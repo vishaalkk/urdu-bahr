@@ -248,15 +248,16 @@ function patGlyphs(raw){
   return String(raw).split('').map(ch=>ch==='='?'<span class="pg l">=</span>':ch==='-'?'<span class="pg s">-</span>':ch==='x'?'<span class="pg x">x</span>':ch==='/'?'<span class="pg sep">/</span>':ch).join('');
 }
 function legendHTML(cls){
-  // one compact line; longer explanations live in the tooltips
+  // one compact line; each item explains itself on hover or tap (data-tip, styled in verse.css)
+  const item = (tip, body) => `<span class="lg-item" tabindex="0" data-tip="${tip}">${body}</span>`;
   return `<div class="legend${cls?' '+cls:''}">`
-    +`<span title="long syllable — sung 'dum'"><i class="sw c-l"></i><span class="lg-or">/</span><span class="pg l">=</span> long <span class="lg-note">(dum)</span></span>`
-    +`<span title="short syllable — sung 'da'"><i class="sw c-s"></i><span class="lg-or">/</span><span class="pg s">–</span> short <span class="lg-note">(da)</span></span>`
-    +`<span title="flexible: could be long or short; the meter decides"><i class="sw c-x"></i>flexible</span>`
-    +`<span title="either: the meter allows long or short here"><span class="pg x">x</span> either</span>`
-    +`<span title="cheat: an extra short syllable at the end of a line, outside the meter"><i class="sw c-c"></i>cheat</span>`
-    +`<span title="grafted: words joined across the space"><i class="sw c-g"></i>grafted</span>`
-    +`</div>`;
+    + item("A long syllable — sung 'dum'. Shown as a solid underline or =.", `<i class="sw c-l"></i><span class="lg-or">/</span><span class="pg l">=</span> long <span class="lg-note">(dum)</span>`)
+    + item("A short syllable — sung 'da'. Shown as a dotted underline or –.", `<i class="sw c-s"></i><span class="lg-or">/</span><span class="pg s">–</span> short <span class="lg-note">(da)</span>`)
+    + item("A word whose syllable can be read long or short (کو، سے، ہے…). The meter decides which — the underline shows the reading chosen.", `<i class="sw c-x"></i>flexible`)
+    + item("A slot in the meter's own pattern that accepts long or short. About the meter, not the word.", `<span class="pg x">x</span> either`)
+    + item("One extra short syllable the meter doesn't count — allowed at the end of a line (and in some meters at the mid-line break). Pritchett calls it a 'cheat' syllable.", `<i class="sw c-c"></i>extra`)
+    + item("Words joined across the space and read as one (e.g. aḳhir us → ā·khi·ras).", `<i class="sw c-g"></i>grafted`)
+    + `</div>`;
 }
 const FAM_TITLES = {
   'hazaron': "Bahr of Hazāroñ Ḳhvāhisheñ",

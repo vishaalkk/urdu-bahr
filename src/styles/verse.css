@@ -516,3 +516,20 @@ html[data-script="hi"] .chips .fname { font-family: var(--deva); }
   justify-content: flex-start; flex-wrap: wrap; gap: 4px 18px; font-size: 12.5px; text-align: left;
 }
 .legend > span { white-space: nowrap; cursor: help; }
+
+/* Legend explanations: an instant popup on hover, keyboard focus or tap (native titles are slow
+   and don't work on phones) */
+.legend .lg-item { position: relative; cursor: help; outline: none; }
+.legend .lg-item::after {
+  content: attr(data-tip); position: absolute; left: 0; top: calc(100% + 6px); z-index: 60;
+  width: max-content; max-width: 280px; white-space: normal; text-align: left;
+  padding: 8px 10px; border-radius: 8px; background: var(--ink); color: var(--bg);
+  font: 400 12.5px/1.45 var(--sans); box-shadow: var(--shadow);
+  opacity: 0; visibility: hidden; transform: translateY(-2px); transition: opacity .12s, transform .12s;
+  pointer-events: none;
+}
+.legend .lg-item:hover::after, .legend .lg-item:focus::after, .legend .lg-item:focus-within::after {
+  opacity: 1; visibility: visible; transform: none;
+}
+.legend .lg-item:focus-visible { box-shadow: 0 0 0 2px var(--gold); border-radius: 4px; }
+.legend .lg-item:nth-last-child(-n+2)::after { left: auto; right: 0; }   /* keep the last popups on screen */
