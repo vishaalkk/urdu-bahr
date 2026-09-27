@@ -1,8 +1,9 @@
-name: Deploy to GitHub Pages
+name: Test and deploy to GitHub Pages
 
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -17,7 +18,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -29,71 +30,46 @@ jobs:
       - name: Set up Python
         run: uv python install
 
-      # test_runtime.py shells out to `node` to exercise the Sean Pue
-      # transliteration engine and to sandbox-run the app's inline scripts
-      # (see test_runtime.py TEST 3 / TEST 4). No browser/Chrome is needed.
+      # Node runs the scansion/transliteration tests, the sandboxed app scripts
+      # (test_runtime.py) and the jsdom smoke test. No browser is needed.
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: npm
 
-      # Fails the job (and therefore the deploy) on any assertion failure.
-      - name: Run verification suite
-        run: uv run python test_runtime.py
+      - name: Install test dependencies
+        run: npm ci
+
+      # Builds index.html from src/ and runs every suite (see scripts/check.sh).
+      - name: Build and test
+        run: npm test
+
+      # The site serves the committed index.html, so it must match the sources.
+      - name: Check committed build is up to date
+        run: |
+          if ! git diff --quiet -- index.html; then
+            echo "::error::index.html is stale — run 'npm run build' and commit the result."
+            git diff --stat -- index.html
+            exit 1
+          fi
 
       - name: Stage public site
         run: |
-          set -e
           mkdir -p _site
-          cp index.html _site/
-          cp .nojekyll _site/
-          # Once standalone feature demos exist, publish them too:
-          # cp -r features _site/features
-          #
-          # Deliberately NOT published to _site/ (see README.md "Licensing"
-          # note and docs/reviews/):
-          #   original_base.html          - pre-build intermediate, superseded by index.html
-          #   scripts/                    - build tooling, not runtime app code
-          #   source_data/                - raw scraped Pritchett & Anjum handbook HTML;
-          #                                  verbatim-reproduction licensing is an open
-          #                                  question for the repo owner (see README)
-          #   data/, scratch/              - source JSON / dev scratch, already baked
-          #                                  into index.html at build time
-          #   .remember/, .codegraph/      - local agent/tooling state
-          #   "urdu-meter-trainer 2.html"  - byte-identical mirror of index.html;
-          #                                  redundant to publish alongside it
+          cp index.html .nojekyll _site/
+          # Not published: src/ scripts/ data/ source_data/ docs/ tests/ —
+          # everything the app needs is compiled into index.html.
 
       - name: Upload artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: _site
 
-      # -----------------------------------------------------------------
-      # Future: once the app is modularized behind a real build (see
-      # docs/reviews/04-architecture-react-xyflow.md), drop the two steps
-      # above ("Set up Node.js" / "Run verification suite" can stay) and
-      # replace "Stage public site" + "Upload artifact" with a Vite build:
-      #
-      # - name: Set up Node.js
-      #   uses: actions/setup-node@v4
-      #   with:
-      #     node-version: "20"
-      #     cache: "npm"
-      #
-      # - name: Install dependencies
-      #   run: npm ci
-      #
-      # - name: Build
-      #   run: npm run build
-      #
-      # - name: Upload artifact
-      #   uses: actions/upload-pages-artifact@v3
-      #   with:
-      #     path: dist
-      # -----------------------------------------------------------------
-
   deploy:
-    needs: build
+    if: github.event_name != 'pull_request'
+    needs: test
     runs-on: ubuntu-latest
     environment:
       name: github-pages

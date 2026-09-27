@@ -1,0 +1,12 @@
+{
+  "name": "urdu-bahr",
+  "private": true,
+  "description": "Bahr — an offline Urdu meter (ʿarūz) trainer. Build output: index.html.",
+  "scripts": {
+    "build": "uv run python scripts/build_app.py",
+    "test": "bash scripts/check.sh"
+  },
+  "devDependencies": {
+    "jsdom": "^24.1.0"
+  }
+}

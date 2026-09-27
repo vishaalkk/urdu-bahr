@@ -1,5 +1,22 @@
+# OS / editors
 .DS_Store
+*.swp
+.vscode/
+.idea/
+
+# Python
 __pycache__/
+*.pyc
+.venv/
+
+# Node
+node_modules/
+
+# Local tooling / agent state
 .remember/
 .codegraph/
-node_modules/
+.claude/
+
+# Scratch space and CI staging
+scratch/
+_site/

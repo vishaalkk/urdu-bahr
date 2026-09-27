@@ -15,4 +15,4 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 The files are included unmodified (byte-identical to upstream master).
-TODO: add the full Apache-2.0 text as LICENSES/Apache-2.0.txt before public release.
+Full licence text: LICENSES/Apache-2.0.txt

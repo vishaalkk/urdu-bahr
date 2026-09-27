@@ -25,64 +25,57 @@ See the in-app **Bibliography** tab for full citations.
 ## Repo layout
 
 ```
-index.html                    Production app (standalone; see below)
-"urdu-meter-trainer 2.html"   Byte-for-byte mirror of index.html
-original_base.html            Pre-build HTML that scripts/build_app.py patches
-test_runtime.py               Verification suite (see "Test")
-data/                         JSON data compiled into index.html (handbook text,
-                               exercises, meters, dictionary, bibliography)
-source_data/                  Raw scraped handbook/exercise HTML from Pritchett's site
-pritchett_scripts/            Sean Pue's AST-graph transliteration engine
-scripts/                      Build & data-extraction scripts
-scratch/                      Ad hoc diagnostic scripts, not part of the app
-docs/reviews/                 Design/architecture review notes (see below)
+index.html              The app — built output, the only file GitHub Pages serves
+src/                    App source: manifest.json, head.html, body/*.html partials,
+                        styles/*.css, js/*.js (concatenated in manifest order), fonts/
+scripts/build_app.py    Build: src/ + data/ → index.html (fonts and data inlined)
+scripts/check.sh        Build + every test (what CI runs)
+test_runtime.py         Content + sandboxed-script verification suite
+tests/                  corpus_scan.js, chip_translit_consistency.js, dom_smoke.js (jsdom)
+data/                   JSON compiled into index.html (handbook, exercises, meters,
+                        glossary, Ghalib/Mir corpora, bibliography)
+source_data/            Raw scraped handbook HTML/text (build input; not published)
+pritchett_scripts/      A. Sean Pue's ghalib.js transliteration engine (Apache-2.0)
+features/               Standalone widget experiments (not in the app)
+docs/                   Design specs (REDESIGN_HANDOFF.md, RESKIN_BRIEF.md), reviews, mockup
+LICENSES/               Third-party notices (ghalib.js Apache-2.0, OFL fonts)
 ```
 
-`index.html` and `"urdu-meter-trainer 2.html"` must stay byte-for-byte
-identical; both are written by the build script, never hand-edited
-individually.
+Never hand-edit `index.html`; change `src/` or `data/` and rebuild.
 
-## Build
+## Develop
 
-```
-uv run python scripts/build_app.py
-```
-
-Regenerates `index.html` and `"urdu-meter-trainer 2.html"` from
-`original_base.html` and `data/*.json`. Do not edit either HTML file by
-hand — change the generator or the data instead, then rebuild.
-
-## Test
+Needs [`uv`](https://docs.astral.sh/uv/) (Python 3.12) and Node 20+.
 
 ```
-uv run python test_runtime.py
+npm install        # once: jsdom for the DOM smoke test
+npm run build      # src/ → index.html
+npm test           # build + all tests (scripts/check.sh)
+open index.html    # the app runs straight from the file — no server needed
 ```
 
-Runs a 6-phase suite: verbatim handbook content, audited ghazal exercise
-data, the Sean Pue transliteration engine (via Node), a sandboxed run of
-the app's inline scripts (meter labeling, studio scansion, script
-switching, sequential audio), byte-for-byte file mirroring, and
-bibliography/UI integrity. Requires `node` on `PATH` in addition to `uv`.
+The tests:
 
-## Deploy
+- `test_runtime.py` — handbook text, audited exercises, the transliteration
+  engine, a sandboxed run of the app's scripts, and self-containment checks.
+- `tests/corpus_scan.js` — the scanner against the 24 Handbook ghazals' answer keys.
+- `tests/chip_translit_consistency.js` — syllable-level vs whole-line transliteration.
+- `tests/dom_smoke.js` — loads the built page in jsdom: no nested sections, no
+  duplicate ids, no network resources, every tab and sub-tab renders when
+  deep-linked, drills mount, family rows expand, search is diacritic-insensitive.
 
-The app is a static file, so it deploys directly to GitHub Pages:
+The build itself also fails if a `src/manifest.json` body partial isn't placed
+in the page or `<section>` tags are unbalanced.
 
-1. In the repo settings, under **Pages**, set **Source** to **GitHub
-   Actions**.
-2. Push to `main` (or run the workflow manually). `.github/workflows/pages.yml`
-   runs the test suite, then publishes `index.html` and `.nojekyll` to
-   Pages. The deploy is blocked if the test suite fails.
+## Deploy (GitHub Pages)
 
-The workflow currently ships the prebuilt standalone HTML directly (no
-npm build step); a commented-out alternative in the workflow shows how to
-switch to a Vite build once the app is modularized (see
-`docs/reviews/04-architecture-react-xyflow.md`).
+1. Repo **Settings → Pages → Source: GitHub Actions** (one-time).
+2. Push to `main`. `.github/workflows/pages.yml` installs dependencies, runs
+   `npm test`, fails if the committed `index.html` doesn't match a fresh build,
+   then publishes `index.html` + `.nojekyll`. Pull requests run the tests only.
 
-Only public, non-copyrighted-source files are published — `scripts/`,
-`source_data/`, `data/`, `scratch/`, `original_base.html`, and the
-duplicate trainer HTML are intentionally excluded (see "Licensing" below
-and the workflow's staging step for the full list).
+Only `index.html` is published; `src/`, `scripts/`, `data/`, `source_data/`,
+`docs/` and `tests/` are not (everything the app needs is compiled in).
 
 ## Status / roadmap
 

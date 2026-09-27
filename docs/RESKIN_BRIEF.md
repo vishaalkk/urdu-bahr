@@ -4,7 +4,7 @@ Supersedes `docs/REDESIGN_HANDOFF.md` **D13 and D14 only** (visual + fonts). Eve
 that doc (IA, tabs, routing, rules in §0, parking lot §10, gotchas §11) still applies. Read §0
 and §11 of that doc before starting.
 
-**Visual reference:** `scratch/mockup-a-quiet-manuscript.html` — open it and read its CSS.
+**Visual reference:** `docs/design/mockup-a-quiet-manuscript.html` — open it and read its CSS.
 Match its look. It is a mock: it uses Google Fonts; the real app must not (offline-only).
 
 ## The look, in rules
