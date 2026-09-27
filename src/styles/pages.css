@@ -10,12 +10,27 @@ header#siteHeader {
   gap: var(--sp-6);
 }
 .mark {
-  font: 500 22px/1 var(--serif);
-  letter-spacing: -0.01em;
+  font: 400 20px/1 var(--mono);
+  letter-spacing: -0.02em;
   cursor: pointer;
   color: var(--ink);
 }
-.mark span {
+.mark-dot-h {
+  position: relative;
+  display: inline-block;
+}
+.mark-dot-h::after {
+  content: '';
+  position: absolute;
+  bottom: -2.5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2.5px;
+  height: 2.5px;
+  background: currentColor;
+  border-radius: 50%;
+}
+.mark .mark-ur, .mark > span:not(.mark-dot-h) {
   font-family: var(--urdu);
   font-size: 18px;
   color: var(--faint);
