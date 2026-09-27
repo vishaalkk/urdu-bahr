@@ -7,7 +7,7 @@ function bestGhazalLinkForMeter(mId) {
   let hb = 0, gh = 0, mr = 0;
   if (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) {
     EXERCISES_DATA.forEach(e => {
-      const match = Array.isArray(e.m) ? e.m.some(x => String(x) === idStr) : String(e.m) === idStr;
+      const em = e.meters || e.m; const match = Array.isArray(em) ? em.some(x => String(x) === idStr) : String(em) === idStr;
       if (match) hb++;
     });
   }
@@ -72,13 +72,13 @@ function renderEarFams() {
 
           h += `<div class="ear-sing-item">`;
           h += `<div class="ear-sing-header">`;
-          h += `<span class="play sm" onclick="earSing(${gi}, 1)" aria-label="Sing misra 1" title="Sing misra">▶</span>`;
+          h += `<span class="play sm" role="button" tabindex="0" data-label="Sing misra" onclick="earSing(${gi}, 1, this)" aria-label="Sing misra 1" title="Sing misra">▶︎</span>`;
           h += `<div class="fam-label-wrap">`;
           h += `<div class="who faint tiny">${g.p} · ${g.ref}</div>`;
           h += `<div class="ear-verse-text ${isRtl ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${vDisp1}</div>`;
           if (vDisp2) {
             h += `<div class="ear-sing-header ear-sing-header-sub">`;
-            h += `<span class="play sm" onclick="earSing(${gi}, 2)" aria-label="Sing misra 2" title="Sing misra 2">▶</span>`;
+            h += `<span class="play sm" role="button" tabindex="0" data-label="Sing misra 2" onclick="earSing(${gi}, 2, this)" aria-label="Sing misra 2" title="Sing misra 2">▶︎</span>`;
             h += `<div class="ear-verse-text ${isRtl ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${vDisp2}</div>`;
             h += `</div>`;
           }
@@ -153,7 +153,7 @@ function famPulse(f) {
   return sylls(Scan.parseRaw(f.pattern)).map(t => t === 'x' ? 'l' : t);
 }
 
-function earSing(gi, which) {
+function earSing(gi, which, btn) {
   const f = FAMS.find(x => x.id === earCur);
   if (!f || !f.gz || !f.gz[gi]) return;
   const g = f.gz[gi];
@@ -161,7 +161,7 @@ function earSing(gi, which) {
   if (!host) return;
   const verseText = (which === 2 && g.ur2) ? g.ur2 : g.ur;
   if (typeof singAlong === 'function') {
-    singAlong(verseText, f, host);
+    singAlong('earsing:' + f.id + ':' + gi + ':' + which, verseText, f, host, btn);
   }
 }
 

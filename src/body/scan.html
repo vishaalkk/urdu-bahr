@@ -2,7 +2,7 @@
 <section id="scan-section" class="tab-view">
   <div class="page-head scan-head">
     <div class="row scan-title-row">
-      <h1>Scan a verse</h1>
+      <h1 class="page-title">Scan a verse</h1>
       <button class="scan-help-btn" id="btnScanHelp" onclick="toggleScanHelp()" aria-label="How to type for best results" title="Typing help">ⓘ</button>
     </div>
     <div id="scanHelpPopover" class="card small scan-help-popover" style="display:none;">
@@ -16,7 +16,7 @@
 
   <div class="row scan-actions">
     <button class="btn gold" onclick="runScan()">Scan ▸</button>
-    <button class="btn sm gold hidden" id="btnPlayCouplet" onclick="studioPlayCouplet()" aria-label="Play couplet rhythm">▶</button>
+    <button class="play sm hidden" id="btnPlayCouplet" onclick="scanPlayAll(null,this)" aria-label="Play all lines" data-label="Play all lines">▶︎</button>
     <button class="btn ghost sm" onclick="clearScan()">Clear</button>
   </div>
 

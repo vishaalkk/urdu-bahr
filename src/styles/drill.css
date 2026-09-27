@@ -1,1 +1,40 @@
-/* Shared drill engine (Weight › Drill, Meter › Drill) */
+/* ================= SHARED DRILL ENGINE (round 2, G3) =================
+   Styles for src/js/22-drill.js's mountDrill('weight'|'meter'). Quiet
+   Manuscript: no shaded panels, one bordered card, type does the hierarchy. */
+
+.dr-root { margin-top: var(--sp-2); }
+
+.dr-filters { display: flex; flex-direction: column; gap: var(--sp-2); margin-bottom: var(--sp-4); }
+.dr-filter-row { display: flex; align-items: baseline; gap: var(--sp-2); flex-wrap: wrap; }
+.dr-filter-row .eyebrow { flex: 0 0 auto; }
+.dr-chips { display: flex; gap: var(--sp-1); flex-wrap: wrap; }
+
+.dr-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--sp-4);
+}
+.dr-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--sp-2); }
+.dr-tag { color: var(--faint); }
+.dr-score { color: var(--faint); }
+
+.dr-prompt { display: flex; align-items: center; gap: var(--sp-3); }
+.dr-prompt p { margin: 0; }
+.dr-word { font-family: var(--serif, inherit); font-size: var(--fs-lg); }
+.dr-word.urdu { font-size: var(--fs-urdu); }
+
+.dr-strip { min-height: 20px; margin: var(--sp-2) 0; }
+
+.dr-choices { display: flex; flex-direction: column; gap: var(--sp-1); margin: var(--sp-2) 0; }
+.dr-choice {
+  width: 100%;
+  text-align: start;
+  justify-content: flex-start;
+  padding: var(--sp-2) var(--sp-3);
+  line-height: var(--lh-base, 1.4);
+}
+.dr-choice:hover:not(:disabled) { background: var(--bg3); }
+.dr-verse { font-family: var(--serif, inherit); }
+.dr-choice-meta { font-family: var(--sans, inherit); }
+
+.dr-reveal { margin: var(--sp-2) 0; }

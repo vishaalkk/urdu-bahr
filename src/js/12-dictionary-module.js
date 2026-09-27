@@ -2,12 +2,12 @@
 let currentDictTag = 'all';
 let currentDictQuery = '';
 
-function formatWeightPattern(wt) {
-  if (!wt) return '';
-  return wt
-    .replace(/=/g, '<span class="L mono">=</span>')
-    .replace(/-/g, '<span class="S mono">–</span>')
-    .replace(/x/g, '<span class="X mono">x</span>');
+/* GLOSSARY_DATA .wt can list several alternative readings, e.g. "(= - x), (= x)" —
+   play/display just the first. Returns a raw pattern string ("= - x") the scansion
+   engine's own parseRaw/patternFeet already understands, so the pattern strip and
+   playback share one source of truth with the rest of the app. */
+function dictFirstPattern(wt) {
+  return String(wt || '').split(/\)\s*,/)[0].replace(/[()]/g, '').trim();
 }
 
 function getDictWordDisplay(item, script) {
@@ -59,17 +59,18 @@ function renderDictionary() {
   const scriptClass = (cs === 'ur') ? 'urdu' : ((cs === 'hi') ? 'deva' : 'mono');
   const langDirAttr = (cs === 'ur') ? 'lang="ur" dir="rtl"' : ((cs === 'hi') ? 'lang="hi"' : 'lang="ur-Latn" dir="ltr"');
 
-  list.innerHTML = filtered.slice(0, 180).map(item => {
+  list.innerHTML = filtered.slice(0, 180).map((item, i) => {
     const word = getDictWordDisplay(item, cs);
-    const patHtml = formatWeightPattern(item.wt);
+    const rawPat = dictFirstPattern(item.wt);
+    const patHtml = (typeof Scan !== 'undefined' && typeof strip === 'function') ? strip(Scan.parseRaw(rawPat)) : escapeHtml(item.wt);
     const meanHtml = escapeHtml(item.mean);
-    const safeWt = item.wt.replace(/'/g, "\\'");
+    const safePat = rawPat.replace(/'/g, "\\'");
     return `
       <div class="dict-row">
         <div class="dict-row-top row">
           <span class="dict-word ${scriptClass}" ${langDirAttr}>${word}</span>
           <span class="dict-pat mono">${patHtml}</span>
-          <button class="icon-btn play sm dict-play" onclick="playWordRhythm('${safeWt}')" aria-label="Play rhythm" title="Play rhythm">▶</button>
+          <button class="icon-btn play sm dict-play" data-label="Play rhythm" onclick="playWordRhythm(${i},'${safePat}',this)" aria-label="Play rhythm" title="Play rhythm">▶︎</button>
         </div>
         ${item.mean ? `<div class="dict-mean dim small">${meanHtml}</div>` : ''}
       </div>
@@ -94,14 +95,10 @@ function filterDictTag(tag) {
   renderDictionary();
 }
 
-function playWordRhythm(wt) {
-  if (typeof A !== 'undefined' && A.ensure && !A.ensure()) return;
-  const seq = [];
-  const parts = wt.replace(/[()]/g, '').split(/[\s,]+/);
-  parts.forEach(p => {
-    if (p === '=') seq.push('l');
-    else if (p === '-') seq.push('s');
-    else if (p === 'x') seq.push('l');
-  });
-  if (seq.length && typeof play === 'function') play(seq);
+/* Word Bank ▶: goes through the player (▶⇄❚❚), lighting the word's own syllable strip. */
+function playWordRhythm(idx, rawPat, btn) {
+  if (!rawPat) return;
+  const row = btn && btn.closest ? btn.closest('.dict-row-top') : null;
+  const nodes = row && typeof row.querySelectorAll === 'function' ? [...row.querySelectorAll('.blk')] : null;
+  if (typeof pbTogglePattern === 'function') pbTogglePattern('dictword:' + idx, btn, rawPat, nodes);
 }

@@ -726,7 +726,7 @@ textarea {
 
 /* ---- Syllable rows in couplet boxes: large by default; a row that would overflow is
    shrunk just enough to fit on one line (--fit set by fitChipRows() in JS, 0.55–1) ---- */
-.cbox-scan .chips, .couplet-scan-box .chips { flex-wrap: nowrap; overflow-x: auto; gap: 0; scrollbar-width: thin; padding-bottom: 2px; --fit: 1; }
+.cbox-scan .chips, .couplet-scan-box .chips { flex-wrap: nowrap; overflow-x: hidden; gap: 0; padding-bottom: 2px; --fit: 1; }
 .cbox-scan .fgrp, .couplet-scan-box .fgrp { padding: 0 calc(12px * var(--fit)); }
 .cbox-scan .fchips, .couplet-scan-box .fchips { gap: calc(7px * var(--fit)); }
 .cbox-scan .chip:not(.roman):not(.deva), .couplet-scan-box .chip:not(.roman):not(.deva) {
@@ -735,6 +735,31 @@ textarea {
 .cbox-scan .chip.deva, .couplet-scan-box .chip.deva { font-size: calc(20px * var(--fit)); padding-left: calc(5px * var(--fit)); padding-right: calc(5px * var(--fit)); }
 .cbox-scan .fname, .couplet-scan-box .fname { font-size: calc(16px * var(--fit)); }
 .cbox-scan .cw .fs, .couplet-scan-box .cw .fs { font-size: calc(12.5px * var(--fit)); }
+
+/* Word-level playback highlight (Meter › Look up couplets): a word is lit while any of its
+   syllables sound; grafted words (one .word span per orthographic word) light together
+   because pbWordLit() lights the whole [word, wordTo] range at once. Same soft-wash
+   treatment as .chip.lit, just on the word instead of the syllable. */
+.word { transition: background .08s; border-radius: 3px; }
+.word.wlit {
+  background: color-mix(in srgb, var(--mark-l) 22%, transparent);
+  box-shadow: 0 3px 0 0 color-mix(in srgb, var(--mark-l) 60%, transparent);
+}
+@media (prefers-reduced-motion: reduce) { .word { transition: none; } }
+
+/* "Scan" toggle on a Look-up couplet: plain text, gold on hover/open, no box */
+.scan-toggle-btn {
+  background: transparent; border: none; padding: 0; margin: 0;
+  font-family: var(--sans); font-size: 12px; color: var(--faint); cursor: pointer;
+}
+.scan-toggle-btn:hover, .scan-toggle-btn[aria-expanded="true"] { color: var(--gold); }
+.couplet-scan-box.hidden { display: none; }
+
+/* Row that would still overflow at the --fit floor wraps between feet, never inside one
+   (.fgrp stays intact — .fchips never wraps). No horizontal scrollbar either way. */
+.cbox-scan .chips.wrap-feet, .couplet-scan-box .chips.wrap-feet {
+  flex-wrap: wrap; overflow-x: visible;
+}
 
 /* play / stop */
 .play.playing { color: var(--gold); border-color: var(--gold); font-size: 11px; letter-spacing: -1px; }
@@ -918,6 +943,10 @@ footer#siteFooter .footer-link:hover { color: var(--gold); }
 
 /* ============================================================
    Page shell — eyebrow / heading / lede (§ token contract)
+   Round 2 G2: three heading classes used everywhere (all tabs/sub-tabs) —
+   .page-title (serif 32px), .section-title (serif 22px), .eyebrow (sans
+   12px uppercase .08em --faint). Legacy bare h1/.sec selectors below keep
+   matching so unclassed markup elsewhere doesn't regress.
    ============================================================ */
 main, .wrap { max-width: 760px; }
 .page-head { margin-bottom: var(--sp-6); }
@@ -928,10 +957,15 @@ main, .wrap { max-width: 760px; }
   text-transform: uppercase;
   color: var(--faint);
 }
-.page-head h1 {
-  font: 400 40px/1.15 var(--serif);
+.page-title, .page-head h1 {
+  font: 400 32px/1.2 var(--serif);
   letter-spacing: -.015em;
   margin: 10px 0 var(--sp-3);
+  color: var(--ink);
+}
+.section-title {
+  font: 400 22px/1.3 var(--serif);
+  margin: var(--sp-6) 0 var(--sp-2);
   color: var(--ink);
 }
 .page-head .lede, .lede {
@@ -1226,6 +1260,12 @@ main, .wrap { max-width: 760px; }
 .vline[lang="hi"] { font-family: var(--deva); font-size: var(--fs-deva); line-height: var(--lh-deva); }
 .vline[lang="ur-Latn"] { font-family: var(--mono); font-size: 15px; }
 
+/* Universal search results: collection tag on each merged row */
+.search-result-col {
+  font-family: var(--sans); font-size: 11px; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--gold);
+}
+
 .vline-lg { font-size: 21px; line-height: 1.5; font-family: var(--serif); margin-bottom: var(--sp-1); }
 .vline-lg[lang="ur"] { font-family: var(--urdu); font-size: var(--fs-urdu-lg, 28px); line-height: 2.1; direction: rtl; text-align: right; }
 .vline-lg[lang="hi"] { font-family: var(--deva); font-size: var(--fs-deva); line-height: var(--lh-deva); }
@@ -1252,6 +1292,16 @@ main, .wrap { max-width: 760px; }
 .ghazal-reader-view { margin-bottom: var(--sp-6); }
 .reader-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--sp-4); font-family: var(--sans); font-size: 13px; }
 .reader-header { margin-bottom: var(--sp-4); text-align: center; }
+/* Reader header component (round 2 D5.8): meter number+name, its pattern,
+   then a clearly-secondary "Same bahr as …" reference — all centred. */
+.reader-header-comp { display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); }
+.reader-header-title-row { justify-content: center; gap: var(--sp-2); }
+.reader-header-title { font: 400 20px/1.3 var(--serif); color: var(--ink); }
+.reader-header-pattern { display: flex; justify-content: center; }
+.reader-header-ref { margin-top: var(--sp-1); max-width: 480px; }
+.reader-header-misra.urdu { font-family: var(--urdu); }
+.reader-header-misra.deva { font-family: var(--deva); }
+.reader-header-misra.roman { font-family: var(--mono); }
 .reader-intro-note { margin: var(--sp-4) 0; max-width: 640px; margin-left: auto; margin-right: auto; }
 .reader-actions {
   display: flex; justify-content: center; gap: var(--sp-6);
@@ -1279,7 +1329,7 @@ main, .wrap { max-width: 760px; }
 /* ============================================================
    Weight page
    ============================================================ */
-.words-title { margin-top: 0; margin-bottom: var(--sp-2); font-size: var(--fs-lg); font-family: var(--serif); color: var(--ink); }
+.words-title { margin-top: 0; margin-bottom: var(--sp-2); }
 .words-def-list { display: grid; grid-template-columns: auto 1fr; gap: var(--sp-2) var(--sp-4); margin: var(--sp-2) 0 0; }
 .words-def-list dt { font-family: var(--mono); font-weight: 600; color: var(--ink); }
 .words-def-list dd { color: var(--dim); margin: 0; font-family: var(--sans); }
@@ -1314,7 +1364,11 @@ main, .wrap { max-width: 760px; }
 .constr-row { display: flex; align-items: center; gap: var(--sp-2); }
 .constr-arrow { padding: 0 var(--sp-1); }
 
-.lookup-title { margin: 0 0 var(--sp-1); font-size: var(--fs-xl); font-family: var(--serif); font-weight: 500; color: var(--ink); }
+/* Weight › Learn › "Special cases": several single-reading examples side by side */
+.special-syll-row { flex-wrap: wrap; align-items: flex-start; gap: var(--sp-5); }
+.special-syll-ex { margin: 0; padding: 0; border: 0; min-width: 7em; }
+
+.lookup-title { margin: 0 0 var(--sp-1); }
 .lookup-desc { margin-bottom: var(--sp-3); font-family: var(--sans); color: var(--dim); }
 .lookup-search-row { margin-top: var(--sp-2); width: 100%; }
 .dict-search-input {
@@ -1420,7 +1474,8 @@ main, .wrap { max-width: 760px; }
    Mobile (375px) — no horizontal scroll, generous gutters
    ============================================================ */
 @media (max-width: 767px) {
-  .page-head h1 { font-size: 32px; }
+  .page-title, .page-head h1 { font-size: 26px; }
+  .section-title { font-size: 19px; }
   .ghazal-controls { flex-wrap: wrap; gap: var(--sp-3); }
   .ghazal-search-input { max-width: none; margin-left: 0; width: 100%; }
   .vrow { grid-template-columns: 44px 1fr auto; gap: var(--sp-3); }
@@ -1497,7 +1552,46 @@ main, .wrap { max-width: 760px; }
 .meter-couplets .couplet-card .vnum { text-decoration: none; }
 .meter-couplets .couplet-card .vnum:hover { color: var(--gold); }
 
-/* Shared drill engine (Weight › Drill, Meter › Drill) */
+/* ================= SHARED DRILL ENGINE (round 2, G3) =================
+   Styles for src/js/22-drill.js's mountDrill('weight'|'meter'). Quiet
+   Manuscript: no shaded panels, one bordered card, type does the hierarchy. */
+
+.dr-root { margin-top: var(--sp-2); }
+
+.dr-filters { display: flex; flex-direction: column; gap: var(--sp-2); margin-bottom: var(--sp-4); }
+.dr-filter-row { display: flex; align-items: baseline; gap: var(--sp-2); flex-wrap: wrap; }
+.dr-filter-row .eyebrow { flex: 0 0 auto; }
+.dr-chips { display: flex; gap: var(--sp-1); flex-wrap: wrap; }
+
+.dr-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--sp-4);
+}
+.dr-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--sp-2); }
+.dr-tag { color: var(--faint); }
+.dr-score { color: var(--faint); }
+
+.dr-prompt { display: flex; align-items: center; gap: var(--sp-3); }
+.dr-prompt p { margin: 0; }
+.dr-word { font-family: var(--serif, inherit); font-size: var(--fs-lg); }
+.dr-word.urdu { font-size: var(--fs-urdu); }
+
+.dr-strip { min-height: 20px; margin: var(--sp-2) 0; }
+
+.dr-choices { display: flex; flex-direction: column; gap: var(--sp-1); margin: var(--sp-2) 0; }
+.dr-choice {
+  width: 100%;
+  text-align: start;
+  justify-content: flex-start;
+  padding: var(--sp-2) var(--sp-3);
+  line-height: var(--lh-base, 1.4);
+}
+.dr-choice:hover:not(:disabled) { background: var(--bg3); }
+.dr-verse { font-family: var(--serif, inherit); }
+.dr-choice-meta { font-family: var(--sans, inherit); }
+
+.dr-reveal { margin: var(--sp-2) 0; }
 </style>
 
 </head>
@@ -1526,7 +1620,7 @@ main, .wrap { max-width: 760px; }
 <!-- ===================== WEIGHT TAB ===================== -->
 <section id="weight-section" class="tab-view">
   <div class="page-head">
-    <h1>Weight</h1>
+    <h1 class="page-title">Weight</h1>
     <div class="lede dim small">How long each syllable is — the raw material of every meter.</div>
     <div class="subtabs seg" role="tablist" aria-label="Weight sub-tabs">
       <button class="seg-btn on" role="tab" id="weightSubLearn" aria-selected="true" onclick="navigate('/weight/learn')">Learn</button>
@@ -1538,7 +1632,7 @@ main, .wrap { max-width: 760px; }
   <!-- Subtab 1: Learn -->
   <div id="weightPanelLearn" class="subpanel">
     <div class="card words-card small">
-      <h3 class="words-title">Words we use</h3>
+      <h2 class="section-title words-title">Words we use</h2>
       <dl class="words-def-list">
         <dt class="mono">miṣraʿ</dt>
         <dd class="dim">A single line or hemistich of poetry.</dd>
@@ -1553,20 +1647,24 @@ main, .wrap { max-width: 760px; }
       </dl>
     </div>
 
-    <h2 class="sec">Letters &amp; weight</h2>
+    <h2 class="section-title">Letters &amp; weight</h2>
     <div class="card small">
       <p><strong class="weight-term">Three rules.</strong> A syllable is <strong class="weight-term">two letters or one</strong>. It <strong class="weight-term">starts with a consonant</strong> if it can. The split <strong class="weight-term">follows pronunciation</strong>.</p>
       <p><strong class="weight-term">The weight law.</strong> <span class="L">Two letters → long (=)</span>. <span class="S">One letter → short (–)</span>.</p>
       <p><strong class="weight-term">Invisible to meter:</strong> zer/zabar/pesh, the aspiration ھ, the nasal ں. <strong class="weight-term">Counts:</strong> hamza ء and ع as full consonants; tashdīd doubles its letter; آ is two letters.</p>
     </div>
 
-    <h2 class="sec">Bending</h2>
+    <h2 class="section-title">Special cases</h2>
+    <p class="small dim">A few words split differently than the three rules alone would predict.</p>
+    <div id="specialSyll" class="constr-container"></div>
+
+    <h2 class="section-title">Bending</h2>
     <div class="card small">
       <p><strong class="weight-term">Flexibility in Urdu prosody.</strong> Many common monosyllables (<span class="urdu urdu-monos">کو، سے، کا، ہے، میں، بھی، نے، ہوں، یہ، وہ، جو، تو</span>) can count as long (=) or short (–) according to the requirement of the meter.</p>
       <p>Final vowels before vowels, the Persian iẓāfat connector (ِ / <em>-e</em>), and the conjunction <em>o</em> ("and") bridge words or alter lengths.</p>
     </div>
 
-    <h3>Across word boundaries</h3>
+    <h2 class="section-title">Across word boundaries</h2>
     <p class="small dim">The usual reason a line that looks wrong is right. Tap ▶︎ to hear before → after.</p>
     <div id="constr" class="constr-container"></div>
 
@@ -1579,7 +1677,7 @@ main, .wrap { max-width: 760px; }
 <!-- ===================== METER TAB ===================== -->
 <section id="meter-section" class="tab-view">
   <div class="meter-head page-head">
-    <h1>Meter</h1>
+    <h1 class="page-title">Meter</h1>
     <div class="lede dim small">Every bahr is a tune. Hear it, then learn to recognise it.</div>
     <div class="subtabs seg" role="tablist" aria-label="Meter sub-tabs">
       <button class="seg-btn on" role="tab" id="meterSubLearn" aria-selected="true" onclick="navigate('/meter/learn')">Learn</button>
@@ -1595,13 +1693,13 @@ main, .wrap { max-width: 760px; }
       <p class="explainer-p"><b class="t S">◆ Shape bahr</b> — one fixed contour, no clean repeat. Don't dissect it; hold it as a melody.</p>
     </div>
 
-    <h3>Families of Bahrs</h3>
+    <h2 class="section-title">Families of bahrs</h2>
     <p class="small dim">Pick a family to hear its tune sung as <b class="t L">dum</b> (long) and <b class="t S">da</b> (short), then sing along as the syllables light up.</p>
-    <div class="scroller" id="earFams"></div>
+    <div class="fam-list" id="earFams"></div>
     <div id="earPanel"></div>
 
     <div class="go-deeper">
-      <strong>Go deeper:</strong> <a href="#/handbook/ch5">Handbook ch. 5 — Metrical Feet ›</a> · <a href="#/handbook/ch6">Handbook ch. 6 — Meters & Bahrs ›</a>
+      <strong>Go deeper:</strong> <a href="#/handbook/ch5">Handbook ch. 5 — Metrical Feet ›</a> · <a href="#/handbook/ch6">Handbook ch. 6 — Meters & Bahrs ›</a> · <a href="#/handbook/ch8">Handbook ch. 8 — From Eye to Ear ›</a>
     </div>
   </div>
 
@@ -1609,7 +1707,7 @@ main, .wrap { max-width: 760px; }
 <section id="scan-section" class="tab-view">
   <div class="page-head scan-head">
     <div class="row scan-title-row">
-      <h1>Scan a verse</h1>
+      <h1 class="page-title">Scan a verse</h1>
       <button class="scan-help-btn" id="btnScanHelp" onclick="toggleScanHelp()" aria-label="How to type for best results" title="Typing help">ⓘ</button>
     </div>
     <div id="scanHelpPopover" class="card small scan-help-popover" style="display:none;">
@@ -1623,7 +1721,7 @@ main, .wrap { max-width: 760px; }
 
   <div class="row scan-actions">
     <button class="btn gold" onclick="runScan()">Scan ▸</button>
-    <button class="btn sm gold hidden" id="btnPlayCouplet" onclick="studioPlayCouplet()" aria-label="Play couplet rhythm">▶</button>
+    <button class="play sm hidden" id="btnPlayCouplet" onclick="scanPlayAll(null,this)" aria-label="Play all lines" data-label="Play all lines">▶︎</button>
     <button class="btn ghost sm" onclick="clearScan()">Clear</button>
   </div>
 
@@ -1646,7 +1744,7 @@ main, .wrap { max-width: 760px; }
 <section id="ghazals-section" class="tab-view">
   <div class="page-head ghazal-head">
     <div class="eyebrow" id="ghazalEyebrow">Handbook · 24 ghazals</div>
-    <h1>Ghazals</h1>
+    <h1 class="page-title">Ghazals</h1>
     <p class="lede">Read a ghazal couplet by couplet. Tap any line to see how it scans.</p>
     <!-- Collection segmented control -->
     <div class="seg" role="tablist" aria-label="Collections">
@@ -1661,7 +1759,7 @@ main, .wrap { max-width: 760px; }
       <select id="ghazalMeterFilter" class="ghazal-meter-filter" onchange="onGhazalFilterChange()">
         <option value="all">All meters</option>
       </select>
-      <input type="text" id="ghazalSearchInput" class="ghazal-search-input" placeholder="Search poet or first line..." oninput="onGhazalSearch()">
+      <input type="text" id="ghazalSearchInput" class="ghazal-search-input" placeholder="Search poet, first line, or number — all collections" oninput="onGhazalSearch()">
     </div>
   </div>
 
@@ -1679,6 +1777,10 @@ main, .wrap { max-width: 760px; }
 
   <!-- Ghazal List View -->
   <div id="ghazalListView">
+    <!-- Universal search results (all collections, tagged); shown instead of
+         the three containers below whenever the search box has a query. -->
+    <div id="ghazalUniversalResults" class="verses hidden"></div>
+
     <!-- Handbook exercises list -->
     <div id="handbookExContainer">
       <div class="row hidden" id="exPoetChips"></div>
@@ -1707,7 +1809,7 @@ main, .wrap { max-width: 760px; }
   </div>
 
   <div class="card">
-    <h2>Handbook Chapters</h2>
+    <h2 class="section-title">Handbook Chapters</h2>
     <div class="scroller" id="hbChapterChips"></div>
   </div>
 
@@ -1717,18 +1819,18 @@ main, .wrap { max-width: 760px; }
 <!-- ================= ABOUT SECTION ================= -->
 <section id="about-section" class="tab-view" style="display:none;">
   <div class="page-head">
-    <h1>About Baḥr</h1>
+    <h1 class="page-title">About Baḥr</h1>
     <div class="lede">Sources, scanner accuracy, and academic acknowledgments.</div>
   </div>
 
   <div class="card small">
-    <h3>How far to trust the scanner</h3>
+    <h3 class="section-title">How far to trust the scanner</h3>
     <p>Tested against the handbook's own answer key: on all 24 exercise ghazals (226 lines), Pritchett's meter fits <b class="t">225 lines</b>, and stacking names the right meter for <b class="t">23 of 24 ghazals</b> (the miss: Akbar's English "M.A.", which she scans unusually). On her printed syllable-by-syllable breakdown of Mir's Hindi-meter ghazal it matches <b class="t">108 of 108 syllables</b>.</p>
     <p class="faint tiny">Rules: Pritchett &amp; Khaliq, chs. 1–3. Word lists verified against the same.</p>
   </div>
 
   <div class="card">
-    <h2>Acknowledgments &amp; Bibliography</h2>
+    <h2 class="section-title">Acknowledgments &amp; Bibliography</h2>
     <div class="faint small">Direct scholarly citations for the pedagogical handbook and computational linguistics engine powering this application.</div>
   </div>
 
@@ -3051,7 +3153,9 @@ function showWeightSubtab(sub) {
 
   if (sub === 'learn') {
     if (typeof renderConstr === 'function') renderConstr();
+    if (typeof renderSpecialSyll === 'function') renderSpecialSyll();
   } else if (sub === 'drill') {
+    if (typeof mountDrill === 'function') mountDrill('weight');
     if (typeof wdNext === 'function' && $('wdWord') && !$('wdWord').textContent) wdNext();
     if (typeof fxNext === 'function' && $('fxWord') && !$('fxWord').textContent) fxNext();
   } else if (sub === 'lookup') {
@@ -3080,6 +3184,7 @@ function showMeterSubtab(sub, params) {
     if (typeof renderEar === 'function') renderEar();
     if (params && params.open && typeof earPick === 'function') earPick(params.open);
   } else if (sub === 'drill') {
+    if (typeof mountDrill === 'function') mountDrill('meter');
     if (typeof iomNew === 'function' && $('iomStrip') && !$('iomStrip').textContent) iomNew();
     if (typeof wtNew === 'function' && $('wtChoices') && !$('wtChoices').textContent) wtNew();
     if (typeof renderWeak === 'function') renderWeak();
@@ -3651,12 +3756,29 @@ let curReaderCol = null;
 let curReaderId = null;
 let curReaderItem = null;
 
+/* Universal search (round 2): while the box has a query, results merge all
+   three collections; the collection segmented buttons then act as a filter
+   on those merged results instead of switching which corpus is browsed.
+   'all' = no filter. Reset to 'all' whenever the search box is cleared. */
+let searchCollectionFilter = 'all';
+let ghazalSearchDebounce = null;
+
 // Scans are shown by default; only an explicit "Hide all scans" turns them off.
 let showAllScans = true;
 try {
   showAllScans = (sessionStorage.getItem('bahr_reader_scans') !== 'false');
 } catch (e) {
   showAllScans = true;
+}
+
+/* Handbook items store meter id(s) under `meters` (array); Ghalib/Mir extended
+   corpora also use `meters`. Some older call sites assumed `m`/`meter`, which is
+   why rows showed "#undefined". Always resolve through this helper. */
+function mListOf(item) {
+  if (!item) return [];
+  const src = Array.isArray(item.meters) ? item.meters
+    : (Array.isArray(item.m) ? item.m : [item.meter != null ? item.meter : item.m]);
+  return src.filter(x => x !== undefined && x !== null && x !== '');
 }
 
 function escapeHtml(str) {
@@ -3674,6 +3796,146 @@ function getLangDir(cs) {
   if (cs === 'hi') return 'lang="hi"';
   return 'lang="ur-Latn" dir="ltr"';
 }
+
+/* ================= UNIVERSAL SEARCH (round 2 G-search) =================
+   One normalizer for Urdu, Devanagari and Roman text, poet names, and
+   ghazal numbers, so a single query box can match across all of them and
+   across all three collections at once. Diacritic-insensitive on both
+   sides: Urdu combining marks/tatweel/ZWNJ are stripped, and Roman text is
+   NFD-decomposed so ā/ī/ū/ṭ/ḍ/ṇ/ṣ/ẕ/ḥ/ḳ/ñ all fold to their plain letter
+   (which also makes "ḳh" == "kh"); ʿ/ʾ/ʽ/' are dropped outright since they
+   don't correspond to a plain-key letter at all. This is deliberately
+   separate from normVerseKey() (05-translit-helpers.js) — that one matches
+   whole verses across scripts exactly for the corpus dedup/lookup index;
+   this one only needs to be forgiving enough for a human typing a search. */
+function searchNorm(str) {
+  if (!str) return '';
+  let s = String(str).toLowerCase();
+  s = s.replace(/[ً-ٰٟـ​-‏]/g, '');   // Urdu diacritics, madda, tatweel, ZW*
+  s = s.normalize('NFD').replace(/[̀-ͯ]/g, '');           // ā→a, ṭ→t, ñ→n, ḳ→k, …
+  s = s.replace(/[ʿʾʽ`'’‘]/g, '');                                   // ayn/hamza marks, apostrophes
+  s = s.replace(/[،۔؟!,.;:?"«»()\[\]{}\-–—/]/g, ' ');
+  return s.replace(/\s+/g, ' ').trim();
+}
+
+/* GHALIB_EXT_DATA/MIR_EXT_DATA only carry the poet's name in Roman ("Ghalib",
+   "Mir"); add the Urdu/Devanagari spellings so a search in those scripts can
+   find the poet too. Handbook items already carry each ghazal's own
+   (Roman-only) poet name, which we index as-is. */
+const POET_NAMES = {
+  ghalib: ['Ghalib', 'غالب', 'ग़ालिब'],
+  mir: ['Mir', 'میر', 'मीर']
+};
+
+let GHAZAL_SEARCH_INDEX = null; // built lazily on first search; { col, id, hay } rows
+function buildGhazalSearchIndex() {
+  const cols = [
+    ['handbook', (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) ? EXERCISES_DATA : []],
+    ['ghalib', (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) ? GHALIB_EXT_DATA : []],
+    ['mir', (typeof MIR_EXT_DATA !== 'undefined' && Array.isArray(MIR_EXT_DATA)) ? MIR_EXT_DATA : []]
+  ];
+  const idx = [];
+  cols.forEach(([col, corpus]) => {
+    const poetNames = col === 'handbook' ? null : POET_NAMES[col];
+    corpus.forEach(item => {
+      const l1 = (item.lines && item.lines[0]) || null;
+      const fields = poetNames ? poetNames.slice() : [item.poet || ''];
+      fields.push(String(item.id));
+      if (l1) fields.push(l1.ur || '', l1.hi || '', l1.ro || '', l1.ascii || '');
+      idx.push({ col, id: String(item.id), hay: searchNorm(fields.filter(Boolean).join(' ')) });
+    });
+  });
+  GHAZAL_SEARCH_INDEX = idx;
+}
+window.buildGhazalSearchIndex = buildGhazalSearchIndex;
+
+/* -> { handbook: Set<id>, ghalib: Set<id>, mir: Set<id> } or null for an empty query.
+   All query words must appear (substring) in a row's haystack — good enough for
+   short poet-name / first-line / number queries without needing real tokenization. */
+function searchGhazalIndex(q) {
+  const nq = searchNorm(q);
+  if (!nq) return null;
+  if (!GHAZAL_SEARCH_INDEX) buildGhazalSearchIndex();
+  const terms = nq.split(' ').filter(Boolean);
+  const out = { handbook: new Set(), ghalib: new Set(), mir: new Set() };
+  GHAZAL_SEARCH_INDEX.forEach(rec => {
+    if (terms.every(t => rec.hay.indexOf(t) !== -1)) out[rec.col].add(rec.id);
+  });
+  return out;
+}
+window.searchGhazalIndex = searchGhazalIndex;
+
+/* The famous misra for a meter, in the current script, plus its poet — for
+   the reader header's "Same bahr as …" reference line. Reads the FAMS/
+   famOfMeter globals (owned by the Player & Meter agent's data file) but
+   doesn't modify them. */
+function meterFamousLine(mId) {
+  if (!mId || typeof famOfMeter === 'undefined') return null;
+  const fam = famOfMeter[Number(mId)] || famOfMeter[String(mId)];
+  if (!fam || !fam.gz || !fam.gz[0]) return null;
+  const g = fam.gz[0];
+  const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
+  const text = (typeof getLineDisplay === 'function') ? getLineDisplay(g, cs) : (g[cs] || g.ur || '');
+  return text ? { text, poet: g.p || '' } : null;
+}
+
+/* PB-compatible "line" for a bare pattern string (no verse) — lets the
+   reader header's ▶ go through the shared pbToggle controller (round 2 G1)
+   without a real Scan.explain() result. Same technique as rawPbLine() in
+   21-learn.js; requested as a formal pbTogglePattern() helper in
+   15-audio.js so every "play the pattern only" button can share it — see
+   final report. */
+function readerPatternLine(raw, host) {
+  if (typeof Scan === 'undefined' || !Scan.parseRaw) return null;
+  const toks = Scan.parseRaw(raw).filter(t => t === 'l' || t === 's' || t === 'x' || t === 'c');
+  return { e: { syl: toks.map(t => ({ resolved: t })) }, nodes: host ? [...host.querySelectorAll('.blk')] : null, groups: null };
+}
+
+function toggleReaderPatternPlay(mId, btn) {
+  if (typeof pbToggle !== 'function') return;
+  const info = (typeof meterLabelInfo === 'function') ? meterLabelInfo(mId) : null;
+  if (!info || !info.pattern) return;
+  const host = btn.closest('.reader-header-comp');
+  const patHost = host ? host.querySelector('.reader-header-pattern') : null;
+  pbToggle('reader-pattern:' + mId, btn, () => {
+    const line = readerPatternLine(info.pattern, patHost);
+    return line ? [line] : null;
+  });
+}
+window.toggleReaderPatternPlay = toggleReaderPatternPlay;
+
+/* Reader header (§5.8 / round 2): meter number + name as the title, its
+   pattern centred underneath, and — clearly marked as a reference, not this
+   ghazal's own line — the famous misra for the bahr. Built here rather than
+   via renderMeterLabel() (18b-meter-label.js) because that component shows
+   the famous misra as the PRIMARY line, which reads as though it were this
+   ghazal's own first line. */
+function renderGhazalReaderHeader(mId) {
+  if (!mId) return '';
+  const info = (typeof meterLabelInfo === 'function') ? meterLabelInfo(mId) : null;
+  if (!info) return '';
+  const canPlay = !!info.pattern;
+  const patternHtml = (info.pattern && typeof feetStrip === 'function') ? feetStrip(info.pattern) : '';
+  const numHtml = `<span class="mono">${escapeHtml(info.number)}</span>`;
+  const titleHtml = info.name ? `${numHtml} · ${escapeHtml(info.name)}` : numHtml;
+  const famous = meterFamousLine(mId);
+  const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
+  const misraScriptCls = cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : 'roman');
+  const refHtml = famous
+    ? `<div class="reader-header-ref faint small">Same bahr as <span class="reader-header-misra ${misraScriptCls}">${escapeHtml(famous.text)}</span>${famous.poet ? ' — ' + escapeHtml(famous.poet) : ''}</div>`
+    : '';
+  return `
+    <div class="reader-header-comp">
+      <div class="row reader-header-title-row">
+        ${canPlay ? `<span class="play sm" role="button" tabindex="0" data-label="Play meter pattern" aria-label="Play meter pattern" onclick="toggleReaderPatternPlay('${info.id}', this)">▶︎</span>` : ''}
+        <span class="reader-header-title">${titleHtml}</span>
+      </div>
+      <div class="reader-header-pattern">${patternHtml}</div>
+      ${refHtml}
+    </div>
+  `;
+}
+window.renderGhazalReaderHeader = renderGhazalReaderHeader;
 
 function getGhazalNavLabel(col, item) {
   if (!item) return '';
@@ -3707,8 +3969,7 @@ function populateGhazalMeterFilter(col) {
 
   const meterCounts = {};
   corpus.forEach(item => {
-    const mList = Array.isArray(item.meters) ? item.meters : (Array.isArray(item.m) ? item.m : [item.meter || item.m]);
-    const dedup = [...new Set(mList.filter(Boolean).map(x => String(x)))];
+    const dedup = [...new Set(mListOf(item).map(x => String(x)))];
     dedup.forEach(id => {
       meterCounts[id] = (meterCounts[id] || 0) + 1;
     });
@@ -3750,21 +4011,41 @@ window.onGhazalFilterChange = onGhazalFilterChange;
 
 function onGhazalSearch() {
   ghazalShownCount = 30;
-  renderGhazalsList();
+  clearTimeout(ghazalSearchDebounce);
+  ghazalSearchDebounce = setTimeout(() => {
+    if (!($('ghazalSearchInput') && $('ghazalSearchInput').value.trim())) searchCollectionFilter = 'all';
+    renderGhazalsList();
+  }, 150);
 }
 window.onGhazalSearch = onGhazalSearch;
 
-function switchCollection(col) {
-  activeCollection = col;
-  const btns = {
-    'handbook': 'colBtnHandbook',
-    'ghalib': 'colBtnGhalib',
-    'mir': 'colBtnMir'
-  };
+/* Highlight the segmented buttons for whichever meaning currently applies:
+   collection switch (normal browsing) or result filter (search active). */
+function syncCollectionButtons() {
+  const searchActive = !!($('ghazalSearchInput') && $('ghazalSearchInput').value.trim());
+  const on = searchActive ? searchCollectionFilter : activeCollection;
+  const btns = { handbook: 'colBtnHandbook', ghalib: 'colBtnGhalib', mir: 'colBtnMir' };
   Object.keys(btns).forEach(k => {
     const el = $(btns[k]);
-    if (el) el.classList.toggle('on', k === col);
+    if (el) el.classList.toggle('on', k === on);
   });
+}
+
+function switchCollection(col) {
+  const searchActive = !!($('ghazalSearchInput') && $('ghazalSearchInput').value.trim());
+  if (searchActive) {
+    // While a query is active, the segmented control filters the merged
+    // cross-collection results instead of switching pages; click the same
+    // one again to go back to "all collections".
+    searchCollectionFilter = (searchCollectionFilter === col) ? 'all' : col;
+    syncCollectionButtons();
+    renderGhazalsList();
+    return;
+  }
+
+  activeCollection = col;
+  searchCollectionFilter = 'all';
+  syncCollectionButtons();
 
   const descs = {
     'handbook': "The handbook's exercise ghazals, with Frances Pritchett's notes.",
@@ -3814,7 +4095,7 @@ function renderZeroResults(col, selFilter, searchQ) {
       else if (otherCol === 'mir') corpus = (typeof MIR_EXT_DATA !== 'undefined') ? MIR_EXT_DATA : [];
 
       const count = corpus.filter(item => {
-        const mList = Array.isArray(item.meters) ? item.meters.map(String) : (Array.isArray(item.m) ? item.m.map(String) : [String(item.meter || item.m)]);
+        const mList = mListOf(item).map(String);
         return mList.includes(selFilter);
       }).length;
 
@@ -3849,46 +4130,31 @@ function renderZeroResults(col, selFilter, searchQ) {
 function getFilteredGhazals(col) {
   const selVal = $('ghazalMeterFilter') ? $('ghazalMeterFilter').value : 'all';
   const selFilter = (selVal && selVal.trim()) ? selVal.trim() : 'all';
-  const searchQ = $('ghazalSearchInput') ? $('ghazalSearchInput').value.toLowerCase().trim() : '';
+  const searchQ = $('ghazalSearchInput') ? $('ghazalSearchInput').value.trim() : '';
+  // Universal search (searchGhazalIndex) covers all scripts + poet + number,
+  // diacritic-insensitively; the list views normally don't reach this branch
+  // with a query (renderGhazalsList routes those to the merged results
+  // instead), but keep it correct for direct callers (e.g. reader prev/next).
+  const searchIds = searchQ ? searchGhazalIndex(searchQ) : null;
 
   if (col === 'handbook') {
     if (typeof EXERCISES_DATA === 'undefined') return [];
     return EXERCISES_DATA.filter(ex => {
       if (selFilter !== 'all') {
-        const mList = Array.isArray(ex.m) ? ex.m.map(String) : [String(ex.m)];
+        const mList = mListOf(ex).map(String);
         if (!mList.includes(selFilter)) return false;
       }
-      if (searchQ) {
-        const poetMatch = (ex.poet || '').toLowerCase().includes(searchQ);
-        const l1 = ex.lines && ex.lines[0];
-        const lineMatch = l1 && (
-          (l1.ur || '').toLowerCase().includes(searchQ) ||
-          (l1.hi || '').toLowerCase().includes(searchQ) ||
-          (l1.ro || '').toLowerCase().includes(searchQ) ||
-          (l1.ascii || '').toLowerCase().includes(searchQ)
-        );
-        if (!poetMatch && !lineMatch) return false;
-      }
+      if (searchIds && !searchIds.handbook.has(String(ex.id))) return false;
       return true;
     });
   } else {
     const corpus = (col === 'ghalib') ? ((typeof GHALIB_EXT_DATA !== 'undefined') ? GHALIB_EXT_DATA : []) : ((typeof MIR_EXT_DATA !== 'undefined') ? MIR_EXT_DATA : []);
     return corpus.filter(g => {
       if (selFilter !== 'all') {
-        const mList = Array.isArray(g.meters) ? g.meters.map(String) : [String(g.meter || g.m)];
+        const mList = mListOf(g).map(String);
         if (!mList.includes(selFilter)) return false;
       }
-      if (searchQ) {
-        const poetMatch = (col === 'ghalib' ? 'ghalib' : 'mir').includes(searchQ);
-        const l1 = g.lines && g.lines[0];
-        const lineMatch = l1 && (
-          (l1.ur || '').toLowerCase().includes(searchQ) ||
-          (l1.hi || '').toLowerCase().includes(searchQ) ||
-          (l1.ro || '').toLowerCase().includes(searchQ) ||
-          (l1.ascii || '').toLowerCase().includes(searchQ)
-        );
-        if (!poetMatch && !lineMatch) return false;
-      }
+      if (searchIds && !searchIds[col].has(String(g.id))) return false;
       return true;
     });
   }
@@ -3904,6 +4170,19 @@ function renderGhazalsList() {
     return;
   }
 
+  const q = $('ghazalSearchInput') ? $('ghazalSearchInput').value.trim() : '';
+  if (q) {
+    renderUniversalSearchResults(q);
+    return;
+  }
+
+  const uHost = $('ghazalUniversalResults');
+  if (uHost) { uHost.classList.add('hidden'); uHost.style.display = 'none'; }
+  const cHandbook = $('handbookExContainer'), cGhalib = $('ghalibContainer'), cMir = $('mirContainer');
+  if (cHandbook) { cHandbook.classList.toggle('hidden', activeCollection !== 'handbook'); cHandbook.style.display = ''; }
+  if (cGhalib) { cGhalib.classList.toggle('hidden', activeCollection !== 'ghalib'); cGhalib.style.display = ''; }
+  if (cMir) { cMir.classList.toggle('hidden', activeCollection !== 'mir'); cMir.style.display = ''; }
+
   if (activeCollection === 'handbook') {
     renderHandbookList();
   } else if (activeCollection === 'ghalib') {
@@ -3913,6 +4192,74 @@ function renderGhazalsList() {
   }
 }
 window.renderGhazalsList = renderGhazalsList;
+
+/* Merged, tagged results across Handbook/Ghalib/Mir for the universal
+   search box; searchCollectionFilter (driven by the segmented control)
+   narrows this to one collection. */
+function renderUniversalSearchResults(q) {
+  const uHost = $('ghazalUniversalResults');
+  const cHandbook = $('handbookExContainer'), cGhalib = $('ghalibContainer'), cMir = $('mirContainer');
+  [cHandbook, cGhalib, cMir].forEach(el => { if (el) { el.classList.add('hidden'); el.style.display = 'none'; } });
+  if (!uHost) return;
+  uHost.classList.remove('hidden');
+  uHost.style.display = 'block';
+  syncCollectionButtons();
+
+  const idx = searchGhazalIndex(q);
+  const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
+  const langDir = getLangDir(cs);
+  const colNames = { handbook: 'Handbook', ghalib: 'Ghalib', mir: 'Mir' };
+  const cols = (searchCollectionFilter === 'all') ? ['handbook', 'ghalib', 'mir'] : [searchCollectionFilter];
+
+  const rows = [];
+  if (idx) {
+    cols.forEach(col => {
+      const ids = idx[col];
+      if (!ids || !ids.size) return;
+      const corpus = col === 'handbook' ? ((typeof EXERCISES_DATA !== 'undefined') ? EXERCISES_DATA : [])
+        : col === 'ghalib' ? ((typeof GHALIB_EXT_DATA !== 'undefined') ? GHALIB_EXT_DATA : [])
+        : ((typeof MIR_EXT_DATA !== 'undefined') ? MIR_EXT_DATA : []);
+      corpus.forEach(item => { if (ids.has(String(item.id))) rows.push({ col, item }); });
+    });
+  }
+
+  if ($('ghazalEyebrow')) {
+    const scope = searchCollectionFilter !== 'all' ? colNames[searchCollectionFilter] : 'All collections';
+    $('ghazalEyebrow').textContent = `${scope} · ${rows.length} match${rows.length === 1 ? '' : 'es'}`;
+  }
+
+  if (!rows.length) {
+    const where = searchCollectionFilter !== 'all' ? ` in ${colNames[searchCollectionFilter]}` : '';
+    uHost.innerHTML = `<div class="zero-state"><p>No ghazals match &ldquo;${escapeHtml(q)}&rdquo;${where}.</p></div>`;
+    return;
+  }
+
+  uHost.innerHTML = rows.map((r, idx2) => {
+    const { col, item } = r;
+    const l1 = item.lines && item.lines[0];
+    const disp1 = l1 ? ((typeof getLineDisplay === 'function') ? getLineDisplay(l1, cs) : (l1[cs] || l1.ur)) : '';
+    const mStr = mListOf(item).map(x => '#' + x).join('/') || '#?';
+    const who = col === 'handbook' ? (item.poet || 'Handbook') : colNames[col];
+    return `
+      <div class="vrow" role="link" tabindex="0" onclick="navigate('/ghazals/${col}/${item.id}')">
+        <span class="vnum">${escapeHtml(getGhazalNavLabel(col, item))}</span>
+        <div class="vtext">
+          <div class="vline" ${langDir}>${disp1}</div>
+          <div class="vmeta">
+            <span class="search-result-col">${colNames[col]}</span>
+            <span>·</span>
+            <span>${escapeHtml(who)}</span>
+            <span>·</span>
+            <span class="mono">${mStr}</span>
+          </div>
+        </div>
+        <div class="vact"><span class="chevron">›</span></div>
+      </div>
+      ${idx2 < rows.length - 1 ? '<div class="vrule"></div>' : ''}
+    `;
+  }).join('');
+}
+window.renderUniversalSearchResults = renderUniversalSearchResults;
 
 function renderHandbookList() {
   const container = $('exDetailView');
@@ -3935,7 +4282,7 @@ function renderHandbookList() {
   container.innerHTML = filtered.map((ex, idx) => {
     const l1 = ex.lines && ex.lines[0];
     const disp1 = l1 ? ((typeof getLineDisplay === 'function') ? getLineDisplay(l1, cs) : (l1[cs] || l1.ur)) : '';
-    const mStr = Array.isArray(ex.m) ? ex.m.map(x => '#' + x).join('/') : '#' + ex.m;
+    const mStr = mListOf(ex).map(x => '#' + x).join('/') || '#?';
 
     return `
       <div class="vrow" role="link" tabindex="0" onclick="navigate('/ghazals/handbook/${ex.id}')">
@@ -3981,7 +4328,7 @@ function renderCorpusList(col) {
   listEl.innerHTML = shown.map((g, gi) => {
     const l1 = g.lines && g.lines[0];
     const disp1 = l1 ? ((typeof getLineDisplay === 'function') ? getLineDisplay(l1, cs) : (l1[cs] || l1.ur)) : '';
-    const mStr = Array.isArray(g.meters) ? g.meters.map(x => '#' + x).join('/') : '#' + (g.meter || g.m);
+    const mStr = mListOf(g).map(x => '#' + x).join('/') || '#?';
     const lineCount = g.lines ? g.lines.length : 0;
 
     return `
@@ -4071,11 +4418,9 @@ function openGhazalReader(col, id) {
     }
   }
 
-  const mId = Array.isArray(item.meters) ? item.meters[0] : (Array.isArray(item.m) ? item.m[0] : (item.meter || item.m));
+  const mId = mListOf(item)[0];
   const rHeader = $('readerHeader');
-  if (rHeader) {
-    rHeader.innerHTML = (typeof renderMeterLabel === 'function') ? renderMeterLabel(mId, { size: 'lg', play: true }) : '';
-  }
+  if (rHeader) rHeader.innerHTML = renderGhazalReaderHeader(mId);
 
   // Intro note (Handbook only per §5.8)
   const introDiv = $('readerIntroNote');
@@ -4512,12 +4857,12 @@ function scanLineInEngine(line) {
 let currentDictTag = 'all';
 let currentDictQuery = '';
 
-function formatWeightPattern(wt) {
-  if (!wt) return '';
-  return wt
-    .replace(/=/g, '<span class="L mono">=</span>')
-    .replace(/-/g, '<span class="S mono">–</span>')
-    .replace(/x/g, '<span class="X mono">x</span>');
+/* GLOSSARY_DATA .wt can list several alternative readings, e.g. "(= - x), (= x)" —
+   play/display just the first. Returns a raw pattern string ("= - x") the scansion
+   engine's own parseRaw/patternFeet already understands, so the pattern strip and
+   playback share one source of truth with the rest of the app. */
+function dictFirstPattern(wt) {
+  return String(wt || '').split(/\)\s*,/)[0].replace(/[()]/g, '').trim();
 }
 
 function getDictWordDisplay(item, script) {
@@ -4569,17 +4914,18 @@ function renderDictionary() {
   const scriptClass = (cs === 'ur') ? 'urdu' : ((cs === 'hi') ? 'deva' : 'mono');
   const langDirAttr = (cs === 'ur') ? 'lang="ur" dir="rtl"' : ((cs === 'hi') ? 'lang="hi"' : 'lang="ur-Latn" dir="ltr"');
 
-  list.innerHTML = filtered.slice(0, 180).map(item => {
+  list.innerHTML = filtered.slice(0, 180).map((item, i) => {
     const word = getDictWordDisplay(item, cs);
-    const patHtml = formatWeightPattern(item.wt);
+    const rawPat = dictFirstPattern(item.wt);
+    const patHtml = (typeof Scan !== 'undefined' && typeof strip === 'function') ? strip(Scan.parseRaw(rawPat)) : escapeHtml(item.wt);
     const meanHtml = escapeHtml(item.mean);
-    const safeWt = item.wt.replace(/'/g, "\\'");
+    const safePat = rawPat.replace(/'/g, "\\'");
     return `
       <div class="dict-row">
         <div class="dict-row-top row">
           <span class="dict-word ${scriptClass}" ${langDirAttr}>${word}</span>
           <span class="dict-pat mono">${patHtml}</span>
-          <button class="icon-btn play sm dict-play" onclick="playWordRhythm('${safeWt}')" aria-label="Play rhythm" title="Play rhythm">▶</button>
+          <button class="icon-btn play sm dict-play" data-label="Play rhythm" onclick="playWordRhythm(${i},'${safePat}',this)" aria-label="Play rhythm" title="Play rhythm">▶︎</button>
         </div>
         ${item.mean ? `<div class="dict-mean dim small">${meanHtml}</div>` : ''}
       </div>
@@ -4604,16 +4950,12 @@ function filterDictTag(tag) {
   renderDictionary();
 }
 
-function playWordRhythm(wt) {
-  if (typeof A !== 'undefined' && A.ensure && !A.ensure()) return;
-  const seq = [];
-  const parts = wt.replace(/[()]/g, '').split(/[\s,]+/);
-  parts.forEach(p => {
-    if (p === '=') seq.push('l');
-    else if (p === '-') seq.push('s');
-    else if (p === 'x') seq.push('l');
-  });
-  if (seq.length && typeof play === 'function') play(seq);
+/* Word Bank ▶: goes through the player (▶⇄❚❚), lighting the word's own syllable strip. */
+function playWordRhythm(idx, rawPat, btn) {
+  if (!rawPat) return;
+  const row = btn && btn.closest ? btn.closest('.dict-row-top') : null;
+  const nodes = row && typeof row.querySelectorAll === 'function' ? [...row.querySelectorAll('.blk')] : null;
+  if (typeof pbTogglePattern === 'function') pbTogglePattern('dictword:' + idx, btn, rawPat, nodes);
 }
 
 /* ================= STUDIO / COMPOSER MODULE ================= */
@@ -5148,17 +5490,31 @@ function pbForget() { PB.resume = null; pbClearMark(); }
 /* another sound took over, or the view changed */
 function pbDetach() { if (PB.playing) pbSetBtn(PB.btn, false); PB.playing = false; PB.key = null; PB.btn = null; PB.lines = null; pbForget(); }
 function pbCancel() { pbDetach(); stopAll(); }
+/* highlight the whole word a syllable belongs to (grafted words light together);
+   words[] indexed to match e.syl[i].word/.wordTo, built by pbWordsMatching() */
+function pbWordLit(words) {
+  let cur = [];
+  return (from, to) => {
+    to = to == null ? from : to;
+    cur.forEach(w => { if (words[w]) words[w].classList.remove('wlit'); });
+    cur = [];
+    for (let w = from; w <= to; w++) { if (words[w]) { words[w].classList.add('wlit'); cur.push(w); } }
+  };
+}
 function pbRunLine(li, foot) {
   const L = PB.lines && PB.lines[li];
   if (!L) { pbFinish(); return; }
-  const p = exSeq(L.e);
+  const p = L.p || exSeq(L.e);            /* L.p: precomputed {seq,feet,cae} for pattern-only playback */
   let s0 = p.feet.findIndex(f => f >= foot); if (s0 < 0) s0 = 0;
   const lit = L.nodes ? litter(L.nodes) : null;
+  const wl = L.words ? pbWordLit(L.words) : null;
   play(p.seq.slice(s0), { pb: true, feet: p.feet.slice(s0), cae: p.cae.filter(c => c > foot),
     onStep: i => { const gi = i + s0; PB.pos = { line: li, foot: p.feet[gi] };
       if (lit) lit(gi);
+      if (wl && L.e && L.e.syl[gi]) wl(L.e.syl[gi].word, L.e.syl[gi].wordTo);
       if (L.groups) { L.groups.forEach(g => g.classList.remove('litf')); const g = L.groups[p.feet[gi]]; if (g) g.classList.add('litf'); } },
     onEnd: () => { if (L.groups) L.groups.forEach(g => g.classList.remove('litf'));
+      if (wl) wl(-1, -2);
       if (li + 1 < PB.lines.length) playLater(() => pbRunLine(li + 1, 0), 350); else pbFinish(); } });
 }
 function pbFinish() { pbSetBtn(PB.btn, false); PB.playing = false; PB.key = null; PB.btn = null; PB.lines = null; PB.pos = null; pbForget(); }
@@ -5195,7 +5551,28 @@ function pbFromFoot(ev, el) {
   else if (kind === 'lookup' && typeof playLookupCouplet === 'function') { const [m, i] = arg.split(','); playLookupCouplet(m, +i, start, btn); }
 }
 function pbNodes(host) { return host ? { nodes: [...host.querySelectorAll('.chip')].sort((a, b) => a.dataset.i - b.dataset.i), groups: [...host.querySelectorAll('.fgrp')] } : { nodes: null, groups: null }; }
+/* word spans (see pbWordLit) inside a host, ordered by data-w */
+function pbWords(host) {
+  if (!host || typeof host.querySelectorAll !== 'function') return null;
+  const els = [...host.querySelectorAll('.word')].sort((a, b) => a.dataset.w - b.dataset.w);
+  return els.length ? els : null;
+}
+/* only return the word spans if their count matches the scanned line's word count —
+   otherwise the mapping can't be trusted, so callers fall back to no word-highlight */
+function pbWordsMatching(host, e) {
+  if (!e || !e.syl || !e.syl.length) return null;
+  const need = e.syl[e.syl.length - 1].wordTo + 1;
+  const els = pbWords(host);
+  return (els && els.length === need) ? els : null;
+}
+/* pattern-only playback (no verse, no per-line resume beyond the one line): every ▶ that
+   plays a bare weight pattern (raw = e.g. "= - x / = = -") goes through this, not playPat() directly. */
+function pbTogglePattern(key, btn, raw, blkNodes) {
+  return pbToggle(key, btn, () => [{ p: patSeq(raw), nodes: blkNodes || null, groups: null }]);
+}
 window.pbToggle = pbToggle; window.pbFromFoot = pbFromFoot; window.pbCancel = pbCancel;
+window.pbNodes = pbNodes; window.pbWords = pbWords; window.pbWordsMatching = pbWordsMatching;
+window.pbTogglePattern = pbTogglePattern;
 
 function litter(nodes){ return i=>{ nodes.forEach(n=>n.classList.remove('lit')); const n=nodes[i]; if(n){n.classList.add('lit'); setTimeout(()=>n.classList.remove('lit'),240);} }; }
 
@@ -5295,16 +5672,38 @@ function chipsHTML(syl,feet,li,roCtx){
   if(!feet||!feet.length) return syl.map((s,i)=>chipHTML(s,i,li,overrides[i],gp[i])).join('');
   return feet.map((F,fi)=>F?`${F.cae?'<span class="caeu">//</span>':''}<span class="fgrp" data-f="${fi}"><span class="fname" onclick="pbFromFoot(event,this)" title="Play from this foot">${(()=>{const fm=cs==='ur'?(F.ur||''):(cs==='hi'?(typeof urduToDevanagari==='function'?urduToDevanagari(F.ur):''):''); return fm?`${fm} <i>${F.name||''}</i>`:`<i>${F.name||''}</i>`;})()}</span><span class="fchips">${F.idx.map(i=>chipHTML(syl[i],i,li,overrides[i],gp[i])).join('')}</span></span>`:'').join('');
 }
-/* Keep each syllable row on one line: shrink a row's --fit only as far as needed. */
+/* Wrap each whitespace-separated word of a display string in <span class="word" data-w="i">
+   for word-level playback highlight (pbWordsMatching). Leaves the whitespace itself outside
+   the spans so RTL/LTR flow is untouched. Returns the word count too, so callers can check
+   it against the scanner's word count before trusting the mapping. */
+function wrapWordsHTML(text) {
+  let i = 0;
+  const html = String(text == null ? '' : text).split(/(\s+)/).map(tok => {
+    if (tok === '' || /^\s+$/.test(tok)) return tok;
+    const h = `<span class="word" data-w="${i}">${tok}</span>`;
+    i++;
+    return h;
+  }).join('');
+  return { html, count: i };
+}
+
+/* Keep each syllable row on one line: shrink a row's --fit only as far as needed, down to
+   a floor of 0.7. Below that floor, stop shrinking and let the row wrap — but only between
+   feet (.fgrp), never inside one: adds .wrap-feet, which verse.css turns into a flex-wrap. */
 function fitChipRows(root){
   if (typeof document === 'undefined' || typeof document.querySelectorAll !== 'function') return;
+  const FLOOR = 0.7;
   (root || document).querySelectorAll('.cbox-scan .chips, .couplet-scan-box .chips').forEach(ch => {
     if (!ch.clientWidth) return;                      // hidden box: fitted when shown
+    ch.classList.remove('wrap-feet');
     ch.style.setProperty('--fit', '1');
-    for (let k = 0; k < 3 && ch.scrollWidth > ch.clientWidth + 1; k++) {
+    for (let k = 0; k < 4 && ch.scrollWidth > ch.clientWidth + 1; k++) {
       const cur = parseFloat(ch.style.getPropertyValue('--fit')) || 1;
-      ch.style.setProperty('--fit', Math.max(0.55, cur * ch.clientWidth / ch.scrollWidth * 0.99).toFixed(3));
+      const next = Math.max(FLOOR, cur * ch.clientWidth / ch.scrollWidth * 0.99);
+      ch.style.setProperty('--fit', next.toFixed(3));
+      if (next <= FLOOR) break;
     }
+    if (ch.scrollWidth > ch.clientWidth + 1) ch.classList.add('wrap-feet');
   });
 }
 window.fitChipRows = fitChipRows;
@@ -5324,13 +5723,20 @@ function alignVerse(ur,fam){
   const r=Scan.scanLine(ur); const f=r.fits.find(x=>fam.meters.includes(x.meter.id));
   alignCache[k]= f? Scan.explain(r,f):null; return alignCache[k];
 }
-function singAlong(ur,fam,host){
-  const e=alignVerse(ur,fam); if(!e) return;
-  const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
-  host.innerHTML=`<div class="chips ${cs==='ur'?'':'ltr'}">${chipsHTML(e.syl,e.feet)}</div>`;
-  const nodes=[...host.querySelectorAll('.chip')].sort((a,b)=>a.dataset.i-b.dataset.i), groups=[...host.querySelectorAll('.fgrp')];
-  playEx(e,nodes,groups);
+/* sing-along ▶: goes through the player (▶⇄❚❚, stop remembers the foot). key must be
+   unique per sing-along instance (caller's family+verse id); btn is the ▶ element itself.
+   Re-renders the chips fresh on every play (so a script switch is picked up); leaves them
+   alone when the tap is just stopping playback. */
+function singAlong(key,ur,fam,host,btn){
+  const e=alignVerse(ur,fam); if(!e||!host) return;
+  const stopping = (typeof PB!=='undefined' && PB.playing && PB.key===key);
+  if(!stopping){
+    const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
+    host.innerHTML=`<div class="chips ${cs==='ur'?'':'ltr'}">${chipsHTML(e.syl,e.feet)}</div>`;
+  }
+  pbToggle(key,btn,()=>[Object.assign({e},pbNodes(host))]);
 }
+window.singAlong = singAlong;
 
 
 /* ================= EAR & METER TAB (§5.5, §6.8) ================= */
@@ -5342,7 +5748,7 @@ function bestGhazalLinkForMeter(mId) {
   let hb = 0, gh = 0, mr = 0;
   if (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) {
     EXERCISES_DATA.forEach(e => {
-      const match = Array.isArray(e.m) ? e.m.some(x => String(x) === idStr) : String(e.m) === idStr;
+      const em = e.meters || e.m; const match = Array.isArray(em) ? em.some(x => String(x) === idStr) : String(em) === idStr;
       if (match) hb++;
     });
   }
@@ -5407,13 +5813,13 @@ function renderEarFams() {
 
           h += `<div class="ear-sing-item">`;
           h += `<div class="ear-sing-header">`;
-          h += `<span class="play sm" onclick="earSing(${gi}, 1)" aria-label="Sing misra 1" title="Sing misra">▶</span>`;
+          h += `<span class="play sm" role="button" tabindex="0" data-label="Sing misra" onclick="earSing(${gi}, 1, this)" aria-label="Sing misra 1" title="Sing misra">▶︎</span>`;
           h += `<div class="fam-label-wrap">`;
           h += `<div class="who faint tiny">${g.p} · ${g.ref}</div>`;
           h += `<div class="ear-verse-text ${isRtl ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${vDisp1}</div>`;
           if (vDisp2) {
             h += `<div class="ear-sing-header ear-sing-header-sub">`;
-            h += `<span class="play sm" onclick="earSing(${gi}, 2)" aria-label="Sing misra 2" title="Sing misra 2">▶</span>`;
+            h += `<span class="play sm" role="button" tabindex="0" data-label="Sing misra 2" onclick="earSing(${gi}, 2, this)" aria-label="Sing misra 2" title="Sing misra 2">▶︎</span>`;
             h += `<div class="ear-verse-text ${isRtl ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${vDisp2}</div>`;
             h += `</div>`;
           }
@@ -5488,7 +5894,7 @@ function famPulse(f) {
   return sylls(Scan.parseRaw(f.pattern)).map(t => t === 'x' ? 'l' : t);
 }
 
-function earSing(gi, which) {
+function earSing(gi, which, btn) {
   const f = FAMS.find(x => x.id === earCur);
   if (!f || !f.gz || !f.gz[gi]) return;
   const g = f.gz[gi];
@@ -5496,7 +5902,7 @@ function earSing(gi, which) {
   if (!host) return;
   const verseText = (which === 2 && g.ur2) ? g.ur2 : g.ur;
   if (typeof singAlong === 'function') {
-    singAlong(verseText, f, host);
+    singAlong('earsing:' + f.id + ':' + gi + ':' + which, verseText, f, host, btn);
   }
 }
 
@@ -5810,7 +6216,7 @@ function meterLabelInfo(mOrId) {
   let count = 0;
   if (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) {
     EXERCISES_DATA.forEach(e => {
-      const match = Array.isArray(e.m) ? e.m.some(x => String(x) === idStr) : String(e.m) === idStr;
+      const em = e.meters || e.m; const match = Array.isArray(em) ? em.some(x => String(x) === idStr) : String(em) === idStr;
       if (match) count++;
     });
   }
@@ -5842,7 +6248,7 @@ function meterLabelInfo(mOrId) {
   }
 
   if (!verse && typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) {
-    const exMatch = EXERCISES_DATA.find(e => Array.isArray(e.m) ? e.m.some(x => String(x) === idStr) : String(e.m) === idStr);
+    const exMatch = EXERCISES_DATA.find(e => { const em = e.meters || e.m; return Array.isArray(em) ? em.some(x => String(x) === idStr) : String(em) === idStr; });
     if (exMatch && exMatch.lines && exMatch.lines[0]) {
       const l = exMatch.lines[0];
       verse = { ur: l.ur || '', hi: l.hi || '', ro: l.ro || '', ascii: l.ascii || '' };
@@ -5908,7 +6314,7 @@ function renderMeterLabel(mOrId, opts) {
   let h = `<div class="meter-label-comp ${size==='lg'?'meter-label-lg':'meter-label-sm'}">`;
   h += `<div class="row">`;
   if (canPlay) {
-    h += `<span class="play sm" aria-label="Play meter rhythm" onclick="event.stopPropagation();playPat('${info.pattern}',[...this.closest('.meter-label-comp').querySelectorAll('.meter-label-pattern .blk')])">▶︎</span>`;
+    h += `<span class="play sm" role="button" tabindex="0" data-label="Play meter rhythm" aria-label="Play meter rhythm" onclick="event.stopPropagation();pbTogglePattern('meterlabel:${info.id}',this,'${info.pattern.replace(/'/g,"\\'")}',[...this.closest('.meter-label-comp').querySelectorAll('.meter-label-pattern .blk')])">▶︎</span>`;
   }
   h += `<div class="meter-label-body">`;
   h += `<div class="meter-label-primary ${isVerseUrdu ? 'urdu' : ((verseText || opts.couplet) ? (cs === 'ro' ? 'mono' : '') : 'mono')} ${opts.couplet ? 'ml-couplet' : ''}">${primaryText}</div>`;
@@ -6168,6 +6574,8 @@ const SAMPLES=[
 if ($('samples')) $('samples').innerHTML=SAMPLES.map((s,i)=>`<button class="chipbtn" onclick="loadSample(${i})">${s[0]}</button>`).join('');
 if ($('exSel')) $('exSel').innerHTML='<option value="">Pritchett\'s exercise ghazals (1–24)…</option>'+EXERCISES.map((e,i)=>`<option value="${i}">${e.g}. ${e.poet}</option>`).join('');
 let curEx=null;
+/* answer-key meters: Scan's own EXERCISES use .m, corpus ghazals (Mir/Ghalib browse) use .meters */
+function exMeters(ex){ const m = ex ? (ex.m || ex.meters || []) : []; return Array.isArray(m) ? m : [m]; }
 function loadEx(v){ if(v===''){curEx=null;return;} curEx=EXERCISES[+v]; if($('scanIn')) $('scanIn').value=curEx.L; ovr={}; selWord=null; runScan(); }
 function loadSample(i){ if($('scanIn')) $('scanIn').value=SAMPLES[i][1]; ovr={}; curEx=null; if($('exSel')) $('exSel').value=''; runScan(); }
 let ovr={}, lastScan=null, selWord=null, scanRolls={};
@@ -6365,7 +6773,7 @@ function runScan(){
         }
         h+=`</div>`; }
       /* answer key if exercise */
-      if(curEx){ const _hit=_fcd.every(f=>curEx.m.includes(f.meter.id)); h+=`<p class="tiny muted mt-loose">Pritchett's answer key (ch. 11): <b class="t">${curEx.m.map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b> — ${_hit?'<span class="ok-text">the scanner agrees ✓</span>':'<span class="no-text">the scanner disagrees ✗</span>'}</p>`; }
+      if(curEx){ const _hit=_fcd.every(f=>exMeters(curEx).includes(f.meter.id)); h+=`<p class="tiny muted mt-loose">Pritchett's answer key (ch. 11): <b class="t">${exMeters(curEx).map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b> — ${_hit?'<span class="ok-text">the scanner agrees ✓</span>':'<span class="no-text">the scanner disagrees ✗</span>'}</p>`; }
       h+=legendHTML('top');
       /* lines grouped into couplets (shers) of 2, each its own bordered card */
       for(let _i=0;_i<results.length;_i+=2){
@@ -6393,7 +6801,7 @@ function stackHTML(lines,results,common,tot){
     const nb=lastScan.near; let msg='';
     if(nb){ const f=famOfMeter[nb.g[0]]; const name=f?`<span class="urdu fam-inline">${famLabel(f).ur}</span>`:(nb.g[0]==='H'?'Mir\'s Hindi meter':'#'+nb.g.join('/'));
       msg=`<p class="small">${nb.n} of ${lines.length} lines fit ${name}. Look closely at line${nb.miss.length>1?'s':''} <b class="t">${nb.miss.join(', ')}</b> — a reading, an unwritten iẓāfat, a missing tashdīd, or the text itself.</p>`; }
-    let key=''; if(curEx) key=`<p class="tiny muted">Pritchett's answer key: <b class="t">${curEx.m.map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b></p>`;
+    let key=''; if(curEx) key=`<p class="tiny muted">Pritchett's answer key: <b class="t">${exMeters(curEx).map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b></p>`;
     return `<div class="card"><div class="verdict no-fit">No single bahr fits every line</div>${msg}${key}</div>`;
   }
   const members=[...new Set(common.fits.map(f=>f.meter))].sort((a,b)=>b.seq?(b.seq.length-(a.seq?a.seq.length:0)):0);
@@ -6421,8 +6829,8 @@ function stackHTML(lines,results,common,tot){
   } else body=rows.map((r,li)=>`<tr><td class="num">${li+1}</td>${r.map((x,k)=>cell(x,k,r)).join('')}</tr>`).join('');
   const alt=tot.filter(x=>x!==common).slice(0,2).filter(x=>x.c-common.c<1.5).map(x=>famOfMeter[x.id]?`<span class="urdu fam-inline sm">${famLabel(famOfMeter[x.id]).ur}</span>`:(x.id==='H'?'Hindi meter':'#'+x.id));
   let key='';
-  if(curEx){ const hit=common.fits.every(f=>curEx.m.includes(f.meter.id));
-    key=`<div class="card key-card"><span class="tiny muted">Pritchett's answer key (ch. 11):</span> <b class="t">${curEx.m.map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b> — ${hit?'<span class="ok-text">the scanner agrees ✓</span>':'<span class="no-text">the scanner disagrees ✗</span>'}</div>`; }
+  if(curEx){ const hit=common.fits.every(f=>exMeters(curEx).includes(f.meter.id));
+    key=`<div class="card key-card"><span class="tiny muted">Pritchett's answer key (ch. 11):</span> <b class="t">${exMeters(curEx).map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b> — ${hit?'<span class="ok-text">the scanner agrees ✓</span>':'<span class="no-text">the scanner disagrees ✗</span>'}</div>`; }
   return `<div class="card">${key}<div class="row tight-top"><span class="pill ${vc}">${vt}</span><span class="tiny muted">all ${lines.length} lines stacked</span></div>
     ${m.id!=='H'&&!fam?'':''}${fam?`<div class="small muted">Same bahr as</div><div class="fam-name">${famLabel(fam).ur}</div><div class="ro">${famLabel(fam).ro} — ${famLabel(fam).ref}</div>`:`<div class="verdict">${meterLabel(m)}</div>`}
     <div class="grid"><table>${head}${body}</table></div>
@@ -6454,8 +6862,8 @@ function stackInner(lines,results,common,tot){
   } else body=rows.map((r,li)=>`<tr><td class="num">${li+1}</td>${r.map((x,k)=>cell(x,k,r)).join('')}</tr>`).join('');
   const alt=tot.filter(x=>x!==common).slice(0,2).filter(x=>x.c-common.c<1.5).map(x=>famOfMeter[x.id]?`<span class="urdu fam-inline sm">${famLabel(famOfMeter[x.id]).ur}</span>`:(x.id==='H'?'Hindi meter':'#'+x.id));
   let key='';
-  if(curEx){ const hit=common.fits.every(f=>curEx.m.includes(f.meter.id));
-    key=`<div class="card key-card"><span class="tiny muted">Pritchett's answer key (ch. 11):</span> <b class="t">${curEx.m.map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b> — ${hit?'<span class="ok-text">the scanner agrees ✓</span>':'<span class="no-text">the scanner disagrees ✗</span>'}</div>`; }
+  if(curEx){ const hit=common.fits.every(f=>exMeters(curEx).includes(f.meter.id));
+    key=`<div class="card key-card"><span class="tiny muted">Pritchett's answer key (ch. 11):</span> <b class="t">${exMeters(curEx).map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b> — ${hit?'<span class="ok-text">the scanner agrees ✓</span>':'<span class="no-text">the scanner disagrees ✗</span>'}</div>`; }
   return `${key}<div class="row tight-top"><span class="pill ${vc}">${vt}</span><span class="tiny muted">all ${lines.length} lines stacked</span></div>
     ${m.id!=='H'&&!fam?'':''}${fam?`<div class="small muted">Same bahr as</div><div class="fam-name">${famLabel(fam).ur}</div><div class="ro">${famLabel(fam).ro} — ${famLabel(fam).ref}</div>`:`<div class="verdict">${meterLabel(m)}</div>`}
     <div class="grid"><table>${head}${body}</table></div>
@@ -6548,6 +6956,18 @@ function playCouplet(li1,li2,start,btn){
     return out;
   }, start);
 }
+/* ▶ at the top of Scan: play every line in order, chips lighting, through the shared player */
+function scanPlayAll(start,btn){
+  if(!lastScan||!lastScan.results||!lastScan.results.length) return;
+  btn = btn || $('btnPlayCouplet');
+  pbToggle('scan:all', btn, ()=>{
+    const out=[];
+    lastScan.results.forEach((r,li)=>{ const f=(lastScan.forced&&lastScan.forced[li])||r.fits[0];
+      if(f && $('sc'+li)) out.push(Object.assign({e:Scan.explain(r,f)}, pbNodes($('sc'+li)))); });
+    return out;
+  }, start);
+}
+window.scanPlayAll = scanPlayAll;
 function playScan(li,start,btn){ if(!lastScan||!lastScan.results[li]) return;
   btn = btn || document.querySelector(`[data-pb="line:${li}"]`);
   pbToggle('line:'+li, btn, ()=>{ const r=lastScan.results[li]; const f=(lastScan.forced&&lastScan.forced[li])||r.fits[0];
@@ -6631,10 +7051,22 @@ let lookupFilterKind = 'all';
 /* Full couplets for a meter, for Look up. First the family's famous misras, each
    located in a corpus so we can show the whole sher; then, if none, the matla of
    ghazals tagged with this meter (Handbook, then Ghalib, then Mir). */
+/* wrapWordsHTML()'d for playback highlight, but getLineDisplay() can tack on an
+   "approximate" badge <span> whose own attribute spaces would corrupt naive whitespace
+   splitting — strip it first and re-append it outside the word spans. */
+function dispWordWrap(l, cs) {
+  const full = (typeof getLineDisplay === 'function') ? getLineDisplay(l, cs) : (l[cs] || l.ur || '');
+  const m = /^([\s\S]*?)(\s*<span class="pill[^>]*>[\s\S]*?<\/span>)\s*$/.exec(full);
+  const plain = m ? m[1] : full;
+  const badge = m ? m[2] : '';
+  const w = (typeof wrapWordsHTML === 'function') ? wrapWordsHTML(plain) : { html: plain, count: 0 };
+  return { html: w.html + badge, count: w.count };
+}
+
 var _coupletCache = {};
 function _meterCollections() {
   const out = [];
-  if (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) out.push(['handbook', EXERCISES_DATA, it => it.poet || 'Handbook', it => it.m]);
+  if (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) out.push(['handbook', EXERCISES_DATA, it => it.poet || 'Handbook', it => it.meters || it.m]);
   if (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) out.push(['ghalib', GHALIB_EXT_DATA, () => 'Ghalib', it => it.meters || it.meter || it.m]);
   if (typeof MIR_EXT_DATA !== 'undefined' && Array.isArray(MIR_EXT_DATA)) out.push(['mir', MIR_EXT_DATA, () => 'Mir', it => it.meters || it.meter || it.m]);
   return out;
@@ -6740,18 +7172,23 @@ function renderFams() {
         if (note) h += `<div class="meter-meta-notes">${note}</div>`;
       }
 
-      // 3. Famous couplets in this meter: the same couplet box as the reader (▶, scan, highlight)
+      // 3. Famous couplets in this meter: reference, not scansion — ▶ lights up the words of
+      // the couplet itself; a "Scan" toggle (closed by default) reveals the syllable chips.
       if (cps.length) {
-        const disp = l => (typeof getLineDisplay === 'function') ? getLineDisplay(l, cs) : (l[cs] || l.ur);
         const langDir = cs === 'ur' ? 'lang="ur" dir="rtl"' : (cs === 'hi' ? 'lang="hi"' : 'lang="ur-Latn" dir="ltr"');
         h += `<div class="meter-couplets">`;
         h += `<div class="fam-section-label">Famous couplets in this bahr</div>`;
         cps.forEach((c, i) => {
+          const w1 = dispWordWrap(c.l1, cs);
+          const w2 = dispWordWrap(c.l2, cs);
           h += `<div class="card couplet-card">`;
           h += `<div class="row couplet-head"><a class="vnum" href="#/ghazals/${c.col}/${c.id}" onclick="event.stopPropagation()">${c.poet}${c.col !== 'handbook' ? ' ' + c.id : ''} ›</a>`;
-          h += `<div class="row couplet-acts"><span class="play sm" role="button" tabindex="0" aria-label="Play couplet" data-label="Play couplet" data-pb="lookup:${idStr},${i}" onclick="event.stopPropagation();playLookupCouplet('${idStr}',${i},null,this)">▶︎</span></div></div>`;
-          h += `<div class="cbox-verse"><div class="vline-lg" ${langDir}>${disp(c.l1)}</div><div class="vline-lg" ${langDir}>${disp(c.l2)}</div></div>`;
-          h += `<div class="couplet-scan-box"><div id="lkScan_${idStr}_${i}_1"></div><div id="lkScan_${idStr}_${i}_2"></div></div>`;
+          h += `<div class="row couplet-acts">`;
+          h += `<button class="scan-toggle-btn tiny" id="lkScanBtn_${idStr}_${i}" aria-expanded="false" onclick="event.stopPropagation();toggleLookupScan('${idStr}',${i})">Scan ▾</button>`;
+          h += `<span class="play sm" role="button" tabindex="0" aria-label="Play couplet" data-label="Play couplet" data-pb="lookup:${idStr},${i}" onclick="event.stopPropagation();playLookupCouplet('${idStr}',${i},null,this)">▶︎</span>`;
+          h += `</div></div>`;
+          h += `<div class="cbox-verse"><div class="vline-lg" id="lkWords_${idStr}_${i}_1" ${langDir}>${w1.html}</div><div class="vline-lg" id="lkWords_${idStr}_${i}_2" ${langDir}>${w2.html}</div></div>`;
+          h += `<div class="couplet-scan-box hidden" id="lkScanBox_${idStr}_${i}"><div id="lkScan_${idStr}_${i}_1"></div><div id="lkScan_${idStr}_${i}_2"></div></div>`;
           h += `</div>`;
         });
         h += `</div>`;
@@ -6783,13 +7220,28 @@ function renderFams() {
     return h;
   }).join('');
 
-  // fill the expanded row's couplet scans
-  if (lookupExpandedId != null && typeof renderLineScan === 'function') {
-    coupletsForMeter(lookupExpandedId, 2).forEach((c, i) => {
-      [c.l1, c.l2].forEach((l, k) => { const el = $(`lkScan_${lookupExpandedId}_${i}_${k + 1}`); if (el) renderLineScan(l.ur, el, l, lookupExpandedId); });
-    });
+}
+
+/* per-couplet "Scan" toggle: closed by default (reference, not scansion); render the
+   syllable chips lazily the first time a box is opened, then just show/hide it. */
+function toggleLookupScan(mId, i) {
+  const box = $(`lkScanBox_${mId}_${i}`), btn = $(`lkScanBtn_${mId}_${i}`);
+  if (!box) return;
+  const opening = box.classList.contains('hidden');
+  box.classList.toggle('hidden');
+  if (btn) { btn.textContent = opening ? 'Scan ▴' : 'Scan ▾'; btn.setAttribute('aria-expanded', opening ? 'true' : 'false'); }
+  if (opening) {
+    if (!box.dataset.filled) {
+      const c = coupletsForMeter(mId, 2)[i];
+      if (c && typeof renderLineScan === 'function') {
+        [c.l1, c.l2].forEach((l, k) => { const el = $(`lkScan_${mId}_${i}_${k + 1}`); if (el) renderLineScan(l.ur, el, l, mId); });
+        box.dataset.filled = '1';
+      }
+    }
+    if (typeof fitChipRows === 'function') fitChipRows(box);
   }
 }
+window.toggleLookupScan = toggleLookupScan;
 
 function playLookupCouplet(mId, i, start, btn) {
   const c = coupletsForMeter(mId, 2)[i]; if (!c) return;
@@ -6800,24 +7252,28 @@ function playLookupCouplet(mId, i, start, btn) {
     [c.l1, c.l2].forEach((l, k) => {
       const r = Scan.scanLine(l.ur); if (!r || !r.fits || !r.fits.length) return;
       const f = r.fits.find(x => String(x.meter.id) === String(mId)) || r.fits[0];
-      out.push(Object.assign({ e: Scan.explain(r, f) }, pbNodes($(`lkScan_${mId}_${i}_${k + 1}`))));
+      const e = Scan.explain(r, f);
+      const wordsHost = $(`lkWords_${mId}_${i}_${k + 1}`);
+      out.push(Object.assign({ e, words: (typeof pbWordsMatching === 'function') ? pbWordsMatching(wordsHost, e) : null },
+        pbNodes($(`lkScan_${mId}_${i}_${k + 1}`))));
     });
     return out;
   }, start);
 }
 window.playLookupCouplet = playLookupCouplet;
 
-function famPulsePlay(id, el) {
+function famPulsePlay(id, btn) {
   const f = FAMS.find(x => x.id === id);
   if (!f) return;
-  const nodes = el && el.parentNode && typeof el.parentNode.querySelectorAll === 'function' ? [...el.parentNode.querySelectorAll('.blk')] : null;
-  playPat(f.pattern, nodes);
+  const host = btn && btn.closest ? btn.closest('.fam-strip-wrap, .row') : null;
+  const nodes = host && typeof host.querySelectorAll === 'function' ? [...host.querySelectorAll('.blk')] : null;
+  if (typeof pbTogglePattern === 'function') pbTogglePattern('fampulse:' + id, btn, f.pattern, nodes);
 }
 
-function famSing(id, gi) {
+function famSing(id, gi, btn) {
   const f = FAMS.find(x => x.id === id);
   if (!f || !f.gz || !f.gz[gi]) return;
-  singAlong(f.gz[gi].ur, f, $('fs-' + id + '-' + gi));
+  if (typeof singAlong === 'function') singAlong('famsing:' + id + ':' + gi, f.gz[gi].ur, f, $('fs-' + id + '-' + gi), btn);
 }
 
 window.renderFams = renderFams;
@@ -6975,9 +7431,20 @@ const CONSTR = [
   { t: 'iẓāfat on a consonant', d: 'The ِ joins the last consonant into one flexible syllable.', ex: [['ملک ← ملکِ', 'mulk → mulk-e', '= -', '= x', 'mul-ke'], ['لب ← لبِ', 'lab → lab-e', '=', '- x', 'la-be']] },
   { t: 'iẓāfat after ā', d: 'An extra syllable appears; the ā stays long.', ex: [['وفا ← وفائے', 'vafā → vafā-e', '- =', '- = x', 'va-fā-e']] },
   { t: 'iẓāfat after ī', d: 'Usually the ī turns into a consonant.', ex: [['شوخی ← شوخیِ', 'shoḳhī → shoḳhī-e', '= x', '= - x', 'sho-khi-ye']] },
+  { t: 'iẓāfat after ū', d: 'Same pattern as ā and ī: one extra flexible syllable, written with an added ی.', ex: [['کو ← کوئے', 'kū → kū-e', '=', '= x', 'kū-e']] },
+  { t: 'iẓāfat, short Arabic word', d: 'A two-consonant Arabic word may double its last consonant (tashdīd) before the iẓāfat. Safest to scan both syllables as flexible.', ex: [['فن ← فنِ / فنّ', 'fan → fan-e / fann-e', '=', 'x x', 'fa-ne / fan-ne']] },
   { t: 'o, "and"', d: 'After a consonant it joins it, like iẓāfat.', ex: [['دین و دل', 'dīn o dil', '= - =', '= x =', 'dī-no dil']] },
   { t: 'al, "the"', d: 'Read the word before as if it merely ended in an extra ل.', ex: [['عالم الغیب', 'ʿālam ul-ġhaib', '= - = = -', '= - = = -', 'ʿā-la-mul ġhai-b']] }
 ];
+
+/* Build a PB-compatible "line" from a raw pattern string ('=', '-', 'x' tokens)
+   and the .blk nodes already rendered for it, so every ▶ in this file goes
+   through the shared pbToggle controller (round 2 G1) instead of calling
+   play() directly. */
+function rawPbLine(raw, resolve, host) {
+  const toks = sylls(Scan.parseRaw(raw)).map(t => resolve ? resolve(t) : t);
+  return { e: { syl: toks.map(t => ({ resolved: t })) }, nodes: host ? [...host.querySelectorAll('.blk')] : null, groups: null };
+}
 
 function renderConstr() {
   const host = $('constr');
@@ -6991,7 +7458,7 @@ function renderConstr() {
           <div class="urdu constr-urdu">${e[0]}</div>
           <div class="ro dim small constr-ro">${e[1]} → ${e[4]}</div>
           <div class="row constr-row">
-            <button class="icon-btn play sm" onclick="cPlay(${ci},${ei},this)" aria-label="Play example" title="Play">▶︎</button>
+            <span class="play sm" role="button" tabindex="0" data-label="Play example" aria-label="Play example" onclick="cPlay(${ci},${ei},this)">▶︎</span>
             <div class="strip">${strip(Scan.parseRaw(e[2]))}</div>
             <span class="L mono constr-arrow">→</span>
             <div class="strip">${strip(Scan.parseRaw(e[3]))}</div>
@@ -7002,17 +7469,53 @@ function renderConstr() {
   `).join('');
 }
 
-function cPlay(ci, ei, el) {
+function cPlay(ci, ei, btn) {
   const e = CONSTR[ci].ex[ei];
-  const a = sylls(Scan.parseRaw(e[2])).map(t => t === 'x' ? 'l' : t);
-  const b = sylls(Scan.parseRaw(e[3])).map(t => t === 'x' ? 's' : t);
-  const strips = el.parentNode.querySelectorAll('.strip');
-  const na = [...strips[0].querySelectorAll('.blk')], nb = [...strips[1].querySelectorAll('.blk')];
-  const bpm = (typeof settings !== 'undefined' && settings.bpm) ? settings.bpm : 120;
-  const beat = 60 / bpm;
-  const d = play(a, { onStep: (typeof litter === 'function') ? litter(na) : undefined });
-  setTimeout(() => play(b, { onStep: (typeof litter === 'function') ? litter(nb) : undefined }), (d + beat * 1.5) * 1000);
+  const strips = btn.parentNode.querySelectorAll('.strip');
+  const lineA = rawPbLine(e[2], t => t === 'x' ? 'l' : t, strips[0]);
+  const lineB = rawPbLine(e[3], t => t === 'x' ? 's' : t, strips[1]);
+  pbToggle('constr:' + ci + ':' + ei, btn, () => [lineA, lineB]);
 }
+window.cPlay = cPlay;
+
+/* Rules about how a single word divides into syllables (Handbook ch. 1.4,
+   1.3) — no before/after transform, just the word and its reading. */
+const SPECIAL_SYLL = [
+  { t: 'Three-consonant Arabic/Persian words', d: 'A word made of three consonants and no vowel letters usually splits two-then-one, not one-then-two.', ex: [['ملک', 'mulk', '= -'], ['وقت', 'vaqt', '= -'], ['ورق', 'varaq', '- =']], note: 'A minority — varaq, qasam, magar, ġhazal, nikal — split one-then-two instead.' },
+  { t: 'و and ی: vowel or consonant', d: 'و and ی count as vowels only as the second letter of a syllable; starting a syllable, or standing alone, they are ordinary consonants v/y.', ex: [['کو', 'ko', '='], ['وقت', 'vaqt', '= -'], ['یار', 'yār', '= -']] }
+];
+
+function renderSpecialSyll() {
+  const host = $('specialSyll');
+  if (!host) return;
+  host.innerHTML = SPECIAL_SYLL.map((c, ci) => `
+    <div class="card constr-card">
+      <h3 class="constr-title">${c.t}</h3>
+      <p class="constr-desc dim small">${c.d}</p>
+      <div class="row constr-row special-syll-row">
+        ${c.ex.map((e, ei) => `
+          <div class="constr-ex special-syll-ex">
+            <div class="urdu constr-urdu">${e[0]}</div>
+            <div class="ro dim small constr-ro">${e[1]}</div>
+            <div class="row">
+              <span class="play sm" role="button" tabindex="0" data-label="Play example" aria-label="Play example" onclick="ssPlay(${ci},${ei},this)">▶︎</span>
+              <div class="strip">${strip(Scan.parseRaw(e[2]))}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      ${c.note ? `<p class="constr-desc dim small">${c.note}</p>` : ''}
+    </div>
+  `).join('');
+}
+
+function ssPlay(ci, ei, btn) {
+  const e = SPECIAL_SYLL[ci].ex[ei];
+  const strip_ = btn.parentNode.querySelector('.strip');
+  const line = rawPbLine(e[2], null, strip_);
+  pbToggle('special:' + ci + ':' + ei, btn, () => [line]);
+}
+window.ssPlay = ssPlay;
 
 /* App Initialization */
 if ($('footPulse')) $('footPulse').checked = settings.footPulse !== false;
@@ -7035,6 +7538,7 @@ if (typeof renderFams === 'function') renderFams();
 if (typeof wdNext === 'function') wdNext();
 if (typeof fxNext === 'function') fxNext();
 if (typeof renderConstr === 'function') renderConstr();
+if (typeof renderSpecialSyll === 'function') renderSpecialSyll();
 if (typeof renderHandbook === 'function') renderHandbook();
 if (typeof renderExercises === 'function') renderExercises();
 if (typeof renderDictionary === 'function') renderDictionary();
@@ -7045,7 +7549,549 @@ if (typeof handleRoute === 'function') {
   handleRoute();
 }
 
-/* ================= SHARED DRILL ENGINE ================= */
+/* ================= SHARED DRILL ENGINE (round 2, G3) =================
+   One engine, mounted into both Weight › Drill and Meter › Drill by
+   mountDrill('weight'|'meter'). Generates fresh questions on the fly from
+   the word bank (GLOSSARY_DATA) and the three verse corpora (EXERCISES_DATA /
+   GHALIB_EXT_DATA / MIR_EXT_DATA) via the scanner (Scan.scanLine/explain),
+   confident scans only (verdictOf(fit.c)[0]==='ok', i.e. cost <= 2.5).
+   Reuses the *ideas* in 21-learn.js (wdNext/fxNext) and 17-ear.js
+   (iomNew/wtNew/renderWeak) but not their code or DOM ids — those stay in
+   place, unlinked. Every ▶ here is pattern-only playback (no real-line audio
+   yet), routed through pbTogglePattern when the Player agent adds it; see
+   drPlayToggle()'s fallback and the final report. */
+
+const DR = { weight: null, meter: null };
+
+const DR_TYPES = {
+  weight: [
+    { key: 'weigh', label: 'Weigh the word' },
+    { key: 'flexfixed', label: 'Flexible or fixed' },
+    { key: 'izafat', label: 'Iẓāfat' },
+    { key: 'grafting', label: 'Grafting' },
+    { key: 'ojoin', label: "'O' joins" }
+  ],
+  meter: [
+    { key: 'bahr', label: 'Which bahr' },
+    { key: 'limping', label: 'In the bahr, or limping?' },
+    { key: 'foot', label: 'Which foot' },
+    { key: 'ghazal', label: 'Which ghazal' }
+  ]
+};
+const DR_SOURCES = [
+  { key: 'handbook', label: 'Handbook' },
+  { key: 'ghalib', label: 'Ghalib' },
+  { key: 'mir', label: 'Mir' }
+];
+
+/* ---------- small utilities ---------- */
+function drSym(w) { return w === 'l' ? '=' : w === 's' ? '–' : w === 'x' ? 'x' : '·'; }
+function drPatText(seq) { return seq.map(drSym).join(' '); }
+function drShuffle(a) { return a.map(v => [Math.random(), v]).sort((x, y) => x[0] - y[0]).map(x => x[1]); }
+function drPick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function drEsc(s) {
+  if (typeof escapeHtml === 'function') return escapeHtml(s);
+  return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function drLabelForSource(k) { return k === 'handbook' ? 'Handbook' : k === 'ghalib' ? 'Ghalib' : k === 'mir' ? 'Mir' : k; }
+function drCapFirst(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+function drRawFromSeq(seq) { return seq.map(w => w === 'l' ? '=' : w === 's' ? '-' : w === 'x' ? 'x' : '-').join(' '); }
+
+function drFlipOne(seq) {
+  const t = seq.slice();
+  const i = Math.floor(Math.random() * t.length);
+  t[i] = t[i] === 'l' ? 's' : (t[i] === 's' ? 'l' : (Math.random() < 0.5 ? 'l' : 's'));
+  return t;
+}
+function drDistractors(correct, n) {
+  const out = [], seen = new Set([correct.join('|')]);
+  for (let tries = 0; out.length < n && tries < 30; tries++) {
+    const d = drFlipOne(correct), k = d.join('|');
+    if (!seen.has(k)) { seen.add(k); out.push(d); }
+  }
+  return out;
+}
+
+function drCorpusFor(key) {
+  if (key === 'handbook') return (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) ? EXERCISES_DATA : [];
+  if (key === 'ghalib') return (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) ? GHALIB_EXT_DATA : [];
+  if (key === 'mir') return (typeof MIR_EXT_DATA !== 'undefined' && Array.isArray(MIR_EXT_DATA)) ? MIR_EXT_DATA : [];
+  return [];
+}
+function drActiveSources(tab) {
+  const st = DR[tab], keys = DR_SOURCES.map(x => x.key);
+  if (!st || !st.sources || st.sources.has('all') || !st.sources.size) return keys;
+  return keys.filter(k => st.sources.has(k));
+}
+function drActiveTypes(tab) {
+  const st = DR[tab], keys = DR_TYPES[tab].map(x => x.key);
+  if (!st || !st.types || st.types.has('all') || !st.types.size) return keys;
+  return keys.filter(k => st.types.has(k));
+}
+
+/* sample one confident-scan (cost <= 2.5) real line from the chosen sources.
+   Lazy: a handful of random line + Scan.scanLine tries, never the whole corpus. */
+function drSample(sources) {
+  for (let tries = 0; tries < 25; tries++) {
+    const src = drPick(sources);
+    const corpus = drCorpusFor(src);
+    if (!corpus.length) continue;
+    const item = drPick(corpus);
+    if (!item.lines || !item.lines.length) continue;
+    const line = drPick(item.lines);
+    if (!line || !line.ur) continue;
+    let res, fit;
+    try { res = Scan.scanLine(line.ur); fit = res.fits && res.fits[0]; } catch (e) { continue; }
+    if (!fit || typeof verdictOf !== 'function' || verdictOf(fit.c)[0] !== 'ok') continue;
+    return { source: src, item, line, res, fit };
+  }
+  return null;
+}
+
+/* group a real Scan.explain() syllable list back into the per-word/per-graft
+   "steps" the engine scored, and match each scanner note to its segment (by
+   the exact raw phrase text explain() already put on the note). */
+function drNoteSegments(res, exp) {
+  const segs = [];
+  let i = 0;
+  while (i < exp.syl.length) {
+    const s = exp.syl[i]; let j = i;
+    while (j < exp.syl.length && exp.syl[j].word === s.word && exp.syl[j].wordTo === s.wordTo) j++;
+    segs.push({ from: s.word, to: s.wordTo, syl: exp.syl.slice(i, j) });
+    i = j;
+  }
+  const wordsRaw = res.words.map(w => w.raw);
+  const out = [];
+  (exp.notes || []).forEach(n => {
+    const seg = segs.find(sg => !sg._used && wordsRaw.slice(sg.from, sg.to + 1).join(' ') === n.word);
+    if (seg) { seg._used = true; out.push({ seg, note: n.note, phrase: n.word }); }
+  });
+  return out;
+}
+
+function drParseWt(wt) {
+  return String(wt).split(',').map(p => p.replace(/[()]/g, '').trim()).filter(Boolean)
+    .map(p => p.split(/\s+/).map(sym => sym === '=' ? 'l' : (sym === '-' ? 's' : 'x')));
+}
+
+/* ---------- WEIGHT question generators ---------- */
+function drGenWeigh() {
+  if (typeof GLOSSARY_DATA === 'undefined' || !GLOSSARY_DATA.length) return null;
+  for (let tries = 0; tries < 15; tries++) {
+    const item = drPick(GLOSSARY_DATA);
+    const pats = drParseWt(item.wt);
+    const correct = pats[0];
+    if (!correct || correct.length < 1 || correct.length > 4) continue;
+    const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
+    const wordDisp = (typeof getDictWordDisplay === 'function') ? getDictWordDisplay(item, cs) : (item.ascii || item.syl || '');
+    const distractors = drDistractors(correct, 2);
+    const choices = drShuffle([correct, ...distractors]);
+    return {
+      type: 'weigh', source: 'handbook',
+      playSeq: null,
+      promptHTML: `<div class="dr-word ${cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${drEsc(wordDisp)}</div>` +
+        (item.mean ? `<p class="dim small">${drEsc(item.mean)}</p>` : `<p class="dim small">Weigh this word.</p>`),
+      choices: choices.map(c => ({ html: `<span class="mono">${drPatText(c)}</span>`, seq: c })),
+      correctIndex: choices.findIndex(c => c === correct),
+      reason: `Weight: ${drPatText(correct)}.`
+    };
+  }
+  return null;
+}
+
+function drGenFlexFixed() {
+  if (typeof GLOSSARY_DATA === 'undefined' || !GLOSSARY_DATA.length) return null;
+  for (let tries = 0; tries < 15; tries++) {
+    const item = drPick(GLOSSARY_DATA);
+    const pats = drParseWt(item.wt);
+    if (!pats.length) continue;
+    const flexible = pats.some(p => p.includes('x'));
+    const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
+    const wordDisp = (typeof getDictWordDisplay === 'function') ? getDictWordDisplay(item, cs) : (item.ascii || item.syl || '');
+    const opts = drShuffle([{ html: 'Flexible', val: true }, { html: 'Fixed', val: false }]);
+    return {
+      type: 'flexfixed', source: 'handbook',
+      playSeq: null,
+      promptHTML: `<div class="dr-word ${cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${drEsc(wordDisp)}</div><p class="dim small">Flexible, or fixed?</p>`,
+      choices: opts,
+      correctIndex: opts.findIndex(o => o.val === flexible),
+      reason: flexible ? `Flexible — it can scan as ${drPatText(pats[0])}${pats[1] ? ` or ${drPatText(pats[1])}` : ''}.`
+                        : `Fixed — always ${drPatText(pats[0])}.`
+    };
+  }
+  return null;
+}
+
+function drGenNoteType(sources, matcher) {
+  for (let tries = 0; tries < 20; tries++) {
+    const s = drSample(sources);
+    if (!s) continue;
+    let exp;
+    try { exp = Scan.explain(s.res, s.fit); } catch (e) { continue; }
+    const withNotes = drNoteSegments(s.res, exp);
+    const hit = withNotes.find(w => matcher(w.note));
+    if (!hit) continue;
+    const correct = hit.seg.syl.map(x => x.resolved);
+    if (!correct.length) continue;
+    const distractors = drDistractors(correct, 2);
+    const choices = drShuffle([correct, ...distractors]);
+    const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
+    const phraseDisp = cs === 'ur' ? hit.phrase : (typeof translitText === 'function' ? translitText(hit.phrase, cs) : hit.phrase);
+    return {
+      type: 'note', source: s.source,
+      playSeq: null, revealSyl: hit.seg.syl,
+      promptHTML: `<div class="dr-word ${cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${drEsc(phraseDisp)}</div><p class="dim small">How is this read?</p>`,
+      choices: choices.map(c => ({ html: `<span class="mono">${drPatText(c)}</span>`, seq: c })),
+      correctIndex: choices.findIndex(c => c === correct),
+      reason: drCapFirst(hit.note) + '.'
+    };
+  }
+  return null;
+}
+
+/* ---------- METER question generators ---------- */
+function drFamText(f) {
+  const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
+  const g = f.gz && f.gz[0];
+  const verse = g ? ((typeof getLineDisplay === 'function') ? getLineDisplay(g, cs) : (g[cs] || g.ur)) : '';
+  return verse || f.pattern || String(f.id);
+}
+
+function drGenBahr(sources) {
+  if (typeof FAMS === 'undefined' || typeof famOfMeter === 'undefined') return null;
+  for (let tries = 0; tries < 20; tries++) {
+    const s = drSample(sources);
+    if (!s) continue;
+    const fam = famOfMeter[s.fit.meter.id] || famOfMeter[String(s.fit.meter.id)];
+    if (!fam) continue;
+    const pool = FAMS.filter(f => !f.hindi && f.id !== fam.id);
+    if (pool.length < 2) continue;
+    const opts = drShuffle([fam, ...drShuffle(pool).slice(0, 3)]).slice(0, Math.min(4, pool.length + 1));
+    let exp; try { exp = Scan.explain(s.res, s.fit); } catch (e) { continue; }
+    return {
+      type: 'bahr', source: s.source,
+      playSeq: exp.syl.map(x => x.resolved),
+      promptHTML: `<p class="dim small">Listen, then name the bahr.</p>`,
+      choices: opts.map(f => ({ html: `<span class="dr-verse ${(typeof currentScript !== 'undefined' && currentScript === 'ur') ? 'urdu' : ''}">${drEsc(drFamText(f))}</span>`, fam: f })),
+      correctIndex: opts.findIndex(f => f.id === fam.id),
+      reason: `Same bahr as “${drEsc(drFamText(fam))}”.`
+    };
+  }
+  return null;
+}
+
+function drGenGhazal(sources) {
+  const pool = [];
+  sources.forEach(src => drCorpusFor(src).forEach(item => { if (item.lines && item.lines.length) pool.push({ src, item }); }));
+  if (pool.length < 3) return null;
+  for (let tries = 0; tries < 20; tries++) {
+    const s = drSample(sources);
+    if (!s) continue;
+    // distractors must be in a different meter, or the pattern alone can't decide the answer
+    const mid = String(s.fit.meter.id);
+    const metersOf = it => { const m = it.meters || it.m || it.meter; return (Array.isArray(m) ? m : [m]).map(String); };
+    const distractors = drShuffle(pool.filter(p => !(p.item === s.item && p.src === s.source) && !metersOf(p.item).includes(mid))).slice(0, 2);
+    if (distractors.length < 2) continue;
+    let exp; try { exp = Scan.explain(s.res, s.fit); } catch (e) { continue; }
+    const optsRaw = drShuffle([
+      { item: s.item, src: s.source, line: s.line },
+      ...distractors.map(d => ({ item: d.item, src: d.src, line: drPick(d.item.lines) }))
+    ]);
+    const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
+    const isRtl = cs === 'ur';
+    return {
+      type: 'ghazal', source: s.source,
+      playSeq: exp.syl.map(x => x.resolved),
+      promptHTML: `<p class="dim small">Only the pattern plays. Which verse rides on it?</p>`,
+      choices: optsRaw.map(o => {
+        const txt = o.line[cs] || o.line.ur;
+        return {
+          html: `<span class="dr-verse ${isRtl ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${drEsc(txt)}</span>` +
+                `<span class="tiny faint dr-choice-meta"> — ${drEsc(o.item.poet || drLabelForSource(o.src))}</span>`,
+          match: o
+        };
+      }),
+      correctIndex: optsRaw.findIndex(o => o.item === s.item && o.src === s.source),
+      reason: `“${drEsc(s.line[cs] || s.line.ur)}” — ${drEsc(s.item.poet || drLabelForSource(s.source))}.`
+    };
+  }
+  return null;
+}
+
+function drGenLimping(sources) {
+  for (let tries = 0; tries < 15; tries++) {
+    const s = drSample(sources);
+    if (!s) continue;
+    let exp; try { exp = Scan.explain(s.res, s.fit); } catch (e) { continue; }
+    const base = exp.syl.map(x => x.resolved);
+    if (base.length < 4) continue;
+    let seq, inBahr, why;
+    if (Math.random() < 0.5) { seq = base.slice(); inBahr = true; why = 'it is in true bahr'; }
+    else {
+      let got = null, reason = '';
+      for (let k = 0; k < 20 && !got; k++) {
+        const t = base.slice();
+        const idxs = t.map((v, i) => i).filter(i => t[i] !== 'c');
+        if (!idxs.length) break;
+        const i = drPick(idxs), mode = Math.floor(Math.random() * 3);
+        if (mode === 0 && t.length > 3) { t.splice(i, 1); reason = 'a syllable was dropped'; }
+        else if (mode === 1) { t.splice(i, 0, Math.random() < 0.5 ? 'l' : 's'); reason = 'a syllable was added'; }
+        else { t[i] = t[i] === 'l' ? 's' : (t[i] === 's' ? 'l' : t[i]); reason = 'a long and a short were swapped'; }
+        const clean = t.filter(x => x !== 'c');
+        if (!Scan.matchWeights(clean).length) got = t;
+      }
+      if (!got) continue;
+      seq = got; inBahr = false; why = reason;
+    }
+    return {
+      type: 'limping', source: s.source,
+      playSeq: seq,
+      promptHTML: `<p class="dim small">A line is sung. Judge by ear: in the bahr, or limping?</p>`,
+      choices: [{ html: 'In ✓', val: true }, { html: 'Limping ✗', val: false }],
+      correctIndex: inBahr ? 0 : 1,
+      reason: inBahr ? 'In the true bahr.' : (why + '.')
+    };
+  }
+  return null;
+}
+
+function drGenFoot(sources) {
+  for (let tries = 0; tries < 15; tries++) {
+    const s = drSample(sources);
+    if (!s) continue;
+    let exp; try { exp = Scan.explain(s.res, s.fit); } catch (e) { continue; }
+    const feet = (exp.feet || []).filter(Boolean);
+    if (feet.length < 2) continue;
+    const fi = Math.floor(Math.random() * feet.length);
+    const foot = feet[fi];
+    const idxs = foot.idx.filter(i => !exp.syl[i].cheat);
+    if (!idxs.length) continue;
+    const seq = exp.syl.map(x => x.resolved);
+    const i = drPick(idxs), orig = seq[i];
+    seq[i] = orig === 'l' ? 's' : (orig === 's' ? 'l' : (Math.random() < 0.5 ? 'l' : 's'));
+    const label = foot.name ? `Foot ${fi + 1} (${foot.name})` : `Foot ${fi + 1}`;
+    return {
+      type: 'foot', source: s.source,
+      playSeq: seq,
+      promptHTML: `<p class="dim small">One foot has changed. Which one?</p>`,
+      choices: feet.map((F, k) => ({ html: F.name ? `Foot ${k + 1} <span class="dim tiny">(${drEsc(F.name)})</span>` : `Foot ${k + 1}`, idx: k })),
+      correctIndex: fi,
+      reason: `${label} — a ${orig === 'l' ? 'long became short' : (orig === 's' ? 'short became long' : 'syllable changed')}.`
+    };
+  }
+  return null;
+}
+
+/* ---------- dispatcher ---------- */
+function drGenerate(tab) {
+  const sources = drActiveSources(tab), types = drActiveTypes(tab);
+  if (!types.length || !sources.length) return null;
+  for (let attempt = 0; attempt < 12; attempt++) {
+    const type = drPick(types);
+    let q = null;
+    if (tab === 'weight') {
+      if (type === 'weigh') q = drGenWeigh();
+      else if (type === 'flexfixed') q = drGenFlexFixed();
+      else if (type === 'izafat') q = drGenNoteType(sources, n => /iẓāfat/i.test(n));
+      else if (type === 'grafting') q = drGenNoteType(sources, n => /grafting/i.test(n));
+      else if (type === 'ojoin') q = drGenNoteType(sources, n => /^o joins/i.test(n));
+    } else {
+      if (type === 'bahr') q = drGenBahr(sources);
+      else if (type === 'limping') q = drGenLimping(sources);
+      else if (type === 'foot') q = drGenFoot(sources);
+      else if (type === 'ghazal') q = drGenGhazal(sources);
+    }
+    if (q) return q;
+  }
+  return null;
+}
+
+/* ---------- mount / render / interact ---------- */
+function drDefaultState() { return { types: new Set(['all']), sources: new Set(['all']), correct: 0, attempted: 0, current: null }; }
+
+function drShellHTML(tab) {
+  return `<div class="dr-root">
+    <div class="dr-filters">
+      <div class="dr-filter-row"><span class="eyebrow">Question types</span><div class="dr-chips" data-kind="type" data-tab="${tab}"></div></div>
+      <div class="dr-filter-row"><span class="eyebrow">Source</span><div class="dr-chips" data-kind="source" data-tab="${tab}"></div></div>
+    </div>
+    <div class="card dr-card">
+      <div class="dr-card-head">
+        <span class="eyebrow dr-tag" id="dr-${tab}-tag"></span>
+        <span class="mono tiny dr-score" id="dr-${tab}-score">0 / 0</span>
+      </div>
+      <div class="dr-prompt" id="dr-${tab}-prompt"></div>
+      <div class="dr-strip" id="dr-${tab}-strip"></div>
+      <div class="dr-choices" id="dr-${tab}-choices"></div>
+      <div class="fb dr-fb" id="dr-${tab}-fb"></div>
+    </div>
+  </div>`;
+}
+
+function drChipsHTML(tab, kind, items) {
+  const state = DR[tab] || drDefaultState();
+  const sel = kind === 'type' ? state.types : state.sources;
+  const allOn = sel.has('all');
+  let h = `<button type="button" class="chipbtn ${allOn ? 'on' : ''}" onclick="drFilterClick('${tab}','${kind}','all')">All</button>`;
+  h += items.map(it => `<button type="button" class="chipbtn ${!allOn && sel.has(it.key) ? 'on' : ''}" onclick="drFilterClick('${tab}','${kind}','${it.key}')">${drEsc(it.label)}</button>`).join('');
+  return h;
+}
+function drRenderFilterChips(tab) {
+  const panel = $(tab === 'weight' ? 'weightPanelDrill' : 'meterPanelDrill');
+  if (!panel) return;
+  const typeHost = panel.querySelector('.dr-chips[data-kind="type"]');
+  const srcHost = panel.querySelector('.dr-chips[data-kind="source"]');
+  if (typeHost) typeHost.innerHTML = drChipsHTML(tab, 'type', DR_TYPES[tab]);
+  if (srcHost) srcHost.innerHTML = drChipsHTML(tab, 'source', DR_SOURCES);
+}
+function drFilterClick(tab, kind, key) {
+  if (!DR[tab]) DR[tab] = drDefaultState();
+  const sel = kind === 'type' ? DR[tab].types : DR[tab].sources;
+  if (key === 'all') { sel.clear(); sel.add('all'); }
+  else {
+    sel.delete('all');
+    if (sel.has(key)) sel.delete(key); else sel.add(key);
+    if (!sel.size) sel.add('all');
+  }
+  drRenderFilterChips(tab);
+  drNext(tab);
+}
+window.drFilterClick = drFilterClick;
+
+function drRenderQuestion(tab) {
+  const st = DR[tab]; if (!st) return;
+  const q = st.current;
+  const tagEl = $('dr-' + tab + '-tag'), promptEl = $('dr-' + tab + '-prompt'), stripEl = $('dr-' + tab + '-strip'),
+        choicesEl = $('dr-' + tab + '-choices'), fbEl = $('dr-' + tab + '-fb'), scoreEl = $('dr-' + tab + '-score');
+  if (scoreEl) scoreEl.textContent = st.correct + ' / ' + st.attempted;
+  if (!q) {
+    if (tagEl) tagEl.textContent = '';
+    if (promptEl) promptEl.innerHTML = '<p class="dim small">No questions available for this filter yet — try a different source or type.</p>';
+    if (stripEl) stripEl.innerHTML = '';
+    if (choicesEl) choicesEl.innerHTML = '';
+    if (fbEl) { fbEl.innerHTML = ''; fbEl.className = 'fb dr-fb'; }
+    return;
+  }
+  if (tagEl) tagEl.textContent = drLabelForSource(q.source);
+  if (promptEl) promptEl.innerHTML = (q.playSeq ? `<button type="button" class="play dr-play" aria-label="Play" onclick="drPlayToggle('${tab}',this)">▶︎</button>` : '') + (q.promptHTML || '');
+  if (stripEl) stripEl.innerHTML = q.playSeq ? strip(q.answered ? q.playSeq : q.playSeq.map(() => 'c')) : '';
+  if (choicesEl) {
+    choicesEl.innerHTML = q.choices.map((c, i) => `<button type="button" class="btn ghost dr-choice" data-idx="${i}" ${q.answered ? 'disabled' : ''} onclick="drAnswer('${tab}',${i})">${c.html}</button>`).join('');
+    if (q.answered) {
+      const btns = [...choicesEl.querySelectorAll('.dr-choice')];
+      btns.forEach((b, i) => {
+        if (i === q.correctIndex) b.classList.add('ans-ok');
+        if (i === q.chosenIndex && i !== q.correctIndex) b.classList.add('ans-no');
+      });
+    }
+  }
+  if (fbEl) {
+    if (q.answered) {
+      const ok = q.chosenIndex === q.correctIndex;
+      if (q.revealSyl && !q.revealHTML && typeof chipsHTML === 'function') {
+        q.revealHTML = `<div class="chips dr-reveal">${chipsHTML(q.revealSyl, null, null)}</div>`;
+      }
+      fbEl.className = 'fb dr-fb ' + (ok ? 'ok' : 'no');
+      fbEl.innerHTML = `<div class="fb-text">${ok ? '✓ Right' : '✗ Not quite'} — ${q.reason}</div>` +
+        (q.revealHTML || '') +
+        `<button type="button" class="btn gold sm fb-next-btn" id="dr-${tab}-next" onclick="drNext('${tab}')">Next ▸</button>`;
+    } else {
+      fbEl.className = 'fb dr-fb'; fbEl.innerHTML = '';
+    }
+  }
+}
+
+function drAnswer(tab, idx) {
+  const st = DR[tab], q = st && st.current;
+  if (!q || q.answered) return;
+  q.answered = true; q.chosenIndex = idx;
+  st.attempted++;
+  if (idx === q.correctIndex) st.correct++;
+  drRenderQuestion(tab);
+  const nb = $('dr-' + tab + '-next'); if (nb) nb.focus();
+}
+window.drAnswer = drAnswer;
+
+function drNext(tab) {
+  if (!DR[tab]) DR[tab] = drDefaultState();
+  DR[tab].current = drGenerate(tab);
+  drRenderQuestion(tab);
+}
+window.drNext = drNext;
+
+/* pattern-only playback. Prefers pbTogglePattern(key, btn, raw, blkNodes) — the
+   PB-integrated wrapper the Player agent is asked to add in 15-audio.js (G1) —
+   and falls back to a plain play()/stopAll() toggle otherwise (play() itself
+   still calls pbDetach() so it correctly stops any other PB-driven playback). */
+function drPlayToggle(tab, btn) {
+  const st = DR[tab], q = st && st.current;
+  if (!q || !q.playSeq) return;
+  const host = $('dr-' + tab + '-strip');
+  if (typeof pbTogglePattern === 'function') {
+    pbTogglePattern('drill:' + tab, btn, drRawFromSeq(q.playSeq), host ? [...host.querySelectorAll('.blk')] : null);
+    return;
+  }
+  if (typeof play !== 'function') return;
+  if (btn.classList.contains('playing')) {
+    if (typeof stopAll === 'function') stopAll();
+    btn.classList.remove('playing'); btn.textContent = '▶︎';
+    return;
+  }
+  if (typeof document !== 'undefined' && typeof document.querySelectorAll === 'function') {
+    document.querySelectorAll('.dr-play.playing').forEach(b => { b.classList.remove('playing'); b.textContent = '▶︎'; });
+  }
+  btn.classList.add('playing'); btn.textContent = '❚❚';
+  const nodes = host ? [...host.querySelectorAll('.blk')] : [];
+  play(q.playSeq, {
+    onStep: nodes.length ? litter(nodes) : undefined,
+    onEnd: () => { btn.classList.remove('playing'); btn.textContent = '▶︎'; }
+  });
+}
+window.drPlayToggle = drPlayToggle;
+
+function mountDrill(tab) {
+  const panel = $(tab === 'weight' ? 'weightPanelDrill' : 'meterPanelDrill');
+  if (!panel) return;
+  let root = panel.querySelector('.dr-root');
+  if (!root) {
+    panel.innerHTML = drShellHTML(tab);
+    drRenderFilterChips(tab);
+  }
+  if (!DR[tab]) { DR[tab] = drDefaultState(); drNext(tab); }
+  else if (!DR[tab].current) drNext(tab);
+  else drRenderQuestion(tab);
+}
+window.mountDrill = mountDrill;
+
+/* keyboard: 1-4 answer the current question, Enter = Next */
+if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
+  document.addEventListener('keydown', ev => {
+    if (ev.defaultPrevented) return;
+    const tgt = ev.target;
+    if (tgt && tgt.tagName && /^(INPUT|TEXTAREA|SELECT)$/.test(tgt.tagName)) return;
+    ['weight', 'meter'].forEach(tab => {
+      const panel = $(tab === 'weight' ? 'weightPanelDrill' : 'meterPanelDrill');
+      const st = DR[tab];
+      if (!panel || panel.style.display === 'none' || !st || !st.current) return;
+      const q = st.current;
+      if (!q.answered && /^[1-4]$/.test(ev.key)) {
+        const idx = +ev.key - 1;
+        if (idx < q.choices.length) { drAnswer(tab, idx); ev.preventDefault(); }
+      } else if (q.answered && ev.key === 'Enter') {
+        drNext(tab); ev.preventDefault();
+      }
+    });
+  });
+}
+
+/* self-mount fallback: this file loads after 21-learn.js's initial
+   handleRoute() call (manifest order), so if the page loads directly on a
+   drill route, mountDrill didn't exist yet the first time 02-store.js's
+   showWeightSubtab/showMeterSubtab tried to call it. Pick up here. */
+['weight', 'meter'].forEach(tab => {
+  const panel = $(tab === 'weight' ? 'weightPanelDrill' : 'meterPanelDrill');
+  if (panel && panel.style && panel.style.display === 'block') mountDrill(tab);
+});
 
 </script>
 </body>

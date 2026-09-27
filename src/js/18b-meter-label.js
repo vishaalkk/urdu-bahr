@@ -59,7 +59,7 @@ function meterLabelInfo(mOrId) {
   let count = 0;
   if (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) {
     EXERCISES_DATA.forEach(e => {
-      const match = Array.isArray(e.m) ? e.m.some(x => String(x) === idStr) : String(e.m) === idStr;
+      const em = e.meters || e.m; const match = Array.isArray(em) ? em.some(x => String(x) === idStr) : String(em) === idStr;
       if (match) count++;
     });
   }
@@ -91,7 +91,7 @@ function meterLabelInfo(mOrId) {
   }
 
   if (!verse && typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) {
-    const exMatch = EXERCISES_DATA.find(e => Array.isArray(e.m) ? e.m.some(x => String(x) === idStr) : String(e.m) === idStr);
+    const exMatch = EXERCISES_DATA.find(e => { const em = e.meters || e.m; return Array.isArray(em) ? em.some(x => String(x) === idStr) : String(em) === idStr; });
     if (exMatch && exMatch.lines && exMatch.lines[0]) {
       const l = exMatch.lines[0];
       verse = { ur: l.ur || '', hi: l.hi || '', ro: l.ro || '', ascii: l.ascii || '' };
@@ -157,7 +157,7 @@ function renderMeterLabel(mOrId, opts) {
   let h = `<div class="meter-label-comp ${size==='lg'?'meter-label-lg':'meter-label-sm'}">`;
   h += `<div class="row">`;
   if (canPlay) {
-    h += `<span class="play sm" aria-label="Play meter rhythm" onclick="event.stopPropagation();playPat('${info.pattern}',[...this.closest('.meter-label-comp').querySelectorAll('.meter-label-pattern .blk')])">▶︎</span>`;
+    h += `<span class="play sm" role="button" tabindex="0" data-label="Play meter rhythm" aria-label="Play meter rhythm" onclick="event.stopPropagation();pbTogglePattern('meterlabel:${info.id}',this,'${info.pattern.replace(/'/g,"\\'")}',[...this.closest('.meter-label-comp').querySelectorAll('.meter-label-pattern .blk')])">▶︎</span>`;
   }
   h += `<div class="meter-label-body">`;
   h += `<div class="meter-label-primary ${isVerseUrdu ? 'urdu' : ((verseText || opts.couplet) ? (cs === 'ro' ? 'mono' : '') : 'mono')} ${opts.couplet ? 'ml-couplet' : ''}">${primaryText}</div>`;

@@ -148,9 +148,20 @@ const CONSTR = [
   { t: 'iẓāfat on a consonant', d: 'The ِ joins the last consonant into one flexible syllable.', ex: [['ملک ← ملکِ', 'mulk → mulk-e', '= -', '= x', 'mul-ke'], ['لب ← لبِ', 'lab → lab-e', '=', '- x', 'la-be']] },
   { t: 'iẓāfat after ā', d: 'An extra syllable appears; the ā stays long.', ex: [['وفا ← وفائے', 'vafā → vafā-e', '- =', '- = x', 'va-fā-e']] },
   { t: 'iẓāfat after ī', d: 'Usually the ī turns into a consonant.', ex: [['شوخی ← شوخیِ', 'shoḳhī → shoḳhī-e', '= x', '= - x', 'sho-khi-ye']] },
+  { t: 'iẓāfat after ū', d: 'Same pattern as ā and ī: one extra flexible syllable, written with an added ی.', ex: [['کو ← کوئے', 'kū → kū-e', '=', '= x', 'kū-e']] },
+  { t: 'iẓāfat, short Arabic word', d: 'A two-consonant Arabic word may double its last consonant (tashdīd) before the iẓāfat. Safest to scan both syllables as flexible.', ex: [['فن ← فنِ / فنّ', 'fan → fan-e / fann-e', '=', 'x x', 'fa-ne / fan-ne']] },
   { t: 'o, "and"', d: 'After a consonant it joins it, like iẓāfat.', ex: [['دین و دل', 'dīn o dil', '= - =', '= x =', 'dī-no dil']] },
   { t: 'al, "the"', d: 'Read the word before as if it merely ended in an extra ل.', ex: [['عالم الغیب', 'ʿālam ul-ġhaib', '= - = = -', '= - = = -', 'ʿā-la-mul ġhai-b']] }
 ];
+
+/* Build a PB-compatible "line" from a raw pattern string ('=', '-', 'x' tokens)
+   and the .blk nodes already rendered for it, so every ▶ in this file goes
+   through the shared pbToggle controller (round 2 G1) instead of calling
+   play() directly. */
+function rawPbLine(raw, resolve, host) {
+  const toks = sylls(Scan.parseRaw(raw)).map(t => resolve ? resolve(t) : t);
+  return { e: { syl: toks.map(t => ({ resolved: t })) }, nodes: host ? [...host.querySelectorAll('.blk')] : null, groups: null };
+}
 
 function renderConstr() {
   const host = $('constr');
@@ -164,7 +175,7 @@ function renderConstr() {
           <div class="urdu constr-urdu">${e[0]}</div>
           <div class="ro dim small constr-ro">${e[1]} → ${e[4]}</div>
           <div class="row constr-row">
-            <button class="icon-btn play sm" onclick="cPlay(${ci},${ei},this)" aria-label="Play example" title="Play">▶︎</button>
+            <span class="play sm" role="button" tabindex="0" data-label="Play example" aria-label="Play example" onclick="cPlay(${ci},${ei},this)">▶︎</span>
             <div class="strip">${strip(Scan.parseRaw(e[2]))}</div>
             <span class="L mono constr-arrow">→</span>
             <div class="strip">${strip(Scan.parseRaw(e[3]))}</div>
@@ -175,17 +186,53 @@ function renderConstr() {
   `).join('');
 }
 
-function cPlay(ci, ei, el) {
+function cPlay(ci, ei, btn) {
   const e = CONSTR[ci].ex[ei];
-  const a = sylls(Scan.parseRaw(e[2])).map(t => t === 'x' ? 'l' : t);
-  const b = sylls(Scan.parseRaw(e[3])).map(t => t === 'x' ? 's' : t);
-  const strips = el.parentNode.querySelectorAll('.strip');
-  const na = [...strips[0].querySelectorAll('.blk')], nb = [...strips[1].querySelectorAll('.blk')];
-  const bpm = (typeof settings !== 'undefined' && settings.bpm) ? settings.bpm : 120;
-  const beat = 60 / bpm;
-  const d = play(a, { onStep: (typeof litter === 'function') ? litter(na) : undefined });
-  setTimeout(() => play(b, { onStep: (typeof litter === 'function') ? litter(nb) : undefined }), (d + beat * 1.5) * 1000);
+  const strips = btn.parentNode.querySelectorAll('.strip');
+  const lineA = rawPbLine(e[2], t => t === 'x' ? 'l' : t, strips[0]);
+  const lineB = rawPbLine(e[3], t => t === 'x' ? 's' : t, strips[1]);
+  pbToggle('constr:' + ci + ':' + ei, btn, () => [lineA, lineB]);
 }
+window.cPlay = cPlay;
+
+/* Rules about how a single word divides into syllables (Handbook ch. 1.4,
+   1.3) — no before/after transform, just the word and its reading. */
+const SPECIAL_SYLL = [
+  { t: 'Three-consonant Arabic/Persian words', d: 'A word made of three consonants and no vowel letters usually splits two-then-one, not one-then-two.', ex: [['ملک', 'mulk', '= -'], ['وقت', 'vaqt', '= -'], ['ورق', 'varaq', '- =']], note: 'A minority — varaq, qasam, magar, ġhazal, nikal — split one-then-two instead.' },
+  { t: 'و and ی: vowel or consonant', d: 'و and ی count as vowels only as the second letter of a syllable; starting a syllable, or standing alone, they are ordinary consonants v/y.', ex: [['کو', 'ko', '='], ['وقت', 'vaqt', '= -'], ['یار', 'yār', '= -']] }
+];
+
+function renderSpecialSyll() {
+  const host = $('specialSyll');
+  if (!host) return;
+  host.innerHTML = SPECIAL_SYLL.map((c, ci) => `
+    <div class="card constr-card">
+      <h3 class="constr-title">${c.t}</h3>
+      <p class="constr-desc dim small">${c.d}</p>
+      <div class="row constr-row special-syll-row">
+        ${c.ex.map((e, ei) => `
+          <div class="constr-ex special-syll-ex">
+            <div class="urdu constr-urdu">${e[0]}</div>
+            <div class="ro dim small constr-ro">${e[1]}</div>
+            <div class="row">
+              <span class="play sm" role="button" tabindex="0" data-label="Play example" aria-label="Play example" onclick="ssPlay(${ci},${ei},this)">▶︎</span>
+              <div class="strip">${strip(Scan.parseRaw(e[2]))}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      ${c.note ? `<p class="constr-desc dim small">${c.note}</p>` : ''}
+    </div>
+  `).join('');
+}
+
+function ssPlay(ci, ei, btn) {
+  const e = SPECIAL_SYLL[ci].ex[ei];
+  const strip_ = btn.parentNode.querySelector('.strip');
+  const line = rawPbLine(e[2], null, strip_);
+  pbToggle('special:' + ci + ':' + ei, btn, () => [line]);
+}
+window.ssPlay = ssPlay;
 
 /* App Initialization */
 if ($('footPulse')) $('footPulse').checked = settings.footPulse !== false;
@@ -208,6 +255,7 @@ if (typeof renderFams === 'function') renderFams();
 if (typeof wdNext === 'function') wdNext();
 if (typeof fxNext === 'function') fxNext();
 if (typeof renderConstr === 'function') renderConstr();
+if (typeof renderSpecialSyll === 'function') renderSpecialSyll();
 if (typeof renderHandbook === 'function') renderHandbook();
 if (typeof renderExercises === 'function') renderExercises();
 if (typeof renderDictionary === 'function') renderDictionary();

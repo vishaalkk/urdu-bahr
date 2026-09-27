@@ -237,6 +237,8 @@ const SAMPLES=[
 if ($('samples')) $('samples').innerHTML=SAMPLES.map((s,i)=>`<button class="chipbtn" onclick="loadSample(${i})">${s[0]}</button>`).join('');
 if ($('exSel')) $('exSel').innerHTML='<option value="">Pritchett\'s exercise ghazals (1–24)…</option>'+EXERCISES.map((e,i)=>`<option value="${i}">${e.g}. ${e.poet}</option>`).join('');
 let curEx=null;
+/* answer-key meters: Scan's own EXERCISES use .m, corpus ghazals (Mir/Ghalib browse) use .meters */
+function exMeters(ex){ const m = ex ? (ex.m || ex.meters || []) : []; return Array.isArray(m) ? m : [m]; }
 function loadEx(v){ if(v===''){curEx=null;return;} curEx=EXERCISES[+v]; if($('scanIn')) $('scanIn').value=curEx.L; ovr={}; selWord=null; runScan(); }
 function loadSample(i){ if($('scanIn')) $('scanIn').value=SAMPLES[i][1]; ovr={}; curEx=null; if($('exSel')) $('exSel').value=''; runScan(); }
 let ovr={}, lastScan=null, selWord=null, scanRolls={};
@@ -434,7 +436,7 @@ function runScan(){
         }
         h+=`</div>`; }
       /* answer key if exercise */
-      if(curEx){ const _hit=_fcd.every(f=>curEx.m.includes(f.meter.id)); h+=`<p class="tiny muted mt-loose">Pritchett's answer key (ch. 11): <b class="t">${curEx.m.map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b> — ${_hit?'<span class="ok-text">the scanner agrees ✓</span>':'<span class="no-text">the scanner disagrees ✗</span>'}</p>`; }
+      if(curEx){ const _hit=_fcd.every(f=>exMeters(curEx).includes(f.meter.id)); h+=`<p class="tiny muted mt-loose">Pritchett's answer key (ch. 11): <b class="t">${exMeters(curEx).map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b> — ${_hit?'<span class="ok-text">the scanner agrees ✓</span>':'<span class="no-text">the scanner disagrees ✗</span>'}</p>`; }
       h+=legendHTML('top');
       /* lines grouped into couplets (shers) of 2, each its own bordered card */
       for(let _i=0;_i<results.length;_i+=2){
@@ -462,7 +464,7 @@ function stackHTML(lines,results,common,tot){
     const nb=lastScan.near; let msg='';
     if(nb){ const f=famOfMeter[nb.g[0]]; const name=f?`<span class="urdu fam-inline">${famLabel(f).ur}</span>`:(nb.g[0]==='H'?'Mir\'s Hindi meter':'#'+nb.g.join('/'));
       msg=`<p class="small">${nb.n} of ${lines.length} lines fit ${name}. Look closely at line${nb.miss.length>1?'s':''} <b class="t">${nb.miss.join(', ')}</b> — a reading, an unwritten iẓāfat, a missing tashdīd, or the text itself.</p>`; }
-    let key=''; if(curEx) key=`<p class="tiny muted">Pritchett's answer key: <b class="t">${curEx.m.map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b></p>`;
+    let key=''; if(curEx) key=`<p class="tiny muted">Pritchett's answer key: <b class="t">${exMeters(curEx).map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b></p>`;
     return `<div class="card"><div class="verdict no-fit">No single bahr fits every line</div>${msg}${key}</div>`;
   }
   const members=[...new Set(common.fits.map(f=>f.meter))].sort((a,b)=>b.seq?(b.seq.length-(a.seq?a.seq.length:0)):0);
@@ -490,8 +492,8 @@ function stackHTML(lines,results,common,tot){
   } else body=rows.map((r,li)=>`<tr><td class="num">${li+1}</td>${r.map((x,k)=>cell(x,k,r)).join('')}</tr>`).join('');
   const alt=tot.filter(x=>x!==common).slice(0,2).filter(x=>x.c-common.c<1.5).map(x=>famOfMeter[x.id]?`<span class="urdu fam-inline sm">${famLabel(famOfMeter[x.id]).ur}</span>`:(x.id==='H'?'Hindi meter':'#'+x.id));
   let key='';
-  if(curEx){ const hit=common.fits.every(f=>curEx.m.includes(f.meter.id));
-    key=`<div class="card key-card"><span class="tiny muted">Pritchett's answer key (ch. 11):</span> <b class="t">${curEx.m.map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b> — ${hit?'<span class="ok-text">the scanner agrees ✓</span>':'<span class="no-text">the scanner disagrees ✗</span>'}</div>`; }
+  if(curEx){ const hit=common.fits.every(f=>exMeters(curEx).includes(f.meter.id));
+    key=`<div class="card key-card"><span class="tiny muted">Pritchett's answer key (ch. 11):</span> <b class="t">${exMeters(curEx).map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b> — ${hit?'<span class="ok-text">the scanner agrees ✓</span>':'<span class="no-text">the scanner disagrees ✗</span>'}</div>`; }
   return `<div class="card">${key}<div class="row tight-top"><span class="pill ${vc}">${vt}</span><span class="tiny muted">all ${lines.length} lines stacked</span></div>
     ${m.id!=='H'&&!fam?'':''}${fam?`<div class="small muted">Same bahr as</div><div class="fam-name">${famLabel(fam).ur}</div><div class="ro">${famLabel(fam).ro} — ${famLabel(fam).ref}</div>`:`<div class="verdict">${meterLabel(m)}</div>`}
     <div class="grid"><table>${head}${body}</table></div>
@@ -523,8 +525,8 @@ function stackInner(lines,results,common,tot){
   } else body=rows.map((r,li)=>`<tr><td class="num">${li+1}</td>${r.map((x,k)=>cell(x,k,r)).join('')}</tr>`).join('');
   const alt=tot.filter(x=>x!==common).slice(0,2).filter(x=>x.c-common.c<1.5).map(x=>famOfMeter[x.id]?`<span class="urdu fam-inline sm">${famLabel(famOfMeter[x.id]).ur}</span>`:(x.id==='H'?'Hindi meter':'#'+x.id));
   let key='';
-  if(curEx){ const hit=common.fits.every(f=>curEx.m.includes(f.meter.id));
-    key=`<div class="card key-card"><span class="tiny muted">Pritchett's answer key (ch. 11):</span> <b class="t">${curEx.m.map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b> — ${hit?'<span class="ok-text">the scanner agrees ✓</span>':'<span class="no-text">the scanner disagrees ✗</span>'}</div>`; }
+  if(curEx){ const hit=common.fits.every(f=>exMeters(curEx).includes(f.meter.id));
+    key=`<div class="card key-card"><span class="tiny muted">Pritchett's answer key (ch. 11):</span> <b class="t">${exMeters(curEx).map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b> — ${hit?'<span class="ok-text">the scanner agrees ✓</span>':'<span class="no-text">the scanner disagrees ✗</span>'}</div>`; }
   return `${key}<div class="row tight-top"><span class="pill ${vc}">${vt}</span><span class="tiny muted">all ${lines.length} lines stacked</span></div>
     ${m.id!=='H'&&!fam?'':''}${fam?`<div class="small muted">Same bahr as</div><div class="fam-name">${famLabel(fam).ur}</div><div class="ro">${famLabel(fam).ro} — ${famLabel(fam).ref}</div>`:`<div class="verdict">${meterLabel(m)}</div>`}
     <div class="grid"><table>${head}${body}</table></div>
@@ -617,6 +619,18 @@ function playCouplet(li1,li2,start,btn){
     return out;
   }, start);
 }
+/* ▶ at the top of Scan: play every line in order, chips lighting, through the shared player */
+function scanPlayAll(start,btn){
+  if(!lastScan||!lastScan.results||!lastScan.results.length) return;
+  btn = btn || $('btnPlayCouplet');
+  pbToggle('scan:all', btn, ()=>{
+    const out=[];
+    lastScan.results.forEach((r,li)=>{ const f=(lastScan.forced&&lastScan.forced[li])||r.fits[0];
+      if(f && $('sc'+li)) out.push(Object.assign({e:Scan.explain(r,f)}, pbNodes($('sc'+li)))); });
+    return out;
+  }, start);
+}
+window.scanPlayAll = scanPlayAll;
 function playScan(li,start,btn){ if(!lastScan||!lastScan.results[li]) return;
   btn = btn || document.querySelector(`[data-pb="line:${li}"]`);
   pbToggle('line:'+li, btn, ()=>{ const r=lastScan.results[li]; const f=(lastScan.forced&&lastScan.forced[li])||r.fits[0];

@@ -175,7 +175,9 @@ function showWeightSubtab(sub) {
 
   if (sub === 'learn') {
     if (typeof renderConstr === 'function') renderConstr();
+    if (typeof renderSpecialSyll === 'function') renderSpecialSyll();
   } else if (sub === 'drill') {
+    if (typeof mountDrill === 'function') mountDrill('weight');
     if (typeof wdNext === 'function' && $('wdWord') && !$('wdWord').textContent) wdNext();
     if (typeof fxNext === 'function' && $('fxWord') && !$('fxWord').textContent) fxNext();
   } else if (sub === 'lookup') {
@@ -204,6 +206,7 @@ function showMeterSubtab(sub, params) {
     if (typeof renderEar === 'function') renderEar();
     if (params && params.open && typeof earPick === 'function') earPick(params.open);
   } else if (sub === 'drill') {
+    if (typeof mountDrill === 'function') mountDrill('meter');
     if (typeof iomNew === 'function' && $('iomStrip') && !$('iomStrip').textContent) iomNew();
     if (typeof wtNew === 'function' && $('wtChoices') && !$('wtChoices').textContent) wtNew();
     if (typeof renderWeak === 'function') renderWeak();

@@ -1,7 +1,7 @@
 <!-- ===================== WEIGHT TAB ===================== -->
 <section id="weight-section" class="tab-view">
   <div class="page-head">
-    <h1>Weight</h1>
+    <h1 class="page-title">Weight</h1>
     <div class="lede dim small">How long each syllable is — the raw material of every meter.</div>
     <div class="subtabs seg" role="tablist" aria-label="Weight sub-tabs">
       <button class="seg-btn on" role="tab" id="weightSubLearn" aria-selected="true" onclick="navigate('/weight/learn')">Learn</button>
@@ -13,7 +13,7 @@
   <!-- Subtab 1: Learn -->
   <div id="weightPanelLearn" class="subpanel">
     <div class="card words-card small">
-      <h3 class="words-title">Words we use</h3>
+      <h2 class="section-title words-title">Words we use</h2>
       <dl class="words-def-list">
         <dt class="mono">miṣraʿ</dt>
         <dd class="dim">A single line or hemistich of poetry.</dd>
@@ -28,20 +28,24 @@
       </dl>
     </div>
 
-    <h2 class="sec">Letters &amp; weight</h2>
+    <h2 class="section-title">Letters &amp; weight</h2>
     <div class="card small">
       <p><strong class="weight-term">Three rules.</strong> A syllable is <strong class="weight-term">two letters or one</strong>. It <strong class="weight-term">starts with a consonant</strong> if it can. The split <strong class="weight-term">follows pronunciation</strong>.</p>
       <p><strong class="weight-term">The weight law.</strong> <span class="L">Two letters → long (=)</span>. <span class="S">One letter → short (–)</span>.</p>
       <p><strong class="weight-term">Invisible to meter:</strong> zer/zabar/pesh, the aspiration ھ, the nasal ں. <strong class="weight-term">Counts:</strong> hamza ء and ع as full consonants; tashdīd doubles its letter; آ is two letters.</p>
     </div>
 
-    <h2 class="sec">Bending</h2>
+    <h2 class="section-title">Special cases</h2>
+    <p class="small dim">A few words split differently than the three rules alone would predict.</p>
+    <div id="specialSyll" class="constr-container"></div>
+
+    <h2 class="section-title">Bending</h2>
     <div class="card small">
       <p><strong class="weight-term">Flexibility in Urdu prosody.</strong> Many common monosyllables (<span class="urdu urdu-monos">کو، سے، کا، ہے، میں، بھی، نے، ہوں، یہ، وہ، جو، تو</span>) can count as long (=) or short (–) according to the requirement of the meter.</p>
       <p>Final vowels before vowels, the Persian iẓāfat connector (ِ / <em>-e</em>), and the conjunction <em>o</em> ("and") bridge words or alter lengths.</p>
     </div>
 
-    <h3>Across word boundaries</h3>
+    <h2 class="section-title">Across word boundaries</h2>
     <p class="small dim">The usual reason a line that looks wrong is right. Tap ▶︎ to hear before → after.</p>
     <div id="constr" class="constr-container"></div>
 

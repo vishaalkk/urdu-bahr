@@ -171,6 +171,10 @@ footer#siteFooter .footer-link:hover { color: var(--gold); }
 
 /* ============================================================
    Page shell — eyebrow / heading / lede (§ token contract)
+   Round 2 G2: three heading classes used everywhere (all tabs/sub-tabs) —
+   .page-title (serif 32px), .section-title (serif 22px), .eyebrow (sans
+   12px uppercase .08em --faint). Legacy bare h1/.sec selectors below keep
+   matching so unclassed markup elsewhere doesn't regress.
    ============================================================ */
 main, .wrap { max-width: 760px; }
 .page-head { margin-bottom: var(--sp-6); }
@@ -181,10 +185,15 @@ main, .wrap { max-width: 760px; }
   text-transform: uppercase;
   color: var(--faint);
 }
-.page-head h1 {
-  font: 400 40px/1.15 var(--serif);
+.page-title, .page-head h1 {
+  font: 400 32px/1.2 var(--serif);
   letter-spacing: -.015em;
   margin: 10px 0 var(--sp-3);
+  color: var(--ink);
+}
+.section-title {
+  font: 400 22px/1.3 var(--serif);
+  margin: var(--sp-6) 0 var(--sp-2);
   color: var(--ink);
 }
 .page-head .lede, .lede {
@@ -479,6 +488,12 @@ main, .wrap { max-width: 760px; }
 .vline[lang="hi"] { font-family: var(--deva); font-size: var(--fs-deva); line-height: var(--lh-deva); }
 .vline[lang="ur-Latn"] { font-family: var(--mono); font-size: 15px; }
 
+/* Universal search results: collection tag on each merged row */
+.search-result-col {
+  font-family: var(--sans); font-size: 11px; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--gold);
+}
+
 .vline-lg { font-size: 21px; line-height: 1.5; font-family: var(--serif); margin-bottom: var(--sp-1); }
 .vline-lg[lang="ur"] { font-family: var(--urdu); font-size: var(--fs-urdu-lg, 28px); line-height: 2.1; direction: rtl; text-align: right; }
 .vline-lg[lang="hi"] { font-family: var(--deva); font-size: var(--fs-deva); line-height: var(--lh-deva); }
@@ -505,6 +520,16 @@ main, .wrap { max-width: 760px; }
 .ghazal-reader-view { margin-bottom: var(--sp-6); }
 .reader-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--sp-4); font-family: var(--sans); font-size: 13px; }
 .reader-header { margin-bottom: var(--sp-4); text-align: center; }
+/* Reader header component (round 2 D5.8): meter number+name, its pattern,
+   then a clearly-secondary "Same bahr as …" reference — all centred. */
+.reader-header-comp { display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); }
+.reader-header-title-row { justify-content: center; gap: var(--sp-2); }
+.reader-header-title { font: 400 20px/1.3 var(--serif); color: var(--ink); }
+.reader-header-pattern { display: flex; justify-content: center; }
+.reader-header-ref { margin-top: var(--sp-1); max-width: 480px; }
+.reader-header-misra.urdu { font-family: var(--urdu); }
+.reader-header-misra.deva { font-family: var(--deva); }
+.reader-header-misra.roman { font-family: var(--mono); }
 .reader-intro-note { margin: var(--sp-4) 0; max-width: 640px; margin-left: auto; margin-right: auto; }
 .reader-actions {
   display: flex; justify-content: center; gap: var(--sp-6);
@@ -532,7 +557,7 @@ main, .wrap { max-width: 760px; }
 /* ============================================================
    Weight page
    ============================================================ */
-.words-title { margin-top: 0; margin-bottom: var(--sp-2); font-size: var(--fs-lg); font-family: var(--serif); color: var(--ink); }
+.words-title { margin-top: 0; margin-bottom: var(--sp-2); }
 .words-def-list { display: grid; grid-template-columns: auto 1fr; gap: var(--sp-2) var(--sp-4); margin: var(--sp-2) 0 0; }
 .words-def-list dt { font-family: var(--mono); font-weight: 600; color: var(--ink); }
 .words-def-list dd { color: var(--dim); margin: 0; font-family: var(--sans); }
@@ -567,7 +592,11 @@ main, .wrap { max-width: 760px; }
 .constr-row { display: flex; align-items: center; gap: var(--sp-2); }
 .constr-arrow { padding: 0 var(--sp-1); }
 
-.lookup-title { margin: 0 0 var(--sp-1); font-size: var(--fs-xl); font-family: var(--serif); font-weight: 500; color: var(--ink); }
+/* Weight › Learn › "Special cases": several single-reading examples side by side */
+.special-syll-row { flex-wrap: wrap; align-items: flex-start; gap: var(--sp-5); }
+.special-syll-ex { margin: 0; padding: 0; border: 0; min-width: 7em; }
+
+.lookup-title { margin: 0 0 var(--sp-1); }
 .lookup-desc { margin-bottom: var(--sp-3); font-family: var(--sans); color: var(--dim); }
 .lookup-search-row { margin-top: var(--sp-2); width: 100%; }
 .dict-search-input {
@@ -673,7 +702,8 @@ main, .wrap { max-width: 760px; }
    Mobile (375px) — no horizontal scroll, generous gutters
    ============================================================ */
 @media (max-width: 767px) {
-  .page-head h1 { font-size: 32px; }
+  .page-title, .page-head h1 { font-size: 26px; }
+  .section-title { font-size: 19px; }
   .ghazal-controls { flex-wrap: wrap; gap: var(--sp-3); }
   .ghazal-search-input { max-width: none; margin-left: 0; width: 100%; }
   .vrow { grid-template-columns: 44px 1fr auto; gap: var(--sp-3); }

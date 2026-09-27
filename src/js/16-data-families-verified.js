@@ -47,16 +47,38 @@ function chipsHTML(syl,feet,li,roCtx){
   if(!feet||!feet.length) return syl.map((s,i)=>chipHTML(s,i,li,overrides[i],gp[i])).join('');
   return feet.map((F,fi)=>F?`${F.cae?'<span class="caeu">//</span>':''}<span class="fgrp" data-f="${fi}"><span class="fname" onclick="pbFromFoot(event,this)" title="Play from this foot">${(()=>{const fm=cs==='ur'?(F.ur||''):(cs==='hi'?(typeof urduToDevanagari==='function'?urduToDevanagari(F.ur):''):''); return fm?`${fm} <i>${F.name||''}</i>`:`<i>${F.name||''}</i>`;})()}</span><span class="fchips">${F.idx.map(i=>chipHTML(syl[i],i,li,overrides[i],gp[i])).join('')}</span></span>`:'').join('');
 }
-/* Keep each syllable row on one line: shrink a row's --fit only as far as needed. */
+/* Wrap each whitespace-separated word of a display string in <span class="word" data-w="i">
+   for word-level playback highlight (pbWordsMatching). Leaves the whitespace itself outside
+   the spans so RTL/LTR flow is untouched. Returns the word count too, so callers can check
+   it against the scanner's word count before trusting the mapping. */
+function wrapWordsHTML(text) {
+  let i = 0;
+  const html = String(text == null ? '' : text).split(/(\s+)/).map(tok => {
+    if (tok === '' || /^\s+$/.test(tok)) return tok;
+    const h = `<span class="word" data-w="${i}">${tok}</span>`;
+    i++;
+    return h;
+  }).join('');
+  return { html, count: i };
+}
+
+/* Keep each syllable row on one line: shrink a row's --fit only as far as needed, down to
+   a floor of 0.7. Below that floor, stop shrinking and let the row wrap — but only between
+   feet (.fgrp), never inside one: adds .wrap-feet, which verse.css turns into a flex-wrap. */
 function fitChipRows(root){
   if (typeof document === 'undefined' || typeof document.querySelectorAll !== 'function') return;
+  const FLOOR = 0.7;
   (root || document).querySelectorAll('.cbox-scan .chips, .couplet-scan-box .chips').forEach(ch => {
     if (!ch.clientWidth) return;                      // hidden box: fitted when shown
+    ch.classList.remove('wrap-feet');
     ch.style.setProperty('--fit', '1');
-    for (let k = 0; k < 3 && ch.scrollWidth > ch.clientWidth + 1; k++) {
+    for (let k = 0; k < 4 && ch.scrollWidth > ch.clientWidth + 1; k++) {
       const cur = parseFloat(ch.style.getPropertyValue('--fit')) || 1;
-      ch.style.setProperty('--fit', Math.max(0.55, cur * ch.clientWidth / ch.scrollWidth * 0.99).toFixed(3));
+      const next = Math.max(FLOOR, cur * ch.clientWidth / ch.scrollWidth * 0.99);
+      ch.style.setProperty('--fit', next.toFixed(3));
+      if (next <= FLOOR) break;
     }
+    if (ch.scrollWidth > ch.clientWidth + 1) ch.classList.add('wrap-feet');
   });
 }
 window.fitChipRows = fitChipRows;
@@ -76,11 +98,18 @@ function alignVerse(ur,fam){
   const r=Scan.scanLine(ur); const f=r.fits.find(x=>fam.meters.includes(x.meter.id));
   alignCache[k]= f? Scan.explain(r,f):null; return alignCache[k];
 }
-function singAlong(ur,fam,host){
-  const e=alignVerse(ur,fam); if(!e) return;
-  const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
-  host.innerHTML=`<div class="chips ${cs==='ur'?'':'ltr'}">${chipsHTML(e.syl,e.feet)}</div>`;
-  const nodes=[...host.querySelectorAll('.chip')].sort((a,b)=>a.dataset.i-b.dataset.i), groups=[...host.querySelectorAll('.fgrp')];
-  playEx(e,nodes,groups);
+/* sing-along ▶: goes through the player (▶⇄❚❚, stop remembers the foot). key must be
+   unique per sing-along instance (caller's family+verse id); btn is the ▶ element itself.
+   Re-renders the chips fresh on every play (so a script switch is picked up); leaves them
+   alone when the tap is just stopping playback. */
+function singAlong(key,ur,fam,host,btn){
+  const e=alignVerse(ur,fam); if(!e||!host) return;
+  const stopping = (typeof PB!=='undefined' && PB.playing && PB.key===key);
+  if(!stopping){
+    const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
+    host.innerHTML=`<div class="chips ${cs==='ur'?'':'ltr'}">${chipsHTML(e.syl,e.feet)}</div>`;
+  }
+  pbToggle(key,btn,()=>[Object.assign({e},pbNodes(host))]);
 }
+window.singAlong = singAlong;
 

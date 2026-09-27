@@ -234,17 +234,31 @@ function pbForget() { PB.resume = null; pbClearMark(); }
 /* another sound took over, or the view changed */
 function pbDetach() { if (PB.playing) pbSetBtn(PB.btn, false); PB.playing = false; PB.key = null; PB.btn = null; PB.lines = null; pbForget(); }
 function pbCancel() { pbDetach(); stopAll(); }
+/* highlight the whole word a syllable belongs to (grafted words light together);
+   words[] indexed to match e.syl[i].word/.wordTo, built by pbWordsMatching() */
+function pbWordLit(words) {
+  let cur = [];
+  return (from, to) => {
+    to = to == null ? from : to;
+    cur.forEach(w => { if (words[w]) words[w].classList.remove('wlit'); });
+    cur = [];
+    for (let w = from; w <= to; w++) { if (words[w]) { words[w].classList.add('wlit'); cur.push(w); } }
+  };
+}
 function pbRunLine(li, foot) {
   const L = PB.lines && PB.lines[li];
   if (!L) { pbFinish(); return; }
-  const p = exSeq(L.e);
+  const p = L.p || exSeq(L.e);            /* L.p: precomputed {seq,feet,cae} for pattern-only playback */
   let s0 = p.feet.findIndex(f => f >= foot); if (s0 < 0) s0 = 0;
   const lit = L.nodes ? litter(L.nodes) : null;
+  const wl = L.words ? pbWordLit(L.words) : null;
   play(p.seq.slice(s0), { pb: true, feet: p.feet.slice(s0), cae: p.cae.filter(c => c > foot),
     onStep: i => { const gi = i + s0; PB.pos = { line: li, foot: p.feet[gi] };
       if (lit) lit(gi);
+      if (wl && L.e && L.e.syl[gi]) wl(L.e.syl[gi].word, L.e.syl[gi].wordTo);
       if (L.groups) { L.groups.forEach(g => g.classList.remove('litf')); const g = L.groups[p.feet[gi]]; if (g) g.classList.add('litf'); } },
     onEnd: () => { if (L.groups) L.groups.forEach(g => g.classList.remove('litf'));
+      if (wl) wl(-1, -2);
       if (li + 1 < PB.lines.length) playLater(() => pbRunLine(li + 1, 0), 350); else pbFinish(); } });
 }
 function pbFinish() { pbSetBtn(PB.btn, false); PB.playing = false; PB.key = null; PB.btn = null; PB.lines = null; PB.pos = null; pbForget(); }
@@ -281,7 +295,28 @@ function pbFromFoot(ev, el) {
   else if (kind === 'lookup' && typeof playLookupCouplet === 'function') { const [m, i] = arg.split(','); playLookupCouplet(m, +i, start, btn); }
 }
 function pbNodes(host) { return host ? { nodes: [...host.querySelectorAll('.chip')].sort((a, b) => a.dataset.i - b.dataset.i), groups: [...host.querySelectorAll('.fgrp')] } : { nodes: null, groups: null }; }
+/* word spans (see pbWordLit) inside a host, ordered by data-w */
+function pbWords(host) {
+  if (!host || typeof host.querySelectorAll !== 'function') return null;
+  const els = [...host.querySelectorAll('.word')].sort((a, b) => a.dataset.w - b.dataset.w);
+  return els.length ? els : null;
+}
+/* only return the word spans if their count matches the scanned line's word count —
+   otherwise the mapping can't be trusted, so callers fall back to no word-highlight */
+function pbWordsMatching(host, e) {
+  if (!e || !e.syl || !e.syl.length) return null;
+  const need = e.syl[e.syl.length - 1].wordTo + 1;
+  const els = pbWords(host);
+  return (els && els.length === need) ? els : null;
+}
+/* pattern-only playback (no verse, no per-line resume beyond the one line): every ▶ that
+   plays a bare weight pattern (raw = e.g. "= - x / = = -") goes through this, not playPat() directly. */
+function pbTogglePattern(key, btn, raw, blkNodes) {
+  return pbToggle(key, btn, () => [{ p: patSeq(raw), nodes: blkNodes || null, groups: null }]);
+}
 window.pbToggle = pbToggle; window.pbFromFoot = pbFromFoot; window.pbCancel = pbCancel;
+window.pbNodes = pbNodes; window.pbWords = pbWords; window.pbWordsMatching = pbWordsMatching;
+window.pbTogglePattern = pbTogglePattern;
 
 function litter(nodes){ return i=>{ nodes.forEach(n=>n.classList.remove('lit')); const n=nodes[i]; if(n){n.classList.add('lit'); setTimeout(()=>n.classList.remove('lit'),240);} }; }
 

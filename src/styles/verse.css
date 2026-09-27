@@ -400,7 +400,7 @@
 
 /* ---- Syllable rows in couplet boxes: large by default; a row that would overflow is
    shrunk just enough to fit on one line (--fit set by fitChipRows() in JS, 0.55–1) ---- */
-.cbox-scan .chips, .couplet-scan-box .chips { flex-wrap: nowrap; overflow-x: auto; gap: 0; scrollbar-width: thin; padding-bottom: 2px; --fit: 1; }
+.cbox-scan .chips, .couplet-scan-box .chips { flex-wrap: nowrap; overflow-x: hidden; gap: 0; padding-bottom: 2px; --fit: 1; }
 .cbox-scan .fgrp, .couplet-scan-box .fgrp { padding: 0 calc(12px * var(--fit)); }
 .cbox-scan .fchips, .couplet-scan-box .fchips { gap: calc(7px * var(--fit)); }
 .cbox-scan .chip:not(.roman):not(.deva), .couplet-scan-box .chip:not(.roman):not(.deva) {
@@ -409,6 +409,31 @@
 .cbox-scan .chip.deva, .couplet-scan-box .chip.deva { font-size: calc(20px * var(--fit)); padding-left: calc(5px * var(--fit)); padding-right: calc(5px * var(--fit)); }
 .cbox-scan .fname, .couplet-scan-box .fname { font-size: calc(16px * var(--fit)); }
 .cbox-scan .cw .fs, .couplet-scan-box .cw .fs { font-size: calc(12.5px * var(--fit)); }
+
+/* Word-level playback highlight (Meter › Look up couplets): a word is lit while any of its
+   syllables sound; grafted words (one .word span per orthographic word) light together
+   because pbWordLit() lights the whole [word, wordTo] range at once. Same soft-wash
+   treatment as .chip.lit, just on the word instead of the syllable. */
+.word { transition: background .08s; border-radius: 3px; }
+.word.wlit {
+  background: color-mix(in srgb, var(--mark-l) 22%, transparent);
+  box-shadow: 0 3px 0 0 color-mix(in srgb, var(--mark-l) 60%, transparent);
+}
+@media (prefers-reduced-motion: reduce) { .word { transition: none; } }
+
+/* "Scan" toggle on a Look-up couplet: plain text, gold on hover/open, no box */
+.scan-toggle-btn {
+  background: transparent; border: none; padding: 0; margin: 0;
+  font-family: var(--sans); font-size: 12px; color: var(--faint); cursor: pointer;
+}
+.scan-toggle-btn:hover, .scan-toggle-btn[aria-expanded="true"] { color: var(--gold); }
+.couplet-scan-box.hidden { display: none; }
+
+/* Row that would still overflow at the --fit floor wraps between feet, never inside one
+   (.fgrp stays intact — .fchips never wraps). No horizontal scrollbar either way. */
+.cbox-scan .chips.wrap-feet, .couplet-scan-box .chips.wrap-feet {
+  flex-wrap: wrap; overflow-x: visible;
+}
 
 /* play / stop */
 .play.playing { color: var(--gold); border-color: var(--gold); font-size: 11px; letter-spacing: -1px; }

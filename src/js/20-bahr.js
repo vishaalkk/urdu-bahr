@@ -5,10 +5,22 @@ let lookupFilterKind = 'all';
 /* Full couplets for a meter, for Look up. First the family's famous misras, each
    located in a corpus so we can show the whole sher; then, if none, the matla of
    ghazals tagged with this meter (Handbook, then Ghalib, then Mir). */
+/* wrapWordsHTML()'d for playback highlight, but getLineDisplay() can tack on an
+   "approximate" badge <span> whose own attribute spaces would corrupt naive whitespace
+   splitting — strip it first and re-append it outside the word spans. */
+function dispWordWrap(l, cs) {
+  const full = (typeof getLineDisplay === 'function') ? getLineDisplay(l, cs) : (l[cs] || l.ur || '');
+  const m = /^([\s\S]*?)(\s*<span class="pill[^>]*>[\s\S]*?<\/span>)\s*$/.exec(full);
+  const plain = m ? m[1] : full;
+  const badge = m ? m[2] : '';
+  const w = (typeof wrapWordsHTML === 'function') ? wrapWordsHTML(plain) : { html: plain, count: 0 };
+  return { html: w.html + badge, count: w.count };
+}
+
 var _coupletCache = {};
 function _meterCollections() {
   const out = [];
-  if (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) out.push(['handbook', EXERCISES_DATA, it => it.poet || 'Handbook', it => it.m]);
+  if (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) out.push(['handbook', EXERCISES_DATA, it => it.poet || 'Handbook', it => it.meters || it.m]);
   if (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) out.push(['ghalib', GHALIB_EXT_DATA, () => 'Ghalib', it => it.meters || it.meter || it.m]);
   if (typeof MIR_EXT_DATA !== 'undefined' && Array.isArray(MIR_EXT_DATA)) out.push(['mir', MIR_EXT_DATA, () => 'Mir', it => it.meters || it.meter || it.m]);
   return out;
@@ -114,18 +126,23 @@ function renderFams() {
         if (note) h += `<div class="meter-meta-notes">${note}</div>`;
       }
 
-      // 3. Famous couplets in this meter: the same couplet box as the reader (▶, scan, highlight)
+      // 3. Famous couplets in this meter: reference, not scansion — ▶ lights up the words of
+      // the couplet itself; a "Scan" toggle (closed by default) reveals the syllable chips.
       if (cps.length) {
-        const disp = l => (typeof getLineDisplay === 'function') ? getLineDisplay(l, cs) : (l[cs] || l.ur);
         const langDir = cs === 'ur' ? 'lang="ur" dir="rtl"' : (cs === 'hi' ? 'lang="hi"' : 'lang="ur-Latn" dir="ltr"');
         h += `<div class="meter-couplets">`;
         h += `<div class="fam-section-label">Famous couplets in this bahr</div>`;
         cps.forEach((c, i) => {
+          const w1 = dispWordWrap(c.l1, cs);
+          const w2 = dispWordWrap(c.l2, cs);
           h += `<div class="card couplet-card">`;
           h += `<div class="row couplet-head"><a class="vnum" href="#/ghazals/${c.col}/${c.id}" onclick="event.stopPropagation()">${c.poet}${c.col !== 'handbook' ? ' ' + c.id : ''} ›</a>`;
-          h += `<div class="row couplet-acts"><span class="play sm" role="button" tabindex="0" aria-label="Play couplet" data-label="Play couplet" data-pb="lookup:${idStr},${i}" onclick="event.stopPropagation();playLookupCouplet('${idStr}',${i},null,this)">▶︎</span></div></div>`;
-          h += `<div class="cbox-verse"><div class="vline-lg" ${langDir}>${disp(c.l1)}</div><div class="vline-lg" ${langDir}>${disp(c.l2)}</div></div>`;
-          h += `<div class="couplet-scan-box"><div id="lkScan_${idStr}_${i}_1"></div><div id="lkScan_${idStr}_${i}_2"></div></div>`;
+          h += `<div class="row couplet-acts">`;
+          h += `<button class="scan-toggle-btn tiny" id="lkScanBtn_${idStr}_${i}" aria-expanded="false" onclick="event.stopPropagation();toggleLookupScan('${idStr}',${i})">Scan ▾</button>`;
+          h += `<span class="play sm" role="button" tabindex="0" aria-label="Play couplet" data-label="Play couplet" data-pb="lookup:${idStr},${i}" onclick="event.stopPropagation();playLookupCouplet('${idStr}',${i},null,this)">▶︎</span>`;
+          h += `</div></div>`;
+          h += `<div class="cbox-verse"><div class="vline-lg" id="lkWords_${idStr}_${i}_1" ${langDir}>${w1.html}</div><div class="vline-lg" id="lkWords_${idStr}_${i}_2" ${langDir}>${w2.html}</div></div>`;
+          h += `<div class="couplet-scan-box hidden" id="lkScanBox_${idStr}_${i}"><div id="lkScan_${idStr}_${i}_1"></div><div id="lkScan_${idStr}_${i}_2"></div></div>`;
           h += `</div>`;
         });
         h += `</div>`;
@@ -157,13 +174,28 @@ function renderFams() {
     return h;
   }).join('');
 
-  // fill the expanded row's couplet scans
-  if (lookupExpandedId != null && typeof renderLineScan === 'function') {
-    coupletsForMeter(lookupExpandedId, 2).forEach((c, i) => {
-      [c.l1, c.l2].forEach((l, k) => { const el = $(`lkScan_${lookupExpandedId}_${i}_${k + 1}`); if (el) renderLineScan(l.ur, el, l, lookupExpandedId); });
-    });
+}
+
+/* per-couplet "Scan" toggle: closed by default (reference, not scansion); render the
+   syllable chips lazily the first time a box is opened, then just show/hide it. */
+function toggleLookupScan(mId, i) {
+  const box = $(`lkScanBox_${mId}_${i}`), btn = $(`lkScanBtn_${mId}_${i}`);
+  if (!box) return;
+  const opening = box.classList.contains('hidden');
+  box.classList.toggle('hidden');
+  if (btn) { btn.textContent = opening ? 'Scan ▴' : 'Scan ▾'; btn.setAttribute('aria-expanded', opening ? 'true' : 'false'); }
+  if (opening) {
+    if (!box.dataset.filled) {
+      const c = coupletsForMeter(mId, 2)[i];
+      if (c && typeof renderLineScan === 'function') {
+        [c.l1, c.l2].forEach((l, k) => { const el = $(`lkScan_${mId}_${i}_${k + 1}`); if (el) renderLineScan(l.ur, el, l, mId); });
+        box.dataset.filled = '1';
+      }
+    }
+    if (typeof fitChipRows === 'function') fitChipRows(box);
   }
 }
+window.toggleLookupScan = toggleLookupScan;
 
 function playLookupCouplet(mId, i, start, btn) {
   const c = coupletsForMeter(mId, 2)[i]; if (!c) return;
@@ -174,24 +206,28 @@ function playLookupCouplet(mId, i, start, btn) {
     [c.l1, c.l2].forEach((l, k) => {
       const r = Scan.scanLine(l.ur); if (!r || !r.fits || !r.fits.length) return;
       const f = r.fits.find(x => String(x.meter.id) === String(mId)) || r.fits[0];
-      out.push(Object.assign({ e: Scan.explain(r, f) }, pbNodes($(`lkScan_${mId}_${i}_${k + 1}`))));
+      const e = Scan.explain(r, f);
+      const wordsHost = $(`lkWords_${mId}_${i}_${k + 1}`);
+      out.push(Object.assign({ e, words: (typeof pbWordsMatching === 'function') ? pbWordsMatching(wordsHost, e) : null },
+        pbNodes($(`lkScan_${mId}_${i}_${k + 1}`))));
     });
     return out;
   }, start);
 }
 window.playLookupCouplet = playLookupCouplet;
 
-function famPulsePlay(id, el) {
+function famPulsePlay(id, btn) {
   const f = FAMS.find(x => x.id === id);
   if (!f) return;
-  const nodes = el && el.parentNode && typeof el.parentNode.querySelectorAll === 'function' ? [...el.parentNode.querySelectorAll('.blk')] : null;
-  playPat(f.pattern, nodes);
+  const host = btn && btn.closest ? btn.closest('.fam-strip-wrap, .row') : null;
+  const nodes = host && typeof host.querySelectorAll === 'function' ? [...host.querySelectorAll('.blk')] : null;
+  if (typeof pbTogglePattern === 'function') pbTogglePattern('fampulse:' + id, btn, f.pattern, nodes);
 }
 
-function famSing(id, gi) {
+function famSing(id, gi, btn) {
   const f = FAMS.find(x => x.id === id);
   if (!f || !f.gz || !f.gz[gi]) return;
-  singAlong(f.gz[gi].ur, f, $('fs-' + id + '-' + gi));
+  if (typeof singAlong === 'function') singAlong('famsing:' + id + ':' + gi, f.gz[gi].ur, f, $('fs-' + id + '-' + gi), btn);
 }
 
 window.renderFams = renderFams;

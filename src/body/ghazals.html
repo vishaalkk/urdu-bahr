@@ -2,7 +2,7 @@
 <section id="ghazals-section" class="tab-view">
   <div class="page-head ghazal-head">
     <div class="eyebrow" id="ghazalEyebrow">Handbook · 24 ghazals</div>
-    <h1>Ghazals</h1>
+    <h1 class="page-title">Ghazals</h1>
     <p class="lede">Read a ghazal couplet by couplet. Tap any line to see how it scans.</p>
     <!-- Collection segmented control -->
     <div class="seg" role="tablist" aria-label="Collections">
@@ -17,7 +17,7 @@
       <select id="ghazalMeterFilter" class="ghazal-meter-filter" onchange="onGhazalFilterChange()">
         <option value="all">All meters</option>
       </select>
-      <input type="text" id="ghazalSearchInput" class="ghazal-search-input" placeholder="Search poet or first line..." oninput="onGhazalSearch()">
+      <input type="text" id="ghazalSearchInput" class="ghazal-search-input" placeholder="Search poet, first line, or number — all collections" oninput="onGhazalSearch()">
     </div>
   </div>
 
@@ -35,6 +35,10 @@
 
   <!-- Ghazal List View -->
   <div id="ghazalListView">
+    <!-- Universal search results (all collections, tagged); shown instead of
+         the three containers below whenever the search box has a query. -->
+    <div id="ghazalUniversalResults" class="verses hidden"></div>
+
     <!-- Handbook exercises list -->
     <div id="handbookExContainer">
       <div class="row hidden" id="exPoetChips"></div>
