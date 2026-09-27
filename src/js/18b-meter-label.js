@@ -81,12 +81,12 @@ function meterLabelInfo(mOrId) {
   const fam = (typeof famOfMeter !== 'undefined') ? famOfMeter[idNum || idStr] : null;
   if (fam && fam.gz && fam.gz[0]) {
     const g = fam.gz[0];
-    verse = { ur: g.ur || '', hi: g.hi || '', ro: g.ro || '', ascii: g.ascii || '' };
+    verse = { ur: g.ur || '', hi: g.hi || '', ro: g.ro || '', ascii: g.ascii || '', poet: g.p || '' };
   } else if (typeof FAMS !== 'undefined' && Array.isArray(FAMS)) {
     const fMatch = FAMS.find(f => Array.isArray(f.meters) && f.meters.some(x => String(x) === idStr));
     if (fMatch && fMatch.gz && fMatch.gz[0]) {
       const g = fMatch.gz[0];
-      verse = { ur: g.ur || '', hi: g.hi || '', ro: g.ro || '', ascii: g.ascii || '' };
+      verse = { ur: g.ur || '', hi: g.hi || '', ro: g.ro || '', ascii: g.ascii || '', poet: g.p || '' };
     }
   }
 
@@ -94,7 +94,7 @@ function meterLabelInfo(mOrId) {
     const exMatch = EXERCISES_DATA.find(e => { const em = e.meters || e.m; return Array.isArray(em) ? em.some(x => String(x) === idStr) : String(em) === idStr; });
     if (exMatch && exMatch.lines && exMatch.lines[0]) {
       const l = exMatch.lines[0];
-      verse = { ur: l.ur || '', hi: l.hi || '', ro: l.ro || '', ascii: l.ascii || '' };
+      verse = { ur: l.ur || '', hi: l.hi || '', ro: l.ro || '', ascii: l.ascii || '', poet: exMatch.poet || '' };
     }
   }
 
@@ -102,7 +102,7 @@ function meterLabelInfo(mOrId) {
     const ghMatch = GHALIB_EXT_DATA.find(e => Array.isArray(e.meters) ? e.meters.some(x => String(x) === idStr) : String(e.meter || e.m) === idStr);
     if (ghMatch && ghMatch.lines && ghMatch.lines[0]) {
       const l = ghMatch.lines[0];
-      verse = { ur: l.ur || '', hi: l.hi || '', ro: l.ro || '', ascii: l.ascii || '' };
+      verse = { ur: l.ur || '', hi: l.hi || '', ro: l.ro || '', ascii: l.ascii || '', poet: 'Ghalib' };
     }
   }
 
@@ -110,7 +110,7 @@ function meterLabelInfo(mOrId) {
     const mirMatch = MIR_EXT_DATA.find(e => Array.isArray(e.meters) ? e.meters.some(x => String(x) === idStr) : String(e.meter || e.m) === idStr);
     if (mirMatch && mirMatch.lines && mirMatch.lines[0]) {
       const l = mirMatch.lines[0];
-      verse = { ur: l.ur || '', hi: l.hi || '', ro: l.ro || '', ascii: l.ascii || '' };
+      verse = { ur: l.ur || '', hi: l.hi || '', ro: l.ro || '', ascii: l.ascii || '', poet: 'Mir' };
     }
   }
 

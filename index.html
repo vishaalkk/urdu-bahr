@@ -1710,6 +1710,11 @@ main, .wrap { max-width: 760px; }
 .scan-title-row { align-items: baseline; gap: var(--sp-3); }
 .scan-lede { margin: var(--sp-2) 0 0; }
 
+/* Ghazals: say what the meter groups are, so a Ghalib verse heading a Mir group isn't read as Mir's */
+.ghazal-grouping-note { margin: var(--sp-3) 0 0; font-size: 13px; color: var(--faint); }
+.meter-group-label { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); margin-bottom: 2px; }
+.meter-group-poet { font-size: 12.5px; color: var(--faint); margin-top: 2px; }
+
 /* ================= SHARED DRILL ENGINE (round 2, G3) =================
    Styles for src/js/22-drill.js's mountDrill('weight'|'meter'). Quiet
    Manuscript: no shaded panels, one bordered card, type does the hierarchy. */
@@ -2175,6 +2180,7 @@ main, .wrap { max-width: 760px; }
       <button class="seg-btn" id="colBtnMir" onclick="switchCollection('mir')">Mir 429</button>
     </div>
     <div id="colDesc" class="dim ghazal-desc">The handbook's exercise ghazals, with Frances Pritchett's notes. <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/10_ex_01_06.html" target="_blank" rel="noopener">Her exercises<span class="ext">↗</span></a> · <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/11_exnotes.html" target="_blank" rel="noopener">answers &amp; notes<span class="ext">↗</span></a></div>
+    <p class="ghazal-grouping-note">Grouped by bahr. Each group is named after a well-known verse in that meter — not necessarily a line from this collection. Tap a group to open it.</p>
 
     <!-- Controls row: search (the collapsible meter groups below are the meter index) -->
     <div class="row ghazal-controls">
@@ -4407,7 +4413,9 @@ function meterGroupHeaderHTML(key, count, open) {
     if (text) {
       const scriptCls = cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : 'roman');
       const langDir = (typeof getLangDir === 'function') ? getLangDir(cs) : '';
-      verseHtml = `<div class="meter-group-verse ${scriptCls}" ${langDir}>${escapeHtml(text)}</div>`;
+      // the group is named after a famous verse in this bahr — often by another poet than this collection's
+      verseHtml = `<div class="meter-group-label">Bahr of</div><div class="meter-group-verse ${scriptCls}" ${langDir}>${escapeHtml(text)}</div>` +
+        (info.verse.poet ? `<div class="meter-group-poet">— ${escapeHtml(info.verse.poet)}</div>` : '');
     }
   }
   if (!verseHtml) {
@@ -6631,12 +6639,12 @@ function meterLabelInfo(mOrId) {
   const fam = (typeof famOfMeter !== 'undefined') ? famOfMeter[idNum || idStr] : null;
   if (fam && fam.gz && fam.gz[0]) {
     const g = fam.gz[0];
-    verse = { ur: g.ur || '', hi: g.hi || '', ro: g.ro || '', ascii: g.ascii || '' };
+    verse = { ur: g.ur || '', hi: g.hi || '', ro: g.ro || '', ascii: g.ascii || '', poet: g.p || '' };
   } else if (typeof FAMS !== 'undefined' && Array.isArray(FAMS)) {
     const fMatch = FAMS.find(f => Array.isArray(f.meters) && f.meters.some(x => String(x) === idStr));
     if (fMatch && fMatch.gz && fMatch.gz[0]) {
       const g = fMatch.gz[0];
-      verse = { ur: g.ur || '', hi: g.hi || '', ro: g.ro || '', ascii: g.ascii || '' };
+      verse = { ur: g.ur || '', hi: g.hi || '', ro: g.ro || '', ascii: g.ascii || '', poet: g.p || '' };
     }
   }
 
@@ -6644,7 +6652,7 @@ function meterLabelInfo(mOrId) {
     const exMatch = EXERCISES_DATA.find(e => { const em = e.meters || e.m; return Array.isArray(em) ? em.some(x => String(x) === idStr) : String(em) === idStr; });
     if (exMatch && exMatch.lines && exMatch.lines[0]) {
       const l = exMatch.lines[0];
-      verse = { ur: l.ur || '', hi: l.hi || '', ro: l.ro || '', ascii: l.ascii || '' };
+      verse = { ur: l.ur || '', hi: l.hi || '', ro: l.ro || '', ascii: l.ascii || '', poet: exMatch.poet || '' };
     }
   }
 
@@ -6652,7 +6660,7 @@ function meterLabelInfo(mOrId) {
     const ghMatch = GHALIB_EXT_DATA.find(e => Array.isArray(e.meters) ? e.meters.some(x => String(x) === idStr) : String(e.meter || e.m) === idStr);
     if (ghMatch && ghMatch.lines && ghMatch.lines[0]) {
       const l = ghMatch.lines[0];
-      verse = { ur: l.ur || '', hi: l.hi || '', ro: l.ro || '', ascii: l.ascii || '' };
+      verse = { ur: l.ur || '', hi: l.hi || '', ro: l.ro || '', ascii: l.ascii || '', poet: 'Ghalib' };
     }
   }
 
@@ -6660,7 +6668,7 @@ function meterLabelInfo(mOrId) {
     const mirMatch = MIR_EXT_DATA.find(e => Array.isArray(e.meters) ? e.meters.some(x => String(x) === idStr) : String(e.meter || e.m) === idStr);
     if (mirMatch && mirMatch.lines && mirMatch.lines[0]) {
       const l = mirMatch.lines[0];
-      verse = { ur: l.ur || '', hi: l.hi || '', ro: l.ro || '', ascii: l.ascii || '' };
+      verse = { ur: l.ur || '', hi: l.hi || '', ro: l.ro || '', ascii: l.ascii || '', poet: 'Mir' };
     }
   }
 

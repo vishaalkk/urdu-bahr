@@ -834,3 +834,8 @@ main, .wrap { max-width: 760px; }
 #ghazalEyebrow:empty { display: none; }
 .scan-title-row { align-items: baseline; gap: var(--sp-3); }
 .scan-lede { margin: var(--sp-2) 0 0; }
+
+/* Ghazals: say what the meter groups are, so a Ghalib verse heading a Mir group isn't read as Mir's */
+.ghazal-grouping-note { margin: var(--sp-3) 0 0; font-size: 13px; color: var(--faint); }
+.meter-group-label { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); margin-bottom: 2px; }
+.meter-group-poet { font-size: 12.5px; color: var(--faint); margin-top: 2px; }

@@ -244,7 +244,9 @@ function meterGroupHeaderHTML(key, count, open) {
     if (text) {
       const scriptCls = cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : 'roman');
       const langDir = (typeof getLangDir === 'function') ? getLangDir(cs) : '';
-      verseHtml = `<div class="meter-group-verse ${scriptCls}" ${langDir}>${escapeHtml(text)}</div>`;
+      // the group is named after a famous verse in this bahr — often by another poet than this collection's
+      verseHtml = `<div class="meter-group-label">Bahr of</div><div class="meter-group-verse ${scriptCls}" ${langDir}>${escapeHtml(text)}</div>` +
+        (info.verse.poet ? `<div class="meter-group-poet">— ${escapeHtml(info.verse.poet)}</div>` : '');
     }
   }
   if (!verseHtml) {
