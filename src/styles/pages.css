@@ -839,3 +839,12 @@ main, .wrap { max-width: 760px; }
 .fran-link:hover, .fran-link:focus-visible { color: var(--gold); text-decoration: underline; text-underline-offset: 3px; }
 .fran-link:hover .ext { color: var(--gold); }
 .vrow .vnum { white-space: nowrap; }
+
+/* Ghazals: collapsible meter groups — all groups visible at once, tap to open */
+.meter-group { border-top: 1px solid var(--line); }
+.meter-group:last-child { border-bottom: 1px solid var(--line); }
+.meter-group-head { cursor: pointer; padding: var(--sp-3) var(--sp-2); border-radius: 8px; transition: background .12s; }
+.meter-group-head:hover, .meter-group-head:focus-visible { background: var(--bg3); outline: none; }
+.meter-group-head.open { background: color-mix(in srgb, var(--gold) 6%, transparent); }
+.meter-group-chev { margin-left: var(--sp-2); color: var(--gold); }
+.meter-group-rows { padding-bottom: var(--sp-3); }

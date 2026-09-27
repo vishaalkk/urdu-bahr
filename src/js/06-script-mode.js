@@ -1,8 +1,12 @@
 /* ================= SCRIPT MODE ================= */
 let currentScript = 'ur';
 window.currentScript = currentScript;
+/* data-script on <html> lets CSS keep Roman/Devanagari out of Nastaliq + RTL styling (see verse.css) */
+function markScript(mode) { try { document.documentElement.setAttribute('data-script', mode); } catch (e) {} }
+markScript(currentScript);
 function setScriptMode(mode) {
   window.currentScript = currentScript = mode;
+  markScript(mode);
   ['btnScriptUrdu', 'btnScriptDev', 'btnScriptRo', 'btnScriptAsciiHeader'].forEach(id => {
     const el = document.getElementById(id);
     if(el) {

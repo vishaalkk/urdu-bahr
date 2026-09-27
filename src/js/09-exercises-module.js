@@ -235,7 +235,7 @@ function buildMeterGroups(rows, getMeterId, getSortId) {
   return groups;
 }
 
-function meterGroupHeaderHTML(key, count) {
+function meterGroupHeaderHTML(key, count, open) {
   const info = (key && typeof meterLabelInfo === 'function') ? meterLabelInfo(key) : null;
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
   let verseHtml = '';
@@ -253,10 +253,11 @@ function meterGroupHeaderHTML(key, count) {
   }
   const patternHtml = (info && info.pattern && typeof feetStrip === 'function') ? feetStrip(info.pattern) : '';
   return `
-    <div class="meter-group-head">
+    <div class="meter-group-head${open ? ' open' : ''}" role="button" tabindex="0" aria-expanded="${open ? 'true' : 'false'}"
+         onclick="toggleMeterGroup('${escapeHtml(key)}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleMeterGroup('${escapeHtml(key)}')}">
       <div class="meter-group-title">${verseHtml}</div>
       ${patternHtml ? `<div class="meter-group-pattern">${patternHtml}</div>` : ''}
-      <div class="meter-group-count faint tiny">${count} ghazal${count === 1 ? '' : 's'}</div>
+      <div class="meter-group-count faint tiny">${count} ghazal${count === 1 ? '' : 's'} <span class="meter-group-chev" aria-hidden="true">${open ? '▴' : '▾'}</span></div>
     </div>
   `;
 }
@@ -264,20 +265,26 @@ function meterGroupHeaderHTML(key, count) {
 /* Renders as many whole/partial groups as fit in `shownCount` rows (largest
    groups first, per buildMeterGroups), so "Show N more" always continues
    from exactly where the last render left off — including mid-group. */
+/* Every meter group is listed up front as one collapsed line; tap to open its ghazals.
+   A search or meter filter (or a single group) opens everything that matches. */
+const openMeterGroups = new Set();
+function toggleMeterGroup(key) {
+  if (openMeterGroups.has(key)) openMeterGroups.delete(key); else openMeterGroups.add(key);
+  if (typeof renderGhazalsList === 'function') renderGhazalsList();
+}
+window.toggleMeterGroup = toggleMeterGroup;
 function renderGroupedRows(groups, shownCount, rowRenderer) {
+  const mf = $('ghazalMeterFilter');
+  const filtering = !!(($('ghazalSearchInput') && $('ghazalSearchInput').value.trim()) || (mf && mf.value && mf.value !== 'all'));
   let html = '';
-  let used = 0;
   groups.forEach(g => {
-    if (used >= shownCount) return;
-    const remaining = shownCount - used;
-    const rowsToShow = g.rows.slice(0, remaining);
-    if (!rowsToShow.length) return;
-    html += meterGroupHeaderHTML(g.key, g.rows.length);
-    html += `<div class="meter-group-rows">${rowsToShow.map((r, i) => rowRenderer(r, i, rowsToShow.length)).join('')}</div>`;
-    used += rowsToShow.length;
+    const open = filtering || groups.length === 1 || openMeterGroups.has(g.key);
+    html += `<div class="meter-group${open ? ' open' : ''}">` + meterGroupHeaderHTML(g.key, g.rows.length, open);
+    if (open) html += `<div class="meter-group-rows">${g.rows.map((r, i) => rowRenderer(r, i, g.rows.length)).join('')}</div>`;
+    html += `</div>`;
   });
   const totalRows = groups.reduce((s, g) => s + g.rows.length, 0);
-  return { html, shownRows: used, totalRows };
+  return { html, shownRows: totalRows, totalRows };   // no "show more": groups are the pagination
 }
 
 function getGhazalNavLabel(col, item) {

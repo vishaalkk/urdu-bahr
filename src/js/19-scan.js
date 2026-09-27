@@ -249,8 +249,8 @@ function patGlyphs(raw){
 }
 function legendHTML(cls){
   return `<div class="legend${cls?' '+cls:''}">`
-    +`<span><i class="sw c-l"></i><span class="pg l">=</span> long <span class="lg-note">(dum)</span></span>`
-    +`<span><i class="sw c-s"></i><span class="pg s">–</span> short <span class="lg-note">(da)</span></span>`
+    +`<span><i class="sw c-l"></i><span class="lg-or">/</span><span class="pg l">=</span> long <span class="lg-note">(dum)</span></span>`
+    +`<span><i class="sw c-s"></i><span class="lg-or">/</span><span class="pg s">–</span> short <span class="lg-note">(da)</span></span>`
     +`<span><i class="sw c-x"></i>flexible <span class="lg-note">(either, resolved by the meter)</span></span>`
     +`<span><span class="pg x">x</span> either</span>`
     +`<span><i class="sw c-c"></i>cheat</span>`

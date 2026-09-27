@@ -118,7 +118,7 @@ const ROUTES = [
     // meter and poet, so the row's own link is bare — just her number, e.g. "19↗" —
     // not "Mir 19"; the "Mir …" form is reserved for places that mix collections
     // (universal search results, the reader title).
-    await check('#/ghazals/mir', (w, d) => { const a = d.querySelector('#mirExtList .vrow .fran-link'); return a && /franpritchett\.com/.test(a.href) && /^\d+↗$/.test(a.textContent) ? true : 'first Mir row: ' + (a ? a.textContent + ' ' + a.href : 'no link'); }, "Mir rows show Fran's number (bare), linked to her page");
+    await check('#/ghazals/mir', (w, d) => { if (d.querySelector('#mirExtList .vrow')) return 'groups should start collapsed'; const h = d.querySelector('#mirExtList .meter-group-head'); if (!h) return 'no group headers'; h.click(); const a = d.querySelector('#mirExtList .vrow .fran-link'); return a && /franpritchett\.com/.test(a.href) && /^\d+↗$/.test(a.textContent) ? true : 'first Mir row: ' + (a ? a.textContent + ' ' + a.href : 'no link'); }, "Mir rows show Fran's number (bare), linked to her page");
     await check('#/weight', (w) => /^#\/weight\/(learn|drill|lookup)$/.test(w.location.hash) ? true : 'address stayed ' + w.location.hash, 'bare #/weight becomes an explicit sub-tab link');
   }
 
