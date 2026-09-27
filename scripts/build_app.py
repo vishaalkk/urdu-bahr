@@ -343,6 +343,8 @@ full_html = f"""<!DOCTYPE html>
 
 <div class="wrap">
 
+{get_bp('home')}
+
 {get_group('weight')}
 
 {get_group('meter')}
@@ -377,7 +379,7 @@ full_html = f"""<!DOCTYPE html>
 
 
 # ─── 7b. Structural checks: every body partial used, sections balanced ──────
-_used = {'header','nav','settings','scan','ghazals','handbook','about','tap','footer'}
+_used = {'header','home','nav','settings','scan','ghazals','handbook','about','tap','footer'}
 _unused = [k for k in body_parts if k not in _used and not any(k == g or k.startswith(g + '-') for g in ('weight','meter'))]
 if _unused:
     raise SystemExit(f"build_app: manifest body partials not placed in the page: {_unused}")

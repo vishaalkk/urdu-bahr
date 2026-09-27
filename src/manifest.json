@@ -4,10 +4,12 @@
     "src/styles/base.css",
     "src/styles/verse.css",
     "src/styles/pages.css",
-    "src/styles/drill.css"
+    "src/styles/drill.css",
+    "src/styles/home.css"
   ],
   "body": [
     "src/body/header.html",
+    "src/body/home.html",
     "src/body/weight.html",
     "src/body/weight-drill.html",
     "src/body/weight-lookup.html",
