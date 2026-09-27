@@ -79,7 +79,9 @@ function handleRoute(targetHash) {
 
   // Default route when hash is empty
   if (!root) {
-    const last = store.get('lastRoute', '/meter/learn');
+    // A bare URL always opens the start of the path — Weight › Learn. Shared links and
+    // bookmarks carry their own route, so they still open exactly where they point.
+    const last = '/weight/learn';
     if (typeof location !== 'undefined') {
       navigate(last, true);
       return;

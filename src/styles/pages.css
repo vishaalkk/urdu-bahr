@@ -801,3 +801,10 @@ main, .wrap { max-width: 760px; }
 .scriptbtn { display: inline-flex; align-items: center; height: 28px; line-height: 1; }
 #btnScriptUrdu { font-family: var(--urdu); font-size: 15px; direction: rtl; unicode-bidi: isolate; position: relative; top: -4px; }   /* Nastaliq draws below its box; lift it onto the line */
 #btnScriptDev { font-family: var(--deva); font-size: 14px; }
+
+/* Fran Pritchett's ghazal number, linking to her page */
+.fran-link { color: inherit; text-decoration: none; white-space: nowrap; }
+.fran-link .ext { font-size: .8em; margin-left: 2px; color: var(--faint); }
+.fran-link:hover, .fran-link:focus-visible { color: var(--gold); text-decoration: underline; text-underline-offset: 3px; }
+.fran-link:hover .ext { color: var(--gold); }
+.vrow .vnum { white-space: nowrap; }

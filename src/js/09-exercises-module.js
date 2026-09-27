@@ -185,17 +185,43 @@ function renderGhazalReaderHeader(mId) {
 }
 window.renderGhazalReaderHeader = renderGhazalReaderHeader;
 
+/* Fran Pritchett's own number for a ghazal (Ghalib: our id is hers; Mir: ours is sequential,
+   hers is source_id, e.g. 0006 → 6). Handbook exercises have none. */
+function franNum(col, item) {
+  if (!item) return null;
+  if (col === 'ghalib') return item.id;
+  if (col === 'mir') { const n = parseInt(item.source_id, 10); return isNaN(n) ? item.id : n; }
+  return null;
+}
+window.franNum = franNum;
+/* her number as a link to her page for that ghazal (new tab); doesn't open our reader */
+function franLinkHTML(col, item) {
+  const n = franNum(col, item);
+  if (n == null) return '';
+  const who = col === 'ghalib' ? 'Ghalib' : 'Mir';
+  return item.url
+    ? `<a class="fran-link" href="${escapeHtml(item.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="Frances Pritchett's page for ${who} ${n}">${who} ${n}<span class="ext" aria-hidden="true">↗</span></a>`
+    : `${who} ${n}`;
+}
+window.franLinkHTML = franLinkHTML;
+function meterNameOf(item) {
+  const m = mListOf(item)[0];
+  const info = (m != null && typeof meterLabelInfo === 'function') ? meterLabelInfo(m) : null;
+  return info && info.name ? info.name : (m != null ? '#' + m : '');
+}
+
 function getGhazalNavLabel(col, item) {
   if (!item) return '';
   if (col === 'handbook') return `Ex. ${item.id}`;
-  if (col === 'ghalib') return `Ghalib ${item.id}`;
-  if (col === 'mir') return `Mir ${item.id}`;
+  const n = franNum(col, item);
+  if (col === 'ghalib') return `Ghalib ${n}`;
+  if (col === 'mir') return `Mir ${n}`;
   return `${col} ${item.id}`;
 }
 
 function updateCollectionCounts() {
   const hLen = (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) ? EXERCISES_DATA.length : 24;
-  const gLen = (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) ? GHALIB_EXT_DATA.length : 185;
+  const gLen = (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) ? GHALIB_EXT_DATA.length : 234;
   const mLen = (typeof MIR_EXT_DATA !== 'undefined' && Array.isArray(MIR_EXT_DATA)) ? MIR_EXT_DATA.length : 429;
   const bH = $('colBtnHandbook');
   const bG = $('colBtnGhalib');
@@ -261,8 +287,11 @@ function onGhazalSearch() {
   ghazalShownCount = 30;
   clearTimeout(ghazalSearchDebounce);
   ghazalSearchDebounce = setTimeout(() => {
-    if (!($('ghazalSearchInput') && $('ghazalSearchInput').value.trim())) searchCollectionFilter = 'all';
+    const q = ($('ghazalSearchInput') && $('ghazalSearchInput').value.trim()) || '';
+    if (!q) searchCollectionFilter = 'all';
     renderGhazalsList();
+    // shareable: the address bar carries the search
+    if (typeof setHashQuiet === 'function') setHashQuiet(q ? '/ghazals?q=' + encodeURIComponent(q) : '/ghazals/' + (typeof activeCollection !== 'undefined' ? activeCollection : 'handbook'));
   }, 150);
 }
 window.onGhazalSearch = onGhazalSearch;
@@ -305,7 +334,7 @@ function switchCollection(col) {
   const eyebrowNames = { handbook: 'Handbook', ghalib: 'Ghalib', mir: 'Mir' };
   const eyebrowCounts = {
     handbook: (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) ? EXERCISES_DATA.length : 24,
-    ghalib: (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) ? GHALIB_EXT_DATA.length : 185,
+    ghalib: (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) ? GHALIB_EXT_DATA.length : 234,
     mir: (typeof MIR_EXT_DATA !== 'undefined' && Array.isArray(MIR_EXT_DATA)) ? MIR_EXT_DATA.length : 429
   };
   if ($('ghazalEyebrow')) $('ghazalEyebrow').textContent = `${eyebrowNames[col] || col} · ${eyebrowCounts[col] || 0} ghazals`;
@@ -490,7 +519,7 @@ function renderUniversalSearchResults(q) {
     const who = col === 'handbook' ? (item.poet || 'Handbook') : colNames[col];
     return `
       <div class="vrow" role="link" tabindex="0" onclick="navigate('/ghazals/${col}/${item.id}')">
-        <span class="vnum">${escapeHtml(getGhazalNavLabel(col, item))}</span>
+        <span class="vnum">${col === 'handbook' ? escapeHtml(getGhazalNavLabel(col, item)) : franLinkHTML(col, item)}</span>
         <div class="vtext">
           <div class="vline" ${langDir}>${disp1}</div>
           <div class="vmeta">
@@ -577,17 +606,13 @@ function renderCorpusList(col) {
     const l1 = g.lines && g.lines[0];
     const disp1 = l1 ? ((typeof getLineDisplay === 'function') ? getLineDisplay(l1, cs) : (l1[cs] || l1.ur)) : '';
     const mStr = mListOf(g).map(x => '#' + x).join('/') || '#?';
-    const lineCount = g.lines ? g.lines.length : 0;
-
     return `
       <div class="vrow" role="link" tabindex="0" onclick="navigate('/ghazals/${col}/${g.id}')">
-        <span class="vnum">${colName} ${g.id}</span>
+        <span class="vnum">${franLinkHTML(col, g) || escapeHtml(colName + ' ' + g.id)}</span>
         <div class="vtext">
           <div class="vline" ${langDir}>${disp1}</div>
           <div class="vmeta">
-            <span>${lineCount} lines</span>
-            <span>·</span>
-            <span class="mono">${mStr}</span>
+            <span>${escapeHtml(meterNameOf(g))}</span>
           </div>
         </div>
         <div class="vact">
@@ -661,8 +686,7 @@ function openGhazalReader(col, id) {
     if (col === 'handbook') {
       titleEl.textContent = `Ex. ${item.id} · ${item.poet || 'Handbook'}`;
     } else {
-      const colCap = col === 'ghalib' ? 'Ghalib' : 'Mir';
-      titleEl.textContent = `${colCap} ${item.id} · ${colCap}`;
+      titleEl.innerHTML = franLinkHTML(col, item) || escapeHtml(getGhazalNavLabel(col, item));
     }
   }
 
@@ -775,7 +799,7 @@ function openGhazalReader(col, id) {
   // Render scans if showAllScans is true
   if (showAllScans) {
     for (let c = 0; c < cCount; c++) {
-      populateCoupletScan(lines[2 * c], lines[2 * c + 1], c);
+      populateCoupletScan(lines[2 * c], lines[2 * c + 1], c, mListOf(item));
     }
   }
 }
@@ -808,7 +832,7 @@ function toggleCoupletScan(c) {
   if (isHidden) {
     const lines = getCurrentReaderLines();
     if (lines && lines[2 * c] && lines[2 * c + 1]) {
-      populateCoupletScan(lines[2 * c], lines[2 * c + 1], c);
+      populateCoupletScan(lines[2 * c], lines[2 * c + 1], c, mListOf(curReaderItem));
     }
   }
 }
@@ -834,7 +858,7 @@ function toggleReaderAllScans() {
       const cCount = Math.floor(lines.length / 2);
       for (let c = 0; c < cCount; c++) {
         if (lines[2 * c] && lines[2 * c + 1]) {
-          populateCoupletScan(lines[2 * c], lines[2 * c + 1], c);
+          populateCoupletScan(lines[2 * c], lines[2 * c + 1], c, mListOf(curReaderItem));
         }
       }
     }
@@ -842,13 +866,16 @@ function toggleReaderAllScans() {
 }
 window.toggleReaderAllScans = toggleReaderAllScans;
 
-function populateCoupletScan(line1, line2, c) {
+function populateCoupletScan(line1, line2, c, meters) {
   const b1 = $(`misraScan_${c}_1`);
   const b2 = $(`misraScan_${c}_2`);
   const txt = l => (l && typeof l === 'object') ? l.ur : l;
   const obj = l => (l && typeof l === 'object') ? l : null;
-  if (b1 && typeof renderLineScan === 'function') renderLineScan(txt(line1), b1, obj(line1));
-  if (b2 && typeof renderLineScan === 'function') renderLineScan(txt(line2), b2, obj(line2));
+  // `meters` is the ghazal's own bahr (from mListOf(item)), e.g. [18,19] for a
+  // paired meter. renderLineScan then scans each line only against those
+  // meters, instead of whatever the scanner would otherwise guess best.
+  if (b1 && typeof renderLineScan === 'function') renderLineScan(txt(line1), b1, obj(line1), meters);
+  if (b2 && typeof renderLineScan === 'function') renderLineScan(txt(line2), b2, obj(line2), meters);
 }
 window.populateCoupletScan = populateCoupletScan;
 
@@ -878,10 +905,16 @@ function playReaderCoupletByIndex(c, start, btn) {
     else if (box && !box.querySelector('.chip')) populateCoupletScan(lines[2 * c], lines[2 * c + 1], c);
     if (typeof A !== 'undefined' && A.ensure && !A.ensure()) return null;
     if (typeof Scan === 'undefined' || !Scan.scanLine) return null;
+    // Play back the fit in the ghazal's own bahr (never the scanner's best
+    // guess), matching what populateCoupletScan renders above.
+    const meters = mListOf(curReaderItem).map(String);
     const out = [];
     [1, 2].forEach(k => {
       const r = Scan.scanLine(lines[2 * c + k - 1].ur);
-      if (r && r.fits && r.fits.length) out.push(Object.assign({ e: Scan.explain(r, r.fits[0]) }, pbNodes($(`misraScan_${c}_${k}`))));
+      const f = meters.length
+        ? r.fits.filter(x => meters.includes(String(x.meter.id))).sort((a, b) => a.c - b.c)[0]
+        : r.fits[0];
+      if (f) out.push(Object.assign({ e: Scan.explain(r, f) }, pbNodes($(`misraScan_${c}_${k}`))));
     });
     return out;
   }, start);

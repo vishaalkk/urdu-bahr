@@ -31,6 +31,7 @@ with open('data/mir_extended.json', 'r', encoding='utf-8') as f:
 GHALIB_EXT_PREVIEW = [{
     'id': g['id'],
     'meters': g['meters'],
+    'url': g.get('url', ''),        # Fran Pritchett's page for this ghazal (Ghalib id = her number)
     'label': g['meter_label'],
     'n': g['lines_count'],
     'lines': [{'ascii': l['ascii'], 'ur': l['ur'], 'hi': l['hi'], 'ro': l['ro']} for l in g['lines']],
@@ -39,6 +40,8 @@ GHALIB_EXT_PREVIEW = [{
 MIR_EXT_PREVIEW = [{
     'id': g['id'],
     'meters': g['meters'],
+    'url': g.get('url', ''),
+    'source_id': g.get('source_id', ''),   # her number for the ghazal (our Mir id is sequential)
     'label': g['meter_label'],
     'n': g['lines_count'],
     'lines': [{'ascii': l['ascii'], 'ur': l['ur'], 'hi': l['hi'], 'ro': l['ro']} for l in g['lines']],

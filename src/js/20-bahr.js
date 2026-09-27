@@ -34,7 +34,7 @@ function coupletsForMeter(mId, max) {
     const lines = item.lines || [], a = i - (i % 2), l1 = lines[a], l2 = lines[a + 1];
     if (!l1 || !l2) return;
     const k = col + '|' + item.id + '|' + a; if (seen.has(k)) return; seen.add(k);
-    found.push({ l1, l2, poet, col, id: item.id });
+    found.push({ l1, l2, poet, col, id: item.id, item });
   };
   const colls = _meterCollections();
   const fam = (typeof famOfMeter !== 'undefined') ? famOfMeter[mId] : null;
@@ -166,7 +166,7 @@ function meterCoupletsHTML(mId, pfx) {
       const w1 = dispWordWrap(c.l1, cs);
       const w2 = dispWordWrap(c.l2, cs);
       h += `<div class="card couplet-card">`;
-      h += `<div class="row couplet-head"><a class="vnum" href="#/ghazals/${c.col}/${c.id}" onclick="event.stopPropagation()">${c.poet}${c.col !== 'handbook' ? ' ' + c.id : ''} ›</a>`;
+      h += `<div class="row couplet-head"><a class="vnum" href="#/ghazals/${c.col}/${c.id}" onclick="event.stopPropagation()">${c.poet}${c.col !== 'handbook' ? ' ' + ((typeof franNum === 'function' ? franNum(c.col, c.item) : null) || c.id) : ''} ›</a>`;
       h += `<div class="row couplet-acts">`;
       h += `<button class="scan-toggle-btn tiny" id="${pfx}ScanBtn_${idStr}_${i}" aria-expanded="false" onclick="event.stopPropagation();toggleLookupScan('${idStr}',${i},'${pfx}')">Scan ▾</button>`;
       h += `<span class="play sm" role="button" tabindex="0" aria-label="Play couplet" data-label="Play couplet" data-pb="lookup:${idStr},${i},${pfx}" onclick="event.stopPropagation();playLookupCouplet('${idStr}',${i},null,this,'${pfx}')">▶︎</span>`;
