@@ -257,22 +257,6 @@ function filterMeterLookup(kind) {
   if (typeof renderFams === 'function') renderFams();
 }
 
-function handleHandbookRoute(chId, params) {
-  if (typeof pickHbChapter === 'function') pickHbChapter(chId);
-  const backBtn = $('btnHandbookBack');
-  if (backBtn) {
-    backBtn.onclick = () => {
-      if (params && params.from) {
-        navigate(params.from);
-      } else if (window.history.length > 1) {
-        window.history.back();
-      } else {
-        navigate('/weight/learn');
-      }
-    };
-  }
-}
-
 function onHandbookBack() {
   if (window.history.length > 1) {
     window.history.back();

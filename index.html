@@ -1118,7 +1118,6 @@ main, .wrap { max-width: 760px; }
 #weight-section .card,
 #meter-section .card,
 #about-section .card,
-#handbook-section .card,
 #ghazals-section .card:not(.couplet-card) {
   background: none;
   border: 0;
@@ -1138,25 +1137,15 @@ main, .wrap { max-width: 760px; }
 #meter-section .play,
 #ghazals-section .play,
 #about-section .play,
-#handbook-section .play {
-  background: none;
-  box-shadow: none;
-}
 #weight-section .play:hover,
 #meter-section .play:hover,
 #ghazals-section .play:hover,
 #about-section .play:hover,
-#handbook-section .play:hover {
-  background: none;
-  box-shadow: none;
-  border-color: var(--gold);
-}
 
 /* Buttons as text within owned pages */
 #weight-section .btn.ghost,
 #meter-section .btn.ghost,
 #about-section .btn.ghost,
-#handbook-section .btn.ghost,
 #ghazals-section .btn.ghost {
   background: none;
   border-color: transparent;
@@ -1165,7 +1154,6 @@ main, .wrap { max-width: 760px; }
 #weight-section .btn.ghost:hover,
 #meter-section .btn.ghost:hover,
 #about-section .btn.ghost:hover,
-#handbook-section .btn.ghost:hover,
 #ghazals-section .btn.ghost:hover { background: none; color: var(--ink); }
 
 #weight-section .btn.gold,
@@ -1587,18 +1575,6 @@ main, .wrap { max-width: 760px; }
 .bib-summary strong { color: var(--ink); font-weight: 600; }
 .bib-related { margin-top: var(--sp-2); padding-left: var(--sp-3); font-family: var(--sans); font-size: 13px; color: var(--faint); line-height: 1.5; }
 .bib-entry.bib-flash, .bib-flash { outline: 2px solid var(--gold); outline-offset: 4px; transition: outline-color 300ms ease-out; }
-
-/* ============================================================
-   Handbook page
-   ============================================================ */
-#handbook-section .hb-toprow { justify-content: space-between; align-items: center; margin: 0 0 var(--sp-4); }
-#handbook-section h2 { font-family: var(--serif); font-weight: 500; }
-.hb-chapter-title { font-family: var(--serif); font-weight: 500; font-size: 24px; margin: var(--sp-2) 0 var(--sp-1); color: var(--ink); }
-.hb-chapter-meta { font-family: var(--sans); font-size: 13px; color: var(--faint); }
-.hb-chapter-urdu { font-family: var(--urdu); font-size: 24px; color: var(--dim); direction: rtl; }
-.hb-chapter-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--sp-3); flex-wrap: wrap; padding-bottom: var(--sp-4); margin-bottom: var(--sp-5); border-bottom: 1px solid var(--line); }
-.hb-verbatim { line-height: 1.8; font-size: 16px; font-family: var(--serif); max-width: 68ch; margin: 0 auto; color: var(--ink); }
-#hbChapterView { max-width: 68ch; margin: 0 auto; }
 
 /* ============================================================
    Mobile (375px) — no horizontal scroll, generous gutters
@@ -2277,10 +2253,8 @@ main, .wrap { max-width: 760px; }
 </section>
 
 <footer id="siteFooter" class="in-flow-footer">
-  <a href="https://franpritchett.com/00ghalib/meterbk/00_index.html" target="_blank" rel="noopener">Handbook ↗</a>
-  <a href="#/about">Sources</a>
-  <a href="#/about">About the scanner</a>
-  <button class="footer-link" onclick="openSettings()">Settings</button>
+  <a href="https://franpritchett.com/00ghalib/meterbk/00_index.html" target="_blank" rel="noopener">Pritchett's handbook ↗</a>
+  <a href="#/about">About &amp; sources</a>
 </footer>
 
 </div>
@@ -3652,22 +3626,6 @@ function filterMeterLookup(kind) {
                                     (kind === 'hindi' && id === 'filterMeterHindi'));
   });
   if (typeof renderFams === 'function') renderFams();
-}
-
-function handleHandbookRoute(chId, params) {
-  if (typeof pickHbChapter === 'function') pickHbChapter(chId);
-  const backBtn = $('btnHandbookBack');
-  if (backBtn) {
-    backBtn.onclick = () => {
-      if (params && params.from) {
-        navigate(params.from);
-      } else if (window.history.length > 1) {
-        window.history.back();
-      } else {
-        navigate('/weight/learn');
-      }
-    };
-  }
 }
 
 function onHandbookBack() {
@@ -5252,31 +5210,6 @@ function renderMirExt() {
   renderGhazalsList();
 }
 window.renderMirExt = renderMirExt;
-
-/* ================= GHALIB EXTENDED CORPUS ================= */
-/* Superseded (round 3 cleanup): the Ghalib browse list, its meter filter,
-   and "scan in Studio" action all now live in 09-exercises-module.js
-   (renderCorpusList('ghalib'), populateGhazalMeterFilter, editCurrentInScan).
-   This file used to define its own `renderGhalibExt`/`showMoreGhalibExt`/
-   `scanGhalibExtInStudio` against DOM ids (`ghalibExtMeterFilter`) that no
-   longer exist in ghazals.html — since function declarations in a
-   concatenated script all share one scope, THIS file's later declaration
-   was silently winning over 09's for the bare `renderGhalibExt` identifier
-   (only 02-store.js/06-script-mode.js called it that way; the real render
-   path always went through renderGhazalsList, so it was a landmine, not a
-   visible bug). Left empty rather than removed from the manifest so file
-   ownership/numbering stays stable. */
-
-/* ================= MIR EXTENDED CORPUS ================= */
-/* Superseded (round 3 cleanup): the Mir browse list, its meter filter, and
-   "scan in Studio" action all now live in 09-exercises-module.js
-   (renderCorpusList('mir'), populateGhazalMeterFilter, editCurrentInScan).
-   See 10-ghalib-extended-corpus-preview-browse.js for why this file's old
-   `renderMirExt`/`showMoreMirExt`/`scanMirExtInStudio` — and the other
-   Studio-loading helpers below (`loadCoupletInStudio`, `loadExInStudio`,
-   `playCoupletRhythm`, `loadExInScan`, `scanLineInEngine`) — were dead:
-   nothing in the app calls them by name any more. Left empty rather than
-   removed from the manifest so file ownership/numbering stays stable. */
 
 /* ================= DICTIONARY MODULE ================= */
 let currentDictTag = 'all';

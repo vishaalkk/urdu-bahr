@@ -40,6 +40,9 @@ const ROUTES = [
     const ids = [...d.querySelectorAll('[id]')].map(e => e.id);
     const dup = [...new Set(ids.filter((x, i) => ids.indexOf(x) !== i))];
     dup.length ? fail('duplicate ids in static markup: ' + dup.slice(0, 8).join(', ')) : ok('no duplicate ids in static markup');
+    /original print edition|INTRODUCTION TO THE NEW ONLINE VERSION/.test(HTML) ? fail('handbook chapter text is embedded (it should only live locally)') : ok('handbook text not published');
+    /href="#\/handbook/.test(HTML) ? fail('a link still points at the removed in-app Handbook') : ok('no links to the removed in-app Handbook');
+    /<link rel="icon"[^>]+href="data:image\/svg\+xml/.test(HTML) ? ok('inline بحر favicon') : fail('no inline favicon');
     /(https?:)?\/\/fonts\.(googleapis|gstatic)\.com|<script[^>]+src=|<link[^>]+stylesheet[^>]+href=["']https?:/i.test(HTML)
       ? fail('page references a network resource (must work offline)') : ok('no network fonts/scripts/stylesheets');
   }
@@ -94,6 +97,28 @@ const ROUTES = [
       a > 0 && a === b ? ok(`search is diacritic-insensitive (khvahish = ḳhvāhish: ${a} hits)`) : fail(`search mismatch: khvahish=${a}, ḳhvāhish=${b}`);
     } else fail('searchGhazalIndex missing');
     if (errors.length) fail('script error in feature checks: ' + errors[0]);
+    w.close();
+  }
+
+  console.log('Legend and scripts');
+  {
+    const { dom, errors } = load('#/ghazals/handbook'); await wait(1500);
+    const w = dom.window, d = w.document;
+    const lg = d.createElement('div'); lg.innerHTML = w.legendHTML('legend-sticky');
+    const items = [...lg.querySelectorAll('.lg-item')];
+    const labels = items.map(i => i.textContent.replace(/\s+/g, ' ').trim()).join(' | ');
+    items.length === 6 && items.every(i => (i.getAttribute('data-tip') || '').length > 20) && /extra/.test(labels) && !/cheat/.test(labels)
+      ? ok('legend: 6 items, each with an explanation; uses "extra"') : fail('legend items: ' + labels);
+    w.setScriptMode('ro'); await wait(200);
+    const head = d.querySelector('#handbookExContainer .meter-group-head'); if (head) head.click(); await wait(100);   // groups start collapsed
+    const gv = d.querySelector('#handbookExContainer .meter-group-verse');
+    if (!(gv && gv.getAttribute('lang') === 'ur-Latn' && / /.test(gv.textContent))) fail('Roman group header: ' + (gv ? gv.outerHTML.slice(0, 90) : 'none'));
+    const rows = [...d.querySelectorAll('#handbookExContainer .vline')];
+    d.documentElement.getAttribute('data-script') === 'ro' && rows.length && rows.every(r => r.getAttribute('lang') === 'ur-Latn' && r.getAttribute('dir') === 'ltr' && / /.test(r.textContent.trim()))
+      ? ok(`Roman mode: <html data-script="ro">, ${rows.length} rows tagged Roman/LTR with spaces`) : fail('Roman rows: ' + rows.slice(0, 2).map(r => r.outerHTML.slice(0, 90)).join(' || '));
+    w.setScriptMode('ur'); await wait(200);
+    d.documentElement.getAttribute('data-script') === 'ur' ? ok('switching back to Urdu resets data-script') : fail('data-script stuck');
+    if (errors.length) fail('script error in legend/script checks: ' + errors[0]);
     w.close();
   }
 

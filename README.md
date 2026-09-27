@@ -60,9 +60,10 @@ The tests:
   engine, a sandboxed run of the app's scripts, and self-containment checks.
 - `tests/corpus_scan.js` — the scanner against the 24 Handbook ghazals' answer keys.
 - `tests/chip_translit_consistency.js` — syllable-level vs whole-line transliteration.
-- `tests/dom_smoke.js` — loads the built page in jsdom: no nested sections, no
-  duplicate ids, no network resources, every tab and sub-tab renders when
-  deep-linked, drills mount, family rows expand, search is diacritic-insensitive.
+- `tests/dom_smoke.js` — loads the built page in jsdom: page structure, no duplicate
+  ids, no network resources, handbook text not published, every route renders when
+  deep-linked (incl. `#/home`), drills mount, meter groups, legend, Roman mode tagging,
+  shareable links (`?open=`, `?meter=`, `?q=`, `#/scan?t=`), 234 Ghalib ghazals, Fran's links.
 
 The build itself also fails if a `src/manifest.json` body partial isn't placed
 in the page or `<section>` tags are unbalanced.

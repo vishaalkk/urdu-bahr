@@ -247,7 +247,6 @@ main, .wrap { max-width: 760px; }
 #weight-section .card,
 #meter-section .card,
 #about-section .card,
-#handbook-section .card,
 #ghazals-section .card:not(.couplet-card) {
   background: none;
   border: 0;
@@ -267,25 +266,15 @@ main, .wrap { max-width: 760px; }
 #meter-section .play,
 #ghazals-section .play,
 #about-section .play,
-#handbook-section .play {
-  background: none;
-  box-shadow: none;
-}
 #weight-section .play:hover,
 #meter-section .play:hover,
 #ghazals-section .play:hover,
 #about-section .play:hover,
-#handbook-section .play:hover {
-  background: none;
-  box-shadow: none;
-  border-color: var(--gold);
-}
 
 /* Buttons as text within owned pages */
 #weight-section .btn.ghost,
 #meter-section .btn.ghost,
 #about-section .btn.ghost,
-#handbook-section .btn.ghost,
 #ghazals-section .btn.ghost {
   background: none;
   border-color: transparent;
@@ -294,7 +283,6 @@ main, .wrap { max-width: 760px; }
 #weight-section .btn.ghost:hover,
 #meter-section .btn.ghost:hover,
 #about-section .btn.ghost:hover,
-#handbook-section .btn.ghost:hover,
 #ghazals-section .btn.ghost:hover { background: none; color: var(--ink); }
 
 #weight-section .btn.gold,
@@ -716,18 +704,6 @@ main, .wrap { max-width: 760px; }
 .bib-summary strong { color: var(--ink); font-weight: 600; }
 .bib-related { margin-top: var(--sp-2); padding-left: var(--sp-3); font-family: var(--sans); font-size: 13px; color: var(--faint); line-height: 1.5; }
 .bib-entry.bib-flash, .bib-flash { outline: 2px solid var(--gold); outline-offset: 4px; transition: outline-color 300ms ease-out; }
-
-/* ============================================================
-   Handbook page
-   ============================================================ */
-#handbook-section .hb-toprow { justify-content: space-between; align-items: center; margin: 0 0 var(--sp-4); }
-#handbook-section h2 { font-family: var(--serif); font-weight: 500; }
-.hb-chapter-title { font-family: var(--serif); font-weight: 500; font-size: 24px; margin: var(--sp-2) 0 var(--sp-1); color: var(--ink); }
-.hb-chapter-meta { font-family: var(--sans); font-size: 13px; color: var(--faint); }
-.hb-chapter-urdu { font-family: var(--urdu); font-size: 24px; color: var(--dim); direction: rtl; }
-.hb-chapter-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--sp-3); flex-wrap: wrap; padding-bottom: var(--sp-4); margin-bottom: var(--sp-5); border-bottom: 1px solid var(--line); }
-.hb-verbatim { line-height: 1.8; font-size: 16px; font-family: var(--serif); max-width: 68ch; margin: 0 auto; color: var(--ink); }
-#hbChapterView { max-width: 68ch; margin: 0 auto; }
 
 /* ============================================================
    Mobile (375px) — no horizontal scroll, generous gutters
