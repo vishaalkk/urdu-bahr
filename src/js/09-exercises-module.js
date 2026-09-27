@@ -475,7 +475,7 @@ function openGhazalReader(col, id) {
         <div class="row couplet-head">
           <span class="vnum">Couplet ${vNum}</span>
           <div class="row couplet-acts">
-            <span class="play sm" role="button" tabindex="0" aria-label="Play couplet" onclick="playReaderCoupletByIndex(${c})">▶</span>
+            <span class="play sm" role="button" tabindex="0" aria-label="Play couplet" data-label="Play couplet" data-pb="reader:${c}" onclick="playReaderCoupletByIndex(${c}, null, this)">▶︎</span>
             <button class="btn ghost sm" onclick="toggleCoupletScan(${c})">Scan</button>
           </div>
         </div>
@@ -626,34 +626,25 @@ function getCurrentReaderLines() {
   return item ? item.lines : null;
 }
 
-function playReaderCoupletByIndex(c) {
+function playReaderCoupletByIndex(c, start, btn) {
   const lines = getCurrentReaderLines();
   if (!lines || !lines[2 * c] || !lines[2 * c + 1]) return;
-  // Playback highlights the scan chips, so make sure they're rendered and visible.
-  const box = $(`coupletScanBox_${c}`);
-  if (box && box.classList.contains('hidden')) toggleCoupletScan(c);
-  else if (box && !box.querySelector('.chip')) populateCoupletScan(lines[2 * c], lines[2 * c + 1], c);
-  const b1 = $(`misraScan_${c}_1`);
-  const b2 = $(`misraScan_${c}_2`);
-  const nodes1 = b1 ? [...b1.querySelectorAll('.chip')].sort((a,b)=>a.dataset.i-b.dataset.i) : null;
-  const groups1 = b1 ? [...b1.querySelectorAll('.fgrp')] : null;
-  const nodes2 = b2 ? [...b2.querySelectorAll('.chip')].sort((a,b)=>a.dataset.i-b.dataset.i) : null;
-  const groups2 = b2 ? [...b2.querySelectorAll('.fgrp')] : null;
-
-  if (typeof A !== 'undefined' && A.ensure && !A.ensure()) return;
-  if (typeof Scan === 'undefined' || !Scan.scanLine) return;
-  const r1 = Scan.scanLine(lines[2 * c].ur);
-  const r2 = Scan.scanLine(lines[2 * c + 1].ur);
-  if (r1 && r1.fits && r1.fits.length && r2 && r2.fits && r2.fits.length) {
-    const e1 = Scan.explain(r1, r1.fits[0]);
-    const e2 = Scan.explain(r2, r2.fits[0]);
-    if (typeof playEx === 'function') {
-      const dur = playEx(e1, nodes1, groups1);
-      playLater(() => {
-        playEx(e2, nodes2, groups2);
-      }, (dur || 0) * 1000 + 350);
-    }
-  }
+  btn = btn || document.querySelector(`[data-pb="reader:${c}"]`);
+  const key = 'reader:' + (curReaderItem ? curReaderItem.id : '') + ':' + c;
+  pbToggle(key, btn, () => {
+    // Playback highlights the scan chips, so make sure they're rendered and visible.
+    const box = $(`coupletScanBox_${c}`);
+    if (box && box.classList.contains('hidden')) toggleCoupletScan(c);
+    else if (box && !box.querySelector('.chip')) populateCoupletScan(lines[2 * c], lines[2 * c + 1], c);
+    if (typeof A !== 'undefined' && A.ensure && !A.ensure()) return null;
+    if (typeof Scan === 'undefined' || !Scan.scanLine) return null;
+    const out = [];
+    [1, 2].forEach(k => {
+      const r = Scan.scanLine(lines[2 * c + k - 1].ur);
+      if (r && r.fits && r.fits.length) out.push(Object.assign({ e: Scan.explain(r, r.fits[0]) }, pbNodes($(`misraScan_${c}_${k}`))));
+    });
+    return out;
+  }, start);
 }
 window.playReaderCoupletByIndex = playReaderCoupletByIndex;
 

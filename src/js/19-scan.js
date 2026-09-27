@@ -539,7 +539,7 @@ function lineHTML(r,li,forced,lineObj){
   const lObj = lineObj || (lastScan && lastScan.lineObjs && lastScan.lineObjs[li]) || (lastScan && lastScan.lines && lastScan.lines[li]);
   const dispL = (typeof getLineDisplay === 'function') ? getLineDisplay(lObj, cs) : (typeof lObj === 'string' ? lObj : (lObj ? lObj.ur : ''));
 
-  let h=`<div class="card"><div class="row card-head"><span class="tiny muted">Misra ${li+1}</span>${f?`<span class="play sm" title="Hear this misra" aria-label="Hear this misra" onclick="playScan(${li})">▶︎</span>`:''}</div>`;
+  let h=`<div class="card"><div class="row card-head"><span class="tiny muted">Misra ${li+1}</span>${f?`<span class="play sm" title="Hear this misra" aria-label="Hear this misra" data-label="Hear this misra" data-pb="line:${li}" onclick="playScan(${li},null,this)">▶︎</span>`:''}</div>`;
   if(dispL) h+=`<div class="misra-text ${isRtl ? '' : (cs==='hi'?'deva':'ltr')}">${dispL}</div>`;
   if(!f){
     h+=`<div class="words ${isRtl?'rtl':'ltr'}">${r.words.map((w,wi)=>{
@@ -598,7 +598,7 @@ function coupletCard(li1,li2,r1,f1,lineObj1,r2,f2,lineObj2,label){
   const canPlay = !!(f1 || (r2 && (f2||(r2.fits&&r2.fits[0]))));
   let h=`<div class="card misra-card"><div class="row card-head tight">`;
   h+=`<span class="tiny muted">${label}</span>`;
-  h+=canPlay?`<span class="play sm" title="Hear this couplet" aria-label="Hear this couplet" onclick="playCouplet(${li1}${li2!=null?','+li2:''})">▶︎</span>`:'';
+  h+=canPlay?`<span class="play sm" title="Hear this couplet" aria-label="Hear this couplet" data-label="Hear this couplet" data-pb="scan:${li1}${li2!=null?','+li2:''}" onclick="playCouplet(${li1},${li2!=null?li2:'null'},null,this)">▶︎</span>`:'';
   h+='</div>';
   h+='<div class="cbox-verse">'+misraText(li1,lineObj1)+(li2!=null && r2 ? misraText(li2,lineObj2) : '')+'</div>';
   h+='<div class="cbox-scan">'+misraScan(r1,li1,f1)+'</div>';
@@ -606,25 +606,22 @@ function coupletCard(li1,li2,r1,f1,lineObj1,r2,f2,lineObj2,label){
   h+='</div>';
   return h;
 }
-function playCouplet(li1,li2){
+function playCouplet(li1,li2,start,btn){
   if(!lastScan||!lastScan.results[li1]) return;
-  const r1=lastScan.results[li1], f1=(lastScan.forced&&lastScan.forced[li1])||r1.fits[0];
-  if(!f1||!$('sc'+li1)) return;
-  const e1=Scan.explain(r1,f1), host1=$('sc'+li1);
-  const dur=playEx(e1,[...host1.querySelectorAll('.chip')].sort((a,b)=>a.dataset.i-b.dataset.i),[...host1.querySelectorAll('.fgrp')]);
-  if(li2!=null && lastScan.results[li2]){
-    const r2=lastScan.results[li2], f2=(lastScan.forced&&lastScan.forced[li2])||r2.fits[0];
-    if(f2 && $('sc'+li2)){
-      playLater(()=>{
-        const e2=Scan.explain(r2,f2), host2=$('sc'+li2);
-        playEx(e2,[...host2.querySelectorAll('.chip')].sort((a,b)=>a.dataset.i-b.dataset.i),[...host2.querySelectorAll('.fgrp')]);
-      },(dur||0)*1000+350);
-    }
-  }
-}function playScan(li){ if(!lastScan||!lastScan.results[li]) return; const r=lastScan.results[li]; const f=(lastScan.forced&&lastScan.forced[li])||r.fits[0];
-  if(!f||!$('sc'+li)) return;
-  const e=Scan.explain(r,f); const host=$('sc'+li);
-  playEx(e,[...host.querySelectorAll('.chip')].sort((a,b)=>a.dataset.i-b.dataset.i),[...host.querySelectorAll('.fgrp')]); }
+  btn = btn || document.querySelector(`[data-pb="scan:${li1}${li2!=null?','+li2:''}"]`);
+  pbToggle('scan:'+li1+','+li2, btn, ()=>{
+    const out=[];
+    [li1,li2].forEach(li=>{ if(li==null||!lastScan.results[li]) return;
+      const r=lastScan.results[li], f=(lastScan.forced&&lastScan.forced[li])||r.fits[0];
+      if(f && $('sc'+li)) out.push(Object.assign({e:Scan.explain(r,f)}, pbNodes($('sc'+li)))); });
+    return out;
+  }, start);
+}
+function playScan(li,start,btn){ if(!lastScan||!lastScan.results[li]) return;
+  btn = btn || document.querySelector(`[data-pb="line:${li}"]`);
+  pbToggle('line:'+li, btn, ()=>{ const r=lastScan.results[li]; const f=(lastScan.forced&&lastScan.forced[li])||r.fits[0];
+    if(!f||!$('sc'+li)) return null;
+    return [Object.assign({e:Scan.explain(r,f)}, pbNodes($('sc'+li)))]; }, start); }
 function pickWord(li,wi){ selWord=(selWord&&selWord[0]===li&&selWord[1]===wi)?null:[li,wi]; runScan(); }
 function wordPanel(r,li,wi){
   const w=r.words[wi]; const o=(ovr[li]&&ovr[li][wi])||{};
@@ -662,7 +659,7 @@ function clearScan() {
 }
 if ($('scanIn')) $('scanIn').addEventListener('input', onScanComposerInput);
 
-function renderLineScan(text, container, lineObjIn) {
+function renderLineScan(text, container, lineObjIn, meterId) {
   if (!text) {
     if (container) container.innerHTML = '';
     return;
@@ -672,7 +669,7 @@ function renderLineScan(text, container, lineObjIn) {
   let lineObj = (lineObjIn && lineObjIn.ur) ? lineObjIn : ((typeof KNOWN_VERSES !== 'undefined' && KNOWN_VERSES[nk]) ? KNOWN_VERSES[nk] : null);
   let urduL = lineObj ? lineObj.ur : rawL;
   const r = Scan.scanLine(urduL);
-  const f = r.fits[0];
+  const f = (meterId != null && r.fits.find(x => String(x.meter.id) === String(meterId))) || r.fits[0];
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
   const isRtl = (cs === 'ur');
 

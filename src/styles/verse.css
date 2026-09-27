@@ -398,13 +398,23 @@
 .scan-notes { font-family: var(--sans); font-size: 13px; line-height: 1.6; color: var(--faint); text-align: left; margin: var(--sp-3) 0 0; }
 .couplet-scan-box > div > .verdict, .cbox-scan > .verdict { margin: 0; }
 
-/* ---- Long misras (Mir's Hindi meter etc.) stay on one line; type scales with the box ---- */
-.cbox-scan, .couplet-scan-box > div { container-type: inline-size; }
-.cbox-scan .chips, .couplet-scan-box .chips { flex-wrap: nowrap; overflow-x: auto; gap: 0; scrollbar-width: thin; padding-bottom: 2px; }
-.cbox-scan .fgrp, .couplet-scan-box .fgrp { padding: 0 clamp(3px, 0.9cqi, 10px); }
-.cbox-scan .fchips, .couplet-scan-box .fchips { gap: clamp(2px, 0.5cqi, 6px); }
-.cbox-scan .chip:not(.roman):not(.deva), .couplet-scan-box .chip:not(.roman):not(.deva) { font-size: clamp(14px, 1.9cqi, 19px); padding-left: clamp(2px, 0.4cqi, 5px); padding-right: clamp(2px, 0.4cqi, 5px); }
-.cbox-scan .chip.roman, .couplet-scan-box .chip.roman,
-.cbox-scan .chip.deva, .couplet-scan-box .chip.deva { font-size: clamp(11px, 1.35cqi, 14px); padding-left: clamp(1px, 0.3cqi, 5px); padding-right: clamp(1px, 0.3cqi, 5px); }
-.cbox-scan .fname, .couplet-scan-box .fname { font-size: clamp(11px, 1.3cqi, 13.5px); }
-.cbox-scan .cw .fs, .couplet-scan-box .cw .fs { font-size: clamp(9px, 1cqi, 10.5px); }
+/* ---- Syllable rows in couplet boxes: large by default; a row that would overflow is
+   shrunk just enough to fit on one line (--fit set by fitChipRows() in JS, 0.55–1) ---- */
+.cbox-scan .chips, .couplet-scan-box .chips { flex-wrap: nowrap; overflow-x: auto; gap: 0; scrollbar-width: thin; padding-bottom: 2px; --fit: 1; }
+.cbox-scan .fgrp, .couplet-scan-box .fgrp { padding: 0 calc(12px * var(--fit)); }
+.cbox-scan .fchips, .couplet-scan-box .fchips { gap: calc(7px * var(--fit)); }
+.cbox-scan .chip:not(.roman):not(.deva), .couplet-scan-box .chip:not(.roman):not(.deva) {
+  font-size: calc(27px * var(--fit)); padding-left: calc(6px * var(--fit)); padding-right: calc(6px * var(--fit)); padding-bottom: calc(12px * var(--fit)); }
+.cbox-scan .chip.roman, .couplet-scan-box .chip.roman { font-size: calc(18px * var(--fit)); padding-left: calc(5px * var(--fit)); padding-right: calc(5px * var(--fit)); }
+.cbox-scan .chip.deva, .couplet-scan-box .chip.deva { font-size: calc(20px * var(--fit)); padding-left: calc(5px * var(--fit)); padding-right: calc(5px * var(--fit)); }
+.cbox-scan .fname, .couplet-scan-box .fname { font-size: calc(16px * var(--fit)); }
+.cbox-scan .cw .fs, .couplet-scan-box .cw .fs { font-size: calc(12.5px * var(--fit)); }
+
+/* play / stop */
+.play.playing { color: var(--gold); border-color: var(--gold); font-size: 11px; letter-spacing: -1px; }
+/* stopped here: the next ▶ resumes from this foot */
+.fgrp.resume-at { background: color-mix(in srgb, var(--mark-l) 10%, transparent); border-radius: 6px; }
+.fgrp.resume-at .fname { color: var(--gold); }
+/* foot names are tappable inside couplet boxes: play from that foot */
+.couplet-card .fname, .misra-card .fname, .card .fname { cursor: pointer; }
+.couplet-card .fname:hover, .misra-card .fname:hover, .card .fname:hover { color: var(--gold); text-decoration: underline; text-underline-offset: 3px; }

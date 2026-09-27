@@ -191,6 +191,7 @@ function playLater(fn,ms){ A.timers.push(setTimeout(fn,ms)); }
 /* seq of 'l','s','x','c'; onStep(i) fires as each syllable sounds */
 function play(seq,opts){
   opts=opts||{}; if(!A.ensure())return 0;
+  if(!opts.pb && typeof pbDetach==='function') pbDetach(); /* something else is playing: couplet button goes back to ▶ */
   if((settings.sound==='rec'||settings.sound==='tablarec') && !A.rec){ loadRec().then(()=>play(seq,opts)); return (seq.length*1.5*60/settings.bpm); }
   stopAll();
   const sess=A.ctx.createGain(); sess.gain.value=1; sess.connect(settings.sound==='tablarec'?A.out:(A.voiceBus||A.out)); A.sess=sess; /* tabla samples carry their own room: skip reverb */ A.dest=sess;
@@ -214,6 +215,74 @@ function play(seq,opts){
   if(opts.onEnd) A.timers.push(setTimeout(opts.onEnd,(t-A.ctx.currentTime)*1000+60));
   return (t-t0);
 }
+/* ---------- Couplet/line player: ▶ ⇄ ❚❚, resume from the foot you stopped on ----------
+   key   identifies what is playing ('reader:<ghazal>:<c>', 'scan:0,1', 'line:2')
+   lines [{e, nodes, groups}] — Scan.explain() result + its chip nodes and foot groups
+   start {line, foot} — where to begin (foot-name tap); else the remembered resume point. */
+const PB = { key: null, btn: null, lines: null, playing: false, pos: null, resume: null };
+function pbSetBtn(btn, on) {
+  if (!btn) return;
+  btn.textContent = on ? '❚❚' : '▶︎';
+  btn.classList.toggle('playing', on);
+  btn.setAttribute('aria-label', on ? 'Stop' : (btn.getAttribute('data-label') || 'Play'));
+}
+function pbClearMark() {
+  if (typeof document !== 'undefined' && typeof document.querySelectorAll === 'function')
+    document.querySelectorAll('.resume-at').forEach(n => n.classList.remove('resume-at'));
+}
+function pbForget() { PB.resume = null; pbClearMark(); }
+/* another sound took over, or the view changed */
+function pbDetach() { if (PB.playing) pbSetBtn(PB.btn, false); PB.playing = false; PB.key = null; PB.btn = null; PB.lines = null; pbForget(); }
+function pbCancel() { pbDetach(); stopAll(); }
+function pbRunLine(li, foot) {
+  const L = PB.lines && PB.lines[li];
+  if (!L) { pbFinish(); return; }
+  const p = exSeq(L.e);
+  let s0 = p.feet.findIndex(f => f >= foot); if (s0 < 0) s0 = 0;
+  const lit = L.nodes ? litter(L.nodes) : null;
+  play(p.seq.slice(s0), { pb: true, feet: p.feet.slice(s0), cae: p.cae.filter(c => c > foot),
+    onStep: i => { const gi = i + s0; PB.pos = { line: li, foot: p.feet[gi] };
+      if (lit) lit(gi);
+      if (L.groups) { L.groups.forEach(g => g.classList.remove('litf')); const g = L.groups[p.feet[gi]]; if (g) g.classList.add('litf'); } },
+    onEnd: () => { if (L.groups) L.groups.forEach(g => g.classList.remove('litf'));
+      if (li + 1 < PB.lines.length) playLater(() => pbRunLine(li + 1, 0), 350); else pbFinish(); } });
+}
+function pbFinish() { pbSetBtn(PB.btn, false); PB.playing = false; PB.key = null; PB.btn = null; PB.lines = null; PB.pos = null; pbForget(); }
+function pbToggle(key, btn, getLines, start) {
+  if (PB.playing && PB.key === key && !start) {           /* ❚❚ tapped: stop, remember the foot */
+    const pos = PB.pos, lines = PB.lines;
+    stopAll(); pbSetBtn(btn, false); PB.playing = false;
+    PB.resume = pos ? { key, line: pos.line, foot: pos.foot } : null;
+    const g = pos && lines && lines[pos.line] && lines[pos.line].groups && lines[pos.line].groups[pos.foot];
+    if (g) g.classList.add('resume-at');
+    return;
+  }
+  const lines = getLines(); if (!lines || !lines.length) return;
+  const st = start || (PB.resume && PB.resume.key === key ? PB.resume : { line: 0, foot: 0 });
+  if (PB.btn && PB.btn !== btn) pbSetBtn(PB.btn, false);
+  pbForget(); stopAll();
+  PB.key = key; PB.btn = btn; PB.lines = lines; PB.playing = true; PB.pos = { line: st.line, foot: st.foot };
+  pbSetBtn(btn, true);
+  pbRunLine(Math.min(st.line, lines.length - 1), st.foot || 0);
+}
+/* tap a foot name inside a couplet box: play from that foot */
+function pbFromFoot(ev, el) {
+  if (!el || typeof el.closest !== 'function') return;
+  const box = el.closest('.couplet-card, .misra-card, .card'); if (!box) return;
+  const btn = box.querySelector('[data-pb]'); if (!btn) return;
+  if (ev) ev.stopPropagation();
+  const line = [...box.querySelectorAll('.chips')].indexOf(el.closest('.chips'));
+  const grp = el.closest('.fgrp'); const foot = grp ? +grp.getAttribute('data-f') : 0;
+  const [kind, arg] = btn.getAttribute('data-pb').split(':');
+  const start = { line: Math.max(0, line), foot };
+  if (kind === 'reader' && typeof playReaderCoupletByIndex === 'function') playReaderCoupletByIndex(+arg, start, btn);
+  else if (kind === 'scan' && typeof playCouplet === 'function') { const [a, b] = arg.split(',').map(Number); playCouplet(a, isNaN(b) ? null : b, start, btn); }
+  else if (kind === 'line' && typeof playScan === 'function') playScan(+arg, start, btn);
+  else if (kind === 'lookup' && typeof playLookupCouplet === 'function') { const [m, i] = arg.split(','); playLookupCouplet(m, +i, start, btn); }
+}
+function pbNodes(host) { return host ? { nodes: [...host.querySelectorAll('.chip')].sort((a, b) => a.dataset.i - b.dataset.i), groups: [...host.querySelectorAll('.fgrp')] } : { nodes: null, groups: null }; }
+window.pbToggle = pbToggle; window.pbFromFoot = pbFromFoot; window.pbCancel = pbCancel;
+
 function litter(nodes){ return i=>{ nodes.forEach(n=>n.classList.remove('lit')); const n=nodes[i]; if(n){n.classList.add('lit'); setTimeout(()=>n.classList.remove('lit'),240);} }; }
 
 /* sound sheet */
@@ -242,13 +311,13 @@ function pickSound(id){
     const st=$('recStatus'); if(st) st.textContent='Record "dum" and "da" first (or choose two audio files).';
     return;
   }
-  settings.sound=id; store.set('settings',settings); renderSoundOpts();
+  pbForget(); settings.sound=id; store.set('settings',settings); renderSoundOpts();
   if($('soundName')) $('soundName').textContent=SOUNDS.find(s=>s.id===id).nm.replace(/ /g,'');
   play(['l','s','l','l','s','l']);
 }
 function footGapSecs(){ return (settings.footGap!=null?settings.footGap:0.5)*60/settings.bpm; }
 function renderFootGapV(){ const el=$('footGapV'); if(el) el.textContent=(+settings.footGap).toFixed(2)+' beat ('+footGapSecs().toFixed(2)+'s)'; }
-function setBpm(v){ settings.bpm=+v; store.set('settings',settings);
+function setBpm(v){ pbForget(); settings.bpm=+v; store.set('settings',settings);
   [['bpm','bpmV'],['bpmHdr','bpmHdrV']].forEach(([i,o])=>{ const el=$(i); if(el){ el.value=settings.bpm; const elO=$(o); if(elO) elO.textContent=settings.bpm; } });
   renderFootGapV(); }
 if($('bpm')) $('bpm').addEventListener('input',e=>setBpm(e.target.value));
@@ -256,7 +325,7 @@ if($('bpmHdr')){ $('bpmHdr').addEventListener('input',e=>setBpm(e.target.value))
 if(settings.footGap==null) settings.footGap=0.5;
 if($('footGap')) {
   $('footGap').value=settings.footGap;
-  $('footGap').addEventListener('input',e=>{ settings.footGap=+e.target.value; renderFootGapV(); store.set('settings',settings); });
+  $('footGap').addEventListener('input',e=>{ pbForget(); settings.footGap=+e.target.value; renderFootGapV(); store.set('settings',settings); });
 }
 renderFootGapV();
 if($('soundName')) $('soundName').textContent=SOUNDS.find(s=>s.id===settings.sound).nm.replace(/ /g,'');

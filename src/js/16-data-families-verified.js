@@ -45,8 +45,30 @@ function chipsHTML(syl,feet,li,roCtx){
   const overrides = cs!=='ro' ? [] : roCtx ? romanOverridesFor(syl,roCtx.r,roCtx.lineObj) : (li!=null && typeof chipRomanOverrides==='function') ? chipRomanOverrides(syl,li) : [];
   const gp=graftPos(syl);
   if(!feet||!feet.length) return syl.map((s,i)=>chipHTML(s,i,li,overrides[i],gp[i])).join('');
-  return feet.map((F,fi)=>F?`${F.cae?'<span class="caeu">//</span>':''}<span class="fgrp" data-f="${fi}"><span class="fname">${(()=>{const fm=cs==='ur'?(F.ur||''):(cs==='hi'?(typeof urduToDevanagari==='function'?urduToDevanagari(F.ur):''):''); return fm?`${fm} <i>${F.name||''}</i>`:`<i>${F.name||''}</i>`;})()}</span><span class="fchips">${F.idx.map(i=>chipHTML(syl[i],i,li,overrides[i],gp[i])).join('')}</span></span>`:'').join('');
+  return feet.map((F,fi)=>F?`${F.cae?'<span class="caeu">//</span>':''}<span class="fgrp" data-f="${fi}"><span class="fname" onclick="pbFromFoot(event,this)" title="Play from this foot">${(()=>{const fm=cs==='ur'?(F.ur||''):(cs==='hi'?(typeof urduToDevanagari==='function'?urduToDevanagari(F.ur):''):''); return fm?`${fm} <i>${F.name||''}</i>`:`<i>${F.name||''}</i>`;})()}</span><span class="fchips">${F.idx.map(i=>chipHTML(syl[i],i,li,overrides[i],gp[i])).join('')}</span></span>`:'').join('');
 }
+/* Keep each syllable row on one line: shrink a row's --fit only as far as needed. */
+function fitChipRows(root){
+  if (typeof document === 'undefined' || typeof document.querySelectorAll !== 'function') return;
+  (root || document).querySelectorAll('.cbox-scan .chips, .couplet-scan-box .chips').forEach(ch => {
+    if (!ch.clientWidth) return;                      // hidden box: fitted when shown
+    ch.style.setProperty('--fit', '1');
+    for (let k = 0; k < 3 && ch.scrollWidth > ch.clientWidth + 1; k++) {
+      const cur = parseFloat(ch.style.getPropertyValue('--fit')) || 1;
+      ch.style.setProperty('--fit', Math.max(0.55, cur * ch.clientWidth / ch.scrollWidth * 0.99).toFixed(3));
+    }
+  });
+}
+window.fitChipRows = fitChipRows;
+if (typeof MutationObserver !== 'undefined' && typeof document !== 'undefined' && document.body && typeof requestAnimationFrame === 'function') {
+  let fitQueued = false;
+  const queueFit = () => { if (fitQueued) return; fitQueued = true; requestAnimationFrame(() => { fitQueued = false; fitChipRows(); }); };
+  new MutationObserver(ms => { if (ms.some(m => (m.type === 'attributes' && m.target.classList && m.target.classList.contains('couplet-scan-box')) || [...m.addedNodes].some(n => n.nodeType === 1 && (n.matches('.chips, .fgrp') || n.querySelector('.chips'))))) queueFit(); })
+    .observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+  window.addEventListener('resize', queueFit);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(queueFit);
+}
+
 /* align a known verse to its family's meter */
 const alignCache={};
 function alignVerse(ur,fam){

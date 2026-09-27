@@ -65,7 +65,7 @@ function parseHash(hash) {
 
 function handleRoute(targetHash) {
   // Leaving a view stops whatever it was playing
-  try { if (typeof stopAll === 'function') stopAll(); } catch (e) {}
+  try { if (typeof pbCancel === 'function') pbCancel(); else if (typeof stopAll === 'function') stopAll(); } catch (e) {}
   const { parts, params, raw } = parseHash(targetHash);
   let root = parts[0] || '';
 

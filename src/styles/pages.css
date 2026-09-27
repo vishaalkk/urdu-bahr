@@ -743,3 +743,9 @@ main, .wrap { max-width: 760px; }
 .meter-couplet figcaption { margin-top: var(--sp-2); font-size: 12.5px; }
 .meter-couplet figcaption a { color: var(--faint); text-decoration: none; }
 .meter-couplet figcaption a:hover { color: var(--gold); }
+
+/* meter label showing a whole couplet */
+.meter-label-primary.ml-couplet { display: flex; flex-direction: column; }
+.meter-label-primary.ml-couplet .ml-line { display: block; }
+.meter-couplets .couplet-card .vnum { text-decoration: none; }
+.meter-couplets .couplet-card .vnum:hover { color: var(--gold); }

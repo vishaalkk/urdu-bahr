@@ -148,16 +148,19 @@ function renderMeterLabel(mOrId, opts) {
     }
   }
 
-  const primaryText = verseText ? `“${verseText}”` : info.pattern;
-  const isVerseUrdu = verseText && isRtl;
+  const isVerseUrdu = (verseText || opts.couplet) && isRtl;
+  const disp = l => (typeof getLineDisplay === 'function') ? getLineDisplay(l, cs) : (l[cs] || l.ur);
+  /* opts.couplet {l1,l2}: show the whole sher; otherwise the famous misra (no quote marks) */
+  const primaryText = opts.couplet ? `<span class="ml-line">${disp(opts.couplet.l1)}</span><span class="ml-line">${disp(opts.couplet.l2)}</span>`
+    : (verseText || info.pattern);
 
   let h = `<div class="meter-label-comp ${size==='lg'?'meter-label-lg':'meter-label-sm'}">`;
   h += `<div class="row">`;
   if (canPlay) {
-    h += `<span class="play sm" aria-label="Play meter rhythm" onclick="playPat('${info.pattern}')">▶</span>`;
+    h += `<span class="play sm" aria-label="Play meter rhythm" onclick="event.stopPropagation();playPat('${info.pattern}',[...this.closest('.meter-label-comp').querySelectorAll('.meter-label-pattern .blk')])">▶︎</span>`;
   }
   h += `<div class="meter-label-body">`;
-  h += `<div class="meter-label-primary ${isVerseUrdu ? 'urdu' : (verseText ? '' : 'mono')}">${primaryText}</div>`;
+  h += `<div class="meter-label-primary ${isVerseUrdu ? 'urdu' : ((verseText || opts.couplet) ? (cs === 'ro' ? 'mono' : '') : 'mono')} ${opts.couplet ? 'ml-couplet' : ''}">${primaryText}</div>`;
   if (info.pattern && typeof feetStrip === 'function') {
     h += `<div class="meter-label-pattern">${feetStrip(info.pattern)}</div>`;
   }

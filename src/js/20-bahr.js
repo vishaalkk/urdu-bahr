@@ -84,7 +84,8 @@ function renderFams() {
     const mId = m.id;
     const idStr = String(mId);
     const isExpanded = (lookupExpandedId === idStr);
-    const labelHtml = (typeof renderMeterLabel === 'function') ? renderMeterLabel(mId, { size: 'sm', play: true }) : '';
+    const cps = coupletsForMeter(mId, 2);
+    const labelHtml = (typeof renderMeterLabel === 'function') ? renderMeterLabel(mId, { size: 'sm', play: true, couplet: cps[0] || null }) : '';
     const info = (typeof meterLabelInfo === 'function') ? meterLabelInfo(mId) : null;
     const matchInfo = (typeof bestGhazalLinkForMeter === 'function') ? bestGhazalLinkForMeter(mId) : { count: 0, link: `#/ghazals?meter=${mId}` };
 
@@ -97,17 +98,9 @@ function renderFams() {
     if (isExpanded) {
       h += `<div class="meter-row-details">`;
 
-      // 1. Pattern and foot boxes
-      if (info && info.pattern && typeof feetStrip === 'function') {
-        h += `<div class="meter-detail-section">`;
-        h += `<div class="fam-section-label">Metrical pattern & feet:</div>`;
-        h += `<div class="meter-strip-wrap">${feetStrip(info.pattern)}</div>`;
-        h += `</div>`;
-      } else if (idStr === 'H') {
-        h += `<div class="meter-detail-section">`;
-        h += `<div class="fam-section-label">Pattern structure:</div>`;
-        h += `<div class="fam-allowance">Mir's Hindi meter: about 15 long-beats; every even-numbered long except the 8th may become two shorts.</div>`;
-        h += `</div>`;
+      // (pattern + feet are already in the header label)
+      if (idStr === 'H') {
+        h += `<div class="meter-detail-section"><div class="fam-allowance">Mir's Hindi meter: about 15 long-beats; every even-numbered long except the 8th may become two shorts.</div></div>`;
       }
 
       // 2. Metadata notes & caesura
@@ -116,23 +109,24 @@ function renderFams() {
         if (meta.caesura) {
           h += `<div class="meter-meta-notes">Caesura // between hemistich halves</div>`;
         }
-        if (meta.notes) {
-          h += `<div class="meter-meta-notes">${meta.notes}</div>`;
-        }
+        // notes start with Pritchett's ASCII name in [brackets] — already shown properly in the header
+        const note = (meta.notes || '').replace(/^\s*\[[^\]]*\]\.?\s*/, '').trim();
+        if (note) h += `<div class="meter-meta-notes">${note}</div>`;
       }
 
-      // 3. Famous couplets in this meter, each linking to its ghazal
-      const cps = coupletsForMeter(mId, 2);
+      // 3. Famous couplets in this meter: the same couplet box as the reader (▶, scan, highlight)
       if (cps.length) {
         const disp = l => (typeof getLineDisplay === 'function') ? getLineDisplay(l, cs) : (l[cs] || l.ur);
-        const vCls = isRtl ? 'urdu' : (cs === 'hi' ? 'deva' : 'ro');
+        const langDir = cs === 'ur' ? 'lang="ur" dir="rtl"' : (cs === 'hi' ? 'lang="hi"' : 'lang="ur-Latn" dir="ltr"');
         h += `<div class="meter-couplets">`;
         h += `<div class="fam-section-label">Famous couplets in this bahr</div>`;
-        cps.forEach(c => {
-          h += `<figure class="meter-couplet">`;
-          h += `<div class="mc-line ${vCls}">${disp(c.l1)}</div><div class="mc-line ${vCls}">${disp(c.l2)}</div>`;
-          h += `<figcaption><a href="#/ghazals/${c.col}/${c.id}" onclick="event.stopPropagation()">— ${c.poet}${c.col !== 'handbook' ? ' ' + c.id : ''} ›</a></figcaption>`;
-          h += `</figure>`;
+        cps.forEach((c, i) => {
+          h += `<div class="card couplet-card">`;
+          h += `<div class="row couplet-head"><a class="vnum" href="#/ghazals/${c.col}/${c.id}" onclick="event.stopPropagation()">${c.poet}${c.col !== 'handbook' ? ' ' + c.id : ''} ›</a>`;
+          h += `<div class="row couplet-acts"><span class="play sm" role="button" tabindex="0" aria-label="Play couplet" data-label="Play couplet" data-pb="lookup:${idStr},${i}" onclick="event.stopPropagation();playLookupCouplet('${idStr}',${i},null,this)">▶︎</span></div></div>`;
+          h += `<div class="cbox-verse"><div class="vline-lg" ${langDir}>${disp(c.l1)}</div><div class="vline-lg" ${langDir}>${disp(c.l2)}</div></div>`;
+          h += `<div class="couplet-scan-box"><div id="lkScan_${idStr}_${i}_1"></div><div id="lkScan_${idStr}_${i}_2"></div></div>`;
+          h += `</div>`;
         });
         h += `</div>`;
       } else {
@@ -162,7 +156,30 @@ function renderFams() {
     h += `</div>`;
     return h;
   }).join('');
+
+  // fill the expanded row's couplet scans
+  if (lookupExpandedId != null && typeof renderLineScan === 'function') {
+    coupletsForMeter(lookupExpandedId, 2).forEach((c, i) => {
+      [c.l1, c.l2].forEach((l, k) => { const el = $(`lkScan_${lookupExpandedId}_${i}_${k + 1}`); if (el) renderLineScan(l.ur, el, l, lookupExpandedId); });
+    });
+  }
 }
+
+function playLookupCouplet(mId, i, start, btn) {
+  const c = coupletsForMeter(mId, 2)[i]; if (!c) return;
+  btn = btn || document.querySelector(`[data-pb="lookup:${mId},${i}"]`);
+  pbToggle('lookup:' + mId + ':' + i, btn, () => {
+    if (typeof Scan === 'undefined' || !Scan.scanLine) return null;
+    const out = [];
+    [c.l1, c.l2].forEach((l, k) => {
+      const r = Scan.scanLine(l.ur); if (!r || !r.fits || !r.fits.length) return;
+      const f = r.fits.find(x => String(x.meter.id) === String(mId)) || r.fits[0];
+      out.push(Object.assign({ e: Scan.explain(r, f) }, pbNodes($(`lkScan_${mId}_${i}_${k + 1}`))));
+    });
+    return out;
+  }, start);
+}
+window.playLookupCouplet = playLookupCouplet;
 
 function famPulsePlay(id, el) {
   const f = FAMS.find(x => x.id === id);
