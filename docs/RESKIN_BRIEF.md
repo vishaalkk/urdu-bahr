@@ -77,3 +77,66 @@ Supersedes handoff **D17**. Only two themes: **Standard** (light, default, no `d
 **Colour-blind friendly** (`data-theme="cvd"`: long = blue, short = orange + dotted underline,
 flexible = purple + double underline). Dark, High contrast and System are removed; old stored
 values fall back to Standard. Every text colour must be ≥ 7:1 (WCAG AAA) on `--bg` and `--bg2`.
+
+---
+
+# Round 2 (2026-09-27) — unify experiences, per-tab intent
+
+Decisions (user-approved). Everything in round 1 still applies (look, tokens, file rules).
+Read `src/js/15-audio.js` **player section (`PB`, `pbToggle`, `pbFromFoot`, `pbNodes`)** — it is the
+one player every ▶ must use.
+
+## Global
+- **G1 One player.** Every ▶ in the app goes through `pbToggle(key, btn, getLines, start)` (or a thin
+  wrapper): ▶ ⇄ ❚❚, stop remembers the foot, resume from it, `pbForget()` on tempo/voice change,
+  cancelled on route change. Plain `play()`/`playPat()` calls without the controller are not allowed
+  for user-facing buttons. For pattern-only playback (no verse) add a PB-compatible wrapper
+  (e.g. `pbTogglePattern(key, btn, raw, blkNodes)`) in 15-audio.js.
+- **G2 Heading scale** (all tabs/sub-tabs): page title = serif 32px; section heading (h2/h3 inside a
+  sub-tab) = serif 22px; label/eyebrow = sans 12px uppercase .08em `--faint`. Define as classes in
+  pages.css (`.page-title`, `.section-title`, `.eyebrow`) and use them.
+- **G3 One drill engine** (`src/js/22-drill.js`, `src/styles/drill.css`) used by Weight › Drill and
+  Meter › Drill: one card, a queue that rolls through mixed question types, type filter chips,
+  source filter (Handbook / Ghalib / Mir), quiet ✓/✗ + one-line reason + Next, session score only.
+
+## Weight
+- **Learn:** audit Handbook ch. 1–4 (`source_data/0[1-4]_*.txt`) against `weight.html`; add missing
+  rules + real examples (e.g. nūn ghunna, tashdīd, vāv/yā vowel vs consonant, silent h, Arabic
+  endings, izāfat forms, 'o' joining, grafting). Each rule: short heading, one-sentence rule, 1–3
+  examples in current script with a ▶ that plays the word/phrase through the player.
+- **Drill:** replace the two drill boxes with the shared engine. Types: weigh the word, flexible or
+  fixed, iẓāfat, grafting, 'o' joins final consonant (+ any other scanner note types).
+- **Look up (Word Bank):** ▶ on a word uses the player with its syllable chips lighting up.
+
+## Meter
+- **Learn:** families shown as a vertical list (one row per family: famous line, pattern, ▶;
+  expands to sing-along). No narrow horizontal card strip.
+- **Drill:** shared engine. Types: which bahr (pick from 3–4), in the bahr or limping, which foot is
+  missing/changed, which ghazal. Questions generated from corpus lines with **confident scans only**
+  (best fit strain ≤ 2.5, i.e. verdict 'Scans'), each tagged with its source.
+- **Look up:** reference, not scansion. Each famous couplet box shows the couplet; ▶ **lights up the
+  words of the couplet itself** in time (word-level highlight: a word is lit while any of its
+  syllables sound; grafted words light together). A "Scan" toggle per box reveals the syllable chips
+  (hidden by default here). Header ▶ plays the pattern via the player with the bars lighting.
+
+## Scan
+- No horizontal scrollbars in couplet boxes. Rows shrink via `--fit` down to a floor (0.7); below
+  that, the row **wraps between feet (never inside a foot)**; highlight works across wrapped rows.
+
+## Ghazals
+- **Universal search:** one box; matches Urdu (diacritics/ZWNJ-insensitive), Roman (diacritic-
+  insensitive: ā→a, ḳh→kh, ʿ dropped…), Devanagari, poet name, ghazal number; searches **all
+  collections** at once; results show the collection; collection switch acts as a filter.
+- **Bug:** Handbook rows show `#undefined` for the meter — fix (field is `m`, can be an array).
+- **Reader header:** title = meter name (`#26 · Hazaj mus̱amman sālim`); below it small
+  "Same bahr as ‹famous misra› — Ghalib" (clearly a reference, not this ghazal's line); pattern strip
+  centred under the title; ▶ plays the pattern through the player.
+
+## File ownership (round 2 — strict)
+| Agent | Owns |
+|---|---|
+| Player & Meter | `src/js/15-audio.js`, `16-data-families-verified.js`, `17-ear.js` (Learn families + sing-along only — not `iomNew`/`wtNew`/`renderWeak`), `18b-meter-label.js`, `20-bahr.js`, `12-dictionary-module.js`, `19-scan.js` (UI only), `src/body/meter.html`, `meter-lookup.html`, `weight-lookup.html`, `scan.html`, `src/styles/verse.css` |
+| Drills | `src/js/22-drill.js`, `src/styles/drill.css`, `src/body/weight-drill.html`, `meter-drill.html` (old drill code in 17-ear/21-learn stays in place, unlinked) |
+| Pages & Ghazals | `src/styles/pages.css`, `src/body/weight.html` (Learn), `ghazals.html`, `header.html`, `footer.html`, `about.html`, `handbook.html`, `src/js/09-exercises-module.js`, `10-…`, `11-…`, `21-learn.js` (Learn parts), `02-store.js` |
+Shared rules from round 1 apply: no commits, no browser, full test command must pass, report
+requests for other owners instead of editing their files.
