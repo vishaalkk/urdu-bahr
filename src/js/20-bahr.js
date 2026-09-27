@@ -2,6 +2,47 @@
 let lookupExpandedId = null;
 let lookupFilterKind = 'all';
 
+/* Full couplets for a meter, for Look up. First the family's famous misras, each
+   located in a corpus so we can show the whole sher; then, if none, the matla of
+   ghazals tagged with this meter (Handbook, then Ghalib, then Mir). */
+var _coupletCache = {};
+function _meterCollections() {
+  const out = [];
+  if (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) out.push(['handbook', EXERCISES_DATA, it => it.poet || 'Handbook', it => it.m]);
+  if (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) out.push(['ghalib', GHALIB_EXT_DATA, () => 'Ghalib', it => it.meters || it.meter || it.m]);
+  if (typeof MIR_EXT_DATA !== 'undefined' && Array.isArray(MIR_EXT_DATA)) out.push(['mir', MIR_EXT_DATA, () => 'Mir', it => it.meters || it.meter || it.m]);
+  return out;
+}
+function coupletsForMeter(mId, max) {
+  const idStr = String(mId); max = max || 2;
+  if (_coupletCache[idStr]) return _coupletCache[idStr];
+  const found = [], seen = new Set();
+  const key = t => (typeof normVerseKey === 'function') ? normVerseKey(t || '') : (t || '');
+  const add = (col, item, poet, i) => {
+    const lines = item.lines || [], a = i - (i % 2), l1 = lines[a], l2 = lines[a + 1];
+    if (!l1 || !l2) return;
+    const k = col + '|' + item.id + '|' + a; if (seen.has(k)) return; seen.add(k);
+    found.push({ l1, l2, poet, col, id: item.id });
+  };
+  const colls = _meterCollections();
+  const fam = (typeof famOfMeter !== 'undefined') ? famOfMeter[mId] : null;
+  if (fam && fam.gz) fam.gz.forEach(g => {
+    if (found.length >= max) return;
+    const gk = key(g.ur); if (!gk) return;
+    for (const [col, data, poetOf] of colls) {
+      const item = data.find(it => (it.lines || []).some(l => key(l.ur) === gk));
+      if (item) { add(col, item, poetOf(item), item.lines.findIndex(l => key(l.ur) === gk)); break; }
+    }
+  });
+  for (const [col, data, poetOf, metersOf] of colls) {
+    if (found.length >= max) break;
+    const item = data.find(it => { const m = metersOf(it); return Array.isArray(m) ? m.some(x => String(x) === idStr) : String(m) === idStr; });
+    if (item) add(col, item, poetOf(item), 0);
+  }
+  return (_coupletCache[idStr] = found.slice(0, max));
+}
+window.coupletsForMeter = coupletsForMeter;
+
 function toggleMeterLookupExpand(id, e) {
   if (e && e.target && typeof e.target.closest === 'function' && e.target.closest('.play')) return;
   lookupExpandedId = (lookupExpandedId === id) ? null : id;
@@ -80,19 +121,32 @@ function renderFams() {
         }
       }
 
-      // 3. Famous verses from family if available
-      const fam = (typeof famOfMeter !== 'undefined') ? famOfMeter[mId] : null;
-      if (fam && fam.gz && fam.gz.length) {
-        h += `<div class="meter-verses-list">`;
-        h += `<div class="fam-section-label">Famous verses in this bahr:</div>`;
-        fam.gz.forEach(g => {
-          const vDisp = (typeof getLineDisplay === 'function') ? getLineDisplay(g, cs) : (g[cs] || g.ur);
-          h += `<div class="ear-sing-header">`;
-          h += `<span class="faint tiny">${g.p}:</span>`;
-          h += `<span class="ear-verse-text ${isRtl ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${vDisp}</span>`;
-          h += `</div>`;
+      // 3. Famous couplets in this meter, each linking to its ghazal
+      const cps = coupletsForMeter(mId, 2);
+      if (cps.length) {
+        const disp = l => (typeof getLineDisplay === 'function') ? getLineDisplay(l, cs) : (l[cs] || l.ur);
+        const vCls = isRtl ? 'urdu' : (cs === 'hi' ? 'deva' : 'ro');
+        h += `<div class="meter-couplets">`;
+        h += `<div class="fam-section-label">Famous couplets in this bahr</div>`;
+        cps.forEach(c => {
+          h += `<figure class="meter-couplet">`;
+          h += `<div class="mc-line ${vCls}">${disp(c.l1)}</div><div class="mc-line ${vCls}">${disp(c.l2)}</div>`;
+          h += `<figcaption><a href="#/ghazals/${c.col}/${c.id}" onclick="event.stopPropagation()">— ${c.poet}${c.col !== 'handbook' ? ' ' + c.id : ''} ›</a></figcaption>`;
+          h += `</figure>`;
         });
         h += `</div>`;
+      } else {
+        // No ghazal in our collections: fall back to the family's famous misra(s)
+        const fam = (typeof famOfMeter !== 'undefined') ? famOfMeter[mId] : null;
+        if (fam && fam.gz && fam.gz.length) {
+          const vCls = isRtl ? 'urdu' : (cs === 'hi' ? 'deva' : 'ro');
+          h += `<div class="meter-couplets"><div class="fam-section-label">Famous lines in this bahr</div>`;
+          fam.gz.slice(0, 2).forEach(g => {
+            const vDisp = (typeof getLineDisplay === 'function') ? getLineDisplay(g, cs) : (g[cs] || g.ur);
+            h += `<figure class="meter-couplet"><div class="mc-line ${vCls}">${vDisp}</div><figcaption>— ${g.p}</figcaption></figure>`;
+          });
+          h += `</div>`;
+        }
       }
 
       // 4. Ghazal link

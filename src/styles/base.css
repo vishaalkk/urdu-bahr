@@ -1,34 +1,41 @@
 /* ============================================================
-   Baḥr Visual Design System
-   Warm twilight dark / manuscript paper light / high contrast
-   Editorial typography (Fraunces + Spectral + JetBrains Mono)
-   Rich golden accents & smooth tactile animations
+   Baḥr Visual Design System — "Quiet Manuscript"
+   Ink on paper + greys. Type does the hierarchy, not boxes.
+   Source Serif 4 (verse/headings/notes) + Inter (UI) + IBM Plex Mono
+   (patterns/numbers only). Gold is the one UI accent; teal/rose are
+   syllable-weight colours only. See docs/RESKIN_BRIEF.md.
    ============================================================ */
 
 :root {
-  /* Default: Warm Twilight Charcoal Dark */
-  --bg: #161320;
-  --bg2: #1d1930;
-  --bg3: #272140;
-  --raise: #322a4d;
-  --ink: #ECE3D0;
-  --dim: #a79db3;
-  --faint: #766d88;
-  --ghost: #6f6781;
-  --gold: #E6A93C;
-  --teal: #52CBB6;
-  --rose: #E87AA0;
-  --line: rgba(236,227,208,.10);
-  --line2: rgba(236,227,208,.18);
-  --ok: #86d586;
-  --no: #ee7a74;
-  --onGold: #241a06;
-  --shadow: 0 4px 20px rgba(0,0,0,.35);
+  /* Light (default) — every text colour ≥ 7:1 (WCAG AAA) on --bg and --bg2 */
+  --bg: #FAF8F3;
+  --bg2: #F6F2EA;
+  --bg3: #EFE9DC;
+  --raise: #E8E0CE;
+  --ink: #15120E;
+  --dim: #3A342C;
+  --faint: #4D473E;
+  --ghost: #8F887B;          /* decorative only, never text */
+  --gold: #6B4500;           /* UI accent + long */
+  --teal: #00574B;           /* short */
+  --rose: #861A40;           /* flexible */
+  /* weight MARKS (underlines, bars, swatches, ties) — graphics, need ≥ 3:1, so they can be brighter */
+  --mark-l: #A87410;
+  --mark-s: #178A78;
+  --mark-x: #C4476F;
+  --line: rgba(21,18,14,.12);
+  --line2: rgba(21,18,14,.24);
+  --ok: #125424;
+  --no: #931D16;
+  --onGold: #FFFFFF;
+  --shadow: 0 1px 2px rgba(21,18,14,.06), 0 8px 24px rgba(21,18,14,.10);
 
   /* Fonts */
-  --display: 'Fraunces', Georgia, serif;
-  --body: 'Spectral', Georgia, serif;
-  --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  --serif: 'Source Serif 4', Georgia, serif;
+  --sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --display: var(--serif);
+  --body: var(--sans);
+  --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
   --urdu: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', serif;
   --deva: 'Noto Sans Devanagari', 'Kohinoor Devanagari', sans-serif;
 
@@ -57,6 +64,7 @@
   --sp-5: 24px;
   --sp-6: 32px;
   --sp-7: 48px;
+  --sp-8: 64px;
 
   /* Radii */
   --radius-sm: 8px;
@@ -66,6 +74,7 @@
 
   /* Layout width - generous for full-line Nastaliq couplets */
   --content-max: 960px;
+  --reading-max: 760px;
   --prose-max: 76ch;
 
   /* Z-index */
@@ -79,87 +88,24 @@
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]):not([data-theme="contrast"]) {
-    --bg: #F4ECDD;
-    --bg2: #FBF6EC;
-    --bg3: #EDE2CD;
-    --raise: #E4D6BC;
-    --ink: #231c2e;
-    --dim: #5f5570;
-    --faint: #8a8098;
-    --ghost: #a79db3;
-    --gold: #B27414;
-    --teal: #11836f;
-    --rose: #bf3f6c;
-    --line: rgba(35,28,46,.10);
-    --line2: rgba(35,28,46,.20);
-    --ok: #2d8a3a;
-    --no: #c0392b;
-    --onGold: #fff8ea;
-    --shadow: 0 4px 16px rgba(35,28,46,.08);
-  }
+/* Colour-blind friendly (protan/deutan/tritan): long = blue, short = orange,
+   flexible = purple, plus shape cues on the underlines. Same paper + ink; ≥ 7:1 text. */
+:root[data-theme="cvd"] {
+  --gold: #0A4687;           /* UI accent + long */
+  --teal: #7F2C00;           /* short */
+  --rose: #6A2A78;           /* flexible */
+  --mark-l: #2F7BD6;
+  --mark-s: #BD6000;
+  --mark-x: #9B51C9;
+  --ok: #0A4687;
+  --no: #7F2C00;
 }
+:root[data-theme="cvd"] .chip.l { border-bottom-width: 4px; }
+:root[data-theme="cvd"] .chip.s { border-bottom-style: dotted; border-bottom-width: 3px; }
+:root[data-theme="cvd"] .chip.flex.l, :root[data-theme="cvd"] .chip.flex.s { border-bottom-style: double; border-bottom-width: 5px; }
+:root[data-theme="cvd"] .sw.c-s { border-bottom-style: dotted; border-bottom-width: 3px; }
+:root[data-theme="cvd"] .sw.c-x { border-bottom-style: double; border-bottom-width: 5px; }
 
-:root[data-theme="light"] {
-  --bg: #F4ECDD;
-  --bg2: #FBF6EC;
-  --bg3: #EDE2CD;
-  --raise: #E4D6BC;
-  --ink: #231c2e;
-  --dim: #5f5570;
-  --faint: #8a8098;
-  --ghost: #a79db3;
-  --gold: #B27414;
-  --teal: #11836f;
-  --rose: #bf3f6c;
-  --line: rgba(35,28,46,.10);
-  --line2: rgba(35,28,46,.20);
-  --ok: #2d8a3a;
-  --no: #c0392b;
-  --onGold: #fff8ea;
-  --shadow: 0 4px 16px rgba(35,28,46,.08);
-}
-
-:root[data-theme="dark"] {
-  --bg: #161320;
-  --bg2: #1d1930;
-  --bg3: #272140;
-  --raise: #322a4d;
-  --ink: #ECE3D0;
-  --dim: #a79db3;
-  --faint: #766d88;
-  --ghost: #6f6781;
-  --gold: #E6A93C;
-  --teal: #52CBB6;
-  --rose: #E87AA0;
-  --line: rgba(236,227,208,.10);
-  --line2: rgba(236,227,208,.18);
-  --ok: #86d586;
-  --no: #ee7a74;
-  --onGold: #241a06;
-  --shadow: 0 4px 20px rgba(0,0,0,.35);
-}
-
-:root[data-theme="contrast"] {
-  --bg: #0B0B0B;
-  --bg2: #141414;
-  --bg3: #1F1F1F;
-  --raise: #2A2A2A;
-  --ink: #FFFFFF;
-  --dim: #E6E6E6;
-  --faint: #CCCCCC;
-  --ghost: #999999;
-  --gold: #FFD166;
-  --teal: #7AF0DC;
-  --rose: #FFB0CC;
-  --ok: #8BF08B;
-  --no: #FF9C92;
-  --onGold: #000000;
-  --line: rgba(255,255,255,.35);
-  --line2: rgba(255,255,255,.60);
-  --shadow: none;
-}
 
 /* Base resets & typography */
 html { scroll-padding-top: env(safe-area-inset-top, 0px); box-sizing: border-box; }
@@ -176,10 +122,15 @@ body {
 }
 
 p { margin: var(--sp-2) 0; max-width: var(--prose-max); }
-h1, h2, h3, h4 { margin: 0 0 var(--sp-2); font-family: var(--display); font-weight: 600; letter-spacing: -0.01em; }
+h1, h2, h3, h4 {
+  margin: 0 0 var(--sp-2);
+  font-family: var(--display);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+}
 h1 { font-size: var(--fs-2xl); line-height: var(--lh-2xl); }
 h2 { font-size: var(--fs-xl); line-height: var(--lh-xl); }
-h3 { font-size: var(--fs-lg); line-height: var(--lh-lg); }
+h3 { font-size: var(--fs-lg); line-height: var(--lh-lg); font-weight: 500; }
 
 a {
   color: var(--dim);
@@ -209,138 +160,130 @@ header#siteHeader {
 }
 header#siteHeader h1 {
   font-family: var(--display);
-  font-weight: 900;
-  font-size: 26px;
+  font-weight: 500;
+  font-size: 22px;
   margin: 0;
   letter-spacing: -0.01em;
   line-height: 1;
 }
-header#siteHeader h1 .d { color: var(--gold); font-family: var(--urdu); font-weight: normal; margin-right: 4px; }
+header#siteHeader h1 .d { color: var(--faint); font-family: var(--urdu); font-weight: normal; margin-left: 8px; font-size: 0.85em; }
 
-/* Buttons & Controls */
+/* Buttons & Controls — text, not boxes. See RESKIN_BRIEF §3. */
 .btn {
-  font-family: var(--body);
-  font-size: 14.5px;
+  font-family: var(--sans);
+  font-size: 14px;
   font-weight: 500;
   min-height: 40px;
-  padding: 8px 16px;
-  border-radius: var(--radius-sm);
+  padding: 8px 4px;
+  border-radius: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  border: 1px solid var(--line2);
-  background: var(--bg3);
-  color: var(--ink);
-  transition: background 150ms ease-out, border-color 150ms ease-out, transform 80ms ease-out, filter 150ms ease-out;
+  border: 0;
+  background: transparent;
+  color: var(--faint);
+  transition: color 150ms ease-out, transform 80ms ease-out;
   user-select: none;
 }
+.btn:hover:not(:disabled) { color: var(--ink); }
 .btn:active { transform: scale(0.97); }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
 .btn.gold {
-  background: var(--gold);
-  color: var(--onGold);
-  border-color: transparent;
+  color: var(--gold);
   font-weight: 600;
 }
-.btn.gold:hover:not(:disabled) { filter: brightness(1.08); }
+.btn.gold:hover:not(:disabled) { color: var(--gold); filter: brightness(1.15); }
 
 .btn.ghost {
-  background: transparent;
-  border-color: var(--line2);
-  color: var(--ink);
+  color: var(--faint);
 }
-.btn.ghost:hover:not(:disabled) { background: var(--bg3); }
+.btn.ghost:hover:not(:disabled) { color: var(--ink); }
 
 .btn.link {
-  background: transparent;
-  border-color: transparent;
   color: var(--dim);
   min-height: auto;
   padding: 0;
   text-decoration: underline;
+  text-decoration-color: var(--line2);
 }
-.btn.link:hover:not(:disabled) { color: var(--gold); }
+.btn.link:hover:not(:disabled) { color: var(--gold); text-decoration-color: var(--gold); }
 
 .btn.sm {
   min-height: 32px;
-  padding: 4px 11px;
+  padding: 4px 2px;
   font-size: var(--fs-sm);
-  border-radius: 7px;
 }
 .btn.wide { width: 100%; }
 
-/* Circular Audio Play Button with Glow Animation */
+/* Circular audio play button — flat ring, no glow (RESKIN_BRIEF §3, "must keep") */
 .play {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg3);
+  background: transparent;
   border: 1px solid var(--line2);
   color: var(--gold);
-  font-size: 15px;
+  font-size: 14px;
   cursor: pointer;
-  transition: transform .08s, background .15s, border-color .15s, box-shadow .15s;
+  transition: border-color .15s, color .15s, transform .08s;
 }
-.play:hover {
-  border-color: var(--gold);
-  background: color-mix(in srgb, var(--gold) 15%, var(--bg3));
-  box-shadow: 0 0 12px rgba(230, 169, 60, 0.35);
-}
+.play:hover { border-color: var(--gold); }
 .play:active { transform: scale(.92); }
-.play.sm { width: 28px; height: 28px; font-size: 11px; }
+.play.sm { width: 26px; height: 26px; font-size: 10px; }
 
 .icon-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-sm);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background: transparent;
-  border: 1px solid var(--line2);
-  color: var(--ink);
+  border: 0;
+  color: var(--faint);
   cursor: pointer;
   font-size: 16px;
-  transition: background 150ms ease-out, border-color 150ms ease-out;
+  transition: color 150ms ease-out;
 }
-.icon-btn:hover { background: var(--bg3); border-color: var(--gold); }
+.icon-btn:hover { color: var(--gold); }
 
-/* Chip Buttons */
+/* Segmented / chip switches — plain text, active = ink (RESKIN_BRIEF §3) */
 .chipbtn {
-  font-family: var(--body);
+  font-family: var(--sans);
   font-size: 13.5px;
-  background: var(--bg2);
-  color: var(--ink);
-  border: 1px solid var(--line2);
-  border-radius: var(--radius-pill);
-  padding: 6px 13px;
+  background: transparent;
+  color: var(--faint);
+  border: 0;
+  border-radius: 0;
+  padding: 4px 9px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
   cursor: pointer;
-  transition: border-color 150ms ease-out, color 150ms ease-out, background 150ms ease-out;
+  transition: color 150ms ease-out;
 }
-.chipbtn:hover { border-color: var(--gold); color: var(--gold); }
-.chipbtn.on { background: var(--gold); color: var(--onGold); border-color: transparent; font-weight: 600; }
-.chipbtn.sm { font-size: 12px; padding: 3px 9px; }
+.chipbtn:hover { color: var(--ink); }
+.chipbtn.on { color: var(--ink); font-weight: 600; }
+.chipbtn.sm { font-size: 12px; padding: 3px 7px; }
 
-/* Inputs, Textareas, Selects */
+/* Inputs, Textareas, Selects — hairline underline fields, not boxes */
 input, textarea, select {
-  font-family: var(--body);
+  font-family: var(--sans);
   font-size: var(--fs-base);
-  background: var(--bg2);
+  background: transparent;
   color: var(--ink);
-  border: 1px solid var(--line2);
-  border-radius: var(--radius-md);
-  min-height: 42px;
-  padding: 8px 12px;
+  border: 0;
+  border-bottom: 1px solid var(--line2);
+  border-radius: 0;
+  min-height: 32px;
+  padding: 4px 2px;
   transition: border-color 150ms ease-out;
 }
 input:focus, textarea:focus, select:focus {
@@ -355,17 +298,21 @@ textarea {
   line-height: 2.1;
   direction: rtl;
   resize: vertical;
+  border: 1px solid var(--line2);
+  padding: 10px 12px;
 }
 
-/* Note callout */
+/* Note callout — left hairline rule, not a shaded card */
 .note {
-  background: var(--bg3);
-  border-left: 3px solid var(--gold);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  padding: 9px 13px;
-  font-size: var(--fs-sm);
+  background: transparent;
+  border-left: 2px solid var(--line);
+  border-radius: 0;
+  padding-left: var(--sp-4);
+  font-family: var(--serif);
+  font-size: var(--fs-base);
+  line-height: var(--lh-base);
   color: var(--dim);
-  margin: 8px 0;
+  margin: var(--sp-4) 0;
 }
-.note strong { color: var(--gold); font-weight: 600; }
+.note strong { color: var(--ink); font-weight: 500; }
 

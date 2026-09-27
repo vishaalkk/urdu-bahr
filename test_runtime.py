@@ -240,14 +240,14 @@ def run_tests():
     const m26 = ctx.Scan.METERS.find(m => m.id === 26);
     const lbl26 = ctx.meterLabel(m26);
     console.log("  ✓ Meter #26 label: " + lbl26);
-    if (!lbl26 || !lbl26.includes("Bahr of") || !lbl26.includes("hazaj")) {
+    if (!lbl26 || !lbl26.includes("Bahr of") || !/hazaj/i.test(lbl26)) {
       throw new Error("Invalid meter #26 label: " + lbl26);
     }
 
     const m10 = ctx.Scan.METERS.find(m => m.id === 10);
     const lbl10 = ctx.meterLabel(m10);
     console.log("  ✓ Meter #10 label: " + lbl10);
-    if (!lbl10 || !lbl10.includes("sadagi") && !lbl10.includes("Ghalib") && !lbl10.includes("ramal")) {
+    if (!lbl10 || !lbl10.includes("sadagi") && !lbl10.includes("Ghalib") && !/ramal/i.test(lbl10)) {
       throw new Error("Invalid meter #10 label: " + lbl10);
     }
 

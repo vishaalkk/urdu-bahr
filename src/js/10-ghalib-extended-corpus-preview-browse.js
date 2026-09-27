@@ -21,16 +21,16 @@ function renderGhalibExt() {
     const meterTxt = g.meters.length > 1 ? g.meters.map(m => '#' + m).join('/') : '#' + g.meters[0];
     return `
       <div class="vrow">
-        <span class="vnum" style="min-width:56px;">Ghalib ${g.id}</span>
+        <span class="vnum">Ghalib ${g.id}</span>
         <div class="vtext">
-          <div class="vline" style="${isRtl ? 'font-family:\'Jameel Noori Nastaleeq\', \'Noto Nastaliq Urdu\', serif;font-size:18px;direction:rtl;text-align:right;' : 'font-size:14.5px;direction:ltr;text-align:left;'}">${disp1}</div>
+          <div class="vline" ${isRtl ? 'lang="ur" dir="rtl"' : 'lang="ur-Latn" dir="ltr"'}>${disp1}</div>
         </div>
         <div class="vact">
-          <span class="muted tiny" style="white-space:nowrap;">${meterTxt} &middot; ${g.n}L</span>
+          <span class="faint tiny vact-meta">${meterTxt} &middot; ${g.n}L</span>
           <button class="btn ghost sm" onclick="scanGhalibExtInStudio(${g.id})">Scan Ghazal</button>
         </div>
       </div>${gi < shown.length - 1 ? '<div class="vrule"></div>' : ''}`;
-  }).join('') || '<div class="muted small">No ghazals in this meter.</div>';
+  }).join('') || '<div class="faint small">No ghazals in this meter.</div>';
 
   const more = $('ghalibExtMore');
   if(more) {

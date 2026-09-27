@@ -184,7 +184,10 @@ function footThump(t,vol){ const c=A.ctx,o=c.createOscillator(),g=c.createGain()
   o.connect(g); g.connect(A.dest||A.out); o.start(t); o.stop(t+0.32); }
 function stopAll(){ A.timers.forEach(clearTimeout); A.timers=[];
   if(A.ctx && A.sess){ const g=A.sess, now=A.ctx.currentTime; try{ g.gain.cancelScheduledValues(now); g.gain.setValueAtTime(g.gain.value,now); g.gain.linearRampToValueAtTime(0,now+0.03); }catch(e){}
-    setTimeout(()=>{ try{g.disconnect();}catch(e){} },80); A.sess=null; } }
+    setTimeout(()=>{ try{g.disconnect();}catch(e){} },80); A.sess=null; }
+  if(typeof document!=='undefined' && typeof document.querySelectorAll==='function') document.querySelectorAll('.lit,.litf').forEach(n=>n.classList.remove('lit','litf')); }
+/* schedule a follow-on step of the current playback (e.g. a couplet's second line); stopAll() cancels it */
+function playLater(fn,ms){ A.timers.push(setTimeout(fn,ms)); }
 /* seq of 'l','s','x','c'; onStep(i) fires as each syllable sounds */
 function play(seq,opts){
   opts=opts||{}; if(!A.ensure())return 0;
@@ -219,15 +222,16 @@ function closeSound(){ if($('soundSheet')) $('soundSheet').classList.remove('on'
 function renderSoundOpts(){
   const sOpts = $('soundOpts');
   if (sOpts) {
-    sOpts.innerHTML=SOUNDS.map(s=>`<div class="sopt ${s.id===settings.sound?'on':''}" onclick="pickSound('${s.id}')"><span class="play">▶︎</span><div style="flex:1"><div class="nm">${s.nm}</div><div class="ds">${s.ds}</div></div></div>`
-      + (s.id==='mine'?`<div class="card" style="margin:-2px 0 10px;padding:10px 12px" onclick="event.stopPropagation()">
-        <div class="row" style="margin:0">
+    sOpts.innerHTML=SOUNDS.map(s=>{ const on=s.id===settings.sound;
+      return `<button type="button" class="sopt ${on?'on':''}" role="radio" aria-checked="${on}" onclick="pickSound('${s.id}')" title="${s.ds.replace(/"/g,'&quot;')}"><span class="sopt-dot"></span><span class="nm">${s.nm}</span><span class="ds">${s.ds}</span></button>`
+      + (s.id==='mine' && on ? `<div class="sopt-mine">
+        <div class="sopt-row">
           <button class="btn sm ${hasMine('dum')?'':'gold'}" onclick="recordClip('dum')">● dum ${hasMine('dum')?'✓':''}</button>
           <button class="btn sm ${hasMine('da')?'':'gold'}" onclick="recordClip('da')">● da ${hasMine('da')?'✓':''}</button>
-          <label class="btn sm ghost">dum file<input type="file" accept="audio/*" style="display:none" onchange="fileClip('dum',this)"></label>
-          <label class="btn sm ghost">da file<input type="file" accept="audio/*" style="display:none" onchange="fileClip('da',this)"></label>
+          <label class="btn sm ghost">or choose files: dum<input type="file" accept="audio/*" class="hidden" onchange="fileClip('dum',this)"></label>
+          <label class="btn sm ghost">da<input type="file" accept="audio/*" class="hidden" onchange="fileClip('da',this)"></label>
         </div>
-        <p class="tiny muted" id="recStatus" style="margin:6px 0 0">Tap ● and say the syllable once, the way you'd recite — short and clear for "da", a full "dum" for the long. Silence is trimmed automatically; it stays on this device.</p></div>`:'')).join('');
+        <p class="tiny muted rec-status" id="recStatus">Say each syllable once, the way you'd recite it. Silence is trimmed; recordings stay on this device.</p></div>` : ''); }).join('');
   }
   if ($('bpm')) $('bpm').value=settings.bpm;
   if ($('bpmV')) $('bpmV').textContent=settings.bpm;

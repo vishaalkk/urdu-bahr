@@ -1,204 +1,16 @@
 <!-- ===================== GHAZALS TAB ===================== -->
-<style>
-/* Ghazals surface & Reader styles (§5.7, §5.8, §6) */
-.hidden { display: none !important; }
-.ghazal-head { margin-bottom: var(--sp-4); }
-.ghazal-desc { margin-bottom: var(--sp-3); }
-.ghazal-controls { margin-bottom: var(--sp-4); gap: var(--sp-2); align-items: center; }
-.ghazal-meter-filter { flex: 1; max-width: 320px; }
-.ghazal-search-input { flex: 1; min-width: 200px; }
-
-/* Ghazal list rows (.vrow layout per §5.7) */
-.verses { display: flex; flex-direction: column; }
-.vrow {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-3);
-  padding: var(--sp-3) 0;
-  cursor: pointer;
-  border-radius: var(--radius-sm);
-  text-decoration: none;
-  color: inherit;
-  transition: background 150ms ease-out;
-}
-.vrow:hover { background: var(--bg3); }
-.vnum {
-  flex: 0 0 auto;
-  min-width: 60px;
-  color: var(--faint);
-  font-size: var(--fs-xs);
-  font-family: var(--mono);
-}
-.vtext {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-1);
-}
-.vmeta {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-  color: var(--dim);
-  font-size: var(--fs-xs);
-}
-.vline {
-  font-size: var(--fs-verse);
-  line-height: var(--lh-verse);
-}
-.vline[lang="ur"] {
-  font-family: var(--urdu);
-  font-size: var(--fs-urdu);
-  line-height: var(--lh-urdu);
-  direction: rtl;
-  text-align: right;
-}
-.vline[lang="hi"] {
-  font-family: var(--deva);
-  font-size: var(--fs-deva);
-  line-height: var(--lh-deva);
-}
-.vline[lang="ur-Latn"] {
-  font-family: var(--mono);
-  font-size: var(--fs-verse);
-}
-
-.vline-lg {
-  font-size: var(--fs-verse-lg);
-  line-height: var(--lh-verse-lg);
-  font-weight: 500;
-  margin-bottom: var(--sp-1);
-}
-.vline-lg[lang="ur"] {
-  font-family: var(--urdu);
-  font-size: var(--fs-urdu-lg);
-  line-height: var(--lh-urdu-lg);
-  direction: rtl;
-  text-align: right;
-}
-.vline-lg[lang="hi"] {
-  font-family: var(--deva);
-  font-size: var(--fs-deva);
-  line-height: var(--lh-deva);
-}
-.vline-lg[lang="ur-Latn"] {
-  font-family: var(--mono);
-  font-size: var(--fs-verse-lg);
-}
-
-.vact {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-}
-.vact .chevron {
-  color: var(--faint);
-  font-size: var(--fs-sm);
-}
-.vrule {
-  border: 0;
-  border-top: 1px solid var(--line);
-  margin: 0;
-}
-.ghazal-more-btn {
-  margin-top: var(--sp-4);
-  width: 100%;
-}
-@media (min-width: 768px) {
-  .ghazal-more-btn { width: auto; }
-}
-
-/* Zero results (§5.7) */
-.zero-state {
-  padding: var(--sp-4) 0;
-  color: var(--dim);
-  font-size: var(--fs-sm);
-}
-.zero-state p { margin: 0 0 var(--sp-2); }
-.zero-suggestions {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-2);
-  margin-top: var(--sp-2);
-}
-.zero-suggestions a {
-  color: var(--gold);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  font-size: var(--fs-sm);
-}
-
-/* Ghazal reader view (§5.8) */
-.ghazal-reader-view {
-  margin-bottom: var(--sp-5);
-}
-.reader-nav {
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--sp-3);
-}
-.reader-header {
-  margin-bottom: var(--sp-3);
-}
-.reader-intro-note {
-  margin: var(--sp-3) 0;
-}
-.reader-actions {
-  justify-content: space-between;
-  align-items: center;
-  margin: var(--sp-4) 0 var(--sp-3);
-}
-.reader-couplets {
-  margin-top: var(--sp-3);
-}
-.couplet-card {
-  margin: var(--sp-3) 0;
-  background: var(--bg2);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  padding: var(--sp-3);
-}
-.couplet-head {
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--sp-2);
-}
-.couplet-acts {
-  gap: var(--sp-2);
-  align-items: center;
-}
-.couplet-scan-box {
-  margin-top: var(--sp-3);
-  padding-top: var(--sp-2);
-  border-top: 1px solid var(--line);
-}
-.couplet-scan-box .misra-scan-second {
-  margin-top: var(--sp-2);
-}
-.couplet-note {
-  margin-top: var(--sp-3);
-}
-.reader-footer-nav {
-  justify-content: space-between;
-  align-items: center;
-  margin-top: var(--sp-5);
-  padding-top: var(--sp-4);
-  border-top: 1px solid var(--line);
-}
-</style>
-
 <section id="ghazals-section" class="tab-view">
   <div class="page-head ghazal-head">
+    <div class="eyebrow" id="ghazalEyebrow">Handbook · 24 ghazals</div>
     <h1>Ghazals</h1>
+    <p class="lede">Read a ghazal couplet by couplet. Tap any line to see how it scans.</p>
     <!-- Collection segmented control -->
     <div class="seg" role="tablist" aria-label="Collections">
       <button class="seg-btn on" id="colBtnHandbook" onclick="switchCollection('handbook')">Handbook 24</button>
       <button class="seg-btn" id="colBtnGhalib" onclick="switchCollection('ghalib')">Ghalib 185</button>
       <button class="seg-btn" id="colBtnMir" onclick="switchCollection('mir')">Mir 429</button>
     </div>
-    <div id="colDesc" class="tiny dim ghazal-desc">The handbook's exercise ghazals, with Frances Pritchett's notes.</div>
+    <div id="colDesc" class="dim ghazal-desc">The handbook's exercise ghazals, with Frances Pritchett's notes.</div>
 
     <!-- Controls row: meter filter + search -->
     <div class="row ghazal-controls">
@@ -210,7 +22,7 @@
   </div>
 
   <!-- Ghazal Reader View (when viewing a specific ghazal) -->
-  <div id="ghazalReaderView" class="card ghazal-reader-view hidden">
+  <div id="ghazalReaderView" class="ghazal-reader-view hidden">
     <div class="row reader-nav">
       <button class="btn link sm" onclick="navigate('/ghazals/' + (typeof activeCollection !== 'undefined' ? activeCollection : 'handbook'))">← Ghazals</button>
       <span id="readerTitle" class="small dim"></span>

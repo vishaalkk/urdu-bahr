@@ -1,20 +1,18 @@
 <header id="siteHeader">
-  <div class="row" style="margin:0;align-items:center;gap:16px;">
-    <h1 style="margin:0;font-size:24px;cursor:pointer;" onclick="location.hash='#/meter/learn'"><span class="d" style="font-family:var(--urdu);font-weight:normal;">بحر</span> · Baḥr</h1>
-    <nav class="desktop-nav" aria-label="Main Navigation">
-      <a href="#/weight" data-nav="weight">Weight</a>
-      <a href="#/meter" data-nav="meter">Meter</a>
-      <a href="#/scan" data-nav="scan">Scan</a>
-      <a href="#/ghazals" data-nav="ghazals">Ghazals</a>
-    </nav>
-  </div>
-  <div class="hbtn" style="margin-left:auto;display:flex;gap:8px;align-items:center;">
-    <div class="seg-script" style="display:inline-flex;background:var(--bg2);padding:3px;border-radius:var(--radius-sm);border:1px solid var(--line2);gap:2px;">
-      <button class="chipbtn on" id="btnScriptUrdu" onclick="setScriptMode('ur')">اردو</button>
-      <button class="chipbtn" id="btnScriptDev" onclick="setScriptMode('hi')">देव</button>
-      <button class="chipbtn" id="btnScriptRo" onclick="setScriptMode('ro')">Roman</button>
-      <button class="chipbtn" id="btnScriptAsciiHeader" style="display:none;" onclick="setScriptMode('ascii')">ASCII</button>
+  <div class="mark" onclick="location.hash='#/meter/learn'">Baḥr<span>بحر</span></div>
+  <nav class="desktop-nav" aria-label="Main Navigation">
+    <a href="#/weight" data-nav="weight">Weight</a>
+    <a href="#/meter" data-nav="meter">Meter</a>
+    <a href="#/scan" data-nav="scan">Scan</a>
+    <a href="#/ghazals" data-nav="ghazals">Ghazals</a>
+  </nav>
+  <div class="hdr-tools">
+    <div class="script-switch">
+      <button class="scriptbtn on" id="btnScriptUrdu" onclick="setScriptMode('ur')">اردو</button>
+      <button class="scriptbtn" id="btnScriptDev" onclick="setScriptMode('hi')">देव</button>
+      <button class="scriptbtn" id="btnScriptRo" onclick="setScriptMode('ro')">Roman</button>
+      <button class="scriptbtn" id="btnScriptAsciiHeader" style="display:none;" onclick="setScriptMode('ascii')">ASCII</button>
     </div>
-    <button class="icon-btn" id="btnOpenSettings" onclick="openSettings()" aria-label="Settings" title="Settings" style="background:transparent;border:1px solid var(--line2);border-radius:var(--radius-sm);width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;color:var(--ink);cursor:pointer;font-size:18px;">⚙</button>
+    <button class="icon-btn settings-btn" id="btnOpenSettings" onclick="openSettings()" aria-label="Settings" title="Settings">⚙</button>
   </div>
 </header>

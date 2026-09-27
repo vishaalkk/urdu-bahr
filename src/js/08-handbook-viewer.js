@@ -13,19 +13,15 @@ function renderHandbook() {
   if(!view) return;
   const ch = HANDBOOK_DATA.find(x => x.id === currentHbChapter) || HANDBOOK_DATA[0];
   view.innerHTML = `
-    <div style="border-bottom:1px solid var(--line2);padding-bottom:14px;margin-bottom:18px;">
-      <div class="row" style="margin:0;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
-        <div>
-          <span class="pill shape">CHAPTER ${ch.id.replace('ch','')}</span>
-          <h1 style="margin:8px 0 4px 0;font-size:24px;color:var(--gold);">${ch.title}</h1>
-          <div class="muted small">${ch.filename} · Complete unabridged text from Frances Pritchett & Kh. A. Khaliq Anjum</div>
-        </div>
-        <div style="font-family:'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif;font-size:24px;color:var(--teal);direction:rtl;">
-          ${ch.urdu_title}
-        </div>
+    <div class="hb-chapter-head">
+      <div>
+        <div class="eyebrow">Chapter ${ch.id.replace('ch','')}</div>
+        <h1 class="hb-chapter-title">${ch.title}</h1>
+        <div class="faint small">${ch.filename} · Complete unabridged text from Frances Pritchett &amp; Kh. A. Khaliq Anjum</div>
       </div>
+      <div class="hb-chapter-urdu">${ch.urdu_title}</div>
     </div>
-    <div class="hb-verbatim" style="line-height:1.8;font-size:15px;color:var(--ink);">
+    <div class="hb-verbatim">
       ${ch.html_content}
     </div>
   `;

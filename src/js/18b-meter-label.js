@@ -1,3 +1,29 @@
+/* ʿarūz terms: Pritchett's ASCII-style meter names (x = ḳh, z = ẕ/ẓ …) → proper
+   romanization (same scheme as the app's transliteration) and Urdu spelling. */
+const ARUZ_TERMS = {
+  hazaj:['hazaj','ہزج'], ramal:['ramal','رمل'], rajaz:['rajaz','رجز'], 'kāmil':['kāmil','کامل'],
+  mujtas:['mujtas̱','مجتث'], munsarih:['munsariḥ','منسرح'], 'mutadārik':['mutadārik','متدارک'],
+  'mutaqārib':['mutaqārib','متقارب'], 'muzāriʻ':['muẓāriʿ','مضارع'], 'sarīʻ':['sarīʿ','سریع'],
+  'xafīf':['ḳhafīf','خفیف'],
+  musamman:['mus̱amman','مثمن'], musaddas:['musaddas','مسدس'],
+  'sālim':['sālim','سالم'], axrab:['aḳhrab','اخرب'], axram:['aḳhram','اخرم'], ashtar:['ashtar','اشتر'],
+  'maqbūz':['maqbūẓ','مقبوض'], 'mahzūf':['maḥẕūf','محذوف'], 'makfūf':['makfūf','مکفوف'],
+  'maxbūn':['maḳhbūn','مخبون'], 'maqtūʻ':['maqt̤ūʿ','مقطوع'], 'matvī':['mat̤vī','مطوی'],
+  'maksūf':['maksūf','مکسوف'], 'manhūr':['manḥūr','منحور'], 'muzāʻaf':['muẓāʿaf','مضاعف'],
+  aslam:['aslam','اسلم'], asram:['as̱ram','اثرم'], 'mashkūl':['mashkūl','مشکول']
+};
+/* aruzName(raw) -> { ro: "Ḳhafīf musaddas maḳhbūn …", ur: "خفیف مسدس مخبون …" | '' }
+   Unknown words pass through unchanged; ur is '' unless every word is known. */
+function aruzName(raw) {
+  if (!raw) return { ro: '', ur: '' };
+  let allKnown = true;
+  const parts = String(raw).split(/(\s+|\s*\/\s*)/);
+  const ro = parts.map(w => { const t = ARUZ_TERMS[w]; if (!t && /\S/.test(w) && !/\//.test(w)) allKnown = false; return t ? t[0] : w; }).join('');
+  const ur = allKnown ? parts.map(w => ARUZ_TERMS[w] ? ARUZ_TERMS[w][1] : (/\//.test(w) ? ' / ' : w)).join('').replace(/\s+/g, ' ').trim() : '';
+  return { ro: ro.charAt(0).toUpperCase() + ro.slice(1), ur };
+}
+window.aruzName = aruzName;
+
 /* ================= METER LABEL COMPONENT (§6.4) ================= */
 /**
  * meterLabelInfo(mOrId) -> {
@@ -24,7 +50,7 @@ function meterLabelInfo(mOrId) {
   } else if (typeof METERS_DATA !== 'undefined' && METERS_DATA.standard) {
     const meta = METERS_DATA.standard.find(m => String(m.id) === idStr);
     if (meta) {
-      name = meta.name || '';
+      name = aruzName(meta.name || '').ro;
       if (!pattern && meta.pattern) pattern = meta.pattern;
     }
   }
@@ -125,17 +151,17 @@ function renderMeterLabel(mOrId, opts) {
   const primaryText = verseText ? `“${verseText}”` : info.pattern;
   const isVerseUrdu = verseText && isRtl;
 
-  let h = `<div class="meter-label-comp ${size==='lg'?'meter-label-lg':'meter-label-sm'}" style="margin:4px 0;">`;
-  h += `<div class="row" style="margin:0;align-items:flex-start;gap:10px;">`;
+  let h = `<div class="meter-label-comp ${size==='lg'?'meter-label-lg':'meter-label-sm'}">`;
+  h += `<div class="row">`;
   if (canPlay) {
     h += `<span class="play sm" aria-label="Play meter rhythm" onclick="playPat('${info.pattern}')">▶</span>`;
   }
-  h += `<div style="flex:1;min-width:0;">`;
-  h += `<div class="meter-label-primary" style="${isVerseUrdu ? 'font-family:var(--urdu);font-size:'+(size==='lg'?'24px':'20px')+';direction:rtl;line-height:1.8;' : 'font-size:'+(size==='lg'?'16px':'14.5px')+';font-weight:500;'}">${primaryText}</div>`;
+  h += `<div class="meter-label-body">`;
+  h += `<div class="meter-label-primary ${isVerseUrdu ? 'urdu' : (verseText ? '' : 'mono')}">${primaryText}</div>`;
   if (info.pattern && typeof feetStrip === 'function') {
-    h += `<div class="meter-label-pattern" style="margin:4px 0;">${feetStrip(info.pattern)}</div>`;
+    h += `<div class="meter-label-pattern">${feetStrip(info.pattern)}</div>`;
   }
-  h += `<div class="meter-label-meta faint tiny" style="margin-top:2px;">`;
+  h += `<div class="meter-label-meta faint tiny">`;
   const metaParts = [];
   if (info.number) metaParts.push(info.number);
   if (info.name) metaParts.push(info.name);

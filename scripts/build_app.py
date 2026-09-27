@@ -1,4 +1,4 @@
-import json, re, os, subprocess
+import json, re, os, subprocess, base64
 from collections import Counter
 
 # ─── 1. Load datasets ─────────────────────────────────────────────────────────
@@ -188,6 +188,37 @@ if (typeof Parser !== 'undefined') {{
 }}
 '''
 
+# ─── 3b. Embed offline fonts as base64 @font-face rules ───────────────────────
+# Source Serif 4 (400, 400 italic, 600), Inter (400, 500) and IBM Plex Mono
+# (400), subsetted to Latin + Latin Extended A/B/Additional + combining
+# diacritics + the transliteration/pattern marks this app actually uses
+# (see LICENSES/OFL-fonts.txt for provenance). Embedding them keeps the app
+# at zero runtime network requests instead of loading from Google Fonts.
+FONT_FACES = [
+    ('Source Serif 4', 'normal', 400, 'src/fonts/SourceSerif4-Regular.woff2'),
+    ('Source Serif 4', 'italic', 400, 'src/fonts/SourceSerif4-Italic.woff2'),
+    ('Source Serif 4', 'normal', 600, 'src/fonts/SourceSerif4-SemiBold.woff2'),
+    ('Inter', 'normal', 400, 'src/fonts/Inter-Regular.woff2'),
+    ('Inter', 'normal', 500, 'src/fonts/Inter-Medium.woff2'),
+    ('IBM Plex Mono', 'normal', 400, 'src/fonts/IBMPlexMono-Regular.woff2'),
+]
+
+def build_font_face_css(faces):
+    rules = []
+    for family, style, weight, path in faces:
+        with open(path, 'rb') as f:
+            b64 = base64.b64encode(f.read()).decode('ascii')
+        rules.append(
+            "@font-face{{font-family:'{family}';font-style:{style};"
+            "font-weight:{weight};font-display:swap;"
+            "src:url(data:font/woff2;base64,{b64}) format('woff2');}}".format(
+                family=family, style=style, weight=weight, b64=b64
+            )
+        )
+    return ''.join(rules)
+
+font_face_css = build_font_face_css(FONT_FACES)
+
 # ─── 4. Read manifest and source files ────────────────────────────────────────
 with open('src/manifest.json', 'r', encoding='utf-8') as f:
     manifest = json.load(f)
@@ -201,7 +232,8 @@ head_content = read_source(manifest['head'])
 styles_src = manifest['styles']
 styles_content = '\n'.join(read_source(p) for p in (styles_src if isinstance(styles_src, list) else [styles_src]))
 
-# Substitute style placeholder
+# Substitute style placeholders
+head_content = head_content.replace('/*@@FONTFACES@@*/', font_face_css)
 head_content = head_content.replace('/*@@STYLES@@*/', styles_content)
 
 # Read body parts

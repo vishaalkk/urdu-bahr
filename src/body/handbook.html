@@ -1,16 +1,14 @@
 <!-- ================= HANDBOOK READER SECTION ================= -->
 <section id="handbook-section" class="tab-view" style="display:none;">
-  <div class="row" style="margin:0 0 12px;justify-content:space-between;align-items:center;">
+  <div class="row hb-toprow">
     <button class="btn link sm" id="btnHandbookBack" onclick="onHandbookBack()">← Back</button>
-    <div class="muted tiny">Urdu Meter: A Practical Handbook</div>
+    <div class="faint tiny">Urdu Meter: A Practical Handbook</div>
   </div>
 
-  <div class="card" style="margin-bottom:16px;">
-    <div class="row" style="margin-top:0;justify-content:space-between;align-items:center;">
-      <h2 style="margin:0;font-size:20px;color:var(--gold);">Handbook Chapters</h2>
-    </div>
-    <div class="row scroller" id="hbChapterChips" style="gap:8px;margin-top:12px;overflow-x:auto;padding-bottom:4px;"></div>
+  <div class="card">
+    <h2>Handbook Chapters</h2>
+    <div class="scroller" id="hbChapterChips"></div>
   </div>
 
-  <div class="card" id="hbChapterView" style="line-height:1.75;font-size:15px;max-width:68ch;margin:0 auto;"></div>
+  <div id="hbChapterView"></div>
 </section>

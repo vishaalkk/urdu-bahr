@@ -9,29 +9,43 @@ function exSeq(e){ return {seq:e.syl.map(s=>s.resolved), feet:e.syl.map(s=>s.foo
 function playPat(raw,nodes){ const p=patSeq(raw); return play(p.seq,{feet:p.feet,cae:p.cae,onStep:nodes?litter(nodes):null}); }
 function playEx(e,nodes,groups){ const p=exSeq(e); return play(p.seq,{feet:p.feet,cae:p.cae,onStep:i=>{ if(nodes)litter(nodes)(i); if(groups){ groups.forEach(g=>g.classList.remove('litf')); const g=groups[e.syl[i].foot]; if(g) g.classList.add('litf'); } }}); }
 /* pattern with named feet (handbook convention, left→right) */
-function feetStrip(raw){ return '<div class="fstrip">'+Scan.patternFeet(raw).map(f=>`${f.caeBefore?'<span class="cae">//</span>':''}<span class="fbox"><span class="strip" style="margin:0">${strip(f.toks)}</span><span class="fn">${f.ro.join('·')}</span></span>`).join('')+'</div>'; }
+function feetStrip(raw){ return '<div class="fstrip">'+Scan.patternFeet(raw).map(f=>`${f.caeBefore?'<span class="cae">//</span>':''}<span class="fbox"><span class="strip tight">${strip(f.toks)}</span><span class="fn">${f.ro.join('·')}</span></span>`).join('')+'</div>'; }
 /* rendering helpers */
 function strip(tokens){ return tokens.map(t=>t==='|'?'<span class="ft"></span>':t==='//'?'<span class="cae">//</span>':`<span class="blk ${t}">${t==='l'?'=':t==='s'?'–':t==='x'?'x':'·'}</span>`).join(''); }
 function sylls(tokens){ return tokens.filter(t=>t==='l'||t==='s'||t==='x'||t==='c'); }
 function famLabel(f){ return f.gz[0]; }
-function chipHTML(s,i,li,override){
-  const cls=[s.resolved==='c'?'c':s.resolved, s.native==='x'?'flex':'', s.graft?'g':'', s.last?'wend':''].join(' ');
+function chipHTML(s,i,li,override,gpos){
+  const cls=[s.resolved==='c'?'c':s.resolved, s.native==='x'?'flex':'', s.last?'wend':''].join(' ');
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
   const isRtl = (cs === 'ur');
   const txt = (cs === 'ur' || !s.text || s.text === '·') ? s.text : (override!=null ? override : (typeof translitText === 'function' ? translitText(s.text, cs) : s.text));
+  const scriptCls = cs === 'hi' ? 'deva' : (cs !== 'ur' ? 'roman' : '');
   const clickable = li!=null;
   const wsel = clickable && selWord && selWord[0]===li && selWord[1]===s.word;
   const wov = clickable && ovr[li] && ovr[li][s.word];
-  const cwCls=['cw', clickable?'click':'', wsel?'wsel':'', wov?'wov':''].join(' ').replace(/\s+/g,' ').trim();
+  const cwCls=['cw', clickable?'click':'', wsel?'wsel':'', wov?'wov':'', gpos?'g '+gpos:''].join(' ').replace(/\s+/g,' ').trim();
   const click = clickable ? ` onclick="pickWord(${li},${s.word})"` : '';
-  return `<span class="${cwCls}"${click}><span class="chip ${cls}" data-i="${i}" style="${!isRtl?'font-family:var(--body);font-size:15px;':''}">${txt}</span><span class="fs">${s.fsyl||''}</span></span>`;
+  return `<span class="${cwCls}"${click}><span class="chip ${cls} ${scriptCls}" data-i="${i}">${txt}</span><span class="fs">${s.fsyl||''}</span></span>`;
 }
-function chipsHTML(syl,feet,li){
+/* position of each syllable inside a grafted run (words joined across the space): g-start / g-mid / g-end */
+function graftPos(syl){
+  const same=(a,b)=>a&&b&&a.graft&&b.graft&&a.word===b.word&&a.wordTo===b.wordTo;
+  return syl.map((s,i)=>{ if(!s.graft) return ''; const p=same(syl[i-1],s), n=same(s,syl[i+1]); return p&&n?'g-mid':p?'g-end':n?'g-start':'g-solo'; });
+}
+/* Roman syllable labels from a specific scanned line (reader, look-up) instead of the Scan tab's state */
+function romanOverridesFor(syl,r,lineObj){
+  if(!r||!lineObj||typeof wordRomanMap!=='function'||typeof syllabifyRoman!=='function') return [];
+  const wmap=wordRomanMap(lineObj,r); if(!wmap) return [];
+  const counts={}, ordinals=[], pieces={};
+  syl.forEach(s=>{ const o=counts[s.word]||0; ordinals.push(o); counts[s.word]=o+1; });
+  return syl.map((s,i)=>{ if(!(s.word in pieces)){ const w=wmap[s.word]; pieces[s.word]=w?syllabifyRoman(w,counts[s.word]):null; } const p=pieces[s.word]; return p?p[ordinals[i]]:null; });
+}
+function chipsHTML(syl,feet,li,roCtx){
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
-  const isRtl = (cs === 'ur');
-  const overrides = (cs==='ro' && li!=null && typeof chipRomanOverrides==='function') ? chipRomanOverrides(syl,li) : [];
-  if(!feet||!feet.length) return syl.map((s,i)=>chipHTML(s,i,li,overrides[i])).join('');
-  return feet.map((F,fi)=>F?`${F.cae?'<span class="caeu">//</span>':''}<span class="fgrp" data-f="${fi}"><span class="fname">${(()=>{const fm=cs==='ur'?(F.ur||''):(cs==='hi'?(typeof urduToDevanagari==='function'?urduToDevanagari(F.ur):''):''); return fm?`${fm} <i>${F.name||''}</i>`:`<i>${F.name||''}</i>`;})()}</span><span class="fchips" style="direction:${isRtl?'rtl':'ltr'}">${F.idx.map(i=>chipHTML(syl[i],i,li,overrides[i])).join('')}</span></span>`:'').join('');
+  const overrides = cs!=='ro' ? [] : roCtx ? romanOverridesFor(syl,roCtx.r,roCtx.lineObj) : (li!=null && typeof chipRomanOverrides==='function') ? chipRomanOverrides(syl,li) : [];
+  const gp=graftPos(syl);
+  if(!feet||!feet.length) return syl.map((s,i)=>chipHTML(s,i,li,overrides[i],gp[i])).join('');
+  return feet.map((F,fi)=>F?`${F.cae?'<span class="caeu">//</span>':''}<span class="fgrp" data-f="${fi}"><span class="fname">${(()=>{const fm=cs==='ur'?(F.ur||''):(cs==='hi'?(typeof urduToDevanagari==='function'?urduToDevanagari(F.ur):''):''); return fm?`${fm} <i>${F.name||''}</i>`:`<i>${F.name||''}</i>`;})()}</span><span class="fchips">${F.idx.map(i=>chipHTML(syl[i],i,li,overrides[i],gp[i])).join('')}</span></span>`:'').join('');
 }
 /* align a known verse to its family's meter */
 const alignCache={};
@@ -42,7 +56,8 @@ function alignVerse(ur,fam){
 }
 function singAlong(ur,fam,host){
   const e=alignVerse(ur,fam); if(!e) return;
-  host.innerHTML=`<div class="chips">${chipsHTML(e.syl,e.feet)}</div>`;
+  const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
+  host.innerHTML=`<div class="chips ${cs==='ur'?'':'ltr'}">${chipsHTML(e.syl,e.feet)}</div>`;
   const nodes=[...host.querySelectorAll('.chip')].sort((a,b)=>a.dataset.i-b.dataset.i), groups=[...host.querySelectorAll('.fgrp')];
   playEx(e,nodes,groups);
 }

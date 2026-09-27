@@ -4,11 +4,12 @@ let curReaderCol = null;
 let curReaderId = null;
 let curReaderItem = null;
 
-let showAllScans = false;
+// Scans are shown by default; only an explicit "Hide all scans" turns them off.
+let showAllScans = true;
 try {
-  showAllScans = (sessionStorage.getItem('bahr_reader_scans') === 'true');
+  showAllScans = (sessionStorage.getItem('bahr_reader_scans') !== 'false');
 } catch (e) {
-  showAllScans = false;
+  showAllScans = true;
 }
 
 function escapeHtml(str) {
@@ -124,6 +125,14 @@ function switchCollection(col) {
     'mir': "Mir Taqi Mir, scanned and meter-checked by the engine."
   };
   if ($('colDesc')) $('colDesc').textContent = descs[col] || '';
+
+  const eyebrowNames = { handbook: 'Handbook', ghalib: 'Ghalib', mir: 'Mir' };
+  const eyebrowCounts = {
+    handbook: (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) ? EXERCISES_DATA.length : 24,
+    ghalib: (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) ? GHALIB_EXT_DATA.length : 185,
+    mir: (typeof MIR_EXT_DATA !== 'undefined' && Array.isArray(MIR_EXT_DATA)) ? MIR_EXT_DATA.length : 429
+  };
+  if ($('ghazalEyebrow')) $('ghazalEyebrow').textContent = `${eyebrowNames[col] || col} · ${eyebrowCounts[col] || 0} ghazals`;
 
   const cHandbook = $('handbookExContainer');
   const cGhalib = $('ghalibContainer');
@@ -449,6 +458,7 @@ function openGhazalReader(col, id) {
       <button class="btn ghost sm" id="btnToggleAllScans" onclick="toggleReaderAllScans()">${showAllScans ? 'Hide all scans' : 'Show all scans'}</button>
       <button class="btn link sm faint" onclick="editCurrentInScan('${col}', '${item.id}')">Edit in Scan ›</button>
     </div>
+    ${(typeof legendHTML === 'function') ? legendHTML('top') : ''}
   `;
 
   for (let c = 0; c < cCount; c++) {
@@ -463,14 +473,16 @@ function openGhazalReader(col, id) {
     cHtml += `
       <div class="card couplet-card">
         <div class="row couplet-head">
-          <span class="vnum faint tiny">${vNum}</span>
+          <span class="vnum">Couplet ${vNum}</span>
           <div class="row couplet-acts">
             <span class="play sm" role="button" tabindex="0" aria-label="Play couplet" onclick="playReaderCoupletByIndex(${c})">▶</span>
             <button class="btn ghost sm" onclick="toggleCoupletScan(${c})">Scan</button>
           </div>
         </div>
-        <div class="vline-lg" ${langDir}>${disp1}</div>
-        <div class="vline-lg" ${langDir}>${disp2}</div>
+        <div class="cbox-verse">
+          <div class="vline-lg" ${langDir}>${disp1}</div>
+          <div class="vline-lg" ${langDir}>${disp2}</div>
+        </div>
 
         <div id="coupletScanBox_${c}" class="couplet-scan-box ${showAllScans ? '' : 'hidden'}">
           <div id="misraScan_${c}_1"></div>
@@ -493,9 +505,9 @@ function openGhazalReader(col, id) {
     cHtml += `
       <div class="card couplet-card">
         <div class="row couplet-head">
-          <span class="vnum faint tiny">${lines.length}</span>
+          <span class="vnum">Line ${lines.length}</span>
         </div>
-        <div class="vline-lg" ${langDir}>${dispExtra}</div>
+        <div class="cbox-verse"><div class="vline-lg" ${langDir}>${dispExtra}</div></div>
       </div>
     `;
   }
@@ -523,7 +535,7 @@ function openGhazalReader(col, id) {
   // Render scans if showAllScans is true
   if (showAllScans) {
     for (let c = 0; c < cCount; c++) {
-      populateCoupletScan(lines[2 * c].ur, lines[2 * c + 1].ur, c);
+      populateCoupletScan(lines[2 * c], lines[2 * c + 1], c);
     }
   }
 }
@@ -556,7 +568,7 @@ function toggleCoupletScan(c) {
   if (isHidden) {
     const lines = getCurrentReaderLines();
     if (lines && lines[2 * c] && lines[2 * c + 1]) {
-      populateCoupletScan(lines[2 * c].ur, lines[2 * c + 1].ur, c);
+      populateCoupletScan(lines[2 * c], lines[2 * c + 1], c);
     }
   }
 }
@@ -582,7 +594,7 @@ function toggleReaderAllScans() {
       const cCount = Math.floor(lines.length / 2);
       for (let c = 0; c < cCount; c++) {
         if (lines[2 * c] && lines[2 * c + 1]) {
-          populateCoupletScan(lines[2 * c].ur, lines[2 * c + 1].ur, c);
+          populateCoupletScan(lines[2 * c], lines[2 * c + 1], c);
         }
       }
     }
@@ -590,11 +602,13 @@ function toggleReaderAllScans() {
 }
 window.toggleReaderAllScans = toggleReaderAllScans;
 
-function populateCoupletScan(text1, text2, c) {
+function populateCoupletScan(line1, line2, c) {
   const b1 = $(`misraScan_${c}_1`);
   const b2 = $(`misraScan_${c}_2`);
-  if (b1 && typeof renderLineScan === 'function') renderLineScan(text1, b1);
-  if (b2 && typeof renderLineScan === 'function') renderLineScan(text2, b2);
+  const txt = l => (l && typeof l === 'object') ? l.ur : l;
+  const obj = l => (l && typeof l === 'object') ? l : null;
+  if (b1 && typeof renderLineScan === 'function') renderLineScan(txt(line1), b1, obj(line1));
+  if (b2 && typeof renderLineScan === 'function') renderLineScan(txt(line2), b2, obj(line2));
 }
 window.populateCoupletScan = populateCoupletScan;
 
@@ -615,6 +629,10 @@ function getCurrentReaderLines() {
 function playReaderCoupletByIndex(c) {
   const lines = getCurrentReaderLines();
   if (!lines || !lines[2 * c] || !lines[2 * c + 1]) return;
+  // Playback highlights the scan chips, so make sure they're rendered and visible.
+  const box = $(`coupletScanBox_${c}`);
+  if (box && box.classList.contains('hidden')) toggleCoupletScan(c);
+  else if (box && !box.querySelector('.chip')) populateCoupletScan(lines[2 * c], lines[2 * c + 1], c);
   const b1 = $(`misraScan_${c}_1`);
   const b2 = $(`misraScan_${c}_2`);
   const nodes1 = b1 ? [...b1.querySelectorAll('.chip')].sort((a,b)=>a.dataset.i-b.dataset.i) : null;
@@ -631,7 +649,7 @@ function playReaderCoupletByIndex(c) {
     const e2 = Scan.explain(r2, r2.fits[0]);
     if (typeof playEx === 'function') {
       const dur = playEx(e1, nodes1, groups1);
-      setTimeout(() => {
+      playLater(() => {
         playEx(e2, nodes2, groups2);
       }, (dur || 0) * 1000 + 350);
     }

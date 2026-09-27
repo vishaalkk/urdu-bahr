@@ -1,8 +1,12 @@
-/* Nastaliq & Poetry Lines */
+/* ============================================================
+   Verse display: scripts, direction, weight colours
+   ============================================================ */
 .mono { font-family: var(--mono); }
 .urdu { font-family: var(--urdu); direction: rtl; line-height: 2.2; font-size: 22px; }
 .deva { font-family: var(--deva); }
-.ro { font-style: italic; color: var(--dim); font-size: 14.5px; }
+.ro { font-family: var(--serif); font-style: italic; color: var(--dim); font-size: 14.5px; }
+.rtl { direction: rtl; }
+.ltr { direction: ltr; }
 .L { color: var(--gold); }
 .S { color: var(--teal); }
 .X { color: var(--rose); }
@@ -17,59 +21,71 @@
   text-align: right;
 }
 
+/* a scanned misra shown above its chips (results, couplet cards) */
+.misra-text {
+  font-family: var(--urdu);
+  font-size: 20px;
+  line-height: 1.9;
+  direction: rtl;
+  margin: 4px 0 10px;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--line);
+}
+.misra-text.ltr { font-family: var(--mono); font-size: 15px; direction: ltr; }
+.misra-text.deva { font-family: var(--deva); font-size: 16px; direction: ltr; }
+
 /* ============================================================
-   Scansion Feet, Chips & Syllable Animation
+   Syllable chips — plain text with an underline for weight,
+   not filled pills. Feet separated by a hairline.
    ============================================================ */
 .chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 5px;
+  gap: 14px 4px;
   direction: rtl;
   margin: 12px 0;
-  align-items: flex-end;
+  align-items: flex-start;
 }
+.chips.ltr { direction: ltr; }
 
-/* Foot box enclosing syllable columns */
+/* Foot group: no box, just a hairline between feet + a foot name */
 .fgrp {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid var(--line2);
-  border-radius: 12px;
-  padding: 4px 6px 6px;
-  margin: 0 3px 6px;
-  transition: background .15s, border-color .15s;
-  background: var(--bg2);
+  padding: 0 10px;
+  border-left: 1px solid var(--line);
+  transition: background .15s;
 }
+.fgrp:first-child { border-left: 0; padding-inline-start: 0; }
+.chips.ltr .fgrp { border-left: 0; border-right: 1px solid var(--line); }
+.chips.ltr .fgrp:first-child { border-right: 0; padding-inline-end: 0; }
+
 .fgrp.litf {
-  border-color: var(--gold);
-  background: color-mix(in srgb, var(--gold) 14%, var(--bg2));
+  background: color-mix(in srgb, var(--mark-l) 7%, transparent);
+  border-radius: 6px;
 }
 
 .fname {
-  font-family: var(--urdu);
-  font-size: 13.5px;
-  line-height: 1.8;
-  color: var(--gold);
-  white-space: nowrap;
-  margin-bottom: 3px;
-}
-.fname i {
-  font-family: var(--mono);
+  font-family: var(--serif);
   font-style: normal;
-  font-size: 10px;
+  font-size: 13.5px;
   color: var(--dim);
-  margin-right: 4px;
+  white-space: nowrap;
+  margin-bottom: 4px;
 }
+.fname i { font-style: normal; }
+.fgrp.litf .fname { color: var(--gold); }
 
 .fchips {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   direction: rtl;
-  align-items: flex-end;
+  align-items: flex-start;
 }
+.chips.ltr .fchips { direction: ltr; }
 
-/* Syllable column: Urdu chip vertically above afa'il syllable */
+/* Syllable column: the syllable mark, its foot-syllable label below */
 .cw {
   display: inline-flex;
   flex-direction: column;
@@ -77,15 +93,13 @@
   position: relative;
 }
 .cw.click { cursor: pointer; }
-.cw.wsel .chip { border-color: var(--gold); background: color-mix(in srgb, var(--gold) 20%, var(--bg3)); }
-.cw.wov .chip { border-color: var(--rose); }
 .cw .fs {
   font-family: var(--mono);
   font-size: 10.5px;
   color: var(--faint);
   line-height: 1.3;
   direction: ltr;
-  margin-top: 3px;
+  margin-top: 4px;
 }
 
 .caeu {
@@ -93,34 +107,48 @@
   color: var(--gold);
   align-self: center;
   padding: 0 4px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
-/* Syllable Chip with Gold Lit-Up Jump Animation */
+/* Syllable mark: plain text, weight shown by underline colour/weight */
 .chip {
   font-family: var(--urdu);
   font-size: 19px;
-  line-height: 1.9;
-  padding: 0 7px 2px;
-  border-radius: 9px;
-  border: 1.5px solid transparent;
-  background: var(--bg3);
-  position: relative;
-  min-width: 26px;
+  line-height: 1.7;
+  padding: 0 5px 2px;
+  border-radius: 4px 4px 0 0;
+  border-bottom: 2px solid transparent;
+  /* faint tile so each syllable reads as its own piece */
+  background: color-mix(in srgb, var(--ink) 4.5%, transparent);
+  color: var(--ink);
   text-align: center;
-  transition: transform .08s, box-shadow .08s, background .08s;
+  transition: background .08s, transform .08s, box-shadow .08s;
 }
-.chip.l { border-bottom: 5px solid var(--gold); }
-.chip.s { border-bottom: 5px solid var(--teal); }
-.chip.c { border-bottom: 5px dashed var(--ghost); opacity: .75; }
-.chip.flex { background: color-mix(in srgb, var(--rose) 16%, var(--bg3)); }
-.chip.g { box-shadow: inset 0 -1px 0 var(--gold); }
-.chip.wend { margin-left: 9px; }
+.chip.roman { font-family: var(--mono); font-size: 14px; }
+.chip.deva { font-family: var(--deva); font-size: 16px; }
+.chip.l { border-color: var(--mark-l); border-bottom-width: 3px; }
+.chip.s { border-color: var(--mark-s); border-bottom-width: 2px; }
+.chip.c { border-color: var(--ghost); border-bottom-style: dashed; opacity: .7; }
+.chip.flex { color: var(--rose); }
+.chip.flex.l, .chip.flex.s { border-color: var(--mark-x); }
+
+.chip.wend { margin-inline-end: 8px; }
+
+/* Playback highlight: soft gold wash + thicker underline + small lift.
+   Kept deliberately visible — this is the one state allowed a wash/outline. */
 .chip.lit {
+  background: color-mix(in srgb, var(--mark-l) 30%, transparent);
+  border-bottom-width: 4px;
   transform: translateY(-4px);
-  box-shadow: 0 6px 16px rgba(230, 169, 60, .45);
-  background: color-mix(in srgb, var(--gold) 25%, var(--bg3));
+  box-shadow: 0 6px 14px color-mix(in srgb, var(--mark-l) 35%, transparent);
 }
+@media (prefers-reduced-motion: reduce) {
+  .chip.lit, .blk.lit { transform: none; transition: none; }
+}
+
+.wsel .chip { border-color: var(--gold); }
+.wov .chip { color: var(--rose); }
+
 .chip .w {
   position: absolute;
   top: -3px;
@@ -131,42 +159,252 @@
   direction: ltr;
 }
 
-/* Pattern Blocks */
-.strip { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; margin: 8px 0; direction: ltr; }
+/* ============================================================
+   Pattern strips — quieter blocks, long stays 2x short
+   ============================================================ */
+.strip { display: flex; gap: 3px; align-items: center; flex-wrap: wrap; margin: 8px 0; direction: ltr; }
+.strip.tight { margin: 0; }
 .blk {
-  height: 26px;
-  border-radius: 6px;
+  height: 15px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-family: var(--mono);
-  font-weight: 700;
-  font-size: 13px;
-  color: #1a1526;
-  transition: transform .08s, filter .08s, box-shadow .08s;
+  font-size: 10px;
+  color: var(--faint);
+  border-bottom: 3px solid transparent;
+  transition: background .15s, transform .15s;
 }
-.blk.l { background: var(--gold); width: 48px; }
-.blk.s { background: var(--teal); width: 23px; }
-.blk.x { background: var(--rose); width: 48px; }
-.blk.c { background: transparent; border: 1.5px dashed var(--ghost); color: var(--ghost); width: 20px; }
+.blk.l { border-color: var(--mark-l); width: 34px; }
+.blk.s { border-color: var(--mark-s); width: 17px; }
+.blk.x { border-color: var(--mark-x); width: 34px; }
+.blk.c { border-bottom-style: dashed; border-color: var(--ghost); color: var(--ghost); width: 15px; }
 .blk.lit {
-  filter: brightness(1.3);
+  background: color-mix(in srgb, var(--mark-l) 30%, transparent);
+  border-bottom-width: 4px;
   transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(230, 169, 60, .4);
 }
-.ft { width: 1px; height: 22px; background: var(--line2); margin: 0 2px; }
-.cae { color: var(--faint); font-family: var(--mono); font-size: 13px; padding: 0 2px; }
+.ft { width: 1px; height: 14px; background: var(--line2); margin: 0 2px; }
+.cae { color: var(--faint); font-family: var(--mono); font-size: 12px; padding: 0 2px; }
+.cell-empty { background: transparent; }
 
-/* Legend Swatches */
+/* pattern with named feet, handbook convention */
+.fstrip { display: flex; flex-wrap: wrap; gap: 12px; align-items: baseline; margin: 8px 0; }
+.fbox { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; }
+.fn { font-family: var(--serif); font-style: italic; font-size: 12.5px; color: var(--dim); }
+
+/* ============================================================
+   Legend — small sans, short underline swatches
+   ============================================================ */
 .legend {
   display: flex;
-  gap: 14px;
+  gap: 16px;
   flex-wrap: wrap;
-  font-size: 12.5px;
-  color: var(--dim);
+  font-size: 12px;
+  color: var(--faint);
   margin: 8px 0;
   align-items: center;
 }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
-.sw { width: 14px; height: 12px; border-radius: 3px; display: inline-block; }
+.sw { width: 14px; border-bottom: 2px solid; display: inline-block; }
+.sw.c-l { border-color: var(--mark-l); }
+.sw.c-s { border-color: var(--mark-s); }
+.sw.c-x { border-color: var(--mark-x); }
+.sw.c-c { border-bottom-style: dashed; border-color: var(--ghost); }
 
+/* ============================================================
+   Meter label component (§6.4)
+   ============================================================ */
+.meter-label-comp { margin: 4px 0; }
+.meter-label-comp .row { margin: 0; align-items: flex-start; gap: 10px; }
+.meter-label-body { flex: 1; min-width: 0; }
+.meter-label-primary { font-family: var(--serif); font-style: italic; font-weight: 500; }
+.meter-label-sm .meter-label-primary { font-size: 14.5px; font-style: normal; }
+.meter-label-lg .meter-label-primary { font-size: 17px; }
+.meter-label-primary.urdu { font-family: var(--urdu); font-style: normal; direction: rtl; line-height: 1.8; }
+.meter-label-sm .meter-label-primary.urdu { font-size: 20px; }
+.meter-label-lg .meter-label-primary.urdu { font-size: 24px; }
+.meter-label-primary.mono { font-family: var(--mono); font-style: normal; font-size: 13px; color: var(--dim); letter-spacing: .04em; }
+.meter-label-pattern { margin: 4px 0; }
+.meter-label-meta { margin-top: 2px; }
+
+/* ============================================================
+   Scan tab
+   ============================================================ */
+.scan-head { margin-bottom: 14px; }
+.scan-title-row { align-items: center; gap: 10px; margin: 0; }
+.scan-help-btn {
+  background: transparent;
+  border: 1px solid var(--line2);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--faint);
+  cursor: pointer;
+  font-size: 13px;
+  font-family: var(--mono);
+  transition: color .15s, border-color .15s;
+}
+.scan-help-btn:hover, .scan-help-btn:focus-visible { color: var(--ink); border-color: var(--gold); }
+.scan-help-popover { margin-top: 10px; background: var(--bg3); }
+.scan-input {
+  width: 100%;
+  font-family: var(--serif);
+  font-size: 18px;
+  padding: 12px;
+  border-radius: var(--radius-md, 10px);
+  background: var(--bg2);
+  color: var(--ink);
+  border: 1px solid var(--line2);
+  line-height: 1.6;
+}
+.scan-input:focus-visible { outline: none; border-color: var(--gold); }
+.scan-actions { margin: 10px 0 14px; }
+.scan-samples { margin: 8px 0 16px; }
+.scan-samples-list { display: inline-flex; gap: 6px; margin-inline-start: 6px; flex-wrap: wrap; }
+.scan-footnote { margin-top: 24px; border-top: 1px solid var(--line); padding-top: 10px; }
+
+/* small spacing / colour utilities used only in scan result markup */
+.mt-tight { margin: 2px 0 6px; }
+.mt-loose { margin: 2px 0 10px; }
+.mt-note { margin: 4px 0; }
+.mt-2 { margin-top: 4px; }
+.mt-3 { margin-top: 6px; }
+.mb-tight { margin: 0 0 6px; }
+.push-end { margin-inline-start: auto; }
+.fam-inline { font-size: 15px; line-height: 1.8; }
+.fam-inline.sm { font-size: 14px; line-height: normal; }
+.fam-inline.xs { font-size: 13px; }
+.fam-ref { margin-inline-start: 4px; }
+.ok-text { color: var(--ok); }
+.no-text { color: var(--no); }
+.verdict.no-fit { color: var(--no); margin-top: 6px; }
+.verdict.no-meter { color: var(--no); font-size: 13.5px; }
+.tech-line { margin: 0 0 10px; white-space: nowrap; overflow-x: auto; }
+.card.callout-mismatch { border-left: 4px solid var(--gold); background: var(--bg2); margin-bottom: 14px; }
+.card.callout-mismatch .row { margin: 0; color: var(--gold); font-weight: 600; }
+.card.callout-mismatch .note-sub { margin-top: 4px; }
+.card.key-card { margin: 0 0 10px; padding: 10px 12px; background: var(--bg3); }
+.card.misra-card { background: var(--bg3); border: 1px solid var(--line2); }
+.card.word-card { margin: 6px 0; background: var(--bg3); }
+.card-head { justify-content: space-between; align-items: center; margin: 0; }
+.card-head.tight { margin: 0 0 8px; }
+.row.tight-top { margin-top: 0; }
+.opt-w { min-width: 70px; }
+.wbtn.roman { font-family: var(--serif); font-size: 15px; }
+.grow { flex: 1; }
+.sopt-row { margin: 0; }
+.rec-status { margin: 6px 0 0; }
+
+/* ============================================================
+   Couplet box — shared by the ghazal reader (.couplet-card) and
+   Scan results (.misra-card). One bordered container per couplet,
+   sections divided by hairlines: head / verse / each misra's scan / notes.
+   ============================================================ */
+.couplet-card, .misra-card {
+  border: 1px solid var(--line2);
+  border-radius: 10px;
+  background: var(--bg2);
+  margin: 0 0 var(--sp-5);
+  padding: 0;
+  text-align: center;
+  overflow: hidden;
+}
+.couplet-card > *, .misra-card > * { padding-left: var(--sp-5); padding-right: var(--sp-5); }
+.couplet-card .couplet-head, .misra-card .card-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-top: var(--sp-2); padding-bottom: var(--sp-2);
+  margin: 0; border-bottom: 1px solid var(--line);
+}
+.cbox-verse { padding-top: var(--sp-5); padding-bottom: var(--sp-5); }
+.cbox-verse .vline-lg, .cbox-verse .misra-text { text-align: center; margin: 0; border: 0; padding: 2px 0; }
+.cbox-scan, .couplet-scan-box > div {
+  border-top: 1px solid var(--line);
+  padding-top: var(--sp-4); padding-bottom: var(--sp-4);
+}
+.couplet-scan-box { margin: 0; padding: 0; text-align: center; }
+.couplet-scan-box .misra-scan-second { margin-top: 0; }
+.couplet-card .couplet-note {
+  border-top: 1px solid var(--line); border-left: 0;
+  margin: 0; padding-top: var(--sp-3); padding-bottom: var(--sp-3); text-align: left;
+}
+
+/* Feet share the row equally so both misras' feet line up column for column */
+.chips { justify-content: center; }
+.chips > .fgrp { flex: 1 1 0; min-width: fit-content; }
+
+/* Legend sits at the top of results */
+.legend.top { margin: 0 0 var(--sp-4); justify-content: center; }
+
+@media (max-width: 767px) {
+  .couplet-card > *, .misra-card > * { padding-left: var(--sp-3); padding-right: var(--sp-3); }
+}
+
+/* Scan summary — one calm block above the couplets */
+.scan-summary { text-align: center; padding: var(--sp-2) 0 var(--sp-5); display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); }
+.ss-top { display: flex; gap: var(--sp-3); align-items: baseline; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
+.ss-top .pill { font-size: 12px; padding: 0; }
+.ss-num { color: var(--faint); }
+.ss-name { font-family: var(--serif); font-size: 24px; line-height: 1.25; color: var(--ink); }
+.ss-name::first-letter { text-transform: uppercase; }
+.ss-pat { font-family: var(--mono); font-size: 14px; color: var(--dim); letter-spacing: .12em; white-space: nowrap; overflow-x: auto; max-width: 100%; }
+.ss-ref { display: flex; flex-direction: column; align-items: center; gap: 2px; margin-top: var(--sp-2); }
+.ss-lbl { font-size: 12px; color: var(--faint); }
+.ss-verse.urdu { font-family: var(--urdu); font-size: 20px; line-height: 2; direction: rtl; }
+.ss-verse.ro { font-family: var(--mono); font-size: 14px; }
+.ss-cite { font-family: var(--mono); font-size: 12px; color: var(--faint); }
+.ss-more { color: var(--gold); margin-top: var(--sp-1); }
+
+/* Urdu syllables: room under the letters so nuqtas/descenders clear the weight underline */
+.chip:not(.roman):not(.deva) { line-height: 2.1; padding-bottom: 9px; }
+
+/* Grafting: a gold tie over the syllables whose words were joined across the space */
+.cw { padding-top: 9px; }
+.cw.g::before {
+  content: ''; position: absolute; top: 0; height: 7px;
+  left: -3px; right: -3px;
+  border-top: 2px solid var(--mark-l);
+}
+.cw.g-start::before, .cw.g-solo::before { border-inline-start: 2px solid var(--mark-l); border-start-start-radius: 7px; }
+.cw.g-end::before, .cw.g-solo::before { border-inline-end: 2px solid var(--mark-l); border-start-end-radius: 7px; }
+.cw.g-start::before { inset-inline-start: 2px; }
+.cw.g-end::before { inset-inline-end: 2px; }
+.sw.c-g { height: 6px; border: 2px solid var(--mark-l); border-bottom: 0; border-radius: 6px 6px 0 0; }
+.ss-name-ur { font-family: var(--urdu); font-size: 18px; line-height: 2; color: var(--dim); direction: rtl; }
+
+/* coloured pattern glyphs in the scan summary */
+.pg { font-family: var(--mono); font-weight: 600; }
+.pg.l { color: var(--gold); } .pg.s { color: var(--teal); } .pg.x { color: var(--rose); }
+.pg.sep { color: var(--ghost); font-weight: 400; }
+.ss-pat-key { font-size: 12px; color: var(--faint); }
+.ss-pat-key .pg { margin: 0 2px 0 8px; }
+
+/* ---- One couplet box everywhere (reader + Scan): identical head, verse, scans, notes ---- */
+.couplet-card .vnum, .misra-card .card-head > span:first-child {
+  font-family: var(--sans); font-size: 13.5px; color: var(--dim); letter-spacing: 0; text-transform: none;
+}
+.couplet-card .couplet-acts { gap: var(--sp-4); }
+.couplet-card .cbox-verse .vline-lg[lang], .misra-card .cbox-verse .misra-text { text-align: center; direction: inherit; }
+.couplet-card .cbox-verse .vline-lg[lang="ur"], .misra-card .cbox-verse .misra-text:not(.ltr):not(.deva) {
+  font-family: var(--urdu); font-size: 24px; line-height: 2; direction: rtl;
+}
+.couplet-card .cbox-verse .vline-lg[lang="ur-Latn"], .misra-card .cbox-verse .misra-text.ltr {
+  font-family: var(--mono); font-size: 16px; line-height: 1.9; direction: ltr;
+}
+.couplet-card .cbox-verse .vline-lg[lang="hi"], .misra-card .cbox-verse .misra-text.deva { font-size: 18px; line-height: 1.9; }
+.scan-notes { font-family: var(--sans); font-size: 13px; line-height: 1.6; color: var(--faint); text-align: left; margin: var(--sp-3) 0 0; }
+.couplet-scan-box > div > .verdict, .cbox-scan > .verdict { margin: 0; }
+
+/* ---- Long misras (Mir's Hindi meter etc.) stay on one line; type scales with the box ---- */
+.cbox-scan, .couplet-scan-box > div { container-type: inline-size; }
+.cbox-scan .chips, .couplet-scan-box .chips { flex-wrap: nowrap; overflow-x: auto; gap: 0; scrollbar-width: thin; padding-bottom: 2px; }
+.cbox-scan .fgrp, .couplet-scan-box .fgrp { padding: 0 clamp(3px, 0.9cqi, 10px); }
+.cbox-scan .fchips, .couplet-scan-box .fchips { gap: clamp(2px, 0.5cqi, 6px); }
+.cbox-scan .chip:not(.roman):not(.deva), .couplet-scan-box .chip:not(.roman):not(.deva) { font-size: clamp(14px, 1.9cqi, 19px); padding-left: clamp(2px, 0.4cqi, 5px); padding-right: clamp(2px, 0.4cqi, 5px); }
+.cbox-scan .chip.roman, .couplet-scan-box .chip.roman,
+.cbox-scan .chip.deva, .couplet-scan-box .chip.deva { font-size: clamp(11px, 1.35cqi, 14px); padding-left: clamp(1px, 0.3cqi, 5px); padding-right: clamp(1px, 0.3cqi, 5px); }
+.cbox-scan .fname, .couplet-scan-box .fname { font-size: clamp(11px, 1.3cqi, 13.5px); }
+.cbox-scan .cw .fs, .couplet-scan-box .cw .fs { font-size: clamp(9px, 1cqi, 10.5px); }

@@ -1,62 +1,41 @@
 <!-- Settings Sheet Modal per §5.10 -->
 <div class="sheet" id="settingsSheet" role="dialog" aria-modal="true" aria-labelledby="settingsSheetTitle" onclick="if(event.target===this)closeSettings()">
-  <div class="in" style="max-height:85vh;overflow-y:auto;">
-    <div class="row" style="margin:0 0 14px;justify-content:space-between;align-items:center;">
-      <h3 id="settingsSheetTitle" style="margin:0;font-size:18px;">Settings</h3>
-      <button class="icon-btn" onclick="closeSettings()" aria-label="Close settings" style="background:transparent;border:none;font-size:18px;color:var(--dim);cursor:pointer;padding:4px 8px;">✕</button>
+  <div class="in">
+    <div class="settings-head">
+      <h3 id="settingsSheetTitle">Settings</h3>
+      <button class="icon-btn" onclick="closeSettings()" aria-label="Close settings">✕</button>
     </div>
 
-    <!-- Theme -->
-    <div style="margin-bottom:16px;">
-      <label class="small muted" for="themeSelect" style="display:block;margin-bottom:6px;font-weight:600;">Theme</label>
-      <select id="themeSelect" onchange="setTheme(this.value)" style="width:100%;padding:8px 10px;border-radius:var(--radius-sm);background:var(--bg2);color:var(--ink);border:1px solid var(--line2);font-size:14px;">
-        <option value="">System</option>
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
-        <option value="contrast">High contrast</option>
-      </select>
-    </div>
-
-    <!-- Voice / Sound -->
-    <div style="margin-bottom:16px;">
-      <label class="small muted" style="display:block;margin-bottom:6px;font-weight:600;">Voice</label>
-      <div id="soundOpts"></div>
-    </div>
-
-    <!-- Tempo slider -->
-    <div style="margin-bottom:16px;">
-      <div class="row" style="margin:0 0 4px;justify-content:space-between;">
-        <span class="small muted" style="font-weight:600;">Tempo</span>
-        <span class="mono small" id="bpmV">150</span>
-      </div>
-      <input type="range" id="bpm" min="60" max="220" step="5" value="150" style="width:100%;" aria-label="Tempo in beats per minute">
-    </div>
-
-    <!-- Pause between feet -->
-    <div style="margin-bottom:16px;">
-      <div class="row" style="margin:0 0 4px;justify-content:space-between;">
-        <span class="small muted" style="font-weight:600;">Pause between feet</span>
-        <span class="mono small" id="footGapV">0.50</span>
-      </div>
-      <input type="range" id="footGap" min="0" max="2" step="0.05" value="0.5" style="width:100%;" aria-label="Pause between feet, in beats">
-    </div>
-
-    <!-- Drum on foot -->
-    <div style="margin-bottom:16px;">
-      <label class="row small" style="gap:8px;margin:0;cursor:pointer;">
-        <input type="checkbox" id="footPulse" checked onchange="settings.footPulse=this.checked;store.set('settings',settings)"> Soft drum on each foot
+    <div class="settings-group">
+      <div class="settings-group-title">Appearance</div>
+      <label class="settings-check">
+        <input type="checkbox" id="cvdToggle" onchange="setTheme(this.checked?'cvd':'')"> CVD theme <span class="settings-hint">colour-blind friendly: blue long, orange short, purple flexible</span>
       </label>
-    </div>
-
-    <!-- Show Pritchett ASCII -->
-    <div style="margin-bottom:16px;">
-      <label class="row small" style="gap:8px;margin:0;cursor:pointer;">
+      <label class="settings-check">
         <input type="checkbox" id="btnScriptAscii" onchange="toggleAsciiScript(this.checked)"> Show Pritchett ASCII script
       </label>
     </div>
 
-    <p class="tiny muted" style="margin-top:16px;border-top:1px solid var(--line);padding-top:10px;">
-      On iPhone, web audio follows the side mute switch — flip it off if you hear nothing.
-    </p>
+    <div class="settings-group">
+      <div class="settings-group-title">Sound</div>
+      <div class="settings-label settings-sublabel">Voice <span class="settings-hint">tap to hear</span></div>
+      <div id="soundOpts" role="radiogroup" aria-label="Voice"></div>
+
+      <div class="settings-line">
+        <label class="settings-label" for="bpm">Tempo</label>
+        <input type="range" id="bpm" min="60" max="220" step="5" value="150" aria-label="Tempo in beats per minute">
+        <span class="mono settings-value" id="bpmV">150</span>
+      </div>
+      <div class="settings-line">
+        <label class="settings-label" for="footGap">Pause between feet</label>
+        <input type="range" id="footGap" min="0" max="2" step="0.05" value="0.5" aria-label="Pause between feet, in beats">
+        <span class="mono settings-value" id="footGapV">0.50</span>
+      </div>
+      <label class="settings-check">
+        <input type="checkbox" id="footPulse" checked onchange="settings.footPulse=this.checked;store.set('settings',settings)"> Soft drum on each foot
+      </label>
+    </div>
+
+    <p class="settings-note">On iPhone, web audio follows the side mute switch — flip it off if you hear nothing.</p>
   </div>
 </div>

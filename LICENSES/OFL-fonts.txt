@@ -1,0 +1,15 @@
+Fonts embedded (as subsetted, base64-encoded woff2) in the built app under
+src/fonts/, all licensed under the SIL Open Font License, Version 1.1
+(https://openfontlicense.org / https://scripts.sil.org/OFL):
+
+- Source Serif 4 — Copyright 2014 The Source Serif 4 Project Authors
+  (https://github.com/adobe-fonts/source-serif)
+- Inter — Copyright 2020 The Inter Project Authors
+  (https://github.com/rsms/inter)
+- IBM Plex Mono — Copyright 2017 IBM Corp. with Reserved Font Name "Plex"
+  (https://github.com/IBM/plex)
+
+Each font was subsetted from the upstream google/fonts sources to the Latin
+characters, punctuation, and combining diacritics used by this app's Roman
+transliteration and UI (uv run --with fonttools --with brotli pyftsubset ...).
+Full OFL 1.1 license text: https://openfontlicense.org
