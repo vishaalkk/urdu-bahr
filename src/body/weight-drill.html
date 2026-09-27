@@ -1,0 +1,40 @@
+
+  <!-- Subtab 2: Drill -->
+  <div id="weightPanelDrill" class="subpanel">
+    <div class="card drill-card">
+      <div class="drill-head row">
+        <h3 class="drill-title">Weigh the word</h3>
+        <span class="mono tiny score" id="wdScore">0 / 0</span>
+      </div>
+      <p class="dim small drill-prompt">Enter the weight pattern for the word.</p>
+      <div class="urdu drill-word-large" id="wdWord"></div>
+      <div class="ro dim small drill-ro" id="wdRo"></div>
+      <div class="strip center drill-strip" id="wdStrip"></div>
+      <div class="row drill-input-row" id="wdInputBtns">
+        <button class="btn ghost flex-1" id="wdBtnL" onclick="wdAdd('l')" aria-label="Long syllable (=)"><span class="L mono">=</span></button>
+        <button class="btn ghost flex-1" id="wdBtnS" onclick="wdAdd('s')" aria-label="Short syllable (–)"><span class="S mono">–</span></button>
+        <button class="btn ghost flex-1" id="wdBtnX" onclick="wdAdd('x')" aria-label="Flexible syllable (x)"><span class="X mono">x</span></button>
+        <button class="btn ghost sm" id="wdBtnBack" onclick="wdBack()" aria-label="Backspace">⌫</button>
+      </div>
+      <div class="row drill-actions-row">
+        <button class="btn gold flex-1" id="wdBtnCheck" onclick="wdCheck()">Check</button>
+      </div>
+      <div class="fb" id="wdFb"></div>
+    </div>
+
+    <h2 class="sec">Bending drill</h2>
+    <div class="card drill-card">
+      <div class="drill-head row">
+        <h3 class="drill-title">Flexible, always long, or always short?</h3>
+        <span class="mono tiny score" id="fxScore">0 / 0</span>
+      </div>
+      <p class="dim small drill-prompt">Test whether this common monosyllable can bend in meter.</p>
+      <div class="urdu drill-word-xl" id="fxWord"></div>
+      <div class="row drill-choice-row" id="fxChoiceBtns">
+        <button class="btn ghost flex-1" id="fxBtnX" onclick="fxAns('x')">Flexible</button>
+        <button class="btn ghost flex-1" id="fxBtnL" onclick="fxAns('l')">Always =</button>
+        <button class="btn ghost flex-1" id="fxBtnS" onclick="fxAns('s')">Always –</button>
+      </div>
+      <div class="fb" id="fxFb"></div>
+    </div>
+  </div>
