@@ -770,6 +770,19 @@ textarea {
 .couplet-card .fname, .misra-card .fname, .card .fname { cursor: pointer; }
 .couplet-card .fname:hover, .misra-card .fname:hover, .card .fname:hover { color: var(--gold); text-decoration: underline; text-underline-offset: 3px; }
 
+/* never clip a row: 'safe' centring falls back to start alignment when content overflows */
+.cbox-scan .chips, .couplet-scan-box .chips { justify-content: safe center; overflow: visible; }
+.chips.fit-measure { flex-wrap: nowrap !important; justify-content: flex-start !important; }
+.chips.fit-measure > .fgrp { flex: 0 0 auto !important; }
+.chips.wrap-feet { row-gap: var(--sp-4); }
+
+/* Meter labels (Learn families + Look up rows): one layout for every script —
+   ▶ on the start side, everything else centred: couplet, pattern + feet, name */
+.meter-label-body { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.meter-label-primary, .meter-label-primary.urdu { text-align: center; }
+.meter-label-pattern .fstrip { justify-content: center; }
+.meter-label-meta { text-align: center; }
+
 /* ============================================================
    Header / Nav / Footer — "Quiet Manuscript"
    ============================================================ */
@@ -1552,6 +1565,21 @@ main, .wrap { max-width: 760px; }
 .meter-couplets .couplet-card .vnum { text-decoration: none; }
 .meter-couplets .couplet-card .vnum:hover { color: var(--gold); }
 
+/* ---- Sub-tabs (Learn · Drill · Look up): a clear segmented control under the page title ---- */
+.subtabs.seg {
+  display: inline-flex; gap: 2px; padding: 3px; margin: var(--sp-4) 0 var(--sp-6);
+  background: var(--bg3); border: 1px solid var(--line); border-radius: 10px; border-bottom: 1px solid var(--line);
+}
+.subtabs.seg .seg-btn {
+  padding: 7px 18px; border: 0; border-radius: 7px; font-size: 14.5px; color: var(--dim); background: none;
+}
+.subtabs.seg .seg-btn:hover { color: var(--ink); }
+.subtabs.seg .seg-btn.on {
+  background: var(--bg2); color: var(--ink); font-weight: 600;
+  box-shadow: 0 1px 2px rgba(21,18,14,.10), inset 0 -2px 0 var(--gold);
+}
+@media (max-width: 767px) { .subtabs.seg { display: flex; } .subtabs.seg .seg-btn { flex: 1; padding: 7px 8px; } }
+
 /* ================= SHARED DRILL ENGINE (round 2, G3) =================
    Styles for src/js/22-drill.js's mountDrill('weight'|'meter'). Quiet
    Manuscript: no shaded panels, one bordered card, type does the hierarchy. */
@@ -1592,6 +1620,59 @@ main, .wrap { max-width: 760px; }
 .dr-choice-meta { font-family: var(--sans, inherit); }
 
 .dr-reveal { margin: var(--sp-2) 0; }
+
+/* ---- card: the same box as a couplet card (beats the page-level .card reset) ---- */
+#weight-section .dr-card, #meter-section .dr-card {
+  border: 1px solid var(--line2); border-radius: 10px; background: var(--bg2);
+  padding: var(--sp-5) var(--sp-5) var(--sp-4); margin: 0;
+}
+.dr-card-head .dr-tag { font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; }
+.dr-prompt { margin-bottom: var(--sp-3); font-size: 16px; }
+.dr-word { font-size: 26px; }
+.dr-word.urdu { font-family: var(--urdu); font-size: 30px; line-height: 2; }
+/* hidden pattern (before answering): quiet placeholder bars, not dashed noise */
+.dr-card .strip .blk.c { border-bottom: 3px solid var(--line2); color: transparent; }
+
+/* ---- choices: numbered tiles, 2 columns for short answers, 1 for verses ---- */
+.dr-choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-2); margin: var(--sp-3) 0; counter-reset: drc; }
+.dr-choices:has(.dr-verse) { grid-template-columns: 1fr; }
+#weight-section .dr-choice, #meter-section .dr-choice {
+  counter-increment: drc;
+  display: flex; align-items: center; gap: var(--sp-3);
+  width: 100%; min-height: 52px; padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--line2); border-radius: 8px; background: var(--bg);
+  color: var(--ink); font-size: 15px; text-align: start; cursor: pointer;
+  transition: border-color .12s, background .12s;
+}
+#weight-section .dr-choice::before, #meter-section .dr-choice::before {
+  content: counter(drc); flex: none; width: 22px; height: 22px; border-radius: 50%;
+  border: 1px solid var(--line2); display: inline-flex; align-items: center; justify-content: center;
+  font: 500 11.5px/1 var(--mono); color: var(--faint);
+}
+#weight-section .dr-choice:hover:not(:disabled), #meter-section .dr-choice:hover:not(:disabled) { border-color: var(--gold); background: var(--bg2); }
+#weight-section .dr-choice:hover:not(:disabled)::before, #meter-section .dr-choice:hover:not(:disabled)::before { border-color: var(--gold); color: var(--gold); }
+.dr-choice .dr-verse { flex: 1; }
+.dr-choice .dr-verse.urdu { font-family: var(--urdu); font-size: 21px; line-height: 2; direction: rtl; text-align: right; }
+.dr-choice .dr-choice-meta { flex: none; }
+/* answered */
+#weight-section .dr-choice:disabled, #meter-section .dr-choice:disabled { cursor: default; opacity: .55; }
+#weight-section .dr-choice.ans-ok, #meter-section .dr-choice.ans-ok { opacity: 1; border-color: var(--ok); background: color-mix(in srgb, var(--ok) 8%, var(--bg)); }
+#weight-section .dr-choice.ans-ok::before, #meter-section .dr-choice.ans-ok::before { content: '✓'; border-color: var(--ok); background: var(--ok); color: var(--bg); }
+#weight-section .dr-choice.ans-no, #meter-section .dr-choice.ans-no { opacity: 1; border-color: var(--no); background: color-mix(in srgb, var(--no) 7%, var(--bg)); }
+#weight-section .dr-choice.ans-no::before, #meter-section .dr-choice.ans-no::before { content: '✗'; border-color: var(--no); background: var(--no); color: var(--bg); }
+
+/* ---- filters: pill chips, active = gold tint (never black) ---- */
+.dr-filter-row .eyebrow { min-width: 9.5em; }
+#weight-section .dr-chips button, #meter-section .dr-chips button {
+  padding: 5px 12px; border: 1px solid var(--line2); border-radius: 999px; font-size: 13.5px; color: var(--dim); background: none;
+}
+#weight-section .dr-chips button.on, #meter-section .dr-chips button.on {
+  border-color: var(--gold); color: var(--gold); background: color-mix(in srgb, var(--gold) 9%, transparent); font-weight: 500;
+}
+@media (max-width: 767px) {
+  .dr-choices { grid-template-columns: 1fr; }
+  .dr-filter-row .eyebrow { min-width: 0; flex-basis: 100%; }
+}
 </style>
 
 </head>
@@ -5598,7 +5679,7 @@ function pbFromFoot(ev, el) {
   if (kind === 'reader' && typeof playReaderCoupletByIndex === 'function') playReaderCoupletByIndex(+arg, start, btn);
   else if (kind === 'scan' && typeof playCouplet === 'function') { const [a, b] = arg.split(',').map(Number); playCouplet(a, isNaN(b) ? null : b, start, btn); }
   else if (kind === 'line' && typeof playScan === 'function') playScan(+arg, start, btn);
-  else if (kind === 'lookup' && typeof playLookupCouplet === 'function') { const [m, i] = arg.split(','); playLookupCouplet(m, +i, start, btn); }
+  else if (kind === 'lookup' && typeof playLookupCouplet === 'function') { const [m, i, pfx] = arg.split(','); playLookupCouplet(m, +i, start, btn, pfx || 'lk'); }
 }
 function pbNodes(host) { return host ? { nodes: [...host.querySelectorAll('.chip')].sort((a, b) => a.dataset.i - b.dataset.i), groups: [...host.querySelectorAll('.fgrp')] } : { nodes: null, groups: null }; }
 /* word spans (see pbWordLit) inside a host, ordered by data-w */
@@ -5745,15 +5826,23 @@ function fitChipRows(root){
   const FLOOR = 0.7;
   (root || document).querySelectorAll('.cbox-scan .chips, .couplet-scan-box .chips').forEach(ch => {
     if (!ch.clientWidth) return;                      // hidden box: fitted when shown
+    // Measure what the feet need side by side. (scrollWidth misses the part of a centred
+    // row that overflows to the start side, so it under-reports and rows got clipped.)
+    const need = () => [...ch.children].reduce((w, c) => { const cs = getComputedStyle(c); return w + c.getBoundingClientRect().width + parseFloat(cs.marginLeft) + parseFloat(cs.marginRight); }, 0);
     ch.classList.remove('wrap-feet');
+    ch.classList.add('fit-measure');                  // single line, no stretching, while measuring
     ch.style.setProperty('--fit', '1');
-    for (let k = 0; k < 4 && ch.scrollWidth > ch.clientWidth + 1; k++) {
+    const avail = ch.clientWidth;
+    for (let k = 0; k < 4; k++) {
+      const w = need(); if (w <= avail + 1) break;
       const cur = parseFloat(ch.style.getPropertyValue('--fit')) || 1;
-      const next = Math.max(FLOOR, cur * ch.clientWidth / ch.scrollWidth * 0.99);
+      const next = Math.max(FLOOR, cur * avail / w * 0.98);
       ch.style.setProperty('--fit', next.toFixed(3));
       if (next <= FLOOR) break;
     }
-    if (ch.scrollWidth > ch.clientWidth + 1) ch.classList.add('wrap-feet');
+    const tooWide = need() > avail + 1;
+    ch.classList.remove('fit-measure');
+    if (tooWide) ch.classList.add('wrap-feet');
   });
 }
 window.fitChipRows = fitChipRows;
@@ -5842,7 +5931,9 @@ function renderEarFams() {
   host.innerHTML = FAMS.map(f => {
     const isExpanded = (f.id === earCur);
     const mId = (f.meters && f.meters.length) ? f.meters[0] : (f.hindi ? 'H' : null);
-    const meterLabelHtml = (typeof renderMeterLabel === 'function') ? renderMeterLabel(mId, { size: 'sm', play: true }) : '';
+    // same header as Meter › Look up: ▶ (pattern), famous couplet, pattern + feet, name
+    const cps0 = (typeof coupletsForMeter === 'function' && mId != null) ? coupletsForMeter(mId, 2) : [];
+    const meterLabelHtml = (typeof renderMeterLabel === 'function') ? renderMeterLabel(mId, { size: 'sm', play: true, couplet: cps0[0] || null }) : '';
     const matchInfo = bestGhazalLinkForMeter(mId);
 
     let h = `<div class="fam-row card ${isExpanded ? 'expanded' : ''}" id="fam-${f.id}">`;
@@ -5854,39 +5945,14 @@ function renderEarFams() {
     if (isExpanded) {
       h += `<div class="fam-details">`;
 
-      // 1. Sing-along famous verses (§5.5)
-      if (f.gz && f.gz.length) {
-        h += `<div class="fam-section-label">Sing along to famous verses:</div>`;
-        f.gz.forEach((g, gi) => {
-          const vDisp1 = (typeof getLineDisplay === 'function') ? getLineDisplay(g, cs) : (g[cs] || g.ur);
-          const vDisp2 = g.ur2 ? ((typeof getLineDisplay === 'function') ? getLineDisplay({ ascii: g.ascii2, ur: g.ur2, hi: g.hi2, ro: g.ro2 }, cs) : (g[cs + '2'] || g.ur2)) : '';
-
-          h += `<div class="ear-sing-item">`;
-          h += `<div class="ear-sing-header">`;
-          h += `<span class="play sm" role="button" tabindex="0" data-label="Sing misra" onclick="earSing(${gi}, 1, this)" aria-label="Sing misra 1" title="Sing misra">▶︎</span>`;
-          h += `<div class="fam-label-wrap">`;
-          h += `<div class="who faint tiny">${g.p} · ${g.ref}</div>`;
-          h += `<div class="ear-verse-text ${isRtl ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${vDisp1}</div>`;
-          if (vDisp2) {
-            h += `<div class="ear-sing-header ear-sing-header-sub">`;
-            h += `<span class="play sm" role="button" tabindex="0" data-label="Sing misra 2" onclick="earSing(${gi}, 2, this)" aria-label="Sing misra 2" title="Sing misra 2">▶︎</span>`;
-            h += `<div class="ear-verse-text ${isRtl ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${vDisp2}</div>`;
-            h += `</div>`;
-          }
-          h += `<div id="earSing${gi}" class="ear-sing-host"></div>`;
-          h += `</div></div></div>`;
-        });
+      // 1. Counting bahrs: the repeated cell (the full pattern + feet is already in the header)
+      if (f.cell && typeof feetStrip === 'function') {
+        h += `<div class="fam-section-label">The cell (${f.reps}×)</div>`;
+        h += `<div class="fam-strip-wrap">${feetStrip(f.cell)}</div>`;
       }
 
-      // 2. Foot boxes (afāʿīl) for pattern (§5.5)
-      if (typeof feetStrip === 'function') {
-        if (f.cell) {
-          h += `<div class="fam-section-label">The cell (${f.reps}×):</div>`;
-          h += `<div class="fam-strip-wrap">${feetStrip(f.cell)}</div>`;
-        }
-        h += `<div class="fam-section-label">Metrical pattern & feet:</div>`;
-        h += `<div class="fam-strip-wrap">${feetStrip(f.pattern)}</div>`;
-      }
+      // 2. Famous couplets: same couplet boxes as Look up (words light up; scan behind a toggle)
+      if (mId != null && typeof meterCoupletsHTML === 'function') h += meterCoupletsHTML(mId, 'fm');
 
       // 3. Allowance note (§5.5)
       if (f.pair) {
@@ -7222,39 +7288,7 @@ function renderFams() {
         if (note) h += `<div class="meter-meta-notes">${note}</div>`;
       }
 
-      // 3. Famous couplets in this meter: reference, not scansion — ▶ lights up the words of
-      // the couplet itself; a "Scan" toggle (closed by default) reveals the syllable chips.
-      if (cps.length) {
-        const langDir = cs === 'ur' ? 'lang="ur" dir="rtl"' : (cs === 'hi' ? 'lang="hi"' : 'lang="ur-Latn" dir="ltr"');
-        h += `<div class="meter-couplets">`;
-        h += `<div class="fam-section-label">Famous couplets in this bahr</div>`;
-        cps.forEach((c, i) => {
-          const w1 = dispWordWrap(c.l1, cs);
-          const w2 = dispWordWrap(c.l2, cs);
-          h += `<div class="card couplet-card">`;
-          h += `<div class="row couplet-head"><a class="vnum" href="#/ghazals/${c.col}/${c.id}" onclick="event.stopPropagation()">${c.poet}${c.col !== 'handbook' ? ' ' + c.id : ''} ›</a>`;
-          h += `<div class="row couplet-acts">`;
-          h += `<button class="scan-toggle-btn tiny" id="lkScanBtn_${idStr}_${i}" aria-expanded="false" onclick="event.stopPropagation();toggleLookupScan('${idStr}',${i})">Scan ▾</button>`;
-          h += `<span class="play sm" role="button" tabindex="0" aria-label="Play couplet" data-label="Play couplet" data-pb="lookup:${idStr},${i}" onclick="event.stopPropagation();playLookupCouplet('${idStr}',${i},null,this)">▶︎</span>`;
-          h += `</div></div>`;
-          h += `<div class="cbox-verse"><div class="vline-lg" id="lkWords_${idStr}_${i}_1" ${langDir}>${w1.html}</div><div class="vline-lg" id="lkWords_${idStr}_${i}_2" ${langDir}>${w2.html}</div></div>`;
-          h += `<div class="couplet-scan-box hidden" id="lkScanBox_${idStr}_${i}"><div id="lkScan_${idStr}_${i}_1"></div><div id="lkScan_${idStr}_${i}_2"></div></div>`;
-          h += `</div>`;
-        });
-        h += `</div>`;
-      } else {
-        // No ghazal in our collections: fall back to the family's famous misra(s)
-        const fam = (typeof famOfMeter !== 'undefined') ? famOfMeter[mId] : null;
-        if (fam && fam.gz && fam.gz.length) {
-          const vCls = isRtl ? 'urdu' : (cs === 'hi' ? 'deva' : 'ro');
-          h += `<div class="meter-couplets"><div class="fam-section-label">Famous lines in this bahr</div>`;
-          fam.gz.slice(0, 2).forEach(g => {
-            const vDisp = (typeof getLineDisplay === 'function') ? getLineDisplay(g, cs) : (g[cs] || g.ur);
-            h += `<figure class="meter-couplet"><div class="mc-line ${vCls}">${vDisp}</div><figcaption>— ${g.p}</figcaption></figure>`;
-          });
-          h += `</div>`;
-        }
-      }
+      h += meterCoupletsHTML(mId, 'lk');
 
       // 4. Ghazal link
       if (matchInfo.count > 0) {
@@ -7274,8 +7308,57 @@ function renderFams() {
 
 /* per-couplet "Scan" toggle: closed by default (reference, not scansion); render the
    syllable chips lazily the first time a box is opened, then just show/hide it. */
-function toggleLookupScan(mId, i) {
-  const box = $(`lkScanBox_${mId}_${i}`), btn = $(`lkScanBtn_${mId}_${i}`);
+
+/* Famous couplets of a meter as couplet boxes (words light up on ▶, syllable scan behind a toggle).
+   pfx keeps element ids unique when the same meter appears in Look up ('lk') and Learn ('fm'). */
+function meterCoupletsHTML(mId, pfx) {
+  pfx = pfx || 'lk';
+  const idStr = String(mId);
+  const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
+  const isRtl = (cs === 'ur');
+  const cps = coupletsForMeter(mId, 2);
+  let h = '';
+  // the couplet itself; a "Scan" toggle (closed by default) reveals the syllable chips.
+  if (cps.length) {
+    const langDir = cs === 'ur' ? 'lang="ur" dir="rtl"' : (cs === 'hi' ? 'lang="hi"' : 'lang="ur-Latn" dir="ltr"');
+    h += `<div class="meter-couplets">`;
+    h += `<div class="fam-section-label">Famous couplets in this bahr</div>`;
+    cps.forEach((c, i) => {
+      const w1 = dispWordWrap(c.l1, cs);
+      const w2 = dispWordWrap(c.l2, cs);
+      h += `<div class="card couplet-card">`;
+      h += `<div class="row couplet-head"><a class="vnum" href="#/ghazals/${c.col}/${c.id}" onclick="event.stopPropagation()">${c.poet}${c.col !== 'handbook' ? ' ' + c.id : ''} ›</a>`;
+      h += `<div class="row couplet-acts">`;
+      h += `<button class="scan-toggle-btn tiny" id="${pfx}ScanBtn_${idStr}_${i}" aria-expanded="false" onclick="event.stopPropagation();toggleLookupScan('${idStr}',${i},'${pfx}')">Scan ▾</button>`;
+      h += `<span class="play sm" role="button" tabindex="0" aria-label="Play couplet" data-label="Play couplet" data-pb="lookup:${idStr},${i},${pfx}" onclick="event.stopPropagation();playLookupCouplet('${idStr}',${i},null,this,'${pfx}')">▶︎</span>`;
+      h += `</div></div>`;
+      h += `<div class="cbox-verse"><div class="vline-lg" id="${pfx}Words_${idStr}_${i}_1" ${langDir}>${w1.html}</div><div class="vline-lg" id="${pfx}Words_${idStr}_${i}_2" ${langDir}>${w2.html}</div></div>`;
+      h += `<div class="couplet-scan-box hidden" id="${pfx}ScanBox_${idStr}_${i}"><div id="${pfx}Scan_${idStr}_${i}_1"></div><div id="${pfx}Scan_${idStr}_${i}_2"></div></div>`;
+      h += `</div>`;
+    });
+    h += `</div>`;
+  } else {
+    // No ghazal in our collections: fall back to the family's famous misra(s)
+    const fam = (typeof famOfMeter !== 'undefined') ? famOfMeter[mId] : null;
+    if (fam && fam.gz && fam.gz.length) {
+      const vCls = isRtl ? 'urdu' : (cs === 'hi' ? 'deva' : 'ro');
+      h += `<div class="meter-couplets"><div class="fam-section-label">Famous lines in this bahr</div>`;
+      fam.gz.slice(0, 2).forEach(g => {
+        const vDisp = (typeof getLineDisplay === 'function') ? getLineDisplay(g, cs) : (g[cs] || g.ur);
+        h += `<figure class="meter-couplet"><div class="mc-line ${vCls}">${vDisp}</div><figcaption>— ${g.p}</figcaption></figure>`;
+      });
+      h += `</div>`;
+    }
+  }
+
+
+  return h;
+}
+window.meterCoupletsHTML = meterCoupletsHTML;
+
+function toggleLookupScan(mId, i, pfx) {
+  pfx = pfx || 'lk';
+  const box = $(`${pfx}ScanBox_${mId}_${i}`), btn = $(`${pfx}ScanBtn_${mId}_${i}`);
   if (!box) return;
   const opening = box.classList.contains('hidden');
   box.classList.toggle('hidden');
@@ -7284,7 +7367,7 @@ function toggleLookupScan(mId, i) {
     if (!box.dataset.filled) {
       const c = coupletsForMeter(mId, 2)[i];
       if (c && typeof renderLineScan === 'function') {
-        [c.l1, c.l2].forEach((l, k) => { const el = $(`lkScan_${mId}_${i}_${k + 1}`); if (el) renderLineScan(l.ur, el, l, mId); });
+        [c.l1, c.l2].forEach((l, k) => { const el = $(`${pfx}Scan_${mId}_${i}_${k + 1}`); if (el) renderLineScan(l.ur, el, l, mId); });
         box.dataset.filled = '1';
       }
     }
@@ -7293,19 +7376,20 @@ function toggleLookupScan(mId, i) {
 }
 window.toggleLookupScan = toggleLookupScan;
 
-function playLookupCouplet(mId, i, start, btn) {
+function playLookupCouplet(mId, i, start, btn, pfx) {
+  pfx = pfx || 'lk';
   const c = coupletsForMeter(mId, 2)[i]; if (!c) return;
-  btn = btn || document.querySelector(`[data-pb="lookup:${mId},${i}"]`);
-  pbToggle('lookup:' + mId + ':' + i, btn, () => {
+  btn = btn || document.querySelector(`[data-pb="lookup:${mId},${i},${pfx}"]`);
+  pbToggle('lookup:' + pfx + ':' + mId + ':' + i, btn, () => {
     if (typeof Scan === 'undefined' || !Scan.scanLine) return null;
     const out = [];
     [c.l1, c.l2].forEach((l, k) => {
       const r = Scan.scanLine(l.ur); if (!r || !r.fits || !r.fits.length) return;
       const f = r.fits.find(x => String(x.meter.id) === String(mId)) || r.fits[0];
       const e = Scan.explain(r, f);
-      const wordsHost = $(`lkWords_${mId}_${i}_${k + 1}`);
+      const wordsHost = $(`${pfx}Words_${mId}_${i}_${k + 1}`);
       out.push(Object.assign({ e, words: (typeof pbWordsMatching === 'function') ? pbWordsMatching(wordsHost, e) : null },
-        pbNodes($(`lkScan_${mId}_${i}_${k + 1}`))));
+        pbNodes($(`${pfx}Scan_${mId}_${i}_${k + 1}`))));
     });
     return out;
   }, start);

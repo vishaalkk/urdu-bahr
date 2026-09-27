@@ -443,3 +443,16 @@
 /* foot names are tappable inside couplet boxes: play from that foot */
 .couplet-card .fname, .misra-card .fname, .card .fname { cursor: pointer; }
 .couplet-card .fname:hover, .misra-card .fname:hover, .card .fname:hover { color: var(--gold); text-decoration: underline; text-underline-offset: 3px; }
+
+/* never clip a row: 'safe' centring falls back to start alignment when content overflows */
+.cbox-scan .chips, .couplet-scan-box .chips { justify-content: safe center; overflow: visible; }
+.chips.fit-measure { flex-wrap: nowrap !important; justify-content: flex-start !important; }
+.chips.fit-measure > .fgrp { flex: 0 0 auto !important; }
+.chips.wrap-feet { row-gap: var(--sp-4); }
+
+/* Meter labels (Learn families + Look up rows): one layout for every script —
+   ▶ on the start side, everything else centred: couplet, pattern + feet, name */
+.meter-label-body { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.meter-label-primary, .meter-label-primary.urdu { text-align: center; }
+.meter-label-pattern .fstrip { justify-content: center; }
+.meter-label-meta { text-align: center; }

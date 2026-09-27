@@ -126,39 +126,7 @@ function renderFams() {
         if (note) h += `<div class="meter-meta-notes">${note}</div>`;
       }
 
-      // 3. Famous couplets in this meter: reference, not scansion — ▶ lights up the words of
-      // the couplet itself; a "Scan" toggle (closed by default) reveals the syllable chips.
-      if (cps.length) {
-        const langDir = cs === 'ur' ? 'lang="ur" dir="rtl"' : (cs === 'hi' ? 'lang="hi"' : 'lang="ur-Latn" dir="ltr"');
-        h += `<div class="meter-couplets">`;
-        h += `<div class="fam-section-label">Famous couplets in this bahr</div>`;
-        cps.forEach((c, i) => {
-          const w1 = dispWordWrap(c.l1, cs);
-          const w2 = dispWordWrap(c.l2, cs);
-          h += `<div class="card couplet-card">`;
-          h += `<div class="row couplet-head"><a class="vnum" href="#/ghazals/${c.col}/${c.id}" onclick="event.stopPropagation()">${c.poet}${c.col !== 'handbook' ? ' ' + c.id : ''} ›</a>`;
-          h += `<div class="row couplet-acts">`;
-          h += `<button class="scan-toggle-btn tiny" id="lkScanBtn_${idStr}_${i}" aria-expanded="false" onclick="event.stopPropagation();toggleLookupScan('${idStr}',${i})">Scan ▾</button>`;
-          h += `<span class="play sm" role="button" tabindex="0" aria-label="Play couplet" data-label="Play couplet" data-pb="lookup:${idStr},${i}" onclick="event.stopPropagation();playLookupCouplet('${idStr}',${i},null,this)">▶︎</span>`;
-          h += `</div></div>`;
-          h += `<div class="cbox-verse"><div class="vline-lg" id="lkWords_${idStr}_${i}_1" ${langDir}>${w1.html}</div><div class="vline-lg" id="lkWords_${idStr}_${i}_2" ${langDir}>${w2.html}</div></div>`;
-          h += `<div class="couplet-scan-box hidden" id="lkScanBox_${idStr}_${i}"><div id="lkScan_${idStr}_${i}_1"></div><div id="lkScan_${idStr}_${i}_2"></div></div>`;
-          h += `</div>`;
-        });
-        h += `</div>`;
-      } else {
-        // No ghazal in our collections: fall back to the family's famous misra(s)
-        const fam = (typeof famOfMeter !== 'undefined') ? famOfMeter[mId] : null;
-        if (fam && fam.gz && fam.gz.length) {
-          const vCls = isRtl ? 'urdu' : (cs === 'hi' ? 'deva' : 'ro');
-          h += `<div class="meter-couplets"><div class="fam-section-label">Famous lines in this bahr</div>`;
-          fam.gz.slice(0, 2).forEach(g => {
-            const vDisp = (typeof getLineDisplay === 'function') ? getLineDisplay(g, cs) : (g[cs] || g.ur);
-            h += `<figure class="meter-couplet"><div class="mc-line ${vCls}">${vDisp}</div><figcaption>— ${g.p}</figcaption></figure>`;
-          });
-          h += `</div>`;
-        }
-      }
+      h += meterCoupletsHTML(mId, 'lk');
 
       // 4. Ghazal link
       if (matchInfo.count > 0) {
@@ -178,8 +146,57 @@ function renderFams() {
 
 /* per-couplet "Scan" toggle: closed by default (reference, not scansion); render the
    syllable chips lazily the first time a box is opened, then just show/hide it. */
-function toggleLookupScan(mId, i) {
-  const box = $(`lkScanBox_${mId}_${i}`), btn = $(`lkScanBtn_${mId}_${i}`);
+
+/* Famous couplets of a meter as couplet boxes (words light up on ▶, syllable scan behind a toggle).
+   pfx keeps element ids unique when the same meter appears in Look up ('lk') and Learn ('fm'). */
+function meterCoupletsHTML(mId, pfx) {
+  pfx = pfx || 'lk';
+  const idStr = String(mId);
+  const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
+  const isRtl = (cs === 'ur');
+  const cps = coupletsForMeter(mId, 2);
+  let h = '';
+  // the couplet itself; a "Scan" toggle (closed by default) reveals the syllable chips.
+  if (cps.length) {
+    const langDir = cs === 'ur' ? 'lang="ur" dir="rtl"' : (cs === 'hi' ? 'lang="hi"' : 'lang="ur-Latn" dir="ltr"');
+    h += `<div class="meter-couplets">`;
+    h += `<div class="fam-section-label">Famous couplets in this bahr</div>`;
+    cps.forEach((c, i) => {
+      const w1 = dispWordWrap(c.l1, cs);
+      const w2 = dispWordWrap(c.l2, cs);
+      h += `<div class="card couplet-card">`;
+      h += `<div class="row couplet-head"><a class="vnum" href="#/ghazals/${c.col}/${c.id}" onclick="event.stopPropagation()">${c.poet}${c.col !== 'handbook' ? ' ' + c.id : ''} ›</a>`;
+      h += `<div class="row couplet-acts">`;
+      h += `<button class="scan-toggle-btn tiny" id="${pfx}ScanBtn_${idStr}_${i}" aria-expanded="false" onclick="event.stopPropagation();toggleLookupScan('${idStr}',${i},'${pfx}')">Scan ▾</button>`;
+      h += `<span class="play sm" role="button" tabindex="0" aria-label="Play couplet" data-label="Play couplet" data-pb="lookup:${idStr},${i},${pfx}" onclick="event.stopPropagation();playLookupCouplet('${idStr}',${i},null,this,'${pfx}')">▶︎</span>`;
+      h += `</div></div>`;
+      h += `<div class="cbox-verse"><div class="vline-lg" id="${pfx}Words_${idStr}_${i}_1" ${langDir}>${w1.html}</div><div class="vline-lg" id="${pfx}Words_${idStr}_${i}_2" ${langDir}>${w2.html}</div></div>`;
+      h += `<div class="couplet-scan-box hidden" id="${pfx}ScanBox_${idStr}_${i}"><div id="${pfx}Scan_${idStr}_${i}_1"></div><div id="${pfx}Scan_${idStr}_${i}_2"></div></div>`;
+      h += `</div>`;
+    });
+    h += `</div>`;
+  } else {
+    // No ghazal in our collections: fall back to the family's famous misra(s)
+    const fam = (typeof famOfMeter !== 'undefined') ? famOfMeter[mId] : null;
+    if (fam && fam.gz && fam.gz.length) {
+      const vCls = isRtl ? 'urdu' : (cs === 'hi' ? 'deva' : 'ro');
+      h += `<div class="meter-couplets"><div class="fam-section-label">Famous lines in this bahr</div>`;
+      fam.gz.slice(0, 2).forEach(g => {
+        const vDisp = (typeof getLineDisplay === 'function') ? getLineDisplay(g, cs) : (g[cs] || g.ur);
+        h += `<figure class="meter-couplet"><div class="mc-line ${vCls}">${vDisp}</div><figcaption>— ${g.p}</figcaption></figure>`;
+      });
+      h += `</div>`;
+    }
+  }
+
+
+  return h;
+}
+window.meterCoupletsHTML = meterCoupletsHTML;
+
+function toggleLookupScan(mId, i, pfx) {
+  pfx = pfx || 'lk';
+  const box = $(`${pfx}ScanBox_${mId}_${i}`), btn = $(`${pfx}ScanBtn_${mId}_${i}`);
   if (!box) return;
   const opening = box.classList.contains('hidden');
   box.classList.toggle('hidden');
@@ -188,7 +205,7 @@ function toggleLookupScan(mId, i) {
     if (!box.dataset.filled) {
       const c = coupletsForMeter(mId, 2)[i];
       if (c && typeof renderLineScan === 'function') {
-        [c.l1, c.l2].forEach((l, k) => { const el = $(`lkScan_${mId}_${i}_${k + 1}`); if (el) renderLineScan(l.ur, el, l, mId); });
+        [c.l1, c.l2].forEach((l, k) => { const el = $(`${pfx}Scan_${mId}_${i}_${k + 1}`); if (el) renderLineScan(l.ur, el, l, mId); });
         box.dataset.filled = '1';
       }
     }
@@ -197,19 +214,20 @@ function toggleLookupScan(mId, i) {
 }
 window.toggleLookupScan = toggleLookupScan;
 
-function playLookupCouplet(mId, i, start, btn) {
+function playLookupCouplet(mId, i, start, btn, pfx) {
+  pfx = pfx || 'lk';
   const c = coupletsForMeter(mId, 2)[i]; if (!c) return;
-  btn = btn || document.querySelector(`[data-pb="lookup:${mId},${i}"]`);
-  pbToggle('lookup:' + mId + ':' + i, btn, () => {
+  btn = btn || document.querySelector(`[data-pb="lookup:${mId},${i},${pfx}"]`);
+  pbToggle('lookup:' + pfx + ':' + mId + ':' + i, btn, () => {
     if (typeof Scan === 'undefined' || !Scan.scanLine) return null;
     const out = [];
     [c.l1, c.l2].forEach((l, k) => {
       const r = Scan.scanLine(l.ur); if (!r || !r.fits || !r.fits.length) return;
       const f = r.fits.find(x => String(x.meter.id) === String(mId)) || r.fits[0];
       const e = Scan.explain(r, f);
-      const wordsHost = $(`lkWords_${mId}_${i}_${k + 1}`);
+      const wordsHost = $(`${pfx}Words_${mId}_${i}_${k + 1}`);
       out.push(Object.assign({ e, words: (typeof pbWordsMatching === 'function') ? pbWordsMatching(wordsHost, e) : null },
-        pbNodes($(`lkScan_${mId}_${i}_${k + 1}`))));
+        pbNodes($(`${pfx}Scan_${mId}_${i}_${k + 1}`))));
     });
     return out;
   }, start);

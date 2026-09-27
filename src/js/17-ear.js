@@ -51,7 +51,9 @@ function renderEarFams() {
   host.innerHTML = FAMS.map(f => {
     const isExpanded = (f.id === earCur);
     const mId = (f.meters && f.meters.length) ? f.meters[0] : (f.hindi ? 'H' : null);
-    const meterLabelHtml = (typeof renderMeterLabel === 'function') ? renderMeterLabel(mId, { size: 'sm', play: true }) : '';
+    // same header as Meter › Look up: ▶ (pattern), famous couplet, pattern + feet, name
+    const cps0 = (typeof coupletsForMeter === 'function' && mId != null) ? coupletsForMeter(mId, 2) : [];
+    const meterLabelHtml = (typeof renderMeterLabel === 'function') ? renderMeterLabel(mId, { size: 'sm', play: true, couplet: cps0[0] || null }) : '';
     const matchInfo = bestGhazalLinkForMeter(mId);
 
     let h = `<div class="fam-row card ${isExpanded ? 'expanded' : ''}" id="fam-${f.id}">`;
@@ -63,39 +65,14 @@ function renderEarFams() {
     if (isExpanded) {
       h += `<div class="fam-details">`;
 
-      // 1. Sing-along famous verses (§5.5)
-      if (f.gz && f.gz.length) {
-        h += `<div class="fam-section-label">Sing along to famous verses:</div>`;
-        f.gz.forEach((g, gi) => {
-          const vDisp1 = (typeof getLineDisplay === 'function') ? getLineDisplay(g, cs) : (g[cs] || g.ur);
-          const vDisp2 = g.ur2 ? ((typeof getLineDisplay === 'function') ? getLineDisplay({ ascii: g.ascii2, ur: g.ur2, hi: g.hi2, ro: g.ro2 }, cs) : (g[cs + '2'] || g.ur2)) : '';
-
-          h += `<div class="ear-sing-item">`;
-          h += `<div class="ear-sing-header">`;
-          h += `<span class="play sm" role="button" tabindex="0" data-label="Sing misra" onclick="earSing(${gi}, 1, this)" aria-label="Sing misra 1" title="Sing misra">▶︎</span>`;
-          h += `<div class="fam-label-wrap">`;
-          h += `<div class="who faint tiny">${g.p} · ${g.ref}</div>`;
-          h += `<div class="ear-verse-text ${isRtl ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${vDisp1}</div>`;
-          if (vDisp2) {
-            h += `<div class="ear-sing-header ear-sing-header-sub">`;
-            h += `<span class="play sm" role="button" tabindex="0" data-label="Sing misra 2" onclick="earSing(${gi}, 2, this)" aria-label="Sing misra 2" title="Sing misra 2">▶︎</span>`;
-            h += `<div class="ear-verse-text ${isRtl ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${vDisp2}</div>`;
-            h += `</div>`;
-          }
-          h += `<div id="earSing${gi}" class="ear-sing-host"></div>`;
-          h += `</div></div></div>`;
-        });
+      // 1. Counting bahrs: the repeated cell (the full pattern + feet is already in the header)
+      if (f.cell && typeof feetStrip === 'function') {
+        h += `<div class="fam-section-label">The cell (${f.reps}×)</div>`;
+        h += `<div class="fam-strip-wrap">${feetStrip(f.cell)}</div>`;
       }
 
-      // 2. Foot boxes (afāʿīl) for pattern (§5.5)
-      if (typeof feetStrip === 'function') {
-        if (f.cell) {
-          h += `<div class="fam-section-label">The cell (${f.reps}×):</div>`;
-          h += `<div class="fam-strip-wrap">${feetStrip(f.cell)}</div>`;
-        }
-        h += `<div class="fam-section-label">Metrical pattern & feet:</div>`;
-        h += `<div class="fam-strip-wrap">${feetStrip(f.pattern)}</div>`;
-      }
+      // 2. Famous couplets: same couplet boxes as Look up (words light up; scan behind a toggle)
+      if (mId != null && typeof meterCoupletsHTML === 'function') h += meterCoupletsHTML(mId, 'fm');
 
       // 3. Allowance note (§5.5)
       if (f.pair) {

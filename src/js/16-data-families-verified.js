@@ -70,15 +70,23 @@ function fitChipRows(root){
   const FLOOR = 0.7;
   (root || document).querySelectorAll('.cbox-scan .chips, .couplet-scan-box .chips').forEach(ch => {
     if (!ch.clientWidth) return;                      // hidden box: fitted when shown
+    // Measure what the feet need side by side. (scrollWidth misses the part of a centred
+    // row that overflows to the start side, so it under-reports and rows got clipped.)
+    const need = () => [...ch.children].reduce((w, c) => { const cs = getComputedStyle(c); return w + c.getBoundingClientRect().width + parseFloat(cs.marginLeft) + parseFloat(cs.marginRight); }, 0);
     ch.classList.remove('wrap-feet');
+    ch.classList.add('fit-measure');                  // single line, no stretching, while measuring
     ch.style.setProperty('--fit', '1');
-    for (let k = 0; k < 4 && ch.scrollWidth > ch.clientWidth + 1; k++) {
+    const avail = ch.clientWidth;
+    for (let k = 0; k < 4; k++) {
+      const w = need(); if (w <= avail + 1) break;
       const cur = parseFloat(ch.style.getPropertyValue('--fit')) || 1;
-      const next = Math.max(FLOOR, cur * ch.clientWidth / ch.scrollWidth * 0.99);
+      const next = Math.max(FLOOR, cur * avail / w * 0.98);
       ch.style.setProperty('--fit', next.toFixed(3));
       if (next <= FLOOR) break;
     }
-    if (ch.scrollWidth > ch.clientWidth + 1) ch.classList.add('wrap-feet');
+    const tooWide = need() > avail + 1;
+    ch.classList.remove('fit-measure');
+    if (tooWide) ch.classList.add('wrap-feet');
   });
 }
 window.fitChipRows = fitChipRows;

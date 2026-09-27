@@ -292,7 +292,7 @@ function pbFromFoot(ev, el) {
   if (kind === 'reader' && typeof playReaderCoupletByIndex === 'function') playReaderCoupletByIndex(+arg, start, btn);
   else if (kind === 'scan' && typeof playCouplet === 'function') { const [a, b] = arg.split(',').map(Number); playCouplet(a, isNaN(b) ? null : b, start, btn); }
   else if (kind === 'line' && typeof playScan === 'function') playScan(+arg, start, btn);
-  else if (kind === 'lookup' && typeof playLookupCouplet === 'function') { const [m, i] = arg.split(','); playLookupCouplet(m, +i, start, btn); }
+  else if (kind === 'lookup' && typeof playLookupCouplet === 'function') { const [m, i, pfx] = arg.split(','); playLookupCouplet(m, +i, start, btn, pfx || 'lk'); }
 }
 function pbNodes(host) { return host ? { nodes: [...host.querySelectorAll('.chip')].sort((a, b) => a.dataset.i - b.dataset.i), groups: [...host.querySelectorAll('.fgrp')] } : { nodes: null, groups: null }; }
 /* word spans (see pbWordLit) inside a host, ordered by data-w */
