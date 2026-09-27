@@ -20,3 +20,8 @@ node_modules/
 # Scratch space and CI staging
 scratch/
 _site/
+
+# Pritchett & Anjum handbook: local reference material for writing new exercises/content.
+# Not published (the site links to franpritchett.com instead) and not needed to build.
+data/handbook_verbatim.json
+source_data/

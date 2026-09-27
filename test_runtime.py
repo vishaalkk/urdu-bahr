@@ -9,17 +9,24 @@ def run_tests():
     # 1. Test Verbatim Handbook Content (Chapters 0-8)
     # ----------------------------------------------------
     print(f"\n[TEST 1] Verbatim Handbook Content:")
-    with open('data/handbook_verbatim.json', 'r', encoding='utf-8') as f:
+    # Local-only reference data (gitignored): checked when present, skipped in CI.
+    import os
+    if not os.path.exists('data/handbook_verbatim.json'):
+        print('  - skipped: data/handbook_verbatim.json not present (local reference material only)')
+        hb = None
+    else:
+      with open('data/handbook_verbatim.json', 'r', encoding='utf-8') as f:
         hb = json.load(f)
-    assert len(hb) == 9, f"Expected 9 chapters (0-8), found {len(hb)}"
-    for c in hb:
-        clen = len(c['html_content'])
-        print(f"  ✓ {c['id']}: '{c['title']}' ({clen:,} chars)")
-        assert clen > 5000, f"Chapter {c['id']} appears truncated ({clen} chars)"
-    ch0 = next(c for c in hb if c['id'] == 'ch0')
-    assert re.search(r"INTRODUCTION[\s\S]*?TO\s+THE\s+NEW\s+ONLINE\s+VERSION", ch0['html_content'], re.I), "Missing online intro in ch0"
-    assert "original print edition" in ch0['html_content'], "Missing print intro in ch0"
-    print("  -> Passed: All 9 chapters verbatim, unabridged, and verified.")
+    if hb is not None:
+      assert len(hb) == 9, f"Expected 9 chapters (0-8), found {len(hb)}"
+      for c in hb:
+          clen = len(c['html_content'])
+          print(f"  ✓ {c['id']}: '{c['title']}' ({clen:,} chars)")
+          assert clen > 5000, f"Chapter {c['id']} appears truncated ({clen} chars)"
+      ch0 = next(c for c in hb if c['id'] == 'ch0')
+      assert re.search(r"INTRODUCTION[\s\S]*?TO\s+THE\s+NEW\s+ONLINE\s+VERSION", ch0['html_content'], re.I), "Missing online intro in ch0"
+      assert "original print edition" in ch0['html_content'], "Missing print intro in ch0"
+      print("  -> Passed: All 9 chapters verbatim, unabridged, and verified.")
 
     # ----------------------------------------------------
     # 2. Test 100% Audited Ghazal Exercises & Notes (Ch 10 & 11)

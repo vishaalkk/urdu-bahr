@@ -3,8 +3,8 @@ from collections import Counter
 
 # ─── 1. Load datasets ─────────────────────────────────────────────────────────
 
-with open('data/handbook_verbatim.json', 'r', encoding='utf-8') as f:
-    HANDBOOK = json.load(f)
+# data/handbook_verbatim.json (and source_data/) are local-only reference material — gitignored,
+# not needed to build the site (the Handbook reader was removed; see HANDBOOK_DATA below).
 
 with open('data/exercises_verified.json', 'r', encoding='utf-8') as f:
     EXERCISES = json.load(f)
@@ -248,7 +248,9 @@ for body_file in manifest['body']:
 # ─── 6. Build data substitution map ───────────────────────────────────────────
 substitutions = {
     'PUE_PARSER': pue_parser_bundle,
-    'HANDBOOK_DATA': json.dumps(HANDBOOK, ensure_ascii=False),
+    # The Handbook reader was removed from the site (links go to Pritchett's own pages);
+    # data/handbook_verbatim.json stays in the repo as local reference material only.
+    'HANDBOOK_DATA': '[]',
     'EXERCISES_DATA': json.dumps(EXERCISES, ensure_ascii=False),
     'METERS_DATA': json.dumps(METERS_DATA, ensure_ascii=False),
     'GLOSSARY_DATA': json.dumps(GLOSSARY, ensure_ascii=False),
@@ -353,8 +355,6 @@ full_html = f"""<!DOCTYPE html>
 
 {get_bp('ghazals')}
 
-{get_bp('handbook')}
-
 {get_bp('about')}
 
 {get_bp('tap')}
@@ -379,7 +379,7 @@ full_html = f"""<!DOCTYPE html>
 
 
 # ─── 7b. Structural checks: every body partial used, sections balanced ──────
-_used = {'header','home','nav','settings','scan','ghazals','handbook','about','tap','footer'}
+_used = {'header','home','nav','settings','scan','ghazals','about','tap','footer'}
 _unused = [k for k in body_parts if k not in _used and not any(k == g or k.startswith(g + '-') for g in ('weight','meter'))]
 if _unused:
     raise SystemExit(f"build_app: manifest body partials not placed in the page: {_unused}")
