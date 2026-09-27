@@ -333,6 +333,10 @@ textarea {
 .note strong { color: var(--ink); font-weight: 500; }
 
 
+/* visible to screen readers only (page headings whose name the active tab already shows) */
+.sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
+
 /* ============================================================
    Verse display: scripts, direction, weight colours
    ============================================================ */
@@ -1700,6 +1704,12 @@ main, .wrap { max-width: 760px; }
 .vrow .vnum.vpoet { font-family: var(--sans); font-size: 14px; color: var(--dim); }
 .ghazal-desc .fran-link { margin-left: 2px; }
 
+/* page tops: no repeated titles — a one-line lead-in, then the page's own controls */
+.page-head .lede { margin-top: var(--sp-2); }
+#ghazalEyebrow:empty { display: none; }
+.scan-title-row { align-items: baseline; gap: var(--sp-3); }
+.scan-lede { margin: var(--sp-2) 0 0; }
+
 /* ================= SHARED DRILL ENGINE (round 2, G3) =================
    Styles for src/js/22-drill.js's mountDrill('weight'|'meter'). Quiet
    Manuscript: no shaded panels, one bordered card, type does the hierarchy. */
@@ -1986,7 +1996,7 @@ main, .wrap { max-width: 760px; }
 <!-- ===================== WEIGHT TAB ===================== -->
 <section id="weight-section" class="tab-view">
   <div class="page-head">
-    <h1 class="page-title">Weight</h1>
+    <h1 class="page-title sr-only">Weight</h1>
     <div class="lede dim small">How long each syllable is — the raw material of every meter.</div>
     <div class="subtabs seg" role="tablist" aria-label="Weight sub-tabs">
       <button class="seg-btn on" role="tab" id="weightSubLearn" aria-selected="true" onclick="navigate('/weight/learn')">Learn</button>
@@ -2071,7 +2081,7 @@ main, .wrap { max-width: 760px; }
 <!-- ===================== METER TAB ===================== -->
 <section id="meter-section" class="tab-view">
   <div class="meter-head page-head">
-    <h1 class="page-title">Meter</h1>
+    <h1 class="page-title sr-only">Meter</h1>
     <div class="lede dim small">Every bahr is a tune. Hear it, then learn to recognise it.</div>
     <div class="subtabs seg" role="tablist" aria-label="Meter sub-tabs">
       <button class="seg-btn on" role="tab" id="meterSubLearn" aria-selected="true" onclick="navigate('/meter/learn')">Learn</button>
@@ -2119,7 +2129,8 @@ main, .wrap { max-width: 760px; }
 <section id="scan-section" class="tab-view">
   <div class="page-head scan-head">
     <div class="row scan-title-row">
-      <h1 class="page-title">Scan a verse</h1>
+      <h1 class="page-title sr-only">Scan a verse</h1>
+      <p class="lede scan-lede">Type or paste a verse in Urdu to see its bahr, syllable by syllable.</p>
       <button class="scan-help-btn" id="btnScanHelp" onclick="toggleScanHelp()" aria-label="How to type for best results" title="Typing help">ⓘ</button>
     </div>
     <div id="scanHelpPopover" class="card small scan-help-popover" style="display:none;">
@@ -2156,8 +2167,7 @@ main, .wrap { max-width: 760px; }
 <section id="ghazals-section" class="tab-view">
   <div class="page-head ghazal-head">
     <div class="eyebrow" id="ghazalEyebrow">Handbook · 24 ghazals</div>
-    <h1 class="page-title">Ghazals</h1>
-    <p class="lede">Read a ghazal couplet by couplet. Tap any line to see how it scans.</p>
+    <h1 class="page-title sr-only">Ghazals</h1>
     <!-- Collection segmented control -->
     <div class="seg" role="tablist" aria-label="Collections">
       <button class="seg-btn on" id="colBtnHandbook" onclick="switchCollection('handbook')">Handbook 24</button>
@@ -4581,7 +4591,7 @@ function switchCollection(col) {
     ghalib: (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) ? GHALIB_EXT_DATA.length : 234,
     mir: (typeof MIR_EXT_DATA !== 'undefined' && Array.isArray(MIR_EXT_DATA)) ? MIR_EXT_DATA.length : 429
   };
-  if ($('ghazalEyebrow')) $('ghazalEyebrow').textContent = `${eyebrowNames[col] || col} · ${eyebrowCounts[col] || 0} ghazals`;
+  if ($('ghazalEyebrow')) $('ghazalEyebrow').textContent = '';   // the collection switch already says which one; shown only for search results
 
   const cHandbook = $('handbookExContainer');
   const cGhalib = $('ghalibContainer');

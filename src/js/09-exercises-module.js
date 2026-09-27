@@ -428,7 +428,7 @@ function switchCollection(col) {
     ghalib: (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) ? GHALIB_EXT_DATA.length : 234,
     mir: (typeof MIR_EXT_DATA !== 'undefined' && Array.isArray(MIR_EXT_DATA)) ? MIR_EXT_DATA.length : 429
   };
-  if ($('ghazalEyebrow')) $('ghazalEyebrow').textContent = `${eyebrowNames[col] || col} · ${eyebrowCounts[col] || 0} ghazals`;
+  if ($('ghazalEyebrow')) $('ghazalEyebrow').textContent = '';   // the collection switch already says which one; shown only for search results
 
   const cHandbook = $('handbookExContainer');
   const cGhalib = $('ghalibContainer');

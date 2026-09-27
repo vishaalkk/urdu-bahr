@@ -828,3 +828,9 @@ main, .wrap { max-width: 760px; }
 /* Handbook rows: the poet's name in the number column (sans, not mono) */
 .vrow .vnum.vpoet { font-family: var(--sans); font-size: 14px; color: var(--dim); }
 .ghazal-desc .fran-link { margin-left: 2px; }
+
+/* page tops: no repeated titles — a one-line lead-in, then the page's own controls */
+.page-head .lede { margin-top: var(--sp-2); }
+#ghazalEyebrow:empty { display: none; }
+.scan-title-row { align-items: baseline; gap: var(--sp-3); }
+.scan-lede { margin: var(--sp-2) 0 0; }
