@@ -57,7 +57,7 @@ jobs:
       - name: Stage public site
         run: |
           mkdir -p _site
-          cp index.html .nojekyll _site/
+          cp index.html .nojekyll og-image.png CNAME _site/
           # Not published: src/ scripts/ data/ source_data/ docs/ tests/ —
           # everything the app needs is compiled into index.html.
 

@@ -170,7 +170,7 @@ function renderGhazalReaderHeader(mId) {
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
   const misraScriptCls = cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : 'roman');
   const refHtml = famous
-    ? `<div class="reader-header-ref faint small">Same bahr as <span class="reader-header-misra ${misraScriptCls}">${escapeHtml(famous.text)}</span>${famous.poet ? ' — ' + escapeHtml(famous.poet) : ''}</div>`
+    ? `<div class="reader-header-ref faint small">Same bahr as <span class="reader-header-misra ${misraScriptCls}">${escapeHtml(famous.text)}</span>${famous.poet ? ' – ' + escapeHtml(famous.poet) : ''}</div>`
     : '';
   return `
     <div class="reader-header-comp">
@@ -246,7 +246,7 @@ function meterGroupHeaderHTML(key, count, open) {
       const langDir = (typeof getLangDir === 'function') ? getLangDir(cs) : '';
       // the group is named after a famous verse in this bahr — often by another poet than this collection's
       verseHtml = `<div class="meter-group-label">Bahr of</div><div class="meter-group-verse ${scriptCls}" ${langDir}>${escapeHtml(text)}</div>` +
-        (info.verse.poet ? `<div class="meter-group-poet">— ${escapeHtml(info.verse.poet)}</div>` : '');
+        (info.verse.poet ? `<div class="meter-group-poet">– ${escapeHtml(info.verse.poet)}</div>` : '');
     }
   }
   if (!verseHtml) {

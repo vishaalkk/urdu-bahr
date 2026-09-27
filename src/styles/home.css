@@ -22,6 +22,11 @@
 }
 .home-row:first-child { border-top: 1px solid var(--line); }
 
+@media (max-width: 767px) {
+  .home-tabs { margin: var(--sp-5) 0; }
+  .home-row { padding: var(--sp-3) 0; }
+}
+
 .home-row-head {
   display: flex;
   align-items: baseline;
