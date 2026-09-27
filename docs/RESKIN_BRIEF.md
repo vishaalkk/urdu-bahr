@@ -140,3 +140,33 @@ one player every ▶ must use.
 | Pages & Ghazals | `src/styles/pages.css`, `src/body/weight.html` (Learn), `ghazals.html`, `header.html`, `footer.html`, `about.html`, `handbook.html`, `src/js/09-exercises-module.js`, `10-…`, `11-…`, `21-learn.js` (Learn parts), `02-store.js` |
 Shared rules from round 1 apply: no commits, no browser, full test command must pass, report
 requests for other owners instead of editing their files.
+
+---
+
+# Round 3 (2026-09-27) — legend, grouping, home
+
+User decisions:
+- **Meter identity** = famous misra (current script) + pattern strip. Official ʿarūz names are
+  secondary: never a row's main label; at most small faint print.
+- **One legend component** everywhere (`legendHTML(cls)` in `src/js/19-scan.js`): shows the mark AND
+  the symbol: long `=` (dum), short `–` (da), flexible, either `x`, cheat, grafted. Sticky
+  (`legendHTML('legend-sticky')`) at the top of the ghazal reader, Scan results, Meter Learn/Look up,
+  drills — stays visible while scrolling (below the site header; never covers content).
+- **CVD palette is the default** (blue long / orange short / purple flexible + dotted/double
+  underline cues). The old gold/teal/rose becomes an opt-in "Classic colours" setting.
+- **Ghazals**: list grouped by meter (group header = famous misra + pattern + count; rows = number
+  + first line only). In Ghalib/Mir rows the number is Fran's number linked to her page, without
+  repeating the poet. Roman/Devanagari rows must be `lang`/`dir` for their script (Roman = mono, LTR).
+- **Meter › Learn**: families grouped into **Counting bahrs** and **Shape bahrs**, each with a
+  one-line explainer.
+- **Home page** (`#/home`, what a bare URL opens): what each tab is for, how to read the legend,
+  a sample couplet to play, where to start.
+
+## File ownership (round 3 — strict)
+| Agent | Owns |
+|---|---|
+| Legend & colours | `src/js/19-scan.js` (legendHTML + Scan-results legend placement only), `src/styles/verse.css`, `src/styles/base.css`, `src/js/07-theme.js`, `src/body/settings.html`, `src/js/20-bahr.js` (Look up legend), `src/js/22-drill.js` + `src/styles/drill.css` (drill legend) |
+| Ghazals | `src/js/09-exercises-module.js`, `10-…`, `11-…`, `src/body/ghazals.html`, `src/styles/pages.css` |
+| Meter & Home | `src/js/17-ear.js`, `src/body/meter.html`, `src/body/home.html`, `src/styles/home.css`, `src/js/02-store.js`, `src/body/header.html`, `src/body/nav.html` |
+Call `legendHTML('legend-sticky')` — don't write your own legend. Same rules: no commits, no browser,
+`npm test` must pass (runs build + all suites incl. tests/dom_smoke.js).
