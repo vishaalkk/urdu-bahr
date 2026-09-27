@@ -836,6 +836,20 @@ html[data-script="hi"] :is(.dr-word, .meter-group-verse) { font-size: 21px; }
 /* Weight › Learn examples show Urdu with its Roman underneath — that Roman line is always mono */
 .constr-ro { font-family: var(--mono); font-size: 13.5px; }
 
+/* Foot names above the chips repeat the per-syllable labels underneath (maf · ʿū · l), so they're
+   hidden; the labels are the tap target for "play from this foot". */
+.chips .fname { display: none; }
+.cw .fs { cursor: pointer; border-radius: 3px; }
+.cbox-scan .cw .fs:hover, .couplet-scan-box .cw .fs:hover, .card .cw .fs:hover { color: var(--gold); background: color-mix(in srgb, var(--gold) 10%, transparent); }
+.fgrp.litf .cw .fs, .fgrp.resume-at .cw .fs { color: var(--gold); }
+.cw .fs.fs-extra { font-family: var(--sans); font-style: italic; color: var(--ghost); }
+
+/* Legend: one line, left-aligned, everywhere (wraps only when the screen is too narrow) */
+.legend, .legend.top, .legend.legend-sticky, .dr-legend.legend {
+  justify-content: flex-start; flex-wrap: wrap; gap: 4px 18px; font-size: 12.5px; text-align: left;
+}
+.legend > span { white-space: nowrap; cursor: help; }
+
 /* ============================================================
    Header / Nav / Footer — "Quiet Manuscript"
    ============================================================ */
@@ -1687,6 +1701,10 @@ main, .wrap { max-width: 760px; }
 .meter-group-chev { margin-left: var(--sp-2); color: var(--gold); }
 .meter-group-rows { padding-bottom: var(--sp-3); }
 
+/* Handbook rows: the poet's name in the number column (sans, not mono) */
+.vrow .vnum.vpoet { font-family: var(--sans); font-size: 14px; color: var(--dim); }
+.ghazal-desc .fran-link { margin-left: 2px; }
+
 /* ================= SHARED DRILL ENGINE (round 2, G3) =================
    Styles for src/js/22-drill.js's mountDrill('weight'|'meter'). Quiet
    Manuscript: no shaded panels, one bordered card, type does the hierarchy. */
@@ -2151,13 +2169,10 @@ main, .wrap { max-width: 760px; }
       <button class="seg-btn" id="colBtnGhalib" onclick="switchCollection('ghalib')">Ghalib 234</button>
       <button class="seg-btn" id="colBtnMir" onclick="switchCollection('mir')">Mir 429</button>
     </div>
-    <div id="colDesc" class="dim ghazal-desc">The handbook's exercise ghazals, with Frances Pritchett's notes.</div>
+    <div id="colDesc" class="dim ghazal-desc">The handbook's exercise ghazals, with Frances Pritchett's notes. <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/10_ex_01_06.html" target="_blank" rel="noopener">Her exercises<span class="ext">↗</span></a> · <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/11_exnotes.html" target="_blank" rel="noopener">answers &amp; notes<span class="ext">↗</span></a></div>
 
-    <!-- Controls row: meter filter + search -->
+    <!-- Controls row: search (the collapsible meter groups below are the meter index) -->
     <div class="row ghazal-controls">
-      <select id="ghazalMeterFilter" class="ghazal-meter-filter" onchange="onGhazalFilterChange()">
-        <option value="all">All meters</option>
-      </select>
       <input type="text" id="ghazalSearchInput" class="ghazal-search-input" placeholder="Search poet, first line, or number — all collections" oninput="onGhazalSearch()">
     </div>
   </div>
@@ -3656,10 +3671,7 @@ function handleGhazalsRoute(parts, params) {
   closeGhazalReader();
   switchCollection(sub);
 
-  if (params && params.meter && $('ghazalMeterFilter')) {
-    $('ghazalMeterFilter').value = params.meter;
-    onGhazalFilterChange();
-  }
+  if (params && params.meter && typeof openMeterGroupFor === 'function') openMeterGroupFor(params.meter);
   if (params && params.q && $('ghazalSearchInput')) {
     $('ghazalSearchInput').value = params.q;
     onGhazalSearch();
@@ -3680,11 +3692,11 @@ function switchCollection(col) {
   });
 
   const descs = {
-    'handbook': "The handbook's exercise ghazals, with Frances Pritchett's notes.",
+    'handbook': 'The handbook\'s exercise ghazals, with Frances Pritchett\'s notes. <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/10_ex_01_06.html" target="_blank" rel="noopener">Her exercises<span class="ext">↗</span></a> · <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/11_exnotes.html" target="_blank" rel="noopener">answers &amp; notes<span class="ext">↗</span></a>',
     'ghalib': "Ghalib's divan, scanned and meter-checked by the engine.",
     'mir': "Mir Taqi Mir, scanned and meter-checked by the engine."
   };
-  if ($('colDesc')) $('colDesc').textContent = descs[col] || '';
+  if ($('colDesc')) $('colDesc').innerHTML = descs[col] || '';   // descriptions may carry links (trusted, static)
 
   const cHandbook = $('handbookExContainer');
   const cGhalib = $('ghalibContainer');
@@ -4437,13 +4449,27 @@ function toggleMeterGroup(key) {
   if (typeof renderGhazalsList === 'function') renderGhazalsList();
 }
 window.toggleMeterGroup = toggleMeterGroup;
+/* #/ghazals/<col>?meter=15 (e.g. from Meter › Look up): open that meter's group and bring it into view.
+   Paired meters are grouped under the first of the pair. */
+const METER_PAIR_HEAD = { 15: 14, 17: 16, 19: 18, 34: 33 };
+function openMeterGroupFor(id) {
+  const key = String(METER_PAIR_HEAD[id] || id);
+  openMeterGroups.add(key);
+  if (typeof renderGhazalsList === 'function') renderGhazalsList();
+  // each collection's list has its own groups (the hidden ones too), so scroll to the visible one
+  if (typeof setTimeout === 'function') setTimeout(() => {
+    const el = [...document.querySelectorAll('[data-mgroup="' + key + '"]')].find(n => n.offsetParent !== null || n.getClientRects().length);
+    if (el && el.scrollIntoView) el.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }, 80);
+}
+window.openMeterGroupFor = openMeterGroupFor;
 function renderGroupedRows(groups, shownCount, rowRenderer) {
   const mf = $('ghazalMeterFilter');
   const filtering = !!(($('ghazalSearchInput') && $('ghazalSearchInput').value.trim()) || (mf && mf.value && mf.value !== 'all'));
   let html = '';
   groups.forEach(g => {
     const open = filtering || groups.length === 1 || openMeterGroups.has(g.key);
-    html += `<div class="meter-group${open ? ' open' : ''}">` + meterGroupHeaderHTML(g.key, g.rows.length, open);
+    html += `<div class="meter-group${open ? ' open' : ''}" data-mgroup="${escapeHtml(g.key)}">` + meterGroupHeaderHTML(g.key, g.rows.length, open);
     if (open) html += `<div class="meter-group-rows">${g.rows.map((r, i) => rowRenderer(r, i, g.rows.length)).join('')}</div>`;
     html += `</div>`;
   });
@@ -4453,7 +4479,7 @@ function renderGroupedRows(groups, shownCount, rowRenderer) {
 
 function getGhazalNavLabel(col, item) {
   if (!item) return '';
-  if (col === 'handbook') return `Ex. ${item.id}`;
+  if (col === 'handbook') return item.poet || 'Handbook';
   const n = franNum(col, item);
   if (col === 'ghalib') return `Ghalib ${n}`;
   if (col === 'mir') return `Mir ${n}`;
@@ -4566,11 +4592,11 @@ function switchCollection(col) {
   syncCollectionButtons();
 
   const descs = {
-    'handbook': "The handbook's exercise ghazals, with Frances Pritchett's notes.",
+    'handbook': 'The handbook\'s exercise ghazals, with Frances Pritchett\'s notes. <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/10_ex_01_06.html" target="_blank" rel="noopener">Her exercises<span class="ext">↗</span></a> · <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/11_exnotes.html" target="_blank" rel="noopener">answers &amp; notes<span class="ext">↗</span></a>',
     'ghalib': "Ghalib's divan, scanned and meter-checked by the engine.",
     'mir': "Mir Taqi Mir, scanned and meter-checked by the engine."
   };
-  if ($('colDesc')) $('colDesc').textContent = descs[col] || '';
+  if ($('colDesc')) $('colDesc').innerHTML = descs[col] || '';   // descriptions may carry links (trusted, static)
 
   const eyebrowNames = { handbook: 'Handbook', ghalib: 'Ghalib', mir: 'Mir' };
   const eyebrowCounts = {
@@ -4818,12 +4844,9 @@ function renderHandbookList() {
 
     return `
       <div class="vrow" role="link" tabindex="0" onclick="navigate('/ghazals/handbook/${ex.id}')">
-        <span class="vnum">Ex. ${ex.id}</span>
+        <span class="vnum vpoet">${escapeHtml(ex.poet || 'Handbook')}</span>
         <div class="vtext">
           <div class="vline" ${langDir}>${disp1}</div>
-          <div class="vmeta">
-            <span>${escapeHtml(ex.poet)}</span>
-          </div>
         </div>
         <div class="vact">
           <span class="chevron">›</span>
@@ -4944,7 +4967,7 @@ function openGhazalReader(col, id) {
   const titleEl = $('readerTitle');
   if (titleEl) {
     if (col === 'handbook') {
-      titleEl.textContent = `Ex. ${item.id} · ${item.poet || 'Handbook'}`;
+      titleEl.textContent = item.poet || 'Handbook';
     } else {
       titleEl.innerHTML = franLinkHTML(col, item) || escapeHtml(getGhazalNavLabel(col, item));
     }
@@ -6057,7 +6080,7 @@ function chipHTML(s,i,li,override,gpos){
   const wov = clickable && ovr[li] && ovr[li][s.word];
   const cwCls=['cw', clickable?'click':'', wsel?'wsel':'', wov?'wov':'', gpos?'g '+gpos:''].join(' ').replace(/\s+/g,' ').trim();
   const click = clickable ? ` onclick="pickWord(${li},${s.word})"` : '';
-  return `<span class="${cwCls}"${click}><span class="chip ${cls} ${scriptCls}" data-i="${i}">${txt}</span><span class="fs">${s.fsyl||''}</span></span>`;
+  return `<span class="${cwCls}"${click}><span class="chip ${cls} ${scriptCls}" data-i="${i}">${txt}</span><span class="fs${s.fsyl==='+'?' fs-extra':''}" onclick="pbFromFoot(event,this)" title="${s.fsyl==='+'?'Extra syllable outside the meter (cheat)':'Play from this foot'}">${s.fsyl==='+'?'extra':(s.fsyl||'')}</span></span>`;
 }
 /* position of each syllable inside a grafted run (words joined across the space): g-start / g-mid / g-end */
 function graftPos(syl){
@@ -6993,13 +7016,14 @@ function patGlyphs(raw){
   return String(raw).split('').map(ch=>ch==='='?'<span class="pg l">=</span>':ch==='-'?'<span class="pg s">-</span>':ch==='x'?'<span class="pg x">x</span>':ch==='/'?'<span class="pg sep">/</span>':ch).join('');
 }
 function legendHTML(cls){
+  // one compact line; longer explanations live in the tooltips
   return `<div class="legend${cls?' '+cls:''}">`
-    +`<span><i class="sw c-l"></i><span class="lg-or">/</span><span class="pg l">=</span> long <span class="lg-note">(dum)</span></span>`
-    +`<span><i class="sw c-s"></i><span class="lg-or">/</span><span class="pg s">–</span> short <span class="lg-note">(da)</span></span>`
-    +`<span><i class="sw c-x"></i>flexible <span class="lg-note">(either, resolved by the meter)</span></span>`
-    +`<span><span class="pg x">x</span> either</span>`
-    +`<span><i class="sw c-c"></i>cheat</span>`
-    +`<span><i class="sw c-g"></i>grafted <span class="lg-note">(words joined)</span></span>`
+    +`<span title="long syllable — sung 'dum'"><i class="sw c-l"></i><span class="lg-or">/</span><span class="pg l">=</span> long <span class="lg-note">(dum)</span></span>`
+    +`<span title="short syllable — sung 'da'"><i class="sw c-s"></i><span class="lg-or">/</span><span class="pg s">–</span> short <span class="lg-note">(da)</span></span>`
+    +`<span title="flexible: could be long or short; the meter decides"><i class="sw c-x"></i>flexible</span>`
+    +`<span title="either: the meter allows long or short here"><span class="pg x">x</span> either</span>`
+    +`<span title="cheat: an extra short syllable at the end of a line, outside the meter"><i class="sw c-c"></i>cheat</span>`
+    +`<span title="grafted: words joined across the space"><i class="sw c-g"></i>grafted</span>`
     +`</div>`;
 }
 const FAM_TITLES = {

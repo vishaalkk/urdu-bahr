@@ -273,13 +273,27 @@ function toggleMeterGroup(key) {
   if (typeof renderGhazalsList === 'function') renderGhazalsList();
 }
 window.toggleMeterGroup = toggleMeterGroup;
+/* #/ghazals/<col>?meter=15 (e.g. from Meter › Look up): open that meter's group and bring it into view.
+   Paired meters are grouped under the first of the pair. */
+const METER_PAIR_HEAD = { 15: 14, 17: 16, 19: 18, 34: 33 };
+function openMeterGroupFor(id) {
+  const key = String(METER_PAIR_HEAD[id] || id);
+  openMeterGroups.add(key);
+  if (typeof renderGhazalsList === 'function') renderGhazalsList();
+  // each collection's list has its own groups (the hidden ones too), so scroll to the visible one
+  if (typeof setTimeout === 'function') setTimeout(() => {
+    const el = [...document.querySelectorAll('[data-mgroup="' + key + '"]')].find(n => n.offsetParent !== null || n.getClientRects().length);
+    if (el && el.scrollIntoView) el.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }, 80);
+}
+window.openMeterGroupFor = openMeterGroupFor;
 function renderGroupedRows(groups, shownCount, rowRenderer) {
   const mf = $('ghazalMeterFilter');
   const filtering = !!(($('ghazalSearchInput') && $('ghazalSearchInput').value.trim()) || (mf && mf.value && mf.value !== 'all'));
   let html = '';
   groups.forEach(g => {
     const open = filtering || groups.length === 1 || openMeterGroups.has(g.key);
-    html += `<div class="meter-group${open ? ' open' : ''}">` + meterGroupHeaderHTML(g.key, g.rows.length, open);
+    html += `<div class="meter-group${open ? ' open' : ''}" data-mgroup="${escapeHtml(g.key)}">` + meterGroupHeaderHTML(g.key, g.rows.length, open);
     if (open) html += `<div class="meter-group-rows">${g.rows.map((r, i) => rowRenderer(r, i, g.rows.length)).join('')}</div>`;
     html += `</div>`;
   });
@@ -289,7 +303,7 @@ function renderGroupedRows(groups, shownCount, rowRenderer) {
 
 function getGhazalNavLabel(col, item) {
   if (!item) return '';
-  if (col === 'handbook') return `Ex. ${item.id}`;
+  if (col === 'handbook') return item.poet || 'Handbook';
   const n = franNum(col, item);
   if (col === 'ghalib') return `Ghalib ${n}`;
   if (col === 'mir') return `Mir ${n}`;
@@ -402,11 +416,11 @@ function switchCollection(col) {
   syncCollectionButtons();
 
   const descs = {
-    'handbook': "The handbook's exercise ghazals, with Frances Pritchett's notes.",
+    'handbook': 'The handbook\'s exercise ghazals, with Frances Pritchett\'s notes. <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/10_ex_01_06.html" target="_blank" rel="noopener">Her exercises<span class="ext">↗</span></a> · <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/11_exnotes.html" target="_blank" rel="noopener">answers &amp; notes<span class="ext">↗</span></a>',
     'ghalib': "Ghalib's divan, scanned and meter-checked by the engine.",
     'mir': "Mir Taqi Mir, scanned and meter-checked by the engine."
   };
-  if ($('colDesc')) $('colDesc').textContent = descs[col] || '';
+  if ($('colDesc')) $('colDesc').innerHTML = descs[col] || '';   // descriptions may carry links (trusted, static)
 
   const eyebrowNames = { handbook: 'Handbook', ghalib: 'Ghalib', mir: 'Mir' };
   const eyebrowCounts = {
@@ -654,12 +668,9 @@ function renderHandbookList() {
 
     return `
       <div class="vrow" role="link" tabindex="0" onclick="navigate('/ghazals/handbook/${ex.id}')">
-        <span class="vnum">Ex. ${ex.id}</span>
+        <span class="vnum vpoet">${escapeHtml(ex.poet || 'Handbook')}</span>
         <div class="vtext">
           <div class="vline" ${langDir}>${disp1}</div>
-          <div class="vmeta">
-            <span>${escapeHtml(ex.poet)}</span>
-          </div>
         </div>
         <div class="vact">
           <span class="chevron">›</span>
@@ -780,7 +791,7 @@ function openGhazalReader(col, id) {
   const titleEl = $('readerTitle');
   if (titleEl) {
     if (col === 'handbook') {
-      titleEl.textContent = `Ex. ${item.id} · ${item.poet || 'Handbook'}`;
+      titleEl.textContent = item.poet || 'Handbook';
     } else {
       titleEl.innerHTML = franLinkHTML(col, item) || escapeHtml(getGhazalNavLabel(col, item));
     }

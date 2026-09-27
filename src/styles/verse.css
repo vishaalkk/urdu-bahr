@@ -500,3 +500,17 @@ html[data-script="hi"] :is(.dr-word, .meter-group-verse) { font-size: 21px; }
 
 /* Weight › Learn examples show Urdu with its Roman underneath — that Roman line is always mono */
 .constr-ro { font-family: var(--mono); font-size: 13.5px; }
+
+/* Foot names above the chips repeat the per-syllable labels underneath (maf · ʿū · l), so they're
+   hidden; the labels are the tap target for "play from this foot". */
+.chips .fname { display: none; }
+.cw .fs { cursor: pointer; border-radius: 3px; }
+.cbox-scan .cw .fs:hover, .couplet-scan-box .cw .fs:hover, .card .cw .fs:hover { color: var(--gold); background: color-mix(in srgb, var(--gold) 10%, transparent); }
+.fgrp.litf .cw .fs, .fgrp.resume-at .cw .fs { color: var(--gold); }
+.cw .fs.fs-extra { font-family: var(--sans); font-style: italic; color: var(--ghost); }
+
+/* Legend: one line, left-aligned, everywhere (wraps only when the screen is too narrow) */
+.legend, .legend.top, .legend.legend-sticky, .dr-legend.legend {
+  justify-content: flex-start; flex-wrap: wrap; gap: 4px 18px; font-size: 12.5px; text-align: left;
+}
+.legend > span { white-space: nowrap; cursor: help; }

@@ -848,3 +848,7 @@ main, .wrap { max-width: 760px; }
 .meter-group-head.open { background: color-mix(in srgb, var(--gold) 6%, transparent); }
 .meter-group-chev { margin-left: var(--sp-2); color: var(--gold); }
 .meter-group-rows { padding-bottom: var(--sp-3); }
+
+/* Handbook rows: the poet's name in the number column (sans, not mono) */
+.vrow .vnum.vpoet { font-family: var(--sans); font-size: 14px; color: var(--dim); }
+.ghazal-desc .fran-link { margin-left: 2px; }

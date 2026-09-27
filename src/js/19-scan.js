@@ -248,13 +248,14 @@ function patGlyphs(raw){
   return String(raw).split('').map(ch=>ch==='='?'<span class="pg l">=</span>':ch==='-'?'<span class="pg s">-</span>':ch==='x'?'<span class="pg x">x</span>':ch==='/'?'<span class="pg sep">/</span>':ch).join('');
 }
 function legendHTML(cls){
+  // one compact line; longer explanations live in the tooltips
   return `<div class="legend${cls?' '+cls:''}">`
-    +`<span><i class="sw c-l"></i><span class="lg-or">/</span><span class="pg l">=</span> long <span class="lg-note">(dum)</span></span>`
-    +`<span><i class="sw c-s"></i><span class="lg-or">/</span><span class="pg s">–</span> short <span class="lg-note">(da)</span></span>`
-    +`<span><i class="sw c-x"></i>flexible <span class="lg-note">(either, resolved by the meter)</span></span>`
-    +`<span><span class="pg x">x</span> either</span>`
-    +`<span><i class="sw c-c"></i>cheat</span>`
-    +`<span><i class="sw c-g"></i>grafted <span class="lg-note">(words joined)</span></span>`
+    +`<span title="long syllable — sung 'dum'"><i class="sw c-l"></i><span class="lg-or">/</span><span class="pg l">=</span> long <span class="lg-note">(dum)</span></span>`
+    +`<span title="short syllable — sung 'da'"><i class="sw c-s"></i><span class="lg-or">/</span><span class="pg s">–</span> short <span class="lg-note">(da)</span></span>`
+    +`<span title="flexible: could be long or short; the meter decides"><i class="sw c-x"></i>flexible</span>`
+    +`<span title="either: the meter allows long or short here"><span class="pg x">x</span> either</span>`
+    +`<span title="cheat: an extra short syllable at the end of a line, outside the meter"><i class="sw c-c"></i>cheat</span>`
+    +`<span title="grafted: words joined across the space"><i class="sw c-g"></i>grafted</span>`
     +`</div>`;
 }
 const FAM_TITLES = {

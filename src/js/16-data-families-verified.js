@@ -25,7 +25,7 @@ function chipHTML(s,i,li,override,gpos){
   const wov = clickable && ovr[li] && ovr[li][s.word];
   const cwCls=['cw', clickable?'click':'', wsel?'wsel':'', wov?'wov':'', gpos?'g '+gpos:''].join(' ').replace(/\s+/g,' ').trim();
   const click = clickable ? ` onclick="pickWord(${li},${s.word})"` : '';
-  return `<span class="${cwCls}"${click}><span class="chip ${cls} ${scriptCls}" data-i="${i}">${txt}</span><span class="fs">${s.fsyl||''}</span></span>`;
+  return `<span class="${cwCls}"${click}><span class="chip ${cls} ${scriptCls}" data-i="${i}">${txt}</span><span class="fs${s.fsyl==='+'?' fs-extra':''}" onclick="pbFromFoot(event,this)" title="${s.fsyl==='+'?'Extra syllable outside the meter (cheat)':'Play from this foot'}">${s.fsyl==='+'?'extra':(s.fsyl||'')}</span></span>`;
 }
 /* position of each syllable inside a grafted run (words joined across the space): g-start / g-mid / g-end */
 function graftPos(syl){

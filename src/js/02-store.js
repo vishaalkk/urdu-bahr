@@ -293,10 +293,7 @@ function handleGhazalsRoute(parts, params) {
   closeGhazalReader();
   switchCollection(sub);
 
-  if (params && params.meter && $('ghazalMeterFilter')) {
-    $('ghazalMeterFilter').value = params.meter;
-    onGhazalFilterChange();
-  }
+  if (params && params.meter && typeof openMeterGroupFor === 'function') openMeterGroupFor(params.meter);
   if (params && params.q && $('ghazalSearchInput')) {
     $('ghazalSearchInput').value = params.q;
     onGhazalSearch();
@@ -317,11 +314,11 @@ function switchCollection(col) {
   });
 
   const descs = {
-    'handbook': "The handbook's exercise ghazals, with Frances Pritchett's notes.",
+    'handbook': 'The handbook\'s exercise ghazals, with Frances Pritchett\'s notes. <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/10_ex_01_06.html" target="_blank" rel="noopener">Her exercises<span class="ext">↗</span></a> · <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/11_exnotes.html" target="_blank" rel="noopener">answers &amp; notes<span class="ext">↗</span></a>',
     'ghalib': "Ghalib's divan, scanned and meter-checked by the engine.",
     'mir': "Mir Taqi Mir, scanned and meter-checked by the engine."
   };
-  if ($('colDesc')) $('colDesc').textContent = descs[col] || '';
+  if ($('colDesc')) $('colDesc').innerHTML = descs[col] || '';   // descriptions may carry links (trusted, static)
 
   const cHandbook = $('handbookExContainer');
   const cGhalib = $('ghalibContainer');
