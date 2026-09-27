@@ -172,7 +172,7 @@ function renderConstr() {
       <p class="constr-desc dim small">${c.d}</p>
       ${c.ex.map((e, ei) => `
         <div class="constr-ex">
-          <div class="urdu constr-urdu">${e[0]}</div>
+          <div class="urdu constr-urdu ur-always">${e[0]}</div>
           <div class="ro dim small constr-ro">${e[1]} → ${e[4]}</div>
           <div class="row constr-row">
             <span class="play sm" role="button" tabindex="0" data-label="Play example" aria-label="Play example" onclick="cPlay(${ci},${ei},this)">▶︎</span>
@@ -212,7 +212,7 @@ function renderSpecialSyll() {
       <div class="row constr-row special-syll-row">
         ${c.ex.map((e, ei) => `
           <div class="constr-ex special-syll-ex">
-            <div class="urdu constr-urdu">${e[0]}</div>
+            <div class="urdu constr-urdu ur-always">${e[0]}</div>
             <div class="ro dim small constr-ro">${e[1]}</div>
             <div class="row">
               <span class="play sm" role="button" tabindex="0" data-label="Play example" aria-label="Play example" onclick="ssPlay(${ci},${ei},this)">▶︎</span>

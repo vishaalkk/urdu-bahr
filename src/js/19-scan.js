@@ -470,7 +470,7 @@ function runScan(){
 function stackHTML(lines,results,common,tot){
   if(!common) {
     const nb=lastScan.near; let msg='';
-    if(nb){ const f=famOfMeter[nb.g[0]]; const name=f?`<span class="urdu fam-inline">${famLabel(f).ur}</span>`:(nb.g[0]==='H'?'Mir\'s Hindi meter':'#'+nb.g.join('/'));
+    if(nb){ const f=famOfMeter[nb.g[0]]; const name=f?`<span class="${currentScript==='ur'?'urdu':'mono'} fam-inline">${(typeof getLineDisplay==='function'?getLineDisplay(famLabel(f),currentScript):famLabel(f).ur)}</span>`:(nb.g[0]==='H'?'Mir\'s Hindi meter':'#'+nb.g.join('/'));
       msg=`<p class="small">${nb.n} of ${lines.length} lines fit ${name}. Look closely at line${nb.miss.length>1?'s':''} <b class="t">${nb.miss.join(', ')}</b> — a reading, an unwritten iẓāfat, a missing tashdīd, or the text itself.</p>`; }
     let key=''; if(curEx) key=`<p class="tiny muted">Pritchett's answer key: <b class="t">${exMeters(curEx).map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b></p>`;
     return `<div class="card"><div class="verdict no-fit">No single bahr fits every line</div>${msg}${key}</div>`;
@@ -498,7 +498,7 @@ function stackHTML(lines,results,common,tot){
       fh+=`<td class="fh" colspan="${span}">${f.ur}<br><i>${f.ro.join('·')}</i></td>`; });
     head=fh+'</tr>'+head;
   } else body=rows.map((r,li)=>`<tr><td class="num">${li+1}</td>${r.map((x,k)=>cell(x,k,r)).join('')}</tr>`).join('');
-  const alt=tot.filter(x=>x!==common).slice(0,2).filter(x=>x.c-common.c<1.5).map(x=>famOfMeter[x.id]?`<span class="urdu fam-inline sm">${famLabel(famOfMeter[x.id]).ur}</span>`:(x.id==='H'?'Hindi meter':'#'+x.id));
+  const alt=tot.filter(x=>x!==common).slice(0,2).filter(x=>x.c-common.c<1.5).map(x=>famOfMeter[x.id]?`<span class="${currentScript==='ur'?'urdu':'mono'} fam-inline sm">${(typeof getLineDisplay==='function'?getLineDisplay(famLabel(famOfMeter[x.id]),currentScript):famLabel(famOfMeter[x.id]).ur)}</span>`:(x.id==='H'?'Hindi meter':'#'+x.id));
   let key='';
   if(curEx){ const hit=common.fits.every(f=>exMeters(curEx).includes(f.meter.id));
     key=`<div class="card key-card"><span class="tiny muted">Pritchett's answer key (ch. 11):</span> <b class="t">${exMeters(curEx).map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b> — ${hit?'<span class="ok-text">the scanner agrees ✓</span>':'<span class="no-text">the scanner disagrees ✗</span>'}</div>`; }
@@ -531,7 +531,7 @@ function stackInner(lines,results,common,tot){
       fh+=`<td class="fh" colspan="${span}">${f.ur}<br><i>${f.ro.join('·')}</i></td>`; });
     head=fh+'</tr>'+head;
   } else body=rows.map((r,li)=>`<tr><td class="num">${li+1}</td>${r.map((x,k)=>cell(x,k,r)).join('')}</tr>`).join('');
-  const alt=tot.filter(x=>x!==common).slice(0,2).filter(x=>x.c-common.c<1.5).map(x=>famOfMeter[x.id]?`<span class="urdu fam-inline sm">${famLabel(famOfMeter[x.id]).ur}</span>`:(x.id==='H'?'Hindi meter':'#'+x.id));
+  const alt=tot.filter(x=>x!==common).slice(0,2).filter(x=>x.c-common.c<1.5).map(x=>famOfMeter[x.id]?`<span class="${currentScript==='ur'?'urdu':'mono'} fam-inline sm">${(typeof getLineDisplay==='function'?getLineDisplay(famLabel(famOfMeter[x.id]),currentScript):famLabel(famOfMeter[x.id]).ur)}</span>`:(x.id==='H'?'Hindi meter':'#'+x.id));
   let key='';
   if(curEx){ const hit=common.fits.every(f=>exMeters(curEx).includes(f.meter.id));
     key=`<div class="card key-card"><span class="tiny muted">Pritchett's answer key (ch. 11):</span> <b class="t">${exMeters(curEx).map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b> — ${hit?'<span class="ok-text">the scanner agrees ✓</span>':'<span class="no-text">the scanner disagrees ✗</span>'}</div>`; }

@@ -484,11 +484,11 @@
    renders in a fallback serif with Nastaliq's near-zero-width space (words run together) and sits
    right-aligned. In Roman/Devanagari mode, verse elements always get their own script's font and LTR.
    (Genuinely Urdu UI — the بحر mark, the اردو button, Urdu titles, the Scan input — isn't listed.) */
-html[data-script="ro"] :is(.urdu, .vline, .vline-lg, .misra-text, .wbtn, .grid td, .meter-label-primary, .ml-line, .mc-line, .meter-group-verse, .reader-header-misra, .ss-verse, .dr-word, .dr-verse, .home-example-verse, .fam-inline, .ear-verse-text, .fchip) {
+html[data-script="ro"] :is(.urdu, .vline, .vline-lg, .misra-text, .wbtn, .grid td, .meter-label-primary, .ml-line, .mc-line, .meter-group-verse, .reader-header-misra, .ss-verse, .dr-word, .dr-verse, .home-example-verse, .fam-inline, .ear-verse-text, .fchip, .dict-word):not(.ur-always) {
   font-family: var(--mono); direction: ltr; unicode-bidi: isolate; text-align: inherit;
   font-size: 16px; line-height: 1.8; font-style: normal; letter-spacing: 0; word-spacing: normal;
 }
-html[data-script="hi"] :is(.urdu, .vline, .vline-lg, .misra-text, .wbtn, .grid td, .meter-label-primary, .ml-line, .mc-line, .meter-group-verse, .reader-header-misra, .ss-verse, .dr-word, .dr-verse, .home-example-verse, .fam-inline, .ear-verse-text, .fchip) {
+html[data-script="hi"] :is(.urdu, .vline, .vline-lg, .misra-text, .wbtn, .grid td, .meter-label-primary, .ml-line, .mc-line, .meter-group-verse, .reader-header-misra, .ss-verse, .dr-word, .dr-verse, .home-example-verse, .fam-inline, .ear-verse-text, .fchip, .dict-word):not(.ur-always) {
   font-family: var(--deva); direction: ltr; unicode-bidi: isolate; text-align: inherit;
   font-size: 18px; line-height: 1.9; font-style: normal;
 }
@@ -497,3 +497,6 @@ html[data-script="hi"] :is(.dr-word, .meter-group-verse) { font-size: 21px; }
 
 /* legend: underline and symbol are two notations for the same thing — "▬ / =" */
 .legend .lg-or { color: var(--faint); margin: 0 3px; font-family: var(--sans); }
+
+/* Weight › Learn examples show Urdu with its Roman underneath — that Roman line is always mono */
+.constr-ro { font-family: var(--mono); font-size: 13.5px; }
