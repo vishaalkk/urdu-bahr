@@ -91,3 +91,23 @@
   .dr-choices { grid-template-columns: 1fr; }
   .dr-filter-row .eyebrow { min-width: 0; flex-basis: 100%; }
 }
+
+/* ---- round 3: question heading, legend, stage, pattern choices, answer with sound ---- */
+.dr-card-head { align-items: baseline; margin-bottom: var(--sp-3); }
+.dr-qlabel { font: 400 20px/1.3 var(--serif); color: var(--ink); }
+.dr-head-right { display: inline-flex; gap: var(--sp-4); align-items: baseline; }
+.dr-legend.legend { justify-content: flex-start; margin: 0 0 var(--sp-4); padding-bottom: var(--sp-3); border-bottom: 1px solid var(--line); }
+.dr-prompt { flex-direction: column; align-items: center; text-align: center; gap: var(--sp-3); margin: var(--sp-3) 0 var(--sp-4); }
+.dr-prompt .dr-play { width: 52px; height: 52px; font-size: 16px; }
+.dr-stage { display: flex; flex-direction: column; align-items: center; gap: var(--sp-1); }
+.dr-stage .dr-word { margin: 0; }
+.dr-mean { margin: 0; font: italic 400 15px/1.5 var(--serif); color: var(--dim); }
+.dr-ask { margin: var(--sp-2) 0 0; font-size: 14.5px; color: var(--dim); }
+.dr-strip { display: flex; justify-content: center; margin-bottom: var(--sp-2); }
+.dr-pat .strip { margin: 0; }
+.dr-choice .dr-pat { flex: 1; display: flex; }
+.dr-opt { display: flex; flex-direction: column; gap: 2px; }
+.dr-opt b { font-weight: 600; font-size: 15.5px; }
+.dr-opt span { font-size: 13px; color: var(--faint); }
+.dr-answer { display: flex; align-items: center; gap: var(--sp-3); margin: var(--sp-2) 0; }
+.dr-fb .fb-text { margin-bottom: var(--sp-2); }

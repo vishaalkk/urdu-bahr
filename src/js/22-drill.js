@@ -10,9 +10,9 @@
    yet), routed through pbTogglePattern when the Player agent adds it; see
    drPlayToggle()'s fallback and the final report. */
 
-const DR = { weight: null, meter: null };
+var DR = { weight: null, meter: null };
 
-const DR_TYPES = {
+var DR_TYPES = {
   weight: [
     { key: 'weigh', label: 'Weigh the word' },
     { key: 'flexfixed', label: 'Flexible or fixed' },
@@ -27,7 +27,7 @@ const DR_TYPES = {
     { key: 'ghazal', label: 'Which ghazal' }
   ]
 };
-const DR_SOURCES = [
+var DR_SOURCES = [
   { key: 'handbook', label: 'Handbook' },
   { key: 'ghalib', label: 'Ghalib' },
   { key: 'mir', label: 'Mir' }
@@ -130,7 +130,7 @@ function drGenWeigh() {
     const item = drPick(GLOSSARY_DATA);
     const pats = drParseWt(item.wt);
     const correct = pats[0];
-    if (!correct || correct.length < 1 || correct.length > 4) continue;
+    if (!correct || correct.length < 2 || correct.length > 4) continue;   // one syllable is too easy
     const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
     const wordDisp = (typeof getDictWordDisplay === 'function') ? getDictWordDisplay(item, cs) : (item.ascii || item.syl || '');
     const distractors = drDistractors(correct, 2);
@@ -139,10 +139,11 @@ function drGenWeigh() {
       type: 'weigh', source: 'handbook',
       playSeq: null,
       promptHTML: `<div class="dr-word ${cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${drEsc(wordDisp)}</div>` +
-        (item.mean ? `<p class="dim small">${drEsc(item.mean)}</p>` : `<p class="dim small">Weigh this word.</p>`),
-      choices: choices.map(c => ({ html: `<span class="mono">${drPatText(c)}</span>`, seq: c })),
+        (item.mean ? `<p class="dr-mean">${drEsc(item.mean.replace(/^"|"$/g, ''))}</p>` : '') + `<p class="dr-ask">Pick its long–short pattern.</p>`,
+      choices: choices.map(c => ({ html: drPatHTML(c), seq: c })),
       correctIndex: choices.findIndex(c => c === correct),
-      reason: `Weight: ${drPatText(correct)}.`
+      answerSeqs: [correct],
+      reason: `This is how it scans.`
     };
   }
   return null;
@@ -157,15 +158,17 @@ function drGenFlexFixed() {
     const flexible = pats.some(p => p.includes('x'));
     const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
     const wordDisp = (typeof getDictWordDisplay === 'function') ? getDictWordDisplay(item, cs) : (item.ascii || item.syl || '');
-    const opts = drShuffle([{ html: 'Flexible', val: true }, { html: 'Fixed', val: false }]);
+    const opts = [{ html: '<span class="dr-opt"><b>Flexible</b><span>a syllable can be read long or short</span></span>', val: true },
+                  { html: '<span class="dr-opt"><b>Fixed</b><span>always the same long–short pattern</span></span>', val: false }];
     return {
       type: 'flexfixed', source: 'handbook',
       playSeq: null,
-      promptHTML: `<div class="dr-word ${cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${drEsc(wordDisp)}</div><p class="dim small">Flexible, or fixed?</p>`,
+      promptHTML: `<div class="dr-word ${cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${drEsc(wordDisp)}</div>` +
+        (item.mean ? `<p class="dr-mean">${drEsc(item.mean.replace(/^"|"$/g, ''))}</p>` : '') + `<p class="dr-ask">Can its weight bend to fit the meter?</p>`,
+      answerSeqs: pats.slice(0, 3),
       choices: opts,
       correctIndex: opts.findIndex(o => o.val === flexible),
-      reason: flexible ? `Flexible — it can scan as ${drPatText(pats[0])}${pats[1] ? ` or ${drPatText(pats[1])}` : ''}.`
-                        : `Fixed — always ${drPatText(pats[0])}.`
+      reason: flexible ? (pats.length > 1 ? 'Flexible — these are its readings:' : 'Flexible — the rose syllable can be read long or short:') : 'Fixed — always this pattern:'
     };
   }
   return null;
@@ -189,9 +192,10 @@ function drGenNoteType(sources, matcher) {
     return {
       type: 'note', source: s.source,
       playSeq: null, revealSyl: hit.seg.syl,
-      promptHTML: `<div class="dr-word ${cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${drEsc(phraseDisp)}</div><p class="dim small">How is this read?</p>`,
-      choices: choices.map(c => ({ html: `<span class="mono">${drPatText(c)}</span>`, seq: c })),
+      promptHTML: `<div class="dr-word ${cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${drEsc(phraseDisp)}</div><p class="dr-ask">How is this read in the line?</p>`,
+      choices: choices.map(c => ({ html: drPatHTML(c), seq: c })),
       correctIndex: choices.findIndex(c => c === correct),
+      answerSeqs: [correct],
       reason: drCapFirst(hit.note) + '.'
     };
   }
@@ -350,10 +354,23 @@ function drGenerate(tab) {
       else if (type === 'foot') q = drGenFoot(sources);
       else if (type === 'ghazal') q = drGenGhazal(sources);
     }
-    if (q) return q;
+    if (q) {
+      q.kind = type;
+      const t = (DR_TYPES[tab] || []).find(x => x.key === type);
+      q.label = DR_QUESTION[type] || (t ? t.label : '');
+      return q;
+    }
   }
   return null;
 }
+/* the question each type asks, shown as the card's heading */
+var DR_QUESTION = {
+  weigh: 'Weigh the word', flexfixed: 'Flexible or fixed?', izafat: 'Iẓāfat — how is it read?',
+  grafting: 'Grafting — how is it read?', ojoin: "'O' joining — how is it read?",
+  bahr: 'Which bahr is this?', limping: 'In the bahr, or limping?', foot: 'Which foot changed?', ghazal: 'Which verse rides on this?'
+};
+/* a weight pattern as the same coloured bars used everywhere else */
+function drPatHTML(seq) { return `<span class="dr-pat">${(typeof strip === 'function') ? strip(seq) : drPatText(seq)}</span>`; }
 
 /* ---------- mount / render / interact ---------- */
 function drDefaultState() { return { types: new Set(['all']), sources: new Set(['all']), correct: 0, attempted: 0, current: null }; }
@@ -366,9 +383,10 @@ function drShellHTML(tab) {
     </div>
     <div class="card dr-card">
       <div class="dr-card-head">
-        <span class="eyebrow dr-tag" id="dr-${tab}-tag"></span>
-        <span class="mono tiny dr-score" id="dr-${tab}-score">0 / 0</span>
+        <span class="dr-qlabel" id="dr-${tab}-qlabel"></span>
+        <span class="dr-head-right"><span class="eyebrow dr-tag" id="dr-${tab}-tag"></span><span class="mono tiny dr-score" id="dr-${tab}-score">0 / 0</span></span>
       </div>
+      ${(typeof legendHTML === 'function') ? legendHTML('dr-legend') : ''}
       <div class="dr-prompt" id="dr-${tab}-prompt"></div>
       <div class="dr-strip" id="dr-${tab}-strip"></div>
       <div class="dr-choices" id="dr-${tab}-choices"></div>
@@ -422,10 +440,11 @@ function drRenderQuestion(tab) {
     return;
   }
   if (tagEl) tagEl.textContent = drLabelForSource(q.source);
-  if (promptEl) promptEl.innerHTML = (q.playSeq ? `<button type="button" class="play dr-play" aria-label="Play" onclick="drPlayToggle('${tab}',this)">▶︎</button>` : '') + (q.promptHTML || '');
+  const qlEl = $('dr-' + tab + '-qlabel'); if (qlEl) qlEl.textContent = q.label || '';
+  if (promptEl) promptEl.innerHTML = (q.playSeq ? `<button type="button" class="play dr-play" aria-label="Listen" data-label="Listen" onclick="drPlayToggle('${tab}',this)">▶︎</button>` : '') + `<div class="dr-stage">${q.promptHTML || ''}</div>`;
   if (stripEl) stripEl.innerHTML = q.playSeq ? strip(q.answered ? q.playSeq : q.playSeq.map(() => 'c')) : '';
   if (choicesEl) {
-    choicesEl.innerHTML = q.choices.map((c, i) => `<button type="button" class="btn ghost dr-choice" data-idx="${i}" ${q.answered ? 'disabled' : ''} onclick="drAnswer('${tab}',${i})">${c.html}</button>`).join('');
+    choicesEl.innerHTML = q.choices.map((c, i) => `<button type="button" class="dr-choice" data-idx="${i}" ${q.answered ? 'disabled' : ''} onclick="drAnswer('${tab}',${i})">${c.html}</button>`).join('');
     if (q.answered) {
       const btns = [...choicesEl.querySelectorAll('.dr-choice')];
       btns.forEach((b, i) => {
@@ -441,8 +460,9 @@ function drRenderQuestion(tab) {
         q.revealHTML = `<div class="chips dr-reveal">${chipsHTML(q.revealSyl, null, null)}</div>`;
       }
       fbEl.className = 'fb dr-fb ' + (ok ? 'ok' : 'no');
+      const ans = (q.answerSeqs || []).map((sq, k) => `<div class="dr-answer"><button type="button" class="play sm dr-ans-play" aria-label="Hear it" data-label="Hear it" onclick="drAnswerPlay('${tab}',${k},this)">▶︎</button><span class="dr-ans-strip" id="dr-${tab}-ans-${k}">${drPatHTML(sq)}</span></div>`).join('');
       fbEl.innerHTML = `<div class="fb-text">${ok ? '✓ Right' : '✗ Not quite'} — ${q.reason}</div>` +
-        (q.revealHTML || '') +
+        ans + (q.revealHTML || '') +
         `<button type="button" class="btn gold sm fb-next-btn" id="dr-${tab}-next" onclick="drNext('${tab}')">Next ▸</button>`;
     } else {
       fbEl.className = 'fb dr-fb'; fbEl.innerHTML = '';
@@ -458,8 +478,19 @@ function drAnswer(tab, idx) {
   if (idx === q.correctIndex) st.correct++;
   drRenderQuestion(tab);
   const nb = $('dr-' + tab + '-next'); if (nb) nb.focus();
+  // hear the right answer: its bars light up as it plays (meter questions replay what they played)
+  const first = typeof document !== 'undefined' && document.querySelector ? document.querySelector('#dr-' + tab + '-fb .dr-ans-play') : null;
+  if (first) drAnswerPlay(tab, 0, first);
+  else if (q.playSeq) { const pb = document.querySelector && document.querySelector('#dr-' + tab + '-prompt .dr-play'); if (pb) drPlayToggle(tab, pb); }
 }
 window.drAnswer = drAnswer;
+
+function drAnswerPlay(tab, k, btn) {
+  const q = DR[tab] && DR[tab].current; if (!q || !q.answerSeqs || !q.answerSeqs[k]) return;
+  const host = $('dr-' + tab + '-ans-' + k);
+  if (typeof pbTogglePattern === 'function') pbTogglePattern('drill-ans:' + tab + ':' + k, btn, drRawFromSeq(q.answerSeqs[k]), host ? [...host.querySelectorAll('.blk')] : null);
+}
+window.drAnswerPlay = drAnswerPlay;
 
 function drNext(tab) {
   if (!DR[tab]) DR[tab] = drDefaultState();
@@ -498,7 +529,11 @@ function drPlayToggle(tab, btn) {
 }
 window.drPlayToggle = drPlayToggle;
 
+/* All app scripts run as one block, and the router can call mountDrill() (hoisted) on a
+   direct drill URL before this file's data above is initialised. Defer until it is. */
+var drReady;   // undefined until the end of this file runs
 function mountDrill(tab) {
+  if (!drReady) { const q = (window.__drPending = window.__drPending || []); if (q.indexOf(tab) === -1) q.push(tab); return; }
   const panel = $(tab === 'weight' ? 'weightPanelDrill' : 'meterPanelDrill');
   if (!panel) return;
   let root = panel.querySelector('.dr-root');
@@ -537,6 +572,8 @@ if (typeof document !== 'undefined' && typeof document.addEventListener === 'fun
    handleRoute() call (manifest order), so if the page loads directly on a
    drill route, mountDrill didn't exist yet the first time 02-store.js's
    showWeightSubtab/showMeterSubtab tried to call it. Pick up here. */
+drReady = true;
+(window.__drPending || []).splice(0).forEach(tab => mountDrill(tab));
 ['weight', 'meter'].forEach(tab => {
   const panel = $(tab === 'weight' ? 'weightPanelDrill' : 'meterPanelDrill');
   if (panel && panel.style && panel.style.display === 'block') mountDrill(tab);
