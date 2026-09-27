@@ -1,0 +1,41 @@
+{
+  "head": "src/head.html",
+  "styles": "src/styles.css",
+  "body": [
+    "src/body/header.html",
+    "src/body/weight.html",
+    "src/body/meter.html",
+    "src/body/scan.html",
+    "src/body/ghazals.html",
+    "src/body/handbook.html",
+    "src/body/about.html",
+    "src/body/tap.html",
+    "src/body/footer.html",
+    "src/body/nav.html",
+    "src/body/settings.html"
+  ],
+  "js": [
+    "src/js/00-pue-parser.js",
+    "src/js/01-engine.js",
+    "src/js/02-store.js",
+    "src/js/03-data-expanded-encyclopedia.js",
+    "src/js/05-translit-helpers.js",
+    "src/js/06-script-mode.js",
+    "src/js/07-theme.js",
+    "src/js/08-handbook-viewer.js",
+    "src/js/09-exercises-module.js",
+    "src/js/10-ghalib-extended-corpus-preview-browse.js",
+    "src/js/11-mir-extended-corpus-browse.js",
+    "src/js/12-dictionary-module.js",
+    "src/js/13-studio-composer-module.js",
+    "src/js/14-bibliography-module.js",
+    "src/js/15-audio.js",
+    "src/js/16-data-families-verified.js",
+    "src/js/17-ear.js",
+    "src/js/18-tap.js",
+    "src/js/18b-meter-label.js",
+    "src/js/19-scan.js",
+    "src/js/20-bahr.js",
+    "src/js/21-learn.js"
+  ]
+}

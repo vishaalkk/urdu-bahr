@@ -1,0 +1,303 @@
+
+
+   04_irregular
+
+      @import "../stylesheets/comm2.css";
+
+          FOUR == 
+            IRREGULAR WORDS
+
+            *4.1 
+            == Orthography versus pronunciation*
+            *4.2 == Irregular 
+            Persian words*
+            *4.3 == Irregular 
+            Indic words*
+            *4.4 
+            == Irregular Arabic words* 
+
+            4.1 == Orthography versus pronunciation 
+          In Urdu, orthography and pronunciation 
+            correspond quite closely. Orthography is thus a tremendous help in 
+            scanning: many words can be scanned simply by dividing their letters 
+            into groups of one or two in such a way that as many groups as possible 
+            start with a consonant, without knowing their correct pronunciation 
+            at all. Our method is based as much as possible on orthography, which 
+            is more concrete and thus more accessible to the student who is not 
+            a native speaker. Linguistically and theoretically this is not the 
+            most sophisticated approach, as we are well aware; however, in practice 
+            it works remarkably well as a teaching tool for English-speakers, 
+            and that is our chief concern here. 
+          Moreover, in a few cases involving 
+            word-final (( [((ain], orthography alone provides 
+            an accurate scansion, while modern pronunciation does not. Words of 
+            this kind include shuruu(( [shu-ruu-((], mau.zuu(( 
+            [mau-.zuu-((], nau(( [nau-((], mataa(( 
+            [ma-taa-((], ijtimaa(( [ij-ti-maa-((], ta.sdii(( 
+            [ta.s-dii-((], and a number of others; all are scanned with an extra 
+            word-final short syllable which can be clearly and regularly deduced 
+            from the orthography but can almost never be heard in modern pronunciation. 
+            These words form a small and special group, an exception to the general 
+            rule that pronunciation prevails over orthography.
+          Certain three-letter three-consonant 
+            Arabic words like shahr [shah-r], sham((a 
+            [sham-((a], farq [far-q], etc. also seem to 
+            be scanned in ways that reflect their Persian and Arabic backgrounds 
+            rather than their modern pronunciation; these have been discussed 
+            in Section 1.4. Both the word-final- 
+            (( words and these three-consonant words are 
+            of course quite regular from the point of view of our own system, 
+            and in fact serve to point up its virtues.
+          Above all, however, Urdu poetry 
+            is designed for oral recitation. Where orthography and pronunciation 
+            differ, therefore, scansion normally follows pronunciation. This fact 
+            gives rise to a category of words which are NOT scanned as they (orthographically) 
+            should be. These words which are written one way and pronounced another, 
+            and scanned as they are pronounced, we will call irregular words. 
+            We mean, of course, irregular from the point of view of our orthography-based 
+            system. There are several main groups of such words. They are presented 
+            here roughly in order of their frequency of occurrence in poetry. 
+
+            4.2 == Irregular Persian words 
+          CONSONANT-CLUSTER WORDS: A very 
+            common type of irregular Persian word consists of or terminates in 
+            the following pattern: a consonant, followed by a long vowel, followed 
+            by two consonants which are pronounced as a conjunct and are scanned 
+            as though they were one single letter. Most of the words in this pattern 
+            terminate in the following way: 
+          consonant + long vowel + s 
+            or sh + t
+          Examples include common words like 
+            dost [do-st], ziist [zii-st], 
+            raast [raa-st], bardaasht 
+            [bar-daa-sht], gosht [go-sht]. The last two 
+            syllables of such words are nearly always scanned (= -), instead of 
+            (= =) as our system would suggest. VERY rarely, especially in archaic 
+            poetry, such four-letter groups may be found scanned as (= - -) or 
+            even as a single (=). But NEVER are they scanned with word-final (= 
+            =). 
+          When such clusters are not word-final, 
+            however, they break up in the normal scansion process, and the word 
+            is scanned quite regularly: dost [do-st] is 
+            (= -), but the (Persian) plural form dostaa;N 
+            [do-s-taa;N] is (= - =), and the abstract noun dostii 
+            [do-s-tii] is (= - x). Words ending in such clusters are also scanned 
+            normally when followed by [i.zaafat] or by o 
+            as an independent conjunction: dost-e [do-s-te] 
+            is scanned (= - x), and dost o [do-s-to] is 
+            scanned (= - x). 
+          Some Persian words contain the same 
+            kinds of clusters, but involving different consonants: koft 
+            [ko-ft], taa;xt [taa-;xt], kaard 
+            [kaa-rd], paars [paa-rs]. While much less common 
+            than the { s / sh + t 
+            } words, they too are scanned (= -), and behave as described above. 
+
+          This word-final pattern "consonant 
+            + vowel + consonant cluster" appears chiefly in Persian words. It 
+            is impossible in Arabic. But it is not quite confined to Persian words: 
+            a few Indic ones can be found as well, such as maarg 
+            [maa-rg], shuudr [shuu-dr], bhiishm 
+            [bhii-shm]. It also occurs in adopted English words: gaar;D 
+            [gaa-r;D], paark [paa-rk]. Though these words 
+            are not common in poetry, the same scansion considerations would apply 
+            to them as well. 
+          SUPPRESSED- 
+            o WORDS: Another important type 
+            of Persian-derived irregular word contains a largely suppressed o 
+            which is mostly ignored in pronunciation, and entirely ignored in 
+            scanning. These suppressed- o forms occur only 
+            after the letter ;x . Depending on what follows 
+            the { ;x + o }sequence, 
+            the words fall into several sub-groups. 
+          Of all the Persian words which begin 
+            with {;x + o + consonant 
+            }, MOST are pronounced and scanned as though the o 
+            were absent and were replaced by a mere [pesh]. Common words of this 
+            kind include ;xvud [;xud], scanned (=); ;xvush 
+            [;xush], scanned (=); ;xvurshiid [;xur-shii-d], 
+            scanned (= = -), and ;xvushaamad ['xu-shaa-mad], 
+            scanned (- = =). It should be noted, however, that a certain number 
+            of common words beginning with {;x + o 
+            + consonant are pronounced and scanned quite normally: ;xuub 
+            [;xuu-b], (= -); ;xuu [;xuu-n], (= -); ;xauf 
+            [;xau-f], (= -); ;xuu [;xuu], (=); ;xojah 
+            [;xo-jah], (= x). These are exceptions to the more common pattern. 
+
+          Other Persian words of the suppressed- 
+            o type contain the group { ;x 
+            + o + a [alif]}. Wherever 
+            this sequence occurs, the o is suppressed and 
+            the { ;x + o + a 
+            [alif]} sequence is pronounced and scanned as though it consisted 
+            of ;xaa only. Examples: ;xvaahm;xvaah 
+            [;xaa-h-m-;xaa-h], scanned (= - - = -); tan;xvaah 
+            [tan-xaa-h], scanned (= = -); ;xvaahish [;xaa-hish], 
+            scanned (= =); ;xvaar [;xaa-r], scanned (= -). 
+            Note, however, that the ;xvaa [;xavaa] of a 
+            few Arabic plural forms is scanned quite normally and should not be 
+            confused with the Persian ;xvaa. Examples: ;xavaa.s 
+            [;xa-vaa-.s], scanned (- = -); ;xavaatiin [;xa-vaa-tii-n], 
+            scanned (- = = -); i;xvaan [i;x-vaa-n], scanned 
+            (= = -). 
+          There are also a few Persian words 
+            containing the group { ;x + o 
+            + e }, most of which contain the suppressed, 
+            unscanned o . Examples: ;xve 
+            [;xe], scanned (=); ;xvesh [;xe-sh], scanned 
+            (= -). But not quite all are of this irregular type: ;xved 
+            [;x-ve-d] is scanned normally, (- = -). Words containing this { ;x 
+            + o + e } sequence are 
+            few and rare in any case. 
+          Although it's a Persian word, piyaalah 
+            is sometimes scanned as though it contained a consonant cluster--i.e., 
+            [pyaa-lah] (= x). But this is rare; more often it is scanned normally, 
+            as [pi-yaa-lah] (- = x).
+
+            4.3 == Irregular Indic words 
+
+          A group of irregular words of Indic 
+            origin contain conjunct consonants that are scanned as though they 
+            were a single consonant. Many such clusters are possible; the most 
+            common ones include the letter ye [y] as the 
+            second consonant in the luster. Examples: byaah 
+            [byaa-h], pyaar [pyaa-r], dhyaan 
+            [dhyaa-n], gyaan [gyaa-n], etc., all of which 
+            are scanned (= -) regardless of their initial conjunct consonants. 
+            Since it is hard to generalize about such conjunct consonants within 
+            the framework of Urdu poetry, a good many examples are listed in the 
+            Glossary.
+          The interrogative monosyllables 
+            kyaa [kyaa] and kyuu;N 
+            [kyuu;N], and the relative pronoun jyuu;N [jyuu;N], 
+            also belong to this group: they are always scanned long (=). Although 
+            they are treated for metrical purposes as though they contained only 
+            one consonant, they are almost never used as flexible syllables. 
+          The perfect forms of honaa 
+            [honaa}--namely, huu))aa , huu))e , huu))ii , huu))iiN 
+            --are all scanned as they are pronounced, (- x), rather than as they 
+            are spelled. The familiar possessive forms tumhaaraa 
+            , tumhaare , tumhaarii are all scanned (- = x), as though the 
+            h in them were an aspirator [do-chashmii he]. 
+            Similarly, the familiar ko form tumhe;N 
+            [tumhe;N] and the emphatic form tumhii;N [tumhii;N] 
+            are both scanned (- x), though they are usually written with h 
+            (that is, gol he ) rather than [do-chashmii 
+            he].
+          Once in a while such consonant clusters 
+            may be scanned normally, as two separate consonants. But this is quite 
+            rare. 
+
+            4.4 == Irregular Arabic words
+
+          al 
+            CONSTRUCTIONS: Some words of Arabic origin are extraordinarily 
+            irregular. Many such words begin with either baa 
+            [baa] or fiil [fiil] in their written forms, 
+            though the long vowels are not reflected in pronunciation; two of 
+            the most common, for example, are baalkul and 
+            fiil;haal , pronounced as though they were written 
+            [bilkul] and [fil;haal]. Words like these are really specially constructed 
+            phrases joined by the particle al [al]. They 
+            have been discussed in Section 3.4. 
+
+          WORDS ENDING 
+            WITH [tanviin]: Some Arabic adverbs used in Urdu end 
+            in tanviin [tanviin], a mark which consists 
+            of two small diagonal [zabar]-like slashes following just atop an 
+            a [alif]. Words which have the [tanviin] are 
+            pronounced and scanned as though instead of a 
+            [alif] they ended with the syllable an [an]. 
+            Common examples include faura:n, yaqiina:n, :zaahira:n 
+            , pronounced and scanned as [fau-ra:n], [ya-qii-na:n], and [:zaa-hi-ra:n]. 
+
+          In a few words the [tanviin] sits 
+            atop a taa-e mudavvarah [taa-e mudavvarah] rather 
+            than an a [alif]. In such words the [taa-e mudavvarah] 
+            and the [tanviin] join to become a word-final syllable pronounced 
+            and scanned as tan [tan]. Words of this kind 
+            include ishaarata:n [i-shaa-ra-ta:n] and iraadata:n 
+            [i-raa-da-ta:n]. 
+          WORDS WITH 
+            dagger-[alif]: Dagger-[alif] when it appears over 
+            a consonant in certain Arabic words, as in ra;hm;aan 
+            [ra;hm;aan], is only orthographically different from ordinary [alif]. 
+            It looks like a small suspended dagger, and the [alif] sound follows 
+            the consonant it sits over. It is scanned and pronounced as though 
+            it were a normal [alif]. 
+          Dagger-[alif] also occurs over ii 
+            (that is, the letter chho;Tii ye ). In this 
+            case the dagger-[alif] and the ii together form 
+            one letter, a vowel, as in lail;aa [lail;aa]. 
+            This vowel is usually pronounced and scanned as though it were an 
+            [alif]. When a word-final vowel of this kind is followed by an [i.zaafat], 
+            however, it is sometimes scanned as though it were equivalent to ii 
+            rather than to [alif]. See Section 3.2 
+            for discussion of [i.zaafat] following ii .
+          WORD-FINAL 
+            [hamzah]: Some Arabic words ending in a 
+            [alif] may be written with a )) [hamzah] after 
+            the [alif]. This [hamzah] is usually omitted entirely; even if it 
+            is written, it is VERY rarely pronounced or scanned. If it is ever 
+            scanned, it becomes an independent short syllable. Words like umaraa)) 
+            [u-ma-raa))] or ((ulamaa)) [((u-la-maa))] may 
+            have this kind of [hamzah]. A list of words which may have this word-final 
+            [hamzah] appears in .sih;h;hat-e 
+            alfaa:z , pp. 56-57. 
+          In a few Arabic words, o 
+            or a [alif] may (rarely) occur within the word 
+            as a "chair" for )) [hamzah], but it is ignored 
+            when scanning. Such words include the following; they are pronounced 
+            and scanned as though the long vowels were merely [zabar] or [pesh]: 
+            taa))'a;s;sur [ta-))a;s-;sur]; taa))'ssuf 
+            [ta-))as-suf]; taa))'ammul [ta-))am-mul];muu))'a;s;sir 
+            [mu-))a;s-;sir]; muu))'addab [mu-))ad-dab]; 
+            muu))'a;z;zin [mu-))a;z-;zin], all scanned (- 
+            = =); mutaa))'a;s;sir [mu-ta-))a;s-;sir], scanned 
+            (- - = =); jur))at [jur-))at], scanned (= =).
+          In each of these words the )) 
+            [hamzah] begins a new syllable, thus observing our rule that [hamzah] 
+            can never be the second letter in a syllable. Nowadays, however, the 
+            [hamzah] in such words is sometimes not even written, though its effects 
+            on scansion are still very much there. 
+          In a few other words containing 
+            a [alif] as a chair for [hamzah] within the 
+            word, it is the [hamzah] that drops out of pronunciation, scansion, 
+            and often orthography too, while plain [alif] remains. These words 
+            include: maa));xu;z [maa))-;xu;z] scanned (= =); 
+            and maa))muun [maa))-muu-n] scanned (= = -). 
+
+          WORDS WITH 
+            [kha;Rii zer]: The very few Arabic words with kha;Rii 
+            zer [khaRii zer], a tiny vertical slash the size of ordinary 
+            [zer] under word-final h [chho;Tii he], are 
+            pronounced and scanned as though the word-final h 
+            with the [kha;Rii zer] under it were equivalent to hii 
+            [hii]. The VERY few words with do zer [do zer], 
+            two tiny slashes, under their word-final consonants, are pronounced 
+            and scanned as though the word-final consonant were followed by in 
+            [in]. 
+          Most of the words described in this 
+            section are quite RARE in Urdu poetry, and are mentioned mainly for 
+            the sake of completeness, so that the student who comes upon one unexpectedly 
+            for the first time will not be dismayed. The student should also remember 
+            that the great name of God, all;aah [al-l;aa-h], 
+            is always written in stylized orthography, and may be scanned either 
+            (= = -) or, less commonly, (= =). 
+          In dealing with such irregular words, 
+            it is often helpful to have a feel for which language a given strange 
+            word is likely to come from. Remember that the eight letters ;s 
+            , ;z , .s , .z , :t , :z , (( , q [;s, ;z, .s, .z, :t, :z, ((, 
+            q] originate mostly in Arabic. By contrast, the three letters p 
+            , ch , g [p, ch, g] are not found in Arabic, and words containing 
+            them will not be Arabic. The letter zh , [zh] 
+            quite rare in Urdu, originates only in Persian. The three retroflex 
+            consonants ;T , ;D , ;R [;T, ;D, ;R] come only 
+            from the Indic side, as do all aspirated sounds except that of sh 
+            [sh].
+
+       -- meter 
+        book index -- Ghalib sitemap -- Mir 
+        sitemap -- FWP's main 
+        page -- 
+

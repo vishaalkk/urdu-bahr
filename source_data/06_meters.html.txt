@@ -1,0 +1,513 @@
+
+
+   06_meters
+
+      @import "../stylesheets/comm2.css";
+
+          SIX == METERS
+          *6.1 
+            == The meter list*
+            *6.2 == Mir's "Hindi" 
+            meter*
+            *6.3 
+            == The rubaa((ii meters* 
+
+          A systematic discussion of Urdu 
+            meter, or ba;hr [ba;hr], would take us into 
+            the thick of Arabic and Persian poetic theory. As in the case of the 
+            afaa((iil , we must refer the theoretically-minded 
+            student to the works suggested in the Bibliography. 
+            For practical purposes, we offer a list of the meters commonly used 
+            in Urdu, with their full technical names, in an order designed for 
+            easy reference: starting with meters with the greatest number of initial 
+            long syllables, and ending with those with the fewest. This list is 
+            not quite complete, but the meters not included in it are very rare 
+            indeed. In the interest of simplicity, rare variants permissible within 
+            certain meters are not shown. Classical poetry is basically confined 
+            to the meters we have given; modern na:zm [na:zm], 
+            of course, often takes liberties with the traditional meters, or even 
+            rejects them entirely. 
+          We have shown the division of the 
+            meters into feet. The feet of course correspond to the [afaa((iil] 
+            described in Chapter 5. Note that all Urdu 
+            meters end with a long syllable--after which a short "cheat syllable" 
+            is permitted to occur, at the poet's pleasure, in almost all meters--and 
+            that three short syllables may never occur in succession. 
+          For convenience in reference, the 
+            meters are arranged in order according to their number of initial 
+            long syllables, from the ones with most initial long syllables to 
+            the ones with fewest.
+
+            6.1 == The meter list
+          1 = = = /= - = 
+            / - = = 
+            { hazaj musaddas a;xram ashtar ma;h;zuuf } [hazaj 
+            musaddas a;xram ashtar ma;h;zuuf]. May be used with #9. 
+          2 = = / - = = // = = / - 
+            = = 
+            { mutaqaarib mu;samman a;sram } [mutaqaarib 
+            mu;samman a;sram]. Has caesura. 
+          3 = = - = / = 
+            = - = / = = - = / = = - = 
+            { rajaz mu;samman saalim } [rajaz 
+            mu;samman saalim] 
+          4 = = - / = - 
+            = = // = = - / = - = = 
+            { mu.zaari(( mu;samman a;xrab } [mu.zaari(( 
+            mu;samman a;xrab]. Has caesura. 
+          5 = = - / = - 
+            = - / - = = - / = - = 
+            { mu.zaari(( mu;samman a;xrab makfuuf ma;h;zuuf 
+            } [mu.zaari(( mu;samman a;xrab 
+            makfuuf ma;h;zuuf] 
+          6 = = / - - = 
+            / = = / = = / = = / - - = / = = / = = 
+            { mutadaarik mu;samman mu.zaa((af maq:tuu(( ma;xbuun 
+            } [mutadaarik mu;samman mu.zaa((af 
+            maq:tuu(( ma;xbuun]. Very rare. May also be used in a flexible form 
+            in which any odd-numbered long may be replaced by two shorts. 
+          7 = = - / - = 
+            = = // = = - / - = = = 
+            { hazaj mu;samman a;xrab } 
+            [hazaj mu;samman a;xrab]. Has caesura.  
+          8 = = - / - = 
+            = - / - = = - / - = = 
+            { hazaj mu;samman a;xrab makfuuf ma;h;zuuf } 
+            [hazaj mu;samman a;xrab makfuuf ma;h;zuuf]  
+
+              A note for those with theoretical interests: Mir's ghazal M{618} is in this meter. In its first line, the two short syllables in the middle of the line are replaced by one long syllable: din duurii chaman me;N jo ham shaam kare;Nge . This is the kind of thing that readily happens in the rubaa((ii meters (see section 6.3 below); and indeed, this meter is very close to the first ruba'i meter in the list. In several decades of ghazal reading, this one line is the only such example in this meter that I have ever seen. It's rare, but it's there. But since it's so rare, I cannot formulate a practical rule about when to expect it. I have discussed the theory of this with S. R. Faruqi (July 2017); he advises me to refer serious students of metrical theory to the chapter on taskiin-e ausa:t in his book ((aruu.z aahang aur bayaan . For another example of  taskiin-e ausa:t see {1722,6}. Another Mirian example: {1768,7}.
+
+          9 = = - / - = 
+            - = / - = = 
+            { hazaj musaddas a;xrab maqbuu.z ma;h;zuuf } 
+            [hazaj musaddas a;xrab maqbuu.z ma;h;zuuf]. May be used with #1. 
+          10 = - = = / = 
+            - = = / = - = = / = - =  
+            { ramal mu;samman ma;h;zuuf } 
+            [ramal mu;samman ma;h;zuuf] 
+          11 = - = = / = 
+            - = = / = - = 
+            { ramal musaddas ma;h;zuuf } 
+            [ramal musaddas ma;h;zuuf]
+          12 = - = / = - 
+            = / = - = / = - = / = - = / = - = / = - = / = - = 
+            { mutadaarik mu;samman mu.zaa((af saalim } 
+            [mutadaarik mu;samman mu.zaa((af saalim]. Sometimes used with only 
+            four feet; in this case the [mu.zaa((af] is dropped from its name. 
+
+          13 = - = / = - 
+            = / = - = / = 
+            { mutadaarik mu;samman maq:tuu(( ma;h;zuuf } 
+            [mutadaarik mu;samman maq:tuu(( 
+            ma;h;zuuf] 
+          14 =* - = = / 
+            - = - = / = = 
+            { ;xafiif musaddas ma;xbuun ma;h;zuuf maq:tuu(( 
+            } [;xafiif musaddas ma;xbuun 
+            ma;h;zuuf maq:tuu((]. May be used with #15. *The first syllable is 
+            properly long, but may be replaced with a short. 
+          15 =* - = = / 
+            - = - = / - - = 
+            { ;xafiif musaddas ma;xbuun ma;h;zuuf } [;xafiif 
+            musaddas ma;xbuun ma;h;zuuf]. May be used with #14. *The first syllable 
+            is properly long, but may be replaced with a short. 
+          16 =* - = = / 
+            - - = = / = = 
+            { ramal musaddas ma;xbuun ma;h;zuuf maq:tuu(( 
+            } [ramal musaddas ma;xbuun 
+            ma;h;zuuf maq:tuu((]. May be used with #17. *The first syllable is 
+            properly long, but may be replaced with a short. 
+          17 =* - = = / 
+            - - = = / - - = 
+            { ramal musaddas ma;xbuun ma;h;zuuf } [ramal 
+            musaddas ma;xbuun ma;h;zuuf]. May be used with #16. *The first syllable 
+            is properly long, but may be replaced with a short. 
+          18 =* - = = / 
+            - - = = / - - = = / = = 
+            { ramal mu;samman ma;xbuun ma;h;zuuf maq:tuu(( 
+            } [ramal mu;samman ma;xbuun 
+            ma;h;zuuf maq:tuu((]. May be used with #19. *The first syllable is 
+            properly long, but may be replaced with a short. 
+          19 =* - = = / 
+            - - = = / - - = = / - - = 
+            { ramal mu;samman ma;xbuun ma;h;zuuf } [ramal 
+            mu;samman ma;xbuun ma;h;zuuf]. May be used with #18. *The first syllable 
+            is properly long, but may be replaced with a short. 
+          20 = - = / - = 
+            = = // = - = / - = = = 
+            { hazaj mu;samman ashtar } [hazaj 
+            mu;samman ashtar]. Has caesura. 
+          21 = - = / - = 
+            - = // = - = / - = - = 
+            { hazaj mu;samman ashtar maqbuu.z } 
+            [hazaj mu;samman ashtar maqbuu.z]. Has caesura. 
+          22 = - - = / = 
+            - = // = - - = / = - = 
+            { munsari;h mu;samman ma:tvii maksuuf } 
+            [munsari;h mu;samman ma:tvii maksuuf]. Has caesura. 
+          23 = - - = / = 
+            - = - / = - - = / = 
+            { munsari;h mu;samman ma:tvii man;huur } 
+            [munsari;h mu;samman ma:tvii man;huur] 
+          24 = - - = / = 
+            - - = / = - = 
+            { sarii(( musaddas ma:tvii maksuuf } 
+            [sarii(( musaddas ma:tvii maksuuf] 
+          25 = - - = / - 
+            = - = // = - - = / - = - = 
+            { rajaz mu;samman ma:tvii ma;xbuun } 
+            [rajaz mu;samman ma:tvii ma;xbuun] Has caesura. 
+          26 - = = = / - 
+            = = = / - = = = / - = = = 
+            { hazaj mu;samman saalim } [hazaj 
+            mu;samman saalim]. Not allowed to have extra unscanned short syllable 
+            at the end. 
+          27 - = = = / - 
+            = = = / - = = 
+            { hazaj musaddas ma;h;zuuf } 
+            [hazaj musaddas ma;h;zuuf] 
+          28 - = = / - = 
+            = / - = = / - = = 
+            { mutaqaarib mu;samman saalim } 
+            [mutaqaarib mu;samman saalim] 
+          29 - = = / - = 
+            = / - = = / - = 
+            { mutaqaarib mu;samman ma;h;zuuf } 
+            [mutaqaarib mu;samman ma;h;zuuf] 
+          30 - = - / = = 
+            / - = - / = = / - = - / = = / - = - / = = 
+            { mutaqaarib mu;samman mu.zaa((af maqbuu.z a;slam 
+            } [mutaqaarib mu;samman mu.zaa((af 
+            maqbuu.z a;slam] 
+          31 - = - / = = 
+            / - = - / = = / - = - / = = 
+            { mutaqaarib musaddas mu.zaa((af maqbuu.z a;slam 
+            } [mutaqaarib musaddas mu.zaa((af 
+            maqbuu.z a;slam] 
+          32 - = - = / - 
+            = - = / - = - = / - = - = 
+            { hazaj mu;samman mazbuu.z } 
+            [hazaj mu;samman maqbuu.z]
+          33 - = - = / - 
+            - = = / - = - = / = = 
+            { mujta;s mu;samman ma;xbuun ma;h;zuuf maq:tuu(( 
+            } [mujta;s mu;samman ma;xbuun 
+            ma;h;zuuf maq:tuu((]. May be used with #34. 
+          34 - = - = / - 
+            - = = / - = - = / - - = 
+            { mujta;s mu;samman ma;xbuun ma;h;zuuf } 
+            [mujta;s mu;samman ma;xbuun ma;h;zuuf]. May be used with #33. 
+          35 - = - = / - 
+            - = = / - = - = / - - = = 
+            { mujta;s mu;samman ma;xbuun } 
+            [mujta;s mu;samman ma;xbuun]. Does not have caesura. 
+          36 - - = - / = 
+            - = = // - - = - / = - = = 
+            { ramal mu;samman mashkuul } [ramal 
+            mu;samman mashkuul] Has caesura. 
+          37 - - = - = / 
+            - - = - = / - - = - = / - - = - = 
+            { kaamil mu;samman saalim } 
+            [kaamil mu;samman saalim] 
+          Each meter in the list above is described by a series 
+            of Arabic terms, the first of which is the name of the basic meter 
+            itself. The second is either mu;samman [mu;samman], 
+            describing a meter with four feet, or musaddas 
+            [musaddas], describing a meter with three feet. The rest of the terms 
+            describe the modifications, zi;haafaat [zi;haafaat], 
+            by which the basic or saalim meter has been 
+            converted into the particular meter being described. 
+          At the end of a line of poetry in 
+            any of these meters, an extra word-final short syllable may be present if the poet 
+            so chooses. This word-final short syllable is not scanned. Such a syllable almost 
+            always consists of a true  one-letter short syllable, or of a syllable 
+            of the form { )) [hamzah] + vowel}. This short 
+            "cheat syllable" is permitted in all the meters except #26. 
+          A number of meters on the above list have 
+            a natural "caesura," or break, halfway through each line. This is not formally a "caesura" in the Western metrical sense, so it's technically a kind of "quasi-caesura": but for convenience it is here called a "caesura." All such meters 
+            have the following pattern of feet: foot A, foot B; (break); foot A, 
+            foot B. In these meters, an extra word-final short syllable, unscanned, may be present at the end of the first half of the line, just before the (quasi-)caesura. 
+            Meters which permit this extra unscanned word-final short syllable before the 
+            caesura are: #2, #4, #7, #20, #21, #22, #25, #36. Note that #35 does 
+            not have such a caesura. The caesura was not traditionally recognized 
+            in Urdu-Persian metrical theory; it was first explored by Hasrat Mohani 
+            [ ;hasrat mohaanii ] in ma((aa))ib-e 
+            su;xan [ma((aa))iib-e su;xan] (Kanpur, 1941), and has since been 
+            studied by S. R. Faruqi in ((aruu.z 
+            aahang aur bayaan .
+          Most traditional genres of poetry 
+            may be written in any meter. The ;Gazal [Gazal], 
+            qa.siidah [qa.siidah], and mar;siyah 
+            [mar;siyah] offer this freedom, as do most of the minor genres. The 
+            ma;snavii [ma;snavii] is traditionally supposed 
+            to be written in one of the following meters: #1 with #9; #11; #14 
+            with #15; #16 with #17; #24; #27; #28; #29. But this is not binding, 
+            only customary. Permissible meters for the rubaa((ii 
+            [rubaa((ii], however, are very clearly spelled out; see Section 
+            6.3 for details. Free verse, or aazaad na:zm 
+            [aazaad na:zm], tends to use either #28 or "Hindi" meter (see Section 
+            6.2). 
+          You might have noticed certain pairs 
+            of meters-- #1 and #9, #14 and #15, #16 and #17, #18 and #19, #33 
+            and #34-- which differ only in that the next-to-last syllable consists 
+            of one long (=) in the first member of the pair, which is replaced 
+            by two shorts (- -) in the second member. From a practical point of 
+            view, it does indeed seem as though these are permutations of a single 
+            meter. But from a theoretical point of view, they are quite separate; 
+            poems are sometimes written using only one member of the pair. So 
+            we have shown them separately, but have also indicated their close 
+            affiliation. 
+          Sometimes, when scanning, the student 
+            may encounter quite deviant-seeming poems, in which often almost every single 
+            line seems different from the next. This might occur in dealing with 
+            the flexible variant form of #6. More common than this form, however, 
+            is Mir's "Hindi" meter, which will be dealt with below. 
+
+            6.2 == Mir's "Hindi" meter
+          Mir introduced, or at least used 
+            extensively and made popular, a meter very unlike the meters of conventional 
+            prosody. (In fact the meter was apparently first used by Mir Jafar Zatalli [miir 
+            ja((far za:tallii] (d. 1712) in a few of his longish satirical poems.) 
+            Although expressible in terms of the standard afaa((iil 
+            , this meter is highly irregular. The lines are equal in length in 
+            that they all have eight feet, but they do not always contain an equal 
+            number of syllables. Hardly anything is absolutely fixed in this meter 
+            except that the last syllable in each line must be long, short syllables 
+            must occur in pairs, and the short syllables in each pair may be separated 
+            by no more than one long. 
+          Usually the first four feet contain 
+            eight long syllables or their equivalent (with two short syllables 
+            counted as equal to one long), and the last four feet contain seven 
+            long syllables, for a total line equal to fifteen long syllables. 
+            Yet other variations of this meter, used by Mir and others, contain 
+            fourteen long syllables (seven plus seven) or sixteen long syllables 
+            (eight plus eight). Shorter variants of it too are sometimes seen. As with other meters, an extra short syllable, 
+            unscanned, is allowed at the end of the line.
+           There has been a great deal of 
+            controversy over whether this meter was invented by Mir--or rather, 
+            as it now appears, by Zatalli--or somehow already exists within the 
+            conventional framework, or is a Hindi meter modified and adapted for 
+            Urdu. Most prosodists now hold the latter view; certainly this is 
+            basically a moric meter like many Indic meters, rather than a positional 
+            one like those of the traditional Perso-Arabic system. Within the 
+            traditional system, this meter could be called { mutaqaarib 
+            mu;samman mu.zaa((af } [mutaqaarib mu;samman mu.zaa((af] with 
+            varying modifications. A half-length form of it which has been described 
+            as { mutaqaarib mu;samman a;sram a;slam abtar 
+            } [mutaqaarib mu;samman a;sram a;slam abtar] is also sometimes used 
+            in Urdu. On the whole, however, these theoretical discussions are 
+            not too helpful to the student who wants to use the meter in practice. 
+
+          Here then is a form of ostensive 
+            definition of Mir's "Hindi" meter: a list of the various configurations 
+            which commonly occur in its first four feet. They are shown in the 
+            traditional [afaa((iil] patterns into which they could be broken: 
+
+          a) = = / = = / = = / = = 
+            b) = = / = = / = - / - = = 
+            c) = = / = - / - = = / = = 
+            d) = = / = - / - = - / - = = 
+            e) = - / - = = / = = / = = 
+            f) = - / - = = / = - / - = = 
+            g) = - / - = - / - = = / = = 
+            h) = - / - = - / - = - / - = = 
+          Each of these patterns contains 
+            the equivalent of eight long syllables. Usually the second half of 
+            the line contains the equivalent of seven long syllables. Its customary 
+            patterns differ from those given above only by the omission of the 
+            final long syllable.
+          Another form of definition is that 
+            used by Russell and 
+            Matthews and Shackle. It 
+            is an admirably simple one. It envisions the meter as generated by 
+            a pattern like the following, in which every even-numbered long syllable 
+            except the eighth can be replaced at will by two short syllables: 
+
+          = ( = ) / = ( = ) / = ( = ) / = 
+            = // = ( = ) / = ( = ) / = ( = ) / =
+          This is a convenient and powerful 
+            way to think of the meter, and offers a breakdown of syllables more 
+            simple and lucid than that offered by the regular [afaa((iil]--as 
+            can be seen by comparing it with patterns (a) through (h) shown above. 
+            We recommend it to the student as the best general analytical notion 
+            of this meter.
+          However, both of the above attempts 
+            at schematization eventually break down. Mir simply uses this meter 
+            in more complex and idiosyncratic ways than can be shown in these 
+            or any diagrams. Sometimes he does break the eighth long syllable 
+            into two shorts, thus disposing of the "caesura" as a reliable metrical 
+            constant; sometimes his word boundaries themselves flow over the "caesura," 
+            thus disposing of it as a semantic organizing principle. (And in any 
+            case the break in this meter never permits an extra unscanned short 
+            syllable before it, as do the more solid caesuras in some of the regular meters.) 
+            It's true that more often than not the break does seem to be there, 
+            but it is certainly optional rather than compulsory. Here is an example 
+            from Mir's fifth divan [M{1590,1}] which abolishes the caesura on all levels: 
+          { shahr se yaar 
+            savaar hu))aa jo savaad me;N ;xuub ;Gubaar hai aaj } 
+          This line can be broken up as follows: 
+
+          [shah-r se yaa-r 
+            sa-vaa-r hu-))aa jo sa-vaa-d 
+            me;N ;xuu-b ;Gu-baa-r hai aa-j]
+           = - - /= - - /= - - /= - - /= - 
+            - /= - - /= - - /= (-) 
+          This is not the only line in which 
+            Mir violates the caesura metrically, or in which he violates it semantically, 
+            but it is one of the few in which he violates it both ways at once. 
+            It seems also to be the only line in any of his divans in which he 
+            breaks every single even-numbered long syllable into two short syllables. 
+            (By contrast, there are a number of lines in which all the syllables are long; one example is the second line of M{1537,1}; another is the first line of M{1706,7}.)
+          Moreover, note that in this meter short syllables 
+            can also sometimes occur in a kind of syncopated pattern, (- = -), 
+            which is not allowed for in any of the above diagrams. An example 
+            of this syncopated pattern appears in the fourth verse of Ghazal 
+            Six, by Jur'at, in the Exercises. Even in this syncopated form 
+            short syllables do, however, always occur in pairs, and cannot be separated by more than one long syllable. Examples from Mir: M{1177,5}; M{1590,2};  M{1590,7}; M{1650,3}; M{1658,4}; M{1714,6}; M{1741,3}. A problematical case, with extensive throretical disdiscussion by SRF: M{1624,1}.
+          What then do you really need to 
+            know about this meter? Basically, that it can be recognized by its 
+            remarkable length--hardly any of the regular meters are as long--and 
+            its alarmingly erratic syllable pattern. It can be generally understood 
+            according to Russell's model, with suitable reservations about the 
+            caesura (not always present), the pairs of short syllables (once in a while they 
+            have a long between them) and the line length (though in different poets' versions it can vary by a syllable 
+            or two, and truncated versions of the meter can also be used). It's 
+            a very rhythmic and lively meter, a great pleasure to recite; with 
+            just a bit of practice, it becomes quite familiar. Here is the most famous, classic example of it: M{07}. The only Ghalibian example I have found: {267x}.
+          For a thorough discussion of Mir's own use of this meter, see ba;hr-e miir , pp. 175-187, in the preface to volume 1 of shi((r-e shor-angez , by Shamsur Rahman Faruqi (New Delhi: Taraqqi Urdu Bureau, 2006).
+
+            6.3 == The rubaa((ii 
+            meters
+          The rubaa((ii 
+            [rubaa((ii], or quatrain, is, like most genres of Urdu poetry, adopted 
+            from Persian, and has an extremely rigid metrical scheme. The [rubaa((ii] 
+            is written in a modified form of the hazaj [hazaj] 
+            meter. There are twenty-four fixed forms prescribed for it, and a 
+            [rubaa((ii] may contain any four of them. However, twelve of the twenty-four 
+            are distinguished only by the presence of a final short syllable that 
+            in fact need not be scanned at all, so in fact there are only twelve 
+            genuine forms. Of these, only six have been commonly used in Urdu. 
+
+          All the rubaa((ii 
+            forms consist of lines with the metrical equivalent of ten long syllables. All these lines have four feet, and the last foot is always 
+            shorter than the others. These lines have no caesura. The first two syllables in each line, and the last syllable of course, are 
+            always long. As in most other meters, an extra unscanned short syllable is allowed at the very end of the line. 
+          For the third, the sixth, and/or the ninth long syllable, two short syllables may be substituted at will. Also at will, in the case of the sixth long syllable only, these pairs of short syllables may be divided so as to surround the long syllable before them. Thus long syllables five and six can be changed from = = not only into = - - , but also into - = - . 
+          Here is a list of the rubaa((ii 
+            forms used in Urdu, roughly in order of popularity. All the meter 
+            names start with hazaj mu;samman [hazaj mu;samman... 
+
+          POPULAR: [hazaj 
+            mu;samman... 
+          1 = = - / - = = - / - = 
+            = - / - = 
+            ...a;xrab makfuuf majbuub] 
+            { a;xrab makfuuf majbuub }... 
+          2 = = - / - = = - / - = 
+            = = / =
+            ...a;xrab makfuuf abtar] { a;xrab makfuuf 
+            abtar }... 
+          3 = = - / - = - = / - = 
+            = = / =
+            ...a;xrab maqbuu.z abtar] { a;xrab maqbuu.z 
+            abtar }... 
+          4 = = - / - = - = / - = 
+            = - / - =
+            ...a;xrab maqbuu.z makfuuf majbuub] { a;xrab maqbuu.z 
+            makfuuf majbuub }... 
+          5 = = = / = - = / - = = 
+            - / - =
+            ...a;xram ashtar makfuuf majbuub] { a;xram ashtar 
+            makfuuf majbuub }... 
+          6 = = = / = - = / - = = 
+            = / = ...a;xram ashtar abtar] { a;xram ashtar 
+            abtar }... 
+          RARE: 
+            [hazaj mu;samman... 
+          7 = = - / - = = = / = = 
+            = / = 
+            ...a;xrab a;xram abtar] { 
+            a;xrab a;xram abtar }... 
+          8 = = - / - = = = / = = 
+            - / - = 
+            ...a;xrab majbuub] { a;xrab majbuub }... 
+          9 = = = / = = = / = = - 
+            / - = 
+            ...a;xram a;xrab majbuub] { a;xram a;xrab majbuub 
+            }... 
+          10 = = = / = = = / = = = 
+            / = 
+            ...a;xram abtar] { a;xram abtar }... 
+          11 = = = / = = - / - = = = / = ...a;xram 
+            a;xrab abtar] { a;xram a;xrab abtar }... 
+          12 = = = / = = - / - = = 
+            - / - = 
+            ...a;xram a;xrab makfuuf majbuub { a;xram a;xrab 
+            makfuuf majbuub }... 
+          Inspired by Russell's simplification 
+            of Mir's meter, here is what might be called the Pritchett formulation 
+            of rubaa((ii meter: a set of ten long syllables 
+            which may be grouped into (nontraditional) feet of three, three, three, 
+            and one long syllables. The final long in each foot may be freely 
+            replaced by two shorts, and the second foot ONLY may be freely replaced 
+            by (= - = -). This is what it looks like in schematic form: 
+
+              1
+              2
+              3
+              /
+              4
+              5
+              6
+              /
+              7
+              8
+              9
+              /
+              10
+
+              =
+              =
+              (=)
+              /
+              =
+              =
+              (=)
+              /
+              =
+              =
+              (=)
+              /
+              =
+
+              (- -)
+              /
+
+              (- -)
+              /
+
+              (- -)
+              /
+
+              /
+              (=
+              -
+              = -)
+              /
+
+              /
+
+          It seems that this diagram will 
+            generate all the rubaa((ii meters, and it certainly 
+            has the merit of conciseness. At a basic level, however, what you really need to know about ruba'i meter is that a poem four lines long with 
+            a rhyme scheme AABA or AAAA is most probably going to turn out to 
+            BE a ruba'i. Then you can look it up in this book until you get 
+            used to it. In our experience these meters take longer to get used to than 
+            most meters, but their subtlety and sophistication help to make the ruba'i what it is.
+          Mir has one ghazal that uses rubaa((ii meter: M{1267}. No other classical ghazal poet has any, according to S. R. Faruqi.
+
+       -- meter 
+        book index -- Ghalib sitemap -- Mir 
+        sitemap -- FWP's main 
+        page -- 
+

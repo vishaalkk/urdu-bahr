@@ -1,0 +1,320 @@
+<!-- ===================== METER TAB ===================== -->
+<style>
+/* Meter surface styles (§5.5, §6.1, §6.3, §6.7, §6.8) */
+.meter-head {
+  margin-bottom: var(--sp-4);
+}
+.meter-head h1 {
+  margin: 0 0 var(--sp-1);
+}
+.meter-head .lede {
+  margin-bottom: var(--sp-3);
+}
+.subpanel:not(:first-of-type) {
+  display: none;
+}
+.explainer-card {
+  padding: var(--sp-3) var(--sp-4);
+  margin-bottom: var(--sp-4);
+}
+.explainer-p {
+  margin: var(--sp-1) 0;
+}
+.fam-row, .meter-row {
+  margin: var(--sp-2) 0;
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--line);
+  background: var(--bg2);
+  border-radius: var(--radius-md);
+  transition: border-color 150ms ease-out, background 150ms ease-out;
+}
+.fam-row.expanded, .meter-row.expanded {
+  border-color: var(--gold);
+}
+.fam-header, .meter-row-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  cursor: pointer;
+}
+.fam-label-wrap {
+  flex: 1;
+  min-width: 0;
+}
+.fam-toggle-btn {
+  background: transparent;
+  border: none;
+  font-size: var(--fs-lg);
+  color: var(--dim);
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+.fam-toggle-btn:hover {
+  color: var(--gold);
+}
+.fam-details, .meter-row-details {
+  margin-top: var(--sp-3);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--line);
+}
+.fam-section-label {
+  margin: var(--sp-2) 0 var(--sp-1);
+  font-size: var(--fs-xs);
+  color: var(--dim);
+}
+.fam-strip-wrap, .meter-strip-wrap {
+  margin: var(--sp-1) 0 var(--sp-2);
+}
+.fam-allowance {
+  margin: var(--sp-2) 0;
+  font-style: italic;
+  color: var(--dim);
+  font-size: var(--fs-xs);
+}
+.chip.lit {
+  outline: 2px solid var(--gold) !important;
+  background: var(--bg3) !important;
+}
+.ear-sing-item {
+  padding: var(--sp-2) 0;
+  border-top: 1px dashed var(--line);
+}
+.ear-sing-item:first-child {
+  border-top: none;
+}
+.ear-sing-header {
+  margin: 0;
+  gap: var(--sp-2);
+  align-items: flex-start;
+  display: flex;
+}
+.ear-sing-header-sub {
+  margin-top: var(--sp-1);
+}
+.ear-verse-text {
+  font-size: var(--fs-verse);
+  line-height: var(--lh-verse);
+}
+.ear-verse-text.urdu {
+  font-size: var(--fs-urdu);
+  line-height: var(--lh-urdu);
+  direction: rtl;
+}
+.ear-verse-text.deva {
+  font-size: var(--fs-deva);
+  line-height: var(--lh-deva);
+}
+.ear-sing-host {
+  margin-top: var(--sp-1);
+}
+.fam-variants-wrap {
+  margin-top: var(--sp-3);
+  padding-top: var(--sp-2);
+  border-top: 1px dashed var(--line);
+}
+.fam-action-row {
+  margin-top: var(--sp-3);
+  display: flex;
+  justify-content: flex-end;
+}
+.drill-card {
+  margin: var(--sp-4) 0;
+}
+.drill-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--sp-1);
+}
+.drill-title {
+  margin: 0;
+  font-size: var(--fs-lg);
+}
+.drill-score {
+  color: var(--dim);
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+  margin-left: auto;
+}
+.drill-prompt {
+  margin: 0 0 var(--sp-3);
+}
+.drill-strip {
+  margin: var(--sp-2) 0;
+  min-height: 32px;
+}
+.drill-answers-row {
+  display: flex;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+}
+.drill-ans-btn {
+  flex: 1;
+}
+.btn.ans-ok {
+  border-color: var(--ok) !important;
+  color: var(--ok) !important;
+}
+.btn.ans-no {
+  border-color: var(--no) !important;
+  color: var(--no) !important;
+}
+.fb {
+  min-height: 36px;
+  margin-top: var(--sp-3);
+}
+.fb-text {
+  font-size: var(--fs-base);
+  font-weight: 500;
+}
+.fb-next-btn {
+  margin-top: var(--sp-2);
+}
+.drill-choice-btn {
+  width: 100%;
+  margin: var(--sp-1) 0;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+  min-height: 48px;
+  padding: var(--sp-2) var(--sp-3);
+}
+.drill-choice-btn.urdu-choice {
+  direction: rtl;
+  text-align: right;
+}
+.drill-choice-verse {
+  font-size: var(--fs-base);
+}
+.drill-choice-verse.urdu {
+  font-size: var(--fs-verse-lg);
+}
+.weak-card {
+  margin-top: var(--sp-4);
+}
+.weak-list {
+  margin-top: var(--sp-2);
+}
+.weak-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: var(--sp-1) 0;
+}
+.lookup-head-card {
+  margin-bottom: var(--sp-4);
+}
+.lookup-title {
+  margin: 0 0 var(--sp-1);
+  font-size: var(--fs-xl);
+  color: var(--gold);
+}
+.lookup-desc {
+  margin: 0 0 var(--sp-2);
+}
+.lookup-chips-row {
+  display: flex;
+  gap: var(--sp-1);
+}
+.meter-meta-notes {
+  font-size: var(--fs-xs);
+  color: var(--faint);
+  margin-top: var(--sp-1);
+}
+.meter-verses-list {
+  margin-top: var(--sp-2);
+  padding-top: var(--sp-2);
+  border-top: 1px dashed var(--line);
+}
+.go-deeper {
+  margin-top: var(--sp-5);
+}
+</style>
+
+<section id="meter-section" class="tab-view">
+  <div class="meter-head page-head">
+    <h1>Meter</h1>
+    <div class="lede dim small">Every bahr is a tune. Hear it, then learn to recognise it.</div>
+    <div class="subtabs seg" role="tablist" aria-label="Meter sub-tabs">
+      <button class="seg-btn on" role="tab" id="meterSubLearn" aria-selected="true" onclick="navigate('/meter/learn')">Learn</button>
+      <button class="seg-btn" role="tab" id="meterSubDrill" aria-selected="false" onclick="navigate('/meter/drill')">Drill</button>
+      <button class="seg-btn" role="tab" id="meterSubLookup" aria-selected="false" onclick="navigate('/meter/lookup')">Look up</button>
+    </div>
+  </div>
+
+  <!-- Subtab 1: Learn -->
+  <div id="meterPanelLearn" class="subpanel">
+    <div class="card small explainer-card">
+      <p class="explainer-p"><b class="t L">● Counting bahr</b> — one cell repeated; "3 or 4 feet" just means how many times, with the last often clipped. Count the pulses.</p>
+      <p class="explainer-p"><b class="t S">◆ Shape bahr</b> — one fixed contour, no clean repeat. Don't dissect it; hold it as a melody.</p>
+    </div>
+
+    <h3>Families of Bahrs</h3>
+    <p class="small dim">Pick a family to hear its tune sung as <b class="t L">dum</b> (long) and <b class="t S">da</b> (short), then sing along as the syllables light up.</p>
+    <div class="scroller" id="earFams"></div>
+    <div id="earPanel"></div>
+
+    <div class="note go-deeper">
+      <strong>Go deeper:</strong> <a href="#/handbook/ch5">Handbook ch. 5 — Metrical Feet ›</a> · <a href="#/handbook/ch6">Handbook ch. 6 — Meters & Bahrs ›</a>
+    </div>
+  </div>
+
+  <!-- Subtab 2: Drill -->
+  <div id="meterPanelDrill" class="subpanel">
+    <h2 class="sec">Drill 1</h2>
+    <div class="card drill-card">
+      <div class="drill-head">
+        <h3 class="drill-title">In the bahr, or limping?</h3>
+        <span class="mono tiny dim drill-score" id="iomScore">0 / 0</span>
+      </div>
+      <p class="small dim drill-prompt">A line is sung. Sometimes a syllable has been added, dropped or flipped. Judge by ear.</p>
+      <div class="row">
+        <button class="btn gold sm" onclick="iomPlay()">▶ Play</button>
+        <button class="btn ghost sm" onclick="iomPlay()">↻ again</button>
+      </div>
+      <div class="strip drill-strip" id="iomStrip"></div>
+      <div class="drill-answers-row">
+        <button class="btn ghost drill-ans-btn" id="iomBtnIn" onclick="iomAns(true)">In ✓</button>
+        <button class="btn ghost drill-ans-btn" id="iomBtnLimp" onclick="iomAns(false)">Limping ✗</button>
+      </div>
+      <div class="fb" id="iomFb"></div>
+    </div>
+
+    <h2 class="sec">Drill 2</h2>
+    <div class="card drill-card">
+      <div class="drill-head">
+        <h3 class="drill-title">Which ghazal is this?</h3>
+        <span class="mono tiny dim drill-score" id="wtScore">0 / 0</span>
+      </div>
+      <p class="small dim drill-prompt">Only the pulse plays. Pick the verse that rides on it.</p>
+      <div class="row">
+        <button class="btn gold sm" onclick="wtPlay()">▶ Play pulse</button>
+      </div>
+      <div id="wtChoices"></div>
+      <div class="fb" id="wtFb"></div>
+    </div>
+
+    <div class="card tight small weak-card" id="weakCard"></div>
+
+    <div class="note go-deeper">
+      <strong>Go deeper:</strong> <a href="#/handbook/ch8">Handbook ch. 8 — From Eye to Ear ›</a>
+    </div>
+  </div>
+
+  <!-- Subtab 3: Look up -->
+  <div id="meterPanelLookup" class="subpanel">
+    <div class="card lookup-head-card">
+      <h2 class="lookup-title">All 37 Classical Meters</h2>
+      <p class="small dim lookup-desc">Filter through classical meters, rubāʿī forms, and Hindi meters.</p>
+      <div class="lookup-chips-row">
+        <button class="chipbtn on" id="filterMeterAll" onclick="filterMeterLookup('all')">All 37</button>
+        <button class="chipbtn" id="filterMeterRubai" onclick="filterMeterLookup('rubai')">Rubāʿī</button>
+        <button class="chipbtn" id="filterMeterHindi" onclick="filterMeterLookup('hindi')">Hindi</button>
+      </div>
+    </div>
+    <div id="allMetersList">
+      <div id="allMeters"></div>
+    </div>
+  </div>
+</section>

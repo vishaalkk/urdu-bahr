@@ -1,0 +1,151 @@
+
+
+   10_ex_01_06
+
+      @import "../stylesheets/comm2.css";
+
+          TEN == EXERCISES 
+            1-6 
+          These ghazal excerpts are meant for practice. They have 
+            been taken from M. A. R. Barker and S. A. Salam, Classical 
+            Urdu Poetry, volume 1; the page numbers refer to their 
+            location in this volume. All the poems in Barker's volume 1 have been 
+            literally translated, with full explanations, in volume 2 of the same 
+            work; thus no translations will be provided here. Errors of calligraphy 
+            in Barker's edition have been corrected, and a few editing choices 
+            have been differently made. The ghazals appear in abbreviated form, 
+            with some verses omitted, but the first and last verses are always 
+            included. Scansions and explanatory notes for the ghazals are given 
+            in Chapter 11. 
+          *Ghazal 1 by Vali Dakhani, p. 92*
+            *Ghazal 2 by Khvajah Mir Dard, p. 122*
+            *Ghazal 3 by Mir, pp. 127-128*
+            *Ghazal 4 by Mir, pp. 128-129*
+            *Ghazal 5 by Mir, p. 130*
+            *Ghazal 6 by Mus'hafi, p. 178*
+
+            *Ghazal 
+            7 by Jur'at, p. 19*
+            *Ghazal 8 by Jur'at, pp. 193-194*
+            *Ghazal 9 by Atish, p. 218*
+            *Ghazal 10 by Atish, p. 218*
+            *Ghazal 11 by Zauq, p. 297*
+            *Ghazal 12 by Zauq, pp. 298-299*
+          *Ghazal 13 by Momin, p. 307*
+            *Ghazal 14 by Momin, p. 312*
+            *Ghazal 15 by Ghalib, p. 319*
+            *Ghazal 16 by Ghalib, pp. 319-320*
+            *Ghazal 17 by Ghalib, p. 321*
+            *Ghazal 18 by Ghalib, pp. 321-322*
+          *Ghazal 19 by Ghalib, pp. 324-325*
+            *Ghazal 20 by Ghalib, p. 331*
+            *Ghazal 21 by Dagh, p. 367*
+            *Ghazal 22 by Dagh, pp. 371-372*
+            *Ghazal 23 by Akbar Ilahabadi, pp. 396-397*
+            *Ghazal 24 by Iqbal, p. 425*
+
+          GHAZAL 1 by 
+            Vali Dakhani, p. 92:
+           kiyaa 
+            mujh ((ishq ne :zaalim ko aab aahistah aahistah
+            kih aatish gul ko kartaa hai gulaab aahistah aahistah
+          vafaadaarii ne dilbar 
+            kii bujhaayaa aatish-e ;Gam kuu;N
+            kih garmii daf((a kartii hai gulaab aahistah aahistah
+          ((ajab kuchh lu:tf 
+            rakhtaa hai shab-e ;xilvat me;N gulruu suu;N
+            ;xi:taab aahistah aahistah javaab aahistah aahistah
+          adaa o naaz se aataa 
+            hai vuh raushan-jabii;N ghar suu;N
+            kih jyuu;N mashriq suu;N nikle aaftaab aahistah aahistah
+          valii mujh dil me;N 
+            aataa hai ;xayaal-e yaar be-parvaa
+            kih jyuu;N a;Nkhyaa;N mane;N aataa hai ;xvaab aahistah aahistah
+
+          GHAZAL 2 by 
+            Khvajah Mir Dard, p. 122:
+          tuhmate;N 
+            chand apne ;zimme dhar chale
+            jis li))e aa))e the so ham kar chale
+          zindagii hai yaa ko))ii 
+            :tuufaan hai
+            ham to is jiine ke haatho;N mar chale
+          sham((a ke maanind 
+            ham is bazm me;N
+            chashm tar aa))e the daaman tar chale
+          kyaa hame;N kaam in 
+            gulo;N se ai .sabaa
+            ek dam aa))e idhar uudhar chale
+          dard kuchh ma((luum 
+            hai yih log sab
+            kis :taraf se aa))e the kiidhar chale
+
+          GHAZAL 3 by Mir, 
+            pp. 127-128:
+          milne 
+            lage ho der der dekhiye kyaa hai kyaa nahii;N
+            tum to karo ho .saa;hibii bande me;N kuchh rahaa nahii;N
+          buu-e gul aur rang-e 
+            gul dono;N hai;N dilkash ai nasiim
+            lek baqadr-e yak nigaah dekhiye to vafaa nahii;N
+          shikvah karuu;N huu;N 
+            ba;xt kaa itne ;Ga.zab nah ho butaa;N
+            mujh ko ;xudaa nah ;xvaastah tum se to kuchh gilaa nahii;N
+          chashm-e safed ashk-e 
+            sur;x aah-e dil-e ;hazii;N hai yaa;N
+            shiishah nahii;N hai may nahii;N abr nahii;N havaa nahii;N
+          ek faqa:t hai saadagii 
+            tis pah balaa-e jaa;N hai tuu
+            ((ishvah karishmah kuchh nahii;N aan nahii;N adaa nahii;N
+
+            GHAZAL 4 by Mir, pp. 128-129:
+          hastii apnii ;hubaab 
+            kii sii hai
+            yih numaa))ish saraab kii sii hai
+          naazukii us ke lab 
+            kii kyaa kahiye
+            pankha;Rii ik gulaab kii sii hai
+          baar baar us ke dar 
+            pah jaataa huu;N
+            ;haalat ab i.z:taraab kii sii hai
+          mai;N jo bolaa kahaa 
+            kih yih aavaaz
+            usii ;xaanah-;xaraab kii sii hai
+          miir un niim baaz aa;Nkho;N 
+            me;N
+            saarii mastii sharaab kii sii hai
+
+            GHAZAL 5 by Mir, p. 130:
+          ((ishq hamaare ;xayaal 
+            pa;Raa hai ;xvaab ga))ii aaraam gayaa
+            jii kaa jaanaa ;Ther gayaa hai .sub;h gayaa yaa shaam gayaa
+          ((ishq kiyaa so diin 
+            gayaa iimaan gayaa islaam gayaa
+            dil ne aisaa kaam kiyaa kuchh jis se mai;N naakaam gayaa
+          haa))e javaanii kyaa 
+            kyaa kahye shor saro;N me;N rakhte the
+            ab kyaa hai vuh ((ahd gayaa vuh mausam vuh hangaam gayaa
+
+            GHAZAL 6 by Mus'hafi, p. 
+            178:
+          nah vuh raate;N nah 
+            vuh baate;N nah vuh qi.s.sah kahaanii hai
+            faqa:t ik ham hai;N bistar par pa;Re aur naatavaanii hai
+          bhalaa mai;N haath 
+            dho bai;Thuu;N nah apnii jaan se kyuu;N kar
+            ;xiraam us ke me;N ik aab-e ravaa;N kii sii ravaanii hai
+          tuu yuu;N be-pardah 
+            ho jaayaa nah kar har ek ke aage
+            nayaa ((aalam hai teraa aur na))ii kaafir javaanii hai
+          nah tanhaa gul garebaa;N 
+            phaa;Rte hai;N dekh is saj ko
+            chaman me;N aab-juu bhii chaal par us kii divaanii hai
+          tirii baato;N ne to 
+            ai mu.s;hafii jii ko jalaa ;Daalaa
+            ;xudaa ke vaas:te chup rah yih kyaa aatish zabaanii hai 
+
+       -- meter 
+        book index -- Ghalib sitemap -- Mir 
+        sitemap -- FWP's main 
+        page -- 
+

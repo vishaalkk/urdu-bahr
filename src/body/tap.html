@@ -1,0 +1,19 @@
+<!-- ===================== PARKED TAP (Route #/lab/tap) ===================== -->
+<section id="tap-section" class="tab-view" style="display:none;">
+  <h2 class="sec">Tap</h2>
+  <h3>Make the rhythm with your own hand</h3>
+  <p class="small">Producing a rhythm trains the ear faster than hearing one. Tap once per syllable; hold a long twice as long as a short before the next tap.</p>
+  <div class="seg"><button id="tmEcho" class="on" onclick="setTapMode('echo')">Echo a bahr</button><button id="tmFree" onclick="setTapMode('free')">Scan by tapping</button></div>
+  <div id="tapEcho">
+    <div class="card">
+      <div class="row"><button class="btn gold" onclick="echoListen()">▶︎ Listen</button><button class="btn ghost sm" onclick="echoNew()">↻ New</button><span class="mono small" style="margin-left:auto" id="echoInfo"></span></div>
+      <p class="tiny muted" id="echoHint" style="margin:4px 0 0">Listen, then tap it back on the pad.</p>
+    </div>
+  </div>
+  <div id="tapFree" style="display:none">
+    <div class="card small">Recite a misra aloud and tap each syllable as you say it. Press <b class="t">Done</b> when finished. I'll turn your taps into = and –, then check the bahr. The final syllable's length can't be heard from taps, so it stays flexible.</div>
+  </div>
+  <div class="pad" id="pad"><span>tap</span><small id="padSub">&nbsp;</small></div>
+  <div class="row" style="justify-content:center"><button class="btn sm" onclick="tapReset()">Clear</button><button class="btn gold sm" onclick="tapDone()">Done</button></div>
+  <div id="tapOut"></div>
+</section>

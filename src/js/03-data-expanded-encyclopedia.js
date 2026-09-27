@@ -1,0 +1,12 @@
+/* ================= DATA: EXPANDED ENCYCLOPEDIA ================= */
+const HANDBOOK_DATA = /*@@HANDBOOK_DATA@@*/;
+const EXERCISES_DATA = /*@@EXERCISES_DATA@@*/;
+const METERS_DATA = /*@@METERS_DATA@@*/;
+const GLOSSARY_DATA = /*@@GLOSSARY_DATA@@*/;
+const BIBLIOGRAPHY_DATA = /*@@BIBLIOGRAPHY_DATA@@*/;
+const METER_MAP_DATA = /*@@METER_MAP_DATA@@*/;
+const GHALIB_EXT_DATA = /*@@GHALIB_EXT_DATA@@*/;
+const MIR_EXT_DATA = /*@@MIR_EXT_DATA@@*/;
+const WORD_ASCII_MAP = /*@@WORD_ASCII_MAP@@*/;
+window.METER_MAP_DATA = METER_MAP_DATA;
+

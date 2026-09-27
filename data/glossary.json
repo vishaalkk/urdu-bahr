@@ -1,0 +1,2324 @@
+[
+  {
+    "syl": "aa-p hii",
+    "wt": "(= - x), (= x)",
+    "ascii": "aap hii",
+    "mean": "\"one's own self\""
+  },
+  {
+    "syl": "aa-phii",
+    "wt": "(= x)",
+    "ascii": "aaphii",
+    "mean": ""
+  },
+  {
+    "syl": "aa-pii",
+    "wt": "(= x)",
+    "ascii": "aapii",
+    "mean": ""
+  },
+  {
+    "syl": "u-;Thaa",
+    "wt": "(- x)",
+    "ascii": "u;Thaa",
+    "mean": "perf. of [u;Thnaa]"
+  },
+  {
+    "syl": "u;T-;Thaa",
+    "wt": "(= x)",
+    "ascii": "u;T;Thaa",
+    "mean": ""
+  },
+  {
+    "syl": "aa-;xir",
+    "wt": "(= =)",
+    "ascii": "aa;xir",
+    "mean": "\"finally\""
+  },
+  {
+    "syl": "aa-;xii-r",
+    "wt": "(= = -)",
+    "ascii": "aa;xiir",
+    "mean": ""
+  },
+  {
+    "syl": "a-;xii-r",
+    "wt": "(- = -)",
+    "ascii": "a;xiir",
+    "mean": "[i-dhar]"
+  },
+  {
+    "syl": "u-dhar",
+    "wt": "(- =)",
+    "ascii": "idhar",
+    "mean": "\"here,\" \"there\""
+  },
+  {
+    "syl": "ii-dhar, uu-dhar",
+    "wt": "(= =)",
+    "ascii": "iidhar",
+    "mean": ""
+  },
+  {
+    "syl": "az",
+    "wt": "(=)",
+    "ascii": "az",
+    "mean": "\"from, by, with\" (Pers.)"
+  },
+  {
+    "syl": "zi",
+    "wt": "(-)",
+    "ascii": "z",
+    "mean": ""
+  },
+  {
+    "syl": "a-shar-fii",
+    "wt": "(- = x)",
+    "ascii": "asharfii",
+    "mean": "name of a gold coin"
+  },
+  {
+    "syl": "ash-ra-fii",
+    "wt": "(= - x)",
+    "ascii": "ashrafii",
+    "mean": ""
+  },
+  {
+    "syl": "aa-sh-kaa-r",
+    "wt": "(= - = -)",
+    "ascii": "aashkaar",
+    "mean": "\"apparent\""
+  },
+  {
+    "syl": "aa-sh-kaa-raa",
+    "wt": "(= - = x)",
+    "ascii": "aashkaaraa",
+    "mean": ""
+  },
+  {
+    "syl": "aa-shi-yaa-nah",
+    "wt": "(= - = x)",
+    "ascii": "aashiyaanah",
+    "mean": "\"nest\""
+  },
+  {
+    "syl": "aa-shi-yaa;N",
+    "wt": "(= - =)",
+    "ascii": "aashiyaa;N",
+    "mean": ""
+  },
+  {
+    "syl": "aa-gaa-h",
+    "wt": "(= = -)",
+    "ascii": "aagaah",
+    "mean": "\"aware\""
+  },
+  {
+    "syl": "aa-gah",
+    "wt": "(= x)",
+    "ascii": "aagah",
+    "mean": ""
+  },
+  {
+    "syl": "al-laa-h",
+    "wt": "(= =), (= = -)",
+    "ascii": "allaah",
+    "mean": "\"God\""
+  },
+  {
+    "syl": "um-mii-d",
+    "wt": "(= = -)",
+    "ascii": "ummiid",
+    "mean": "\"hope\""
+  },
+  {
+    "syl": "u-mii-d",
+    "wt": "(- = -)",
+    "ascii": "umiid",
+    "mean": ""
+  },
+  {
+    "syl": "an-jhuu",
+    "wt": "(= x), (- x)",
+    "ascii": "anjhuu",
+    "mean": "archaic for \"tears\""
+  },
+  {
+    "syl": "in-shaa)) al-laah",
+    "wt": "(= = = =), (= = = = -)",
+    "ascii": "inshaa)) allaah",
+    "mean": "\"God willing\""
+  },
+  {
+    "syl": "au-r",
+    "wt": "(= -), (=)",
+    "ascii": "aur",
+    "mean": "with word-grafting (- -), \"and\""
+  },
+  {
+    "syl": "aa-))ii-nah",
+    "wt": "(= x x)",
+    "ascii": "aa))iinah",
+    "mean": "\"mirror\""
+  },
+  {
+    "syl": "aa-))i-nah",
+    "wt": "(= - x)",
+    "ascii": "aa))inah",
+    "mean": ""
+  },
+  {
+    "syl": "e-k",
+    "wt": "(= -)",
+    "ascii": "ek",
+    "mean": "\"one\""
+  },
+  {
+    "syl": "ik",
+    "wt": "(=)",
+    "ascii": "ik",
+    "mean": ""
+  },
+  {
+    "syl": "yak",
+    "wt": "(=)",
+    "ascii": "yak",
+    "mean": ""
+  },
+  {
+    "syl": "bil aa-;xir",
+    "wt": "(= = =)",
+    "ascii": "baalaa;xir",
+    "mean": "\"finally\""
+  },
+  {
+    "syl": "bil far-.z",
+    "wt": "(= = -)",
+    "ascii": "baalfar.z",
+    "mean": "\"suppositionally\""
+  },
+  {
+    "syl": "bil kul",
+    "wt": "(= =)",
+    "ascii": "baalkul",
+    "mean": "\"entirely\""
+  },
+  {
+    "syl": "bah an-daa-zah",
+    "wt": "(- = = x)",
+    "ascii": "bah andaazah",
+    "mean": "\"according\""
+  },
+  {
+    "syl": "ba-an-daa-zah",
+    "wt": "(- = = x)",
+    "ascii": "baandaazah",
+    "mean": ""
+  },
+  {
+    "syl": "bach-chah",
+    "wt": "(= x)",
+    "ascii": "bachchah",
+    "mean": "\"child\""
+  },
+  {
+    "syl": "ba-chah",
+    "wt": "(- x)",
+    "ascii": "bachah",
+    "mean": ""
+  },
+  {
+    "syl": "bar-ha-man",
+    "wt": "(= - =)",
+    "ascii": "barhaman",
+    "mean": "\"Brahman\""
+  },
+  {
+    "syl": "ba-rah-man",
+    "wt": "(- = =)",
+    "ascii": "barahman",
+    "mean": ""
+  },
+  {
+    "syl": "ba-rah-nah",
+    "wt": "(- = x)",
+    "ascii": "barahnah",
+    "mean": "\"naked\""
+  },
+  {
+    "syl": "bar-ha-nah",
+    "wt": "(= - x)",
+    "ascii": "barhanah",
+    "mean": ""
+  },
+  {
+    "syl": "ba((-.z",
+    "wt": "(= -)",
+    "ascii": "ba((.z",
+    "mean": "\"a number of\""
+  },
+  {
+    "syl": "ba((-.ze",
+    "wt": "(= x)",
+    "ascii": "ba((.ze",
+    "mean": ""
+  },
+  {
+    "syl": "bul ha-vas",
+    "wt": "(= - =)",
+    "ascii": "buu al-havas",
+    "mean": "\"sensualist\""
+  },
+  {
+    "syl": "buu-s-taa-n",
+    "wt": "(= - = -)",
+    "ascii": "buustaan",
+    "mean": "\"garden\""
+  },
+  {
+    "syl": "bus-taa-n",
+    "wt": "(= = -)",
+    "ascii": "bustaan",
+    "mean": ""
+  },
+  {
+    "syl": "bah",
+    "wt": "(-)",
+    "ascii": "bah",
+    "mean": "\"with\" (Pers.)"
+  },
+  {
+    "syl": "ba-hut",
+    "wt": "(- =)",
+    "ascii": "bahut",
+    "mean": "\"much, many\""
+  },
+  {
+    "syl": "bah-ut",
+    "wt": "(= -)",
+    "ascii": "bahut",
+    "mean": "archaic"
+  },
+  {
+    "syl": "bhii",
+    "wt": "(x)",
+    "ascii": "bhii",
+    "mean": "\"too\""
+  },
+  {
+    "syl": "bhii-tar",
+    "wt": "(= =)",
+    "ascii": "bhiitar",
+    "mean": "\"inside\""
+  },
+  {
+    "syl": "bhi-tar",
+    "wt": "(- =)",
+    "ascii": "bhitar",
+    "mean": ""
+  },
+  {
+    "syl": "byaa-h",
+    "wt": "(= -)",
+    "ascii": "byaah",
+    "mean": "; (- = -), \"wedding\""
+  },
+  {
+    "syl": "ba-yak",
+    "wt": "(- =)",
+    "ascii": "bayak",
+    "mean": "[bah] + [yak]"
+  },
+  {
+    "syl": "byo-paa-r",
+    "wt": "(= = -)",
+    "ascii": "byopaar",
+    "mean": "\"business\""
+  },
+  {
+    "syl": "paa-))o;N",
+    "wt": "(= x)",
+    "ascii": "paa))o;N",
+    "mean": "\"foot\""
+  },
+  {
+    "syl": "paa;N-v",
+    "wt": "(= x)",
+    "ascii": "paa;Nv",
+    "mean": ""
+  },
+  {
+    "syl": "pach-chii-s",
+    "wt": "(= = -)",
+    "ascii": "pachchiis",
+    "mean": "\"twenty-five\""
+  },
+  {
+    "syl": "pa-chii-s",
+    "wt": "(- = -)",
+    "ascii": "pachiis",
+    "mean": ""
+  },
+  {
+    "syl": "par-vaa",
+    "wt": "(= =)",
+    "ascii": "parvaa",
+    "mean": "\"care\""
+  },
+  {
+    "syl": "par-vaa-h",
+    "wt": "(= = -)",
+    "ascii": "parvaah",
+    "mean": ""
+  },
+  {
+    "syl": "prii-t",
+    "wt": "(= -)",
+    "ascii": "priit",
+    "mean": "\"love\""
+  },
+  {
+    "syl": "pa-re-t",
+    "wt": "(- = -)",
+    "ascii": "pret",
+    "mean": "\"ghost\""
+  },
+  {
+    "syl": "pre-m",
+    "wt": "(= -)",
+    "ascii": "prem",
+    "mean": "\"love\""
+  },
+  {
+    "syl": "pa-kaa",
+    "wt": "(- x)",
+    "ascii": "pakaa",
+    "mean": "\"cooked, ripened\""
+  },
+  {
+    "syl": "pak-kaa",
+    "wt": "(= x)",
+    "ascii": "pakkaa",
+    "mean": ""
+  },
+  {
+    "syl": "pa-naa-h",
+    "wt": "(- = -)",
+    "ascii": "panaah",
+    "mean": "\"refuge\""
+  },
+  {
+    "syl": "pa-nah",
+    "wt": "(- =)",
+    "ascii": "panah",
+    "mean": ""
+  },
+  {
+    "syl": "pah",
+    "wt": "(x)",
+    "ascii": "pah",
+    "mean": "\"on\""
+  },
+  {
+    "syl": "pa-hu;Nch-naa",
+    "wt": "(- = x)",
+    "ascii": "pahu;Nchnaa",
+    "mean": "\"to arrive\""
+  },
+  {
+    "syl": "po;N-ch-naa",
+    "wt": "(= - x)",
+    "ascii": "po;Nchnaa",
+    "mean": "archaic"
+  },
+  {
+    "syl": "p'hu;N-chaa",
+    "wt": "(= x)",
+    "ascii": "pahu;Nchaa",
+    "mean": "\"arrived\""
+  },
+  {
+    "syl": "phu-vaa-r",
+    "wt": "(- = -)",
+    "ascii": "phuvaar",
+    "mean": "\"drizzle\""
+  },
+  {
+    "syl": "phu-haa-r",
+    "wt": "(- = -)",
+    "ascii": "phuuhaar",
+    "mean": ""
+  },
+  {
+    "syl": "phvaa-r",
+    "wt": "(= -)",
+    "ascii": "phvaar",
+    "mean": ""
+  },
+  {
+    "syl": "pyaa-r",
+    "wt": "(= -), (- = -)",
+    "ascii": "pyaar",
+    "mean": "\"love\""
+  },
+  {
+    "syl": "p-yaa-lah",
+    "wt": "(- = x), (= x)",
+    "ascii": "pyaalah",
+    "mean": "\"cup\""
+  },
+  {
+    "syl": "pai-raa-han",
+    "wt": "(= = =)",
+    "ascii": "pairaahan",
+    "mean": "\"robe\""
+  },
+  {
+    "syl": "pai-ra-han",
+    "wt": "(= - =)",
+    "ascii": "pairahan",
+    "mean": ""
+  },
+  {
+    "syl": "pa-yaa-m",
+    "wt": "(- = -)",
+    "ascii": "payaam",
+    "mean": "\"message\""
+  },
+  {
+    "syl": "pai-;Gaa-m",
+    "wt": "(= = -)",
+    "ascii": "pai;Gaam",
+    "mean": ""
+  },
+  {
+    "syl": "pa-yam-bar",
+    "wt": "(- = =)",
+    "ascii": "payambar",
+    "mean": "\"Prophet\""
+  },
+  {
+    "syl": "pai-;Gam-bar",
+    "wt": "(= = =)",
+    "ascii": "pai;Gambar",
+    "mean": ""
+  },
+  {
+    "syl": "pe-sh-vaa-z",
+    "wt": "(= - = -)",
+    "ascii": "peshvaaz",
+    "mean": "\"gown\""
+  },
+  {
+    "syl": "pish-vaa-z",
+    "wt": "(= = -)",
+    "ascii": "pishvaaz",
+    "mean": ""
+  },
+  {
+    "syl": "taa",
+    "wt": "(=)",
+    "ascii": "taa",
+    "mean": "\"up to, until\""
+  },
+  {
+    "syl": "ta-))a;s-;sur",
+    "wt": "(- = =)",
+    "ascii": "taa))';s;sur",
+    "mean": "\"effect\""
+  },
+  {
+    "syl": "ta-))as-suf",
+    "wt": "(- = =)",
+    "ascii": "taa))'ssuf",
+    "mean": "\"grief\""
+  },
+  {
+    "syl": "ta-))am-mul",
+    "wt": "(- = =)",
+    "ascii": "taa))'mmul",
+    "mean": "\"hesitation\""
+  },
+  {
+    "syl": "ta-;xay-yul",
+    "wt": "(- = =)",
+    "ascii": "ta;xayyul",
+    "mean": "\"imagination\""
+  },
+  {
+    "syl": "ta;x-))ii-l",
+    "wt": "(= = -)",
+    "ascii": "ta;x))iil",
+    "mean": ""
+  },
+  {
+    "syl": "ta((-))ii-n",
+    "wt": "(= = -)",
+    "ascii": "ta(())iin",
+    "mean": "\"appointing\""
+  },
+  {
+    "syl": "ta-((ay-yun",
+    "wt": "(- = =)",
+    "ascii": "ta((ayyun",
+    "mean": ""
+  },
+  {
+    "syl": "tak",
+    "wt": "(=)",
+    "ascii": "tak",
+    "mean": "\"until\""
+  },
+  {
+    "syl": "ta-lak",
+    "wt": "(- =)",
+    "ascii": "talak",
+    "mean": ""
+  },
+  {
+    "syl": "tu-mhaa-raa",
+    "wt": "(- = x)",
+    "ascii": "tumhaaraa",
+    "mean": "same for fem. and plur., \"your\""
+  },
+  {
+    "syl": "ta-nuu-r",
+    "wt": "(- = -)",
+    "ascii": "tanuur",
+    "mean": "\"oven\""
+  },
+  {
+    "syl": "tan-nuu-r",
+    "wt": "(= = -)",
+    "ascii": "tannuur",
+    "mean": ""
+  },
+  {
+    "syl": "tan-duu-r",
+    "wt": "(= = -)",
+    "ascii": "tanduur",
+    "mean": ""
+  },
+  {
+    "syl": "to",
+    "wt": "(x)",
+    "ascii": "to",
+    "mean": "\"then\""
+  },
+  {
+    "syl": "tuu",
+    "wt": "(x)",
+    "ascii": "tuu",
+    "mean": "\"you\""
+  },
+  {
+    "syl": "thaa",
+    "wt": "(x)",
+    "ascii": "thaa",
+    "mean": "same for fem. and plur., \"was\""
+  },
+  {
+    "syl": "tahh",
+    "wt": "(=)",
+    "ascii": "tahah",
+    "mean": "\"under\""
+  },
+  {
+    "syl": "ta-))ii;N",
+    "wt": "(- =), (=), (= =)",
+    "ascii": "ta))ii;N",
+    "mean": "\"oneself\""
+  },
+  {
+    "syl": "te-raa",
+    "wt": "(= x)",
+    "ascii": "teraa",
+    "mean": "same for fem. and plur., \"your\""
+  },
+  {
+    "syl": "ti-raa",
+    "wt": "(- x)",
+    "ascii": "tiraa",
+    "mean": "same for fem. and plur."
+  },
+  {
+    "syl": "tev-rii",
+    "wt": "(= x)",
+    "ascii": "tevrii",
+    "mean": "\"brow\""
+  },
+  {
+    "syl": "tyuu;N",
+    "wt": "(=)",
+    "ascii": "tyuu;N",
+    "mean": "\"in that way\""
+  },
+  {
+    "syl": "jib-ra-))ii-l",
+    "wt": "(= - = -)",
+    "ascii": "jibra))iil",
+    "mean": "\"Gabriel\""
+  },
+  {
+    "syl": "jib-rii-l",
+    "wt": "(= = -)",
+    "ascii": "jibriil",
+    "mean": ""
+  },
+  {
+    "syl": "jib-hah",
+    "wt": "(= x)",
+    "ascii": "jibahah",
+    "mean": "\"forehead\""
+  },
+  {
+    "syl": "ji-dhar",
+    "wt": "(- =)",
+    "ascii": "jidhar",
+    "mean": "\"the place where\""
+  },
+  {
+    "syl": "jii-dhar",
+    "wt": "(= =)",
+    "ascii": "jiidhar",
+    "mean": ""
+  },
+  {
+    "syl": "jur-))at",
+    "wt": "(= =)",
+    "ascii": "jur))aat",
+    "mean": "\"courage\""
+  },
+  {
+    "syl": "jur-aat",
+    "wt": "(= =)",
+    "ascii": "juraat",
+    "mean": ""
+  },
+  {
+    "syl": "juz-v",
+    "wt": "(= -)",
+    "ascii": "juzv",
+    "mean": "\"part\""
+  },
+  {
+    "syl": "juz",
+    "wt": "(=)",
+    "ascii": "juz",
+    "mean": ""
+  },
+  {
+    "syl": "ja-gah",
+    "wt": "(- x)",
+    "ascii": "jagah",
+    "mean": "usually (- =), \"place\""
+  },
+  {
+    "syl": "jaa-gah",
+    "wt": "(= x)",
+    "ascii": "jaagah",
+    "mean": "usually (= =)"
+  },
+  {
+    "syl": "jo",
+    "wt": "(x)",
+    "ascii": "jo",
+    "mean": "\"the one who\""
+  },
+  {
+    "syl": "ju-vaa",
+    "wt": "(- =)",
+    "ascii": "juvaa",
+    "mean": "\"gambling\""
+  },
+  {
+    "syl": "juv-vaa",
+    "wt": "(= =)",
+    "ascii": "juvva",
+    "mean": "rare"
+  },
+  {
+    "syl": "j-vaa-r",
+    "wt": "(- = -)",
+    "ascii": "jvaar",
+    "mean": "\"millet\""
+  },
+  {
+    "syl": "jii",
+    "wt": "(x)",
+    "ascii": "jii",
+    "mean": "honorific particle"
+  },
+  {
+    "syl": "jyuu;N",
+    "wt": "(=)",
+    "ascii": "jyuu;N",
+    "mean": "\"the way in which\""
+  },
+  {
+    "syl": "cha-khaa",
+    "wt": "(- x)",
+    "ascii": "chakhaa",
+    "mean": "perf. of [chakhnaa]"
+  },
+  {
+    "syl": "chak-khaa",
+    "wt": "(= x)",
+    "ascii": "chakkhaa",
+    "mean": ""
+  },
+  {
+    "syl": "chuu-hi-yaa",
+    "wt": "(= - x)",
+    "ascii": "chuuhiyaa",
+    "mean": "\"mouse\""
+  },
+  {
+    "syl": "chuh-yaa",
+    "wt": "(= x)",
+    "ascii": "chuhiyaa",
+    "mean": ""
+  },
+  {
+    "syl": "chyuu;N-;Tii",
+    "wt": "(= x)",
+    "ascii": "chyuun;Tii",
+    "mean": "var. of [chii;N;Tii], \"ant\""
+  },
+  {
+    "syl": ";xaa-mo-shii",
+    "wt": "(= = x)",
+    "ascii": ";xaamoshii",
+    "mean": "\"silence\""
+  },
+  {
+    "syl": ";xa-mo-shii",
+    "wt": "(- = x)",
+    "ascii": ";xamoshii",
+    "mean": ""
+  },
+  {
+    "syl": ";xaa-mu-shii",
+    "wt": "(= - x)",
+    "ascii": ";xaamushii",
+    "mean": ""
+  },
+  {
+    "syl": ";xi.zr",
+    "wt": "(= -)",
+    "ascii": ";xi.zr",
+    "mean": "\"Khizr\""
+  },
+  {
+    "syl": ";xi-.zir",
+    "wt": "(- =)",
+    "ascii": ";xi.zir",
+    "mean": "\"Khizir\" or \"Khizar\""
+  },
+  {
+    "syl": ";xa:t-rah",
+    "wt": "(= x)",
+    "ascii": ";xa:trah",
+    "mean": "\"danger\""
+  },
+  {
+    "syl": ";xa-:tar",
+    "wt": "(- =)",
+    "ascii": ";xa:tar",
+    "mean": ""
+  },
+  {
+    "syl": ";xvaa-m-;xvaa-h",
+    "wt": "(= - = -)",
+    "ascii": ";xvaam;xvaah",
+    "mean": "\"willy-nilly\""
+  },
+  {
+    "syl": ";xvaa-hish",
+    "wt": "(= =)",
+    "ascii": ";xvaahish",
+    "mean": "\"longing\""
+  },
+  {
+    "syl": ";xud",
+    "wt": "(=)",
+    "ascii": ";xvud",
+    "mean": "\"self\""
+  },
+  {
+    "syl": ";xu-shii",
+    "wt": "(- x)",
+    "ascii": ";xvushii",
+    "mean": "\"happiness\""
+  },
+  {
+    "syl": "daa-man",
+    "wt": "(= =)",
+    "ascii": "daaman",
+    "mean": "\"skirt\""
+  },
+  {
+    "syl": "daa-maa-n",
+    "wt": "(= = -)",
+    "ascii": "daamaan",
+    "mean": ""
+  },
+  {
+    "syl": "du;x-tar",
+    "wt": "(= =)",
+    "ascii": "du;xtar",
+    "mean": "\"daughter\""
+  },
+  {
+    "syl": "du;x-t",
+    "wt": "(= -)",
+    "ascii": "du;xt",
+    "mean": ""
+  },
+  {
+    "syl": "du-kaa-n",
+    "wt": "(- = -)",
+    "ascii": "dukaan",
+    "mean": "\"shop\""
+  },
+  {
+    "syl": "duu-kaa-n",
+    "wt": "(= = -)",
+    "ascii": "duukaan",
+    "mean": ""
+  },
+  {
+    "syl": "duk-kaa-n",
+    "wt": "(= = -)",
+    "ascii": "dukkaan",
+    "mean": ""
+  },
+  {
+    "syl": "dulhan",
+    "wt": "(- =), (= =)",
+    "ascii": "dulhan",
+    "mean": "\"bride\""
+  },
+  {
+    "syl": "duulhan",
+    "wt": "(- =), (= =)",
+    "ascii": "duulhan",
+    "mean": ""
+  },
+  {
+    "syl": "do",
+    "wt": "(x)",
+    "ascii": "do",
+    "mean": "\"two,\" \"give\""
+  },
+  {
+    "syl": "do-baa-rah",
+    "wt": "(x = x)",
+    "ascii": "dobaarah",
+    "mean": "\"twice\""
+  },
+  {
+    "syl": "du-pa;T-;Tah",
+    "wt": "(- = x)",
+    "ascii": "dupa;T;Tah",
+    "mean": "\"long scarf\""
+  },
+  {
+    "syl": "do-pa;T-;Tah",
+    "wt": "(= = x)",
+    "ascii": "dopa;T;Tah",
+    "mean": ""
+  },
+  {
+    "syl": "do-raa-haa",
+    "wt": "(x = x)",
+    "ascii": "doraahaa",
+    "mean": "\"fork in the road\""
+  },
+  {
+    "syl": "do-zaa-nuu",
+    "wt": "(x = x)",
+    "ascii": "dozaanuu",
+    "mean": "\"kneeling\""
+  },
+  {
+    "syl": "do-gaa-naa",
+    "wt": "(= = x)",
+    "ascii": "dogaanaa",
+    "mean": "; (- = x), \"double\""
+  },
+  {
+    "syl": "duu-lhaa",
+    "wt": "(= =)",
+    "ascii": "duulhaa",
+    "mean": "\"bridegroom\""
+  },
+  {
+    "syl": "duu-lah",
+    "wt": "(= x)",
+    "ascii": "duulah",
+    "mean": "rare"
+  },
+  {
+    "syl": "duu-))ii",
+    "wt": "(x x)",
+    "ascii": "duu))ii",
+    "mean": "\"twoness\""
+  },
+  {
+    "syl": "da-han",
+    "wt": "(- =)",
+    "ascii": "dahan",
+    "mean": "\"mouth\""
+  },
+  {
+    "syl": "da-haa-n",
+    "wt": "(- = -)",
+    "ascii": "dahaan",
+    "mean": ""
+  },
+  {
+    "syl": "da-haa-nah",
+    "wt": "(- = x)",
+    "ascii": "dahaanah",
+    "mean": ""
+  },
+  {
+    "syl": "dhyaa-n",
+    "wt": "(= -)",
+    "ascii": "dhyaan",
+    "mean": "\"concentration\""
+  },
+  {
+    "syl": "dii-gar",
+    "wt": "(= =)",
+    "ascii": "diigar",
+    "mean": "\"other\""
+  },
+  {
+    "syl": "di-gar",
+    "wt": "(- =)",
+    "ascii": "digar",
+    "mean": ""
+  },
+  {
+    "syl": "dii-vaa-nah",
+    "wt": "(= = x)",
+    "ascii": "diivaanah",
+    "mean": "\"mad\""
+  },
+  {
+    "syl": "di-vaa-nah",
+    "wt": "(- = x)",
+    "ascii": "divaanah",
+    "mean": "archaic"
+  },
+  {
+    "syl": "raa-s-tah",
+    "wt": "(= - x)",
+    "ascii": "raastah",
+    "mean": "\"road\""
+  },
+  {
+    "syl": "ras-tah",
+    "wt": "(= x)",
+    "ascii": "rastah",
+    "mean": ""
+  },
+  {
+    "syl": "raa-h",
+    "wt": "(= -)",
+    "ascii": "raah",
+    "mean": "\"road\""
+  },
+  {
+    "syl": "rah",
+    "wt": "(=)",
+    "ascii": "rah",
+    "mean": ""
+  },
+  {
+    "syl": "ru;x-saa-r",
+    "wt": "(= = -)",
+    "ascii": "ru;xsaar",
+    "mean": "\"cheek\""
+  },
+  {
+    "syl": "ru;x-saa-rah",
+    "wt": "(= = x)",
+    "ascii": "ru;xsaarah",
+    "mean": ""
+  },
+  {
+    "syl": "ra-khaa",
+    "wt": "(- x)",
+    "ascii": "rakhaa",
+    "mean": "same for fem. and plur., \"kept\""
+  },
+  {
+    "syl": "rak-khaa",
+    "wt": "(= x)",
+    "ascii": "rakkhaa",
+    "mean": "same for fem. and plur."
+  },
+  {
+    "syl": "ruu-bah",
+    "wt": "(= x)",
+    "ascii": "ruubah",
+    "mean": "\"fox\""
+  },
+  {
+    "syl": "ruu-baa-h",
+    "wt": "(= = -)",
+    "ascii": "ruubaah",
+    "mean": ""
+  },
+  {
+    "syl": "rah-gu-z;ar",
+    "wt": "(= - =)",
+    "ascii": "rahguz;ar",
+    "mean": "\"road\""
+  },
+  {
+    "syl": "raa-h-gu-z;ar",
+    "wt": "(= - - =)",
+    "ascii": "raahguz;ar",
+    "mean": ""
+  },
+  {
+    "syl": "rah-gu-z;aa-r",
+    "wt": "(= - = -)",
+    "ascii": "rahguz;aar",
+    "mean": ""
+  },
+  {
+    "syl": "raa-h-gu-z;aa-r",
+    "wt": "(= - - = -)",
+    "ascii": "raahguz;aar",
+    "mean": ""
+  },
+  {
+    "syl": "zaq-quu-m",
+    "wt": "(= = -)",
+    "ascii": "zaqquum",
+    "mean": "name of an infernal tree"
+  },
+  {
+    "syl": "za-quu-m",
+    "wt": "(- = -)",
+    "ascii": "zaquum",
+    "mean": ""
+  },
+  {
+    "syl": "za-maa-nah",
+    "wt": "(- = x)",
+    "ascii": "zamaanah",
+    "mean": "\"era\""
+  },
+  {
+    "syl": "za-maa;N",
+    "wt": "(- =)",
+    "ascii": "zamaa;N",
+    "mean": ""
+  },
+  {
+    "syl": "za-maa-n",
+    "wt": "(- = -)",
+    "ascii": "zamaan",
+    "mean": ""
+  },
+  {
+    "syl": "za-man",
+    "wt": "(- =)",
+    "ascii": "zaman",
+    "mean": ""
+  },
+  {
+    "syl": "zin-haa-r",
+    "wt": "(= = -)",
+    "ascii": "zinhaar",
+    "mean": "\"beware\""
+  },
+  {
+    "syl": "zii-n-haa-r",
+    "wt": "(= - = -)",
+    "ascii": "ziinhaar",
+    "mean": ""
+  },
+  {
+    "syl": "saa",
+    "wt": "(x)",
+    "ascii": "saa",
+    "mean": "\"-ish\""
+  },
+  {
+    "syl": "saa-jan",
+    "wt": "(= =)",
+    "ascii": "saajan",
+    "mean": "\"lover\""
+  },
+  {
+    "syl": "sa-jan",
+    "wt": "(- =)",
+    "ascii": "sajan",
+    "mean": ""
+  },
+  {
+    "syl": "saa-))ii-s",
+    "wt": "(= = -)",
+    "ascii": "saa))iis",
+    "mean": "\"groom\""
+  },
+  {
+    "syl": "sa-))ii-s",
+    "wt": "(- = -)",
+    "ascii": "sa))iis",
+    "mean": ""
+  },
+  {
+    "syl": "sai-s",
+    "wt": "(= -)",
+    "ascii": "sais",
+    "mean": ""
+  },
+  {
+    "syl": "sa-rhaa-naa",
+    "wt": "(- = x)",
+    "ascii": "sarhaanaa",
+    "mean": "\"headboard\""
+  },
+  {
+    "syl": "si-kan-dar",
+    "wt": "(- = =)",
+    "ascii": "sikandar",
+    "mean": "\"Alexander\""
+  },
+  {
+    "syl": "is-kan-dar",
+    "wt": "(= = =)",
+    "ascii": "iskandar",
+    "mean": ""
+  },
+  {
+    "syl": "so",
+    "wt": "(x)",
+    "ascii": "so",
+    "mean": "\"thus\""
+  },
+  {
+    "syl": "sau",
+    "wt": "(=)",
+    "ascii": "sau",
+    "mean": "\"100\""
+  },
+  {
+    "syl": "suu",
+    "wt": "(=)",
+    "ascii": "suu",
+    "mean": "\"direction\""
+  },
+  {
+    "syl": "sa-vaa-r",
+    "wt": "(- = -)",
+    "ascii": "savaar",
+    "mean": "\"horseman\""
+  },
+  {
+    "syl": "as-vaa-r",
+    "wt": "(= = -)",
+    "ascii": "asvaar",
+    "mean": "rare"
+  },
+  {
+    "syl": "svaa;N-g",
+    "wt": "(= -)",
+    "ascii": "svaa;Ng",
+    "mean": "\"folk opera\""
+  },
+  {
+    "syl": "saa;N-g",
+    "wt": "(= -)",
+    "ascii": "saa;Ng",
+    "mean": ""
+  },
+  {
+    "syl": "su-var",
+    "wt": "(- =)",
+    "ascii": "suvar",
+    "mean": "\"pig\""
+  },
+  {
+    "syl": "suu-raa-j",
+    "wt": "(= = -)",
+    "ascii": "suuraaj",
+    "mean": "\"Swaraj\""
+  },
+  {
+    "syl": "sva-raa-j",
+    "wt": "(- = -)",
+    "ascii": "svaraaj",
+    "mean": ""
+  },
+  {
+    "syl": "sih",
+    "wt": "(x)",
+    "ascii": "sih",
+    "mean": "\"three\""
+  },
+  {
+    "syl": "sii",
+    "wt": "(x)",
+    "ascii": "sii",
+    "mean": "\"-ish\""
+  },
+  {
+    "syl": "se",
+    "wt": "(x)",
+    "ascii": "se",
+    "mean": "\"from, with,\" \"-ish\""
+  },
+  {
+    "syl": "si-yaa-h",
+    "wt": "(- = -)",
+    "ascii": "siyaah",
+    "mean": "\"black\""
+  },
+  {
+    "syl": "si-yah",
+    "wt": "(- x)",
+    "ascii": "siyah",
+    "mean": ""
+  },
+  {
+    "syl": "shaa-h",
+    "wt": "(= -)",
+    "ascii": "shaah",
+    "mean": "\"king\""
+  },
+  {
+    "syl": "shah",
+    "wt": "(=)",
+    "ascii": "shah",
+    "mean": ""
+  },
+  {
+    "syl": "shub-hah",
+    "wt": "(= -)",
+    "ascii": "shubahah",
+    "mean": "\"suspicion\""
+  },
+  {
+    "syl": "shu-tur",
+    "wt": "(- =)",
+    "ascii": "shutur",
+    "mean": "\"camel\""
+  },
+  {
+    "syl": "ush-tur",
+    "wt": "(= =)",
+    "ascii": "ushtur",
+    "mean": ""
+  },
+  {
+    "syl": "sha-raa-r",
+    "wt": "(- = -)",
+    "ascii": "sharaar",
+    "mean": "\"spark\""
+  },
+  {
+    "syl": "sha-rar",
+    "wt": "(- =)",
+    "ascii": "sharar",
+    "mean": ""
+  },
+  {
+    "syl": "sha-raa-rah",
+    "wt": "(- = x)",
+    "ascii": "sharaarah",
+    "mean": ""
+  },
+  {
+    "syl": "sha-kar",
+    "wt": "(- =)",
+    "ascii": "shakar",
+    "mean": "\"sugar\""
+  },
+  {
+    "syl": "shak-kar",
+    "wt": "(= =)",
+    "ascii": "shakkar",
+    "mean": ""
+  },
+  {
+    "syl": ".saa-buu-n",
+    "wt": "(= = -)",
+    "ascii": ".saabuun",
+    "mean": "\"soap\""
+  },
+  {
+    "syl": ".saa-bun",
+    "wt": "(= =)",
+    "ascii": ".saabun",
+    "mean": ""
+  },
+  {
+    "syl": ".su-var",
+    "wt": "(- =)",
+    "ascii": ".suvar",
+    "mean": "pl. of [.suurat], \"face\""
+  },
+  {
+    "syl": ":tar-;h",
+    "wt": "(= -)",
+    "ascii": ":tar;h",
+    "mean": "\"manner\""
+  },
+  {
+    "syl": ":ta-ra;h",
+    "wt": "(- =)",
+    "ascii": ":tara;h",
+    "mean": "; (- x), (modern)"
+  },
+  {
+    "syl": ":ta-raf",
+    "wt": "(- =)",
+    "ascii": ":taraf",
+    "mean": "\"direction\""
+  },
+  {
+    "syl": ":tar-f",
+    "wt": "(= -)",
+    "ascii": ":tarf",
+    "mean": ""
+  },
+  {
+    "syl": ":ta-ma((",
+    "wt": "(- =)",
+    "ascii": ":tama((",
+    "mean": "\"greed\""
+  },
+  {
+    "syl": ":tam-((a",
+    "wt": "(= -)",
+    "ascii": ":tam((a",
+    "mean": ""
+  },
+  {
+    "syl": "fi-ran-g",
+    "wt": "(- = -)",
+    "ascii": "firang",
+    "mean": "\"European\""
+  },
+  {
+    "syl": "af-ran-g",
+    "wt": "(= = -)",
+    "ascii": "afrang",
+    "mean": ""
+  },
+  {
+    "syl": "fu-zuu;N",
+    "wt": "(- x)",
+    "ascii": "fuzuu;N",
+    "mean": "\"increasing\""
+  },
+  {
+    "syl": "af-zuu;N",
+    "wt": "(= x)",
+    "ascii": "afzuu;N",
+    "mean": ""
+  },
+  {
+    "syl": "fa-saa-nah",
+    "wt": "(- = x)",
+    "ascii": "fasaanah",
+    "mean": "\"story\""
+  },
+  {
+    "syl": "af-saa-nah",
+    "wt": "(= = x)",
+    "ascii": "afsaanah",
+    "mean": ""
+  },
+  {
+    "syl": "fu-sur-dah",
+    "wt": "(- = x)",
+    "ascii": "fusurdah",
+    "mean": "\"sorrowful\""
+  },
+  {
+    "syl": "af-sur-dah",
+    "wt": "(= = x)",
+    "ascii": "afsurdah",
+    "mean": ""
+  },
+  {
+    "syl": "fu-suu;N",
+    "wt": "(- x)",
+    "ascii": "fusuu;N",
+    "mean": "\"increasing\""
+  },
+  {
+    "syl": "af-suu;N",
+    "wt": "(= x)",
+    "ascii": "afsuu;N",
+    "mean": ""
+  },
+  {
+    "syl": "fu-;Gaa;N",
+    "wt": "(- x)",
+    "ascii": "fi;Gaa;N",
+    "mean": "\"sighing\""
+  },
+  {
+    "syl": "af-;Gaa;N",
+    "wt": "(= x)",
+    "ascii": "af;Gaa;N",
+    "mean": ""
+  },
+  {
+    "syl": "fi-gaa-r",
+    "wt": "(- = -)",
+    "ascii": "figaar",
+    "mean": "\"wounded\""
+  },
+  {
+    "syl": "af-gaa-r",
+    "wt": "(= = -)",
+    "ascii": "afgaar",
+    "mean": ""
+  },
+  {
+    "syl": "fu-laa;N",
+    "wt": "(- =)",
+    "ascii": "fulaa;N",
+    "mean": "\"such-and-such\""
+  },
+  {
+    "syl": "fa-laa-naa",
+    "wt": "(- = x)",
+    "ascii": "falaanaa",
+    "mean": ""
+  },
+  {
+    "syl": "fil-;haa-l",
+    "wt": "(= = -)",
+    "ascii": "fii al-;haal",
+    "mean": "\"at present\""
+  },
+  {
+    "syl": "fil-;ha-qii-qat",
+    "wt": "(= - = -)",
+    "ascii": "fii al-;haqiiqat",
+    "mean": "\"in reality\""
+  },
+  {
+    "syl": "qur-aan",
+    "wt": "(= = -)",
+    "ascii": "qur aan",
+    "mean": "\"Qur'an\""
+  },
+  {
+    "syl": "qu-raa-n",
+    "wt": "(- = -)",
+    "ascii": "quraan",
+    "mean": "rare"
+  },
+  {
+    "syl": "kaa",
+    "wt": "(x)",
+    "ascii": "kaa",
+    "mean": "\"of\""
+  },
+  {
+    "syl": "kaa-sah",
+    "wt": "(= x)",
+    "ascii": "kaasah",
+    "mean": "\"bowl\""
+  },
+  {
+    "syl": "kaa-s",
+    "wt": "(= -)",
+    "ascii": "kaas",
+    "mean": ""
+  },
+  {
+    "syl": "krish-n",
+    "wt": "(= -)",
+    "ascii": "krishn",
+    "mean": "\"Krishna\""
+  },
+  {
+    "syl": "ki-naa-rah",
+    "wt": "(- = x)",
+    "ascii": "kinaarah",
+    "mean": "\"riverbank\""
+  },
+  {
+    "syl": "ka-naa-r",
+    "wt": "(- = -)",
+    "ascii": "kinaar",
+    "mean": ""
+  },
+  {
+    "syl": "ko",
+    "wt": "(x)",
+    "ascii": "ko",
+    "mean": "\"to\""
+  },
+  {
+    "syl": "ka))ii",
+    "wt": "(- x)",
+    "ascii": "1029,1",
+    "mean": "; rare archaic variant (=) [M]; \"anyone, any\""
+  },
+  {
+    "syl": "ko))ii",
+    "wt": "(x x)",
+    "ascii": "ko))ii",
+    "mean": "; archaic variant (=); \"anyone, any\""
+  },
+  {
+    "syl": "kih",
+    "wt": "(-)",
+    "ascii": "kih",
+    "mean": "; archaic variant: (=); \"that\""
+  },
+  {
+    "syl": "kah'h",
+    "wt": "(=)",
+    "ascii": "kah'h",
+    "mean": "root of [kahnaa]"
+  },
+  {
+    "syl": "kho-))e",
+    "wt": "(= x)",
+    "ascii": "kho))e",
+    "mean": "\"lost\""
+  },
+  {
+    "syl": "kho))e",
+    "wt": "(=)",
+    "ascii": "kho))e",
+    "mean": "archaic  polite imperative of"
+  },
+  {
+    "syl": "kahnaa",
+    "wt": "(- - x)",
+    "ascii": "kahiye",
+    "mean": "(= x)"
+  },
+  {
+    "syl": "kii",
+    "wt": "(x)",
+    "ascii": "kii",
+    "mean": "\"of\""
+  },
+  {
+    "syl": "ke",
+    "wt": "(x)",
+    "ascii": "ke",
+    "mean": "\"of\""
+  },
+  {
+    "syl": "kyaa",
+    "wt": "(=)",
+    "ascii": "kyaa",
+    "mean": "\"what\""
+  },
+  {
+    "syl": "ki-yaa-rii",
+    "wt": "(- = x)",
+    "ascii": "kiyaarii",
+    "mean": "\"flowerbed\""
+  },
+  {
+    "syl": "kyaa-rii",
+    "wt": "(= x)",
+    "ascii": "kyaarii",
+    "mean": ""
+  },
+  {
+    "syl": "kyuu;N",
+    "wt": "(=)",
+    "ascii": "kyuu;N",
+    "mean": "\"why\""
+  },
+  {
+    "syl": "gaa-h",
+    "wt": "(= -)",
+    "ascii": "gaah",
+    "mean": "\"place\""
+  },
+  {
+    "syl": "gah",
+    "wt": "(=)",
+    "ascii": "gah",
+    "mean": ""
+  },
+  {
+    "syl": "gar",
+    "wt": "(=)",
+    "ascii": "gar",
+    "mean": "\"if\""
+  },
+  {
+    "syl": "a-gar",
+    "wt": "(- =)",
+    "ascii": "agar",
+    "mean": ""
+  },
+  {
+    "syl": "gar-chah",
+    "wt": "(= x)",
+    "ascii": "garchah",
+    "mean": "\"although\""
+  },
+  {
+    "syl": "a-gar-chah",
+    "wt": "(- = x)",
+    "ascii": "agarchah",
+    "mean": ""
+  },
+  {
+    "syl": "gur-sa-nah",
+    "wt": "(= - x)",
+    "ascii": "gursanah",
+    "mean": "\"hungry\""
+  },
+  {
+    "syl": "gu-ras-nah",
+    "wt": "(- = x)",
+    "ascii": "gurasnah",
+    "mean": ""
+  },
+  {
+    "syl": "gar-han",
+    "wt": "(= =)",
+    "ascii": "garhan",
+    "mean": "\"eclipse\""
+  },
+  {
+    "syl": "ga-han",
+    "wt": "(- =)",
+    "ascii": "gahan",
+    "mean": ""
+  },
+  {
+    "syl": "gu-lis-taa;N (- = =), \"garden\" { \n            gulistaa;N }\n            [gul-si-taa;N",
+    "wt": "(= - =)",
+    "ascii": "gulsitaa;N",
+    "mean": ""
+  },
+  {
+    "syl": "gu-naa-h",
+    "wt": "(- = -)",
+    "ascii": "gunaah",
+    "mean": "\"sin\""
+  },
+  {
+    "syl": "gu-nah",
+    "wt": "(- x)",
+    "ascii": "gunah",
+    "mean": ""
+  },
+  {
+    "syl": "go",
+    "wt": "(=)",
+    "ascii": "go",
+    "mean": "; very rare: (-); \"although\""
+  },
+  {
+    "syl": "guu-ruu",
+    "wt": "(- =)",
+    "ascii": "guuruu",
+    "mean": "\"religious teacher\""
+  },
+  {
+    "syl": "gu-ruu",
+    "wt": "(- =)",
+    "ascii": "guruu",
+    "mean": ""
+  },
+  {
+    "syl": "gau-har",
+    "wt": "(= =)",
+    "ascii": "gauhar",
+    "mean": "\"pearl\""
+  },
+  {
+    "syl": "gu-har",
+    "wt": "(- =)",
+    "ascii": "guhar",
+    "mean": ""
+  },
+  {
+    "syl": "ga-))e",
+    "wt": "(- x)",
+    "ascii": "ga))e",
+    "mean": "\"went\""
+  },
+  {
+    "syl": "ga))e",
+    "wt": "(=)",
+    "ascii": "ga))e",
+    "mean": "archaic"
+  },
+  {
+    "syl": "gyaan",
+    "wt": "(= -)",
+    "ascii": "gyaan",
+    "mean": "\"knowledge\""
+  },
+  {
+    "syl": "laa-sh",
+    "wt": "(= -)",
+    "ascii": "laash",
+    "mean": "\"corpse\""
+  },
+  {
+    "syl": "laa-shah",
+    "wt": "(= x)",
+    "ascii": "laashah",
+    "mean": ""
+  },
+  {
+    "syl": "li-khaa",
+    "wt": "(- x)",
+    "ascii": "likhaa",
+    "mean": "same for fem., plur.; \"wrote\""
+  },
+  {
+    "syl": "lik-khaa",
+    "wt": "(= x)",
+    "ascii": "likkhaa",
+    "mean": "same for fem., plur."
+  },
+  {
+    "syl": "lo-haa-r",
+    "wt": "(- = -)",
+    "ascii": "lohaar",
+    "mean": "\"blacksmith\""
+  },
+  {
+    "syl": "lu-haa-r",
+    "wt": "(- = -)",
+    "ascii": "luhaar",
+    "mean": ""
+  },
+  {
+    "syl": "le-kin",
+    "wt": "(= =)",
+    "ascii": "lekin",
+    "mean": "\"but\""
+  },
+  {
+    "syl": "le-k",
+    "wt": "(= -)",
+    "ascii": "lek",
+    "mean": "archaic"
+  },
+  {
+    "syl": "maa-rg",
+    "wt": "(= -)",
+    "ascii": "maarg",
+    "mean": "\"road\""
+  },
+  {
+    "syl": "maa-shaa)) al-laah",
+    "wt": "(= = = =), (= = = = -)",
+    "ascii": "maashaa)) allaah",
+    "mean": "\"as God wills\""
+  },
+  {
+    "syl": "ma-;aa-l",
+    "wt": "(- = -)",
+    "ascii": "ma;aal",
+    "mean": "\"property\""
+  },
+  {
+    "syl": "maa))-muu-n",
+    "wt": "(= = -)",
+    "ascii": "maa))muun",
+    "mean": "same as [maamuun], \"safe\""
+  },
+  {
+    "syl": "maa-h",
+    "wt": "(= -)",
+    "ascii": "maah",
+    "mean": "\"moon\""
+  },
+  {
+    "syl": "mah",
+    "wt": "(=)",
+    "ascii": "mah",
+    "mean": ""
+  },
+  {
+    "syl": "mi.s-ra((",
+    "wt": "(= =)",
+    "ascii": "mi.sra((",
+    "mean": "\"line of verse\""
+  },
+  {
+    "syl": "mi.s-ra((h",
+    "wt": "(= =)",
+    "ascii": "mi.sra((h",
+    "mean": ""
+  },
+  {
+    "syl": "mi.s-raa-((",
+    "wt": "(= = -)",
+    "ascii": "mi.sraa((",
+    "mean": ""
+  },
+  {
+    "syl": "mu-vaa",
+    "wt": "(- x)",
+    "ascii": "muvaa",
+    "mean": "\"wretch\""
+  },
+  {
+    "syl": "muu-))ii",
+    "wt": "(- x)",
+    "ascii": "muu))ii",
+    "mean": ""
+  },
+  {
+    "syl": "muu-))e",
+    "wt": "(- x)",
+    "ascii": "muu))e",
+    "mean": ""
+  },
+  {
+    "syl": "mau-j",
+    "wt": "(= -)",
+    "ascii": "mauj",
+    "mean": "\"wave\""
+  },
+  {
+    "syl": "mau-jah",
+    "wt": "(= x)",
+    "ascii": "maujah",
+    "mean": ""
+  },
+  {
+    "syl": "mu-))a;x-;xar",
+    "wt": "(- = =)",
+    "ascii": "muu))a;x;xar",
+    "mean": "same as [muva;x;xar], \"latter\""
+  },
+  {
+    "syl": "mu-))ad-dab",
+    "wt": "(- = =)",
+    "ascii": "muu))addab",
+    "mean": "same as [muvaddab], \"courteous\"  [mu-))ar-ri;x (- = =), same as [muvarri;x], \"chronicler\""
+  },
+  {
+    "syl": "muu;Nhh",
+    "wt": "(=)",
+    "ascii": "muu;Nhah",
+    "mean": "same as [mu;Nh], \"mouth\""
+  },
+  {
+    "syl": "mih-maa-n",
+    "wt": "(= = -)",
+    "ascii": "mihmaan",
+    "mean": "(\"guest\")"
+  },
+  {
+    "syl": "me-h-maa-n",
+    "wt": "(= - = -)",
+    "ascii": "1004,1",
+    "mean": "[very rare, but see e.g. M]"
+  },
+  {
+    "syl": "mi-yaa;N",
+    "wt": "(- x)",
+    "ascii": "miyaa;N",
+    "mean": "(term of address or endearment)"
+  },
+  {
+    "syl": "myaa;N",
+    "wt": "(=)",
+    "ascii": "myaa;N",
+    "mean": ""
+  },
+  {
+    "syl": "me-raa",
+    "wt": "(= x)",
+    "ascii": "meraa",
+    "mean": "same for fem. and plur., \"my\""
+  },
+  {
+    "syl": "mi-raa",
+    "wt": "(- x)",
+    "ascii": "miraa",
+    "mean": "same for fem. and plur."
+  },
+  {
+    "syl": "me;N",
+    "wt": "(x)",
+    "ascii": "me;N",
+    "mean": "\"in\""
+  },
+  {
+    "syl": "mai;N",
+    "wt": "(x)",
+    "ascii": "mai;N",
+    "mean": "\"I\""
+  },
+  {
+    "syl": "mii-naa-r",
+    "wt": "(= = x)",
+    "ascii": "miinaar",
+    "mean": "\"tower\""
+  },
+  {
+    "syl": "mi-naa-r",
+    "wt": "(- = -)",
+    "ascii": "minaar",
+    "mean": ""
+  },
+  {
+    "syl": "naa-;xuu-n",
+    "wt": "(= = -)",
+    "ascii": "naa;xuun",
+    "mean": "\"fingernail\""
+  },
+  {
+    "syl": "naa-;xun",
+    "wt": "(= =)",
+    "ascii": "naa;xun",
+    "mean": ""
+  },
+  {
+    "syl": "naa-gaa-h",
+    "wt": "(= = -)",
+    "ascii": "naagaah",
+    "mean": "\"unaware\""
+  },
+  {
+    "syl": "naa-gahh",
+    "wt": "(= x)",
+    "ascii": "naagahah",
+    "mean": ""
+  },
+  {
+    "syl": "naa-))o",
+    "wt": "(= x)",
+    "ascii": "naa))o",
+    "mean": "\"boat\""
+  },
+  {
+    "syl": "naa-v",
+    "wt": "(= x)",
+    "ascii": "naav",
+    "mean": ""
+  },
+  {
+    "syl": "ni-baa-h-naa",
+    "wt": "(- = - x)",
+    "ascii": "nibaahnaa",
+    "mean": "\"to uphold\""
+  },
+  {
+    "syl": "ni-bhaa-naa",
+    "wt": "(- = x)",
+    "ascii": "nibhaanaa",
+    "mean": ""
+  },
+  {
+    "syl": "na-dii",
+    "wt": "(- x)",
+    "ascii": "nadii",
+    "mean": "\"river\""
+  },
+  {
+    "syl": "nad-dii",
+    "wt": "(= x)",
+    "ascii": "naddii",
+    "mean": ""
+  },
+  {
+    "syl": "nash-tar",
+    "wt": "(= =)",
+    "ascii": "nashtar",
+    "mean": "\"lancet\""
+  },
+  {
+    "syl": "ne-sh-tar",
+    "wt": "(= - =)",
+    "ascii": "neshtar",
+    "mean": ""
+  },
+  {
+    "syl": "nash-))ah",
+    "wt": "(= x)",
+    "ascii": "nash))ah",
+    "mean": "\"intoxication\""
+  },
+  {
+    "syl": "na-shah",
+    "wt": "(- x)",
+    "ascii": "nashah",
+    "mean": ""
+  },
+  {
+    "syl": "na-:zaa-rah",
+    "wt": "(- = x)",
+    "ascii": "na:zaarah",
+    "mean": "\"sight\""
+  },
+  {
+    "syl": "na:z-:zaa-rah",
+    "wt": "(= = x)",
+    "ascii": "na:z:zaarah",
+    "mean": ""
+  },
+  {
+    "syl": "ni-gaa-h",
+    "wt": "(- = -)",
+    "ascii": "nigaah",
+    "mean": "\"glance\""
+  },
+  {
+    "syl": "ni-gah",
+    "wt": "(- x)",
+    "ascii": "nigah",
+    "mean": ""
+  },
+  {
+    "syl": "nan-haa",
+    "wt": "(= x)",
+    "ascii": "nanhaa",
+    "mean": "\"tiny\""
+  },
+  {
+    "syl": "nau",
+    "wt": "(=)",
+    "ascii": "nau",
+    "mean": "\"nine,\" \"new\""
+  },
+  {
+    "syl": "na-vaa-b",
+    "wt": "(- = -)",
+    "ascii": "navaab",
+    "mean": "\"Navab\""
+  },
+  {
+    "syl": "nav-vaa-b",
+    "wt": "(= = -)",
+    "ascii": "navvaab",
+    "mean": ""
+  },
+  {
+    "syl": "nau-shah",
+    "wt": "(= x)",
+    "ascii": "naushah",
+    "mean": "\"bridegroom\""
+  },
+  {
+    "syl": "nau-shaa-h",
+    "wt": "(= = -)",
+    "ascii": "naushaah",
+    "mean": ""
+  },
+  {
+    "syl": "nah",
+    "wt": "(-)",
+    "ascii": "nah",
+    "mean": "; (=), rare and archaic; \"not\""
+  },
+  {
+    "syl": "nah",
+    "wt": "(-)",
+    "ascii": "nah",
+    "mean": "\"neither\""
+  },
+  {
+    "syl": "nai",
+    "wt": "(=)",
+    "ascii": "nai",
+    "mean": "archaic"
+  },
+  {
+    "syl": "ne",
+    "wt": "(x)",
+    "ascii": "ne",
+    "mean": "ergative marker"
+  },
+  {
+    "syl": "na-yas-taa;N",
+    "wt": "(- = =)",
+    "ascii": "nayastaa;N",
+    "mean": "\"reed-thicket\""
+  },
+  {
+    "syl": "nai-si-taa;N",
+    "wt": "(= - =)",
+    "ascii": "naisitaa;N",
+    "mean": ""
+  },
+  {
+    "syl": "var-nah",
+    "wt": "(= x)",
+    "ascii": "varnah",
+    "mean": "\"otherwise\""
+  },
+  {
+    "syl": "va-gar-nah",
+    "wt": "(- = x)",
+    "ascii": "vagarnah",
+    "mean": ""
+  },
+  {
+    "syl": "vuh",
+    "wt": "(x)",
+    "ascii": "vuh",
+    "mean": "\"he, she it\""
+  },
+  {
+    "syl": "va-haa;N",
+    "wt": "(- x)",
+    "ascii": "vahaa;N",
+    "mean": "\"there\""
+  },
+  {
+    "syl": "vaa;N",
+    "wt": "(=)",
+    "ascii": "vaa;N",
+    "mean": "archaic"
+  },
+  {
+    "syl": "vai",
+    "wt": "(=)",
+    "ascii": "vai",
+    "mean": "rare and archaic, \"they\""
+  },
+  {
+    "syl": "haa-))e",
+    "wt": "(= x)",
+    "ascii": "haa))e",
+    "mean": "\"alas\""
+  },
+  {
+    "syl": "haay",
+    "wt": "(=)",
+    "ascii": "hai",
+    "mean": ""
+  },
+  {
+    "syl": "ho",
+    "wt": "(x)",
+    "ascii": "ho",
+    "mean": "subjunc. or fam. imp. of [honaa]"
+  },
+  {
+    "syl": "hu-))aa",
+    "wt": "(- x)",
+    "ascii": "huu))aa",
+    "mean": "\"occurred\""
+  },
+  {
+    "syl": "hu-))e",
+    "wt": "(- x)",
+    "ascii": "huu))e",
+    "mean": ""
+  },
+  {
+    "syl": "hu-))ii",
+    "wt": "(- x)",
+    "ascii": "huu))ii",
+    "mean": ""
+  },
+  {
+    "syl": "hu-))ii;N",
+    "wt": "(- x)",
+    "ascii": "huu))ii;N",
+    "mean": ""
+  },
+  {
+    "syl": "ho-sh-yaa-r",
+    "wt": "(= - = -)",
+    "ascii": "hoshyaar",
+    "mean": "\"alert\""
+  },
+  {
+    "syl": "hush-yaa-r",
+    "wt": "(= = -)",
+    "ascii": "hushyaar",
+    "mean": ""
+  },
+  {
+    "syl": "ho;N",
+    "wt": "(x)",
+    "ascii": "ho;N",
+    "mean": "\"might be\""
+  },
+  {
+    "syl": "huu;N",
+    "wt": "(x)",
+    "ascii": "huu;N",
+    "mean": "\"am\""
+  },
+  {
+    "syl": "hii",
+    "wt": "(x)",
+    "ascii": "hii",
+    "mean": "emphatic particle"
+  },
+  {
+    "syl": "hai",
+    "wt": "(x)",
+    "ascii": "hai",
+    "mean": "\"is\""
+  },
+  {
+    "syl": "hai;N",
+    "wt": "(x)",
+    "ascii": "hai;N",
+    "mean": "\"are\""
+  },
+  {
+    "syl": "yaa",
+    "wt": "(=)",
+    "ascii": "yaa",
+    "mean": "; (x), archaic; \"or,\" \"oh\""
+  },
+  {
+    "syl": "yuu-rish",
+    "wt": "(= =), (- =)",
+    "ascii": "yuurish",
+    "mean": "\"assault\""
+  },
+  {
+    "syl": "yih",
+    "wt": "(x)",
+    "ascii": "yih",
+    "mean": "\"this\""
+  },
+  {
+    "syl": "ya-haa;N",
+    "wt": "(- x)",
+    "ascii": "yahaa;N",
+    "mean": "\"here\""
+  },
+  {
+    "syl": "yaa;N",
+    "wt": "(=)",
+    "ascii": "yaa;N",
+    "mean": "archaic"
+  },
+  {
+    "syl": "yuu;N",
+    "wt": "(x)",
+    "ascii": "yuu;N",
+    "mean": "\"in such a way\""
+  },
+  {
+    "syl": "ye",
+    "wt": "(=)",
+    "ascii": "ye",
+    "mean": "rare and archaic, \"these\"  -- meter book index -- Ghalib sitemap -- Mir sitemap -- FWP's main page --"
+  }
+]

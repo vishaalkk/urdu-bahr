@@ -1,0 +1,35 @@
+{
+  "metadata": {
+    "title": "Attributions & Scholarly Citations",
+    "description": "Primary academic and computational sources powering the Urdu Meter Handbook and Interactive Studio.",
+    "entries_count": 2
+  },
+  "entries": [
+    {
+      "id": "pritchett_khaliq_1987",
+      "authors": [
+        "Frances W. Pritchett",
+        "Khawaja Ahmad Khaliq Anjum"
+      ],
+      "title": "Urdu Meter: A Practical Handbook",
+      "urdu_title": "اردو بحور: ایک عملی دستی کتاب",
+      "year": "1987 (Print); 2003+ (Web Edition)",
+      "publisher_or_affiliation": "Department of Middle Eastern, South Asian, and African Studies (MESAAS), Columbia University; South Asian Studies, University of Wisconsin-Madison",
+      "canonical_url": "https://franpritchett.com/00ghalib/meterbk/00_intro.html",
+      "summary": "The primary intellectual, theoretical, and pedagogical foundation of this software. Pritchett & Khaliq formulated the empirical weight rule ('2 letters = Long (=), 1 letter = Short (-)'), the vertical syllable code-breaking scansion method, the catalog of 37 classical meters grouped into melodic families, the rules of flexibility (x), and the 24 classical ghazal exercises with answer keys.",
+      "related_project": "Also citing Frances W. Pritchett's monumental online research repository 'A Desertful of Roses: The Divan of Ghalib in Urdu with Complete Scansions and Commentary' (https://franpritchett.com/00ghalib/)."
+    },
+    {
+      "id": "pue_ast_transliteration",
+      "authors": [
+        "A. Sean Pue"
+      ],
+      "title": "Finite-State AST Graph Transliteration & Multi-Script Parsing Engine (ghalib.js)",
+      "urdu_title": "محدود المعطیات گراف پر مبنی کثیر الخطی ٹرانسلٹریشن انجن",
+      "year": "2002–present",
+      "publisher_or_affiliation": "Department of Linguistics, Languages, and Cultures, Michigan State University; Columbia University South Asian Digital Humanities",
+      "canonical_url": "https://www.columbia.edu/itc/mealac/pritchett/00ghalib/script/ghalib.js",
+      "summary": "Developer of the underlying finite-state transition graph and abstract syntax tree parser ('ghalib.js', 'urdu_parser_data.js', 'devanagari_parser_data.js', 'diacritics_parser_data.js') originally installed in October 2002 on Columbia's 'A Desertful of Roses'. In this application, Sean Pue's algorithm powers our multi-script engine, enabling instantaneous switching across Urdu Nastaliq, Devanagari, Roman with academic diacritics, and ASCII."
+    }
+  ]
+}

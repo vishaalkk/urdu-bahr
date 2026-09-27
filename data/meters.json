@@ -1,0 +1,429 @@
+{
+  "standard": [
+    {
+      "id": 1,
+      "pattern": "= = = /= - = / - = =",
+      "name": "hazaj musaddas axram ashtar mahzūf",
+      "raw_name": "hazaj musaddas a;xram ashtar ma;h;zuuf",
+      "caesura": false,
+      "paired": [
+        9
+      ],
+      "notes": "[hazaj musaddas a;xram ashtar ma;h;zuuf]. May be used with #9."
+    },
+    {
+      "id": 2,
+      "pattern": "= = / - = = // = = / - = =",
+      "name": "mutaqārib musamman asram",
+      "raw_name": "mutaqaarib mu;samman a;sram",
+      "caesura": true,
+      "paired": [],
+      "notes": "[mutaqaarib mu;samman a;sram]. Has caesura."
+    },
+    {
+      "id": 3,
+      "pattern": "= = - = / = = - = / = = - = / = = - =",
+      "name": "rajaz musamman sālim",
+      "raw_name": "rajaz mu;samman saalim",
+      "caesura": false,
+      "paired": [],
+      "notes": "[rajaz mu;samman saalim]"
+    },
+    {
+      "id": 4,
+      "pattern": "= = - / = - = = // = = - / = - = =",
+      "name": "muzāriʻ musamman axrab",
+      "raw_name": "mu.zaari(( mu;samman a;xrab",
+      "caesura": true,
+      "paired": [],
+      "notes": "[mu.zaari(( mu;samman a;xrab]. Has caesura."
+    },
+    {
+      "id": 5,
+      "pattern": "= = - / = - = - / - = = - / = - =",
+      "name": "muzāriʻ musamman axrab makfūf mahzūf",
+      "raw_name": "mu.zaari(( mu;samman a;xrab makfuuf ma;h;zuuf",
+      "caesura": false,
+      "paired": [],
+      "notes": "[mu.zaari(( mu;samman a;xrab makfuuf ma;h;zuuf]"
+    },
+    {
+      "id": 6,
+      "pattern": "= = / - - = / = = / = = / = = / - - = / = = / = =",
+      "name": "mutadārik musamman muzāʻaf maqtūʻ maxbūn",
+      "raw_name": "mutadaarik mu;samman mu.zaa((af maq:tuu(( ma;xbuun",
+      "caesura": false,
+      "paired": [],
+      "notes": "[mutadaarik mu;samman mu.zaa((af maq:tuu(( ma;xbuun]. Very rare. May also be used in a flexible form in which any odd-numbered long may be replaced by two shorts."
+    },
+    {
+      "id": 7,
+      "pattern": "= = - / - = = = // = = - / - = = =",
+      "name": "hazaj musamman axrab",
+      "raw_name": "hazaj mu;samman a;xrab",
+      "caesura": true,
+      "paired": [],
+      "notes": "[hazaj mu;samman a;xrab]. Has caesura."
+    },
+    {
+      "id": 8,
+      "pattern": "= = - / - = = - / - = = - / - = =",
+      "name": "hazaj musamman axrab makfūf mahzūf",
+      "raw_name": "hazaj mu;samman a;xrab makfuuf ma;h;zuuf",
+      "caesura": false,
+      "paired": [],
+      "notes": "[hazaj mu;samman a;xrab makfuuf ma;h;zuuf] A note for those with theoretical interests: Mir's ghazal M{618} is in this meter. In its first line, the two short syllables in the middle of the line are replaced by one long syllable: din duurii chaman me;N jo ham shaam kare;Nge . This is the kind of thing that readily happens in the rubaa((ii meters (see section 6.3 below); and indeed, this meter is very close to the first ruba'i meter in the list. In several decades of ghazal reading, this one line is the only such example in this meter that I have ever seen. It's rare, but it's there. But since it's so rare, I cannot formulate a practical rule about when to expect it. I have discussed the theory of this with S. R. Faruqi (July 2017); he advises me to refer serious students of metrical theory to the chapter on taskiin-e ausa:t in his book ((aruu.z aahang aur bayaan . For another example of taskiin-e ausa:t see {1722,6}. Another Mirian example: {1768,7}."
+    },
+    {
+      "id": 9,
+      "pattern": "= = - / - = - = / - = =",
+      "name": "hazaj musaddas axrab maqbūz mahzūf",
+      "raw_name": "hazaj musaddas a;xrab maqbuu.z ma;h;zuuf",
+      "caesura": false,
+      "paired": [
+        1
+      ],
+      "notes": "[hazaj musaddas a;xrab maqbuu.z ma;h;zuuf]. May be used with #1."
+    },
+    {
+      "id": 10,
+      "pattern": "= - = = / = - = = / = - = = / = - =",
+      "name": "ramal musamman mahzūf",
+      "raw_name": "ramal mu;samman ma;h;zuuf",
+      "caesura": false,
+      "paired": [],
+      "notes": "[ramal mu;samman ma;h;zuuf]"
+    },
+    {
+      "id": 11,
+      "pattern": "= - = = / = - = = / = - =",
+      "name": "ramal musaddas mahzūf",
+      "raw_name": "ramal musaddas ma;h;zuuf",
+      "caesura": false,
+      "paired": [],
+      "notes": "[ramal musaddas ma;h;zuuf]"
+    },
+    {
+      "id": 12,
+      "pattern": "= - = / = - = / = - = / = - = / = - = / = - = / = - = / = - =",
+      "name": "mutadārik musamman muzāʻaf sālim",
+      "raw_name": "mutadaarik mu;samman mu.zaa((af saalim",
+      "caesura": false,
+      "paired": [],
+      "notes": "[mutadaarik mu;samman mu.zaa((af saalim]. Sometimes used with only four feet; in this case the [mu.zaa((af] is dropped from its name."
+    },
+    {
+      "id": 13,
+      "pattern": "= - = / = - = / = - = / =",
+      "name": "mutadārik musamman maqtūʻ mahzūf",
+      "raw_name": "mutadaarik mu;samman maq:tuu(( ma;h;zuuf",
+      "caesura": false,
+      "paired": [],
+      "notes": "[mutadaarik mu;samman maq:tuu(( ma;h;zuuf]"
+    },
+    {
+      "id": 14,
+      "pattern": "=* - = = / - = - = / = =",
+      "name": "xafīf musaddas maxbūn mahzūf maqtūʻ",
+      "raw_name": ";xafiif musaddas ma;xbuun ma;h;zuuf maq:tuu((",
+      "caesura": false,
+      "paired": [
+        15
+      ],
+      "notes": "[;xafiif musaddas ma;xbuun ma;h;zuuf maq:tuu((]. May be used with #15. *The first syllable is properly long, but may be replaced with a short."
+    },
+    {
+      "id": 15,
+      "pattern": "=* - = = / - = - = / - - =",
+      "name": "xafīf musaddas maxbūn mahzūf",
+      "raw_name": ";xafiif musaddas ma;xbuun ma;h;zuuf",
+      "caesura": false,
+      "paired": [
+        14
+      ],
+      "notes": "[;xafiif musaddas ma;xbuun ma;h;zuuf]. May be used with #14. *The first syllable is properly long, but may be replaced with a short."
+    },
+    {
+      "id": 16,
+      "pattern": "=* - = = / - - = = / = =",
+      "name": "ramal musaddas maxbūn mahzūf maqtūʻ",
+      "raw_name": "ramal musaddas ma;xbuun ma;h;zuuf maq:tuu((",
+      "caesura": false,
+      "paired": [
+        17
+      ],
+      "notes": "[ramal musaddas ma;xbuun ma;h;zuuf maq:tuu((]. May be used with #17. *The first syllable is properly long, but may be replaced with a short."
+    },
+    {
+      "id": 17,
+      "pattern": "=* - = = / - - = = / - - =",
+      "name": "ramal musaddas maxbūn mahzūf",
+      "raw_name": "ramal musaddas ma;xbuun ma;h;zuuf",
+      "caesura": false,
+      "paired": [
+        16
+      ],
+      "notes": "[ramal musaddas ma;xbuun ma;h;zuuf]. May be used with #16. *The first syllable is properly long, but may be replaced with a short."
+    },
+    {
+      "id": 18,
+      "pattern": "=* - = = / - - = = / - - = = / = =",
+      "name": "ramal musamman maxbūn mahzūf maqtūʻ",
+      "raw_name": "ramal mu;samman ma;xbuun ma;h;zuuf maq:tuu((",
+      "caesura": false,
+      "paired": [
+        19
+      ],
+      "notes": "[ramal mu;samman ma;xbuun ma;h;zuuf maq:tuu((]. May be used with #19. *The first syllable is properly long, but may be replaced with a short."
+    },
+    {
+      "id": 19,
+      "pattern": "=* - = = / - - = = / - - = = / - - =",
+      "name": "ramal musamman maxbūn mahzūf",
+      "raw_name": "ramal mu;samman ma;xbuun ma;h;zuuf",
+      "caesura": false,
+      "paired": [
+        18
+      ],
+      "notes": "[ramal mu;samman ma;xbuun ma;h;zuuf]. May be used with #18. *The first syllable is properly long, but may be replaced with a short."
+    },
+    {
+      "id": 20,
+      "pattern": "= - = / - = = = // = - = / - = = =",
+      "name": "hazaj musamman ashtar",
+      "raw_name": "hazaj mu;samman ashtar",
+      "caesura": true,
+      "paired": [],
+      "notes": "[hazaj mu;samman ashtar]. Has caesura."
+    },
+    {
+      "id": 21,
+      "pattern": "= - = / - = - = // = - = / - = - =",
+      "name": "hazaj musamman ashtar maqbūz",
+      "raw_name": "hazaj mu;samman ashtar maqbuu.z",
+      "caesura": true,
+      "paired": [],
+      "notes": "[hazaj mu;samman ashtar maqbuu.z]. Has caesura."
+    },
+    {
+      "id": 22,
+      "pattern": "= - - = / = - = // = - - = / = - =",
+      "name": "munsarih musamman matvī maksūf",
+      "raw_name": "munsari;h mu;samman ma:tvii maksuuf",
+      "caesura": true,
+      "paired": [],
+      "notes": "[munsari;h mu;samman ma:tvii maksuuf]. Has caesura."
+    },
+    {
+      "id": 23,
+      "pattern": "= - - = / = - = - / = - - = / =",
+      "name": "munsarih musamman matvī manhūr",
+      "raw_name": "munsari;h mu;samman ma:tvii man;huur",
+      "caesura": false,
+      "paired": [],
+      "notes": "[munsari;h mu;samman ma:tvii man;huur]"
+    },
+    {
+      "id": 24,
+      "pattern": "= - - = / = - - = / = - =",
+      "name": "sarīʻ musaddas matvī maksūf",
+      "raw_name": "sarii(( musaddas ma:tvii maksuuf",
+      "caesura": false,
+      "paired": [],
+      "notes": "[sarii(( musaddas ma:tvii maksuuf]"
+    },
+    {
+      "id": 25,
+      "pattern": "= - - = / - = - = // = - - = / - = - =",
+      "name": "rajaz musamman matvī maxbūn",
+      "raw_name": "rajaz mu;samman ma:tvii ma;xbuun",
+      "caesura": true,
+      "paired": [],
+      "notes": "[rajaz mu;samman ma:tvii ma;xbuun] Has caesura."
+    },
+    {
+      "id": 26,
+      "pattern": "- = = = / - = = = / - = = = / - = = =",
+      "name": "hazaj musamman sālim",
+      "raw_name": "hazaj mu;samman saalim",
+      "caesura": false,
+      "paired": [],
+      "notes": "[hazaj mu;samman saalim]. Not allowed to have extra unscanned short syllable at the end."
+    },
+    {
+      "id": 27,
+      "pattern": "- = = = / - = = = / - = =",
+      "name": "hazaj musaddas mahzūf",
+      "raw_name": "hazaj musaddas ma;h;zuuf",
+      "caesura": false,
+      "paired": [],
+      "notes": "[hazaj musaddas ma;h;zuuf]"
+    },
+    {
+      "id": 28,
+      "pattern": "- = = / - = = / - = = / - = =",
+      "name": "mutaqārib musamman sālim",
+      "raw_name": "mutaqaarib mu;samman saalim",
+      "caesura": false,
+      "paired": [],
+      "notes": "[mutaqaarib mu;samman saalim]"
+    },
+    {
+      "id": 29,
+      "pattern": "- = = / - = = / - = = / - =",
+      "name": "mutaqārib musamman mahzūf",
+      "raw_name": "mutaqaarib mu;samman ma;h;zuuf",
+      "caesura": false,
+      "paired": [],
+      "notes": "[mutaqaarib mu;samman ma;h;zuuf]"
+    },
+    {
+      "id": 30,
+      "pattern": "- = - / = = / - = - / = = / - = - / = = / - = - / = =",
+      "name": "mutaqārib musamman muzāʻaf maqbūz aslam",
+      "raw_name": "mutaqaarib mu;samman mu.zaa((af maqbuu.z a;slam",
+      "caesura": false,
+      "paired": [],
+      "notes": "[mutaqaarib mu;samman mu.zaa((af maqbuu.z a;slam]"
+    },
+    {
+      "id": 31,
+      "pattern": "- = - / = = / - = - / = = / - = - / = =",
+      "name": "mutaqārib musaddas muzāʻaf maqbūz aslam",
+      "raw_name": "mutaqaarib musaddas mu.zaa((af maqbuu.z a;slam",
+      "caesura": false,
+      "paired": [],
+      "notes": "[mutaqaarib musaddas mu.zaa((af maqbuu.z a;slam]"
+    },
+    {
+      "id": 32,
+      "pattern": "- = - = / - = - = / - = - = / - = - =",
+      "name": "hazaj musamman mazbūz",
+      "raw_name": "hazaj mu;samman mazbuu.z",
+      "caesura": false,
+      "paired": [],
+      "notes": "[hazaj mu;samman maqbuu.z]"
+    },
+    {
+      "id": 33,
+      "pattern": "- = - = / - - = = / - = - = / = =",
+      "name": "mujtas musamman maxbūn mahzūf maqtūʻ",
+      "raw_name": "mujta;s mu;samman ma;xbuun ma;h;zuuf maq:tuu((",
+      "caesura": false,
+      "paired": [
+        34
+      ],
+      "notes": "[mujta;s mu;samman ma;xbuun ma;h;zuuf maq:tuu((]. May be used with #34."
+    },
+    {
+      "id": 34,
+      "pattern": "- = - = / - - = = / - = - = / - - =",
+      "name": "mujtas musamman maxbūn mahzūf",
+      "raw_name": "mujta;s mu;samman ma;xbuun ma;h;zuuf",
+      "caesura": false,
+      "paired": [
+        33
+      ],
+      "notes": "[mujta;s mu;samman ma;xbuun ma;h;zuuf]. May be used with #33."
+    },
+    {
+      "id": 35,
+      "pattern": "- = - = / - - = = / - = - = / - - = =",
+      "name": "mujtas musamman maxbūn",
+      "raw_name": "mujta;s mu;samman ma;xbuun",
+      "caesura": false,
+      "paired": [],
+      "notes": "[mujta;s mu;samman ma;xbuun]. Does not have caesura."
+    },
+    {
+      "id": 36,
+      "pattern": "- - = - / = - = = // - - = - / = - = =",
+      "name": "ramal musamman mashkūl",
+      "raw_name": "ramal mu;samman mashkuul",
+      "caesura": true,
+      "paired": [],
+      "notes": "[ramal mu;samman mashkuul] Has caesura."
+    },
+    {
+      "id": 37,
+      "pattern": "- - = - = / - - = - = / - - = - = / - - = - =",
+      "name": "kāmil musamman sālim",
+      "raw_name": "kaamil mu;samman saalim",
+      "caesura": false,
+      "paired": [],
+      "notes": "[kaamil mu;samman saalim] Each meter in the list above is described by a series of Arabic terms, the first of which is the name of the basic meter itself. The second is either mu;samman [mu;samman], describing a meter with four feet, or musaddas [musaddas], describing a meter with three feet. The rest of the terms describe the modifications, zi;haafaat [zi;haafaat], by which the basic or saalim meter has been converted into the particular meter being described. At the end of a line of poetry in any of these meters, an extra word-final short syllable may be present if the poet so chooses. This word-final short syllable is not scanned. Such a syllable almost always consists of a true one-letter short syllable, or of a syllable of the form { )) [hamzah] + vowel}. This short \"cheat syllable\" is permitted in all the meters except #26. A number of meters on the above list have a natural \"caesura,\" or break, halfway through each line. This is not formally a \"caesura\" in the Western metrical sense, so it's technically a kind of \"quasi-caesura\": but for convenience it is here called a \"caesura.\" All such meters have the following pattern of feet: foot A, foot B; (break); foot A, foot B. In these meters, an extra word-final short syllable, unscanned, may be present at the end of the first half of the line, just before the (quasi-)caesura. Meters which permit this extra unscanned word-final short syllable before the caesura are: #2, #4, #7, #20, #21, #22, #25, #36. Note that #35 does not have such a caesura. The caesura was not traditionally recognized in Urdu-Persian metrical theory; it was first explored by Hasrat Mohani [ ;hasrat mohaanii ] in ma((aa))ib-e su;xan [ma((aa))iib-e su;xan] (Kanpur, 1941), and has since been studied by S. R. Faruqi in ((aruu.z aahang aur bayaan . Most traditional genres of poetry may be written in any meter. The ;Gazal [Gazal], qa.siidah [qa.siidah], and mar;siyah [mar;siyah] offer this freedom, as do most of the minor genres. The ma;snavii [ma;snavii] is traditionally supposed to be written in one of the following meters: #1 with #9; #11; #14 with #15; #16 with #17; #24; #27; #28; #29. But this is not binding, only customary. Permissible meters for the rubaa((ii [rubaa((ii], however, are very clearly spelled out; see Section 6.3 for details. Free verse, or aazaad na:zm [aazaad na:zm], tends to use either #28 or \"Hindi\" meter (see Section 6.2). You might have noticed certain pairs of meters-- #1 and #9, #14 and #15, #16 and #17, #18 and #19, #33 and #34-- which differ only in that the next-to-last syllable consists of one long (=) in the first member of the pair, which is replaced by two shorts (- -) in the second member. From a practical point of view, it does indeed seem as though these are permutations of a single meter. But from a theoretical point of view, they are quite separate; poems are sometimes written using only one member of the pair. So we have shown them separately, but have also indicated their close affiliation. Sometimes, when scanning, the student may encounter quite deviant-seeming poems, in which often almost every single line seems different from the next. This might occur in dealing with the flexible variant form of #6. More common than this form, however, is Mir's \"Hindi\" meter, which will be dealt with below."
+    }
+  ],
+  "rubai": [
+    {
+      "id": "R1",
+      "pattern": "= = - / - = = - / - = = - / - =",
+      "name": "axrab makfūf \n            majbūb"
+    },
+    {
+      "id": "R2",
+      "pattern": "= = - / - = = - / - = = = / =",
+      "name": "axrab makfūf \n            abtar"
+    },
+    {
+      "id": "R3",
+      "pattern": "= = - / - = - = / - = = = / =",
+      "name": "axrab maqbūz \n            abtar"
+    },
+    {
+      "id": "R4",
+      "pattern": "= = - / - = - = / - = = - / - =",
+      "name": "axrab maqbūz \n            makfūf majbūb"
+    },
+    {
+      "id": "R5",
+      "pattern": "= = = / = - = / - = = - / - =",
+      "name": "axram ashtar \n            makfūf majbūb"
+    },
+    {
+      "id": "R6",
+      "pattern": "= = = / = - = / - = = = / =",
+      "name": "axram ashtar \n            abtar"
+    },
+    {
+      "id": "R7",
+      "pattern": "= = - / - = = = / = = = / =",
+      "name": "axrab axram abtar"
+    },
+    {
+      "id": "R8",
+      "pattern": "= = - / - = = = / = = - / - =",
+      "name": "axrab majbūb"
+    },
+    {
+      "id": "R9",
+      "pattern": "= = = / = = = / = = - / - =",
+      "name": "axram axrab majbūb"
+    },
+    {
+      "id": "R10",
+      "pattern": "= = = / = = = / = = = / =",
+      "name": "axram abtar"
+    },
+    {
+      "id": "R11",
+      "pattern": "= = = / = = - / - = = = / =",
+      "name": "axram axrab \n            abtar"
+    },
+    {
+      "id": "R12",
+      "pattern": "= = = / = = - / - = = - / - =",
+      "name": "axram axrab \n            makfūf majbūb"
+    }
+  ],
+  "hindi_info": {
+    "description": "Mir's moraic meter based on 16 moras (matras) per hemistich, divided into 8 + 8 by a strong caesura.",
+    "feet": [
+      "= =",
+      "= -",
+      "- = =",
+      "- = -",
+      "="
+    ]
+  }
+}

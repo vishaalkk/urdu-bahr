@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rhythm Roll — demo</title>
+<style>
+  :root{
+    --fg:#231c2e; --bg:#F4ECDD; --bg2:#EDE2CD; --muted:#766d88; --accent:#B27414;
+    --rule:rgba(35,28,46,.2); --long:#B27414; --short:#11836f;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:var(--bg); color:var(--fg); font-family:ui-sans-serif,system-ui,Helvetica,Arial,sans-serif;
+    padding:24px 16px 60px; max-width:1040px; margin:0 auto;
+  }
+  h1{font-size:22px; margin:0 0 4px}
+  p.lede{color:var(--muted); font-size:14px; margin:0 0 28px; max-width:640px; line-height:1.5}
+  section.example{margin-bottom:40px}
+  h2{font-size:15px; margin:0 0 2px; letter-spacing:.01em}
+  .couplet{
+    font-family:'Noto Nastaliq Urdu','Jameel Noori Nastaleeq',serif; direction:rtl; font-size:19px;
+    line-height:2; margin:0 0 10px; color:var(--fg);
+  }
+  .couplet .ro{
+    font-family:ui-sans-serif,system-ui,sans-serif; direction:ltr; font-size:13px; color:var(--muted);
+    line-height:1.6; margin-top:2px;
+  }
+  .attrib{font-size:12px; color:var(--muted); margin:0 0 12px}
+  .toolbar{
+    display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin:10px 0 12px; font-size:13px; color:var(--muted);
+  }
+  .toolbar label{display:inline-flex; align-items:center; gap:6px; cursor:pointer}
+  .toolbar input[type="range"]{width:110px}
+  .mount{margin-top:6px}
+  .dark-wrap{
+    --fg:#ECE3D0; --bg:#161320; --bg2:#1d1930; --muted:#a79db3; --accent:#E6A93C;
+    --rule:rgba(236,227,208,.18); --long:#E6A93C; --short:#52CBB6;
+    background:var(--bg); color:var(--fg); padding:18px; border-radius:12px;
+  }
+  .dark-wrap .couplet, .dark-wrap .attrib{color:var(--fg)}
+  .dark-wrap .attrib, .dark-wrap .couplet .ro{color:var(--muted)}
+  .badge{
+    display:inline-block; font-size:10.5px; letter-spacing:.03em; text-transform:uppercase; color:var(--accent);
+    border:1px solid var(--rule); border-radius:999px; padding:2px 8px; margin-bottom:8px;
+  }
+  .preview-note{font-size:13px; color:var(--muted); max-width:640px; line-height:1.5}
+  footer{margin-top:50px; font-size:12px; color:var(--muted); border-top:1px solid var(--rule); padding-top:14px}
+</style>
+</head>
+<body>
+
+<h1>Rhythm Roll</h1>
+<p class="lede">
+  A standalone piano-roll for Urdu metrical lines. Each block's width encodes syllable duration
+  (long = 2 units, short = 1, flexible = hatched at 1.5). Click <b>▶</b> to hear a demo click track drive
+  the playhead — that audio lives only in this demo page; the widget itself never touches WebAudio.
+  Toggle "editable" and click a block, or focus it and press Space/Enter, to cycle long → short → flexible.
+</p>
+
+<section class="example" id="ex1">
+  <span class="badge">Hazaj musamman sālim</span>
+  <h2>mafāʿīlun · mafāʿīlun · mafāʿīlun · mafāʿīlun</h2>
+  <div class="couplet">
+    کیا مجھ عشق نے ظالم کو آب آہستہ آہستہ<br>
+    کہ آتش گل کو کرتا ہے گلاب آہستہ آہستہ
+    <div class="ro">kiyā mujh ʿishq ne z̤ālim ko āb āhistah āhistah<br>kih ātish gul ko kartā hai gulāb āhistah āhistah</div>
+  </div>
+  <p class="attrib">Vali Dakhani, ghazal 1 — data/exercises_verified.json #1, meter #26. Scanned with the app's own scansion engine.</p>
+  <div class="toolbar">
+    <label>editable <input type="checkbox" data-ex="1" class="tog-editable"></label>
+    <label>compare to meter <input type="checkbox" data-ex="1" class="tog-compare"></label>
+    <label>bpm <input type="range" min="40" max="140" value="76" data-ex="1" class="tog-bpm"> <span data-ex="1" class="bpm-out">76</span></label>
+  </div>
+  <div class="mount" id="mount1"></div>
+</section>
+
+<section class="example" id="ex2">
+  <span class="badge">Ramal musamman mahzūf</span>
+  <h2>fāʿilātun · fāʿilātun · fāʿilātun · fāʿilun</h2>
+  <div class="couplet">
+    سب کہاں کچھ لالہ او گل میں نمایاں ہو گئیں<br>
+    خاک میں کیا صورتیں ہونگی کہ پنہاں ہو گئیں
+    <div class="ro">sab kahāñ kuchh lāla o gul meñ numāyāñ ho gaʼīñ<br>ḳhāk meñ kyā .sūrateñ hoñgī kih pinhāñ ho gaʼīñ</div>
+  </div>
+  <p class="attrib">Ghalib, ghazal 18 — data/exercises_verified.json #18, meter #10.</p>
+  <div class="toolbar">
+    <label>editable <input type="checkbox" data-ex="2" class="tog-editable" checked></label>
+    <label>compare to meter <input type="checkbox" data-ex="2" class="tog-compare"></label>
+    <label>bpm <input type="range" min="40" max="140" value="92" data-ex="2" class="tog-bpm"> <span data-ex="2" class="bpm-out">92</span></label>
+  </div>
+  <div class="mount" id="mount2"></div>
+</section>
+
+<section class="example" id="ex3">
+  <div class="dark-wrap">
+    <span class="badge">Mujtass musamman maxbūn mahzūf — dark theme, via CSS vars</span>
+    <h2>mufāʿilun · faʿilātun · mufāʿilun · faʿilun</h2>
+    <div class="couplet">
+      یہ آرزو تھی تجھے گل کے رو بہ رو کرتے<br>
+      ہم اور بلبلِ بیتاب گفتگو کرتے
+      <div class="ro">yih ārzū thī tujhe gul ke rū bah rū karte<br>ham aur bulbul-e betāb guftagū karte</div>
+    </div>
+    <p class="attrib">Atish, ghazal 10 — data/exercises_verified.json #10, meter #34 (paired with #33).</p>
+    <div class="toolbar">
+      <label>editable <input type="checkbox" data-ex="3" class="tog-editable"></label>
+      <label>compare to meter <input type="checkbox" data-ex="3" class="tog-compare"></label>
+      <label>bpm <input type="range" min="40" max="140" value="84" data-ex="3" class="tog-bpm"> <span data-ex="3" class="bpm-out">84</span></label>
+    </div>
+    <div class="mount" id="mount3"></div>
+  </div>
+</section>
+
+<section class="example" id="ex-caesura">
+  <span class="badge">Feature preview</span>
+  <h2>Caesura marker</h2>
+  <p class="preview-note">
+    None of the three meters above take a caesura, so it's not exercised above. This is a short synthetic
+    pattern (not a real verse) just to show the marker mid-line, as used by meters such as muẕāriʿ or
+    munsariḥ.
+  </p>
+  <div class="mount" id="mount-cae"></div>
+</section>
+
+<footer>
+  rhythmRoll.js · vanilla ES module · no dependencies, no network requests. See README.md for the API.
+</footer>
+
+<script type="module">
+import { mountRhythmRoll } from './rhythmRoll.js';
+
+// --- syllable data, produced by running the app's own Scan.scanLine()/explain()
+// against these exact lines (see PR notes) — not hand-scanned. ---
+
+const EX1 = {
+  syllables: [
+    {text:'ک', weight:'s'}, {text:'یا', weight:'l'}, {text:'مجھ', weight:'l'}, {text:'عش', weight:'l'},
+    {text:'ق', weight:'s'}, {text:'نے', weight:'l'}, {text:'ظا', weight:'l'}, {text:'لم', weight:'l'},
+    {text:'کو', weight:'s'}, {text:'آ', weight:'l'}, {text:'بآ', weight:'l'}, {text:'ہس', weight:'l'},
+    {text:'تہ', weight:'s'}, {text:'آ', weight:'l'}, {text:'ہس', weight:'l'}, {text:'تہ', weight:'l'},
+  ],
+  feet: [[0,3],[4,7],[8,11],[12,15]],
+  pattern: ['s','l','l','l','s','l','l','l','s','l','l','l','s','l','l','l'],
+};
+
+const EX2 = {
+  syllables: [
+    {text:'سب', weight:'l'}, {text:'ک', weight:'s'}, {text:'ہاں', weight:'l'}, {text:'کچھ', weight:'l'},
+    {text:'لا', weight:'l'}, {text:'لہ', weight:'s'}, {text:'او', weight:'l'}, {text:'گل', weight:'l'},
+    {text:'میں', weight:'l'}, {text:'ن', weight:'s'}, {text:'ما', weight:'l'}, {text:'یاں', weight:'l'},
+    {text:'ہو', weight:'l'}, {text:'گ', weight:'s'}, {text:'ئیں', weight:'l'},
+  ],
+  feet: [[0,3],[4,7],[8,11],[12,14]],
+  pattern: ['l','s','l','l','l','s','l','l','l','s','l','l','l','s','l'],
+};
+
+const EX3 = {
+  syllables: [
+    {text:'یہ', weight:'s'}, {text:'آ', weight:'l'}, {text:'ر', weight:'s'}, {text:'زو', weight:'l'},
+    {text:'تھی', weight:'s'}, {text:'ت', weight:'s'}, {text:'جھے', weight:'l'}, {text:'گل', weight:'l'},
+    {text:'کے', weight:'s'}, {text:'رو', weight:'l'}, {text:'بہ', weight:'s'}, {text:'رو', weight:'l'},
+    {text:'ک', weight:'s'}, {text:'ر', weight:'s'}, {text:'تے', weight:'l'},
+  ],
+  feet: [[0,3],[4,7],[8,11],[12,14]],
+  pattern: ['s','l','s','l','s','s','l','l','s','l','s','l','s','s','l'],
+};
+
+const CAESURA_DEMO = {
+  syllables: [
+    {text:'1', weight:'l'}, {text:'2', weight:'l'}, {text:'3', weight:'s'},
+    {text:'4', weight:'l'}, {text:'5', weight:'s'}, {text:'6', weight:'l'}, {text:'7', weight:'l'},
+  ],
+  feet: [[0,2],[3,4],[5,6]],
+  caesura: 3,
+};
+
+// --- a tiny demo-only WebAudio click track. This is the only place in the
+// whole feature that touches audio; rhythmRoll.js never does. ---
+let ctx = null;
+let stopCurrent = null;
+
+function ensureCtx() {
+  if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+  return ctx;
+}
+
+function click(time, isLong) {
+  const c = ensureCtx();
+  const osc = c.createOscillator();
+  const gain = c.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = isLong ? 220 : 440;
+  gain.gain.setValueAtTime(0.0001, time);
+  gain.gain.exponentialRampToValueAtTime(0.35, time + 0.005);
+  gain.gain.exponentialRampToValueAtTime(0.0001, time + (isLong ? 0.16 : 0.09));
+  osc.connect(gain).connect(c.destination);
+  osc.start(time);
+  osc.stop(time + (isLong ? 0.18 : 0.11));
+}
+
+function playSequence(roll, { syllables, bpm }) {
+  if (stopCurrent) stopCurrent();
+  const c = ensureCtx();
+  const secPerUnit = 30 / Math.max(1, bpm);
+  const UNITS = { l: 2, s: 1, x: 1.5 };
+  const startAt = c.currentTime + 0.06;
+  let t = 0;
+  syllables.forEach((s) => {
+    click(startAt + t, s.weight === 'l');
+    t += (UNITS[s.weight] || 1) * secPerUnit;
+  });
+  const total = t;
+  const t0 = performance.now();
+  let raf = null;
+  function frame() {
+    const elapsed = (performance.now() - t0) / 1000;
+    roll.setPlayhead(elapsed);
+    if (elapsed < total) {
+      raf = requestAnimationFrame(frame);
+    } else {
+      roll.setPlayhead(total);
+      setTimeout(() => roll.highlight(-1), 200);
+    }
+  }
+  raf = requestAnimationFrame(frame);
+  stopCurrent = () => { if (raf) cancelAnimationFrame(raf); };
+}
+
+function wireExample(mountId, data, bpm) {
+  const roll = mountRhythmRoll(document.getElementById(mountId), {
+    syllables: data.syllables,
+    feet: data.feet,
+    caesura: data.caesura,
+    bpm,
+    editable: false,
+    onChange(next) { /* demo: nothing persisted, just cycling weights live */ },
+    onPlay(payload) { playSequence(roll, payload); },
+  });
+
+  const n = mountId.replace('mount', '');
+  const editTog = document.querySelector(`.tog-editable[data-ex="${n}"]`);
+  const cmpTog = document.querySelector(`.tog-compare[data-ex="${n}"]`);
+  const bpmSlider = document.querySelector(`.tog-bpm[data-ex="${n}"]`);
+  const bpmOut = document.querySelector(`.bpm-out[data-ex="${n}"]`);
+
+  if (editTog) {
+    roll.setEditable(editTog.checked);
+    editTog.addEventListener('change', () => roll.setEditable(editTog.checked));
+  }
+  if (cmpTog) {
+    cmpTog.addEventListener('change', () => roll.setTarget(cmpTog.checked ? data.pattern : null));
+  }
+  if (bpmSlider) {
+    bpmSlider.addEventListener('input', () => {
+      roll.setBpm(+bpmSlider.value);
+      if (bpmOut) bpmOut.textContent = bpmSlider.value;
+    });
+  }
+  return roll;
+}
+
+wireExample('mount1', EX1, 76);
+wireExample('mount2', EX2, 92);
+wireExample('mount3', EX3, 84);
+
+mountRhythmRoll(document.getElementById('mount-cae'), {
+  syllables: CAESURA_DEMO.syllables,
+  feet: CAESURA_DEMO.feet,
+  caesura: CAESURA_DEMO.caesura,
+  bpm: 80,
+  editable: false,
+});
+</script>
+</body>
+</html>

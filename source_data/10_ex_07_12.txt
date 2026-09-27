@@ -1,0 +1,112 @@
+
+
+   10_ex_07_12
+
+      @import "../stylesheets/comm2.css";
+
+          TEN == EXERCISES 
+            7-12 
+
+            *Ghazal 7 by Jur'at, p. 19*
+            *Ghazal 8 by Jur'at, pp. 193-194*
+            *Ghazal 9 by Atish, p. 218*
+            *Ghazal 10 by Atish, p. 218*
+            *Ghazal 11 by Zauq, p. 297*
+            *Ghazal 12 by Zauq, pp. 298-299* 
+
+            GHAZAL 7 by Jur'at, p. 191:
+          baal suljhaanaa tiraa 
+            kanghii se dil uljhaa))e hai
+            aur bikhre dekh kar bas jii hii bikhraa jaa))e hai
+          sur;x ;Dore dekh kyaa 
+            hii jaal me;N pha;Nstaa hai dil
+            nikle;N hai;N kyaa kyaa adaa))e;N jab kih tuu sharmaa))e hai
+          rang par chahre ke 
+            hai kyaa hii javaanii kii chamak
+            aur bhare gaalo;N pah jii bose ko kyaa lalchaa))e hai
+          ;Gash me;N ho jaataa 
+            hai jii bas ((i:tr kii buu baas par
+            jha;T se jur))at ke gale jab aa ke tuu lag jaa))e hai
+
+            GHAZAL 8 by Jur'at, pp. 193-194:
+          bhuul ga))e tum jin 
+            rozo;N ham ghar pah bulaa))e jaate the
+            hote the kyaa kyaa kuchh charche ((aish manaa))e jaate the
+          kyaa kyaa kuchh thii 
+            ;xaa:tirdaarii kyaa kyaa pyaar kii baate;N thii;N
+            kis kis ;Dhab se chaah jataa kar rab:t ba;Rhaa))e jaate the
+          karte the tum un kii 
+            ;xvushaamad jo the hamaare ma;hram-e raaz
+            har har baat pah kyaa kyaa un ke naaz u;Thaa))e jaate the
+          nang hai yaa ab naam 
+            se aisaa jahaa;N likhaa ho mi;Tvaa do
+            yaa pa;Rhne ko jur))at hii ke shi((r likhaa))e jaate the
+
+          GHAZAL 9 by 
+            Atish, p. 218:
+          ;hasrat-e jalvah-e 
+            diidaar li))e phirtii hai
+            pesh-e rauzan pas-e diivaar li))e phirtii hai
+          maal-e muflis mujhe 
+            samjhaa hai junuu;N ne shaayad
+            va;hshat-e dil sar-e baazaar li))e phirtii hai
+          ka((bah o dair me;N 
+            vuh ;xaanah-bar-andaaz kahaa;N
+            gardish-e kaafir-o-dii;Ndaar li))e phirtii hai
+          kisii .suurat se nahii;N 
+            jaa;N ko qaraar ai aatish
+            :tapish-e dil mujhe naachaar li))e phirtii hai
+
+          GHAZAL 10 by 
+            Atish, p. 218:
+          yih aarzuu thii tujhe 
+            gul ke ruu bah ruu karte
+            ham aur bulbul-e betaab guftaguu karte
+          mirii :tara;h se mah 
+            o mahr bhii hai;N aavaarah
+            kisii ;habiib kii yih bhii hai;N justajuu karte
+          jo dekhte tirii zanjiir-e 
+            zulf kaa ((aalam
+            asiir hone kii aazaad aarzuu karte
+          nah puuchh ((aalam-e 
+            bargashtah :taal((ii aatish
+            barastii aag jo baaraa;N kii aarzuu karte
+
+          GHAZAL 11 by 
+            Zauq, p. 297:
+          use ham ne bahut ;Dhuun;Dhaa 
+            nah paayaa
+            agar paayaa to khoj apnaa nah paayaa
+          muqaddar par hii gar 
+            suud o ziyaa;N hai
+            to ham ne yaa;N nah kuchh khoyaa nah paayaa
+          kahe kyaa haa))e za;xm-e 
+            dil hamaaraa
+            dahan paayaa lab-e goyaa nah paayaa
+          na:ziir us kii kahaa;N 
+            ((aalam me;N ai ;zauq
+            kahii;N aisaa nah paa))egaa nah paayaa
+
+          GHAZAL 12 by 
+            Zauq, pp. 298-299:
+          laa))i ;hayaat aa))e 
+            qa.zaa le chalii chale
+            apnii ;xvushii nah aa))e nah apnii ;xvushii chale
+          bahtar to hai yihii 
+            kih nah dunyaa se dil lage
+            par kyaa kare;N jo kaam nah be-dil-lagii chale
+          ho ((umr-e ;xi.zr bhii 
+            to kahe;Nge bavaqt-e marg
+            ham kyaa rahe yahaa;N abhii aa))e abhii chale
+          naazaa;N nah ho ;xirad 
+            pah jo honaa ho ho vuhii
+            daanish tirii nah kuchh mirii daanishvarii chale
+          dunyaa ne kis kaa raah-e 
+            fanaa me;N diyaa hai saath
+            tum bhii chale chalo yuu;N hii jab tak chalii chale  
+
+       -- meter 
+        book index -- Ghalib sitemap -- Mir 
+        sitemap -- FWP's main 
+        page -- 
+

@@ -1,0 +1,36 @@
+<!-- ===================== SCAN TAB ===================== -->
+<section id="scan-section" class="tab-view">
+  <div class="page-head" style="margin-bottom:14px;">
+    <div class="row" style="margin:0;align-items:center;gap:10px;">
+      <h1 style="font-size:24px;margin:0;">Scan a verse</h1>
+      <button class="icon-btn" id="btnScanHelp" onclick="toggleScanHelp()" aria-label="How to type for best results" title="Typing help" style="background:transparent;border:1px solid var(--line2);border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;color:var(--dim);cursor:pointer;font-size:13px;font-family:var(--mono);">ⓘ</button>
+    </div>
+    <div id="scanHelpPopover" class="card small" style="display:none;margin-top:10px;background:var(--bg3);">
+      <p class="small" style="margin:0 0 6px;"><b class="t">How to type for best results:</b></p>
+      <p class="small" style="margin:0;">The script hides short vowels, so the scanner considers every plausible reading and lets the meter choose, like a reader would. Two things help it: write <b class="t">tashdīd</b> ّ where a letter is doubled (مدّت، قصّہ، امّید), and write <b class="t">zer</b> ِ for an iẓāfat you'd pronounce (غمِ دل). Everything else is automatic.</p>
+    </div>
+  </div>
+
+  <textarea id="scanIn" rows="3" placeholder="Paste a misra, a sher, or a whole ghazal" style="width:100%;font-size:18px;padding:12px;border-radius:var(--radius-md);background:var(--bg2);color:var(--ink);border:1px solid var(--line2);line-height:1.6;" oninput="onScanComposerInput()"></textarea>
+  <textarea id="studioInput" style="display:none;" aria-hidden="true"></textarea>
+
+  <div class="row" style="margin:10px 0 14px;">
+    <button class="btn gold" onclick="runScan()">Scan ▸</button>
+    <button class="btn sm gold" id="btnPlayCouplet" onclick="studioPlayCouplet()" style="display:none;" aria-label="Play couplet rhythm">▶</button>
+    <button class="btn ghost sm" onclick="clearScan()">Clear</button>
+  </div>
+
+  <!-- Empty state quick try chips -->
+  <div id="scanEmptyState" style="margin:8px 0 16px;">
+    <span class="tiny muted">Try:</span>
+    <span id="samples" style="display:inline-flex;gap:6px;margin-left:6px;flex-wrap:wrap;"></span>
+  </div>
+
+  <div id="scanOut"></div>
+  <div id="studioResults" style="display:none;" aria-hidden="true"></div>
+
+  <!-- Accuracy footnote -->
+  <div class="footnote faint tiny" style="margin-top:24px;border-top:1px solid var(--line);padding-top:10px;">
+    Tested on the handbook's 226 exercise lines: 225 fit. <a href="#/about">About the scanner ›</a>
+  </div>
+</section>

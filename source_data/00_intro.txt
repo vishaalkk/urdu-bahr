@@ -1,0 +1,184 @@
+
+
+    A Practical Handbook of Urdu Meter, by F. W. Pritchett and
+      Kh. A. Khaliq
+
+      @import "../stylesheets/comm2.css";
+
+            Cover
+
+                    of the 1987 printed version, designed by FWP, based
+                    on the cover of the :tilismaat-e ((ajaa))ib,
+                    an old book of magic and wonders from the Naval
+                    Kishor Press.
+
+                ~~
+                      INTRODUCTION 
+                   TO
+                        THE NEW ONLINE VERSION ~~ 
+
+                We said at the
+                    end of Chapter 8 in the original print edition
+                    (1987) that real ahl-e zabaan were
+                    made and not born. That may have been only partially
+                    the case then, but it's all too true by now.
+                    Traditionally-educated ustads are a dying breed.
+                    Classical Urdu poetry, like so much else, belongs
+                    less and less to those who simply inherit it, and
+                    more and more to those who seek it out and adopt it
+                    for their own. 
+
+                The very forces
+                    that have deprived us of traditionally-educated
+                    ustads, however, have brought us the internet. Now
+                    Urdu poetry is international, and we can share with
+                    each other across time and space. And of course we
+                    still have Mir and Ghalib, and so much else besides.
+                    So dig in, you ahl-e zabaan of the
+                    future, and learn to use the tools. Classical ghazal
+                    poetry is an astonishing delight. The rewards are so
+                    rich that you won't exhaust them in a lifetime.
+
+                Fran Pritchett 
+                    New York, July 2003 
+
+              ***Table of
+                          Contents***
+
+              INTRODUCTION 
+                to
+                      the original print edition (South Asian Studies,
+                      University of Wisconsin at Madison, 1987)
+
+                This handbook is designed to be of use to
+                  English-speaking students of Urdu poetry. Above all it
+                  will be helpful to those students for whom English is
+                  a native language. One of the authors is such a
+                  student, while the other has been teaching such
+                  students for years. We have written the kind of book
+                  we can best use ourselves, for our own work; other
+                  students and teachers have also found our approach
+                  helpful. Our method does not assume a native speaker's
+                  instinct, an intuitive perception, or an "ear" for
+                  poetry. Even a completely tone-deaf and unintuitive
+                  student can learn to scan Urdu poetry with great
+                  accuracy. And a student who does have an "ear" can
+                  also learn to hear, recite, and enjoy the oral rhythms
+                  of the poetry as immediately as any native speaker. A
+                  determined student can even compose metrically correct
+                  verse himself; a number of Westerners have done
+                  so.  
+                We do, however, assume the student's ability to
+                  understand the words of a poem in their normal prose
+                  sense, and to pronounce them carefully and correctly.
+                  This does not mean that only advanced students should
+                  study poetry. On the contrary: we feel strongly that
+                  even beginning students can enjoy poetry, and can
+                  profit by exposure to it. But the poetry chosen for
+                  study should be suited to the student's background.
+                  The student who cannot recognize and pronounce most of
+                  the words of a poem, and cannot generally understand
+                  their grammar, cannot properly scan that poem. No
+                  method can enable him to do so, and certainly not
+                  ours. Such a student needs a good dictionary, a good
+                  teacher, or an easier poem; he must generally
+                  understand the poem's words in order to correctly
+                  evaluate its meter.  
+                Another sort of student who can profitably use our
+                  method is the native speaker of Urdu (or the
+                  Hindi-speaker who has learned Urdu script) who has a
+                  serious interest in recitation or composition, but
+                  finds traditional Urdu poetics intimidating. Virtually
+                  all existing accounts of Urdu meter start with the
+                  elaborate metrical systems of Arabic and Persian
+                  poetic theory. These systems are complex enough in
+                  themselves, and must be further modified to suit a
+                  language for which they were not originally intended.
+                  Our method differs from traditional accounts in being
+                  completely descriptive and practical; it is designed
+                  to meet the immediate needs of the student, rather
+                  than to explicate the orthodox system or to develop
+                  any other comprehensive theory. Our method starts with
+                  the poetry as actually encountered, and explains its
+                  scansion in what we think is the simplest and most
+                  efficient way. The native speaker who prefers poetry
+                  to poetic theory will find our handbook convenient. 
+                Finally, we hope that our work will be of interest to
+                  those fully conversant with traditional Urdu poetic
+                  theory. It may offer a few new perspectives, and
+                  suggest different ways of looking at familiar
+                  phenomena.  
+                The first draft of this handbook was compiled during
+                  the course of the Berkeley Urdu Language Program in
+                  Pakistan, 1979-1980, and our earliest debts are to
+                  people associated with that program. The Program owes
+                  its long and healthy career to Professor Bruce Pray of
+                  the University of California at Berkeley, who has been
+                  a friend and counsellor to us both. Dr. Ruth Laila
+                  Schmidt, Field Director for 1979-1980, arranged for us
+                  to have the time and freedom for this project. One of
+                  the Program's teachers, Arif Vaqar, and one of its
+                  participants, Mark S. Pegors, took an especially
+                  strong interest in the project, and their continuing
+                  suggestions and criticisms were most helpful. All
+                  those involved in the Program encouraged us, and
+                  gallantly endured the hours of heated discussion which
+                  we inflicted upon them. In particular we thank Altaf
+                  Fatima, who has been a very good friend to us both,
+                  for her counsel, encouragement, and many cups of
+                  tea.  
+                After the first draft of the book was prepared in
+                  Lahore during 1979-1980, circumstances made it
+                  impossible for the authors to work together in
+                  completing it: Frances Pritchett had to return to the
+                  United States, while Khaliq Ahmad Khaliq remained in
+                  Lahore. The later drafts, including the final one,
+                  were therefore prepared by F. Pritchett after her
+                  return to the United States. Although Khaliq Sahib has
+                  had a chance to see them in a general way, the final
+                  responsibility for the shape of the book, and for any
+                  errors it may contain, must be borne by F. Pritchett.
+                  She thanks all her Urdu students at Columbia
+                  University who have made use of the successive drafts
+                  of this book and contributed their suggestions;
+                  Randolph Thornton in particular has taken a serious
+                  interest in the project.  
+                Above all, the handbook owes incomparably much to the
+                  close scrutiny given it by Shamsur Rahman Faruqi, who
+                  is, among many other distinctions, perhaps the best
+                  modern authority on Urdu meter. Faruqi Sahib was kind
+                  enough to prepare extensive notes which became the
+                  basis for our discussion of feet and meters, and to
+                  suggest appropriate entries for the Bibliography. He
+                  also gave us the benefit of his advice and criticism
+                  throughout. The chance to draw on his specialized
+                  knowledge in this field was invaluable, and we are
+                  most grateful.  
+                We also thank Professor Gopi Chand Narang, of Delhi
+                  University; Professor M. A. R. Barker, of the
+                  University of Minnesota at Minneapolis; and Professor
+                  Ralph Russell, formerly of the School or Oriental and
+                  African Studies of the University of London, for their
+                  most valuable comments and suggestions. Professors
+                  Muhammad Umar Memon and Narayana Rao of the University
+                  of Wisconsin at Madison have also given encouragement
+                  and help to the project. The elegant and beautiful
+                  Urdu script which appears in this volume is generated
+                  by a program called "Khushnavis," designed by
+                  Professor Donald Becker of the University of Wisconsin
+                  at Madison. Professor Becker was most generous with
+                  his help in preparing the manuscript and designing its
+                  printed format, and the book owes him the ultimate
+                  debt: it could not have existed in its present form
+                  without his work.  
+                Frances W. Pritchett 
+                    New York, 1987   
+                Khaliq Ahmad Khaliq 
+                    Lahore, 1980   
+
+             --
+
+                  meter book index -- Ghalib sitemap -- Mir sitemap
+                  -- FWP's
+                    main page -- 
+

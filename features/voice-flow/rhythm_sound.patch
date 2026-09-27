@@ -1,0 +1,157 @@
+Rhythm/sound-design patch -- tanpura drone + micro-timing/accelerando + optional
+pentatonic pitch contour for the tabla path.
+=====================================================================
+NOT APPLIED. Sketch only, produced during the rhythm/sound exploration
+(docs/reviews/11-rhythm-sound-exploration.md). Demo: see that report for the
+scratchpad demo.html this was validated against by ear.
+
+Target: original_base.html (re-mirror via scripts/build_app.py as usual; never
+hand-edit index.html / "urdu-meter-trainer 2.html" directly). Matched against
+the copy of original_base.html read while this patch was written -- verify each
+"old" block is still a single-occurrence match (grep -Fc) before applying.
+
+Recommended combination (see report): micro-timing/rubato + drone ON by default
+for the 'tabla' sound; pentatonic pitch contour OFF by default behind a new
+settings.melodicContour toggle, since it changes the tabla's character more
+than the owner may want as a default. All three are purely additive: existing
+call sites of play(seq, opts) are unchanged.
+
+--------------------------------------------------------------------
+EDIT 1 of 4 -- tabla(): accept an optional pitch multiplier (default 1 = identical to today)
+--------------------------------------------------------------------
+OLD:
+function tabla(t,dur,isLong,vol){
+  const c=A.ctx, f=isLong?311:370, decay=isLong?Math.min(0.7,dur*1.1):Math.min(0.2,dur*0.9);
+  [1,2,3,4.15].forEach((h,i)=>{const o=c.createOscillator(); o.type='sine'; o.frequency.value=f*h;
+    const g=c.createGain(); const d=decay/(1+i*0.7); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.55*vol/(i+1),t+0.004);
+    g.gain.exponentialRampToValueAtTime(0.0006,t+d); o.connect(g); g.connect(A.dest||A.out); o.start(t); o.stop(t+d+0.05);});
+  burst(t,isLong?2400:4200,1.2,0.35*vol,0.015);
+  if(isLong){ const o=c.createOscillator(); o.type='sine'; o.frequency.setValueAtTime(72,t); o.frequency.linearRampToValueAtTime(104,t+Math.min(0.45,dur));
+    const g=c.createGain(); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(1.1*vol,t+0.006); g.gain.exponentialRampToValueAtTime(0.0006,t+Math.min(0.9,dur*1.4));
+    o.connect(g); g.connect(A.dest||A.out); o.start(t); o.stop(t+1); }
+}
+
+NEW:
+function tabla(t,dur,isLong,vol,pitchMul){
+  pitchMul=pitchMul||1;
+  const c=A.ctx, f=(isLong?311:370)*pitchMul, decay=isLong?Math.min(0.7,dur*1.1):Math.min(0.2,dur*0.9);
+  [1,2,3,4.15].forEach((h,i)=>{const o=c.createOscillator(); o.type='sine'; o.frequency.value=f*h;
+    const g=c.createGain(); const d=decay/(1+i*0.7); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.55*vol/(i+1),t+0.004);
+    g.gain.exponentialRampToValueAtTime(0.0006,t+d); o.connect(g); g.connect(A.dest||A.out); o.start(t); o.stop(t+d+0.05);});
+  burst(t,isLong?2400:4200,1.2,0.35*vol,0.015);
+  if(isLong){ const o=c.createOscillator(); o.type='sine'; o.frequency.setValueAtTime(72*pitchMul,t); o.frequency.linearRampToValueAtTime(104*pitchMul,t+Math.min(0.45,dur));
+    const g=c.createGain(); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(1.1*vol,t+0.006); g.gain.exponentialRampToValueAtTime(0.0006,t+Math.min(0.9,dur*1.4));
+    o.connect(g); g.connect(A.dest||A.out); o.start(t); o.stop(t+1); }
+}
+/* pentatonic-ish frequency ratios, close to 1 so the result still reads as "tabla" and not
+   a xylophone; settings.melodicContour (default false) gates this on. */
+const PENTA=[1,9/8,5/4,3/2,27/16];
+function pitchContourMul(footIdx,posInFoot,isCaesuraFoot,isLastFoot){
+  if(!settings.melodicContour) return 1;
+  let step = isLastFoot?0:(footIdx%PENTA.length);
+  if(isCaesuraFoot) step=Math.max(0,step-1);
+  return PENTA[step]*(1+Math.min(3,posInFoot)*0.01);
+}
+/* tanpura-ish drone: a quiet tonal center under the whole line so long/short reads as a
+   pattern against a key, not hits in silence. 3 detuned oscillators (root/fifth/octave) +
+   a slow amplitude wobble. settings.drone (default true for 'tabla') gates this on. */
+function drone(t0,dur){
+  const c=A.ctx, bus=c.createGain(); bus.gain.value=0;
+  const lp=c.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=900; bus.connect(lp); lp.connect(A.dest||A.out);
+  [1,1.5,2].forEach((r,i)=>{ const o=c.createOscillator(); o.type=i===0?'sawtooth':'sine';
+    o.frequency.value=130.81*r*(1+(Math.random()-0.5)*0.004);
+    const g=c.createGain(); g.gain.value=i===0?0.5:(i===1?0.26:0.12);
+    o.connect(g); g.connect(bus); o.start(t0); o.stop(t0+dur+0.4); });
+  const lfo=c.createOscillator(); lfo.frequency.value=0.18+Math.random()*0.04;
+  const lfoG=c.createGain(); lfoG.gain.value=0.011; lfo.connect(lfoG); lfoG.connect(bus.gain);
+  lfo.start(t0); lfo.stop(t0+dur+0.4);
+  bus.gain.setValueAtTime(0,t0); bus.gain.linearRampToValueAtTime(0.045,t0+0.6);
+  bus.gain.setValueAtTime(0.045,t0+dur-0.5); bus.gain.linearRampToValueAtTime(0,t0+dur+0.35);
+}
+
+--------------------------------------------------------------------
+EDIT 2 of 4 -- syllableSound(): pass pos/foot context through to tabla's pitch contour
+--------------------------------------------------------------------
+OLD:
+function syllableSound(t,dur,isLong,vol,pos,hold){
+  const s=settings.sound, d=dur*(hold||1);
+  if(s==='tabla') tabla(t,d,isLong,vol); else if(s==='tone') tone(t,d,isLong,vol);
+  else if(s==='mine') mineSound(t,d,isLong,vol); else if(s==='rec'||s==='tablarec') recSound(t,d/0.95,isLong,vol,pos,hold); else voice(t,d,isLong,s,vol,pos);
+}
+
+NEW:
+function syllableSound(t,dur,isLong,vol,pos,hold,pitchMul){
+  const s=settings.sound, d=dur*(hold||1);
+  if(s==='tabla') tabla(t,d,isLong,vol,pitchMul); else if(s==='tone') tone(t,d,isLong,vol);
+  else if(s==='mine') mineSound(t,d,isLong,vol); else if(s==='rec'||s==='tablarec') recSound(t,d/0.95,isLong,vol,pos,hold); else voice(t,d,isLong,s,vol,pos);
+}
+
+--------------------------------------------------------------------
+EDIT 3 of 4 -- play(): micro-timing jitter + phrase accelerando (biased toward zero on
+foot-first/strong beats), plus start the drone once per line when settings.drone is on
+--------------------------------------------------------------------
+OLD:
+  const beat=60/(opts.bpm||settings.bpm); let t=A.ctx.currentTime+0.16; const t0=t;
+  const F=opts.feet, cae=opts.cae||[];
+  seq.forEach((v,i)=>{
+    const isLong=(v==='l'||v==='x'); let dur=(isLong?2:1)*beat;
+    let vol=v==='c'?0.45:1, hold=0.97;
+    if(F){ const fs=(i===0||F[i]!==F[i-1]), fe=(i===seq.length-1||F[i+1]!==F[i]);
+      if(fs && i>0 && cae.includes(F[i])) t+=beat*0.6;              /* breath at the mid-line break */
+      if(fs && settings.footPulse!==false && v!=='c') footThump(t,0.9);
+      if(!fs && v!=='c') vol*=0.84;                                   /* stress the foot's first syllable */
+      if(fe && i<seq.length-1){ dur*=1.07; hold=0.82; }               /* a little lift at the end of each foot */
+    }
+    if(opts.cadence!==false && i===seq.length-1 && seq.length>4){ dur*=1.4; if(settings.sound==='tablarec') hold=0.6; } /* no long ring on the final tabla stroke */
+    if(!(v==='c' && settings.sound==='tablarec')) syllableSound(t,dur,isLong,vol,i/Math.max(1,seq.length-1),hold); /* extrametrical syllable: no stroke on tabla */
+    if(opts.onStep) A.timers.push(setTimeout(()=>opts.onStep(i),(t-A.ctx.currentTime)*1000));
+    t+=dur;
+  });
+
+NEW:
+  const beat0=60/(opts.bpm||settings.bpm); let t=A.ctx.currentTime+0.16; const t0=t;
+  const F=opts.feet, cae=opts.cae||[];
+  const rubato = settings.sound==='tabla' && settings.rubato!==false;
+  if(settings.sound==='tabla' && settings.drone!==false) drone(t0-0.1, seq.length*beat0*1.6+2);
+  seq.forEach((v,i)=>{
+    const isLong=(v==='l'||v==='x');
+    const fs=F?(i===0||F[i]!==F[i-1]):(i===0);
+    /* phrase curve: a shade slower/deliberate at the start, eases forward mid-line, settles
+       at the end -- instead of one constant bpm for the whole line */
+    const pos=i/Math.max(1,seq.length-1);
+    const beat = rubato ? beat0*(1+0.06*Math.cos((pos*0.5+0.5)*Math.PI)*(1-pos)+0.04*Math.pow(pos,3)) : beat0;
+    let dur=(isLong?2:1)*beat;
+    let vol=v==='c'?0.45:1, hold=0.97;
+    if(rubato && v!=='c') t += (Math.random()*2-1)*(fs?beat0*0.006:beat0*0.045); /* near-zero jitter on strong beats, a few % on weak ones */
+    if(F){ const fe=(i===seq.length-1||F[i+1]!==F[i]);
+      if(fs && i>0 && cae.includes(F[i])) t+=beat*0.6;              /* breath at the mid-line break */
+      if(fs && settings.footPulse!==false && v!=='c') footThump(t,0.9);
+      if(!fs && v!=='c') vol*=0.84;                                   /* stress the foot's first syllable */
+      if(fe && i<seq.length-1){ dur*=1.07; hold=0.82; }               /* a little lift at the end of each foot */
+    }
+    if(opts.cadence!==false && i===seq.length-1 && seq.length>4){ dur*=1.4; if(settings.sound==='tablarec') hold=0.6; } /* no long ring on the final tabla stroke */
+    const pitchMul = F ? pitchContourMul(F[i], i-F.indexOf(F[i]), cae.includes(F[i]), F[i]===F[seq.length-1]) : 1;
+    if(!(v==='c' && settings.sound==='tablarec')) syllableSound(t,dur,isLong,vol,pos,hold,pitchMul); /* extrametrical syllable: no stroke on tabla */
+    if(opts.onStep) A.timers.push(setTimeout(()=>opts.onStep(i),(t-A.ctx.currentTime)*1000));
+    t+=dur;
+  });
+
+--------------------------------------------------------------------
+EDIT 4 of 4 -- Sound panel: two small toggles alongside the existing "Pause between feet"
+slider (settings.rubato / settings.drone default true, settings.melodicContour default false)
+--------------------------------------------------------------------
+OLD:
+    <div class="row"><span class="small muted">Pause between feet</span><input type="range" id="footGap" min="0" max="1" step="0.05" value="0.5" aria-label="Pause between feet, in beats"><span class="mono small" id="footGapV">0.50</span></div>
+
+NEW:
+    <div class="row"><span class="small muted">Pause between feet</span><input type="range" id="footGap" min="0" max="1" step="0.05" value="0.5" aria-label="Pause between feet, in beats"><span class="mono small" id="footGapV">0.50</span></div>
+    <div class="row"><label class="small muted"><input type="checkbox" id="rubatoT" checked> Natural micro-timing</label></div>
+    <div class="row"><label class="small muted"><input type="checkbox" id="droneT" checked> Drone under the line</label></div>
+    <div class="row"><label class="small muted"><input type="checkbox" id="contourT"> Melodic pitch contour</label></div>
+
+(plus 3 short addEventListener wires mirroring the existing $('footGap') pattern -- omitted
+here since they're mechanical repeats of the footGap wiring already in the file.)
+
+--------------------------------------------------------------------
+Not touched: voice(), recSound(), mineSound(), tone(), footThump(), stopAll(), burst(),
+VOICEPACK/TABLAPACK data, and every call site of play() (Ear tab, Studio, "Play Rhythm").

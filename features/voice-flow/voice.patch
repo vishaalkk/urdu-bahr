@@ -1,0 +1,267 @@
+Voice-flow patch for the recorded-voice ("dum"/"da") playback engine
+=====================================================================
+
+Target: original_base.html (then re-mirror into index.html / "urdu-meter-trainer 2.html"
+via scripts/build_app.py, per the project's dual-file convention -- do NOT hand-edit the
+mirrors). Matched against the copy of original_base.html read while this patch was written;
+each "old" block below is a verbatim, single-occurrence snippet (confirmed via
+`grep -Fc` against both original_base.html and index.html: count 1 in each), so it is safe
+to apply as a plain text search/replace even if unrelated parts of the file have moved.
+
+This is a pure engine-internals change: no call sites elsewhere in the app (build_app.py's
+Studio couplet player, the Ear tab, "Play Rhythm" buttons, etc.) need to change, since they
+only ever call play(seq, {feet, cae, onStep, onEnd, ...}) and never touch recSound/
+syllableSound/voice/mineSound directly. All new opts fields (footGap, caeGap, xfade) are
+optional with defaults, and opts.feet/opts.cae remain optional exactly as before.
+
+Apply as 6 independent find/replace edits, in the style of build_app.py's own
+`assert old in html; html = html.replace(old, new)` pattern:
+
+--------------------------------------------------------------------
+EDIT 1 of 6 -- voice(): add an optional pitch-lift parameter
+--------------------------------------------------------------------
+OLD:
+function voice(t,dur,isLong,style,vol,pos){
+
+NEW:
+function voice(t,dur,isLong,style,vol,pos,pitchMul){
+
+--------------------------------------------------------------------
+EDIT 2 of 6 -- voice(): consume the new parameter (backward compatible: undefined -> 1)
+--------------------------------------------------------------------
+OLD:
+  const f0=(isLong?117:124)*phrase*(1+(Math.random()-0.5)*0.02);
+
+NEW:
+  const f0=(isLong?117:124)*phrase*(pitchMul||1)*(1+(Math.random()-0.5)*0.02);
+
+--------------------------------------------------------------------
+EDIT 3 of 6 -- loadRec() + recSound(): the core fix
+--------------------------------------------------------------------
+OLD:
+/* ---------- recorded voice pack ---------- */
+function loadRec(){
+  if(A.recP) return A.recP;
+  const dec=o=>{ const bin=atob(o.b64), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+    return new Promise((res)=>{ try{ const p=A.ctx.decodeAudioData(u.buffer,b=>res({buf:b,off:o.off,dur:o.dur}),()=>res(null)); if(p&&p.then)p.catch(()=>res(null)); }catch(e){res(null);} }); };
+  A.recP=Promise.all([Promise.all(VOICEPACK.da.map(dec)),Promise.all(VOICEPACK.dum.map(dec))])
+    .then(([da,dum])=>{ A.rec={da:da.filter(Boolean),dum:dum.filter(Boolean),last:{l:-1,s:-1}}; });
+  return A.recP;
+}
+/* choose the take whose sounding length best fits the slot, never the same take twice running */
+function recSound(t,dur,isLong,vol,pos,holdF){
+  const R=A.rec; if(!R||!R.da.length||!R.dum.length) return voice(t,dur,isLong,'dumda',vol,pos);
+  const pool=isLong?R.dum:R.da, key=isLong?'l':'s';
+  let bi=0,bs=1e9; pool.forEach((k,j)=>{ const sc=Math.abs((k.dur-k.off)-dur*0.95)+(j===R.last[key]?0.2:0); if(sc<bs){bs=sc;bi=j;} });
+  R.last[key]=bi; const k=pool[bi];
+  const rate=1+0.02*Math.sin(Math.PI*Math.min(1,pos||0))-((pos||0)>0.9?0.02:0);
+  const c=A.ctx, src=c.createBufferSource(); src.buffer=k.buf; src.playbackRate.value=rate;
+  const g=c.createGain(); const start=Math.max(c.currentTime, t-k.off/rate);
+  const hold=Math.min(k.dur/rate, k.off/rate+dur*0.95), fo=Math.min(0.05,hold/3);
+  g.gain.setValueAtTime(vol,start); g.gain.setValueAtTime(vol,start+hold-fo); g.gain.linearRampToValueAtTime(0,start+hold);
+  src.connect(g); g.connect(A.dest||A.voiceBus||A.out); src.start(start); src.stop(start+hold+0.02);
+}
+
+NEW:
+/* ---------- recorded voice pack ---------- */
+function loadRec(){
+  if(A.recP) return A.recP;
+  const dec=o=>{ const bin=atob(o.b64), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+    return new Promise((res)=>{ try{ const p=A.ctx.decodeAudioData(u.buffer,b=>res({buf:b,off:o.off,dur:o.dur}),()=>res(null)); if(p&&p.then)p.catch(()=>res(null)); }catch(e){res(null);} }); };
+  A.recP=Promise.all([Promise.all(VOICEPACK.da.map(dec)),Promise.all(VOICEPACK.dum.map(dec))])
+    .then(([da,dum])=>{ da=da.filter(Boolean); dum=dum.filter(Boolean); da.concat(dum).forEach(findLoopPoints);
+      A.rec={da,dum,last:{l:-1,s:-1}}; });
+  return A.recP;
+}
+/* a short (~90ms) steady region past the attack that a take can be looped on, so a long
+   "dum" can keep ringing to fill a slow beat instead of running out of tape and going silent */
+function findLoopPoints(k){
+  try{
+    const d=k.buf.getChannelData(0), sr=k.buf.sampleRate, n=d.length;
+    const lo=Math.floor(n*0.40), hi=Math.floor(n*0.86), win=Math.floor(sr*0.09);
+    if(hi-lo<win+1) return;
+    const hop=Math.max(1,Math.floor(sr*0.008));
+    let bestI=-1,bestVar=Infinity,prevRms=null;
+    for(let i=lo;i+win<hi;i+=hop){
+      let sum=0,cnt=0; for(let j=i;j<i+win;j+=4){ sum+=d[j]*d[j]; cnt++; }
+      const rms=Math.sqrt(sum/Math.max(1,cnt));
+      if(prevRms!=null){ const v=Math.abs(rms-prevRms); if(v<bestVar){bestVar=v;bestI=i;} }
+      prevRms=rms;
+    }
+    if(bestI<0) return;
+    const snap=p=>{ let best=p,bd=Infinity,span=Math.floor(sr*0.003); for(let o=-span;o<=span;o++){ const q=p+o; if(q<1||q>=n)continue; const v=Math.abs(d[q]); if(v<bd){bd=v;best=q;} } return best; };
+    const a=snap(bestI), b=snap(bestI+win);
+    if(b-a>sr*0.03){ k.loopStart=a/sr; k.loopEnd=b/sr; }
+  }catch(e){}
+}
+function eqPowerFade(peak,n){ const c=new Float32Array(n); for(let i=0;i<n;i++) c[i]=peak*Math.cos((i/(n-1))*Math.PI/2); return c; }
+/* choose the take whose sounding length best fits the slot (same take for repeats within one
+   foot, via ctx.footTake, so a run like dum-dum-dum doesn't jitter between voices); glue it to
+   the next syllable with a short crossfade, and if the recording is too short for the slot,
+   ring its own steady tail (findLoopPoints) instead of cutting to silence */
+function recSound(t,dur,isLong,vol,pos,ctx){
+  const R=A.rec; if(!R||!R.da.length||!R.dum.length) return voice(t,dur,isLong,'dumda',vol,pos);
+  ctx=ctx||{};
+  const pool=isLong?R.dum:R.da, key=isLong?'l':'s';
+  const xfade=ctx.xfade!=null?ctx.xfade:0.02;
+  let fadeStart=(ctx.nextOnset!=null?ctx.nextOnset-xfade/2:t+dur);
+  fadeStart=Math.max(fadeStart,t+0.02);
+  const fadeEnd=fadeStart+(ctx.nextOnset!=null?xfade:xfade*1.5);
+  let bi;
+  if(ctx.footKey && ctx.footTake && ctx.footTake[ctx.footKey]!=null){ bi=ctx.footTake[ctx.footKey]; }
+  else{
+    bi=0; let bs=1e9; const target=fadeStart-t;
+    pool.forEach((k,j)=>{ const sc=Math.abs((k.dur-k.off)-target)+(j===R.last[key]?0.15:0); if(sc<bs){bs=sc;bi=j;} });
+    if(ctx.footKey && ctx.footTake) ctx.footTake[ctx.footKey]=bi;
+  }
+  R.last[key]=bi; const k=pool[bi];
+  const need=fadeStart-t, rate0=1+0.015*Math.sin(Math.PI*Math.min(1,pos||0));
+  const needRatio=(k.dur-k.off)/Math.max(1e-6,need);
+  const rate=needRatio<rate0 ? Math.max(0.92,needRatio) : rate0*(ctx.pitchLift?1.015:1);
+  const c=A.ctx, src=c.createBufferSource(); src.buffer=k.buf; src.playbackRate.value=rate;
+  const start=Math.max(c.currentTime, t-k.off/rate);
+  const naturalEnd=start+k.dur/rate;
+  const useLoop=naturalEnd<fadeStart && k.loopStart!=null;
+  if(useLoop){ src.loop=true; src.loopStart=k.loopStart; src.loopEnd=k.loopEnd; }
+  const g=c.createGain(); src.connect(g); g.connect(A.dest||A.voiceBus||A.out);
+  g.gain.setValueAtTime(vol,start);
+  if(naturalEnd>=fadeStart){                                     /* plenty of recording: hold, then trim/fade right at the slot edge */
+    g.gain.setValueAtTime(vol,fadeStart);
+    g.gain.setValueCurveAtTime(eqPowerFade(vol,12),fadeStart,fadeEnd-fadeStart);
+  } else if(useLoop){                                            /* not enough tape: ring the take's own steady region to bridge the gap */
+    g.gain.setValueAtTime(vol,naturalEnd);
+    g.gain.linearRampToValueAtTime(vol*0.72,fadeStart);
+    g.gain.setValueCurveAtTime(eqPowerFade(vol*0.72,12),fadeStart,fadeEnd-fadeStart);
+  } else {                                                        /* no loop region on this take: end gracefully rather than click into silence */
+    const fs2=Math.max(start+0.02,naturalEnd-0.03);
+    g.gain.setValueAtTime(vol,fs2);
+    g.gain.setValueCurveAtTime(eqPowerFade(vol,12),fs2,0.03);
+  }
+  src.start(start); src.stop((useLoop?fadeEnd:Math.min(naturalEnd,fadeEnd))+0.02);
+}
+
+--------------------------------------------------------------------
+EDIT 4 of 6 -- mineSound(): same no-abrupt-cut fix for the user's own single-take recording
+--------------------------------------------------------------------
+OLD:
+function mineSound(t,dur,isLong,vol){
+  const buf=isLong?(mine.dum||mine.da):(mine.da||mine.dum); if(!buf) return voice(t,dur,isLong,'dumda',vol,0);
+  const c=A.ctx, s=c.createBufferSource(); s.buffer=buf; const g=c.createGain();
+  const hold=Math.min(buf.duration,dur*0.93);
+  g.gain.setValueAtTime(vol,t); g.gain.setValueAtTime(vol,t+Math.max(0.02,hold-0.04)); g.gain.linearRampToValueAtTime(0,t+hold);
+  s.connect(g); g.connect(A.dest||A.voiceBus||A.out); s.start(t); s.stop(t+hold+0.02);
+}
+
+NEW:
+function mineSound(t,dur,isLong,vol,ctx){
+  const buf=isLong?(mine.dum||mine.da):(mine.da||mine.dum); if(!buf) return voice(t,dur,isLong,'dumda',vol,0);
+  ctx=ctx||{};
+  const c=A.ctx, s=c.createBufferSource(); s.buffer=buf; const g=c.createGain();
+  const xfade=ctx.xfade!=null?ctx.xfade:0.02;
+  let fadeStart=(ctx.nextOnset!=null?ctx.nextOnset-xfade/2:t+dur); fadeStart=Math.max(fadeStart,t+0.02);
+  const fadeEnd=fadeStart+(ctx.nextOnset!=null?xfade:xfade*1.5);
+  const hold=Math.min(buf.duration,fadeStart-t);
+  g.gain.setValueAtTime(vol,t); g.gain.setValueAtTime(vol,t+hold);
+  g.gain.setValueCurveAtTime(eqPowerFade(vol,10),t+hold,Math.max(0.01,fadeEnd-(t+hold)));
+  s.connect(g); g.connect(A.dest||A.voiceBus||A.out); s.start(t); s.stop(t+Math.max(hold,fadeEnd-t)+0.02);
+}
+
+--------------------------------------------------------------------
+EDIT 5 of 6 -- syllableSound(): pass a context object through instead of the old hold multiplier
+--------------------------------------------------------------------
+OLD:
+function syllableSound(t,dur,isLong,vol,pos,hold){
+  const s=settings.sound, d=dur*(hold||1);
+  if(s==='tabla') tabla(t,d,isLong,vol); else if(s==='tone') tone(t,d,isLong,vol);
+  else if(s==='mine') mineSound(t,d,isLong,vol); else if(s==='rec') recSound(t,d/0.95,isLong,vol,pos,hold); else voice(t,d,isLong,s,vol,pos);
+}
+
+NEW:
+function syllableSound(t,dur,isLong,vol,pos,ctx){
+  ctx=ctx||{};
+  const s=settings.sound;
+  if(s==='tabla') tabla(t,dur,isLong,vol); else if(s==='tone') tone(t,dur,isLong,vol);
+  else if(s==='mine') mineSound(t,dur,isLong,vol,ctx); else if(s==='rec') recSound(t,dur,isLong,vol,pos,ctx); else voice(t,dur,isLong,s,vol,pos,ctx.pitchLift?1.015:1);
+}
+
+--------------------------------------------------------------------
+EDIT 6 of 6 -- play(): two-pass scheduling -- legato within a foot, a deliberate breath between feet
+--------------------------------------------------------------------
+OLD:
+/* seq of 'l','s','x','c'; onStep(i) fires as each syllable sounds */
+function play(seq,opts){
+  opts=opts||{}; if(!A.ensure())return 0;
+  if(settings.sound==='rec' && !A.rec){ loadRec().then(()=>play(seq,opts)); return (seq.length*1.5*60/settings.bpm); }
+  stopAll();
+  const sess=A.ctx.createGain(); sess.gain.value=1; sess.connect(A.voiceBus||A.out); A.sess=sess; A.dest=sess;
+  const beat=60/(opts.bpm||settings.bpm); let t=A.ctx.currentTime+0.16; const t0=t;
+  const F=opts.feet, cae=opts.cae||[];
+  seq.forEach((v,i)=>{
+    const isLong=(v==='l'||v==='x'); let dur=(isLong?2:1)*beat;
+    let vol=v==='c'?0.45:1, hold=0.97;
+    if(F){ const fs=(i===0||F[i]!==F[i-1]), fe=(i===seq.length-1||F[i+1]!==F[i]);
+      if(fs && i>0 && cae.includes(F[i])) t+=beat*0.6;              /* breath at the mid-line break */
+      if(fs && settings.footPulse!==false && v!=='c') footThump(t,0.9);
+      if(!fs && v!=='c') vol*=0.84;                                   /* stress the foot's first syllable */
+      if(fe && i<seq.length-1){ dur*=1.07; hold=0.82; }               /* a little lift at the end of each foot */
+    }
+    if(opts.cadence!==false && i===seq.length-1 && seq.length>4) dur*=1.4;
+    syllableSound(t,dur,isLong,vol,i/Math.max(1,seq.length-1),hold);
+    if(opts.onStep) A.timers.push(setTimeout(()=>opts.onStep(i),(t-A.ctx.currentTime)*1000));
+    t+=dur;
+  });
+  if(opts.onEnd) A.timers.push(setTimeout(opts.onEnd,(t-A.ctx.currentTime)*1000+60));
+  return (t-t0);
+}
+
+NEW:
+/* seq of 'l','s','x','c'; onStep(i) fires as each syllable sounds.
+   Syllables that share a foot (opts.feet) are glued together with a short crossfade so the
+   foot reads as one recited unit; a small breath sits between feet, a longer one at a
+   caesura (opts.cae) or the mid-line break. Without opts.feet this still removes the old
+   gaps/clicks, it just has nothing to phrase into feet. */
+function play(seq,opts){
+  opts=opts||{}; if(!A.ensure())return 0;
+  if(settings.sound==='rec' && !A.rec){ loadRec().then(()=>play(seq,opts)); return (seq.length*1.5*60/settings.bpm); }
+  stopAll();
+  const sess=A.ctx.createGain(); sess.gain.value=1; sess.connect(A.voiceBus||A.out); A.sess=sess; A.dest=sess;
+  const beat=60/(opts.bpm||settings.bpm); const t0=A.ctx.currentTime+0.16;
+  const F=opts.feet||null, cae=opts.cae||[], n=seq.length;
+  const footGapUnits=opts.footGap!=null?opts.footGap:0.16, caeGapUnits=opts.caeGap!=null?opts.caeGap:0.6;
+  const xfade=opts.xfade!=null?opts.xfade:0.02;
+  /* pass 1: lay out onsets, slot lengths, and the deliberate breaths between feet / at the caesura */
+  const slots=[]; let t=t0;
+  seq.forEach((v,i)=>{
+    const isLong=(v==='l'||v==='x'); let dur=(isLong?2:1)*beat;
+    let vol=v==='c'?0.45:1, pitchLift=false;
+    const fs=F?(i===0||F[i]!==F[i-1]):(i===0), fe=F?(i===n-1||F[i+1]!==F[i]):(i===n-1);
+    if(F && fs && i>0 && cae.includes(F[i])) t+=beat*caeGapUnits;      /* breath at the mid-line break */
+    if(fs && v!=='c'){ vol*=1.12; if(isLong) pitchLift=true; }          /* stress the foot's ictus, a touch brighter */
+    else if(v!=='c') vol*=0.92;                                        /* gentle decay across the rest of the foot */
+    if(opts.cadence!==false && i===n-1 && n>4) dur*=1.4;               /* a little rest at the very end of the line */
+    const gapAfter=(F && fe && i<n-1) ? beat*footGapUnits : 0;
+    slots.push({i,v,isLong,dur,vol,pitchLift,fs,foot:F?F[i]:0,onset:t});
+    t+=dur+gapAfter;
+  });
+  /* pass 2: schedule audio, gluing same-foot syllables together (legato) and keeping the take
+     choice consistent within a foot so a run like dum-dum-dum doesn't jitter between voices */
+  const footTake={};
+  slots.forEach((sl,i)=>{
+    const next=slots[i+1];
+    if(F && settings.footPulse!==false && sl.fs && sl.v!=='c') footThump(sl.onset,0.9);
+    const ctx={footKey:F?(sl.foot+':'+(sl.isLong?'l':'s')):null, footTake, pitchLift:sl.pitchLift,
+               nextOnset:next?next.onset:null, xfade};
+    syllableSound(sl.onset,sl.dur,sl.isLong,sl.vol,i/Math.max(1,n-1),ctx);
+    if(opts.onStep) A.timers.push(setTimeout(()=>opts.onStep(i),(sl.onset-A.ctx.currentTime)*1000));
+  });
+  const last=slots[n-1], endT=last.onset+last.dur;
+  if(opts.onEnd) A.timers.push(setTimeout(opts.onEnd,(endT-A.ctx.currentTime)*1000+60));
+  return (endT-t0);
+}
+
+--------------------------------------------------------------------
+Not touched: footThump(), stopAll(), tabla(), tone(), tick(), litter(), burst(), A.ensure/
+unlock, VOICEPACK data itself, recordClip/prepClip/fileClip/saveClip/b64ToBuf/bufToB64
+(the user's own single-clip recorder), and every call site of play() in build_app.py /
+original_base.html's UI code (Ear tab, Studio, "Play Rhythm" buttons) -- opts.feet/opts.cae
+are consumed the same way they always were.

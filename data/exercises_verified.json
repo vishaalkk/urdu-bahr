@@ -1,0 +1,1949 @@
+[
+  {
+    "id": 1,
+    "poet": "Vali Dakhani",
+    "meters": [
+      26
+    ],
+    "couplets_count": 5,
+    "lines_count": 10,
+    "lines": [
+      {
+        "ascii": "kiyaa mujh ((ishq ne :zaalim ko aab aahistah aahistah",
+        "ur": "کیا مجھ عشق نے ظالم کو آب آہستہ آہستہ",
+        "hi": "किया मुझ िश्क़ ने ज़ालिम को आब आहिस्ता आहिस्ता",
+        "ro": "kiyā mujh ʿishq ne z̤ālim ko āb āhistah āhistah"
+      },
+      {
+        "ascii": "kih aatish gul ko kartaa hai gulaab aahistah aahistah",
+        "ur": "کہ آتش گل کو کرتا ہے گلاب آہستہ آہستہ",
+        "hi": "कि आतिश गुल को करता है गुलाब आहिस्ता आहिस्ता",
+        "ro": "kih ātish gul ko kartā hai gulāb āhistah āhistah"
+      },
+      {
+        "ascii": "vafaadaarii ne dilbar kii bujhaayaa aatish-e ;Gam kuu;N",
+        "ur": "وفاداری نے دلبر کی بجھایا آتشِ غم کوں",
+        "hi": "वफ़ादारी ने दिलबर की बुझाया आतिश-ए ग़म कूँ",
+        "ro": "vafādārī ne dilbar kī bujhāyā ātish-e ġham kūñ"
+      },
+      {
+        "ascii": "kih garmii daf((a kartii hai gulaab aahistah aahistah",
+        "ur": "کہ گرمی دفع کرتی ہے گلاب آہستہ آہستہ",
+        "hi": "कि गर्मी दफ़ करती है गुलाब आहिस्ता आहिस्ता",
+        "ro": "kih garmī dafʿa kartī hai gulāb āhistah āhistah"
+      },
+      {
+        "ascii": "((ajab kuchh lu:tf rakhtaa hai shab-e ;xilvat me;N gulruu suu;N",
+        "ur": "عجب کچھ لطف رکھتا ہے شبِ خلوت میں گلرو سوں",
+        "hi": "जब कुछ लुतफ़ रखता है शब-ए ख़िलवत में गुलरू सूँ",
+        "ro": "ʿajab kuchh lut̤f rakhtā hai shab-e ḳhilvat meñ gulrū sūñ"
+      },
+      {
+        "ascii": ";xi:taab aahistah aahistah javaab aahistah aahistah",
+        "ur": "خطاب آہستہ آہستہ جواب آہستہ آہستہ",
+        "hi": "ख़िताब आहिस्ता आहिस्ता जवाब आहिस्ता आहिस्ता",
+        "ro": "ḳhit̤āb āhistah āhistah javāb āhistah āhistah"
+      },
+      {
+        "ascii": "adaa o naaz se aataa hai vuh raushan-jabii;N ghar suu;N",
+        "ur": "ادا او ناز سے آتا ہے وہ روشن جبیں گھر سوں",
+        "hi": "अदा ओ नाज़ से आता है वो रौशन-जबीं घर सूँ",
+        "ro": "adā o nāz se ātā hai vuh raushan-jabīñ ghar sūñ"
+      },
+      {
+        "ascii": "kih jyuu;N mashriq suu;N nikle aaftaab aahistah aahistah",
+        "ur": "کہ جیوں مشرق سوں نکلے آفتاب آہستہ آہستہ",
+        "hi": "कि ज्यूँ मशरिक़ सूँ निकले आफ़ताब आहिस्ता आहिस्ता",
+        "ro": "kih jyūñ mashriq sūñ nikle āftāb āhistah āhistah"
+      },
+      {
+        "ascii": "valii mujh dil me;N aataa hai ;xayaal-e yaar be-parvaa",
+        "ur": "ولی مجھ دل میں آتا ہے خیالِ یار بے پروا",
+        "hi": "वली मुझ दिल में आता है ख़याल-ए यार बे-परवा",
+        "ro": "valī mujh dil meñ ātā hai ḳhayāl-e yār be-parvā"
+      },
+      {
+        "ascii": "kih jyuu;N a;Nkhyaa;N mane;N aataa hai ;xvaab aahistah aahistah",
+        "ur": "کہ جیوں انکھیاں منیں آتا ہے خواب آہستہ آہستہ",
+        "hi": "कि ज्यूँ अंख्याँ मनें आता है ख़्वाब आहिस्ता आहिस्ता",
+        "ro": "kih jyūñ añkhyāñ maneñ ātā hai ḳhvāb āhistah āhistah"
+      }
+    ],
+    "notes": {
+      "poet": "Vali Dakhani",
+      "meter_info": "#26, - = = = / - = = = / - = = = / - = = =",
+      "meters": [
+        26
+      ],
+      "intro": "In this ghazal word-grafting occurs at the start of the radiif [radiif] every time it appears: for example, aab aahistah is scanned as though it were aabaahistah [aa-baa-his-tah]. See Section 3.1 . Technical terms like radiif are explained in the Ghalib index of terms , and by Barker in volume 1, in \"Appendix I: Urdu Poetics,\" pp. xxiii-lxiv. Barker also discusses Urdu meter in some detail, in a relatively traditional manner. This ghazal contains a number of Dakhani forms like mujh [mujh] for mere [mere], kuu;N [kuu;N] for ko [ko], suu;N [suu;N] for se [se], mane;N [mane;N] for me;N [me;N]. Their frequency decreases in later ghazals.",
+      "verses": {
+        "1": "mujh [mujh] is scanned (=), since the do-chashmii he of aspiration does not count as a letter. See Section l.l .",
+        "2": "aatish-e ;Gam is an i.zaafat [i.zaafat] construction, and is scanned [aa-ti-she-;Gam], (= - x =). See Section 3.2 .",
+        "3": "((ajab [((ajab] and lu:tf [lu:tf] are both three-consonant Arabic words; in this case the first is scanned (- =) and the second, more typically, (= -). See Section 1.4 . Word-grafting: ;xi:taab aahistah is treated as ;xi;taabaahistah [xi-:taa-baa-his-tah].",
+        "4": "adaa o naaz [a-daa o naa-z] involves a construction with o ; see Section 3.3 . jyuu;N [jyuu;N] is scanned (=); see Section 2.1 .",
+        "5": "a;Nkhyaa;N [a;Nkh-yaa;N] is archaic; it is scanned (= =). ;xvaab [;xvaa-b], scanned (= -), is an irregularly spelled Persian word; see Section 4.2 ."
+      }
+    }
+  },
+  {
+    "id": 2,
+    "poet": "Khvajah Mir Dard",
+    "meters": [
+      11
+    ],
+    "couplets_count": 5,
+    "lines_count": 10,
+    "lines": [
+      {
+        "ascii": "t uhmate;N chand apne ;zimme dhar chale",
+        "ur": "ت اہمتیں چند اپنے ذمّے دھر چلے",
+        "hi": "त उहमतें चंद अपने ज़िममे धर चले",
+        "ro": "t uhmateñ chand apne żimme dhar chale"
+      },
+      {
+        "ascii": "jis li))e aa))e the so ham kar chale",
+        "ur": "جس لئے آئے تھے سو ہم کر چلے",
+        "hi": "जिस लिए आए थे सो हम कर चले",
+        "ro": "jis liʾe āʾe the so ham kar chale"
+      },
+      {
+        "ascii": "zindagii hai yaa ko))ii :tuufaan hai",
+        "ur": "زندگی ہے یا کوئی طوفان ہے",
+        "hi": "ज़िंदगी है या कोई तूफ़ान है",
+        "ro": "zindagī hai yā koʾī t̤ūfān hai"
+      },
+      {
+        "ascii": "ham to is jiine ke haatho;N mar chale",
+        "ur": "ہم تو اس جینے کے ہاتھوں مر چلے",
+        "hi": "हम तो इस जीने के हाथों मर चले",
+        "ro": "ham to is jīne ke hāthoñ mar chale"
+      },
+      {
+        "ascii": "sham((a ke maanind ham is bazm me;N",
+        "ur": "شمع کے مانند ہم اس بزم میں",
+        "hi": "शम के मानिंद हम इस बज़्म में",
+        "ro": "shamʿa ke mānind ham is bazm meñ"
+      },
+      {
+        "ascii": "chashm tar aa))e the daaman tar chale",
+        "ur": "چشم تر آئے تھے دامن تر چلے",
+        "hi": "चश्म तर आए थे दामन तर चले",
+        "ro": "chashm tar āʾe the dāman tar chale"
+      },
+      {
+        "ascii": "kyaa hame;N kaam in gulo;N se ai .sabaa",
+        "ur": "کیا ہمیں کام ان گلوں سے اے صبا",
+        "hi": "क्या हमें काम इन गुलों से ऐ सबा",
+        "ro": "kyā hameñ kām in guloñ se ai ṣabā"
+      },
+      {
+        "ascii": "ek dam aa))e idhar uudhar chale",
+        "ur": "ایک دم آئے ادھر اودھر چلے",
+        "hi": "एक दम आए इधर ऊधर चले",
+        "ro": "ek dam āʾe idhar ūdhar chale"
+      },
+      {
+        "ascii": "dard kuchh ma((luum hai yih log sab",
+        "ur": "درد کچھ معلوم ہے یہ لوگ سب",
+        "hi": "दर्द कुछ मालूम है ये लोग सब",
+        "ro": "dard kuchh maʿlūm hai yih log sab"
+      },
+      {
+        "ascii": "kis :taraf se aa))e the kiidhar chale",
+        "ur": "کس طرف سے آئے تھے کیدھر چلے",
+        "hi": "किस तरफ़ से आए थे कीधर चले",
+        "ro": "kis t̤araf se āʾe the kīdhar chale"
+      }
+    ],
+    "notes": {
+      "poet": "Mir Dard",
+      "meter_info": "#11, = - = = / = - = = / = - =",
+      "meters": [
+        11
+      ],
+      "intro": "",
+      "verses": {
+        "1": "li))e [li-))e] is scanned (- x), for )) counts as a full consonant; see Section 1.1 .",
+        "2": "ko))ii [ko-))ii] is a uniquely flexible word, scanned (x x); see Section 2.2 .",
+        "4": "uudhar [uu-dhar], scanned (= =), is spelled in a manner now archaic to signal the intended scansion. Note the contrast with the normal spelling, and scansion, of idhar [i-dhar] (- =). Word-grafting: kaam in is treated as kaamin [kaa-min]."
+      }
+    }
+  },
+  {
+    "id": 3,
+    "poet": "Mir",
+    "meters": [
+      25
+    ],
+    "couplets_count": 5,
+    "lines_count": 10,
+    "lines": [
+      {
+        "ascii": "milne lage ho der der dekhiye kyaa hai kyaa nahii;N",
+        "ur": "ملنے لگے ہو دیر دیر دیکھیے کیا ہے کیا نہیں",
+        "hi": "मिलने लगे हो देर देर देखिये क्या है क्या नहीं",
+        "ro": "milne lage ho der der dekhiye kyā hai kyā nahīñ"
+      },
+      {
+        "ascii": "tum to karo ho .saa;hibii bande me;N kuchh rahaa nahii;N",
+        "ur": "تم تو کرو ہو صاحبی بندے میں کچھ رہا نہیں",
+        "hi": "तुम तो करो हो साहिबी बंदे में कुछ रहा नहीं",
+        "ro": "tum to karo ho ṣāḥibī bande meñ kuchh rahā nahīñ"
+      },
+      {
+        "ascii": "buu-e gul aur rang-e gul dono;N hai;N dilkash ai nasiim",
+        "ur": "بوئے گل اور رنگِ گل دونوں ہیں دلکش اے نسیم",
+        "hi": "बू-ए गुल और रंग-ए गुल दोनों हैं दिलकश ऐ नसीम",
+        "ro": "bū-e gul aur rang-e gul donoñ haiñ dilkash ai nasīm"
+      },
+      {
+        "ascii": "lek baqadr-e yak nigaah dekhiye to vafaa nahii;N",
+        "ur": "لیک بقدرِ یک نگاہ دیکھیے تو وفا نہیں",
+        "hi": "लेक बक़द्र-ए यक निगाह देखिये तो वफ़ा नहीं",
+        "ro": "lek baqadr-e yak nigāh dekhiye to vafā nahīñ"
+      },
+      {
+        "ascii": "shikvah karuu;N huu;N ba;xt kaa itne ;Ga.zab nah ho butaa;N",
+        "ur": "شکوہ کروں ہوں بخت کا اتنے غضب نہ ہو بتاں",
+        "hi": "शिकवा करूँ हूँ बख़्त का इतने ग़ज़ब न हो बुताँ",
+        "ro": "shikvah karūñ hūñ baḳht kā itne ġhaẓab nah ho butāñ"
+      },
+      {
+        "ascii": "mujh ko ;xudaa nah ;xvaastah tum se to kuchh gilaa nahii;N",
+        "ur": "مجھ کو خدا نہ خواستہ تم سے تو کچھ گلا نہیں",
+        "hi": "मुझ को ख़ुदा न ख़्वास्ता तुम से तो कुछ गिला नहीं",
+        "ro": "mujh ko ḳhudā nah ḳhvāstah tum se to kuchh gilā nahīñ"
+      },
+      {
+        "ascii": "chashm-e safed ashk-e sur;x aah-e dil-e ;hazii;N hai yaa;N",
+        "ur": "چشمِ سفید اشکِ سرخ آہِ دلِ حزیں ہے یاں",
+        "hi": "चश्म-ए सफ़ेद अश्क-ए सुरख़ आह-ए दिल-ए हज़ीं है याँ",
+        "ro": "chashm-e safed ashk-e surḳh āh-e dil-e ḥazīñ hai yāñ"
+      },
+      {
+        "ascii": "shiishah nahii;N hai may nahii;N abr nahii;N havaa nahii;N",
+        "ur": "شیشہ نہیں ہے می نہیں ابر نہیں ہوا نہیں",
+        "hi": "शीशा नहीं है मय नहीं अब्र नहीं हवा नहीं",
+        "ro": "shīshah nahīñ hai may nahīñ abr nahīñ havā nahīñ"
+      },
+      {
+        "ascii": "ek faqa:t hai saadagii tis pah balaa-e jaa;N hai tuu",
+        "ur": "ایک فقط ہے سادگی تس پہ بلائے جاں ہے تو",
+        "hi": "एक फ़क़त है सादगी तिस पे बला-ए जाँ है तू",
+        "ro": "ek faqat̤ hai sādagī tis pah balā-e jāñ hai tū"
+      },
+      {
+        "ascii": "((ishvah karishmah kuchh nahii;N aan nahii;N adaa nahii;N",
+        "ur": "عشوہ کرشمہ کچھ نہیں آن نہیں ادا نہیں",
+        "hi": "िशवा करिश्मा कुछ नहीं आन नहीं अदा नहीं",
+        "ro": "ʿishvah karishmah kuchh nahīñ ān nahīñ adā nahīñ"
+      }
+    ],
+    "notes": {
+      "poet": "Mir",
+      "meter_info": "#25, = - - = / - = - = // = - - = / - = - = Has caesura.",
+      "meters": [
+        25
+      ],
+      "intro": "",
+      "verses": {
+        "1": "der der [de-r de-r], is scanned (= - = -), so it would seem not to fit the meter. But in meters with a caesura, like this one, an extra unscanned short syllable may occur just before the caesura; see the discussion in Section 6.1 . The final r in the second der thus need not count in the scansion.",
+        "2": "Since the verse contains several special features like [i.zaafat] and word-grafting, here is its breakdown into syllables and feet: [buu-e gu-lau/-r ran-ge gul// do-no;N hai;N dil/-ka-shai na-sii-(m)] [le-k ba-qad/-re yak ni-gaa(-h)// de-khi-ye to/ va-faa na-hii;N]. Note that an extra unscanned syllable can be present before the caesura, like the (-h) at the end of nigaah , and/or at the end of the line, as in the case of the (-m) at the end of nasiim . See Section 6.1 .",
+        "3": ";xvaastah [;xvaa-s-tah] is an irregularly spelled Persian word, scanned (= - x). See Section 4.2 ."
+      }
+    }
+  },
+  {
+    "id": 4,
+    "poet": "Mir",
+    "meters": [
+      14,
+      15
+    ],
+    "couplets_count": 5,
+    "lines_count": 10,
+    "lines": [
+      {
+        "ascii": "hastii apnii ;hubaab kii sii hai",
+        "ur": "ہستی اپنی حباب کی سی ہے",
+        "hi": "हस्ती अपनी हुबाब की सी है",
+        "ro": "hastī apnī ḥubāb kī sī hai"
+      },
+      {
+        "ascii": "yih numaa))ish saraab kii sii hai",
+        "ur": "یہ نمائش سراب کی سی ہے",
+        "hi": "ये नुमाइश सराब की सी है",
+        "ro": "yih numāʾish sarāb kī sī hai"
+      },
+      {
+        "ascii": "naazukii us ke lab kii kyaa kahiye",
+        "ur": "نازکی اس کے لب کی کیا کہیے",
+        "hi": "नाज़ुकी उस के लब की क्या कहिये",
+        "ro": "nāzukī us ke lab kī kyā kahiye"
+      },
+      {
+        "ascii": "pankha;Rii ik gulaab kii sii hai",
+        "ur": "پنکھڑی اک گلاب کی سی ہے",
+        "hi": "पंखड़ी इक गुलाब की सी है",
+        "ro": "pankhaṛī ik gulāb kī sī hai"
+      },
+      {
+        "ascii": "baar baar us ke dar pah jaataa huu;N",
+        "ur": "بار بار اس کے در پہ جاتا ہوں",
+        "hi": "बार बार उस के दर पे जाता हूँ",
+        "ro": "bār bār us ke dar pah jātā hūñ"
+      },
+      {
+        "ascii": ";haalat ab i.z:taraab kii sii hai",
+        "ur": "حالت اب اضطراب کی سی ہے",
+        "hi": "हालत अब इज़तराब की सी है",
+        "ro": "ḥālat ab iẓt̤arāb kī sī hai"
+      },
+      {
+        "ascii": "mai;N jo bolaa kahaa kih yih aavaaz",
+        "ur": "میں جو بولا کہا کہ یہ آواز",
+        "hi": "मैं जो बोला कहा कि ये आवाज़",
+        "ro": "maiñ jo bolā kahā kih yih āvāz"
+      },
+      {
+        "ascii": "usii ;xaanah-;xaraab kii sii hai",
+        "ur": "اسی خانہ خراب کی سی ہے",
+        "hi": "उसी ख़ाना-ख़राब की सी है",
+        "ro": "usī ḳhānah-ḳharāb kī sī hai"
+      },
+      {
+        "ascii": "miir un niim baaz aa;Nkho;N me;N",
+        "ur": "میر ان نیم باز آنکھوں میں",
+        "hi": "मीर उन नीम बाज़ आंखों में",
+        "ro": "mīr un nīm bāz āñkhoñ meñ"
+      },
+      {
+        "ascii": "saarii mastii sharaab kii sii hai",
+        "ur": "ساری مستی شراب کی سی ہے",
+        "hi": "सारी मस्ती शराब की सी है",
+        "ro": "sārī mastī sharāb kī sī hai"
+      }
+    ],
+    "notes": {
+      "poet": "Mir",
+      "meter_info": "#14 =* - = = / - = - = / = = *This syllable, while normally long, may occasionally be replaced with a short, at the poet's pleasure.",
+      "meters": [
+        14,
+        15
+      ],
+      "intro": "",
+      "verses": {
+        "2": "ik [ik] by its spelling signals a scansion of (=); see Section 2.4 .",
+        "3": "Word-grafting: baar baar us is treated as baarbaarus [baa-r baa-rus]; ;haalat ab is treated as ;haalatab [;haa-la-tab].",
+        "4": "aavaaz [aa-vaa-(z)] contains the extra short \"cheat syllable\" permitted at the end of the line in almost all meters. The second line begins with the less common but permissible short syllable, rather than the official long syllable shown in the pattern."
+      }
+    }
+  },
+  {
+    "id": 5,
+    "poet": "Mir",
+    "meters": [
+      "H"
+    ],
+    "couplets_count": 3,
+    "lines_count": 6,
+    "lines": [
+      {
+        "ascii": "((ishq hamaare ;xayaal pa;Raa hai ;xvaab ga))ii aaraam gayaa",
+        "ur": "عشق ہمارے خیال پڑا ہے خواب گئی آرام گیا",
+        "hi": "िश्क़ हमारे ख़याल पड़ा है ख़्वाब गई आराम गया",
+        "ro": "ʿishq hamāre ḳhayāl paṛā hai ḳhvāb gaʾī ārām gayā"
+      },
+      {
+        "ascii": "jii kaa jaanaa ;Ther gayaa hai .sub;h gayaa yaa shaam gayaa",
+        "ur": "جی کا جانا ٹھیر گیا ہے صبح گیا یا شام گیا",
+        "hi": "जी का जाना ठेर गया है सुबह गया या शाम गया",
+        "ro": "jī kā jānā ṭher gayā hai ṣubḥ gayā yā shām gayā"
+      },
+      {
+        "ascii": "((ishq kiyaa so diin gayaa iimaan gayaa islaam gayaa",
+        "ur": "عشق کیا سو دین گیا ایمان گیا اسلام گیا",
+        "hi": "िश्क़ किया सो दीन गया ईमान गया इसलाम गया",
+        "ro": "ʿishq kiyā so dīn gayā īmān gayā islām gayā"
+      },
+      {
+        "ascii": "dil ne aisaa kaam kiyaa kuchh jis se mai;N naakaam gayaa",
+        "ur": "دل نے ایسا کام کیا کچھ جس سے میں ناکام گیا",
+        "hi": "दिल ने ऐसा काम किया कुछ जिस से मैं नाकाम गया",
+        "ro": "dil ne aisā kām kiyā kuchh jis se maiñ nākām gayā"
+      },
+      {
+        "ascii": "haa))e javaanii kyaa kyaa kahye shor saro;N me;N rakhte the",
+        "ur": "ہائے جوانی کیا کیا کہیے شور سروں میں رکھتے تھے",
+        "hi": "हाए जवानी क्या क्या कहये शोर सरों में रखते थे",
+        "ro": "hāʾe javānī kyā kyā kahye shor saroñ meñ rakhte the"
+      },
+      {
+        "ascii": "ab kyaa hai vuh ((ahd gayaa vuh mausam vuh hangaam gayaa",
+        "ur": "اب کیا ہے وہ عہد گیا وہ موسم وہ ہنگام گیا",
+        "hi": "अब क्या है वो हद गया वो मौसम वो हंगाम गया",
+        "ro": "ab kyā hai vuh ʿahd gayā vuh mausam vuh hangām gayā"
+      }
+    ],
+    "notes": {
+      "poet": "Mir",
+      "meter_info": "\"Hindi\" meter ; see Section 6.2 . In order to help you get used to this meter, here is a breakdown into syllables. Long syllables are shown in bold:",
+      "meters": [
+        "H"
+      ],
+      "intro": "((ish -q ha- maa -re ;xi- yaa -l pa- ;raa hai // ;xvaa -b ga- ))ii aa - raa -m ga- yaa jii kaa jaa naa ;The -r ga- yaa hai // .sub -;h ga- yaa yaa shaa -m ga- yaa ((ish -q ki- yaa so dii -n ga- yaa ii - / maa -n ga- yaa is - laa -m ga- yaa dil ne ai - saa kaa -m ki- yaa kuchh // jis se mai;N naa - kaa -m ga- yaa haa -))e ja- vaa - nii kyaa kyaa kah - ye // sho -r sa- ro;N me;N rakh - te the ab kyaa hai vuh ((ah -d ga- yaa vuh / mau - sam vuh han - gaa -m ga- yaa Note that in the first line of the second verse, and the second line of the third verse, word overlaps prevent the lines from having a true caesura break after the eighth syllable.",
+      "verses": {}
+    }
+  },
+  {
+    "id": 6,
+    "poet": "Mus'hafi",
+    "meters": [
+      26
+    ],
+    "couplets_count": 5,
+    "lines_count": 10,
+    "lines": [
+      {
+        "ascii": "nah vuh raate;N nah vuh baate;N nah vuh qi.s.sah kahaanii hai",
+        "ur": "نہ وہ راتیں نہ وہ باتیں نہ وہ قصّہ کہانی ہے",
+        "hi": "न वो रातें न वो बातें न वो क़िससा कहानी है",
+        "ro": "nah vuh rāteñ nah vuh bāteñ nah vuh qiṣṣah kahānī hai"
+      },
+      {
+        "ascii": "faqa:t ik ham hai;N bistar par pa;Re aur naatavaanii hai",
+        "ur": "فقط اک ہم ہیں بستر پر پڑے اور ناتوانی ہے",
+        "hi": "फ़क़त इक हम हैं बिसतर पर पड़े और नातवानी है",
+        "ro": "faqat̤ ik ham haiñ bistar par paṛe aur nātavānī hai"
+      },
+      {
+        "ascii": "bhalaa mai;N haath dho bai;Thuu;N nah apnii jaan se kyuu;N kar",
+        "ur": "بھلا میں ہاتھ دھو بیٹھوں نہ اپنی جان سے کیوں کر",
+        "hi": "भला मैं हाथ धो बैठूँ न अपनी जान से क्यूँ कर",
+        "ro": "bhalā maiñ hāth dho baiṭhūñ nah apnī jān se kyūñ kar"
+      },
+      {
+        "ascii": ";xiraam us ke me;N ik aab-e ravaa;N kii sii ravaanii hai",
+        "ur": "خرام اس کے میں اک آبِ رواں کی سی روانی ہے",
+        "hi": "ख़िराम उस के में इक आब-ए रवाँ की सी रवानी है",
+        "ro": "ḳhirām us ke meñ ik āb-e ravāñ kī sī ravānī hai"
+      },
+      {
+        "ascii": "tuu yuu;N be-pardah ho jaayaa nah kar har ek ke aage",
+        "ur": "تو یوں بے پردہ ہو جایا نہ کر ہر ایک کے آگے",
+        "hi": "तू यूँ बे-पर्दा हो जाया न कर हर एक के आगे",
+        "ro": "tū yūñ be-pardah ho jāyā nah kar har ek ke āge"
+      },
+      {
+        "ascii": "nayaa ((aalam hai teraa aur na))ii kaafir javaanii hai",
+        "ur": "نیا عالم ہے تیرا اور نئی کافر جوانی ہے",
+        "hi": "नया ालम है तेरा और नई काफ़िर जवानी है",
+        "ro": "nayā ʿālam hai terā aur naʾī kāfir javānī hai"
+      },
+      {
+        "ascii": "nah tanhaa gul garebaa;N phaa;Rte hai;N dekh is saj ko",
+        "ur": "نہ تنہا گل گریباں پھاڑتے ہیں دیکھ اس سج کو",
+        "hi": "न तंहा गुल गरेबाँ फाड़ते हैं देख इस सज को",
+        "ro": "nah tanhā gul garebāñ phāṛte haiñ dekh is saj ko"
+      },
+      {
+        "ascii": "chaman me;N aab-juu bhii chaal par us kii divaanii hai",
+        "ur": "چمن میں آب جو بھی چال پر اس کی دوانی ہے",
+        "hi": "चमन में आब-जू भी चाल पर उस की दिवानी है",
+        "ro": "chaman meñ āb-jū bhī chāl par us kī divānī hai"
+      },
+      {
+        "ascii": "tirii baato;N ne to ai mu.s;hafii jii ko jalaa ;Daalaa",
+        "ur": "تری باتوں نے تو اے مصحفی جی کو جلا ڈالا",
+        "hi": "तिरी बातों ने तो ऐ मुसहफ़ी जी को जला डाला",
+        "ro": "tirī bātoñ ne to ai muṣḥafī jī ko jalā ḍālā"
+      },
+      {
+        "ascii": ";xudaa ke vaas:te chup rah yih kyaa aatish zabaanii hai",
+        "ur": "خدا کے واسطے چپ رہ یہ کیا آتش زبانی ہے",
+        "hi": "ख़ुदा के वासते चुप रह ये क्या आतिश ज़बानी है",
+        "ro": "ḳhudā ke vāst̤e chup rah yih kyā ātish zabānī hai"
+      }
+    ],
+    "notes": {
+      "poet": "Mus'hafi",
+      "meter_info": "#26, - = = = / - = = = / - = = = / - = = =",
+      "meters": [
+        26
+      ],
+      "intro": "",
+      "verses": {
+        "1": "aur [aur] is here scanned as (=) rather than (= -) as it normally would be; it is scanned again this way in Verse 4. This is one of its possibilities; see Section 2.1 .",
+        "2": "Word-grafting: ;xiraam us is treated as ;xiraamus [;xi-raa-mus].",
+        "4": "divaanii [di-vaa-nii] has replaced the normal spelling diivaanii [dii-vaa-nii], in order to permit and suggest a scansion of (- = x). This is now archaic. See Section 2.4 .",
+        "5": "tirii [ti-rii] has replaced the normal spelling terii [te-rii], in order to change the scansion to (- x). See Section 2.4 ."
+      }
+    }
+  },
+  {
+    "id": 7,
+    "poet": "Jur'at",
+    "meters": [
+      10
+    ],
+    "couplets_count": 4,
+    "lines_count": 8,
+    "lines": [
+      {
+        "ascii": "baal suljhaanaa tiraa kanghii se dil uljhaa))e hai",
+        "ur": "بال سلجھانا ترا کنگھی سے دل الجھائے ہے",
+        "hi": "बाल सुलझाना तिरा कंघी से दिल उलझाए है",
+        "ro": "bāl suljhānā tirā kanghī se dil uljhāʾe hai"
+      },
+      {
+        "ascii": "aur bikhre dekh kar bas jii hii bikhraa jaa))e hai",
+        "ur": "اور بکھرے دیکھ کر بس جی ہی بکھرا جائے ہے",
+        "hi": "और बिखरे देख कर बस जी ही बिखरा जाए है",
+        "ro": "aur bikhre dekh kar bas jī hī bikhrā jāʾe hai"
+      },
+      {
+        "ascii": "sur;x ;Dore dekh kyaa hii jaal me;N pha;Nstaa hai dil",
+        "ur": "سرخ ڈورے دیکھ کیا ہی جال میں پھنستا ہے دل",
+        "hi": "सुरख़ डोरे देख क्या ही जाल में फंसता है दिल",
+        "ro": "surḳh ḍore dekh kyā hī jāl meñ phañstā hai dil"
+      },
+      {
+        "ascii": "nikle;N hai;N kyaa kyaa adaa))e;N jab kih tuu sharmaa))e hai",
+        "ur": "نکلیں ہیں کیا کیا ادائیں جب کہ تو شرمائے ہے",
+        "hi": "निक्लें हैं क्या क्या अदाएँ जब कि तू शर्माए है",
+        "ro": "nikleñ haiñ kyā kyā adāʾeñ jab kih tū sharmāʾe hai"
+      },
+      {
+        "ascii": "rang par chahre ke hai kyaa hii javaanii kii chamak",
+        "ur": "رنگ پر چہرے کے ہے کیا ہی جوانی کی چمک",
+        "hi": "रंग पर चहरे के है क्या ही जवानी की चमक",
+        "ro": "rang par chahre ke hai kyā hī javānī kī chamak"
+      },
+      {
+        "ascii": "aur bhare gaalo;N pah jii bose ko kyaa lalchaa))e hai",
+        "ur": "اور بھرے گالوں پہ جی بوسے کو کیا للچائے ہے",
+        "hi": "और भरे गालों पे जी बोसे को क्या ललचाए है",
+        "ro": "aur bhare gāloñ pah jī bose ko kyā lalchāʾe hai"
+      },
+      {
+        "ascii": ";Gash me;N ho jaataa hai jii bas ((i:tr kii buu baas par",
+        "ur": "غش میں ہو جاتا ہے جی بس عطر کی بو باس پر",
+        "hi": "ग़श में हो जाता है जी बस ितर की बू बास पर",
+        "ro": "ġhash meñ ho jātā hai jī bas ʿit̤r kī bū bās par"
+      },
+      {
+        "ascii": "jha;T se jur))at ke gale jab aa ke tuu lag jaa))e hai",
+        "ur": "جھٹ سے جرئت کے گلے جب آ کے تو لگ جائے ہے",
+        "hi": "झट से जुरअत के गले जब आ के तू लग जाए है",
+        "ro": "jhaṭ se jurʾat ke gale jab ā ke tū lag jāʾe hai"
+      }
+    ],
+    "notes": {
+      "poet": "Jur'at",
+      "meter_info": "#10 = - = = / = - = = / = - = = / = - =",
+      "meters": [
+        10
+      ],
+      "intro": "",
+      "verses": {
+        "2": "kyaa [kyaa] is almost always (=); see Section 2.1 . For pha;Nstaa [pha;Ns-taa] see Section 1.2 .",
+        "3": "For rang [ran-g] see Section 1.2 . The word aur [aur], normally (= -), is here scanned (=); see Section 2.1 .",
+        "4": "jur))aat [jur-))at] is scanned (= =); see Section 4.4 ."
+      }
+    }
+  },
+  {
+    "id": 8,
+    "poet": "Jur'at",
+    "meters": [
+      "H"
+    ],
+    "couplets_count": 4,
+    "lines_count": 8,
+    "lines": [
+      {
+        "ascii": "bhuul ga))e tum jin rozo;N ham ghar pah bulaa))e jaate the",
+        "ur": "بھول گئے تم جن روزوں ہم گھر پہ بلائے جاتے تھے",
+        "hi": "भूल गए तुम जिन रोज़ों हम घर पे बुलाए जाते थे",
+        "ro": "bhūl gaʾe tum jin rozoñ ham ghar pah bulāʾe jāte the"
+      },
+      {
+        "ascii": "hote the kyaa kyaa kuchh charche ((aish manaa))e jaate the",
+        "ur": "ہوتے تھے کیا کیا کچھ چرچے عیش منائے جاتے تھے",
+        "hi": "होते थे क्या क्या कुछ चरचे ैश मनाए जाते थे",
+        "ro": "hote the kyā kyā kuchh charche ʿaish manāʾe jāte the"
+      },
+      {
+        "ascii": "kyaa kyaa kuchh thii ;xaa:tirdaarii kyaa kyaa pyaar kii baate;N thii;N",
+        "ur": "کیا کیا کچھ تھی خاطرداری کیا کیا پیار کی باتیں تھیں",
+        "hi": "क्या क्या कुछ थी ख़ातिर्दारी क्या क्या प्यार की बातें थीं",
+        "ro": "kyā kyā kuchh thī ḳhāt̤irdārī kyā kyā pyār kī bāteñ thīñ"
+      },
+      {
+        "ascii": "kis kis ;Dhab se chaah jataa kar rab:t ba;Rhaa))e jaate the",
+        "ur": "کس کس ڈھب سے چاہ جتا کر ربط بڑھائے جاتے تھے",
+        "hi": "किस किस ढब से चाह जता कर रबत बढ़ाए जाते थे",
+        "ro": "kis kis ḍhab se chāh jatā kar rabt̤ baṛhāʾe jāte the"
+      },
+      {
+        "ascii": "karte the tum un kii ;xvushaamad jo the hamaare ma;hram-e raaz",
+        "ur": "کرتے تھے تم ان کی خوشامد جو تھے ہمارے محرمِ راز",
+        "hi": "करते थे तुम उन की ख़्वुशामद जो थे हमारे महरम-ए राज़",
+        "ro": "karte the tum un kī ḳhvushāmad jo the hamāre maḥram-e rāz"
+      },
+      {
+        "ascii": "har har baat pah kyaa kyaa un ke naaz u;Thaa))e jaate the",
+        "ur": "ہر ہر بات پہ کیا کیا ان کے ناز اٹھائے جاتے تھے",
+        "hi": "हर हर बात पे क्या क्या उन के नाज़ उठाए जाते थे",
+        "ro": "har har bāt pah kyā kyā un ke nāz uṭhāʾe jāte the"
+      },
+      {
+        "ascii": "nang hai yaa ab naam se aisaa jahaa;N likhaa ho mi;Tvaa do",
+        "ur": "ننگ ہے یا اب نام سے ایسا جہاں لکھا ہو مٹوا دو",
+        "hi": "नंग है या अब नाम से ऐसा जहाँ लिखा हो मिटवा दो",
+        "ro": "nang hai yā ab nām se aisā jahāñ likhā ho miṭvā do"
+      },
+      {
+        "ascii": "yaa pa;Rhne ko jur))at hii ke shi((r likhaa))e jaate the",
+        "ur": "یا پڑھنے کو جرئت ہی کے شعر لکھائے جاتے تھے",
+        "hi": "या पढ़ने को जुरअत ही के शिर लिखाए जाते थे",
+        "ro": "yā paṛhne ko jurʾat hī ke shiʿr likhāʾe jāte the"
+      }
+    ],
+    "notes": {
+      "poet": "Jur'at",
+      "meter_info": "\"Hindi\" meter ; see Section 6.2 .",
+      "meters": [
+        "H"
+      ],
+      "intro": "",
+      "verses": {
+        "2": "pyaar [pyaa-r] is an irregularly spelled Indic word, scanned (= -); see Section 4.3 .",
+        "3": ";xvushaamad is really [;xu-shaa-mad]; see Section 4.2 .",
+        "4": "jahaaN likhaa ho [ja-haaN li-khaa ho] contains an example of the rare scansion pattern (- = -), in [ja-haaN li-], rather than (= - -) as is the norm in this meter. See Section 6.2."
+      }
+    }
+  },
+  {
+    "id": 9,
+    "poet": "Atish",
+    "meters": [
+      18,
+      19
+    ],
+    "couplets_count": 4,
+    "lines_count": 8,
+    "lines": [
+      {
+        "ascii": ";hasrat-e jalvah-e diidaar li))e phirtii hai",
+        "ur": "حسرتِ جلوۂ دیدار لئے پھرتی ہے",
+        "hi": "हसरत-ए जलवा-ए दीदार लिए फिरती है",
+        "ro": "ḥasrat-e jalvah-e dīdār liʾe phirtī hai"
+      },
+      {
+        "ascii": "pesh-e rauzan pas-e diivaar li))e phirtii hai",
+        "ur": "پیشِ روزن پسِ دیوار لئے پھرتی ہے",
+        "hi": "पेश-ए रौज़न पस-ए दीवार लिए फिरती है",
+        "ro": "pesh-e rauzan pas-e dīvār liʾe phirtī hai"
+      },
+      {
+        "ascii": "maal-e muflis mujhe samjhaa hai junuu;N ne shaayad",
+        "ur": "مالِ مفلس مجھے سمجھا ہے جنوں نے شاید",
+        "hi": "माल-ए मुफ़लिस मुझे समझा है जुनूँ ने शायद",
+        "ro": "māl-e muflis mujhe samjhā hai junūñ ne shāyad"
+      },
+      {
+        "ascii": "va;hshat-e dil sar-e baazaar li))e phirtii hai",
+        "ur": "وحشتِ دل سرِ بازار لئے پھرتی ہے",
+        "hi": "वहशत-ए दिल सर-ए बाज़ार लिए फिरती है",
+        "ro": "vaḥshat-e dil sar-e bāzār liʾe phirtī hai"
+      },
+      {
+        "ascii": "ka((bah o dair me;N vuh ;xaanah-bar-andaaz kahaa;N",
+        "ur": "کعبہ او دیر میں وہ خانہ بر انداز کہاں",
+        "hi": "काबा ओ दैर में वो ख़ाना-बर-अंदाज़ कहाँ",
+        "ro": "kaʿbah o dair meñ vuh ḳhānah-bar-andāz kahāñ"
+      },
+      {
+        "ascii": "gardish-e kaafir-o-dii;Ndaar li))e phirtii hai",
+        "ur": "گردشِ کافر و دیندار لئے پھرتی ہے",
+        "hi": "गर्दिश-ए काफ़िर-ओ-दींदार लिए फिरती है",
+        "ro": "gardish-e kāfir-o-dīñdār liʾe phirtī hai"
+      },
+      {
+        "ascii": "kisii .suurat se nahii;N jaa;N ko qaraar ai aatish",
+        "ur": "کسی صورت سے نہیں جاں کو قرار اے آتش",
+        "hi": "किसी सूरत से नहीं जाँ को क़रार ऐ आतिश",
+        "ro": "kisī ṣūrat se nahīñ jāñ ko qarār ai ātish"
+      },
+      {
+        "ascii": ":tapish-e dil mujhe naachaar li))e phirtii hai",
+        "ur": "طپشِ دل مجھے ناچار لئے پھرتی ہے",
+        "hi": "तपिश-ए दिल मुझे नाचार लिए फिरती है",
+        "ro": "t̤apish-e dil mujhe nāchār liʾe phirtī hai"
+      }
+    ],
+    "notes": {
+      "poet": "Atish",
+      "meter_info": "#18, =* - = = / - - = = / - - = = / = = #19, =* - = = / - - = = / - - = = / - - = These two closely related meters are often used together. *This syllable, while normally long, may occasionally be replaced with a short, at the poet's pleasure.",
+      "meters": [
+        18,
+        19
+      ],
+      "intro": "",
+      "verses": {
+        "3": "The first line of this verse is the only one in this excerpt that is composed in meter #18 rather than its more common companion #19. Word-grafting: bar andaaz is treated as barandaaz [ba-ran-daa-z].",
+        "4": "Both lines of this verse begin with a short syllable, rather than the more common long syllable shown in the official pattern. Word-grafting: qaraar ai is treated as qaraarai [qa-raa-rai]."
+      }
+    }
+  },
+  {
+    "id": 10,
+    "poet": "Atish",
+    "meters": [
+      33,
+      34
+    ],
+    "couplets_count": 4,
+    "lines_count": 8,
+    "lines": [
+      {
+        "ascii": "yih aarzuu thii tujhe gul ke ruu bah ruu karte",
+        "ur": "یہ آرزو تھی تجھے گل کے رو بہ رو کرتے",
+        "hi": "ये आर्ज़ू थी तुझे गुल के रू ब रू करते",
+        "ro": "yih ārzū thī tujhe gul ke rū bah rū karte"
+      },
+      {
+        "ascii": "ham aur bulbul-e betaab guftaguu karte",
+        "ur": "ہم اور بلبلِ بیتاب گفتگو کرتے",
+        "hi": "हम और बुलबुल-ए बेताब गुफ़तगू करते",
+        "ro": "ham aur bulbul-e betāb guftagū karte"
+      },
+      {
+        "ascii": "mirii :tara;h se mah o mahr bhii hai;N aavaarah",
+        "ur": "مری طرح سے مہ او مہر بھی ہیں آوارہ",
+        "hi": "मिरी तरह से मा ओ महर भी हैं आवारा",
+        "ro": "mirī t̤araḥ se mah o mahr bhī haiñ āvārah"
+      },
+      {
+        "ascii": "kisii ;habiib kii yih bhii hai;N justajuu karte",
+        "ur": "کسی حبیب کی یہ بھی ہیں جستجو کرتے",
+        "hi": "किसी हबीब की ये भी हैं जुसतजू करते",
+        "ro": "kisī ḥabīb kī yih bhī haiñ justajū karte"
+      },
+      {
+        "ascii": "jo dekhte tirii zanjiir-e zulf kaa ((aalam",
+        "ur": "جو دیکھتے تری زنجیرِ زلف کا عالم",
+        "hi": "जो देखते तिरी ज़ंजीर-ए ज़ुलफ़ का ालम",
+        "ro": "jo dekhte tirī zanjīr-e zulf kā ʿālam"
+      },
+      {
+        "ascii": "asiir hone kii aazaad aarzuu karte",
+        "ur": "اسیر ہونے کی آزاد آرزو کرتے",
+        "hi": "असीर होने की आज़ाद आर्ज़ू करते",
+        "ro": "asīr hone kī āzād ārzū karte"
+      },
+      {
+        "ascii": "nah puuchh ((aalam-e bargashtah :taal((ii aatish",
+        "ur": "نہ پوچھ عالمِ برگشتہ طالعی آتش",
+        "hi": "न पूछ ालम-ए बरगश्ता ताली आतिश",
+        "ro": "nah pūchh ʿālam-e bargashtah t̤ālʿī ātish"
+      },
+      {
+        "ascii": "barastii aag jo baaraa;N kii aarzuu karte",
+        "ur": "برستی آگ جو باراں کی آرزو کرتے",
+        "hi": "बरस्ती आग जो बाराँ की आर्ज़ू करते",
+        "ro": "barastī āg jo bārāñ kī ārzū karte"
+      }
+    ],
+    "notes": {
+      "poet": "Atish",
+      "meter_info": "#34 - = - = / - - = = / - = - = / = =",
+      "meters": [
+        33,
+        34
+      ],
+      "intro": "",
+      "verses": {
+        "1": "Word-grafting: ham aur is treated as hamaur [ha-mau-r].",
+        "2": "The writing of mahah [mahh], \"moon,\" with two h's in sequence is merely an orthographic convention, like that used with kahah , the root of kahnaa , to distinguish it from kih [kih]. It does not affect the scansion, which remains [ma-ho mah-r].",
+        "4": "taali((ii is scanned [:taa-li-((ii]. Remember that (( is a full, regular consonant in metrical terms; see Section 1.3 ."
+      }
+    }
+  },
+  {
+    "id": 11,
+    "poet": "Zauq",
+    "meters": [
+      27
+    ],
+    "couplets_count": 4,
+    "lines_count": 8,
+    "lines": [
+      {
+        "ascii": "use ham ne bahut ;Dhuun;Dhaa nah paayaa",
+        "ur": "اسے ہم نے بہت ڈھونڈھا نہ پایا",
+        "hi": "उसे हम ने बहुत ढूंढा न पाया",
+        "ro": "use ham ne bahut ḍhūnḍhā nah pāyā"
+      },
+      {
+        "ascii": "agar paayaa to khoj apnaa nah paayaa",
+        "ur": "اگر پایا تو کھوج اپنا نہ پایا",
+        "hi": "अगर पाया तो खोज अपना न पाया",
+        "ro": "agar pāyā to khoj apnā nah pāyā"
+      },
+      {
+        "ascii": "muqaddar par hii gar suud o ziyaa;N hai",
+        "ur": "مقدّر پر ہی گر سود او زیاں ہے",
+        "hi": "मुक़द््दर पर ही गर सूद ओ ज़ियाँ है",
+        "ro": "muqaddar par hī gar sūd o ziyāñ hai"
+      },
+      {
+        "ascii": "to ham ne yaa;N nah kuchh khoyaa nah paayaa",
+        "ur": "تو ہم نے یاں نہ کچھ کھویا نہ پایا",
+        "hi": "तो हम ने याँ न कुछ खोया न पाया",
+        "ro": "to ham ne yāñ nah kuchh khoyā nah pāyā"
+      },
+      {
+        "ascii": "kahe kyaa haa))e za;xm-e dil hamaaraa",
+        "ur": "کہے کیا ہائے زخمِ دل ہمارا",
+        "hi": "कहे क्या हाए ज़ख़्म-ए दिल हमारा",
+        "ro": "kahe kyā hāʾe zaḳhm-e dil hamārā"
+      },
+      {
+        "ascii": "dahan paayaa lab-e goyaa nah paayaa",
+        "ur": "دہن پایا لبِ گویا نہ پایا",
+        "hi": "दहन पाया लब-ए गोया न पाया",
+        "ro": "dahan pāyā lab-e goyā nah pāyā"
+      },
+      {
+        "ascii": "na:ziir us kii kahaa;N ((aalam me;N ai ;zauq",
+        "ur": "نظیر اس کی کہاں عالم میں اے ذوق",
+        "hi": "नज़ीर उस की कहाँ ालम में ऐ ज़ौक़",
+        "ro": "naz̤īr us kī kahāñ ʿālam meñ ai żauq"
+      },
+      {
+        "ascii": "kahii;N aisaa nah paa))egaa nah paayaa",
+        "ur": "کہیں ایسا نہ پاۓگا نہ پایا",
+        "hi": "कहीं ऐसा न पाएगा न पाया",
+        "ro": "kahīñ aisā nah pāʾegā nah pāyā"
+      }
+    ],
+    "notes": {
+      "poet": "Zauq",
+      "meter_info": "#27 - = = = / - = = = / - = =",
+      "meters": [
+        27
+      ],
+      "intro": "",
+      "verses": {
+        "1": "Word-grafting: khoj apnaa is treated as khojapnaa [kho-jap-naa].",
+        "4": "Word-grafting: na:ziir us is treated as na;ziirus [na-:zii-rus]."
+      }
+    }
+  },
+  {
+    "id": 12,
+    "poet": "Zauq",
+    "meters": [
+      5
+    ],
+    "couplets_count": 5,
+    "lines_count": 10,
+    "lines": [
+      {
+        "ascii": "laa))i ;hayaat aa))e qa.zaa le chalii chale",
+        "ur": "لائی حیات آئے قضا لے چلی چلے",
+        "hi": "लाइ हयात आए क़ज़ा ले चली चले",
+        "ro": "lāʾi ḥayāt āʾe qaẓā le chalī chale"
+      },
+      {
+        "ascii": "apnii ;xvushii nah aa))e nah apnii ;xvushii chale",
+        "ur": "اپنی خوشی نہ آئے نہ اپنی خوشی چلے",
+        "hi": "अपनी ख़्वुशी न आए न अपनी ख़्वुशी चले",
+        "ro": "apnī ḳhvushī nah āʾe nah apnī ḳhvushī chale"
+      },
+      {
+        "ascii": "bahtar to hai yihii kih nah dunyaa se dil lage",
+        "ur": "بہتر تو ہے یہی کہ نہ دنیا سے دل لگے",
+        "hi": "बहतर तो है यही कि न दुनिया से दिल लगे",
+        "ro": "bahtar to hai yihī kih nah dunyā se dil lage"
+      },
+      {
+        "ascii": "par kyaa kare;N jo kaam nah be-dil-lagii chale",
+        "ur": "پر کیا کریں جو کام نہ بے دل لگی چلے",
+        "hi": "पर क्या करें जो काम न बे-दिल-लगी चले",
+        "ro": "par kyā kareñ jo kām nah be-dil-lagī chale"
+      },
+      {
+        "ascii": "ho ((umr-e ;xi.zr bhii to kahe;Nge bavaqt-e marg",
+        "ur": "ہو عمرِ خضر بھی تو کہیں گے بوقتِ مرگ",
+        "hi": "हो ुमर-ए ख़िज़्र भी तो कहेंगे बवक़्त-ए मरग",
+        "ro": "ho ʿumr-e ḳhiẓr bhī to kaheñge bavaqt-e marg"
+      },
+      {
+        "ascii": "ham kyaa rahe yahaa;N abhii aa))e abhii chale",
+        "ur": "ہم کیا رہے یہاں ابھی آئے ابھی چلے",
+        "hi": "हम क्या रहे यहाँ अभी आए अभी चले",
+        "ro": "ham kyā rahe yahāñ abhī āʾe abhī chale"
+      },
+      {
+        "ascii": "naazaa;N nah ho ;xirad pah jo honaa ho ho vuhii",
+        "ur": "نازاں نہ ہو خرد پہ جو ہونا ہو ہو وہی",
+        "hi": "नाज़ाँ न हो ख़िरद पे जो होना हो हो वही",
+        "ro": "nāzāñ nah ho ḳhirad pah jo honā ho ho vuhī"
+      },
+      {
+        "ascii": "daanish tirii nah kuchh mirii daanishvarii chale",
+        "ur": "دانش تری نہ کچھ مری دانشوری چلے",
+        "hi": "दानिश तिरी न कुछ मिरी दानिश्वरी चले",
+        "ro": "dānish tirī nah kuchh mirī dānishvarī chale"
+      },
+      {
+        "ascii": "dunyaa ne kis kaa raah-e fanaa me;N diyaa hai saath",
+        "ur": "دنیا نے کس کا راہِ فنا میں دیا ہے ساتھ",
+        "hi": "दुनिया ने किस का राह-ए फ़ना में दिया है साथ",
+        "ro": "dunyā ne kis kā rāh-e fanā meñ diyā hai sāth"
+      },
+      {
+        "ascii": "tum bhii chale chalo yuu;N hii jab tak chalii chale",
+        "ur": "تم بھی چلے چلو یوں ہی جب تک چلی چلے",
+        "hi": "तुम भी चले चलो यूँ ही जब तक चली चले",
+        "ro": "tum bhī chale chalo yūñ hī jab tak chalī chale"
+      }
+    ],
+    "notes": {
+      "poet": "Zauq",
+      "meter_info": "#5 = = - / = - = - / - = = - / = - =",
+      "meters": [
+        5
+      ],
+      "intro": "",
+      "verses": {
+        "1": ";xvushii is really [;xu-shii]; see Section 4.2 .",
+        "3": "bavaqt-e marg is [ba-vaq-te mar-g]. It could also be written bah vaqt-e marg , of which it's just a shortened form."
+      }
+    }
+  },
+  {
+    "id": 13,
+    "poet": "Momin",
+    "meters": [
+      14,
+      15
+    ],
+    "couplets_count": 5,
+    "lines_count": 10,
+    "lines": [
+      {
+        "ascii": "a;sar us ko ;zaraa nahii;N hotaa",
+        "ur": "اثر اس کو ذرا نہیں ہوتا",
+        "hi": "असर उस को ज़रा नहीं होता",
+        "ro": "aṡar us ko żarā nahīñ hotā"
+      },
+      {
+        "ascii": "ranj raa;hat-fazaa nahii;N hotaa",
+        "ur": "رنج راحت فزا نہیں ہوتا",
+        "hi": "रंज राहत-फ़ज़ा नहीं होता",
+        "ro": "ranj rāḥat-fazā nahīñ hotā"
+      },
+      {
+        "ascii": "tum hamaare kisii :tara;h nah huu))e",
+        "ur": "تم ہمارے کسی طرح نہ ہوئے",
+        "hi": "तुम हमारे किसी तरह न हूए",
+        "ro": "tum hamāre kisī t̤araḥ nah hūʾe"
+      },
+      {
+        "ascii": "varnah dunyaa me;N kyaa nahii;N hotaa",
+        "ur": "ورنہ دنیا میں کیا نہیں ہوتا",
+        "hi": "वरना दुनिया में क्या नहीं होता",
+        "ro": "varnah dunyā meñ kyā nahīñ hotā"
+      },
+      {
+        "ascii": "ek dushman kih char;x hai nah rahe",
+        "ur": "ایک دشمن کہ چرخ ہے نہ رہے",
+        "hi": "एक दुशमन कि चरख़ है न रहे",
+        "ro": "ek dushman kih charḳh hai nah rahe"
+      },
+      {
+        "ascii": "tujh se yih ai du((aa nahii;N hotaa",
+        "ur": "تجھ سے یہ اے دعا نہیں ہوتا",
+        "hi": "तुझ से ये ऐ दुआ नहीं होता",
+        "ro": "tujh se yih ai duʿā nahīñ hotā"
+      },
+      {
+        "ascii": "tum mire paas hote ho goyaa",
+        "ur": "تم مرے پاس ہوتے ہو گویا",
+        "hi": "तुम मिरे पास होते हो गोया",
+        "ro": "tum mire pās hote ho goyā"
+      },
+      {
+        "ascii": "jab ko))ii duusraa nahii;N hotaa",
+        "ur": "جب کوئی دوسرا نہیں ہوتا",
+        "hi": "जब कोई दूसरा नहीं होता",
+        "ro": "jab koʾī dūsrā nahīñ hotā"
+      },
+      {
+        "ascii": "kyuu;N sune ((ar.z-e mu.z:tar ai momin",
+        "ur": "کیوں سنے عرضِ مضطر اے مومن",
+        "hi": "क्यूँ सुने र्ज़-ए मुज़तर ऐ मोमिन",
+        "ro": "kyūñ sune ʿarẓ-e muẓt̤ar ai momin"
+      },
+      {
+        "ascii": ".sanam aa;xir ;xudaa nahii;N hotaa",
+        "ur": "صنم آخر خدا نہیں ہوتا",
+        "hi": "सनम आख़िर ख़ुदा नहीं होता",
+        "ro": "ṣanam āḳhir ḳhudā nahīñ hotā"
+      }
+    ],
+    "notes": {
+      "poet": "Momin",
+      "meter_info": "#14 =* - = = / - = - = / = = #15 =* - = = / - = - = / - - = These two closely related meters are often used together. *This syllable, while normally long, may occasionally be replaced with a short, at the poet's pleasure.",
+      "meters": [
+        14,
+        15
+      ],
+      "intro": "",
+      "verses": {
+        "1": "Word-grafting: a;sar us is treated as a:sarus [a-;sa-rus]; this verse begins with the variant short-syllable opening.",
+        "2": "The first line is in meter #15. huu))e is really [hu-))e], (- x); see Section 4.3 .",
+        "3": "The first line is in meter #15.",
+        "4": "ko))ii is to be considered (x x). See Section 2.2 .",
+        "5": "Word-grafting: mu.z:tar ai is treated as mu.z:tarai [mu.z-:ta-rai]; .sanam aa;xir is treated as .sanamaa;xir [.sa-na-maa-;xir]. The second line begins with the variant short-syllable opening."
+      }
+    }
+  },
+  {
+    "id": 14,
+    "poet": "Momin",
+    "meters": [
+      37
+    ],
+    "couplets_count": 5,
+    "lines_count": 10,
+    "lines": [
+      {
+        "ascii": "vuh jo ham me;N tum me;N qaraar thaa tumhe;N yaad ho kih nah yaad ho",
+        "ur": "وہ جو ہم میں تم میں قرار تھا تمہیں یاد ہو کہ نہ یاد ہو",
+        "hi": "वो जो हम में तुम में क़रार था तुम्हें याद हो कि न याद हो",
+        "ro": "vuh jo ham meñ tum meñ qarār thā tumheñ yād ho kih nah yād ho"
+      },
+      {
+        "ascii": "vahii ya((nii va((dah nibaah kaa tumhe;N yaad ho kih nah yaad ho",
+        "ur": "وہی یعنی وعدہ نباہ کا تمہیں یاد ہو کہ نہ یاد ہو",
+        "hi": "वही यानी वादा निबाह का तुम्हें याद हो कि न याद हो",
+        "ro": "vahī yaʿnī vaʿdah nibāh kā tumheñ yād ho kih nah yād ho"
+      },
+      {
+        "ascii": "vuh na))e gile vuh shikaayate;N vuh maze maze kii ;hikaayate;N",
+        "ur": "وہ نئے گلے وہ شکایتیں وہ مزے مزے کی حکایتیں",
+        "hi": "वो नए गिले वो शिकायतें वो मज़े मज़े की हिकायतें",
+        "ro": "vuh naʾe gile vuh shikāyateñ vuh maze maze kī ḥikāyateñ"
+      },
+      {
+        "ascii": "vuh har ek baat pah ruu;Thnaa tumhe;N yaad ho kih nah yaad ho",
+        "ur": "وہ ہر ایک بات پہ روٹھنا تمہیں یاد ہو کہ نہ یاد ہو",
+        "hi": "वो हर एक बात पे रूठना तुम्हें याद हो कि न याद हो",
+        "ro": "vuh har ek bāt pah rūṭhnā tumheñ yād ho kih nah yād ho"
+      },
+      {
+        "ascii": "huu))e ittifaaq se gar baham to vafaa jataane ko dam bah dam",
+        "ur": "ہوئے اتّفاق سے گر بہم تو وفا جتانے کو دم بہ دم",
+        "hi": "हूए इततिफ़ाक़ से गर बहम तो वफ़ा जताने को दम ब दम",
+        "ro": "hūʾe ittifāq se gar baham to vafā jatāne ko dam bah dam"
+      },
+      {
+        "ascii": "gilah-e malaamat-e aqrabaa tumhe;N yaad ho kih nah yaad ho",
+        "ur": "گلۂ ملامتِ اقربا تمہیں یاد ہو کہ نہ یاد ہو",
+        "hi": "गिला-ए मलामत-ए अक़रबा तुम्हें याद हो कि न याद हो",
+        "ro": "gilah-e malāmat-e aqrabā tumheñ yād ho kih nah yād ho"
+      },
+      {
+        "ascii": "ko))ii baat aisii agar huu))ii kih tumhaare jii ko burii lagii",
+        "ur": "کوئی بات ایسی اگر ہوئی کہ تمہارے جی کو بری لگی",
+        "hi": "कोई बात ऐसी अगर हूई कि तुम्हारे जी को बुरी लगी",
+        "ro": "koʾī bāt aisī agar hūʾī kih tumhāre jī ko burī lagī"
+      },
+      {
+        "ascii": "to bayaa;N se pahle hii bhuulnaa tumhe;N yaad ho kih nah yaad ho",
+        "ur": "تو بیاں سے پہلے ہی بھولنا تمہیں یاد ہو کہ نہ یاد ہو",
+        "hi": "तो बयाँ से पहले ही भूलना तुम्हें याद हो कि न याद हो",
+        "ro": "to bayāñ se pahle hī bhūlnā tumheñ yād ho kih nah yād ho"
+      },
+      {
+        "ascii": "jise aap ginte the aashnaa jise aap kahte the baavafaa",
+        "ur": "جسے آپ گنتے تھے آشنا جسے آپ کہتے تھے باوفا",
+        "hi": "जिसे आप गिंते थे आशना जिसे आप कहते थे बावफ़ा",
+        "ro": "jise āp ginte the āshnā jise āp kahte the bāvafā"
+      },
+      {
+        "ascii": "mai;N vahii huu;N momin-e mubtalaa tumhe;N yaad ho kih nah yaad ho",
+        "ur": "میں وہی ہوں مومنِ مبتلا تمہیں یاد ہو کہ نہ یاد ہو",
+        "hi": "मैं वही हूँ मोमिन-ए मुबतला तुम्हें याद हो कि न याद हो",
+        "ro": "maiñ vahī hūñ momin-e mubtalā tumheñ yād ho kih nah yād ho"
+      }
+    ],
+    "notes": {
+      "poet": "Momin",
+      "meter_info": "#38 - - = - = / - - = - = / - - = - = / - - = - =",
+      "meters": [
+        37
+      ],
+      "intro": "",
+      "verses": {
+        "1": "Note the scansion of tumhe;N [tu-mhe;N], which is (- x) in accordance with its pronunciation, though it is more often spelled with h than with [do-chashmii he]. See Section 4.3 . Both kih [kih] and nah [nah] are virtually always short; see Section 2.1 .",
+        "2": "Word-grafting: har ek is treated as harek [ha-re-k].",
+        "3": "huu))e [hu-))e] is an irregularly spelled Indic word, scanned (- x); see Section 4.3 . Note that the doubled letter created by the tashdiid [tashdiid] on the t in ittifaaq counts as fully as any other letter in the scansion: [it-ti-faa-q].",
+        "4": "The protean word ko))ii is always to be scanned (x x). Note that tumhaare is scanned [tu-mhaa-re], (- = x); see Section 4.3 ."
+      }
+    }
+  },
+  {
+    "id": 15,
+    "poet": "Ghalib",
+    "meters": [
+      18,
+      19
+    ],
+    "couplets_count": 5,
+    "lines_count": 10,
+    "lines": [
+      {
+        "ascii": "baskih dushvaar hai har kaam kaa aasaa;N honaa",
+        "ur": "بسکہ دشوار ہے ہر کام کا آساں ہونا",
+        "hi": "बसकि दुश्वार है हर काम का आसाँ होना",
+        "ro": "baskih dushvār hai har kām kā āsāñ honā"
+      },
+      {
+        "ascii": "aadmii ko bhii muyassar nahii;N insaa;N honaa",
+        "ur": "آدمی کو بھی میسّر نہیں انساں ہونا",
+        "hi": "आदमी को भी मुयस्सर नहीं इंसाँ होना",
+        "ro": "ādmī ko bhī muyassar nahīñ insāñ honā"
+      },
+      {
+        "ascii": "vaa))e diivaanagii-e shauq kih har dam mujh ko",
+        "ur": "وائے دیوانگیِ شوق کہ ہر دم مجھ کو",
+        "hi": "वाए दीवानगी-ए शौक़ कि हर दम मुझ को",
+        "ro": "vāʾe dīvānagī-e shauq kih har dam mujh ko"
+      },
+      {
+        "ascii": "aap jaanaa udhar aur aap hii ;hairaa;N honaa",
+        "ur": "آپ جانا ادھر اور آپ ہی حیراں ہونا",
+        "hi": "आप जाना उधर और आप ही हैराँ होना",
+        "ro": "āp jānā udhar aur āp hī ḥairāñ honā"
+      },
+      {
+        "ascii": "((ishrat-e qatl-gah-e ahl-e tamannaa mat puuchh",
+        "ur": "عشرتِ قتل گۂ اہلِ تمنّا مت پوچھ",
+        "hi": "िशरत-ए क़तल-गह-ए अहल-ए तमंना मत पूछ",
+        "ro": "ʿishrat-e qatl-gah-e ahl-e tamannā mat pūchh"
+      },
+      {
+        "ascii": "((iid-e na:z:zaarah hai shamshiir kaa ((uryaa;N honaa",
+        "ur": "عیدِ نظّارہ ہے شمشیر کا عریاں ہونا",
+        "hi": "ीद-ए नज़्ज़ारा है शमशीर का ुर्याँ होना",
+        "ro": "ʿīd-e naz̤z̤ārah hai shamshīr kā ʿuryāñ honā"
+      },
+      {
+        "ascii": "((ishrat-e paarah-e dil za;xm-e tamannaa khaanaa",
+        "ur": "عشرتِ پارۂ دل زخمِ تمنّا کھانا",
+        "hi": "िशरत-ए पारा-ए दिल ज़ख़्म-ए तमंना खाना",
+        "ro": "ʿishrat-e pārah-e dil zaḳhm-e tamannā khānā"
+      },
+      {
+        "ascii": "la;z;zat-e resh-e jigar ;Garq-e namakdaa;N honaa",
+        "ur": "لذّتِ ریشِ جگر غرقِ نمکداں ہونا",
+        "hi": "लज़्ज़त-ए रेश-ए जिगर ग़रक़-ए नमकदाँ होना",
+        "ro": "lażżat-e resh-e jigar ġharq-e namakdāñ honā"
+      },
+      {
+        "ascii": ";haif us chaar girah kap;Re kii qismat ;Gaalib",
+        "ur": "حیف اس چار گرہ کپڑے کی قسمت غالب",
+        "hi": "हैफ़ उस चार गिरह कपड़े की क़िस्मत ग़ालिब",
+        "ro": "ḥaif us chār girah kapṛe kī qismat ġhālib"
+      },
+      {
+        "ascii": "jis kii qismat me;N ho ((aashiq kaa garebaa;N honaa",
+        "ur": "جس کی قسمت میں ہو عاشق کا گریباں ہونا",
+        "hi": "जिस की क़िस्मत में हो ाशिक़ का गरेबाँ होना",
+        "ro": "jis kī qismat meñ ho ʿāshiq kā garebāñ honā"
+      }
+    ],
+    "notes": {
+      "poet": "Ghalib",
+      "meter_info": "#18 =* - = = / - - = = / - - = = / = = *This syllable, while normally long, may occasionally be replaced with a short, at the poet's pleasure.",
+      "meters": [
+        18,
+        19
+      ],
+      "intro": "",
+      "verses": {
+        "2": "Note the way the vowel- ii turns into a consonant before an [i.zaafat]: diivaanagii-e shauq becomes [dii-vaa-na-gi-ye shau-q], (= = - - = = -); see Section 3.2 . In this case the [i.zaafat] syllable has to be long, to avoid having the forbidden three shorts in a row. Also note the double word-grafting: udhar aur aap is treated as udharauraap [u-dha-rau-raa-p]."
+      }
+    }
+  },
+  {
+    "id": 16,
+    "poet": "Ghalib",
+    "meters": [
+      36
+    ],
+    "couplets_count": 5,
+    "lines_count": 10,
+    "lines": [
+      {
+        "ascii": "yih nah thii hamaarii qismat kih vi.saal-e yaar hotaa",
+        "ur": "یہ نہ تھی ہماری قسمت کہ وصالِ یار ہوتا",
+        "hi": "ये न थी हमारी क़िस्मत कि विसाल-ए यार होता",
+        "ro": "yih nah thī hamārī qismat kih viṣāl-e yār hotā"
+      },
+      {
+        "ascii": "agar aur jiite rahte yihii inti:zaar hotaa",
+        "ur": "اگر اور جیتے رہتے یہی انتظار ہوتا",
+        "hi": "अगर और जीते रहते यही इंतिज़ार होता",
+        "ro": "agar aur jīte rahte yihī intiz̤ār hotā"
+      },
+      {
+        "ascii": "tire va((de par jiye ham to yih jaan jhuu;T jaanaa",
+        "ur": "ترے وعدے پر جیے ہم تو یہ جان جھوٹ جانا",
+        "hi": "तिरे वादे पर जिये हम तो ये जान झूट जाना",
+        "ro": "tire vaʿde par jiye ham to yih jān jhūṭ jānā"
+      },
+      {
+        "ascii": "kih ;xvushii se mar nah jaate agar i((tibaar hotaa",
+        "ur": "کہ خوشی سے مر نہ جاتے اگر اعتبار ہوتا",
+        "hi": "कि ख़्वुशी से मर न जाते अगर इतिबार होता",
+        "ro": "kih ḳhvushī se mar nah jāte agar ětibār hotā"
+      },
+      {
+        "ascii": "ko))ii mere dil se puuchhe tire tiir-e niim kash ko",
+        "ur": "کوئی میرے دل سے پوچھے ترے تیرِ نیم کش کو",
+        "hi": "कोई मेरे दिल से पूछे तिरे तीर-ए नीम कश को",
+        "ro": "koʾī mere dil se pūchhe tire tīr-e nīm kash ko"
+      },
+      {
+        "ascii": "yih ;xalish kahaa;N se hotii jo jigar ke paar hotaa",
+        "ur": "یہ خلش کہاں سے ہوتی جو جگر کے پار ہوتا",
+        "hi": "ये ख़लिश कहाँ से होती जो जिगर के पार होता",
+        "ro": "yih ḳhalish kahāñ se hotī jo jigar ke pār hotā"
+      },
+      {
+        "ascii": ";Gam agarchih jaa;N-gusil hai pah kahaa;N bache;N kih dil hai",
+        "ur": "غم اگرچہ جاں گسل ہے پہ کہاں بچیں کہ دل ہے",
+        "hi": "ग़म अगरचिह जाँ-गुसिल है पे कहाँ बचें कि दिल है",
+        "ro": "ġham agarchih jāñ-gusil hai pah kahāñ bacheñ kih dil hai"
+      },
+      {
+        "ascii": ";Gam-e ((ishq agar nah hotaa ;Gam-e rozgaar hotaa",
+        "ur": "غمِ عشق اگر نہ ہوتا غمِ روزگار ہوتا",
+        "hi": "ग़म-ए िश्क़ अगर न होता ग़म-ए रोज़गार होता",
+        "ro": "ġham-e ʿishq agar nah hotā ġham-e rozgār hotā"
+      },
+      {
+        "ascii": "yih masaa))il-e ta.savvuf yih tiraa bayaan ;Gaalib",
+        "ur": "یہ مسائلِ تصوّف یہ ترا بیان غالب",
+        "hi": "ये मसाइल-ए तसव्वुफ़ ये तिरा बयान ग़ालिब",
+        "ro": "yih masāʾil-e taṣavvuf yih tirā bayān ġhālib"
+      },
+      {
+        "ascii": "tujhe ham valii samajhte jo nah baadah ;xvaar hotaa",
+        "ur": "تجھے ہم ولی سمجھتے جو نہ بادہ خوار ہوتا",
+        "hi": "तुझे हम वली समझते जो न बादा ख़्वार होता",
+        "ro": "tujhe ham valī samajhte jo nah bādah ḳhvār hotā"
+      }
+    ],
+    "notes": {
+      "poet": "Ghalib",
+      "meter_info": "#37 - - = - / = - = = // - - = - / = - = = Has caesura.",
+      "meters": [
+        36
+      ],
+      "intro": "",
+      "verses": {
+        "1": "Word-grafting: agar aur is treated as agaraur [a-ga-rau-r].",
+        "2": ";xvushii is really [;xu-shii]; see Section 4.2 . Word-grafting: agar i((tibaar is treated as agari((tibaar [a-ga-ri((-t-baa-r].",
+        "3": "ko))ii [ko-))ii] is, as ever, (x x).",
+        "4": "Word-grafting: ;Gam agarchih is treated as ;Gamarchih [;Ga-ma-gar-chih].",
+        "5": "masaa))il-e ta.savvuf is [ma-saa-))i-le ta-.sav-vuf]."
+      }
+    }
+  },
+  {
+    "id": 17,
+    "poet": "Ghalib",
+    "meters": [
+      18,
+      19
+    ],
+    "couplets_count": 5,
+    "lines_count": 10,
+    "lines": [
+      {
+        "ascii": "dahr me;N naqsh-e vafaa vajah-e tasallii nah huu))aa",
+        "ur": "دہر میں نقشِ وفا وجۂ تسلی نہ ہوئا",
+        "hi": "दहर में नक़्श-ए वफ़ा वजा-ए तसल्ली न हूआ",
+        "ro": "dahr meñ naqsh-e vafā vajah-e tasallī nah hūʾā"
+      },
+      {
+        "ascii": "hai yih vuh laf:z kih sharmindah-e ma((nii nah huu))aa",
+        "ur": "ہے یہ وہ لفظ کہ شرمندۂ معنی نہ ہوئا",
+        "hi": "है ये वो लफ़्ज़ कि शर्मिंदा-ए मानी न हूआ",
+        "ro": "hai yih vuh lafz̤ kih sharmindah-e maʿnī nah hūʾā"
+      },
+      {
+        "ascii": "mai;N ne chaahaa thaa kih andoh-e vafaa se chhuu'Tuu;N",
+        "ur": "میں نے چاہا تھا کہ اندوۂ وفا سے چھوتوں",
+        "hi": "मैं ने चाहा था कि अंदोह-ए वफ़ा से छूतूँ",
+        "ro": "maiñ ne chāhā thā kih andoh-e vafā se chhū'tūñ"
+      },
+      {
+        "ascii": "vuh sitamgar mire marne pah bhii raa.zii nah huu))aa",
+        "ur": "وہ ستمگر مرے مرنے پہ بھی راضی نہ ہوئا",
+        "hi": "वो सितम्गर मिरे मरने पे भी राज़ी न हूआ",
+        "ro": "vuh sitamgar mire marne pah bhī rāẓī nah hūʾā"
+      },
+      {
+        "ascii": "huu;N tire va((dah nah karne pah bhii raa.zii kih kabhii",
+        "ur": "ہوں ترے وعدہ نہ کرنے پہ بھی راضی کہ کبھی",
+        "hi": "हूँ तिरे वादा न करने पे भी राज़ी कि कभी",
+        "ro": "hūñ tire vaʿdah nah karne pah bhī rāẓī kih kabhī"
+      },
+      {
+        "ascii": "gosh minnat-kash-e gulbaang-e tasallii nah huu))aa",
+        "ur": "گوش منّت کشِ گلبانگِ تسلی نہ ہوئا",
+        "hi": "गोश मिंनत-कश-ए गुलबांग-ए तसल्ली न हूआ",
+        "ro": "gosh minnat-kash-e gulbāng-e tasallī nah hūʾā"
+      },
+      {
+        "ascii": "kis se ma;hruumii-e qismat kii shikaayat kiije",
+        "ur": "کس سے محرومیِ قسمت کی شکایت کیجے",
+        "hi": "किस से महरूमी-ए क़िस्मत की शिकायत कीजे",
+        "ro": "kis se maḥrūmī-e qismat kī shikāyat kīje"
+      },
+      {
+        "ascii": "ham ne chaahaa thaa kih mar jaa))e;N so vuh bhii nah huu))aa",
+        "ur": "ہم نے چاہا تھا کہ مر جائیں سو وہ بھی نہ ہوئا",
+        "hi": "हम ने चाहा था कि मर जाएं सो वो भी न हूआ",
+        "ro": "ham ne chāhā thā kih mar jāʾeñ so vuh bhī nah hūʾā"
+      },
+      {
+        "ascii": "mar gayaa .sadmah-e yak-junbish-e lab se ;Gaalib",
+        "ur": "مر گیا صدمۂ یک جنبشِ لب سے غالب",
+        "hi": "मर गया सदमा-ए यक-जुंबिश-ए लब से ग़ालिब",
+        "ro": "mar gayā ṣadmah-e yak-junbish-e lab se ġhālib"
+      },
+      {
+        "ascii": "naatavaanii se ;hariif-e dam-e ((iisii nah huu))aa",
+        "ur": "ناتوانی سے حریفِ دمِ عیسی نہ ہوئا",
+        "hi": "नातवानी से हरीफ़-ए दम-ए ीसी न हूआ",
+        "ro": "nātavānī se ḥarīf-e dam-e ʿīsī nah hūʾā"
+      }
+    ],
+    "notes": {
+      "poet": "Ghalib",
+      "meter_info": "#19 =* - = = / - - = = / - - = = / - - = #18 =* - = = / - - = = / - - = = / = = These two closely related meters are often used together. *This syllable, while normally long, may occasionally be replaced with a short, at the poet's pleasure.",
+      "meters": [
+        18,
+        19
+      ],
+      "intro": "",
+      "verses": {
+        "1": "vajah-e tasallii is [vaj-he-ta-sal-lii].",
+        "2": "The first line is in #18.",
+        "4": "The first line is in #18.",
+        "5": "The first line is in #18. .sadmah-e yak-junbish-e lab is [.sad-ma-he yak-jun-bi-she lab]."
+      }
+    }
+  },
+  {
+    "id": 18,
+    "poet": "Ghalib",
+    "meters": [
+      10
+    ],
+    "couplets_count": 5,
+    "lines_count": 10,
+    "lines": [
+      {
+        "ascii": "sab kahaa;N kuchh laalah o gul me;N numaayaa;N ho ga))ii;N",
+        "ur": "سب کہاں کچھ لالہ او گل میں نمایاں ہو گئیں",
+        "hi": "सब कहाँ कुछ लाला ओ गुल में नुमायाँ हो गईं",
+        "ro": "sab kahāñ kuchh lālah o gul meñ numāyāñ ho gaʾīñ"
+      },
+      {
+        "ascii": ";xaak me;N kyaa .suurate;N ho;Ngii kih pinhaa;N ho ga))ii;N",
+        "ur": "خاک میں کیا صورتیں ہونگی کہ پنہاں ہو گئیں",
+        "hi": "ख़ाक में क्या सूरतें होंगी कि पिंहाँ हो गईं",
+        "ro": "ḳhāk meñ kyā ṣūrateñ hoñgī kih pinhāñ ho gaʾīñ"
+      },
+      {
+        "ascii": "yaad thii;N ham ko bhii rangaarang bazm-aaraa))iyaa;N",
+        "ur": "یاد تھیں ہم کو بھی رنگارنگ بزم آرائیاں",
+        "hi": "याद थीं हम को भी रंगारंग बज़्म-आराइयाँ",
+        "ro": "yād thīñ ham ko bhī rangārang bazm-ārāʾiyāñ"
+      },
+      {
+        "ascii": "lekin ab naqsh o nigaar-e :taaq-e nisyaa;N ho ga))ii;N",
+        "ur": "لیکن اب نقش او نگارِ طاقِ نسیاں ہو گئیں",
+        "hi": "लेकिन अब नक़्श ओ निगार-ए ताक़-ए निस्याँ हो गईं",
+        "ro": "lekin ab naqsh o nigār-e t̤āq-e nisyāñ ho gaʾīñ"
+      },
+      {
+        "ascii": "niind us kii hai dimaa;G us kaa hai raate;N us kii hai;N",
+        "ur": "نیند اس کی ہے دماغ اس کا ہے راتیں اس کی ہیں",
+        "hi": "नींद उस की है दिमाग़ उस का है रातें उस की हैं",
+        "ro": "nīnd us kī hai dimāġh us kā hai rāteñ us kī haiñ"
+      },
+      {
+        "ascii": "terii zulfe;N jis ke baazuu par pareshaa;N ho ga))ii;N",
+        "ur": "تیری زلفیں جس کے بازو پر پریشاں ہو گئیں",
+        "hi": "तेरी ज़ुल्फ़ें जिस के बाज़ू पर परेशाँ हो गईं",
+        "ro": "terī zulfeñ jis ke bāzū par pareshāñ ho gaʾīñ"
+      },
+      {
+        "ascii": "ham muva;h;hid hai;N hamaaraa kesh hai tark-e rusuum",
+        "ur": "ہم موحّد ہیں ہمارا کیش ہے ترکِ رسوم",
+        "hi": "हम मुवहहिद हैं हमारा केश है तरक-ए रुसूम",
+        "ro": "ham muvaḥḥid haiñ hamārā kesh hai tark-e rusūm"
+      },
+      {
+        "ascii": "millate;N jab miT ga))ii;N ajzaa-e iimaa;N ho ga))ii;N",
+        "ur": "ملتیں جب مت گئیں اجزائے ایماں ہو گئیں",
+        "hi": "मिल्लतें जब मित गईं अजज़ा-ए ईमाँ हो गईं",
+        "ro": "millateñ jab mit gaʾīñ ajzā-e īmāñ ho gaʾīñ"
+      },
+      {
+        "ascii": "yuu;Nhii gar rotaa rahaa ;Gaalib to ai ahl-e jahaa;N",
+        "ur": "یونہی گر روتا رہا غالب تو اے اہلِ جہاں",
+        "hi": "यूंही गर रोता रहा ग़ालिब तो ऐ अहल-ए जहाँ",
+        "ro": "yūñhī gar rotā rahā ġhālib to ai ahl-e jahāñ"
+      },
+      {
+        "ascii": "dekhnaa in bastiyo;N ko tum kih viiraa;N ho ga))ii;N",
+        "ur": "دیکھنا ان بستیوں کو تم کہ ویراں ہو گئیں",
+        "hi": "देखना इन बसतियों को तुम कि वीराँ हो गईं",
+        "ro": "dekhnā in bastiyoñ ko tum kih vīrāñ ho gaʾīñ"
+      }
+    ],
+    "notes": {
+      "poet": "Ghalib",
+      "meter_info": "#10 = - = = / = - = = / = - = = / = - =",
+      "meters": [
+        10
+      ],
+      "intro": "",
+      "verses": {
+        "1": "laalah o is [laa-la-ho]; see Section 3.3 .",
+        "2": "Word-grafting: bazm-araa))iyaa;N is treated as bazmaaraa))iyaa;N [baz-maa-raa-))i-yaa;N].",
+        "3": "Word-grafting: dimaa;G us is treated as dimaa;Gus [di-maa-;Gus].",
+        "4": "muva;h;hid is scanned [mu-va;h-;hid]. Note the presence of the extra unscanned \"cheat syllable\"--the m of rusuum [ru-suu-m]-- at the end of the first line.",
+        "5": "yuu;Nhii is scanned as [yuu;N hii], (x x)."
+      }
+    }
+  },
+  {
+    "id": 19,
+    "poet": "Ghalib",
+    "meters": [
+      5
+    ],
+    "couplets_count": 4,
+    "lines_count": 8,
+    "lines": [
+      {
+        "ascii": "gar ;xaamushii se faa))idah a;xfaa-e ;haal hai",
+        "ur": "گر خامشی سے فائدہ اخفائے حال ہے",
+        "hi": "गर ख़ामुशी से फ़ाइदा अख़फ़ा-ए हाल है",
+        "ro": "gar ḳhāmushī se fāʾidah aḳhfā-e ḥāl hai"
+      },
+      {
+        "ascii": ";xvush huu;N kih merii baat samajhnii mu;haal hai",
+        "ur": "خوش ہوں کہ میری بات سمجھنی محال ہے",
+        "hi": "ख़्वुश हूँ कि मेरी बात समझनी मुहाल है",
+        "ro": "ḳhvush hūñ kih merī bāt samajhnī muḥāl hai"
+      },
+      {
+        "ascii": "kis parde me;N hai aa))inah-pardaaz ai ;xudaa",
+        "ur": "کس پردے میں ہے آئنہ پرداز اے خدا",
+        "hi": "किस पर्दे में है आइना-पर्दाज़ ऐ ख़ुदा",
+        "ro": "kis parde meñ hai āʾinah-pardāz ai ḳhudā"
+      },
+      {
+        "ascii": "ra;hmat kih ((u;zr-;xvaah lab-e be-savaal hai",
+        "ur": "رحمت کہ عذر خواہ لبِ بے سوال ہے",
+        "hi": "रहमत कि ुज़्र-ख़्वाह लब-ए बे-सवाल है",
+        "ro": "raḥmat kih ʿużr-ḳhvāh lab-e be-savāl hai"
+      },
+      {
+        "ascii": "hai hai ;xudaa na;xvaastah vuh aur dushmanii",
+        "ur": "ہے ہے خدا نخواستہ وہ اور دشمنی",
+        "hi": "है है ख़ुदा नख़वास्ता वो और दुशमनी",
+        "ro": "hai hai ḳhudā naḳhvāstah vuh aur dushmanī"
+      },
+      {
+        "ascii": "ai shauq-e munfa((il yih tujhe kyaa ;xayaal hai",
+        "ur": "اے شوقِ منفعل یہ تجھے کیا خیال ہے",
+        "hi": "ऐ शौक़-ए मुंफ़िल ये तुझे क्या ख़याल है",
+        "ro": "ai shauq-e munfaʿil yih tujhe kyā ḳhayāl hai"
+      },
+      {
+        "ascii": "hastii ke mat fareb me;N aa jaa))iyo asad",
+        "ur": "ہستی کے مت فریب میں آ جائیو اسد",
+        "hi": "हस्ती के मत फ़रेब में आ जाइयो असद",
+        "ro": "hastī ke mat fareb meñ ā jāʾiyo asad"
+      },
+      {
+        "ascii": "((aalam tamaam ;halqah-e daam-e ;xayaal hai",
+        "ur": "عالم تمام حلقۂ دامِ خیال ہے",
+        "hi": "ालम तमाम हलक़ा-ए दाम-ए ख़याल है",
+        "ro": "ʿālam tamām ḥalqah-e dām-e ḳhayāl hai"
+      }
+    ],
+    "notes": {
+      "poet": "Ghalib",
+      "meter_info": "#5 = = - / = - = - / - = = - / = - =",
+      "meters": [
+        5
+      ],
+      "intro": "",
+      "verses": {
+        "1": "The spelling ;xaamushii , rather than the usual ;xaamoshii , points to the scansion [;xaa-mu-shii]; see Section 2.4 . ;xvush is really [;xush]; see Section 4.2 .",
+        "2": "aa))inah , a remarkably flexible word, is here scanned (= x x), and spelled accordingly; see Section 2.2 . ((u;zr-;xvaah is scanned [((u;z-r-;xvaa-h]; see Section 4.2 .",
+        "3": "na;xvaastah is scanned [na-;xvaa-s-tah]; see Section 4.2 ."
+      }
+    }
+  },
+  {
+    "id": 20,
+    "poet": "Ghalib",
+    "meters": [
+      8
+    ],
+    "couplets_count": 5,
+    "lines_count": 10,
+    "lines": [
+      {
+        "ascii": "hai baskih har ik un ke ishaare me;N nishaa;N aur",
+        "ur": "ہے بسکہ ہر اک ان کے اشارے میں نشاں اور",
+        "hi": "है बसकि हर इक उन के इशारे में निशाँ और",
+        "ro": "hai baskih har ik un ke ishāre meñ nishāñ aur"
+      },
+      {
+        "ascii": "karte hai;N mu;habbat to gu;zartaa hai gumaa;N aur",
+        "ur": "کرتے ہیں محبّت تو گذرتا ہے گماں اور",
+        "hi": "करते हैं मुहब्बत तो गुज़रता है गुमाँ और",
+        "ro": "karte haiñ muḥabbat to gużartā hai gumāñ aur"
+      },
+      {
+        "ascii": "yaa rab vuh nah samjhe hai;N nah samjhe;Nge mirii baat",
+        "ur": "یا رب وہ نہ سمجھے ہیں نہ سمجھیں گے مری بات",
+        "hi": "या रब वो न समझे हैं न सम्झेंगे मिरी बात",
+        "ro": "yā rab vuh nah samjhe haiñ nah samjheñge mirī bāt"
+      },
+      {
+        "ascii": "de aur dil un ko jo nah de mujh ko zabaa;N aur",
+        "ur": "دے اور دل ان کو جو نہ دے مجھ کو زباں اور",
+        "hi": "दे और दिल उन को जो न दे मुझ को ज़बाँ और",
+        "ro": "de aur dil un ko jo nah de mujh ko zabāñ aur"
+      },
+      {
+        "ascii": "har chand subuk dast huu))e but-shikanii me;N",
+        "ur": "ہر چند سبک دست ہوئے بت شکنی میں",
+        "hi": "हर चंद सुबुक दस्त हूए बुत-शिकनी में",
+        "ro": "har chand subuk dast hūʾe but-shikanī meñ"
+      },
+      {
+        "ascii": "ham hai;N to abhii raah me;N hai sang-e giraa;N aur",
+        "ur": "ہم ہیں تو ابھی راہ میں ہے سنگِ گراں اور",
+        "hi": "हम हैं तो अभी राह में है संग-ए गिराँ और",
+        "ro": "ham haiñ to abhī rāh meñ hai sang-e girāñ aur"
+      },
+      {
+        "ascii": "paate nahii;N jab raah to cha;Rh jaate hai;N naale",
+        "ur": "پاتے نہیں جب راہ تو چڑھ جاتے ہیں نالے",
+        "hi": "पाते नहीं जब राह तो चढ़ जाते हैं नाले",
+        "ro": "pāte nahīñ jab rāh to chaṛh jāte haiñ nāle"
+      },
+      {
+        "ascii": "ruktii hai mirii :tab((a to hotii hai ravaa;N aur",
+        "ur": "رکتی ہے مری طبع تو ہوتی ہے رواں اور",
+        "hi": "रुकती है मिरी तब तो होती है रवाँ और",
+        "ro": "ruktī hai mirī t̤abʿa to hotī hai ravāñ aur"
+      },
+      {
+        "ascii": "hai;N aur bhii dunyaa me;N su;xanvar bahut achchhe",
+        "ur": "ہیں اور بھی دنیا میں سخنور بہت اچّھے",
+        "hi": "हैं और भी दुनिया में सुख़ंवर बहुत अचछे",
+        "ro": "haiñ aur bhī dunyā meñ suḳhanvar bahut achchhe"
+      },
+      {
+        "ascii": "kahte hai;N kih ;Gaalib kaa hai andaaz-e bayaa;N aur",
+        "ur": "کہتے ہیں کہ غالب کا ہے اندازِ بیاں اور",
+        "hi": "कहते हैं कि ग़ालिब का है अंदाज़-ए बयाँ और",
+        "ro": "kahte haiñ kih ġhālib kā hai andāz-e bayāñ aur"
+      }
+    ],
+    "notes": {
+      "poet": "Ghalib",
+      "meter_info": "#8 = = - / - = = - / - = = - / - = =",
+      "meters": [
+        8
+      ],
+      "intro": "This ghazal should be considered to have the optional \"cheat syllable\" at the end of every verse, in the form of the r in aur [au-r].",
+      "verses": {
+        "1": "Word-grafting: har ik [har ik] is treated as harik [ha-rik]; note that the spelling of ik [ik] points to its scansion as (=) rather than (= -).",
+        "2": "Word-grafting: dil un is treated as dilun [di-lun].",
+        "3": "huu))e is really [hu-))e]. shikanii is [shi-ka-nii].",
+        "5": "Word-grafting: bahut achchhe is treated as bahutachchhe [ba-hu-tach-chhe]."
+      }
+    }
+  },
+  {
+    "id": 21,
+    "poet": "Dagh",
+    "meters": [
+      4
+    ],
+    "couplets_count": 5,
+    "lines_count": 10,
+    "lines": [
+      {
+        "ascii": "yaa rab hai ba;xsh denaa bande ko kaam teraa",
+        "ur": "یا رب ہے بخش دینا بندے کو کام تیرا",
+        "hi": "या रब है बख़श देना बंदे को काम तेरा",
+        "ro": "yā rab hai baḳhsh denā bande ko kām terā"
+      },
+      {
+        "ascii": "ma;hruum rah nah jaa))e kal yih ;Gulaam teraa",
+        "ur": "محروم رہ نہ جائے کل یہ غلام تیرا",
+        "hi": "महरूम रह न जाए कल ये ग़ुलाम तेरा",
+        "ro": "maḥrūm rah nah jāʾe kal yih ġhulām terā"
+      },
+      {
+        "ascii": "jab tak hai dil ba;Gal me;N har dam ho yaad terii",
+        "ur": "جب تک ہے دل بغل میں ہر دم ہو یاد تیری",
+        "hi": "जब तक है दिल बग़ल में हर दम हो याद तेरी",
+        "ro": "jab tak hai dil baġhal meñ har dam ho yād terī"
+      },
+      {
+        "ascii": "jab tak zabaa;N hai mu;Nh me;N jaarii ho naam teraa",
+        "ur": "جب تک زباں ہے منہ میں جاری ہو نام تیرا",
+        "hi": "जब तक ज़बाँ है मुंह में जारी हो नाम तेरा",
+        "ro": "jab tak zabāñ hai muñh meñ jārī ho nām terā"
+      },
+      {
+        "ascii": "hai tuu hii dene vaalaa pastii se de bulandii",
+        "ur": "ہے تو ہی دینے والا پستی سے دے بلندی",
+        "hi": "है तू ही देने वाला पस्ती से दे बुलंदी",
+        "ro": "hai tū hī dene vālā pastī se de bulandī"
+      },
+      {
+        "ascii": "asfal maqaam meraa a((al;aa maqaam teraa",
+        "ur": "اسفل مقام میرا اعلیٰ مقام تیرا",
+        "hi": "असफ़ल मक़ाम मेरा अला मक़ाम तेरा",
+        "ro": "asfal maqām merā aʿalâ maqām terā"
+      },
+      {
+        "ascii": "ma;hruum kyuu;N rahuu;N mai;N jii bhar ke kyuu;N nah luu;N mai;N",
+        "ur": "محروم کیوں رہوں میں جی بھر کے کیوں نہ لوں میں",
+        "hi": "महरूम क्यूँ रहूँ मैं जी भर के क्यूँ न लूँ मैं",
+        "ro": "maḥrūm kyūñ rahūñ maiñ jī bhar ke kyūñ nah lūñ maiñ"
+      },
+      {
+        "ascii": "detaa hai rizq sab ko hai fai.z ((aam teraa",
+        "ur": "دیتا ہے رزق سب کو ہے فیض عام تیرا",
+        "hi": "देता है रिज़्क़ सब को है फ़ैज़ ाम तेरा",
+        "ro": "detā hai rizq sab ko hai faiẓ ʿām terā"
+      },
+      {
+        "ascii": "yih daa;G bhii nah hogaa tere sivaa kisii kaa",
+        "ur": "یہ داغ بھی نہ ہوگا تیرے سوا کسی کا",
+        "hi": "ये दाग़ भी न होगा तेरे सिवा किसी का",
+        "ro": "yih dāġh bhī nah hogā tere sivā kisī kā"
+      },
+      {
+        "ascii": "kaunain me;N hai jo kuchh vuh hai tamaam teraa",
+        "ur": "کونین میں ہے جو کچھ وہ ہے تمام تیرا",
+        "hi": "कौनैन में है जो कुछ वो है तमाम तेरा",
+        "ro": "kaunain meñ hai jo kuchh vuh hai tamām terā"
+      }
+    ],
+    "notes": {
+      "poet": "Dagh",
+      "meter_info": "#4 = = - / = - = = // = = - / = - = = Has caesura.",
+      "meters": [
+        4
+      ],
+      "intro": "",
+      "verses": {}
+    }
+  },
+  {
+    "id": 22,
+    "poet": "Dagh",
+    "meters": [
+      36
+    ],
+    "couplets_count": 5,
+    "lines_count": 10,
+    "lines": [
+      {
+        "ascii": "((ajab apnaa ;haal hotaa jo vi.saal-e yaar hotaa",
+        "ur": "عجب اپنا حال ہوتا جو وصالِ یار ہوتا",
+        "hi": "जब अपना हाल होता जो विसाल-ए यार होता",
+        "ro": "ʿajab apnā ḥāl hotā jo viṣāl-e yār hotā"
+      },
+      {
+        "ascii": "kabhii jaan .sadqe hotii kabhii dil ni;saar hotaa",
+        "ur": "کبھی جان صدقے ہوتی کبھی دل نثار ہوتا",
+        "hi": "कभी जान सदक़े होती कभी दिल निसार होता",
+        "ro": "kabhī jān ṣadqe hotī kabhī dil niṡār hotā"
+      },
+      {
+        "ascii": "ko))ii fitnah taa qiyaamat nah phir aashkaar hotaa",
+        "ur": "کوئی فتنہ تا قیامت نہ پھر آشکار ہوتا",
+        "hi": "कोई फ़ितना ता क़ियामत न फिर आशकार होता",
+        "ro": "koʾī fitnah tā qiyāmat nah phir āshkār hotā"
+      },
+      {
+        "ascii": "tire dil pah kaash :zaalim mujhe i;xtiyaar hotaa",
+        "ur": "ترے دل پہ کاش ظالم مجھے اختیار ہوتا",
+        "hi": "तिरे दिल पे काश ज़ालिम मुझे इख़्तियार होता",
+        "ro": "tire dil pah kāsh z̤ālim mujhe iḳhtiyār hotā"
+      },
+      {
+        "ascii": "yih mazah thaa dil-lagii kaa kih baraabar aag lagtii",
+        "ur": "یہ مزہ تھا دل لگی کا کہ برابر آگ لگتی",
+        "hi": "ये मज़ा था दिल-लगी का कि बराबर आग लगती",
+        "ro": "yih mazah thā dil-lagī kā kih barābar āg lagtī"
+      },
+      {
+        "ascii": "nah tujhe qaraar hotaa nah mujhe qaraar hotaa",
+        "ur": "نہ تجھے قرار ہوتا نہ مجھے قرار ہوتا",
+        "hi": "न तुझे क़रार होता न मुझे क़रार होता",
+        "ro": "nah tujhe qarār hotā nah mujhe qarār hotā"
+      },
+      {
+        "ascii": "tire va((de par sitam-gar abhii aur .sabr karte",
+        "ur": "ترے وعدے پر ستم گر ابھی اور صبر کرتے",
+        "hi": "तिरे वादे पर सितम-गर अभी और सबर करते",
+        "ro": "tire vaʿde par sitam-gar abhī aur ṣabr karte"
+      },
+      {
+        "ascii": "agar apnii zindagii kaa hame;N ((itibaar hotaa",
+        "ur": "اگر اپنی زندگی کا ہمیں عتبار ہوتا",
+        "hi": "अगर अपनी ज़िंदगी का हमें ितिबार होता",
+        "ro": "agar apnī zindagī kā hameñ ʿitibār hotā"
+      },
+      {
+        "ascii": "tumhe;N naaz ho nah kyuu;N kar kih liyaa hai daa;G kaa dil",
+        "ur": "تمہیں ناز ہو نہ کیوں کر کہ لیا ہے داغ کا دل",
+        "hi": "तुम्हें नाज़ हो न क्यूँ कर कि लिया है दाग़ का दिल",
+        "ro": "tumheñ nāz ho nah kyūñ kar kih liyā hai dāġh kā dil"
+      },
+      {
+        "ascii": "yih raqam nah haath lagtii nah yih ifti;xaar hotaa",
+        "ur": "یہ رقم نہ ہاتھ لگتی نہ یہ افتخار ہوتا",
+        "hi": "ये रक़म न हाथ लगती न ये इफ़तिख़ार होता",
+        "ro": "yih raqam nah hāth lagtī nah yih iftiḳhār hotā"
+      }
+    ],
+    "notes": {
+      "poet": "Dagh",
+      "meter_info": "#37 - - = - / = - = = // - - = - / = - = = Has caesura.",
+      "meters": [
+        36
+      ],
+      "intro": "",
+      "verses": {
+        "1": "Word-grafting: ((ajab apnaa is treated as ((ajabapnaa [((a-ja-bap-naa].",
+        "2": "Word-grafting: phir aashkaar is treated as phiraashkaar [phi-raa-sh-kaa-r].",
+        "3": "Word-grafting: baraabar aag is treated as baraabaraag [ba-raa-ba-raa-g].",
+        "4": "Word-grafting: agar apnii is treated as agarapnii [a-ga-rap-nii].",
+        "5": "tumhe;N is [tu-mhe;N], (- x)."
+      }
+    }
+  },
+  {
+    "id": 23,
+    "poet": "Akbar Ilahabadi",
+    "meters": [
+      27
+    ],
+    "couplets_count": 6,
+    "lines_count": 12,
+    "lines": [
+      {
+        "ascii": ";xudaa ;haafi:z musalmaano;N kaa akbar",
+        "ur": "خدا حافظ مسلمانوں کا اکبر",
+        "hi": "ख़ुदा हाफ़िज़ मुसलमानों का अकबर",
+        "ro": "ḳhudā ḥāfiz̤ musalmānoñ kā akbar"
+      },
+      {
+        "ascii": "mujhe to un kii ;xvush-;haalii se hai yaas",
+        "ur": "مجھے تو ان کی خوش حالی سے ہے یاس",
+        "hi": "मुझे तो उन की ख़्वुश-हाली से है यास",
+        "ro": "mujhe to un kī ḳhvush-ḥālī se hai yās"
+      },
+      {
+        "ascii": "kahaa majnuu;N se yih lail;aa kii maa;N ne",
+        "ur": "کہا مجنوں سے یہ لیلیٰ کی ماں نے",
+        "hi": "कहा मज्नूँ से ये लैला की माँ ने",
+        "ro": "kahā majnūñ se yih lailâ kī māñ ne"
+      },
+      {
+        "ascii": "kih be;Taa tuu agar kar le em ai paas",
+        "ur": "کہ بیٹا تو اگر کر لے ایم اے پاس",
+        "hi": "कि बेटा तू अगर कर ले एम ऐ पास",
+        "ro": "kih beṭā tū agar kar le em ai pās"
+      },
+      {
+        "ascii": "to faura:n byaah duu;N lail;aa ko tujh se",
+        "ur": "تو فوراً بیاہ دوں لیلیٰ کو تجھ سے",
+        "hi": "तो फ़ौरन ब्याह दूँ लैला को तुझ से",
+        "ro": "to fauraṅ byāh dūñ lailâ ko tujh se"
+      },
+      {
+        "ascii": "bilaa diqqat mai;N ban jaa))uu;N tirii saas",
+        "ur": "بلا دقّت میں بن جاؤں تری ساس",
+        "hi": "बिला दिक़क़त मैं बन जाऊँ तिरी सास",
+        "ro": "bilā diqqat maiñ ban jāʾūñ tirī sās"
+      },
+      {
+        "ascii": "kahaa majnuu;N ne yih achchhii sunaa))ii",
+        "ur": "کہا مجنوں نے یہ اچّھی سنائی",
+        "hi": "कहा मज्नूँ ने ये अचछी सुनाई",
+        "ro": "kahā majnūñ ne yih achchhī sunāʾī"
+      },
+      {
+        "ascii": "kujaa ((aashiq kujaa kaalij kii bakvaas",
+        "ur": "کجا عاشق کجا کالج کی بکواس",
+        "hi": "कुजा ाशिक़ कुजा कालिज की बकवास",
+        "ro": "kujā ʿāshiq kujā kālij kī bakvās"
+      },
+      {
+        "ascii": "dil apnaa ;xuun karne ko huu;N maujuud",
+        "ur": "دل اپنا خون کرنے کو ہوں موجود",
+        "hi": "दिल अपना ख़ून करने को हूँ मौजूद",
+        "ro": "dil apnā ḳhūn karne ko hūñ maujūd"
+      },
+      {
+        "ascii": "nahii;N man:zuur ma;Gz-e sar kaa aamaas",
+        "ur": "نہیں منظور مغزِ سر کا آماس",
+        "hi": "नहीं मंज़ूर मग़ज़-ए सर का आमास",
+        "ro": "nahīñ manz̤ūr maġhz-e sar kā āmās"
+      },
+      {
+        "ascii": "yahii ;Thahrii jo shar:t-e va.sl-e lail;aa",
+        "ur": "یہی ٹھہری جو شرطِ وصلِ لیلیٰ",
+        "hi": "यही ठहरी जो शरत-ए वसल-ए लैला",
+        "ro": "yahī ṭhahrī jo shart̤-e vaṣl-e lailâ"
+      },
+      {
+        "ascii": "to isti((faa miraa baa ;hasrat o yaas",
+        "ur": "تو استعفا مرا با حسرت او یاس",
+        "hi": "तो इसतिफ़ा मिरा बा हसरत ओ यास",
+        "ro": "to istiʿfā mirā bā ḥasrat o yās"
+      }
+    ],
+    "notes": {
+      "poet": "Akbar Ilahabadi",
+      "meter_info": "#27 - = = = / - = = = / - = =",
+      "meters": [
+        27
+      ],
+      "intro": "Strictly speaking, this is not a ghazal but a qi:t((ah [qi:t((ah]. See Barker vol. I, pp. xxvi-xxvii. Note that yaas [yaa-s], paas [paa-s], and all the other rhyming words end in the short \"cheat syllable\" permitted at the end of a line.",
+      "verses": {
+        "1": ";xvush is really [;xush]; see Section 4.2 .",
+        "2": "Word-grafting: em ai , \"M.A.,\" is treated as emai [e-me].",
+        "3": "For faura:n [fau-ran] see the [tanviin] part of Section 4.4 . byaah [byaa-h] is an irregular Indic word, scanned (= -); see Section 4.3.",
+        "4": "Word-grafting: dil apnaa is treated as dilapnaa [di-lap-naa]."
+      }
+    }
+  },
+  {
+    "id": 24,
+    "poet": "Iqbal",
+    "meters": [
+      37
+    ],
+    "couplets_count": 5,
+    "lines_count": 10,
+    "lines": [
+      {
+        "ascii": "kabhii ai ;haqiiqat-e munta:zar na:zar aa libaas-e majaaz me;N",
+        "ur": "کبھی اے حقیقتِ منتظر نظر آ لباسِ مجاز میں",
+        "hi": "कभी ऐ हक़ीक़त-ए मुंतज़र नज़र आ लिबास-ए मजाज़ में",
+        "ro": "kabhī ai ḥaqīqat-e muntaz̤ar naz̤ar ā libās-e majāz meñ"
+      },
+      {
+        "ascii": "kih hazaaro;N sijde ta;Rap rahe hai;N mirii jabiin-e niyaaz me;N",
+        "ur": "کہ ہزاروں سجدے تڑپ رہے ہیں مری جبینِ نیاز میں",
+        "hi": "कि हज़ारों सिजदे तड़प रहे हैं मिरी जबीन-ए नियाज़ में",
+        "ro": "kih hazāroñ sijde taṛap rahe haiñ mirī jabīn-e niyāz meñ"
+      },
+      {
+        "ascii": "tuu bachaa bachaa ke nah rakh use tiraa aa))iinah hai vuh aa))iinah",
+        "ur": "تو بچا بچا کے نہ رکھ اسے ترا آئینہ ہے وہ آئینہ",
+        "hi": "तू बचा बचा के न रख उसे तिरा आईना है वो आईना",
+        "ro": "tū bachā bachā ke nah rakh use tirā āʾīnah hai vuh āʾīnah"
+      },
+      {
+        "ascii": "kih shikastah ho to ((aziiztar hai nigaah-e aa))iinah-saaz me;N",
+        "ur": "کہ شکستہ ہو تو عزیزتر ہے نگاہِ آئینہ ساز میں",
+        "hi": "कि शिकस्ता हो तो ज़ीज़्तर है निगाह-ए आईना-साज़ में",
+        "ro": "kih shikastah ho to ʿazīztar hai nigāh-e āʾīnah-sāz meñ"
+      },
+      {
+        "ascii": "nah kahii;N jahaa;N me;N amaa;N milii jo amaa;N milii to kahaa;N milii",
+        "ur": "نہ کہیں جہاں میں اماں ملی جو اماں ملی تو کہاں ملی",
+        "hi": "न कहीं जहाँ में अमाँ मिली जो अमाँ मिली तो कहाँ मिली",
+        "ro": "nah kahīñ jahāñ meñ amāñ milī jo amāñ milī to kahāñ milī"
+      },
+      {
+        "ascii": "mire jurm-e ;xaanah-;xaraab ko tire ((afv-e bandah-navaaz me;N",
+        "ur": "مرے جرمِ خانہ خراب کو ترے عفوِ بندہ نواز میں",
+        "hi": "मिरे जुर्म-ए ख़ाना-ख़राब को तिरे फ़व-ए बंदा-नवाज़ में",
+        "ro": "mire jurm-e ḳhānah-ḳharāb ko tire ʿafv-e bandah-navāz meñ"
+      },
+      {
+        "ascii": "nah vuh ((ishq me;N rahii;N garmiyaa;N nah vuh ;husn me;N rahii;N sho;xiyaa;N",
+        "ur": "نہ وہ عشق میں رہیں گرمیاں نہ وہ حسن میں رہیں شوخیاں",
+        "hi": "न वो िश्क़ में रहीं गर्मियाँ न वो हुस्न में रहीं शोख़ियाँ",
+        "ro": "nah vuh ʿishq meñ rahīñ garmiyāñ nah vuh ḥusn meñ rahīñ shoḳhiyāñ"
+      },
+      {
+        "ascii": "nah vuh ;Gaznavii me;N ta;Rap rahii nah vuh ;xam hai zulf-e ayaaz me;N",
+        "ur": "نہ وہ غزنوی میں تڑپ رہی نہ وہ خم ہے زلفِ ایاز میں",
+        "hi": "न वो ग़ज़नवी में तड़प रही न वो ख़म है ज़ुलफ़-ए अयाज़ में",
+        "ro": "nah vuh ġhaznavī meñ taṛap rahī nah vuh ḳham hai zulf-e ayāz meñ"
+      },
+      {
+        "ascii": "jo mai;N sar bah sijdah huu))aa kabhii to zamii;N se aane lagii .sadaa",
+        "ur": "جو میں سر بہ سجدہ ہوئا کبھی تو زمیں سے آنے لگی صدا",
+        "hi": "जो मैं सर ब सिजदा हूआ कभी तो ज़मीं से आने लगी सदा",
+        "ro": "jo maiñ sar bah sijdah hūʾā kabhī to zamīñ se āne lagī ṣadā"
+      },
+      {
+        "ascii": "tiraa dil to hai .sanam aashnaa tujhe kyaa milegaa namaaz se",
+        "ur": "ترا دل تو ہے صنم آشنا تجھے کیا ملےگا نماز سے",
+        "hi": "तिरा दिल तो है सनम आशना तुझे क्या मिलेगा नमाज़ से",
+        "ro": "tirā dil to hai ṣanam āshnā tujhe kyā milegā namāz se"
+      }
+    ],
+    "notes": {
+      "poet": "Iqbal",
+      "meter_info": "#38 - - = - = / - - = - = / - - = - = / - - = - =",
+      "meters": [
+        37
+      ],
+      "intro": "",
+      "verses": {
+        "1": "Word-grafting: na:zar aa is treated as na:zaraa [na-:za-raa].",
+        "2": "aa))iinah is scanned (= x x); see Section 2.2 .",
+        "3": "In the word ((afv [((af-v], the v is a consonant, and so receives a normal consonant [i.zaafat], becoming [((af-ve].",
+        "5": "huu))aa is really [hu-))aa]."
+      }
+    }
+  }
+]

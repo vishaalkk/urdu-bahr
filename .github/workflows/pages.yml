@@ -1,0 +1,104 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deploy at a time; let an in-flight run finish rather than
+# cancelling it mid-upload.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up Python
+        run: uv python install
+
+      # test_runtime.py shells out to `node` to exercise the Sean Pue
+      # transliteration engine and to sandbox-run the app's inline scripts
+      # (see test_runtime.py TEST 3 / TEST 4). No browser/Chrome is needed.
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # Fails the job (and therefore the deploy) on any assertion failure.
+      - name: Run verification suite
+        run: uv run python test_runtime.py
+
+      - name: Stage public site
+        run: |
+          set -e
+          mkdir -p _site
+          cp index.html _site/
+          cp .nojekyll _site/
+          # Once standalone feature demos exist, publish them too:
+          # cp -r features _site/features
+          #
+          # Deliberately NOT published to _site/ (see README.md "Licensing"
+          # note and docs/reviews/):
+          #   original_base.html          - pre-build intermediate, superseded by index.html
+          #   scripts/                    - build tooling, not runtime app code
+          #   source_data/                - raw scraped Pritchett & Anjum handbook HTML;
+          #                                  verbatim-reproduction licensing is an open
+          #                                  question for the repo owner (see README)
+          #   data/, scratch/              - source JSON / dev scratch, already baked
+          #                                  into index.html at build time
+          #   .remember/, .codegraph/      - local agent/tooling state
+          #   "urdu-meter-trainer 2.html"  - byte-identical mirror of index.html;
+          #                                  redundant to publish alongside it
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      # -----------------------------------------------------------------
+      # Future: once the app is modularized behind a real build (see
+      # docs/reviews/04-architecture-react-xyflow.md), drop the two steps
+      # above ("Set up Node.js" / "Run verification suite" can stay) and
+      # replace "Stage public site" + "Upload artifact" with a Vite build:
+      #
+      # - name: Set up Node.js
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: "20"
+      #     cache: "npm"
+      #
+      # - name: Install dependencies
+      #   run: npm ci
+      #
+      # - name: Build
+      #   run: npm run build
+      #
+      # - name: Upload artifact
+      #   uses: actions/upload-pages-artifact@v3
+      #   with:
+      #     path: dist
+      # -----------------------------------------------------------------
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

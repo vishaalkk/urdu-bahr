@@ -1,0 +1,252 @@
+
+
+   07_scanning
+
+      @import "../stylesheets/comm2.css";
+
+          SEVEN == SCANNING 
+            AS CODE-BREAKING
+
+          Using the material in this book, 
+            you can determine the meter of almost any Urdu poem with complete 
+            accuracy. The only condition is that you must have enough lines to 
+            work with. Eight lines are usually more than sufficient. Two lines 
+            are sometimes not enough. 
+          When you are new to the process, 
+            it's important to work calmly and carefully and pay full attention. 
+            The normal process of scanning is so reassuringly mechanical that 
+            mistakes and anomalies can seem quite disconcerting. And as we will 
+            see, some uncertainties are inevitable on the first reading. But the 
+            encouraging truth is that after all, all traditional and most modern 
+            poetry CAN most definitely be scanned. Urdu meter is a far more powerful 
+            and reliable tool for the student than English meter. 
+          Start with the first word in the 
+            first line, and divide it into syllables according to the three basic 
+            criteria (Sections 1.2, 1.3, 
+            and 1.4). Work from orthography 
+            first; very often it is sufficient in itself. If it is not, pronounce 
+            the word mentally for guidance. Consider whether there are any flexible 
+            syllables in the word (Section 2.2), 
+            or any special features that might make its scanning unusual (Sections 
+            4.2, 4.3, 
+            and 4.4). Mark down its syllables 
+            in sequence as long, short, or flexible--you can use any sort of notation 
+            you like, as long as it can reflect these three possibilities. If 
+            the word is a monosyllable, consider whether it may be flexible (Section 
+            2.1). 
+          Then deal with the second word. 
+            You can write down the syllables either from left to right, as we 
+            have done for typographical convenience in this book, or from right 
+            to left, as flows more naturally from working with Urdu script; a 
+            consistent method of your own is the main necessity. If some syllable 
+            puzzles you, leave its space blank, or mark it in lightly (pencil 
+            is more convenient than pen for this kind of work). Scan three or 
+            four lines in this way, trying to keep the syllables properly aligned 
+            in vertical columns as you go. 
+          After three or four lines you will 
+            almost always notice a pattern emerging, though you'll very often 
+            find one or two lines skewed or disarranged somehow, coming out too 
+            long or too short. Remember to allow for the extra, unscanned short 
+            syllable which may occur at the end of the line in almost all meters, 
+            and which does not count in determining the line length. All lines 
+            of poetry officially end with a long syllable, since all the meters 
+            do. If some lines still seem irregular in length, scan a few more 
+            lines, until the weight of evidence is sufficient to tell you the 
+            normal line length. Then go over the idiosyncratic lines carefully 
+            for one or more of the following tricky features: 
+          *the word aur 
+            [aur], which is scanned either (= -), or merely (=). It is 
+            so common that it is in a class by itself as a source of error. 
+          *possible cases of word-grafting 
+            (Section 3.1). Word-grafting often 
+            reduces the number of syllables by one, so an extra syllable in a 
+            line can often be removed by detecting the presence of word-grafting. 
+
+          *metrical peculiarities. 
+            You might be dealing with one of those pairs of meters which permit 
+            the substitution of two shorts for one long, usually in the next-to-last 
+            syllable. Uniquely, the pair consisting of meters #1 and #9 permits 
+            such substitution in the third syllable. (These pairs of freely combinable 
+            meters are enumerated at the end of Section 
+            6.1.) Some of these meters also permit the first syllable, normally 
+            long, to be replaced at will with a short (meters #14-#19). Also, 
+            be alert for the extra, unscanned short syllable permitted before 
+            the caesura in meters which have a caesura; see Section 
+            6.1 for details.
+          These features, which can be detected 
+            only AFTER the initial scanning process, account for almost all irregularities 
+            in the number of syllables per line. If any irregularity remains, 
+            set aside the line in which it occurs for later study. When in doubt, 
+            scan more lines and consider them all together; the pattern will emerge 
+            more and more clearly. 
+          Very rarely, but once in a while, 
+            you'll encounter a situation in which a pattern simply fails to emerge, 
+            in which each line seems to be quite different in length and pattern 
+            from other lines. If this happens, the most probable diagnosis is 
+            Mir's "Hindi" meter (Section 6.2); 
+            check the patterns and the length to see if this is the case. Remember 
+            that a half-length form of this meter, though quite uncommon, does 
+            sometimes occur. Then there is meter #6 (Section 
+            6.1), which like "Hindi" meter permits frequent substitution of 
+            two shorts for one long, and thus can vary greatly from line to line. 
+            Another possibility is that you are dealing with a rubaa((ii 
+            [rubaa((ii]. Usually you will know beforehand if this is the case, 
+            since the [rubaa((ii] meters are such a distinctive group (Section 
+            6.3), and since [rubaa((ii] poetry normally comes in four-line 
+            units which rhyme AABA or AAAA. 
+          If you're dealing with "Hindi" meter 
+            or one of its cousins, you will know it. Otherwise, you'll be able 
+            to normalize the length of enough lines to make the pattern clear. 
+            You will then have orderly vertical columns of syllables. If the nth 
+            vertical column contains all long or (most improbably) all short syllables, 
+            you will have no doubt about the length of the nth syllable of the 
+            line. If the column contains a mixture of longs and flexibles, or 
+            a mixture of shorts and flexibles, the true length of the syllable 
+            will still be clear. Write the proper mark below each column, separated 
+            from it by a line or a bit of space. 
+          What if the column contains all 
+            flexibles? If you want to be perfectly sure of your ground, scan more 
+            lines. But a column of five or six flexibles usually indicates a short 
+            syllable. The reason for this is that the normal processes of syllable 
+            division produce more long syllables than short ones. All flexible 
+            syllables are two-letter ones: they are thus properly "long" syllables, 
+            which may also be pressed into service as short ones. In particular, 
+            all the common monosyllabic words which the poet can most conveniently 
+            shuffle around to fit the meter are either long or long-turned-flexible 
+            (Section 2.1). Thus when the 
+            poet wants a long syllable, he has a large stock to choose from and 
+            the odds are against his using a whole column of flexible longs and 
+            no inflexible longs. But when he wants a convenient short syllable, 
+            he has much less scope for choice, so the odds are much greater that 
+            he would come to select a whole column of flexibles. The longer the 
+            column of flexibles, the greater the probability that the syllable 
+            in question is short. 
+          Except in the case of the peculiar 
+            meters described above, it is impossible for a single column to contain 
+            both long and short syllables. It may often happen that all the syllables 
+            in your column appear to be of the same kind, or else flexible, with 
+            only a single glaring aberration. If there is any doubt, scan more 
+            lines until the weight of evidence makes the proper scansion clear. 
+            Then focus on the aberration. Consider the following possibilities: 
+
+          *possible word-grafting 
+            (Section 3.1). If word-grafting 
+            is permissible in the situation and would correct the scansion, it 
+            should be assumed to have taken place. 
+          *the possible presence of 
+            a [tashdiid], even if it is not written; or the erroneous 
+            insertion of a tashdiid by the calligrapher 
+            where there should not be one. 
+          *the possible presence of 
+            an [i.zaafat], even if it is not written; or the erroneous 
+            insertion of an i.zaafat where there should 
+            not be one. 
+          *the possibility of an Arabic, 
+            Persian, or Indic word that falls under some special irregular 
+            scansion rule; see Chapter 4 and the 
+            Glossary. 
+          *the possibility of a misspelled 
+            word-- it's possible that a word with a flexible spelling 
+            to indicate scansion (Section 2.4) 
+            has in fact been misspelled by the calligrapher. The most common possibility of this kind is an ek [ek] where there should be an ik [ik], or vice versa.
+          *the possibility of confusion 
+            between n and ;N 
+            . There could be confusion between [nuun] and [nuun-e ;Gunnah], with 
+            one being erroneously present while the other is metrically correct. 
+
+          *the amphibious role of 
+            o ii e as vowels or consonants, depending 
+            on syllable division. 
+          If none of these possibilities can 
+            account for the discrepancy, remember that editors and calligraphers 
+            do often make mistakes. Compare your edition of the text with some 
+            other if possible, to check its accuracy. It is all too easy for the 
+            calligrapher to write kar [kar] for ke 
+            [ke], shaah [shaah] for shah 
+            [shah], or the reverse. Such mistakes, all but undetectable in prose, 
+            can have a great effect on scanning, and it is necessary to be alert 
+            for them. It is much more likely that there's some such mistake in 
+            transmission, than that the poet wrote a line flagrantly out of meter. 
+            However, pronunciation and poetic practice have varied somewhat with 
+            time and place; the oldest poets may have archaic usages, and the 
+            newest may be experimentally taking liberties.
+          If the poet has done something idiosyncratic, 
+            or if there is a textual problem, you will be well able to isolate 
+            and investigate it. If you have enough lines to work with, no small 
+            anomaly can possibly confuse you: you can always break the code. But 
+            sometimes you may want to scan a very short poem, or a single two-line 
+            shi((r [shi((r]. No method, and certainly not 
+            ours, can guarantee you perfect success. There are enough kinds of 
+            flexibility and uncertainty built into Urdu meter so that mechanical 
+            accuracy requires a good deal of redundancy. However, if you are willing 
+            to venture, it is usually possible to make excellent educated guesses. 
+            Scan the lines in the normal way as best you can. Usually you arrive 
+            at a result which leaves at least one flexible syllable even in the 
+            final resolution. A column consisting of only two flexibles has no 
+            more than about a 60-40 chance of representing a short syllable. Sometimes 
+            you can make use of the rule that three short syllables never occur 
+            in a row. But usually you need more help than this. If the meter is 
+            a common one, you may be able to recognize it; then you will know 
+            for sure what the flexible syllables really are. 
+          Even if you don't recognize the 
+            meter, you may be able to figure it out by recognizing the feet. The 
+            great majority of Urdu meters contain four feet. And the great majority 
+            of four-foot meters contain two or more identical feet among the four. 
+            Remember that the middle feet are more likely to be longer, often 
+            four-syllable ones; the last foot is often very short (two or three 
+            syllables), and the first foot is also often short (three syllables). 
+            A good working knowledge of the afaa((iil [afaa((iil] 
+            (Chapter 5) is obviously very helpful in 
+            this process. Remember that none of the [afaa((iil] end with two short 
+            syllables, and only one-third of the [afaa((iil] end with one short 
+            syllable. Two short syllables together usually occur at the beginning 
+            of a foot. Try to envision the breakdown of your scansion into feet. 
+            If you can discover two or more identical feet, you can often resolve 
+            any remaining flexible syllables by seeing the correspondences. If 
+            your scansion reveals a caesura pattern (foot A, foot B, foot A, foot 
+            B), you can easily determine the true length of any flexible syllables. 
+            If your meter appears shorter than average, it is probably a three-foot 
+            one. Three-foot meters are very likely not to have any identical feet. 
+
+          If none of these shortcuts works, 
+            you can always take the meter list (Section 
+            6.1), and plow through it until you recognize your meter; though 
+            the list is not exhaustive, it contains meters for something like 
+            95% of the meters you will normally encounter. For rare and exotic 
+            meters, you can check in Barker or 
+            Grahame Bailey. Don't let a difficult-looking 
+            meter intimidate you. Even educated native speakers have trouble when 
+            given small samples of exotic meters. If you are careful and persistent, 
+            you can eventually figure out almost anything. 
+          A NOTE ON na:zm 
+            [na:zm]: Modern na:zm 
+            are actually much closer to traditional metrical conventions than 
+            might be expected. The paaband na:zm [paaband 
+            na:zm], "regular verse," always uses one of the traditional meters, 
+            and traditional rhyming elements as well. The na:zm-e 
+            mu((arraa [na:zm-e mu((arraa], "blank verse," also uses a traditional 
+            meter, though it is unrhymed. 
+          Undoubtedly aazaad 
+            na:zm [aazaad na:zm], "free verse," takes liberties with traditional 
+            meters. Yet the particular meter any aazaad na:zm 
+            is taking liberties with can almost always be recognized. Suppose 
+            that the traditional meter consists of the sequence: foot A, foot 
+            B, foot C, foot D. Then the aazaad na:zm might 
+            have lines in foot-sequences like the following: ABC / ABCD / A / 
+            AB / CDA / B / CDAB / CD, and so on. Sometimes a foot itself may begin 
+            at the end of one line and end at the beginning of the next. Lines 
+            may also be stretched by the duplication of medial feet: ABBBCD, ABBCCD, 
+            etc. But the omission of a foot (ACD, BD) does not usually occur. 
+            Common Hindi meters are sometimes adapted and used in [aazaad na:zm], 
+            but in general the traditional meters, though modified, remain quite 
+            recognizable. 
+          There is also of course na;srii 
+            na:zm [na;srii na:zm], the "prose poem." These 
+            generally use metrical feet very idiosyncratically, if at all. Usually they can't be scanned in any systematic 
+            way.
+
+       -- meter 
+        book index -- Ghalib sitemap -- Mir 
+        sitemap -- FWP's main 
+        page -- 
+

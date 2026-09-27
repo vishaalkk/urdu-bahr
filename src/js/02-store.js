@@ -1,0 +1,392 @@
+'use strict';
+const $ = id => document.getElementById(id);
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('dumda:' + k); return v ? JSON.parse(v) : d; } catch(e) { return d; } },
+  set(k, v) { try { localStorage.setItem('dumda:' + k, JSON.stringify(v)); } catch(e) {} }
+};
+
+/* ================= HASH ROUTER (§4) ================= */
+let currentRoute = '';
+const subTabMemory = {
+  weight: store.get('subTab:weight', 'learn'),
+  meter: store.get('subTab:meter', 'learn')
+};
+
+function navigate(path, replace) {
+  if (!path.startsWith('#')) path = '#' + (path.startsWith('/') ? path : '/' + path);
+  if (typeof location !== 'undefined') {
+    if (replace && typeof location.replace === 'function') {
+      location.replace(path);
+    } else {
+      location.hash = path;
+    }
+  } else {
+    handleRoute(path);
+  }
+}
+
+/* Backward compatibility shim for any existing go(id) calls */
+function go(id) {
+  const map = {
+    'ear': '/meter/drill',
+    'learn': '/weight/learn',
+    'tap': '/lab/tap',
+    'exercises': '/ghazals/handbook',
+    'scan': '/scan',
+    'studio': '/scan',
+    'bahr': '/meter/learn',
+    'dictionary': '/weight/lookup',
+    'handbook': '/handbook/ch0',
+    'bibliography': '/about'
+  };
+  const target = map[id] || '/meter/learn';
+  navigate(target);
+}
+
+function parseHash(hash) {
+  let target = '';
+  if (typeof hash === 'string') {
+    target = hash;
+  } else if (typeof location !== 'undefined' && typeof location.hash === 'string') {
+    target = location.hash;
+  }
+  const h = (target || '').replace(/^#\/?/, '');
+  const [pathPart, queryPart] = h.split('?');
+  const parts = pathPart ? pathPart.split('/').filter(Boolean) : [];
+  const params = {};
+  if (queryPart) {
+    queryPart.split('&').forEach(kv => {
+      const [k, v] = kv.split('=');
+      if (k) params[decodeURIComponent(k)] = decodeURIComponent(v || '');
+    });
+  }
+  return { parts, params, raw: h };
+}
+
+function handleRoute(targetHash) {
+  const { parts, params, raw } = parseHash(targetHash);
+  let root = parts[0] || '';
+
+  // Default route when hash is empty
+  if (!root) {
+    const last = store.get('lastRoute', '/meter/learn');
+    if (typeof location !== 'undefined') {
+      navigate(last, true);
+      return;
+    } else {
+      return handleRoute(last);
+    }
+  }
+
+  store.set('lastRoute', '/' + raw);
+
+  // Top-level sections mapping
+  const sectionMap = {
+    'weight': 'weight-section',
+    'meter': 'meter-section',
+    'scan': 'scan-section',
+    'ghazals': 'ghazals-section',
+    'handbook': 'handbook-section',
+    'about': 'about-section',
+    'lab': 'tap-section'
+  };
+
+  // Hide all sections, show active
+  const activeSecId = sectionMap[root] || 'meter-section';
+  document.querySelectorAll('.tab-view, section').forEach(s => {
+    s.classList.remove('on');
+    s.style.display = 'none';
+  });
+
+  const activeSec = $(activeSecId);
+  if (activeSec) {
+    activeSec.classList.add('on');
+    activeSec.style.display = 'block';
+  }
+
+  // Update nav active states (desktop + mobile)
+  const navRoot = (root === 'weight' || root === 'meter' || root === 'scan' || root === 'ghazals') ? root : '';
+  if (typeof document !== 'undefined' && typeof document.querySelectorAll === 'function') {
+    document.querySelectorAll('[data-nav]').forEach(el => {
+      const isCur = (typeof el.getAttribute === 'function' ? el.getAttribute('data-nav') : '') === navRoot;
+      if (el.classList && typeof el.classList.toggle === 'function') el.classList.toggle('on', isCur);
+      if (typeof el.setAttribute === 'function') {
+        if (isCur) el.setAttribute('aria-current', 'page');
+        else if (typeof el.removeAttribute === 'function') el.removeAttribute('aria-current');
+      }
+    });
+  }
+
+  // Handle specific tabs
+  if (root === 'weight') {
+    let sub = parts[1] || subTabMemory.weight || 'learn';
+    if (!['learn', 'drill', 'lookup'].includes(sub)) sub = 'learn';
+    subTabMemory.weight = sub;
+    store.set('subTab:weight', sub);
+    showWeightSubtab(sub);
+    if (typeof document !== 'undefined') document.title = 'Weight — Baḥr';
+  } else if (root === 'meter') {
+    let sub = parts[1] || subTabMemory.meter || 'learn';
+    if (!['learn', 'drill', 'lookup'].includes(sub)) sub = 'learn';
+    subTabMemory.meter = sub;
+    store.set('subTab:meter', sub);
+    showMeterSubtab(sub, params);
+    if (typeof document !== 'undefined') document.title = 'Meter — Baḥr';
+  } else if (root === 'scan') {
+    if (typeof document !== 'undefined') document.title = 'Scan — Baḥr';
+    initScanEmptyState();
+  } else if (root === 'ghazals') {
+    if (typeof document !== 'undefined') document.title = 'Ghazals — Baḥr';
+    handleGhazalsRoute(parts, params);
+  } else if (root === 'handbook') {
+    const ch = parts[1] || 'ch0';
+    if (typeof document !== 'undefined') document.title = 'Handbook — Baḥr';
+    handleHandbookRoute(ch, params);
+  } else if (root === 'about') {
+    if (typeof document !== 'undefined') document.title = 'About — Baḥr';
+    if (typeof renderBibliography === 'function') renderBibliography();
+  } else if (root === 'lab' && parts[1] === 'tap') {
+    if (typeof document !== 'undefined') document.title = 'Tap Along — Baḥr';
+    if (typeof echoNew === 'function') echoNew();
+  }
+
+  if (typeof window !== 'undefined' && typeof window.scrollTo === 'function' && !params.keepScroll) {
+    window.scrollTo(0, 0);
+  }
+}
+
+function showWeightSubtab(sub) {
+  const tabs = {
+    learn: { btn: 'weightSubLearn', panel: 'weightPanelLearn' },
+    drill: { btn: 'weightSubDrill', panel: 'weightPanelDrill' },
+    lookup: { btn: 'weightSubLookup', panel: 'weightPanelLookup' }
+  };
+  Object.keys(tabs).forEach(k => {
+    const b = $(tabs[k].btn), p = $(tabs[k].panel);
+    const on = (k === sub);
+    if (b) {
+      if (b.classList && typeof b.classList.toggle === 'function') b.classList.toggle('on', on);
+      if (typeof b.setAttribute === 'function') b.setAttribute('aria-selected', on ? 'true' : 'false');
+    }
+    if (p) p.style.display = on ? 'block' : 'none';
+  });
+
+  if (sub === 'learn') {
+    if (typeof renderConstr === 'function') renderConstr();
+  } else if (sub === 'drill') {
+    if (typeof wdNext === 'function' && $('wdWord') && !$('wdWord').textContent) wdNext();
+    if (typeof fxNext === 'function' && $('fxWord') && !$('fxWord').textContent) fxNext();
+  } else if (sub === 'lookup') {
+    if (typeof renderDictionary === 'function') renderDictionary();
+  }
+}
+
+function showMeterSubtab(sub, params) {
+  const tabs = {
+    learn: { btn: 'meterSubLearn', panel: 'meterPanelLearn' },
+    drill: { btn: 'meterSubDrill', panel: 'meterPanelDrill' },
+    lookup: { btn: 'meterSubLookup', panel: 'meterPanelLookup' }
+  };
+  Object.keys(tabs).forEach(k => {
+    const b = $(tabs[k].btn), p = $(tabs[k].panel);
+    const on = (k === sub);
+    if (b) {
+      if (b.classList && typeof b.classList.toggle === 'function') b.classList.toggle('on', on);
+      if (typeof b.setAttribute === 'function') b.setAttribute('aria-selected', on ? 'true' : 'false');
+    }
+    if (p) p.style.display = on ? 'block' : 'none';
+  });
+
+  if (sub === 'learn') {
+    if (typeof renderEarFams === 'function') renderEarFams();
+    if (typeof renderEar === 'function') renderEar();
+    if (params && params.open && typeof earPick === 'function') earPick(params.open);
+  } else if (sub === 'drill') {
+    if (typeof iomNew === 'function' && $('iomStrip') && !$('iomStrip').textContent) iomNew();
+    if (typeof wtNew === 'function' && $('wtChoices') && !$('wtChoices').textContent) wtNew();
+    if (typeof renderWeak === 'function') renderWeak();
+  } else if (sub === 'lookup') {
+    if (typeof renderFams === 'function') renderFams();
+  }
+}
+
+function filterMeterLookup(kind) {
+  ['filterMeterAll', 'filterMeterRubai', 'filterMeterHindi'].forEach(id => {
+    const el = $(id);
+    if (el) el.classList.toggle('on', (kind === 'all' && id === 'filterMeterAll') ||
+                                    (kind === 'rubai' && id === 'filterMeterRubai') ||
+                                    (kind === 'hindi' && id === 'filterMeterHindi'));
+  });
+  if (typeof renderFams === 'function') renderFams();
+}
+
+function handleHandbookRoute(chId, params) {
+  if (typeof pickHbChapter === 'function') pickHbChapter(chId);
+  const backBtn = $('btnHandbookBack');
+  if (backBtn) {
+    backBtn.onclick = () => {
+      if (params && params.from) {
+        navigate(params.from);
+      } else if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        navigate('/weight/learn');
+      }
+    };
+  }
+}
+
+function onHandbookBack() {
+  if (window.history.length > 1) {
+    window.history.back();
+  } else {
+    navigate('/weight/learn');
+  }
+}
+
+function handleGhazalsRoute(parts, params) {
+  const sub = parts[1] || 'handbook';
+  const ghazalId = parts[2] || null;
+
+  if (ghazalId) {
+    openGhazalReader(sub, ghazalId);
+    return;
+  }
+
+  closeGhazalReader();
+  switchCollection(sub);
+
+  if (params && params.meter && $('ghazalMeterFilter')) {
+    $('ghazalMeterFilter').value = params.meter;
+    onGhazalFilterChange();
+  }
+  if (params && params.q && $('ghazalSearchInput')) {
+    $('ghazalSearchInput').value = params.q;
+    onGhazalSearch();
+  }
+}
+
+let activeCollection = 'handbook';
+function switchCollection(col) {
+  activeCollection = col;
+  const btns = {
+    'handbook': 'colBtnHandbook',
+    'ghalib': 'colBtnGhalib',
+    'mir': 'colBtnMir'
+  };
+  Object.keys(btns).forEach(k => {
+    const el = $(btns[k]);
+    if (el) el.classList.toggle('on', k === col);
+  });
+
+  const descs = {
+    'handbook': "The handbook's exercise ghazals, with Frances Pritchett's notes.",
+    'ghalib': "Ghalib's divan, scanned and meter-checked by the engine.",
+    'mir': "Mir Taqi Mir, scanned and meter-checked by the engine."
+  };
+  if ($('colDesc')) $('colDesc').textContent = descs[col] || '';
+
+  const cHandbook = $('handbookExContainer');
+  const cGhalib = $('ghalibContainer');
+  const cMir = $('mirContainer');
+
+  if (cHandbook) cHandbook.style.display = (col === 'handbook') ? 'block' : 'none';
+  if (cGhalib) cGhalib.style.display = (col === 'ghalib') ? 'block' : 'none';
+  if (cMir) cMir.style.display = (col === 'mir') ? 'block' : 'none';
+
+  if (col === 'handbook' && typeof renderExercises === 'function') renderExercises();
+  if (col === 'ghalib' && typeof renderGhalibExt === 'function') renderGhalibExt();
+  if (col === 'mir' && typeof renderMirExt === 'function') renderMirExt();
+
+  populateGhazalMeterFilter(col);
+}
+
+function populateGhazalMeterFilter(col) {
+  const sel = $('ghazalMeterFilter');
+  if (!sel) return;
+  sel.innerHTML = '<option value="all">All meters</option>';
+}
+
+function onGhazalFilterChange() {
+  const val = $('ghazalMeterFilter') ? $('ghazalMeterFilter').value : 'all';
+  if (activeCollection === 'ghalib' && $('ghalibExtMeterFilter')) {
+    $('ghalibExtMeterFilter').value = val;
+    if (typeof renderGhalibExt === 'function') renderGhalibExt();
+  } else if (activeCollection === 'mir' && $('mirExtMeterFilter')) {
+    $('mirExtMeterFilter').value = val;
+    if (typeof renderMirExt === 'function') renderMirExt();
+  }
+}
+
+function onGhazalSearch() {
+  const q = $('ghazalSearchInput') ? $('ghazalSearchInput').value.toLowerCase().trim() : '';
+  if (activeCollection === 'ghalib') {
+    if (typeof renderGhalibExt === 'function') renderGhalibExt();
+  } else if (activeCollection === 'mir') {
+    if (typeof renderMirExt === 'function') renderMirExt();
+  }
+}
+
+function openGhazalReader(col, id) {
+  const rView = $('ghazalReaderView');
+  const lView = $('ghazalListView');
+  if (rView) rView.style.display = 'block';
+  if (lView) lView.style.display = 'none';
+  if ($('readerTitle')) $('readerTitle').textContent = `${col.toUpperCase()} ${id}`;
+}
+
+function closeGhazalReader() {
+  const rView = $('ghazalReaderView');
+  const lView = $('ghazalListView');
+  if (rView) rView.style.display = 'none';
+  if (lView) lView.style.display = 'block';
+}
+
+function initScanEmptyState() {
+  const host = $('samples');
+  if (!host) return;
+  const samples = [
+    { title: "Ghalib: dil-e nādāñ", text: "دلِ ناداں تجھے ہوا کیا ہے\nآخر اس درد کی دوا کیا ہے" },
+    { title: "Mir: hastī apnī", text: "ہستی اپنی حباب کی سی ہے\nیہ نمائش سراب کی سی ہے" },
+    { title: "Iqbal: sitāroñ se āge", text: "ستاروں سے آگے جہاں اور بھی ہیں\nابھی عشق کے امتحان اور بھی ہیں" }
+  ];
+  host.innerHTML = samples.map((s, i) => `
+    <button class="chipbtn sm" onclick="$('scanIn').value=\`${s.text}\`;runScan();">${s.title}</button>
+  `).join('');
+}
+
+function toggleScanHelp() {
+  const p = $('scanHelpPopover');
+  if (p) p.style.display = (p.style.display === 'none' || !p.style.display) ? 'block' : 'none';
+}
+
+/* Settings Sheet Controls */
+function openSettings() {
+  const s = $('settingsSheet');
+  if (s) {
+    s.classList.add('on');
+    if (typeof renderSoundOpts === 'function') renderSoundOpts();
+  }
+}
+
+function closeSettings() {
+  const s = $('settingsSheet');
+  if (s) s.classList.remove('on');
+}
+
+function toggleAsciiScript(show) {
+  store.set('showAscii', show);
+  const hdrBtn = $('btnScriptAsciiHeader');
+  if (hdrBtn) hdrBtn.style.display = show ? 'inline-flex' : 'none';
+}
+
+if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+  window.addEventListener('hashchange', () => handleRoute());
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      closeSettings();
+      const hp = $('scanHelpPopover');
+      if (hp) hp.style.display = 'none';
+    }
+  });
+}

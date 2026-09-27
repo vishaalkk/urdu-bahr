@@ -1,0 +1,253 @@
+
+
+   02_flexibility
+
+      @import "../stylesheets/comm2.css";
+
+          TWO == FLEXIBILITY
+          *2.1 == Flexible words: the common 
+            monosyllables*
+            *2.2 == Flexible syllables: word-final vowels*
+            *2.3 == Flexible syllable divisions within words* 
+
+            *2.4 == Flexible spellings to indicate scansion* 
+
+          So far we've discussed the firm, general rules of the Urdu metrical 
+            system. Now we will deal with the system's flexible possibilities. 
+            If you try sometime to write an Urdu poem yourself, you'll come to 
+            cherish every form of flexibility that the system allows. 
+          It should be remembered that flexible syllables are flexible, or 
+            subject to change in length, only between one metrical environment 
+            and another, between one particular occurrence and another. Once the 
+            meter of a particular verse is known, and the syllable's position 
+            within the line is known, the syllable is either long or short, period. 
+            (The rare instances of continued flexibility are idiosyncratic and 
+            beyond our present scope.) 
+          Since the official Arabic-based metrical system generates too many long syllables and too few short ones for the convenience of Urdu poets, flexibility is most often used for creating more short syllables.
+
+            2.1 Flexible words == the common monosyllables 
+
+          Many one-syllable words in Urdu are flexible. They may thus be scanned 
+            either long or short, whichever suits the immediate needs of the metrical 
+            situation. All flexible words are TWO-LETTER ones, so that their normal 
+            length would be long. All flexible words have one of the following 
+            two forms: 
+          *Consonant + vowel 
+          *Consonant + h
+          Not all one-syllable words of these forms are equally likely to be 
+            flexible. Words ending in ii , e , h are more 
+            likely to be flexible; those ending in o , a 
+            bit less likely; those ending in a [alif], less 
+            likely still.
+          The likelihood of flexibility also depends on the nature and origin 
+            of the word. Grammatically operative particles, pronouns, postpositions, 
+            etc. are almost always flexible. Verb forms are generally flexible, 
+            except for familiar imperatives which are always long. Arabic and 
+            Persian nouns are almost always long, with no flexibility possible--for 
+            example, the words nai , mai , :tai , jaa , juu , 
+            ruu , suu are always scanned as long. The vocative address ai 
+            is nowadays always long, though in archaic usage it was sometimes 
+            treated as short.
+          But these theoretical possibilities needn't be any problem, for by 
+            treating ALL one-syllable words of the forms given above as potentially 
+            flexible one never makes errors in ascertaining the meter of a poem. 
+            Here is a list of common one-syllable words which ARE flexible. They 
+            are listed in the GLOSSARY as well. 
+          bhii
+            to , tuu
+            thaa , the , thii, thii;N
+            jo
+            do
+            saa , se , sii
+            se
+            so
+            kaa , ke , kii
+            ko
+            me;N , mai;N
+            ne
+            vuh , yih
+            ho
+            huu;N , ho;N
+            hii
+            hai , hai;N
+            yuu;N 
+          In general, one-syllable words not on this list are not flexible, 
+            but can be taken as long. The following common one-syllable words 
+            are virtually ALWAYS LONG: taa , go , yaa . 
+            The two contractions vaa;N for vahaa;N 
+            and yaa;N for yahaa;N 
+            are always long nowadays, but once in a while may, in older poetry, 
+            occur as short. Despite their consonant clusters, 
+            jyuu;N , kyaa , kyuu;N are each scanned as one long syllable.
+          Where a one-syllable word is repeated distributively or rhetorically, 
+            its first occurrence is normally scanned as long, while its second 
+            may be treated as flexible: Mir has used kyaa kyaa 
+            as (= -). But this is rare. 
+          Three special one-syllable words are ALWAYS SHORT in modern usage: 
+            bah for "with" in Persian constructions, kih 
+            which introduces quoted discourse, and nah for 
+            negation. Mir does treat kih and nah 
+            as long from time to time, but after him this is almost never done.
+          THE WORD aur : 
+            A special case, a law unto itself, is aur . 
+            It can be scanned [au-r], (= -), as one would expect, or simply as 
+            one long syllable, (=).
+
+            2.2 Flexible syllables == word-final vowels 
+
+          A flexible syllable is one which may be scanned either long or short. 
+            All flexible syllables are two-letter ones; one-letter syllables are 
+            invariably short. All flexible syllables have one of the following 
+            two forms:
+          *Consonant + vowel
+          *Consonant + h
+          Almost all flexible syllables in words of more than one syllable 
+            occur in WORD-FINAL position. There are only a VERY few exceptions, 
+            of which two notable ones are ko))ii , scanned 
+            (x x), and aa))iinah , scanned (= x x). 
+          In words of more than one syllable, word-final two-letter syllables 
+            in which the second letter is ii , e , h are 
+            almost always flexible. In words of more than one syllable, word-final 
+            two-letter syllables in which the second letter is o 
+            or a [alif] are often treated as flexible. In 
+            some words, however, these syllables are always long. It's possible 
+            to give a few general guidelines. Syllables containing o 
+            are more likely to be flexible than those containing a 
+            [alif]. Such syllables in Indic words, especially verb forms, are 
+            more likely to be flexible than similar syllables in Persian and Arabic 
+            words; for example, rahaa from rahnaa 
+            [rahnaa] is scanned (- x), while the Persian rihaa 
+            [rihaa] meaning "released" is always scanned (- =). 
+          The whole problem of when such word-final syllables are flexible, 
+            and when they are not, is complex and controversial. It is not possible 
+            to formulate exhaustive rules. For a discussion of this question see 
+            ((aruu.z aahang aur bayaan 
+            , pp. 35-97. But it's only a problem for the theorist, not in 
+            practice for the student. When ascertaining the meter of a poem, ALL 
+            such word-final consonant + vowel or consonant + h 
+            syllables should initially be considered flexible, and then there 
+            will be no problem. 
+          COMPOUND WORDS: Some compound 
+            words retain the original flexibility of their separate parts: bandobast 
+            [ban-do-bas-t] is scanned (= x = -), from [band o bast], and kaarobaar 
+            [kaa-ro-baa-r] as (= x = -), from [kaar o baar]. Words like these 
+            are really petrified conjunct expressions containing a medial o 
+            ; see Section 3.3 for discussion 
+            of o constructions.
+          GRAMMATICAL FORMS: Equally 
+            flexible are future verb forms: jaa))e gaa is 
+            scanned (= x x), from [jaa-))e-gaa], and so on for the other forms. 
+            Flexibility also sometimes remains within the word after the addition 
+            of nominative and oblique plural endings; this seems to occur chiefly 
+            with words ending in uu . For example, aa;Nsuu 
+            is scanned (= x), while aansuu))o;N is scanned 
+            (= x x). In some cases, these endings even increase flexibility: juu 
+            is scanned (=), juu))e;N and juu))o;N 
+            both (x x). 
+
+            2.3 == Flexible syllable divisions within 
+            words 
+          A few words can undergo an optional redivision of their letters into 
+            different syllable patterns. Naturally these are words full of consonants, 
+            with few or no vowels to impose syllable breaks more strongly. We 
+            have put as many of these as we thought useful into the Glossary. 
+            Here are some of the commonest examples:
+          barhaman , "Brahmin": [bar-ha-man] scanned 
+            as (= - =); [ba-rah-man] scanned as (- = =)
+          barahnah , "naked": [ba-rah-nah] scanned as 
+            (- = x); [bar-ha-nah] scanned as (= - x)
+          ;xi.zr , "Khizr": [;xi.z-r] scanned as (= -) 
+            [;xi-.zir] or [;xi-.zar] scanned as (- =)
+          :tar;h , "manner": [:tar-;h] scanned as (= 
+            -); [;ta-ra;h] scanned as (- =)
+           gulistaa;N , "garden": [gu-lis-taa;N] scanned 
+            as (- = =); [gul-si-taa;N] scanned as (= - =).
+          Words like gulistaa;N , in which the word-final 
+            ;N represents a shorter variant of a full n, 
+            do not have flexible word-final syllables. 
+          A large number of Arabic words which begin with a series of three 
+            consonants offer the poet a special kind of flexibility in syllable 
+            division. In modern Urdu, most such words are pronounced with an initial 
+            long syllable, and may be scanned accordingly. However, they may also 
+            be scanned according to their original Arabic pronunciation, with 
+            an initial (- -) sequence. Here are some common examples: 
+          barkat , "blessing": [bar-kat] scanned as (= 
+            =); [ba-ra-kat] scanned as (- - =)
+          :zulmaat , "darkness": [:zul-maa-t] scanned 
+            as (= = -); [:zu-lu-maa-t] scanned as (- - = -)
+          kalmah , "speech": [kal-mah] scanned as (= 
+            x); [ka-li-mah] scanned as (- - x)
+
+            2.4 == Flexible spellings to indicate scansion 
+
+          Certain words offer the poet the option of changing their scansion 
+            by changing their spelling. Such words are always scanned exactly 
+            as they are written; the spelling informs the reader of the intended 
+            scansion. Since they are hard to predict in advance, a number of the 
+            more frequently occurring ones are listed in the Glossary. 
+            Here are some of the commonest examples:
+           "story": afsaanah [af-saa-nah] scanned as 
+            (= = x); fasaanah [fa-saa-nah] scanned as (- 
+            = x)
+          "my": meraa [me-raa] scanned as (= x); miraa 
+            [mi-raa] scanned as (- x)
+           "there": vahaa;N [va-haa;N] scanned as (- 
+            x); vaa;N [vaa;N] scanned as (=) 
+          "one": ek [e-k] scanned as (= -); yak 
+            [yak] scanned as (=); ik [ik] scanned as (=) 
+
+          "silence": ;xaamoshii [xaa-mo-shii] scanned 
+            as (= = x); ;xaamushii [xaa-mu-shii] scanned 
+            as (= - x); ;xamoshii [;xa-mo-shii] scanned 
+            as (- = x) 
+          The same choices are available for the feminine and plural forms 
+            of meraa , and for the comparable forms of teraa, 
+            and for yahaa;N as for vahaa;N 
+            . 
+          THE LETTERS n AND ;N 
+            : Word-final n , if preceded 
+            by one of the letters a , o , ii , e , may be 
+            transformed to ;N and scanned accordingly: for 
+            example, bayaan [ba-yaa-n] scanned as (- = -) 
+            can be turned into bayaa;N scanned as (- =), 
+            losing its word-final short syllable. In such cases the word-final 
+            syllable ending in ;N is nearly always long. 
+            Similarly, word-final ;N can be turned into 
+            a full n : gulistaa;N 
+            [gulistaa;N] can turn into gulistaan [gulistaan], 
+            and thus add an extra short syllable at the end. 
+          OPTIONAL TASHDIID : 
+            Another kind of flexible spelling involves an optional 
+            [tashdiid]. Orthography is not in this case a reliable guide, for 
+            often the tashdiid is not written, but must 
+            nevertheless be assumed for correct scansion. Most words of this kind 
+            are simple perfect forms of certain common verbs. Usually, though 
+            not always, these verbs have roots that end in kh 
+            . Note the following cases: 
+          *very often with tashdiid : rakhaa 
+            , chakhaa 
+          *sometimes with tashdiid : pakaa 
+            , u;Thaa
+          *rarely with tashdiid : likhaa
+          For example, rakha could be scanned either 
+            [ra-khaa], (- x), without the [tashdiid], or [rak-khaa], (= x), with 
+            the [tashdiid]. The same applies to the plural and feminine perfect 
+            forms of these verbs: rakhe, rakhii , etc. 
+          Using such perfect forms in the past participle tends to decrease 
+            the likelihood of a [tashdiid] being present: pakaa 
+            hu))aa, u;Thaa hu))aa never have a [tashdiid]. But while likhaa 
+            rarely has a [tashdiid], likhaa hu))aa is a 
+            bit more likely to have one. To be on the safe side, perfect forms 
+            of these verbs can initially be scanned (x x) when ascertaining the 
+            meter of a poem. A few nouns may have optional [tashdiid]s which are 
+            more often absent than present. Examples: dukaan 
+            [du-kaa-n] scanned as (- = -), versus dukkaan 
+            [duk-kaa-n] scanned as (= = -); shakar [sha-kar] 
+            scanned as (- =), versus shakkar [shak-kar] 
+            scanned as (= =).
+
+       -- meter 
+        book index -- Ghalib sitemap -- Mir 
+        sitemap -- FWP's main 
+        page -- 
+
