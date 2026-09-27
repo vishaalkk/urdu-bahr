@@ -836,9 +836,11 @@ html[data-script="hi"] :is(.dr-word, .meter-group-verse) { font-size: 21px; }
 /* Weight › Learn examples show Urdu with its Roman underneath — that Roman line is always mono */
 .constr-ro { font-family: var(--mono); font-size: 13.5px; }
 
-/* Foot names above the chips repeat the per-syllable labels underneath (maf · ʿū · l), so they're
-   hidden; the labels are the tap target for "play from this foot". */
-.chips .fname { display: none; }
+/* Foot names above the chips: Urdu (or Devanagari) only — the Roman name is spelled out under the
+   syllables (maf · ʿū · l). Both the name and those labels are tap targets for "play from this foot". */
+.chips .fname:empty { display: none; }   /* Roman mode: no foot name (the labels under the syllables spell it) */
+.chips .fname { font-family: var(--urdu); font-style: normal; cursor: pointer; }
+html[data-script="hi"] .chips .fname { font-family: var(--deva); }
 .cw .fs { cursor: pointer; border-radius: 3px; }
 .cbox-scan .cw .fs:hover, .couplet-scan-box .cw .fs:hover, .card .cw .fs:hover { color: var(--gold); background: color-mix(in srgb, var(--gold) 10%, transparent); }
 .fgrp.litf .cw .fs, .fgrp.resume-at .cw .fs { color: var(--gold); }
@@ -6100,7 +6102,7 @@ function chipsHTML(syl,feet,li,roCtx){
   const overrides = cs!=='ro' ? [] : roCtx ? romanOverridesFor(syl,roCtx.r,roCtx.lineObj) : (li!=null && typeof chipRomanOverrides==='function') ? chipRomanOverrides(syl,li) : [];
   const gp=graftPos(syl);
   if(!feet||!feet.length) return syl.map((s,i)=>chipHTML(s,i,li,overrides[i],gp[i])).join('');
-  return feet.map((F,fi)=>F?`${F.cae?'<span class="caeu">//</span>':''}<span class="fgrp" data-f="${fi}"><span class="fname" onclick="pbFromFoot(event,this)" title="Play from this foot">${(()=>{const fm=cs==='ur'?(F.ur||''):(cs==='hi'?(typeof urduToDevanagari==='function'?urduToDevanagari(F.ur):''):''); return fm?`${fm} <i>${F.name||''}</i>`:`<i>${F.name||''}</i>`;})()}</span><span class="fchips">${F.idx.map(i=>chipHTML(syl[i],i,li,overrides[i],gp[i])).join('')}</span></span>`:'').join('');
+  return feet.map((F,fi)=>F?`${F.cae?'<span class="caeu">//</span>':''}<span class="fgrp" data-f="${fi}"><span class="fname" onclick="pbFromFoot(event,this)" title="Play from this foot">${(()=>{const fm=cs==='ur'?(F.ur||''):(cs==='hi'?(typeof urduToDevanagari==='function'?urduToDevanagari(F.ur):''):''); return fm ? fm : '';   /* script-only foot name; the Roman name is spelled out under the syllables */})()}</span><span class="fchips">${F.idx.map(i=>chipHTML(syl[i],i,li,overrides[i],gp[i])).join('')}</span></span>`:'').join('');
 }
 /* Wrap each whitespace-separated word of a display string in <span class="word" data-w="i">
    for word-level playback highlight (pbWordsMatching). Leaves the whitespace itself outside

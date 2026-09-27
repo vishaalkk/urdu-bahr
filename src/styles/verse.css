@@ -501,9 +501,11 @@ html[data-script="hi"] :is(.dr-word, .meter-group-verse) { font-size: 21px; }
 /* Weight › Learn examples show Urdu with its Roman underneath — that Roman line is always mono */
 .constr-ro { font-family: var(--mono); font-size: 13.5px; }
 
-/* Foot names above the chips repeat the per-syllable labels underneath (maf · ʿū · l), so they're
-   hidden; the labels are the tap target for "play from this foot". */
-.chips .fname { display: none; }
+/* Foot names above the chips: Urdu (or Devanagari) only — the Roman name is spelled out under the
+   syllables (maf · ʿū · l). Both the name and those labels are tap targets for "play from this foot". */
+.chips .fname:empty { display: none; }   /* Roman mode: no foot name (the labels under the syllables spell it) */
+.chips .fname { font-family: var(--urdu); font-style: normal; cursor: pointer; }
+html[data-script="hi"] .chips .fname { font-family: var(--deva); }
 .cw .fs { cursor: pointer; border-radius: 3px; }
 .cbox-scan .cw .fs:hover, .couplet-scan-box .cw .fs:hover, .card .cw .fs:hover { color: var(--gold); background: color-mix(in srgb, var(--gold) 10%, transparent); }
 .fgrp.litf .cw .fs, .fgrp.resume-at .cw .fs { color: var(--gold); }
