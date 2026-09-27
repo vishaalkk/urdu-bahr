@@ -379,31 +379,6 @@ textarea {
 }
 .note strong { color: var(--gold); font-weight: 600; }
 
-/* Cards & Rows */
-.card {
-  background: var(--bg2);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  padding: 16px;
-  margin: 12px 0;
-  box-shadow: var(--shadow);
-}
-@media (min-width: 768px) {
-  .card { padding: 20px 22px; }
-}
-.card.small { padding: 12px 15px; }
-
-.couplet-card {
-  background: var(--bg2);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  padding: 18px 22px;
-  margin: 14px 0;
-  transition: border-color 150ms ease-out;
-}
-.couplet-card:hover { border-color: var(--line2); }
-
-.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 
 /* Nastaliq & Poetry Lines */
 .mono { font-family: var(--mono); }
@@ -576,6 +551,33 @@ textarea {
 }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
 .sw { width: 14px; height: 12px; border-radius: 3px; display: inline-block; }
+
+
+/* Cards & Rows */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin: 12px 0;
+  box-shadow: var(--shadow);
+}
+@media (min-width: 768px) {
+  .card { padding: 20px 22px; }
+}
+.card.small { padding: 12px 15px; }
+
+.couplet-card {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 18px 22px;
+  margin: 14px 0;
+  transition: border-color 150ms ease-out;
+}
+.couplet-card:hover { border-color: var(--line2); }
+
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 
 /* Interactive Words */
 .words { display: flex; flex-wrap: wrap; gap: 6px; direction: rtl; margin: 6px 0; }

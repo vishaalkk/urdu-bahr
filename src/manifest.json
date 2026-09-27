@@ -1,6 +1,10 @@
 {
   "head": "src/head.html",
-  "styles": "src/styles.css",
+  "styles": [
+    "src/styles/base.css",
+    "src/styles/verse.css",
+    "src/styles/pages.css"
+  ],
   "body": [
     "src/body/header.html",
     "src/body/weight.html",

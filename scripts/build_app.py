@@ -198,7 +198,8 @@ def read_source(path):
 
 # ─── 5. Concatenate HTML from source partials ─────────────────────────────────
 head_content = read_source(manifest['head'])
-styles_content = read_source(manifest['styles'])
+styles_src = manifest['styles']
+styles_content = '\n'.join(read_source(p) for p in (styles_src if isinstance(styles_src, list) else [styles_src]))
 
 # Substitute style placeholder
 head_content = head_content.replace('/*@@STYLES@@*/', styles_content)
