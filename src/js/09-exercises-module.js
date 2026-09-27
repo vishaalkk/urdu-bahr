@@ -319,9 +319,12 @@ function updateCollectionCounts() {
   const bH = $('colBtnHandbook');
   const bG = $('colBtnGhalib');
   const bM = $('colBtnMir');
-  if (bH) bH.textContent = `Handbook ${hLen}`;
-  if (bG) bG.textContent = `Ghalib ${gLen}`;
-  if (bM) bM.textContent = `Mir ${mLen}`;
+  if (bH) bH.textContent = 'Handbook';
+  if (bG) bG.textContent = 'Ghalib';
+  if (bM) bM.textContent = 'Mir';
+  const counts = { handbook: hLen, ghalib: gLen, mir: mLen };
+  const col = (typeof activeCollection !== 'undefined') ? activeCollection : 'handbook';
+  if ($('ghazalCollectionCount')) $('ghazalCollectionCount').textContent = (counts[col] || hLen) + ' ghazals';
 }
 
 function populateGhazalMeterFilter(col) {
@@ -424,13 +427,13 @@ function switchCollection(col) {
   };
   if ($('colDesc')) $('colDesc').innerHTML = descs[col] || '';   // descriptions may carry links (trusted, static)
 
-  const eyebrowNames = { handbook: 'Handbook', ghalib: 'Ghalib', mir: 'Mir' };
   const eyebrowCounts = {
     handbook: (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) ? EXERCISES_DATA.length : 24,
     ghalib: (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) ? GHALIB_EXT_DATA.length : 234,
     mir: (typeof MIR_EXT_DATA !== 'undefined' && Array.isArray(MIR_EXT_DATA)) ? MIR_EXT_DATA.length : 429
   };
   if ($('ghazalEyebrow')) $('ghazalEyebrow').textContent = '';   // the collection switch already says which one; shown only for search results
+  if ($('ghazalCollectionCount')) $('ghazalCollectionCount').textContent = eyebrowCounts[col] + ' ghazals';
 
   const cHandbook = $('handbookExContainer');
   const cGhalib = $('ghalibContainer');

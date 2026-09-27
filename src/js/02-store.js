@@ -304,6 +304,13 @@ function switchCollection(col) {
   };
   if ($('colDesc')) $('colDesc').innerHTML = descs[col] || '';   // descriptions may carry links (trusted, static)
 
+  const eyebrowCounts = {
+    handbook: (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) ? EXERCISES_DATA.length : 24,
+    ghalib: (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) ? GHALIB_EXT_DATA.length : 234,
+    mir: (typeof MIR_EXT_DATA !== 'undefined' && Array.isArray(MIR_EXT_DATA)) ? MIR_EXT_DATA.length : 429
+  };
+  if ($('ghazalCollectionCount')) $('ghazalCollectionCount').textContent = eyebrowCounts[col] + ' ghazals';
+
   const cHandbook = $('handbookExContainer');
   const cGhalib = $('ghalibContainer');
   const cMir = $('mirContainer');

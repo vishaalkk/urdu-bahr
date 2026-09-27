@@ -5,15 +5,16 @@
     <h1 class="page-title sr-only">Ghazals</h1>
     <!-- Collection segmented control -->
     <div class="subtabs seg" role="tablist" aria-label="Collections">
-      <button class="seg-btn on" id="colBtnHandbook" onclick="switchCollection('handbook')">Handbook 24</button>
-      <button class="seg-btn" id="colBtnGhalib" onclick="switchCollection('ghalib')">Ghalib 234</button>
-      <button class="seg-btn" id="colBtnMir" onclick="switchCollection('mir')">Mir 429</button>
+      <button class="seg-btn on" id="colBtnHandbook" onclick="switchCollection('handbook')">Handbook</button>
+      <button class="seg-btn" id="colBtnGhalib" onclick="switchCollection('ghalib')">Ghalib</button>
+      <button class="seg-btn" id="colBtnMir" onclick="switchCollection('mir')">Mir</button>
     </div>
     <div id="colDesc" class="dim ghazal-desc">The handbook's exercise ghazals, with Frances Pritchett's notes. <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/10_ex_01_06.html" target="_blank" rel="noopener">Her exercises<span class="ext">↗</span></a> · <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/11_exnotes.html" target="_blank" rel="noopener">answers &amp; notes<span class="ext">↗</span></a></div>
     <p class="ghazal-grouping-note">Grouped by bahr. Each group is named after a well-known verse in that meter — not necessarily a line from this collection. Tap a group to open it.</p>
 
-    <!-- Controls row: search (the collapsible meter groups below are the meter index) -->
+    <!-- Controls row: count + search -->
     <div class="row ghazal-controls">
+      <span id="ghazalCollectionCount" class="ghazal-collection-count">24 ghazals</span>
       <input type="text" id="ghazalSearchInput" class="ghazal-search-input" placeholder="Search poet, first line, or number — all collections" oninput="onGhazalSearch()">
     </div>
   </div>

@@ -446,6 +446,12 @@ main, .wrap { max-width: 760px; }
   color: var(--ink); font-family: var(--sans); font-size: 14px;
 }
 .ghazal-search-input:focus { border-color: var(--gold); }
+.ghazal-collection-count {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--faint);
+  white-space: nowrap;
+}
 
 .verses { display: flex; flex-direction: column; }
 

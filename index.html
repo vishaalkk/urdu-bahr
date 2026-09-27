@@ -1321,6 +1321,12 @@ main, .wrap { max-width: 760px; }
   color: var(--ink); font-family: var(--sans); font-size: 14px;
 }
 .ghazal-search-input:focus { border-color: var(--gold); }
+.ghazal-collection-count {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--faint);
+  white-space: nowrap;
+}
 
 .verses { display: flex; flex-direction: column; }
 
@@ -2184,15 +2190,16 @@ main, .wrap { max-width: 760px; }
     <h1 class="page-title sr-only">Ghazals</h1>
     <!-- Collection segmented control -->
     <div class="subtabs seg" role="tablist" aria-label="Collections">
-      <button class="seg-btn on" id="colBtnHandbook" onclick="switchCollection('handbook')">Handbook 24</button>
-      <button class="seg-btn" id="colBtnGhalib" onclick="switchCollection('ghalib')">Ghalib 234</button>
-      <button class="seg-btn" id="colBtnMir" onclick="switchCollection('mir')">Mir 429</button>
+      <button class="seg-btn on" id="colBtnHandbook" onclick="switchCollection('handbook')">Handbook</button>
+      <button class="seg-btn" id="colBtnGhalib" onclick="switchCollection('ghalib')">Ghalib</button>
+      <button class="seg-btn" id="colBtnMir" onclick="switchCollection('mir')">Mir</button>
     </div>
     <div id="colDesc" class="dim ghazal-desc">The handbook's exercise ghazals, with Frances Pritchett's notes. <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/10_ex_01_06.html" target="_blank" rel="noopener">Her exercises<span class="ext">↗</span></a> · <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/11_exnotes.html" target="_blank" rel="noopener">answers &amp; notes<span class="ext">↗</span></a></div>
     <p class="ghazal-grouping-note">Grouped by bahr. Each group is named after a well-known verse in that meter — not necessarily a line from this collection. Tap a group to open it.</p>
 
-    <!-- Controls row: search (the collapsible meter groups below are the meter index) -->
+    <!-- Controls row: count + search -->
     <div class="row ghazal-controls">
+      <span id="ghazalCollectionCount" class="ghazal-collection-count">24 ghazals</span>
       <input type="text" id="ghazalSearchInput" class="ghazal-search-input" placeholder="Search poet, first line, or number — all collections" oninput="onGhazalSearch()">
     </div>
   </div>
@@ -3700,6 +3707,13 @@ function switchCollection(col) {
   };
   if ($('colDesc')) $('colDesc').innerHTML = descs[col] || '';   // descriptions may carry links (trusted, static)
 
+  const eyebrowCounts = {
+    handbook: (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) ? EXERCISES_DATA.length : 24,
+    ghalib: (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) ? GHALIB_EXT_DATA.length : 234,
+    mir: (typeof MIR_EXT_DATA !== 'undefined' && Array.isArray(MIR_EXT_DATA)) ? MIR_EXT_DATA.length : 429
+  };
+  if ($('ghazalCollectionCount')) $('ghazalCollectionCount').textContent = eyebrowCounts[col] + ' ghazals';
+
   const cHandbook = $('handbookExContainer');
   const cGhalib = $('ghalibContainer');
   const cMir = $('mirContainer');
@@ -4497,9 +4511,12 @@ function updateCollectionCounts() {
   const bH = $('colBtnHandbook');
   const bG = $('colBtnGhalib');
   const bM = $('colBtnMir');
-  if (bH) bH.textContent = `Handbook ${hLen}`;
-  if (bG) bG.textContent = `Ghalib ${gLen}`;
-  if (bM) bM.textContent = `Mir ${mLen}`;
+  if (bH) bH.textContent = 'Handbook';
+  if (bG) bG.textContent = 'Ghalib';
+  if (bM) bM.textContent = 'Mir';
+  const counts = { handbook: hLen, ghalib: gLen, mir: mLen };
+  const col = (typeof activeCollection !== 'undefined') ? activeCollection : 'handbook';
+  if ($('ghazalCollectionCount')) $('ghazalCollectionCount').textContent = (counts[col] || hLen) + ' ghazals';
 }
 
 function populateGhazalMeterFilter(col) {
@@ -4602,13 +4619,13 @@ function switchCollection(col) {
   };
   if ($('colDesc')) $('colDesc').innerHTML = descs[col] || '';   // descriptions may carry links (trusted, static)
 
-  const eyebrowNames = { handbook: 'Handbook', ghalib: 'Ghalib', mir: 'Mir' };
   const eyebrowCounts = {
     handbook: (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) ? EXERCISES_DATA.length : 24,
     ghalib: (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) ? GHALIB_EXT_DATA.length : 234,
     mir: (typeof MIR_EXT_DATA !== 'undefined' && Array.isArray(MIR_EXT_DATA)) ? MIR_EXT_DATA.length : 429
   };
   if ($('ghazalEyebrow')) $('ghazalEyebrow').textContent = '';   // the collection switch already says which one; shown only for search results
+  if ($('ghazalCollectionCount')) $('ghazalCollectionCount').textContent = eyebrowCounts[col] + ' ghazals';
 
   const cHandbook = $('handbookExContainer');
   const cGhalib = $('ghalibContainer');
