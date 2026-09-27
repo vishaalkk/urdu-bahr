@@ -16,7 +16,7 @@ function load(hash) {
   const errors = [];
   const vc = new VirtualConsole();
   vc.on('jsdomError', e => { if (!IGNORE.test(e.message)) errors.push(e.message.split('\n')[0]); });
-  const dom = new JSDOM(HTML, { runScripts: 'dangerously', pretendToBeVisual: true, virtualConsole: vc, url: 'file:///app/index.html' + hash });
+  const dom = new JSDOM(HTML, { runScripts: 'dangerously', pretendToBeVisual: true, virtualConsole: vc, url: 'http://localhost/index.html' + hash });
   dom.window.scrollTo = () => {};
   return { dom, errors };
 }
@@ -82,6 +82,7 @@ const ROUTES = [
     if (!f0) fail('FAMS not loaded');
     else {
       w.toggleFamExpand(f0, { target: d.body });
+      if (!d.getElementById('fam-' + f0).classList.contains('expanded')) w.toggleFamExpand(f0, { target: d.body });   // first family may start open
       const row = d.getElementById('fam-' + f0);
       row && row.querySelectorAll('.couplet-card .play').length ? ok('Meter › Learn family expands to playable couplet boxes') : fail('family row has no couplet boxes');
     }
@@ -94,6 +95,22 @@ const ROUTES = [
     } else fail('searchGhazalIndex missing');
     if (errors.length) fail('script error in feature checks: ' + errors[0]);
     w.close();
+  }
+
+  console.log('Shareable links');
+  {
+    const check = async (hash, test, label) => {
+      const { dom, errors } = load(hash); await wait(1500);
+      const w = dom.window;
+      let res; try { res = test(w, w.document); } catch (e) { res = 'threw ' + e.message; }
+      if (errors.length) fail(`${hash}: script error — ${errors[0]}`);
+      else res === true ? ok(`${label}  (${hash})`) : fail(`${label} (${hash}): ${res}`);
+      w.close();
+    };
+    await check('#/meter/lookup?open=26', (w, d) => { const r = d.getElementById('m-row-26'); return r && r.classList.contains('expanded') ? true : 'meter #26 not expanded'; }, 'Look up opens a specific meter');
+    await check('#/meter/learn?open=' + 'hazaron', (w, d) => { const r = d.getElementById('fam-hazaron'); return r && r.querySelector('.couplet-card') ? true : 'family not expanded'; }, 'Learn opens a specific family');
+    await check('#/scan?t=' + encodeURIComponent('دلِ ناداں تجھے ہوا کیا ہے\nآخر اس درد کی دوا کیا ہے'), (w, d) => d.querySelectorAll('#scanOut .chip').length > 10 ? true : 'verse not scanned', 'Scan link scans the shared verse');
+    await check('#/weight', (w) => /^#\/weight\/(learn|drill|lookup)$/.test(w.location.hash) ? true : 'address stayed ' + w.location.hash, 'bare #/weight becomes an explicit sub-tab link');
   }
 
   console.log(failures ? `\nDOM SMOKE: ${failures} failure(s)` : '\nDOM SMOKE: all checks passed');

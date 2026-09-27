@@ -25,6 +25,14 @@ function navigate(path, replace) {
   }
 }
 
+/* Update the address bar to a shareable link for what's on screen, without a route change
+   (no re-render, no scroll jump, no extra history entry). file:// pages may refuse; that's fine. */
+function setHashQuiet(path) {
+  if (!path.startsWith('#')) path = '#' + (path.startsWith('/') ? path : '/' + path);
+  try { if (typeof history !== 'undefined' && history.replaceState) history.replaceState(null, '', path); } catch (e) {}
+}
+window.setHashQuiet = setHashQuiet;
+
 /* Backward compatibility shim for any existing go(id) calls */
 function go(id) {
   const map = {
@@ -123,6 +131,7 @@ function handleRoute(targetHash) {
   if (root === 'weight') {
     let sub = parts[1] || subTabMemory.weight || 'learn';
     if (!['learn', 'drill', 'lookup'].includes(sub)) sub = 'learn';
+    if (parts[1] !== sub) setHashQuiet('/weight/' + sub);
     subTabMemory.weight = sub;
     store.set('subTab:weight', sub);
     showWeightSubtab(sub);
@@ -130,6 +139,7 @@ function handleRoute(targetHash) {
   } else if (root === 'meter') {
     let sub = parts[1] || subTabMemory.meter || 'learn';
     if (!['learn', 'drill', 'lookup'].includes(sub)) sub = 'learn';
+    if (parts[1] !== sub) setHashQuiet('/meter/' + sub + (raw && raw.indexOf('?') !== -1 ? raw.slice(raw.indexOf('?')) : ''));
     subTabMemory.meter = sub;
     store.set('subTab:meter', sub);
     showMeterSubtab(sub, params);
@@ -137,6 +147,7 @@ function handleRoute(targetHash) {
   } else if (root === 'scan') {
     if (typeof document !== 'undefined') document.title = 'Scan — Baḥr';
     initScanEmptyState();
+    if (params && params.t && $('scanIn') && $('scanIn').value !== params.t && typeof runScan === 'function') { $('scanIn').value = params.t; runScan(); }
   } else if (root === 'ghazals') {
     if (typeof document !== 'undefined') document.title = 'Ghazals — Baḥr';
     handleGhazalsRoute(parts, params);
@@ -211,8 +222,17 @@ function showMeterSubtab(sub, params) {
     if (typeof wtNew === 'function' && $('wtChoices') && !$('wtChoices').textContent) wtNew();
     if (typeof renderWeak === 'function') renderWeak();
   } else if (sub === 'lookup') {
+    if (params && params.open != null && typeof lookupExpandedId !== 'undefined') lookupExpandedId = String(params.open);
     if (typeof renderFams === 'function') renderFams();
+    if (params && params.open != null) scrollToLater('m-row-' + params.open);
   }
+  if (sub === 'learn' && params && params.open) scrollToLater('fam-' + params.open);
+}
+
+/* after a shared link opens something, bring it into view once it's rendered */
+function scrollToLater(id) {
+  if (typeof setTimeout !== 'function') return;
+  setTimeout(() => { const el = $(id); if (el && el.scrollIntoView) el.scrollIntoView({ block: 'start', behavior: 'smooth' }); }, 60);
 }
 
 function filterMeterLookup(kind) {

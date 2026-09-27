@@ -794,3 +794,10 @@ main, .wrap { max-width: 760px; }
   box-shadow: 0 1px 2px rgba(21,18,14,.10), inset 0 -2px 0 var(--gold);
 }
 @media (max-width: 767px) { .subtabs.seg { display: flex; } .subtabs.seg .seg-btn { flex: 1; padding: 7px 8px; } }
+
+/* Script switch: each label in its own script's font, all three centred on one line.
+   (اردو was falling back from Inter to a random system font and sat off the line.) */
+.script-switch { align-items: center; height: 28px; }
+.scriptbtn { display: inline-flex; align-items: center; height: 28px; line-height: 1; }
+#btnScriptUrdu { font-family: var(--urdu); font-size: 15px; direction: rtl; unicode-bidi: isolate; position: relative; top: -4px; }   /* Nastaliq draws below its box; lift it onto the line */
+#btnScriptDev { font-family: var(--deva); font-size: 14px; }

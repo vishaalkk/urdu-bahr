@@ -110,13 +110,13 @@ function toggleFamExpand(id, e) {
   if (earCur === id) {
     earCur = null;
     store.set('earCur', null);
-    if (typeof navigate === 'function') navigate('/meter/learn');
-    else renderEarFams();
+    renderEarFams();
+    if (typeof setHashQuiet === 'function') setHashQuiet('/meter/learn');
   } else {
     earCur = id;
     store.set('earCur', id);
-    if (typeof navigate === 'function') navigate('/meter/learn?open=' + id);
-    else renderEarFams();
+    renderEarFams();
+    if (typeof setHashQuiet === 'function') setHashQuiet('/meter/learn?open=' + id);
   }
 }
 

@@ -332,6 +332,7 @@ function meterLabel(m, opts){
 }
 function runScan(){
   const rawLines=$('scanIn').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  if(typeof setHashQuiet==='function' && typeof location!=='undefined' && /^#\/scan/.test(location.hash||'')) setHashQuiet(rawLines.length ? '/scan?t=' + encodeURIComponent(rawLines.join('\n')) : '/scan');
   if(!rawLines.length){
     $('scanOut').innerHTML='';
     if($('studioResults')) $('studioResults').innerHTML='';
@@ -683,7 +684,20 @@ function renderLineScan(text, container, lineObjIn, meterId) {
   let lineObj = (lineObjIn && lineObjIn.ur) ? lineObjIn : ((typeof KNOWN_VERSES !== 'undefined' && KNOWN_VERSES[nk]) ? KNOWN_VERSES[nk] : null);
   let urduL = lineObj ? lineObj.ur : rawL;
   const r = Scan.scanLine(urduL);
-  const f = (meterId != null && r.fits.find(x => String(x.meter.id) === String(meterId))) || r.fits[0];
+  let f;
+  if (Array.isArray(meterId)) {
+    // The line belongs to a ghazal locked to one (or a paired pair) of these
+    // meters — never fall back to the scanner's own top guess. Pick whichever
+    // of the ghazal's own meters fits this line best; if none does, leave f
+    // unset so the "no meter fits" message renders instead of silently
+    // switching to a different bahr than the ghazal is actually written in.
+    f = meterId
+      .map(id => r.fits.find(x => String(x.meter.id) === String(id)))
+      .filter(Boolean)
+      .sort((a, b) => a.c - b.c)[0];
+  } else {
+    f = (meterId != null && r.fits.find(x => String(x.meter.id) === String(meterId))) || r.fits[0];
+  }
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
   const isRtl = (cs === 'ur');
 

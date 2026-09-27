@@ -59,6 +59,7 @@ function toggleMeterLookupExpand(id, e) {
   if (e && e.target && typeof e.target.closest === 'function' && e.target.closest('.play')) return;
   lookupExpandedId = (lookupExpandedId === id) ? null : id;
   renderFams();
+  if (typeof setHashQuiet === 'function') setHashQuiet('/meter/lookup' + (lookupExpandedId != null ? '?open=' + lookupExpandedId : ''));
 }
 
 function renderFams() {
