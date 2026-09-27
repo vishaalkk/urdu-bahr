@@ -93,7 +93,8 @@ function renderFams() {
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
   const isRtl = (cs === 'ur');
 
-  host.innerHTML = metersToRender.map(m => {
+  const legend = (typeof legendHTML === 'function') ? legendHTML('legend-sticky') : '';
+  host.innerHTML = legend + metersToRender.map(m => {
     const mId = m.id;
     const idStr = String(mId);
     const isExpanded = (lookupExpandedId === idStr);

@@ -1,5 +1,64 @@
-
-<!-- HOME: landing page for a bare URL (route #/home) -->
+<!-- HOME: landing page for a bare URL (route #/home). Static shell; renderHome()
+     in 02-store.js fills the legend + verse example, and re-fills them each time
+     this route is entered so they follow the current script. -->
 <section id="home-section" class="tab-view">
-  <div id="homeRoot"></div>
+  <div id="homeRoot">
+    <div class="page-head">
+      <div class="eyebrow">Welcome</div>
+      <h1 class="page-title">Learn to hear the bahr</h1>
+      <p class="lede dim">Urdu poetry is sung in <b>bahrs</b> — patterns of long and short
+        syllables. This app teaches you to hear them, see them, and scan them for yourself.</p>
+    </div>
+
+    <div class="home-tabs" id="homeTabs">
+      <a class="home-row" href="#/weight/learn">
+        <div class="home-row-head">
+          <span class="home-row-name">Weight</span>
+          <span class="home-row-arrow">›</span>
+        </div>
+        <p class="home-row-desc dim small">What makes a syllable long or short.</p>
+      </a>
+      <a class="home-row" href="#/meter/learn">
+        <div class="home-row-head">
+          <span class="home-row-name">Meter</span>
+          <span class="home-row-arrow">›</span>
+        </div>
+        <p class="home-row-desc dim small">The bahrs: hear them, drill them, look them up.</p>
+      </a>
+      <a class="home-row" href="#/scan">
+        <div class="home-row-head">
+          <span class="home-row-name">Scan</span>
+          <span class="home-row-arrow">›</span>
+        </div>
+        <p class="home-row-desc dim small">Paste any verse and see its bahr.</p>
+      </a>
+      <a class="home-row" href="#/ghazals">
+        <div class="home-row-head">
+          <span class="home-row-name">Ghazals</span>
+          <span class="home-row-arrow">›</span>
+        </div>
+        <p class="home-row-desc dim small">Read Ghalib, Mir and the Handbook's ghazals couplet by couplet.</p>
+      </a>
+    </div>
+
+    <h2 class="section-title">How to read the marks</h2>
+    <p class="small dim">Every scan marks each syllable long or short (some are flexible).
+      Here is the key, and one line marked out:</p>
+    <div id="homeLegend"></div>
+
+    <div class="home-example">
+      <div class="home-example-head">
+        <span class="home-example-verse" id="homeExampleVerse"></span>
+        <button class="play" id="homeExamplePlay" aria-label="Play" onclick="homePlayExample(this)">▶︎</button>
+      </div>
+      <div id="homeExampleScan"></div>
+    </div>
+
+    <div class="home-cta">
+      <a class="btn gold" href="#/weight/learn">Start here → Weight › Learn</a>
+    </div>
+
+    <p class="home-credit tiny dim">Built on Frances W. Pritchett &amp; K. A. K. Anjum's
+      <a href="https://franpritchett.com/00ghalib/meterbk/00_index.html" target="_blank" rel="noopener"><i>Urdu Meter: A Practical Handbook</i> ↗</a>.</p>
+  </div>
 </section>

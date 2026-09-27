@@ -112,8 +112,13 @@ const ROUTES = [
     await check('#/scan?t=' + encodeURIComponent('دلِ ناداں تجھے ہوا کیا ہے\nآخر اس درد کی دوا کیا ہے'), (w, d) => d.querySelectorAll('#scanOut .chip').length > 10 ? true : 'verse not scanned', 'Scan link scans the shared verse');
     await check('#/ghazals?q=' + encodeURIComponent('ghalib'), (w, d) => (d.getElementById('ghazalSearchInput').value === 'ghalib' && /Ghalib/.test(d.getElementById('ghazals-section').textContent)) ? true : 'search not applied', 'Ghazals search link fills and runs the search');
     await check('#/ghazals/ghalib', (w, d) => (w.eval('GHALIB_EXT_DATA.length') === 234 && /Ghalib 234/.test(d.getElementById('colBtnGhalib').textContent)) ? true : 'Ghalib count ' + w.eval('GHALIB_EXT_DATA.length') + ' / label ' + d.getElementById('colBtnGhalib').textContent, 'all 234 Ghalib ghazals present and labelled');
-    await check('', (w) => w.location.hash === '#/weight/learn' ? true : 'landed on ' + w.location.hash, 'bare URL lands on Weight › Learn');
-    await check('#/ghazals/mir', (w, d) => { const a = d.querySelector('#mirExtList .vrow .fran-link'); return a && /franpritchett\.com/.test(a.href) && /Mir 6\b/.test(a.textContent) ? true : 'first Mir row: ' + (a ? a.textContent + ' ' + a.href : 'no link'); }, "Mir rows show Fran's number, linked to her page");
+    await check('', (w) => w.location.hash === '#/home' ? true : 'landed on ' + w.location.hash, 'bare URL lands on Home');
+    await check('#/home', (w, d) => { const s = d.getElementById('home-section'); return s && s.classList.contains('on') && /Weight/.test(s.textContent) && /Ghazals/.test(s.textContent) ? true : 'home section not rendered'; }, 'Home renders its content');
+    // Round 3: inside the (single-collection) Mir list the group header carries the
+    // meter and poet, so the row's own link is bare — just her number, e.g. "19↗" —
+    // not "Mir 19"; the "Mir …" form is reserved for places that mix collections
+    // (universal search results, the reader title).
+    await check('#/ghazals/mir', (w, d) => { const a = d.querySelector('#mirExtList .vrow .fran-link'); return a && /franpritchett\.com/.test(a.href) && /^\d+↗$/.test(a.textContent) ? true : 'first Mir row: ' + (a ? a.textContent + ' ' + a.href : 'no link'); }, "Mir rows show Fran's number (bare), linked to her page");
     await check('#/weight', (w) => /^#\/weight\/(learn|drill|lookup)$/.test(w.location.hash) ? true : 'address stayed ' + w.location.hash, 'bare #/weight becomes an explicit sub-tab link');
   }
 

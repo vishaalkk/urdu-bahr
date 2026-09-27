@@ -460,6 +460,37 @@ main, .wrap { max-width: 760px; }
 .ghazal-search-input:focus { border-color: var(--gold); }
 
 .verses { display: flex; flex-direction: column; }
+
+/* Meter group header (round 3): the famous misra + pattern + count carry
+   the meter identity for every row underneath, so rows themselves don't
+   repeat the meter name/number. Whitespace + a hairline, no card. */
+.meter-group-head {
+  padding: var(--sp-5) 0 var(--sp-3);
+  border-top: 1px solid var(--line);
+  text-align: center;
+}
+.verses > .meter-group-head:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.meter-group-verse {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--ink);
+}
+.meter-group-verse.urdu { font-family: var(--urdu); font-style: normal; direction: rtl; font-size: 22px; line-height: 1.8; }
+.meter-group-verse.deva { font-family: var(--deva); font-style: normal; }
+.meter-group-verse.roman { font-family: var(--mono); font-style: normal; font-size: 14px; }
+.meter-group-pattern { display: flex; justify-content: center; margin-top: var(--sp-2); }
+.meter-group-count {
+  margin-top: var(--sp-1);
+  font-family: var(--sans);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.meter-group-rows { display: flex; flex-direction: column; }
+
 .vrow {
   display: grid;
   grid-template-columns: 60px 1fr auto;

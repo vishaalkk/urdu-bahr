@@ -248,7 +248,14 @@ function patGlyphs(raw){
   return String(raw).split('').map(ch=>ch==='='?'<span class="pg l">=</span>':ch==='-'?'<span class="pg s">-</span>':ch==='x'?'<span class="pg x">x</span>':ch==='/'?'<span class="pg sep">/</span>':ch).join('');
 }
 function legendHTML(cls){
-  return `<div class="legend${cls?' '+cls:''}"><span><i class="sw c-l"></i>long</span><span><i class="sw c-s"></i>short</span><span><i class="sw c-x"></i>flexible, resolved</span><span><i class="sw c-c"></i>cheat</span><span><i class="sw c-g"></i>grafted (words joined)</span></div>`;
+  return `<div class="legend${cls?' '+cls:''}">`
+    +`<span><i class="sw c-l"></i><span class="pg l">=</span> long <span class="lg-note">(dum)</span></span>`
+    +`<span><i class="sw c-s"></i><span class="pg s">–</span> short <span class="lg-note">(da)</span></span>`
+    +`<span><i class="sw c-x"></i>flexible <span class="lg-note">(either, resolved by the meter)</span></span>`
+    +`<span><span class="pg x">x</span> either</span>`
+    +`<span><i class="sw c-c"></i>cheat</span>`
+    +`<span><i class="sw c-g"></i>grafted <span class="lg-note">(words joined)</span></span>`
+    +`</div>`;
 }
 const FAM_TITLES = {
   'hazaron': "Bahr of Hazāroñ Ḳhvāhisheñ",
@@ -438,7 +445,7 @@ function runScan(){
         h+=`</div>`; }
       /* answer key if exercise */
       if(curEx){ const _hit=_fcd.every(f=>exMeters(curEx).includes(f.meter.id)); h+=`<p class="tiny muted mt-loose">Pritchett's answer key (ch. 11): <b class="t">${exMeters(curEx).map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b> — ${_hit?'<span class="ok-text">the scanner agrees ✓</span>':'<span class="no-text">the scanner disagrees ✗</span>'}</p>`; }
-      h+=legendHTML('top');
+      h+=legendHTML('legend-sticky');
       /* lines grouped into couplets (shers) of 2, each its own bordered card */
       for(let _i=0;_i<results.length;_i+=2){
         const _li2 = (_i+1<results.length) ? _i+1 : null;
@@ -446,7 +453,7 @@ function runScan(){
       }
       h+='</div>';
     } else {
-      h+=legendHTML('top');
+      h+=legendHTML('legend-sticky');
       h+=`<div class="card callout-mismatch"><div class="row">Differing or Strained Meters Between Misras</div><div class="muted small note-sub">No single classical bahr fits every misra. Inspect individual misra scans below.</div></div>`;
       for(let _i=0;_i<results.length;_i+=2){
         const _li2 = (_i+1<results.length) ? _i+1 : null;
@@ -454,7 +461,7 @@ function runScan(){
       }
     }
   } else {
-    h+=legendHTML('top');
+    h+=legendHTML('legend-sticky');
     results.forEach((r,li)=>{ h+=lineHTML(r,li,null,lineObjs[0]); });
   }
   $('scanOut').innerHTML=h;

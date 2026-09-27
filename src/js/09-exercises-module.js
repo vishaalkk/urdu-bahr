@@ -194,20 +194,90 @@ function franNum(col, item) {
   return null;
 }
 window.franNum = franNum;
-/* her number as a link to her page for that ghazal (new tab); doesn't open our reader */
-function franLinkHTML(col, item) {
+/* her number as a link to her page for that ghazal (new tab); doesn't open our reader.
+   opts.bare (round 3): inside a single-collection list the group header already
+   carries the collection, so the row just needs "12 ↗" — no "Ghalib"/"Mir" prefix.
+   Keep the full "Ghalib 12 ↗" form (the default) wherever rows from different
+   collections mix (search results) and in the reader title. */
+function franLinkHTML(col, item, opts) {
   const n = franNum(col, item);
   if (n == null) return '';
   const who = col === 'ghalib' ? 'Ghalib' : 'Mir';
+  const bare = !!(opts && opts.bare);
+  const label = bare ? String(n) : `${who} ${n}`;
+  const title = `Frances Pritchett's page for ${who} ${n}`;
   return item.url
-    ? `<a class="fran-link" href="${escapeHtml(item.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="Frances Pritchett's page for ${who} ${n}">${who} ${n}<span class="ext" aria-hidden="true">↗</span></a>`
-    : `${who} ${n}`;
+    ? `<a class="fran-link" href="${escapeHtml(item.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="${escapeHtml(title)}">${label}<span class="ext" aria-hidden="true">↗</span></a>`
+    : label;
 }
 window.franLinkHTML = franLinkHTML;
-function meterNameOf(item) {
-  const m = mListOf(item)[0];
-  const info = (m != null && typeof meterLabelInfo === 'function') ? meterLabelInfo(m) : null;
-  return info && info.name ? info.name : (m != null ? '#' + m : '');
+/* ================= GROUP BY METER (round 3) =================
+   Lists group rows by their ghazal's meter — the group header carries the
+   meter identity (famous misra + pattern + count) so rows themselves no
+   longer repeat the meter name/number. A paired meter (mListOf -> [18, 19])
+   groups under the FIRST id, since that's the bahr the ghazal is filed
+   under everywhere else (meter filter, franLinkHTML, etc). `rows` can be
+   plain corpus items (Handbook/Ghalib/Mir lists) or {col, item} pairs
+   (universal search, which mixes collections in one group). */
+function buildMeterGroups(rows, getMeterId, getSortId) {
+  const map = new Map();
+  rows.forEach(r => {
+    const key = String(getMeterId(r) || '');
+    if (!map.has(key)) map.set(key, []);
+    map.get(key).push(r);
+  });
+  const groups = [...map.entries()].map(([key, its]) => {
+    its.sort((a, b) => String(getSortId(a)).localeCompare(String(getSortId(b)), undefined, { numeric: true }));
+    return { key, rows: its };
+  });
+  // Largest group first; ties broken by meter id so ordering is stable.
+  groups.sort((a, b) => b.rows.length - a.rows.length || a.key.localeCompare(b.key, undefined, { numeric: true }));
+  return groups;
+}
+
+function meterGroupHeaderHTML(key, count) {
+  const info = (key && typeof meterLabelInfo === 'function') ? meterLabelInfo(key) : null;
+  const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
+  let verseHtml = '';
+  if (info && info.verse) {
+    const text = (typeof getLineDisplay === 'function') ? getLineDisplay(info.verse, cs) : (info.verse[cs] || info.verse.ur);
+    if (text) {
+      const scriptCls = cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : 'roman');
+      const langDir = (typeof getLangDir === 'function') ? getLangDir(cs) : '';
+      verseHtml = `<div class="meter-group-verse ${scriptCls}" ${langDir}>${escapeHtml(text)}</div>`;
+    }
+  }
+  if (!verseHtml) {
+    const label = (info && info.name) ? info.name : (key ? '#' + key : 'Unfiled');
+    verseHtml = `<div class="meter-group-verse faint">${escapeHtml(label)}</div>`;
+  }
+  const patternHtml = (info && info.pattern && typeof feetStrip === 'function') ? feetStrip(info.pattern) : '';
+  return `
+    <div class="meter-group-head">
+      <div class="meter-group-title">${verseHtml}</div>
+      ${patternHtml ? `<div class="meter-group-pattern">${patternHtml}</div>` : ''}
+      <div class="meter-group-count faint tiny">${count} ghazal${count === 1 ? '' : 's'}</div>
+    </div>
+  `;
+}
+
+/* Renders as many whole/partial groups as fit in `shownCount` rows (largest
+   groups first, per buildMeterGroups), so "Show N more" always continues
+   from exactly where the last render left off — including mid-group. */
+function renderGroupedRows(groups, shownCount, rowRenderer) {
+  let html = '';
+  let used = 0;
+  groups.forEach(g => {
+    if (used >= shownCount) return;
+    const remaining = shownCount - used;
+    const rowsToShow = g.rows.slice(0, remaining);
+    if (!rowsToShow.length) return;
+    html += meterGroupHeaderHTML(g.key, g.rows.length);
+    html += `<div class="meter-group-rows">${rowsToShow.map((r, i) => rowRenderer(r, i, rowsToShow.length)).join('')}</div>`;
+    used += rowsToShow.length;
+  });
+  const totalRows = groups.reduce((s, g) => s + g.rows.length, 0);
+  return { html, shownRows: used, totalRows };
 }
 
 function getGhazalNavLabel(col, item) {
@@ -511,11 +581,11 @@ function renderUniversalSearchResults(q) {
     return;
   }
 
-  uHost.innerHTML = rows.map((r, idx2) => {
+  const groups = buildMeterGroups(rows, r => mListOf(r.item)[0], r => r.item.id);
+  const { html, shownRows, totalRows } = renderGroupedRows(groups, ghazalShownCount, (r, i, arrLen) => {
     const { col, item } = r;
     const l1 = item.lines && item.lines[0];
     const disp1 = l1 ? ((typeof getLineDisplay === 'function') ? getLineDisplay(l1, cs) : (l1[cs] || l1.ur)) : '';
-    const mStr = mListOf(item).map(x => '#' + x).join('/') || '#?';
     const who = col === 'handbook' ? (item.poet || 'Handbook') : colNames[col];
     return `
       <div class="vrow" role="link" tabindex="0" onclick="navigate('/ghazals/${col}/${item.id}')">
@@ -526,15 +596,27 @@ function renderUniversalSearchResults(q) {
             <span class="search-result-col">${colNames[col]}</span>
             <span>·</span>
             <span>${escapeHtml(who)}</span>
-            <span>·</span>
-            <span class="mono">${mStr}</span>
           </div>
         </div>
         <div class="vact"><span class="chevron">›</span></div>
       </div>
-      ${idx2 < rows.length - 1 ? '<div class="vrule"></div>' : ''}
+      ${i < arrLen - 1 ? '<div class="vrule"></div>' : ''}
     `;
-  }).join('');
+  });
+  uHost.innerHTML = html;
+
+  const moreBtn = $('ghazalUniversalMore');
+  if (moreBtn) {
+    if (totalRows > shownRows) {
+      moreBtn.classList.remove('hidden');
+      moreBtn.style.display = 'inline-flex';
+      moreBtn.textContent = `Show 30 more (${totalRows - shownRows} remaining)`;
+      moreBtn.onclick = () => { ghazalShownCount += 30; renderUniversalSearchResults(q); };
+    } else {
+      moreBtn.classList.add('hidden');
+      moreBtn.style.display = 'none';
+    }
+  }
 }
 window.renderUniversalSearchResults = renderUniversalSearchResults;
 
@@ -556,10 +638,12 @@ function renderHandbookList() {
     return;
   }
 
-  container.innerHTML = filtered.map((ex, idx) => {
+  // Only 24 exercises total — small enough to group and show in full,
+  // no "load more" needed.
+  const groups = buildMeterGroups(filtered, ex => mListOf(ex)[0], ex => ex.id);
+  const { html } = renderGroupedRows(groups, filtered.length, (ex, idx, arrLen) => {
     const l1 = ex.lines && ex.lines[0];
     const disp1 = l1 ? ((typeof getLineDisplay === 'function') ? getLineDisplay(l1, cs) : (l1[cs] || l1.ur)) : '';
-    const mStr = mListOf(ex).map(x => '#' + x).join('/') || '#?';
 
     return `
       <div class="vrow" role="link" tabindex="0" onclick="navigate('/ghazals/handbook/${ex.id}')">
@@ -568,17 +652,16 @@ function renderHandbookList() {
           <div class="vline" ${langDir}>${disp1}</div>
           <div class="vmeta">
             <span>${escapeHtml(ex.poet)}</span>
-            <span>·</span>
-            <span class="mono">${mStr}</span>
           </div>
         </div>
         <div class="vact">
           <span class="chevron">›</span>
         </div>
       </div>
-      ${idx < filtered.length - 1 ? '<div class="vrule"></div>' : ''}
+      ${idx < arrLen - 1 ? '<div class="vrule"></div>' : ''}
     `;
-  }).join('');
+  });
+  container.innerHTML = html;
 }
 window.renderHandbookList = renderHandbookList;
 
@@ -593,8 +676,6 @@ function renderCorpusList(col) {
   const searchQ = $('ghazalSearchInput') ? $('ghazalSearchInput').value.toLowerCase().trim() : '';
 
   const filtered = getFilteredGhazals(col);
-  const shown = filtered.slice(0, ghazalShownCount);
-  const colName = (col === 'ghalib') ? 'Ghalib' : 'Mir';
 
   if (!filtered.length) {
     listEl.innerHTML = renderZeroResults(col, selFilter, searchQ);
@@ -602,32 +683,33 @@ function renderCorpusList(col) {
     return;
   }
 
-  listEl.innerHTML = shown.map((g, gi) => {
+  const groups = buildMeterGroups(filtered, g => mListOf(g)[0], g => g.id);
+  const { html, shownRows, totalRows } = renderGroupedRows(groups, ghazalShownCount, (g, gi, arrLen) => {
     const l1 = g.lines && g.lines[0];
     const disp1 = l1 ? ((typeof getLineDisplay === 'function') ? getLineDisplay(l1, cs) : (l1[cs] || l1.ur)) : '';
-    const mStr = mListOf(g).map(x => '#' + x).join('/') || '#?';
+    // Single-collection list: the group header already carries the meter,
+    // and the collection is obvious from the tab, so the row is just her
+    // number (bare, e.g. "12 ↗") — no "Ghalib"/"Mir" prefix (round 3).
     return `
       <div class="vrow" role="link" tabindex="0" onclick="navigate('/ghazals/${col}/${g.id}')">
-        <span class="vnum">${franLinkHTML(col, g) || escapeHtml(colName + ' ' + g.id)}</span>
+        <span class="vnum">${franLinkHTML(col, g, { bare: true }) || escapeHtml('#' + g.id)}</span>
         <div class="vtext">
           <div class="vline" ${langDir}>${disp1}</div>
-          <div class="vmeta">
-            <span>${escapeHtml(meterNameOf(g))}</span>
-          </div>
         </div>
         <div class="vact">
           <span class="chevron">›</span>
         </div>
       </div>
-      ${gi < shown.length - 1 ? '<div class="vrule"></div>' : ''}
+      ${gi < arrLen - 1 ? '<div class="vrule"></div>' : ''}
     `;
-  }).join('');
+  });
+  listEl.innerHTML = html;
 
   if (moreBtn) {
-    if (filtered.length > shown.length) {
+    if (totalRows > shownRows) {
       moreBtn.classList.remove('hidden');
       moreBtn.style.display = 'inline-flex';
-      moreBtn.textContent = `Show 30 more (${filtered.length - shown.length} remaining)`;
+      moreBtn.textContent = `Show 30 more (${totalRows - shownRows} remaining)`;
       moreBtn.onclick = () => {
         ghazalShownCount += 30;
         renderCorpusList(col);
@@ -651,6 +733,13 @@ function showMoreMirExt() {
   renderCorpusList('mir');
 }
 window.showMoreMirExt = showMoreMirExt;
+
+function showMoreUniversal() {
+  ghazalShownCount += 30;
+  const q = $('ghazalSearchInput') ? $('ghazalSearchInput').value.trim() : '';
+  renderUniversalSearchResults(q);
+}
+window.showMoreUniversal = showMoreUniversal;
 
 /* ================= IN-PLACE GHAZAL READER (§5.8) ================= */
 
@@ -722,7 +811,7 @@ function openGhazalReader(col, id) {
       <button class="btn ghost sm" id="btnToggleAllScans" onclick="toggleReaderAllScans()">${showAllScans ? 'Hide all scans' : 'Show all scans'}</button>
       <button class="btn link sm faint" onclick="editCurrentInScan('${col}', '${item.id}')">Edit in Scan ›</button>
     </div>
-    ${(typeof legendHTML === 'function') ? legendHTML('top') : ''}
+    ${(typeof legendHTML === 'function') ? legendHTML('legend-sticky') : ''}
   `;
 
   for (let c = 0; c < cCount; c++) {

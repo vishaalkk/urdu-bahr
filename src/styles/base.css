@@ -7,7 +7,11 @@
    ============================================================ */
 
 :root {
-  /* Light (default) — every text colour ≥ 7:1 (WCAG AAA) on --bg and --bg2 */
+  /* Colour-blind-safe (protan/deutan/tritan) is the default palette: long = blue,
+     short = orange, flexible = purple, plus shape cues on the underlines (below).
+     Same paper + ink as classic. Every text colour ≥ 7:1 (WCAG AAA) on --bg/--bg2;
+     marks ≥ 3:1. See docs/RESKIN_BRIEF.md Round 3. Old gold/teal/rose "Classic
+     colours" is now an opt-in under [data-theme="classic"]. */
   --bg: #FAF8F3;
   --bg2: #F6F2EA;
   --bg3: #EFE9DC;
@@ -16,17 +20,17 @@
   --dim: #3A342C;
   --faint: #4D473E;
   --ghost: #8F887B;          /* decorative only, never text */
-  --gold: #6B4500;           /* UI accent + long */
-  --teal: #00574B;           /* short */
-  --rose: #861A40;           /* flexible */
+  --gold: #0A4687;           /* UI accent + long (blue: 8.84:1 on --bg, 8.40:1 on --bg2) */
+  --teal: #7F2C00;           /* short (orange: 8.74:1 / 8.31:1) */
+  --rose: #6A2A78;           /* flexible (purple: 8.93:1 / 8.49:1) */
   /* weight MARKS (underlines, bars, swatches, ties) — graphics, need ≥ 3:1, so they can be brighter */
-  --mark-l: #A87410;
-  --mark-s: #178A78;
-  --mark-x: #C4476F;
+  --mark-l: #2F7BD6;         /* 4.02:1 / 3.82:1 */
+  --mark-s: #BD6000;         /* 4.09:1 / 3.89:1 */
+  --mark-x: #9B51C9;         /* 4.48:1 / 4.26:1 */
   --line: rgba(21,18,14,.12);
   --line2: rgba(21,18,14,.24);
-  --ok: #125424;
-  --no: #931D16;
+  --ok: #0A4687;
+  --no: #7F2C00;
   --onGold: #FFFFFF;
   --shadow: 0 1px 2px rgba(21,18,14,.06), 0 8px 24px rgba(21,18,14,.10);
 
@@ -88,23 +92,27 @@
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* Colour-blind friendly (protan/deutan/tritan): long = blue, short = orange,
-   flexible = purple, plus shape cues on the underlines. Same paper + ink; ≥ 7:1 text. */
-:root[data-theme="cvd"] {
-  --gold: #0A4687;           /* UI accent + long */
-  --teal: #7F2C00;           /* short */
-  --rose: #6A2A78;           /* flexible */
-  --mark-l: #2F7BD6;
-  --mark-s: #BD6000;
-  --mark-x: #9B51C9;
-  --ok: #0A4687;
-  --no: #7F2C00;
+/* Shape cues (not colour alone) for the weight marks — default, so the underlines
+   stay distinguishable even under full colour blindness or greyscale printing. */
+.chip.l { border-bottom-width: 4px; }
+.chip.s { border-bottom-style: dotted; border-bottom-width: 3px; }
+.chip.flex.l, .chip.flex.s { border-bottom-style: double; border-bottom-width: 5px; }
+.sw.c-s { border-bottom-style: dotted; border-bottom-width: 3px; }
+.sw.c-x { border-bottom-style: double; border-bottom-width: 5px; }
+
+/* Classic colours (opt-in): the original warm gold/teal/rose palette, no CVD
+   shape cues needed since sighted classic users distinguish by hue alone —
+   but the cues do no harm, so they stay on for consistency across themes. */
+:root[data-theme="classic"] {
+  --gold: #6B4500;           /* UI accent + long (7.99:1 / 7.59:1) */
+  --teal: #00574B;           /* short (8.03:1 / 7.63:1) */
+  --rose: #861A40;           /* flexible (8.85:1 / 8.41:1) */
+  --mark-l: #A87410;         /* 3.83:1 / 3.64:1 */
+  --mark-s: #178A78;         /* 4.00:1 / 3.80:1 */
+  --mark-x: #C4476F;         /* 4.42:1 / 4.20:1 */
+  --ok: #125424;
+  --no: #931D16;
 }
-:root[data-theme="cvd"] .chip.l { border-bottom-width: 4px; }
-:root[data-theme="cvd"] .chip.s { border-bottom-style: dotted; border-bottom-width: 3px; }
-:root[data-theme="cvd"] .chip.flex.l, :root[data-theme="cvd"] .chip.flex.s { border-bottom-style: double; border-bottom-width: 5px; }
-:root[data-theme="cvd"] .sw.c-s { border-bottom-style: dotted; border-bottom-width: 3px; }
-:root[data-theme="cvd"] .sw.c-x { border-bottom-style: double; border-bottom-width: 5px; }
 
 
 /* Base resets & typography */

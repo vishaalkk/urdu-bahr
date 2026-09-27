@@ -6,6 +6,10 @@ const store = {
 };
 
 /* ================= HASH ROUTER (§4) ================= */
+/* Frances W. Pritchett & K. A. K. Anjum, Urdu Meter: A Practical Handbook — on her site */
+const PRITCHETT_BOOK = 'https://franpritchett.com/00ghalib/meterbk/';
+const PRITCHETT_CH = { ch0: '00_intro', ch1: '01_genrules', ch2: '02_flexibility', ch3: '03_special', ch4: '04_irregular',
+  ch5: '05_feet', ch6: '06_meters', ch7: '07_scanning', ch8: '08_eyetoear' };
 let currentRoute = '';
 const subTabMemory = {
   weight: store.get('subTab:weight', 'learn'),
@@ -44,7 +48,6 @@ function go(id) {
     'studio': '/scan',
     'bahr': '/meter/learn',
     'dictionary': '/weight/lookup',
-    'handbook': '/handbook/ch0',
     'bibliography': '/about'
   };
   const target = map[id] || '/meter/learn';
@@ -77,11 +80,19 @@ function handleRoute(targetHash) {
   const { parts, params, raw } = parseHash(targetHash);
   let root = parts[0] || '';
 
+  // The Handbook reader was removed: old #/handbook/chN links go to that chapter on Pritchett's site.
+  if (root === 'handbook') {
+    const url = PRITCHETT_BOOK + (PRITCHETT_CH[parts[1]] || '00_index') + '.html';
+    if (typeof location !== 'undefined' && typeof location.replace === 'function') location.replace(url);
+    return;
+  }
+
   // Default route when hash is empty
   if (!root) {
-    // A bare URL always opens the start of the path — Weight › Learn. Shared links and
-    // bookmarks carry their own route, so they still open exactly where they point.
-    const last = '/weight/learn';
+    // A bare URL always opens Home — the landing page explaining what each tab is for.
+    // Shared links and bookmarks carry their own route, so they still open exactly
+    // where they point.
+    const last = '/home';
     if (typeof location !== 'undefined') {
       navigate(last, true);
       return;
@@ -94,17 +105,17 @@ function handleRoute(targetHash) {
 
   // Top-level sections mapping
   const sectionMap = {
+    'home': 'home-section',
     'weight': 'weight-section',
     'meter': 'meter-section',
     'scan': 'scan-section',
     'ghazals': 'ghazals-section',
-    'handbook': 'handbook-section',
     'about': 'about-section',
     'lab': 'tap-section'
   };
 
   // Hide all sections, show active
-  const activeSecId = sectionMap[root] || 'meter-section';
+  const activeSecId = sectionMap[root] || 'home-section';
   document.querySelectorAll('.tab-view, section').forEach(s => {
     s.classList.remove('on');
     s.style.display = 'none';
@@ -130,7 +141,10 @@ function handleRoute(targetHash) {
   }
 
   // Handle specific tabs
-  if (root === 'weight') {
+  if (root === 'home') {
+    if (typeof document !== 'undefined') document.title = 'Baḥr — learn Urdu meter';
+    if (typeof renderHome === 'function') renderHome();
+  } else if (root === 'weight') {
     let sub = parts[1] || subTabMemory.weight || 'learn';
     if (!['learn', 'drill', 'lookup'].includes(sub)) sub = 'learn';
     if (parts[1] !== sub) setHashQuiet('/weight/' + sub);
@@ -153,10 +167,6 @@ function handleRoute(targetHash) {
   } else if (root === 'ghazals') {
     if (typeof document !== 'undefined') document.title = 'Ghazals — Baḥr';
     handleGhazalsRoute(parts, params);
-  } else if (root === 'handbook') {
-    const ch = parts[1] || 'ch0';
-    if (typeof document !== 'undefined') document.title = 'Handbook — Baḥr';
-    handleHandbookRoute(ch, params);
   } else if (root === 'about') {
     if (typeof document !== 'undefined') document.title = 'About — Baḥr';
     if (typeof renderBibliography === 'function') renderBibliography();
@@ -406,6 +416,44 @@ function toggleAsciiScript(show) {
   const hdrBtn = $('btnScriptAsciiHeader');
   if (hdrBtn) hdrBtn.style.display = show ? 'inline-flex' : 'none';
 }
+
+/* ================= HOME (§Round3 "Home page") ================= */
+const HOME_EXAMPLE_UR = 'دلِ ناداں تجھے ہوا کیا ہے';
+function renderHome() {
+  const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
+  const isRtl = (cs === 'ur');
+
+  const legend = $('homeLegend');
+  if (legend && typeof legendHTML === 'function') legend.innerHTML = legendHTML();
+
+  const verseEl = $('homeExampleVerse');
+  if (verseEl) {
+    verseEl.className = 'home-example-verse ' + (isRtl ? 'urdu' : (cs === 'hi' ? 'deva' : 'mono'));
+    if (typeof verseEl.setAttribute === 'function') {
+      verseEl.setAttribute('lang', isRtl ? 'ur' : (cs === 'hi' ? 'hi' : 'ur-Latn'));
+      verseEl.setAttribute('dir', isRtl ? 'rtl' : 'ltr');
+    }
+    verseEl.innerHTML = (typeof getLineDisplay === 'function') ? getLineDisplay(HOME_EXAMPLE_UR, cs) : HOME_EXAMPLE_UR;
+  }
+
+  const scanHost = $('homeExampleScan');
+  if (scanHost && typeof renderLineScan === 'function') renderLineScan(HOME_EXAMPLE_UR, scanHost);
+}
+
+/* ▶ on the home page's sample couplet: same shared player as every other ▶ (G1) */
+function homePlayExample(btn) {
+  const host = $('homeExampleScan');
+  if (!host || typeof Scan === 'undefined' || typeof pbToggle !== 'function') return;
+  pbToggle('home:example', btn, () => {
+    const r = Scan.scanLine(HOME_EXAMPLE_UR);
+    const f = r.fits[0];
+    if (!f) return null;
+    const e = Scan.explain(r, f);
+    return [Object.assign({ e }, (typeof pbNodes === 'function') ? pbNodes(host) : {})];
+  });
+}
+window.renderHome = renderHome;
+window.homePlayExample = homePlayExample;
 
 if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
   window.addEventListener('hashchange', () => handleRoute());

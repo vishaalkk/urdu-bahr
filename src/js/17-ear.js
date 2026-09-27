@@ -41,14 +41,14 @@ function bestGhazalLinkForMeter(mId) {
   };
 }
 
-function renderEarFams() {
-  const host = $('earFams');
-  if (!host) return;
+/* Two groups: counting bahrs repeat one cell (f.cell is set); shape bahrs are a
+   fixed contour with no clean repeat (everything else). §Round3 "Meter › Learn". */
+const FAM_GROUPS = [
+  { key: 'counting', title: 'Counting bahrs', explainer: '<b class="t L">● Counting bahr</b> — one cell repeated; "3 or 4 feet" just means how many times, with the last often clipped. Count the pulses.', test: f => !!f.cell },
+  { key: 'shape', title: 'Shape bahrs', explainer: '<b class="t S">◆ Shape bahr</b> — one fixed contour, no clean repeat. Don\'t dissect it; hold it as a melody.', test: f => !f.cell }
+];
 
-  const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
-  const isRtl = (cs === 'ur');
-
-  host.innerHTML = FAMS.map(f => {
+function famRowHTML(f) {
     const isExpanded = (f.id === earCur);
     const mId = (f.meters && f.meters.length) ? f.meters[0] : (f.hindi ? 'H' : null);
     // same header as Meter › Look up: ▶ (pattern), famous couplet, pattern + feet, name
@@ -101,6 +101,22 @@ function renderEarFams() {
     }
 
     h += `</div>`;
+    return h;
+}
+
+function renderEarFams() {
+  const host = $('earFams');
+  if (!host) return;
+
+  const legendHost = $('meterLearnLegend');
+  if (legendHost && typeof legendHTML === 'function') legendHost.innerHTML = legendHTML('legend-sticky');
+
+  host.innerHTML = FAM_GROUPS.map(grp => {
+    const fams = FAMS.filter(grp.test);
+    if (!fams.length) return '';
+    let h = `<h2 class="section-title fam-group-title">${grp.title}</h2>`;
+    h += `<p class="small dim fam-group-explainer">${grp.explainer}</p>`;
+    h += fams.map(famRowHTML).join('');
     return h;
   }).join('');
 }

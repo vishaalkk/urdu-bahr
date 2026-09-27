@@ -14,6 +14,7 @@ function setScriptMode(mode) {
   });
 
   if(typeof renderEarFams === 'function') renderEarFams();
+  if(typeof renderHome === 'function' && typeof location !== 'undefined' && /^#\/home/.test(location.hash || '')) renderHome();
   if(typeof renderEar === 'function') renderEar();
   if(typeof renderWeak === 'function') renderWeak();
   if(typeof renderHandbook === 'function') renderHandbook();

@@ -1,1 +1,79 @@
-/* Home page (route #/home) */
+/* ===================== HOME (§Round3) =====================
+   "Quiet Manuscript": whitespace + hairlines, no cards/panels. Uses the
+   shared tokens and .page-title/.section-title/.eyebrow from pages.css. */
+
+#home-section .lede {
+  font-family: var(--serif);
+  font-size: var(--fs-lg);
+  max-width: var(--prose-max);
+  margin-top: var(--sp-3);
+}
+
+.home-tabs {
+  margin: var(--sp-7) 0;
+}
+
+.home-row {
+  display: block;
+  padding: var(--sp-4) 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: inherit;
+}
+.home-row:first-child { border-top: 1px solid var(--line); }
+
+.home-row-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-3);
+}
+
+.home-row-name {
+  font-family: var(--serif);
+  font-size: var(--fs-xl);
+  color: var(--ink);
+}
+
+.home-row-arrow {
+  font-family: var(--sans);
+  color: var(--faint);
+}
+
+.home-row:hover .home-row-name,
+.home-row:hover .home-row-arrow {
+  color: var(--gold);
+}
+
+.home-row-desc {
+  margin: var(--sp-1) 0 0;
+}
+
+.home-example {
+  margin-top: var(--sp-4);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--line);
+}
+
+.home-example-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.home-example-verse {
+  font-size: var(--fs-xl);
+  flex: 1;
+}
+.home-example-verse.urdu { font-family: var(--urdu); }
+.home-example-verse.deva { font-family: var(--deva); }
+.home-example-verse.mono { font-family: var(--mono); }
+
+.home-cta {
+  margin: var(--sp-7) 0 var(--sp-6);
+}
+
+.home-credit {
+  border-top: 1px solid var(--line);
+  padding-top: var(--sp-3);
+}
