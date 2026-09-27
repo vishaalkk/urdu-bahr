@@ -1674,6 +1674,34 @@ main, .wrap { max-width: 760px; }
     </div>
   </div>
 
+
+  <!-- Subtab 2: Drill — shared engine, see src/js/22-drill.js mountDrill('weight') -->
+  <div id="weightPanelDrill" class="subpanel"></div>
+
+
+  <!-- Subtab 3: Look up (Word Bank) -->
+  <div id="weightPanelLookup" class="subpanel">
+    <div class="card lookup-head-card">
+      <h2 class="section-title lookup-title">Word bank</h2>
+      <div class="dim small lookup-desc">Over 380 verified irregular words, alternative scansions, and spelling variants from Frances Pritchett's handbook.</div>
+      <div class="row lookup-search-row">
+        <input type="text" id="dictSearchInput" class="dict-search-input" placeholder="Search word, Roman transliteration, or meaning..." oninput="onDictSearch()">
+      </div>
+      <div class="row lookup-tag-row">
+        <button class="tagbtn on" id="dictTagAll" onclick="filterDictTag('all')">All</button>
+        <button class="tagbtn" id="dictTagFlex" onclick="filterDictTag('flex')">Flexible (x)</button>
+        <button class="tagbtn" id="dictTagPersian" onclick="filterDictTag('persian')">Persian</button>
+        <button class="tagbtn" id="dictTagIndic" onclick="filterDictTag('indic')">Indic</button>
+      </div>
+    </div>
+    <div id="dictList" class="dict-list"></div>
+    <div class="go-deeper card small">
+      <span class="go-deeper-tag mono tiny">Go deeper</span>
+      <p class="go-deeper-links"><a href="#/handbook/ch4">Handbook ch. 4 — Irregular Words &amp; Special Vocabulary ›</a></p>
+    </div>
+  </div>
+</section>
+
 <!-- ===================== METER TAB ===================== -->
 <section id="meter-section" class="tab-view">
   <div class="meter-head page-head">
@@ -1702,6 +1730,28 @@ main, .wrap { max-width: 760px; }
       <strong>Go deeper:</strong> <a href="#/handbook/ch5">Handbook ch. 5 — Metrical Feet ›</a> · <a href="#/handbook/ch6">Handbook ch. 6 — Meters & Bahrs ›</a> · <a href="#/handbook/ch8">Handbook ch. 8 — From Eye to Ear ›</a>
     </div>
   </div>
+
+
+  <!-- Subtab 2: Drill — shared engine, see src/js/22-drill.js mountDrill('meter') -->
+  <div id="meterPanelDrill" class="subpanel"></div>
+
+
+  <!-- Subtab 3: Look up -->
+  <div id="meterPanelLookup" class="subpanel">
+    <div class="card lookup-head-card">
+      <h2 class="section-title lookup-title">All 37 classical meters</h2>
+      <p class="small dim lookup-desc">Filter through classical meters, rubāʿī forms, and Hindi meters.</p>
+      <div class="lookup-chips-row">
+        <button class="tagbtn on" id="filterMeterAll" onclick="filterMeterLookup('all')">All 37</button>
+        <button class="tagbtn" id="filterMeterRubai" onclick="filterMeterLookup('rubai')">Rubāʿī</button>
+        <button class="tagbtn" id="filterMeterHindi" onclick="filterMeterLookup('hindi')">Hindi</button>
+      </div>
+    </div>
+    <div id="allMetersList">
+      <div id="allMeters"></div>
+    </div>
+  </div>
+</section>
 
 <!-- ===================== SCAN TAB ===================== -->
 <section id="scan-section" class="tab-view">

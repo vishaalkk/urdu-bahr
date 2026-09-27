@@ -268,6 +268,12 @@ def get_bp(key):
     # Strip trailing newline from body part for clean joining
     return body_parts.get(key, '').rstrip('\n')
 
+def get_group(key):
+    # A page plus its sub-tab partials (e.g. weight + weight-drill + weight-lookup),
+    # in manifest order. Every manifest body file must end up in the page.
+    keys = [k for k in body_parts if k == key or k.startswith(key + '-')]
+    return '\n\n'.join(get_bp(k) for k in keys)
+
 # Build JS content with substitutions
 def build_js_chunk(files):
     parts = []
@@ -334,9 +340,9 @@ full_html = f"""<!DOCTYPE html>
 
 <div class="wrap">
 
-{get_bp('weight')}
+{get_group('weight')}
 
-{get_bp('meter')}
+{get_group('meter')}
 
 {get_bp('scan')}
 
@@ -366,6 +372,16 @@ full_html = f"""<!DOCTYPE html>
 </html>
 """
 
+
+# ─── 7b. Structural checks: every body partial used, sections balanced ──────
+_used = {'header','nav','settings','scan','ghazals','handbook','about','tap','footer'}
+_unused = [k for k in body_parts if k not in _used and not any(k == g or k.startswith(g + '-') for g in ('weight','meter'))]
+if _unused:
+    raise SystemExit(f"build_app: manifest body partials not placed in the page: {_unused}")
+_body = full_html[full_html.index('<body>'):full_html.index('<script>')]
+_open, _close = _body.count('<section'), _body.count('</section>')
+if _open != _close:
+    raise SystemExit(f"build_app: unbalanced <section> tags in body ({_open} open, {_close} close)")
 
 # ─── 8. Write output files ────────────────────────────────────────────────────
 with open('index.html', 'w', encoding='utf-8') as f:
