@@ -1,0 +1,101 @@
+[
+ {
+  "id": "up-1",
+  "poet": "Iqbal",
+  "meters": [26],
+  "lines": [
+   {"ascii": "mi;taa de apnii hastii ko agar kuchh martabah chaahe", "ur": "مٹا دے اپنی ہستی کو اگر کچھ مرتبہ چاہے", "hi": "मिटा दे अपनी हस्ती को अगर कुछ मरतबा चाहे", "ro": "miṭā de apnī hastī ko agar kuchh martabah chāhe"},
+   {"ascii": "kih daanaa Khaak me;N mil kar gul-e-gulzaar hotaa hai", "ur": "کہ دانا کھاک میں مل کر گلِ گلزار ہوتا ہے", "hi": "कि दाना खाक में मिल कर गुल-ए-गुलज़ार होता है", "ro": "kih dānā khāk meñ mil kar gul-e-gulzār hotā hai"}
+  ]
+ },
+ {
+  "id": "up-2",
+  "poet": "Jigar Moradabadi",
+  "meters": [7],
+  "lines": [
+   {"ascii": "kyaa husn ne samjhaa hai kyaa ishq ne jaanaa hai", "ur": "کیا ہسن نے سمجھا ہے کیا اشق نے جانا ہے", "hi": "क्या हुस्न ने समझा है क्या इश्क़ ने जाना है", "ro": "kyā husn ne samjhā hai kyā ishq ne jānā hai"},
+   {"ascii": "ham Khaak-nashiino;N kii thokar me;N zamaanaa hai", "ur": "ہم کھاک نشینوں کی تھوکر میں زمانا ہے", "hi": "हम खाक-नशीनों की थोकर में ज़माना है", "ro": "ham khāk-nashīnoñ kī thokar meñ zamānā hai"}
+  ]
+ },
+ {
+  "id": "up-4",
+  "poet": "Firaq Gorakhpuri",
+  "meters": [27],
+  "lines": [
+   {"ascii": "sitaaro;N se ulajhtaa jaa rahaa huu;N", "ur": "ستاروں سے الجھتا جا رہا ہوں", "hi": "सितारों से उलझता जा रहा हूँ", "ro": "sitāroñ se ulajhtā jā rahā hūñ"},
+   {"ascii": "shab-e-furqat bahut ghabraa rahaa huu;N", "ur": "شبِ فرقت بہت گھبرا رہا ہوں", "hi": "शब-ए-फ़ुरक़त बहुत घबरा रहा हूँ", "ro": "shab-e-furqat bahut ghabrā rahā hūñ"}
+  ]
+ },
+ {
+  "id": "up-5",
+  "poet": "Hasrat Mohani",
+  "meters": [10],
+  "lines": [
+   {"ascii": "sab Gala:t kahte hai;N lu:tf-e-yaar ko wajh-e-sukuu;N", "ur": "سب گلط کہتے ہیں لطفِ یار کو وجھِ سکوں", "hi": "सब गलत कहते हैं लुतफ़-ए-यार को झ-ए-सुकूँ", "ro": "sab galat̤ kahte haiñ lut̤f-e-yār ko wajh-e-sukūñ"},
+   {"ascii": "dard-e-dil us ne tau 'Hasrat' aur duunaa kar diyaa", "ur": "دردِ دل اس نے تو ہسرت اور دونا کر دیا", "hi": "दर्द-ए-दिल उस ने तौ हसरत और दूना कर दिया", "ro": "dard-e-dil us ne tau 'hasrat' aur dūnā kar diyā"}
+  ]
+ },
+ {
+  "id": "up-6",
+  "poet": "Meer Taqi Meer",
+  "meters": [11],
+  "lines": [
+   {"ascii": "ibtidaa-e-ishq hai rotaa hai kyaa", "ur": "ابتدائے اشق ہے روتا ہے کیا", "hi": "इबतिदा-ए-इश्क़ है रोता है क्या", "ro": "ibtidā-e-ishq hai rotā hai kyā"},
+   {"ascii": "aage aage dekhiye hotaa hai kyaa", "ur": "آگے آگے دیکھیے ہوتا ہے کیا", "hi": "आगे आगे देखिये होता है क्या", "ro": "āge āge dekhiye hotā hai kyā"}
+  ]
+ },
+ {
+  "id": "up-7",
+  "poet": "Bekhud Dehlvi",
+  "meters": [28],
+  "lines": [
+   {"ascii": "nah dekhaa thaa jo bazm-e-dushman me;N dekhaa", "ur": "نہ دیکھا تھا جو بزمِ دشمن میں دیکھا", "hi": "न देखा था जो बज़्म-ए-दुशमन में देखा", "ro": "nah dekhā thā jo bazm-e-dushman meñ dekhā"},
+   {"ascii": "mu;habbat tamaashe dikhaatii hai kyaa kyaa", "ur": "محبّت تماشے دکھاتی ہے کیا کیا", "hi": "मुहब्बत तमाशे दिखाती है क्या क्या", "ro": "muḥabbat tamāshe dikhātī hai kyā kyā"}
+  ]
+ },
+ {
+  "id": "up-8",
+  "poet": "Daag Dehlvi",
+  "meters": [30],
+  "lines": [
+   {"ascii": "sitam hii karnaa jafaa hii karnaa nigaah-e-ulfat kabhii nah karnaa", "ur": "ستم ہی کرنا جفا ہی کرنا نگاہِ الفت کبھی نہ کرنا", "hi": "सितम ही करना जफ़ा ही करना निगाह-ए-उलफ़त कभी न करना", "ro": "sitam hī karnā jafā hī karnā nigāh-e-ulfat kabhī nah karnā"},
+   {"ascii": "tumhe;N qasam hai hamaare sar kii hamaare ;haq me;N kamii nah karnaa", "ur": "تمہیں قسم ہے ہمارے سر کی ہمارے حق میں کمی نہ کرنا", "hi": "तुम्हें क़सम है हमारे सर की हमारे हक़ में कमी न करना", "ro": "tumheñ qasam hai hamāre sar kī hamāre ḥaq meñ kamī nah karnā"}
+  ]
+ },
+ {
+  "id": "up-9",
+  "poet": "Hakeem Momin (Momin Khan Momin)",
+  "meters": [37],
+  "lines": [
+   {"ascii": "wuh jo ham me;N tum me;N qaraar thaa tumhe;N yaad ho kih nah yaad ho", "ur": "وہ جو ہم میں تم میں قرار تھا تمہیں یاد ہو کہ نہ یاد ہو", "hi": "वह जो हम में तुम में क़रार था तुम्हें याद हो कि न याद हो", "ro": "wuh jo ham meñ tum meñ qarār thā tumheñ yād ho kih nah yād ho"},
+   {"ascii": "wahii yaanii waadaa nibaah kaa tumhe;N yaad ho kih nah yaad ho", "ur": "وہی یانی وادا نباہ کا تمہیں یاد ہو کہ نہ یاد ہو", "hi": "वही यानी वादा निबाह का तुम्हें याद हो कि न याद हो", "ro": "wahī yānī wādā nibāh kā tumheñ yād ho kih nah yād ho"}
+  ]
+ },
+ {
+  "id": "up-11",
+  "poet": "Iqbal",
+  "meters": [4],
+  "lines": [
+   {"ascii": "saare jahaa;N se achchhaa Hindostaa;N hamaaraa", "ur": "سارے جہاں سے اچّھا ہندوستاں ہمارا", "hi": "सारे जहाँ से अचछा हिंदोस्ताँ हमारा", "ro": "sāre jahāñ se achchhā hindostāñ hamārā"},
+   {"ascii": "ham bulbule;N hai;N iskii yih gulsitaa;N hamaaraa", "ur": "ہم بلبلیں ہیں اسکی یہ گلستاں ہمارا", "hi": "हम बुलबुलें हैं इसकी ये गुलसिताँ हमारा", "ro": "ham bulbuleñ haiñ iskī yih gulsitāñ hamārā"}
+  ]
+ },
+ {
+  "id": "up-12",
+  "poet": "Daag Dehlvi",
+  "meters": [5],
+  "lines": [
+   {"ascii": "Khaatir se yaa lihaaz se mai;N maan tau gayaa", "ur": "کھاتر سے یا لہاز سے میں مان تو گیا", "hi": "खातिर से या लिहाज़ से मैं मान तौ गया", "ro": "khātir se yā lihāz se maiñ mān tau gayā"},
+   {"ascii": "jhuu;Thii qasam se aap kaa iimaan tau gayaa", "ur": "جھوٹھی قسم سے آپ کا ایمان تو گیا", "hi": "झूठी क़सम से आप का ईमान तौ गया", "ro": "jhūṭhī qasam se āp kā īmān tau gayā"}
+  ]
+ },
+ {
+  "id": "up-13",
+  "poet": "Faiz Ahmed Faiz",
+  "meters": [34],
+  "lines": [
+   {"ascii": "gulo;N me;N rang bhare baad-e-nau-bahaar chale", "ur": "گلوں میں رنگ بھرے بادِ نو بہار چلے", "hi": "गुलों में रंग भरे बाद-ए-नौ-बहार चले", "ro": "guloñ meñ rang bhare bād-e-nau-bahār chale"},
+   {"ascii": "chale bhii aao ki gulshan kaa kaar-o-baar chale", "ur": "چلے بھی آو کی گلشن کا کار و بار چلے", "hi": "चले भी आओ कि गुलशन का कार-ओ-बार चले", "ro": "chale bhī āo ki gulshan kā kār-o-bār chale"}
+  ]
+ }
+]

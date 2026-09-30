@@ -1,0 +1,2233 @@
+{
+ "_about": "Rule corpus for the Prosody Engine Lab. Source: F. W. Pritchett & K. A. Khaliq, Urdu Meter: A Practical Handbook (sections cited per rule). kind: strict = never violated; flexible = allowed variation with a likelihood; transcription = Urdu-script under-specification (a hypothesis about what the text means, not a prosodic licence). likelihood.prior values come from the handbook's own wording via the scale in _likelihood_scale; the `evidence` block on each rule is written by learn.js from the Ghalib+Mir corpora and is never edited by hand.",
+ "_likelihood_scale": {
+  "never": 0,
+  "no longer taken": 0.005,
+  "virtually always long / almost never": 0.01,
+  "very rare": 0.02,
+  "rare / rarely / quite rare": 0.05,
+  "once in a while / not so often / occasionally": 0.15,
+  "sometimes": 0.25,
+  "less than half the time": 0.3,
+  "often": 0.5,
+  "usually / normally / most often": 0.8,
+  "almost always / nearly always / very often": 0.95,
+  "always": 1
+ },
+ "rules": [
+  {
+   "id": "L1.2-letters",
+   "section": "1.2",
+   "title": "What counts as a letter",
+   "scope": "letter",
+   "kind": "strict",
+   "condition": {
+    "letters": "alif..ye, tashdiid duplicate, madd over alif, medial hamzah"
+   },
+   "effect": "only these are counted when dividing into syllables",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "ascii,urdu",
+   "learner": "Only letters count: every letter of the alphabet, the doubled letter of a tashdīd, alif madd, and a hamza inside a word."
+  },
+  {
+   "id": "L1.2-short-vowels",
+   "section": "1.2",
+   "title": "zer, zabar, pesh are not letters",
+   "scope": "letter",
+   "kind": "strict",
+   "condition": {
+    "marks": [
+     "zer",
+     "zabar",
+     "pesh"
+    ]
+   },
+   "effect": "ignored when counting letters",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "ascii,urdu",
+   "learner": "Short-vowel marks are not letters, so they never make a syllable longer."
+  },
+  {
+   "id": "L1.2-aspiration",
+   "section": "1.2",
+   "title": "do-chashmī he of aspiration is not a letter",
+   "scope": "letter",
+   "kind": "strict",
+   "condition": {
+    "letter": "ھ",
+    "after": [
+     "b",
+     "p",
+     "t",
+     ";T",
+     "j",
+     "ch",
+     "d",
+     ";D",
+     ";R",
+     "k",
+     "g"
+    ],
+    "ascii": "h directly after one of these consonants"
+   },
+   "effect": "metrically invisible",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "ascii,urdu",
+   "learner": "The ھ of bh, ph, th, kh… is part of the consonant, not a letter: bhii is one two-letter syllable."
+  },
+  {
+   "id": "L1.2-nasal",
+   "section": "1.2",
+   "title": "nūn-e ghunnah is not a letter",
+   "scope": "letter",
+   "kind": "strict",
+   "condition": {
+    "letter": "ں / ;N"
+   },
+   "effect": "metrically invisible",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "ascii,urdu",
+   "learner": "The nasal ں (;N) colours the vowel but is not a letter: me;N is two letters, one syllable."
+  },
+  {
+   "id": "L1.2-tashdid",
+   "section": "1.2",
+   "title": "tashdīd writes a second letter",
+   "scope": "letter",
+   "kind": "strict",
+   "condition": {
+    "mark": "shadda",
+    "ascii": "doubled consonant"
+   },
+   "effect": "the letter counts twice",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "ascii,urdu",
+   "learner": "A tashdīd doubles its letter: mu;habbat is mu-;hab-bat (- = =)."
+  },
+  {
+   "id": "L1.2-hamza-chair",
+   "section": "1.2",
+   "title": "the dotless ye under hamza is not a letter",
+   "scope": "letter",
+   "kind": "strict",
+   "condition": {
+    "letter": "ئ as a chair"
+   },
+   "effect": "only the hamza counts",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "urdu",
+   "learner": "In ئ only the hamza counts; the little ye it sits on is just a seat."
+  },
+  {
+   "id": "L1.3-ain-hamza-consonants",
+   "section": "1.3",
+   "title": "((ain and medial hamza behave as consonants",
+   "scope": "letter",
+   "kind": "strict",
+   "condition": {
+    "letters": [
+     "((",
+     "))"
+    ]
+   },
+   "effect": "treated as consonants even when not pronounced",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "ascii,urdu",
+   "learner": "ع and a medial ء are consonants for scansion, even where you barely hear them."
+  },
+  {
+   "id": "R1.2-h-apostrophe-h",
+   "section": "1.2 (glossary: kah'h (=), naalah'haa)",
+   "title": "h'h counts as one h",
+   "scope": "letter",
+   "kind": "strict",
+   "condition": {
+    "ascii": "h ' h"
+   },
+   "effect": "only one h is scanned: kah'h (=), naalah'haa = naa-la-haa (= - =)",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "ascii",
+   "learner": "In Pritchett's romanisation an apostrophe between two h's (kah'h, naalah'haa) means they are scanned as one."
+  },
+  {
+   "id": "S1.2-syllable-size",
+   "section": "1.2",
+   "title": "A syllable has one or two letters",
+   "scope": "syllable",
+   "kind": "strict",
+   "condition": {},
+   "effect": "every syllable is 1 or 2 letters (4.2 and 4.3 conjuncts are the named exceptions)",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "engine",
+   "learner": "Every syllable is one letter or two, never more."
+  },
+  {
+   "id": "S1.3-onset",
+   "section": "1.3",
+   "title": "Start with a consonant wherever possible",
+   "scope": "syllable",
+   "kind": "strict",
+   "condition": {
+    "vowel_initial_syllable": "only word-initially, or alif madd"
+   },
+   "effect": "syllables are C+C, C+V or C alone; a, aa, a+V, a+C only at the start of a word",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "engine",
+   "learner": "Syllables begin with a consonant; only the first syllable of a word may begin with a vowel."
+  },
+  {
+   "id": "S1.3-hamza-onset",
+   "section": "1.3",
+   "title": "Hamza is never the second letter of a syllable",
+   "scope": "syllable",
+   "kind": "strict",
+   "condition": {
+    "letter": "))",
+    "position": "second"
+   },
+   "effect": "forbidden",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "engine",
+   "learner": "A hamza always starts a syllable; it can never close one."
+  },
+  {
+   "id": "S1.3-madd-alone",
+   "section": "1.3",
+   "title": "Alif madd is a syllable by itself",
+   "scope": "syllable",
+   "kind": "strict",
+   "condition": {
+    "letter": "آ"
+   },
+   "effect": "always one long syllable, and signals a new syllable",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "engine",
+   "learner": "آ is always its own long syllable: aadmii is aa-d-mii (= - =)."
+  },
+  {
+   "id": "F1.3-amphibious-ii",
+   "section": "1.3, 7",
+   "title": "Final ii after ((ain / hamza as consonant y",
+   "scope": "syllable",
+   "kind": "flexible",
+   "condition": {
+    "word_final": "ii",
+    "after": "(( or )) closing a short syllable (sa((ii)"
+   },
+   "effect": "the ii may be the consonant y: sa((ii = sa((-y (= -)",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "vowel": {
+      "prior": 0.8,
+      "handbook": ""
+     },
+     "consonant": {
+      "prior": 0.2,
+      "handbook": "the amphibious role of o ii e as vowels or consonants (7)"
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "The ی of سعی can be a consonant: sa((-y, not sa-((ii."
+  },
+  {
+   "id": "S1.4-pronunciation",
+   "section": "1.4",
+   "title": "Divide by normal prose pronunciation",
+   "scope": "word",
+   "kind": "strict",
+   "condition": {
+    "ascii": "short vowels written in the transcription fix the breaks"
+   },
+   "effect": "a consonant followed by a vowel starts a syllable; a vowelless consonant closes the syllable before it",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "engine",
+   "learner": "Break the word where you hear the breaks: ka-bhii, mul-k, qis-m."
+  },
+  {
+   "id": "S1.4-three-consonant",
+   "section": "1.4",
+   "title": "Three-letter three-consonant words",
+   "scope": "word",
+   "kind": "transcription",
+   "condition": {
+    "letters": 3,
+    "all_consonants": true
+   },
+   "effect": "most split CC-C (qis-m, mul-k); a minority C-CC (va-raq, ;Ga-zal)",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "CC-C": {
+      "prior": 0.8,
+      "handbook": "the great majority"
+     },
+     "C-CC": {
+      "prior": 0.2,
+      "handbook": "a minority"
+     }
+    }
+   },
+   "implemented": "urdu",
+   "learner": "Three consonants and no written vowel: usually two-then-one (qis-m), sometimes one-then-two (;Ga-zal)."
+  },
+  {
+   "id": "S1.5-weight",
+   "section": "1.5",
+   "title": "Two letters long, one letter short",
+   "scope": "syllable",
+   "kind": "strict",
+   "condition": {},
+   "effect": "2-letter syllable = long (=), 1-letter = short (-); a flexible (x) syllable is a 2-letter one that may be used short",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "engine",
+   "learner": "Two letters make a long syllable, one letter a short one. A one-letter syllable can never be made long."
+  },
+  {
+   "id": "F2.1-listed-monosyllable",
+   "section": "2.1",
+   "title": "The common flexible monosyllables",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "word_in": "lexicon.monosyllables[rule=F2.1-listed-monosyllable]",
+    "form": "C+V or C+h"
+   },
+   "effect": "x: long or short as the meter needs",
+   "likelihood": {
+    "type": "weight",
+    "prior_short": 0.5,
+    "handbook": "flexible (particles, pronouns, postpositions: almost always)"
+   },
+   "implemented": "engine",
+   "learner": "kaa, ke, kii, se, ne, hai, to, jo… are flexible: they can take a long or a short beat."
+  },
+  {
+   "id": "F2.1-other-monosyllable",
+   "section": "2.1",
+   "title": "Other C+V / C+h monosyllables",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "syllables": 1,
+    "form": "C+V or C+h",
+    "not_listed": true
+   },
+   "effect": "normally long; treat as potentially flexible when finding the meter",
+   "likelihood": {
+    "type": "weight",
+    "prior_short": 0.15,
+    "handbook": "not on the list: not flexible, but can be taken as long; ii/e/h more likely flexible than o, than aa"
+   },
+   "implemented": "engine",
+   "learner": "A one-syllable word not on the flexible list is normally long."
+  },
+  {
+   "id": "F2.1-always-long",
+   "section": "2.1",
+   "title": "taa, go, yaa are virtually always long",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "word_in": [
+     "taa",
+     "go",
+     "yaa"
+    ]
+   },
+   "effect": "long",
+   "likelihood": {
+    "type": "weight",
+    "prior_short": 0.01,
+    "handbook": "virtually ALWAYS LONG"
+   },
+   "implemented": "engine",
+   "learner": "taa, go and yaa are always long."
+  },
+  {
+   "id": "F2.1-persian-noun",
+   "section": "2.1",
+   "title": "Arabic and Persian noun monosyllables are long",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "word_in": [
+     "nai",
+     "mai",
+     ":tai",
+     "jaa",
+     "juu",
+     "ruu",
+     "suu"
+    ]
+   },
+   "effect": "long",
+   "likelihood": {
+    "type": "weight",
+    "prior_short": 0.01,
+    "handbook": "almost always long, with no flexibility possible"
+   },
+   "implemented": "engine",
+   "learner": "Persian and Arabic nouns such as mai, jaa, ruu are always long."
+  },
+  {
+   "id": "F2.1-vocative-ai",
+   "section": "2.1",
+   "title": "Vocative ai",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "word_in": [
+     "ai"
+    ]
+   },
+   "effect": "long (archaic: sometimes short)",
+   "likelihood": {
+    "type": "weight",
+    "prior_short": 0.05,
+    "handbook": "nowadays always long; in archaic usage sometimes short"
+   },
+   "implemented": "engine",
+   "learner": "The vocative ai ('O…') is long."
+  },
+  {
+   "id": "F2.1-contraction",
+   "section": "2.1",
+   "title": "vaa;N and yaa;N",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "word_in": [
+     "vaa;N",
+     "yaa;N"
+    ]
+   },
+   "effect": "long; in older poetry once in a while short",
+   "likelihood": {
+    "type": "weight",
+    "prior_short": 0.05,
+    "handbook": "always long nowadays, but once in a while may, in older poetry, occur as short"
+   },
+   "implemented": "engine",
+   "learner": "vaa;N and yaa;N are long (older poets occasionally shorten them)."
+  },
+  {
+   "id": "F4.3-kyaa",
+   "section": "2.1, 4.3",
+   "title": "kyaa, kyuu;N, jyuu;N: one long syllable",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "word_in": [
+     "kyaa",
+     "kyuu;N",
+     "jyuu;N"
+    ]
+   },
+   "effect": "one long syllable despite the cluster; almost never flexible",
+   "likelihood": {
+    "type": "weight",
+    "prior_short": 0.01,
+    "handbook": "always scanned long; almost never used as flexible"
+   },
+   "implemented": "engine",
+   "learner": "kyaa, kyuu;N and jyuu;N are single long syllables."
+  },
+  {
+   "id": "F2.1-always-short",
+   "section": "2.1",
+   "title": "bah, kih, nah are short",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "word_in": [
+     "bah",
+     "kih",
+     "nah"
+    ]
+   },
+   "effect": "short (Mir: sometimes long)",
+   "likelihood": {
+    "type": "weight",
+    "prior_short": 0.95,
+    "handbook": "ALWAYS SHORT in modern usage; Mir treats kih and nah as long from time to time"
+   },
+   "implemented": "engine",
+   "learner": "bah, kih and nah are short. (Mir sometimes lengthens kih and nah.)"
+  },
+  {
+   "id": "F2.1-aur",
+   "section": "2.1, 7",
+   "title": "aur: (= -) or (=)",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "word": "aur"
+   },
+   "effect": "au-r (= -) or one long (=)",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "regular": {
+      "prior": 0.5,
+      "handbook": "either"
+     },
+     "alt": {
+      "prior": 0.5,
+      "handbook": "either"
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "aur can be two syllables (au-r, = -) or one long (=). It is the commonest source of scanning mistakes."
+  },
+  {
+   "id": "F2.1-aur-weight",
+   "section": "2.1 (checked against the corpus)",
+   "title": "aur as one syllable: its weight",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "word": "aur",
+    "reading": "single syllable"
+   },
+   "effect": "the handbook gives (=); Ghalib also uses it short (tuu aur aaraa))ish-e, meter #14)",
+   "likelihood": {
+    "type": "weight",
+    "prior_short": 0.05,
+    "handbook": "or simply as one long syllable (=)"
+   },
+   "implemented": "engine",
+   "learner": "Read as one syllable, aur is normally long; a few lines of Ghalib need it short."
+  },
+  {
+   "id": "F2.1-repeat",
+   "section": "2.1",
+   "title": "Repeated monosyllable",
+   "scope": "word-pair",
+   "kind": "flexible",
+   "condition": {
+    "same_word_repeated": true
+   },
+   "effect": "first long, second may be flexible (Mir's kyaa kyaa (= -))",
+   "likelihood": {
+    "type": "weight",
+    "prior_short": 0.05,
+    "handbook": "this is rare"
+   },
+   "implemented": "not-implemented",
+   "learner": "In a repeated word like kyaa kyaa, the second may be shortened; this is rare."
+  },
+  {
+   "id": "F2.2-final-ii-e-h",
+   "section": "2.2",
+   "title": "Word-final ii / e / h syllables are flexible",
+   "scope": "syllable",
+   "kind": "flexible",
+   "condition": {
+    "word_syllables": ">1",
+    "position": "word-final",
+    "form": "C+V or C+h",
+    "second_letter": [
+     "ii",
+     "e",
+     "h"
+    ]
+   },
+   "effect": "x",
+   "likelihood": {
+    "type": "weight",
+    "prior_short": 0.5,
+    "handbook": "almost always flexible"
+   },
+   "implemented": "engine",
+   "learner": "A word-final -ii, -e or -ah (dil kii, siinah) can be long or short."
+  },
+  {
+   "id": "F2.2-final-o-aa",
+   "section": "2.2",
+   "title": "Word-final o / aa syllables are often flexible",
+   "scope": "syllable",
+   "kind": "flexible",
+   "condition": {
+    "word_syllables": ">1",
+    "position": "word-final",
+    "form": "C+V",
+    "second_letter": [
+     "o",
+     "uu",
+     "au",
+     "aa"
+    ],
+    "key": "vowel:origin (1.4 letters)"
+   },
+   "effect": "x; Indic (esp. verbs) more than Persian/Arabic; o more than aa",
+   "likelihood": {
+    "type": "weight",
+    "prior_short": 0.3,
+    "handbook": "often treated as flexible; in some words always long"
+   },
+   "implemented": "engine",
+   "learner": "A word-final -aa or -o is often flexible in Indic words (rahaa, - x) but stays long in many Persian/Arabic ones (rihaa, - =)."
+  },
+  {
+   "id": "F2.2-medial-lexical",
+   "section": "2.2",
+   "title": "Medial flexibility: ko))ii, aa))iinah",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "word_in": "lexicon.medial_flexible"
+   },
+   "effect": "ko))ii (x x), aa))iinah (= x x)",
+   "likelihood": {
+    "type": "weight",
+    "prior_short": 0.5,
+    "handbook": "only a VERY few exceptions"
+   },
+   "implemented": "engine",
+   "learner": "Flexible syllables are almost always word-final; ko))ii and aa))iinah are the famous exceptions."
+  },
+  {
+   "id": "F2.2-future",
+   "section": "2.2",
+   "title": "Future verb forms",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "pattern": "hamza+vowel syllable followed by -gaa/-ge/-gii"
+   },
+   "effect": "jaa))egaa (= x x)",
+   "likelihood": {
+    "type": "weight",
+    "prior_short": 0.5,
+    "handbook": "equally flexible"
+   },
+   "implemented": "engine",
+   "learner": "In jaa))egaa the middle syllable is flexible too (= x x)."
+  },
+  {
+   "id": "F2.2-before-hamza",
+   "section": "2.2",
+   "title": "-uu / -o before a final hamza ending",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "pattern": "C+uu or C+o immediately before a final hamza+vowel syllable (plural -))o;N/-))e;N, -))ii, -))e)"
+   },
+   "effect": "aa;Nsuu))o;N (= x x), juu))e;N (x x); glossary duu))ii (x x), muu))e (- x)",
+   "likelihood": {
+    "type": "weight",
+    "prior_short": 0.5,
+    "handbook": "flexibility sometimes remains ... chiefly with words ending in uu"
+   },
+   "implemented": "engine",
+   "learner": "Before a plural ending, a -uu can stay flexible: aa;Nsuu))o;N (= x x)."
+  },
+  {
+   "id": "F2.3-alternate-split",
+   "section": "2.3",
+   "title": "Alternate syllable divisions",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "word_in": "lexicon.alternate_splits[rule=F2.3-alternate-split]"
+   },
+   "effect": "barhaman (= - =) or (- = =); :tar;h (= -) or (- =); Arabic CCC-initial barkat (= =) or (- - =)",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "regular": {
+      "prior": 0.8,
+      "handbook": "modern pronunciation"
+     },
+     "alt": {
+      "prior": 0.2,
+      "handbook": "at the poet's pleasure / original Arabic"
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "A few consonant-heavy words may be divided two ways: :tar-;h or :ta-ra;h."
+  },
+  {
+   "id": "T2.4-flexible-spelling",
+   "section": "2.4",
+   "title": "Flexible spellings are scanned as written",
+   "scope": "word",
+   "kind": "strict",
+   "condition": {
+    "pairs": [
+     "meraa/miraa",
+     "vahaa;N/vaa;N",
+     "ek/ik/yak",
+     "afsaanah/fasaanah",
+     ";xaamoshii/;xaamushii/;xamoshii"
+    ]
+   },
+   "effect": "the spelling tells you the scansion",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "ascii,validator",
+   "learner": "meraa (= x) and miraa (- x) are both correct; the spelling shows which the poet wants."
+  },
+  {
+   "id": "T2.4-n-nasal",
+   "section": "2.4, 7",
+   "title": "Final n and ;N interchange",
+   "scope": "word",
+   "kind": "transcription",
+   "condition": {
+    "word_final": "n after a/o/ii/e, or ;N"
+   },
+   "effect": "bayaan (- = -) vs bayaa;N (- =); gulistaa;N vs gulistaan",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "as-written": {
+      "prior": 0.95,
+      "handbook": "scanned exactly as written"
+     },
+     "swapped": {
+      "prior": 0.05,
+      "handbook": "7: n / ;N confusion is a possible copying error"
+     }
+    }
+   },
+   "implemented": "urdu,validator",
+   "learner": "Changing a final n to ;N removes a short syllable (bayaan → bayaa;N)."
+  },
+  {
+   "id": "F2.4-optional-tashdid",
+   "section": "2.4",
+   "title": "Optional tashdīd in perfect forms",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "word_in": "lexicon.optional_tashdid",
+    "key": "very-often (rakh-, chakh-) | sometimes (pak-, u;Th-) | rarely (likh-) | noun (dukaan, shakar)"
+   },
+   "effect": "rakhaa (- x) or rakkhaa (= x)",
+   "likelihood": {
+    "type": "choice",
+    "keyed": {
+     "very-often": {
+      "present": 0.95,
+      "absent": 0.05
+     },
+     "sometimes": {
+      "present": 0.25,
+      "absent": 0.75
+     },
+     "rarely": {
+      "present": 0.05,
+      "absent": 0.95
+     },
+     "noun": {
+      "present": 0.25,
+      "absent": 0.75
+     }
+    },
+    "handbook": "very often / sometimes / rarely; nouns: more often absent"
+   },
+   "implemented": "engine",
+   "learner": "rakhaa is often read rak-khaa with an unwritten tashdīd; likhaa rarely is."
+  },
+  {
+   "id": "F3.1-graft",
+   "section": "3.1",
+   "title": "Word-grafting",
+   "scope": "word-pair",
+   "kind": "flexible",
+   "condition": {
+    "first_ends": "consonant",
+    "second_begins": [
+     "a (alif)",
+     "aa (alif madd)"
+    ]
+   },
+   "effect": "read the pair as one word, dropping the alif (aa;xir is → aa;xiris, = - =)",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "graft": {
+      "prior": 0.3,
+      "handbook": "certainly occurs less than half the time"
+     },
+     "no": {
+      "prior": 0.7,
+      "handbook": ""
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "When a word ends in a consonant and the next starts with a / aa, you may run them together: aap agar → aa-pa-gar."
+  },
+  {
+   "id": "F3.1-graft-h",
+   "section": "3.1 (with 1.3)",
+   "title": "Grafting after a final gol he",
+   "scope": "word-pair",
+   "kind": "flexible",
+   "condition": {
+    "first_ends": "h after a short vowel (kih, siinah)",
+    "second_begins": [
+     "a",
+     "aa"
+    ]
+   },
+   "effect": "as 3.1; the handbook does not single this case out, so it is measured separately",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "graft": {
+      "prior": 0.3,
+      "handbook": "(not discussed)"
+     },
+     "no": {
+      "prior": 0.7,
+      "handbook": ""
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "A word ending in a written h (kih, siinah) can graft like any consonant-final word, but it is uncommon."
+  },
+  {
+   "id": "F3.1-graft-vowel",
+   "section": "3.1",
+   "title": "Grafting through a final ii / e / o",
+   "scope": "word-pair",
+   "kind": "flexible",
+   "condition": {
+    "first_ends": [
+     "ii",
+     "e",
+     "o",
+     "uu"
+    ],
+    "second_begins": [
+     "a",
+     "aa"
+    ]
+   },
+   "effect": "the vowel is read as a consonant (y / v) to allow grafting",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "graft": {
+      "prior": 0.02,
+      "handbook": "very rare"
+     },
+     "no": {
+      "prior": 0.98,
+      "handbook": ""
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "Very rarely a final ii / e / o turns into y / v so the next word can graft onto it."
+  },
+  {
+   "id": "F3.1-graft-ain",
+   "section": "3.1",
+   "title": "Grafting onto ((ain",
+   "scope": "word-pair",
+   "kind": "flexible",
+   "condition": {
+    "first_ends": "consonant",
+    "second_begins": "(("
+   },
+   "effect": "(( treated as alif (Mir: ;xaak ((anbar → ;xaa-k((an-bar)",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "graft": {
+      "prior": 0.005,
+      "handbook": "such liberties are no longer taken"
+     },
+     "no": {
+      "prior": 0.995,
+      "handbook": ""
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "Mir once grafted onto a word starting with ع; later poets never do."
+  },
+  {
+   "id": "F3.2-consonant",
+   "section": "3.2",
+   "title": "iẓāfat on a consonant",
+   "scope": "word",
+   "kind": "strict",
+   "condition": {
+    "izafat": true,
+    "last_letter": "consonant (incl. gol he after a short vowel)"
+   },
+   "effect": "the iẓāfat joins the last letter as one flexible syllable: lab-e = la-be (- x), mulk-e = mul-ke (= x)",
+   "likelihood": {
+    "type": "strict",
+    "handbook": "apart from two-consonant Arabic words, never broken"
+   },
+   "implemented": "engine",
+   "learner": "An iẓāfat after a consonant borrows that consonant: dil-e = di-le. The rest of the word does not change."
+  },
+  {
+   "id": "F3.2-cc-tashdid",
+   "section": "3.2",
+   "title": "Arabic C+C monosyllable + iẓāfat: optional tashdīd",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "izafat": true,
+    "word": "two consonant letters with a short vowel between (fan, ;xa:t)",
+    "key": "origin"
+   },
+   "effect": "fa-ne (- x) or fan-ne (= x)",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "none": {
+      "prior": 0.75,
+      "handbook": "either"
+     },
+     "tashdid": {
+      "prior": 0.25,
+      "handbook": "optional, or with some words compulsory"
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "Short Arabic words like fan or ;xa:t may double their last letter before an iẓāfat: fan-ne."
+  },
+  {
+   "id": "F3.2-alif",
+   "section": "3.2",
+   "title": "iẓāfat on alif",
+   "scope": "word",
+   "kind": "strict",
+   "condition": {
+    "izafat": true,
+    "last_letter": "aa"
+   },
+   "effect": "final aa is always long; the iẓāfat (written e / ئے / hamza / zer) is its own flexible syllable: vafaa-e (- = x)",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "engine",
+   "learner": "After -aa, the iẓāfat is its own syllable and the -aa can no longer be shortened."
+  },
+  {
+   "id": "F3.2-iz-vao",
+   "section": "3.2",
+   "title": "iẓāfat on vowel o / uu / au",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "izafat": true,
+    "last_letter": [
+     "o",
+     "uu",
+     "au"
+    ],
+    "key": "au vs o/uu"
+   },
+   "effect": "usually like alif (kuu-e, = x); with au usually the vao becomes a consonant (jau-e = ja-ve, - x)",
+   "likelihood": {
+    "type": "choice",
+    "keyed": {
+     "o": {
+      "separate": 0.8,
+      "consonant": 0.2
+     },
+     "au": {
+      "separate": 0.2,
+      "consonant": 0.8
+     }
+    },
+    "handbook": "usually treated like alif; in some cases (usually au) the o becomes a consonant"
+   },
+   "implemented": "engine",
+   "learner": "After -uu the iẓāfat stands alone (kuu-e); after -au the vao turns into v (ja-ve)."
+  },
+  {
+   "id": "F3.2-iz-ii",
+   "section": "3.2",
+   "title": "iẓāfat on ii",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "izafat": true,
+    "last_letter": "ii"
+   },
+   "effect": "as a rule ii becomes consonant y: sho;xii-e = sho-;xi-ye (= - x); rarely a separate (short) iẓāfat after a long ii",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "consonant": {
+      "prior": 0.95,
+      "handbook": "as a rule"
+     },
+     "separate": {
+      "prior": 0.05,
+      "handbook": "these rather rare cases"
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "-ii + iẓāfat normally becomes -i-ye: sho;xii-e = sho-;xi-ye."
+  },
+  {
+   "id": "F3.2-iz-e",
+   "section": "3.2",
+   "title": "iẓāfat on e / ai",
+   "scope": "word",
+   "kind": "strict",
+   "condition": {
+    "izafat": true,
+    "last_letter": [
+     "e",
+     "ai"
+    ]
+   },
+   "effect": "e becomes consonant y: mai-e = ma-ye (- x)",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "engine",
+   "learner": "-e / -ai + iẓāfat becomes -a-ye: mai-e = ma-ye."
+  },
+  {
+   "id": "F3.2-weight",
+   "section": "3.2",
+   "title": "Weight of the iẓāfat syllable",
+   "scope": "syllable",
+   "kind": "flexible",
+   "condition": {
+    "syllable": "contains the iẓāfat",
+    "key": "joined (on a consonant) | after-aa | after-o | after-ii (separate)"
+   },
+   "effect": "x; the separate iẓāfat after a long vowel is most often short",
+   "likelihood": {
+    "type": "weight",
+    "prior_short": 0.5,
+    "handbook": "one flexible syllable; after o most often short; after a long ii almost always short"
+   },
+   "implemented": "engine",
+   "learner": "The iẓāfat syllable itself is flexible: long or short as the meter needs."
+  },
+  {
+   "id": "F3.2-after-short-vowel",
+   "section": "3.2 (ASCII convention)",
+   "title": "iẓāfat after a written short vowel (dar-pa-e)",
+   "scope": "word",
+   "kind": "strict",
+   "condition": {
+    "ascii": "a one-consonant word written with its short vowel (pa), then -e / -o-"
+   },
+   "effect": "the consonant keeps its short vowel; the iẓāfat is a separate flexible syllable: pa-e (- x)",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "engine",
+   "learner": "In dar-pa-e the pa is already a syllable; the iẓāfat stands alone."
+  },
+  {
+   "id": "F3.3-consonant",
+   "section": "3.3",
+   "title": "o after a consonant",
+   "scope": "word-pair",
+   "kind": "strict",
+   "condition": {
+    "conjunction_o": true,
+    "last_letter": "consonant"
+   },
+   "effect": "o joins the consonant as one flexible syllable: diin o dil = dii-no dil (= x =)",
+   "likelihood": {
+    "type": "strict",
+    "handbook": "the normal pattern"
+   },
+   "implemented": "engine",
+   "learner": "'o' (and) after a consonant borrows it: diin-o-dil = dii-no-dil."
+  },
+  {
+   "id": "F3.3-cc-tashdid",
+   "section": "3.2, 3.3",
+   "title": "Arabic C+C monosyllable + o: optional tashdīd",
+   "scope": "word-pair",
+   "kind": "flexible",
+   "condition": {
+    "conjunction_o": true,
+    "word": "two consonant letters with a short vowel between"
+   },
+   "effect": ";xa-:to (- x) or ;xa:t-:to (= x)",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "none": {
+      "prior": 0.85,
+      "handbook": ""
+     },
+     "tashdid": {
+      "prior": 0.15,
+      "handbook": "sometimes, though not so often"
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "Before 'o', a short Arabic word may double its last letter, less often than before an iẓāfat."
+  },
+  {
+   "id": "F3.3-alif",
+   "section": "3.3",
+   "title": "o after alif",
+   "scope": "word-pair",
+   "kind": "strict",
+   "condition": {
+    "conjunction_o": true,
+    "last_letter": "aa"
+   },
+   "effect": "o is always an independent syllable (usually short); the aa before it is always long",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "engine",
+   "learner": "After -aa, 'o' stands alone (usually short) and the -aa stays long: vafaa o (- = -)."
+  },
+  {
+   "id": "F3.3-o-ii",
+   "section": "3.3",
+   "title": "o after ii",
+   "scope": "word-pair",
+   "kind": "flexible",
+   "condition": {
+    "conjunction_o": true,
+    "last_letter": "ii"
+   },
+   "effect": "usually an independent (short) o after a long ii; occasionally (Mir) ii becomes y: shaa-di-yo (= - x)",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "separate": {
+      "prior": 0.85,
+      "handbook": "usually"
+     },
+     "consonant": {
+      "prior": 0.15,
+      "handbook": "Mir occasionally"
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "After -ii, 'o' usually stands alone: saa-da-gii o."
+  },
+  {
+   "id": "F3.3-o-vowel",
+   "section": "3.3",
+   "title": "o after e / o / uu / au / ai",
+   "scope": "word-pair",
+   "kind": "flexible",
+   "condition": {
+    "conjunction_o": true,
+    "last_letter": [
+     "e",
+     "ai",
+     "o",
+     "uu",
+     "au"
+    ]
+   },
+   "effect": "usually the vowel becomes a consonant and joins o: mai o = ma-yo (- x), ;xusrau o = ;xus-ra-vo",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "consonant": {
+      "prior": 0.8,
+      "handbook": "usually"
+     },
+     "separate": {
+      "prior": 0.2,
+      "handbook": ""
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "After -e or -o, 'o' turns the vowel into y / v: mai o = ma-yo."
+  },
+  {
+   "id": "F3.3-o-h",
+   "section": "3.3",
+   "title": "o after h",
+   "scope": "word-pair",
+   "kind": "flexible",
+   "condition": {
+    "conjunction_o": true,
+    "last_letter": "h (gol he after a short vowel)"
+   },
+   "effect": "usually h + o one flexible syllable; sometimes h read as a vowel and o independent",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "consonant-h": {
+      "prior": 0.8,
+      "handbook": "usually"
+     },
+     "vowel-h": {
+      "prior": 0.2,
+      "handbook": "sometimes"
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "After a final h, 'o' usually joins it (-ho); sometimes it stands alone."
+  },
+  {
+   "id": "F3.3-weight",
+   "section": "3.3",
+   "title": "Weight of the o syllable",
+   "scope": "syllable",
+   "kind": "flexible",
+   "condition": {
+    "syllable": "contains the conjunction o",
+    "key": "joined | after-aa | after-ii | after-o | after-h"
+   },
+   "effect": "x; the independent o is usually short",
+   "likelihood": {
+    "type": "weight",
+    "prior_short": 0.5,
+    "handbook": "flexible; independent o usually short, at times long"
+   },
+   "implemented": "engine",
+   "learner": "The 'o' syllable is flexible; standing alone it is usually short."
+  },
+  {
+   "id": "F3.3-after-short-vowel",
+   "section": "3.3 (ASCII convention)",
+   "title": "o after a written short vowel",
+   "scope": "word-pair",
+   "kind": "strict",
+   "condition": {
+    "ascii": "a one-consonant word written with its short vowel (pa), then -e / -o-"
+   },
+   "effect": "o is a separate flexible syllable",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "engine",
+   "learner": "After a written short vowel, 'o' stands alone."
+  },
+  {
+   "id": "F3.4-al-consonant",
+   "section": "3.4",
+   "title": "al after a consonant",
+   "scope": "word-pair",
+   "kind": "strict",
+   "condition": {
+    "article": "ul-/al-",
+    "first_ends": "consonant"
+   },
+   "effect": "pretend the first word ends in an extra l: ((aalam ul-;Gaib = ((aa-la-mul ;Gai-b; after al scansion starts afresh",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "engine",
+   "learner": "ul- sticks to the word before it as an extra -ul; the next word starts fresh."
+  },
+  {
+   "id": "F3.4-al-vowel",
+   "section": "3.4",
+   "title": "al after a vowel",
+   "scope": "word-pair",
+   "kind": "flexible",
+   "condition": {
+    "article": "ul-/al-",
+    "first_ends": "vowel"
+   },
+   "effect": "the vowel shortens: bi al-kul = bil-kul, fii al-;haal = fil-;haal, ;zuu al-fiqaar = ;zul-fi-qaar",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "shorten": {
+      "prior": 1,
+      "handbook": "reality is invariably shorter than the appearance"
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "Before al, a final vowel is swallowed: fii al-;haal is fil-;haal."
+  },
+  {
+   "id": "R4.1-final-ain",
+   "section": "4.1",
+   "title": "Word-final ((ain after a long vowel",
+   "scope": "syllable",
+   "kind": "strict",
+   "condition": {
+    "word_final": "((",
+    "after": "long vowel"
+   },
+   "effect": "an extra short syllable, from orthography, though rarely heard: shuruu(( = shu-ruu-(( (- = -)",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "engine",
+   "learner": "A final ع after a long vowel is a short syllable even if you don't hear it: shu-ruu-((."
+  },
+  {
+   "id": "F4.2-final-cluster",
+   "section": "4.2",
+   "title": "Long vowel + two consonants at word end",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "word_final": "long vowel + C + C (dost, raast, gosht, koft, kaard)",
+    "suffix": "none"
+   },
+   "effect": "the two consonants act as one letter: dost = do-st (= -); VERY rarely (= - -) or (=); NEVER (= =)",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "one-short": {
+      "prior": 0.96,
+      "handbook": "nearly always"
+     },
+     "two-shorts": {
+      "prior": 0.02,
+      "handbook": "VERY rarely"
+     },
+     "silent": {
+      "prior": 0.02,
+      "handbook": "VERY rarely, even a single (=)"
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "dost, gosht, raast end in (= -): the last two consonants count as one short. Before an iẓāfat they split normally: do-s-te."
+  },
+  {
+   "id": "F4.2-suppressed-o",
+   "section": "4.2",
+   "title": "Suppressed vao after ;x",
+   "scope": "letter",
+   "kind": "strict",
+   "condition": {
+    "ascii": ";xv + vowel",
+    "urdu": "خو + ا / consonant"
+   },
+   "effect": "the vao is not scanned: ;xvud = ;xud (=), ;xvaab = ;xaab (= -)",
+   "likelihood": {
+    "type": "strict",
+    "handbook": "MOST (;x+o+C), wherever (;x+o+a)"
+   },
+   "implemented": "ascii,urdu",
+   "learner": "In ;xvaab and ;xvud the و is silent: ;xaab, ;xud."
+  },
+  {
+   "id": "F4.2-piyaalah",
+   "section": "4.2",
+   "title": "piyaalah as pyaalah",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "word_in": [
+     "piyaalah",
+     "piyaale"
+    ]
+   },
+   "effect": "normally pi-yaa-lah (- = x); rarely pyaa-lah (= x)",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "regular": {
+      "prior": 0.9,
+      "handbook": "more often"
+     },
+     "alt": {
+      "prior": 0.1,
+      "handbook": "this is rare"
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "piyaalah is normally pi-yaa-lah; rarely pyaa-lah."
+  },
+  {
+   "id": "F4.3-initial-conjunct",
+   "section": "4.3",
+   "title": "Indic initial conjuncts (pyaar, byaah, dhyaan)",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "word_initial": "consonant with no vowel + consonant (mostly y) + vowel",
+    "key": "y | other"
+   },
+   "effect": "the two consonants act as one: pyaar = pyaa-r (= -)",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "conjunct": {
+      "prior": 0.95,
+      "handbook": "regardless of their initial conjunct"
+     },
+     "separate": {
+      "prior": 0.05,
+      "handbook": "once in a while... quite rare"
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "In pyaar, byaah, kyaa the first two consonants blend into one: pyaa-r (= -)."
+  },
+  {
+   "id": "F4.3-mh-pronoun",
+   "section": "4.3, 1.2",
+   "title": "tumhaaraa, tumhe;N, unho;N: h as aspirator",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "word_in": "lexicon.mh_pronouns"
+   },
+   "effect": "scanned as if the gol he were do-chashmii: tumhaaraa (- = x), tumhe;N (- x)",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "aspirate": {
+      "prior": 0.95,
+      "handbook": "all scanned (- = x)"
+     },
+     "written": {
+      "prior": 0.05,
+      "handbook": "quite rare"
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "tumhaaraa is tu-mhaa-raa (- = x): the h behaves like the ھ of bh, not a letter."
+  },
+  {
+   "id": "F4.3-huaa",
+   "section": "4.3",
+   "title": "Perfect forms of honaa",
+   "scope": "word",
+   "kind": "strict",
+   "condition": {
+    "ascii": "huu))aa / huu))e / huu))ii / huu))ii;N",
+    "urdu": [
+     "ہوا",
+     "ہوئے",
+     "ہوئی",
+     "ہوئیں"
+    ]
+   },
+   "effect": "scanned as pronounced hu))aa (- x), not as spelled",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "engine (ASCII spelling huu))- is normalised; Urdu via the corpus lexicon)",
+   "learner": "ہوا is hu-))aa (- x), whatever the spelling suggests."
+  },
+  {
+   "id": "F4.4-tanvin",
+   "section": "4.4",
+   "title": "tanvīn",
+   "scope": "word",
+   "kind": "strict",
+   "condition": {
+    "mark": "ً",
+    "ascii": ":n"
+   },
+   "effect": "read as -an: faura:n = fau-ran (= =)",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "ascii",
+   "learner": "فوراً ends in -an: fau-ran."
+  },
+  {
+   "id": "F4.4-dagger-alif",
+   "section": "4.4",
+   "title": "Dagger alif",
+   "scope": "letter",
+   "kind": "strict",
+   "condition": {
+    "mark": "ٰ",
+    "ascii": ";aa"
+   },
+   "effect": "scanned as a normal alif (lail;aa = lai-laa)",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "ascii",
+   "learner": "The small standing alif counts as a full alif: lail;aa = lai-laa."
+  },
+  {
+   "id": "F4.4-dagger-izafat",
+   "section": "4.4",
+   "title": "Dagger alif + iẓāfat read as ii",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "izafat": true,
+    "last_letter": "dagger alif (;aa)"
+   },
+   "effect": "usually as alif (lail;aa-e = lai-laa-e); sometimes as ii, which then becomes y: da((v;aa-e = da((-va-ye",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "as-alif": {
+      "prior": 0.75,
+      "handbook": "usually"
+     },
+     "as-ii": {
+      "prior": 0.25,
+      "handbook": "sometimes"
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "دعویٰ with an iẓāfat can scan da((-va-ye, as if it ended in ii."
+  },
+  {
+   "id": "F4.4-final-hamza",
+   "section": "4.4",
+   "title": "Word-final hamza after alif",
+   "scope": "syllable",
+   "kind": "flexible",
+   "condition": {
+    "word_final": "aa + ))"
+   },
+   "effect": "usually not scanned; if scanned, an extra short",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "silent": {
+      "prior": 0.98,
+      "handbook": "VERY rarely pronounced or scanned"
+     },
+     "short": {
+      "prior": 0.02,
+      "handbook": ""
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "umaraa)) — the final hamza is almost never counted."
+  },
+  {
+   "id": "F4.4-allah",
+   "section": "4.4",
+   "title": "all;aah",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "word": "all;aah"
+   },
+   "effect": "(= = -) or, less commonly, (= =)",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "regular": {
+      "prior": 0.75,
+      "handbook": "normally"
+     },
+     "alt": {
+      "prior": 0.25,
+      "handbook": "less commonly"
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "all;aah is al-l;aa-h (= = -), or less often (= =)."
+  },
+  {
+   "id": "F4.4-khari-zer",
+   "section": "4.4",
+   "title": "khaṛī zer / do zer",
+   "scope": "word",
+   "kind": "strict",
+   "condition": {
+    "mark": "ٖ / ٍ under a final letter"
+   },
+   "effect": "read as -hii / -in",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "not-implemented (very rare; no case in the corpora)",
+   "learner": "A standing zer under a final h reads -hii."
+  },
+  {
+   "id": "G-glossary",
+   "section": "Glossary",
+   "title": "Glossary scansions the general rules do not produce",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "word_in": "glossary_lexicon.json"
+   },
+   "effect": "offer the glossary's scansion as an alternative reading (pahu;Nchaa = p'hu;N-chaa (= x), tevrii = tev-rii (= x), dobaarah (x = x) ...)",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "regular": {
+      "prior": 0.3,
+      "handbook": ""
+     },
+     "alt": {
+      "prior": 0.7,
+      "handbook": "the glossary lists the special scansion"
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "Some words have special scansions listed in the handbook's glossary; the engine offers them."
+  },
+  {
+   "id": "G-pahunch",
+   "section": "Glossary (p'hu;N-chaa (= x)), 4.1",
+   "title": "pahu;Nch- scanned without its u",
+   "scope": "word",
+   "kind": "flexible",
+   "condition": {
+    "ascii": "pahu;Nch-"
+   },
+   "effect": "the transcription's u is not in the Urdu spelling (پہنچ); pahu;Nchaa = p'hu;N-chaa (= x)",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "regular": {
+      "prior": 0.3,
+      "handbook": "pa-hu;Nch-naa (- = x) for the infinitive"
+     },
+     "contracted": {
+      "prior": 0.7,
+      "handbook": "p'hu;N-chaa (= x)"
+     }
+    }
+   },
+   "implemented": "engine",
+   "learner": "pahu;Nchaa scans p'hu;N-chaa (= x): Urdu spells it پہنچا, with no vowel after the h."
+  },
+  {
+   "id": "M6.0-final-long",
+   "section": "6 (intro), 7",
+   "title": "Every meter ends in a long syllable",
+   "scope": "line",
+   "kind": "strict",
+   "condition": {},
+   "effect": "the last scanned syllable is long (a cheat syllable may follow)",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "meter",
+   "learner": "Every line ends on a long beat."
+  },
+  {
+   "id": "M6.0-no-three-shorts",
+   "section": "6 (intro), 3.2, 7",
+   "title": "Never three shorts in a row",
+   "scope": "line",
+   "kind": "strict",
+   "condition": {},
+   "effect": "a flexible syllable between two shorts must be long; three definite shorts are impossible",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "engine,meter",
+   "learner": "Three short syllables never come in a row. If they seem to, one of them must be long."
+  },
+  {
+   "id": "M6.1-cheat-final",
+   "section": "6.1",
+   "title": "Cheat syllable at line end",
+   "scope": "line",
+   "kind": "flexible",
+   "condition": {
+    "meters": "all except #26",
+    "syllable": "word-final, one-letter short, or hamza + vowel"
+   },
+   "effect": "an extra unscanned short after the final long",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "used": {
+      "prior": 0.3,
+      "handbook": "at the poet's pleasure"
+     },
+     "not": {
+      "prior": 0.7,
+      "handbook": ""
+     }
+    }
+   },
+   "implemented": "meter",
+   "learner": "A line may end with one extra short (a one-letter syllable like the -t of dost); it is not counted. Meter #26 does not allow it."
+  },
+  {
+   "id": "M6.1-cheat-caesura",
+   "section": "6.1",
+   "title": "Cheat syllable before the caesura",
+   "scope": "line",
+   "kind": "flexible",
+   "condition": {
+    "meters": [
+     2,
+     4,
+     7,
+     20,
+     21,
+     22,
+     25,
+     36
+    ],
+    "position": "end of the first half-line",
+    "syllable": "word-final one-letter short"
+   },
+   "effect": "an extra unscanned short before the break",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "used": {
+      "prior": 0.15,
+      "handbook": "may be present"
+     },
+     "not": {
+      "prior": 0.85,
+      "handbook": ""
+     }
+    }
+   },
+   "implemented": "meter",
+   "learner": "Meters with a mid-line break (#2, 4, 7, 20, 21, 22, 25, 36) also allow an extra short just before the break."
+  },
+  {
+   "id": "M6.1-pairs",
+   "section": "6.1, 7",
+   "title": "Freely combinable meter pairs",
+   "scope": "line",
+   "kind": "strict",
+   "condition": {
+    "pairs": [
+     [
+      1,
+      9
+     ],
+     [
+      14,
+      15
+     ],
+     [
+      16,
+      17
+     ],
+     [
+      18,
+      19
+     ],
+     [
+      33,
+      34
+     ]
+    ]
+   },
+   "effect": "two shorts may replace the next-to-last long (third syllable for #1/#9); lines of a pair mix freely",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "meter,eval",
+   "learner": "Some meters come in pairs that differ only by (- -) for (=) near the end; poets mix them freely."
+  },
+  {
+   "id": "M6.1-anceps",
+   "section": "6.1, 7",
+   "title": "First syllable of #14–#19",
+   "scope": "line",
+   "kind": "strict",
+   "condition": {
+    "meters": [
+     14,
+     15,
+     16,
+     17,
+     18,
+     19
+    ]
+   },
+   "effect": "the first syllable (normally long) may be short at will",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "meter",
+   "learner": "In meters #14–#19 the first syllable can be long or short."
+  },
+  {
+   "id": "M6.1-meter6-flex",
+   "section": "6.1",
+   "title": "Flexible form of #6",
+   "scope": "line",
+   "kind": "flexible",
+   "condition": {
+    "meter": 6
+   },
+   "effect": "any odd-numbered long may be replaced by two shorts",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "used": {
+      "prior": 0.02,
+      "handbook": "very rare"
+     }
+    }
+   },
+   "implemented": "not-implemented",
+   "learner": "Meter #6 has a rare flexible form where longs split into two shorts."
+  },
+  {
+   "id": "M6.1-taskin",
+   "section": "6.1 (#8 note)",
+   "title": "taskīn-e ausaṭ: two shorts replaced by a long",
+   "scope": "line",
+   "kind": "flexible",
+   "condition": {
+    "meter": 8
+   },
+   "effect": "middle (- -) as (=)",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "used": {
+      "prior": 0.005,
+      "handbook": "the only such example I have ever seen"
+     }
+    }
+   },
+   "implemented": "not-implemented",
+   "learner": "Very rarely (one line of Mir in #8) two middle shorts are replaced by one long."
+  },
+  {
+   "id": "M6.2-hindi-length",
+   "section": "6.2",
+   "title": "Hindi meter: line length",
+   "scope": "line",
+   "kind": "flexible",
+   "condition": {
+    "meter": "H"
+   },
+   "effect": "15 long-equivalents usual; 14 and 16 also used (two shorts = one long)",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "15": {
+      "prior": 0.7,
+      "handbook": "usually"
+     },
+     "14": {
+      "prior": 0.15,
+      "handbook": "other variations"
+     },
+     "16": {
+      "prior": 0.15,
+      "handbook": "other variations"
+     }
+    }
+   },
+   "implemented": "meter",
+   "learner": "Mir's Hindi meter counts beats: usually 15 longs' worth, where two shorts make one long."
+  },
+  {
+   "id": "M6.2-hindi-pairs",
+   "section": "6.2",
+   "title": "Hindi meter: shorts in pairs",
+   "scope": "line",
+   "kind": "strict",
+   "condition": {
+    "meter": "H"
+   },
+   "effect": "short syllables occur in pairs; a pair may be separated by at most one long (syncopation - = -); the last syllable is long; cheat allowed at the end but never at the break",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "meter",
+   "learner": "In the Hindi meter shorts come in pairs (occasionally split by one long)."
+  },
+  {
+   "id": "M6.2-hindi-russell",
+   "section": "6.2",
+   "title": "Hindi meter: Russell's model",
+   "scope": "line",
+   "kind": "flexible",
+   "condition": {
+    "meter": "H"
+   },
+   "effect": "pairs normally replace even-numbered longs except the 8th; elsewhere is off-model",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "on-model": {
+      "prior": 0.9,
+      "handbook": "the best general analytical notion"
+     },
+     "off-model": {
+      "prior": 0.1,
+      "handbook": "Mir uses it in more complex ways"
+     }
+    }
+   },
+   "implemented": "meter",
+   "learner": "A pair of shorts usually stands where an even-numbered long would be."
+  },
+  {
+   "id": "M6.2-hindi-syncopation",
+   "section": "6.2",
+   "title": "Hindi meter: syncopated (- = -)",
+   "scope": "line",
+   "kind": "flexible",
+   "condition": {
+    "meter": "H"
+   },
+   "effect": "a pair of shorts split by one long",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "used": {
+      "prior": 0.05,
+      "handbook": "once in a while"
+     },
+     "not": {
+      "prior": 0.95,
+      "handbook": ""
+     }
+    }
+   },
+   "implemented": "meter",
+   "learner": "Now and then a long sits between the two shorts of a pair: - = -."
+  },
+  {
+   "id": "M6.3-rubai",
+   "section": "6.3",
+   "title": "rubāʿī meters",
+   "scope": "line",
+   "kind": "strict",
+   "condition": {
+    "genre": "rubaa((ii quatrain"
+   },
+   "effect": "12 forms: 10 long-equivalents; 3rd/6th/9th long may be two shorts; 6th pair may surround the 5th",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "meter (as 12 fixed patterns, penalised outside quatrains)",
+   "learner": "The rubāʿī uses its own 12 related patterns."
+  },
+  {
+   "id": "M7-code-breaking",
+   "section": "7",
+   "title": "Scan several lines together",
+   "scope": "ghazal",
+   "kind": "strict",
+   "condition": {
+    "lines": ">= 2 of one poem"
+   },
+   "effect": "all lines share one meter; columns of flexibles resolve by the meter; a column of flexibles usually means short",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "eval (ghazal-level decoding)",
+   "learner": "One line can mislead; eight lines rarely do. Scan the whole ghazal and let the columns decide."
+  },
+  {
+   "id": "T-ascii-given",
+   "section": "4.1, 7",
+   "title": "Pritchett-ASCII is taken as written",
+   "scope": "line",
+   "kind": "transcription",
+   "condition": {
+    "input": "ascii"
+   },
+   "effect": "short vowels, iẓāfat (-e), o (-o-), tashdīd (doubled letter), ;N vs n, ((ain and hamza are all explicit; no transcription hypotheses are generated",
+   "likelihood": {
+    "type": "strict"
+   },
+   "implemented": "ascii",
+   "learner": "In the romanised text every vowel and iẓāfat is written, so only real prosodic choices remain."
+  },
+  {
+   "id": "T-ascii-n-nasal",
+   "section": "1.2, 7",
+   "title": "ASCII n after a long vowel may stand for ;N",
+   "scope": "letter",
+   "kind": "transcription",
+   "condition": {
+    "input": "ascii",
+    "letter": "n after a long vowel, before a consonant, inside a word"
+   },
+   "effect": "read as nasalisation (;Dhuun;Dhaa = ;Dhuu;N;Dhaa)",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "as-written": {
+      "prior": 0.95,
+      "handbook": ""
+     },
+     "nasal": {
+      "prior": 0.05,
+      "handbook": "7: the possibility of confusion between n and ;N"
+     }
+    }
+   },
+   "implemented": "ascii",
+   "learner": "If a transcription writes n after a long vowel before another consonant, it may really be a nasal ;N."
+  },
+  {
+   "id": "T-lexicon",
+   "section": "7 (compare other editions)",
+   "title": "Known word: corpus readings",
+   "scope": "word",
+   "kind": "transcription",
+   "condition": {
+    "input": "urdu",
+    "word": "seen in the training corpus"
+   },
+   "effect": "offer each attested Pritchett transcription, weighted by frequency",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "attested": {
+      "prior": 0.97,
+      "handbook": ""
+     },
+     "unseen-reading": {
+      "prior": 0.03,
+      "handbook": ""
+     }
+    }
+   },
+   "implemented": "urdu",
+   "learner": "For a known word the engine uses the ways Pritchett actually transcribed it (e.g. کیا = kyaa or kiyaa)."
+  },
+  {
+   "id": "T-short-vowel",
+   "section": "1.2, 1.4, 4.1",
+   "title": "Unwritten short vowels",
+   "scope": "word",
+   "kind": "transcription",
+   "condition": {
+    "input": "urdu",
+    "consonant": "not followed by a vowel letter"
+   },
+   "effect": "hypothesise a short vowel or none after each consonant; probabilities learned from the ASCII corpus by letter context",
+   "likelihood": {
+    "type": "learned",
+    "handbook": "orthography alone is often sufficient (4.1); otherwise follow pronunciation (1.4)"
+   },
+   "implemented": "urdu",
+   "learner": "Urdu script rarely writes short vowels, so the engine has to guess where they are."
+  },
+  {
+   "id": "T-vao-ye",
+   "section": "1.3, 7",
+   "title": "و / ی: vowel or consonant",
+   "scope": "letter",
+   "kind": "transcription",
+   "condition": {
+    "input": "urdu",
+    "letter": [
+     "و",
+     "ی"
+    ]
+   },
+   "effect": "vowel (o/uu/au, ii/e/ai) or consonant (v, y); the amphibious role of o ii e (7)",
+   "likelihood": {
+    "type": "learned"
+   },
+   "implemented": "urdu",
+   "learner": "و and ی can be vowels (o, ii) or consonants (v, y); the meter can tell you which."
+  },
+  {
+   "id": "T-nasal-n",
+   "section": "1.2, 7",
+   "title": "ن before a consonant: n or ;N",
+   "scope": "letter",
+   "kind": "transcription",
+   "condition": {
+    "input": "urdu",
+    "letter": "medial ن before a consonant"
+   },
+   "effect": "after a long vowel usually ;N (not a letter); after a short vowel usually n, except Indic first syllables (ha;Nsnaa, mu;Nh)",
+   "likelihood": {
+    "type": "learned",
+    "handbook": "in general ;N can occur only after long vowels"
+   },
+   "implemented": "urdu",
+   "learner": "Medial ن after a long vowel is usually just nasalisation (aa;Nkh); after a short vowel it is usually a full n (rang)."
+  },
+  {
+   "id": "T-izafat-unwritten",
+   "section": "7, 1.0",
+   "title": "Unwritten iẓāfat",
+   "scope": "word",
+   "kind": "transcription",
+   "condition": {
+    "input": "urdu",
+    "word": "no zer / ۂ / ئے mark"
+   },
+   "effect": "hypothesise an iẓāfat anyway",
+   "likelihood": {
+    "type": "learned",
+    "handbook": "the possible presence of an iẓāfat even if it is not written"
+   },
+   "implemented": "urdu",
+   "learner": "Printed Urdu usually leaves out the iẓāfat zer; the meter tells you where it must be."
+  },
+  {
+   "id": "T-izafat-written",
+   "section": "3.2",
+   "title": "Written iẓāfat forms",
+   "scope": "word",
+   "kind": "transcription",
+   "condition": {
+    "input": "urdu",
+    "marks": [
+     "final zer",
+     "ۂ",
+     "ئے / ۓ after alif or vao",
+     "hamza alone"
+    ]
+   },
+   "effect": "iẓāfat present (ئے after a vowel can also be a verb ending: jaa))e)",
+   "likelihood": {
+    "type": "learned"
+   },
+   "implemented": "urdu",
+   "learner": "ۂ, a final zer, or ئے after -aa all mark an iẓāfat."
+  },
+  {
+   "id": "T-tashdid-unwritten",
+   "section": "2.4, 7",
+   "title": "Unwritten tashdīd",
+   "scope": "word",
+   "kind": "transcription",
+   "condition": {
+    "input": "urdu",
+    "consonant": "medial, after a short vowel"
+   },
+   "effect": "hypothesise a doubled letter",
+   "likelihood": {
+    "type": "learned",
+    "handbook": "often the tashdiid is not written, but must nevertheless be assumed"
+   },
+   "implemented": "urdu",
+   "learner": "A tashdīd is often left unwritten (مدت = mud-dat); if a syllable is missing, look for one."
+  },
+  {
+   "id": "T-ek-ik",
+   "section": "7",
+   "title": "ek / ik miswritten",
+   "scope": "word",
+   "kind": "transcription",
+   "condition": {
+    "word": [
+     "ایک",
+     "اک"
+    ]
+   },
+   "effect": "the calligrapher may have written ek for ik or the reverse",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "as-written": {
+      "prior": 0.95,
+      "handbook": ""
+     },
+     "swapped": {
+      "prior": 0.05,
+      "handbook": "the most common possibility of this kind"
+     }
+    }
+   },
+   "implemented": "urdu,validator",
+   "learner": "If a line is one short too many, check whether ایک should be اک."
+  },
+  {
+   "id": "T-scribal",
+   "section": "7",
+   "title": "Scribal slips: kar/ke, shaah/shah",
+   "scope": "word",
+   "kind": "transcription",
+   "condition": {
+    "pairs": [
+     [
+      "kar",
+      "ke"
+     ],
+     [
+      "shaah",
+      "shah"
+     ]
+    ]
+   },
+   "effect": "a copying error, much more likely than a poet writing out of meter",
+   "likelihood": {
+    "type": "choice",
+    "options": {
+     "as-written": {
+      "prior": 0.99,
+      "handbook": ""
+     },
+     "slip": {
+      "prior": 0.01,
+      "handbook": "editors and calligraphers do often make mistakes"
+     }
+    }
+   },
+   "implemented": "validator",
+   "learner": "When nothing else explains a limp, suspect the text: kar for ke, shaah for shah."
+  },
+  {
+   "id": "T-gol-dochashmi",
+   "section": "1.2",
+   "title": "gol he written for do-chashmī (older texts) and vice versa",
+   "scope": "letter",
+   "kind": "transcription",
+   "condition": {
+    "input": "urdu",
+    "letter": "ہ after an aspirable consonant, or decorative ھ"
+   },
+   "effect": "treat by function: aspiration is invisible, gol he is a letter",
+   "likelihood": {
+    "type": "learned"
+   },
+   "implemented": "urdu",
+   "learner": "Older books write ہ for ھ; what matters is whether it is an aspiration or a real h."
+  }
+ ]
+}

@@ -1,0 +1,869 @@
+{
+ "source": {
+  "author": "Irfan 'Abid'",
+  "title": "Bah'r: The Backbone of Shaayari",
+  "site": "Urdu Poetry Archive (urdupoetry.com), Article #5",
+  "date": "19 July 2001",
+  "url": "https://www.urdupoetry.com/articles/art5.html",
+  "saved_copy": "data/sources/urdupoetry_art5.html"
+ },
+ "notes": "Weights are the article's own '1/2/3' scale (short/long/overlong), converted here to the app's =/- notation: 1->-, 2->=, and the '3' overlong subdivides to '-  =' (short+long) per the article's own remark. Bahr names are the article's transliteration ('Mazaar'a' = Pritchett's 'muzāri'', 'Kaamil' = 'kāmil', etc).",
+ "bahrs": [
+  {
+   "n": 1,
+   "name": "Hazaj Saalim",
+   "arkan": [
+    "Ma-faa-ii-lun",
+    "Ma-faa-ii-lun",
+    "Ma-faa-ii-lun",
+    "Ma-faa-ii-lun"
+   ],
+   "weights": "2-1-2-2 (x4)",
+   "matched_meter_id": 26,
+   "match_note": "matches app meter #26",
+   "own_verse": {
+    "poet": "Irfan 'Abid' (article author)",
+    "lines": [
+     {
+      "ascii": "bharii dunyaa sahii lekin Thikaanaa ham bhii paa le;Nge",
+      "ur": "بھری دنیا سہی لیکن تھکانا ہم بھی پا لیں گے",
+      "hi": "भरी दुनिया सही लेकिन थिकाना हम भी पा लेंगे",
+      "ro": "bharī dunyā sahī lekin thikānā ham bhī pā leñge",
+      "scan_fits": [
+       26,
+       "H"
+      ]
+     },
+     {
+      "ascii": "jahaa;N do gaz zamii;N hogii wahii;N ham ghar banaa le;Nge",
+      "ur": "جہاں دو گز زمیں ہوگی وہیں ہم گھر بنا لیں گے",
+      "hi": "जहाँ दो गज़ ज़मीं होगी हीं हम घर बना लेंगे",
+      "ro": "jahāñ do gaz zamīñ hogī wahīñ ham ghar banā leñge",
+      "scan_fits": [
+       26,
+       "H"
+      ]
+     }
+    ],
+    "scans_as_bahr": true
+   },
+   "classic_verse": {
+    "poet": "Allama 'Iqbal'",
+    "lines": [
+     {
+      "ascii": "mi;taa de apnii hastii ko agar kuchh martabah chaahe",
+      "ur": "مٹا دے اپنی ہستی کو اگر کچھ مرتبہ چاہے",
+      "hi": "मिटा दे अपनी हस्ती को अगर कुछ मरतबा चाहे",
+      "ro": "miṭā de apnī hastī ko agar kuchh martabah chāhe",
+      "scan_fits": [
+       26,
+       "H"
+      ]
+     },
+     {
+      "ascii": "kih daanaa Khaak me;N mil kar gul-e-gulzaar hotaa hai",
+      "ur": "کہ دانا کھاک میں مل کر گلِ گلزار ہوتا ہے",
+      "hi": "कि दाना खाक में मिल कर गुल-ए-गुलज़ार होता है",
+      "ro": "kih dānā khāk meñ mil kar gul-e-gulzār hotā hai",
+      "scan_fits": [
+       26,
+       "H"
+      ]
+     }
+    ],
+    "scans_as_bahr": true
+   }
+  },
+  {
+   "n": 2,
+   "name": "Hazaj Musamman Akhrab",
+   "arkan": [
+    "Maf-uu-lu",
+    "Ma-faa-ii-lun",
+    "Maf-uu-lu",
+    "Ma-faa-ii-lun"
+   ],
+   "weights": "2-2-1 / 2-1-2-2 (x2)",
+   "matched_meter_id": 7,
+   "match_note": "matches app meter #7",
+   "own_verse": {
+    "poet": "Irfan 'Abid' (article author)",
+    "lines": [
+     {
+      "ascii": "Khwaabo;N me;N banaa))ii thii aa;Nkho;N me;N sajaa lii hai",
+      "ur": "کھوابوں میں بنائی تھی آنکھوں میں سجا لی ہے",
+      "hi": "ख्ाबों में बनाई थी आंखों में सजा ली है",
+      "ro": "khwāboñ meñ banāʾī thī āñkhoñ meñ sajā lī hai",
+      "scan_fits": [
+       "H",
+       3
+      ]
+     },
+     {
+      "ascii": "tasviir tirii ham ne is dil me;N basaa lii hai",
+      "ur": "تسویر تری ہم نے اس دل میں بسا لی ہے",
+      "hi": "तस्वीर तिरी हम ने इस दिल में बसा ली है",
+      "ro": "tasvīr tirī ham ne is dil meñ basā lī hai",
+      "scan_fits": [
+       7
+      ]
+     }
+    ],
+    "scans_as_bahr": false
+   },
+   "classic_verse": {
+    "poet": "'Jigar' Moradabadi",
+    "lines": [
+     {
+      "ascii": "kyaa husn ne samjhaa hai kyaa ishq ne jaanaa hai",
+      "ur": "کیا ہسن نے سمجھا ہے کیا اشق نے جانا ہے",
+      "hi": "क्या हुस्न ने समझा है क्या इश्क़ ने जाना है",
+      "ro": "kyā husn ne samjhā hai kyā ishq ne jānā hai",
+      "scan_fits": [
+       7,
+       20,
+       21,
+       32,
+       "H"
+      ]
+     },
+     {
+      "ascii": "ham Khaak-nashiino;N kii thokar me;N zamaanaa hai",
+      "ur": "ہم کھاک نشینوں کی تھوکر میں زمانا ہے",
+      "hi": "हम खाक-नशीनों की थोकर में ज़माना है",
+      "ro": "ham khāk-nashīnoñ kī thokar meñ zamānā hai",
+      "scan_fits": [
+       7
+      ]
+     }
+    ],
+    "scans_as_bahr": true
+   }
+  },
+  {
+   "n": 3,
+   "name": "Hazaj Musamman Akhrab Makfuuf Mahzuuf",
+   "arkan": [
+    "Maf-uu-lu",
+    "Ma-faa-ii-lu",
+    "Ma-faa-ii-lu",
+    "Fa-uu-lun"
+   ],
+   "weights": "2-2-1 / 2-1-2-1 / 2-1-2-1 / 1-2-2",
+   "matched_meter_id": 8,
+   "match_note": "matches app meter #8",
+   "own_verse": {
+    "poet": "Irfan 'Abid' (article author)",
+    "lines": [
+     {
+      "ascii": "tuufaan me;N tinke kaa sahaaraa bhii bahut hai",
+      "ur": "توفان میں تنکے کا سہارا بھی بہت ہے",
+      "hi": "तूफ़ान में तिंके का सहारा भी बहुत है",
+      "ro": "tūfān meñ tinke kā sahārā bhī bahut hai",
+      "scan_fits": [
+       5,
+       8,
+       4
+      ]
+     },
+     {
+      "ascii": "zulmat me;N to bas ek sharaaraa bhii bahut hai",
+      "ur": "زلمت میں تو بس ایک شرارا بھی بہت ہے",
+      "hi": "ज़ुलमत में तो बस एक शरारा भी बहुत है",
+      "ro": "zulmat meñ to bas ek sharārā bhī bahut hai",
+      "scan_fits": [
+       8,
+       5,
+       31
+      ]
+     }
+    ],
+    "scans_as_bahr": true
+   },
+   "classic_verse": {
+    "poet": "Mirza Ghalib",
+    "lines": [
+     {
+      "ascii": "baaziichah-e a:tfaal hai dunyaa mire aage",
+      "ur": "بازیچۂ اطفال ہے دنیا مرے آگے",
+      "hi": "बाज़ीचा-ए अतफ़ाल है दुनिया मिरे आगे",
+      "ro": "bāzīchah-e at̤fāl hai dunyā mire āge",
+      "scan_fits": [
+       8
+      ]
+     },
+     {
+      "ascii": "hotaa hai shab-o-roz tamaashaa mire aage",
+      "ur": "ہوتا ہے شب و روز تماشا مرے آگے",
+      "hi": "होता है शब-ओ-रोज़ तमाशा मिरे आगे",
+      "ro": "hotā hai shab-o-roz tamāshā mire āge",
+      "scan_fits": [
+       8
+      ]
+     }
+    ],
+    "scans_as_bahr": true
+   }
+  },
+  {
+   "n": 4,
+   "name": "Hazaj Musaddas Mahzuuf",
+   "arkan": [
+    "Ma-faa-ii-lun",
+    "Ma-faa-ii-lun",
+    "Fa-uu-lun"
+   ],
+   "weights": "2-1-2-2 (x2) / 1-2-2",
+   "matched_meter_id": 27,
+   "match_note": "matches app meter #27",
+   "own_verse": {
+    "poet": "Irfan 'Abid' (article author)",
+    "lines": [
+     {
+      "ascii": "tamannaao;N se aye dil kyaa mile gaa",
+      "ur": "تمنّاوں سے ایے دل کیا ملے گا",
+      "hi": "तमंनाओं से अये दिल क्या मिले गा",
+      "ro": "tamannāoñ se aye dil kyā mile gā",
+      "scan_fits": []
+     },
+     {
+      "ascii": "jo qismat me;N likhaa hogaa mile gaa",
+      "ur": "جو قسمت میں لکھا ہوگا ملے گا",
+      "hi": "जो क़िस्मत में लिखा होगा मिले गा",
+      "ro": "jo qismat meñ likhā hogā mile gā",
+      "scan_fits": [
+       27,
+       "R9",
+       "R5",
+       28,
+       "R8",
+       "R4"
+      ]
+     }
+    ],
+    "scans_as_bahr": false
+   },
+   "classic_verse": {
+    "poet": "'Firaq' Gorakhpuri",
+    "lines": [
+     {
+      "ascii": "sitaaro;N se ulajhtaa jaa rahaa huu;N",
+      "ur": "ستاروں سے الجھتا جا رہا ہوں",
+      "hi": "सितारों से उलझता जा रहा हूँ",
+      "ro": "sitāroñ se ulajhtā jā rahā hūñ",
+      "scan_fits": [
+       27,
+       "R9",
+       "R6",
+       "R11",
+       "R7"
+      ]
+     },
+     {
+      "ascii": "shab-e-furqat bahut ghabraa rahaa huu;N",
+      "ur": "شبِ فرقت بہت گھبرا رہا ہوں",
+      "hi": "शब-ए-फ़ुरक़त बहुत घबरा रहा हूँ",
+      "ro": "shab-e-furqat bahut ghabrā rahā hūñ",
+      "scan_fits": [
+       27,
+       "R12",
+       "R1",
+       "R5",
+       "R4"
+      ]
+     }
+    ],
+    "scans_as_bahr": true
+   }
+  },
+  {
+   "n": 5,
+   "name": "Ramal Musamman Mahzuuf",
+   "arkan": [
+    "Faa-i-laa-tun",
+    "Faa-i-laa-tun",
+    "Faa-i-laa-tun",
+    "Faa-i-lun (var. Faa-i-laan)"
+   ],
+   "weights": "2-1-2-2 (x3) / 2-1-2",
+   "matched_meter_id": 10,
+   "match_note": "matches app meter #10",
+   "own_verse": {
+    "poet": "Irfan 'Abid' (article author)",
+    "lines": [
+     {
+      "ascii": "dil kii bechainii ne apnaa kaam aaKhir kar diyaa",
+      "ur": "دل کی بیچینی نے اپنا کام آکھر کر دیا",
+      "hi": "दिल की बेचैनी ने अपना काम आखिर कर दिया",
+      "ro": "dil kī bechainī ne apnā kām ākhir kar diyā",
+      "scan_fits": [
+       10,
+       "H"
+      ]
+     },
+     {
+      "ascii": "tujh se mere raabte ko aam aaKhir kar diyaa",
+      "ur": "تجھ سے میرے رابتے کو آم آکھر کر دیا",
+      "hi": "तुझ से मेरे राबते को आम आखिर कर दिया",
+      "ro": "tujh se mere rābte ko ām ākhir kar diyā",
+      "scan_fits": [
+       10
+      ]
+     }
+    ],
+    "scans_as_bahr": true
+   },
+   "classic_verse": {
+    "poet": "'Hasrat' Mohani",
+    "lines": [
+     {
+      "ascii": "sab Gala:t kahte hai;N lu:tf-e-yaar ko wajh-e-sukuu;N",
+      "ur": "سب گلط کہتے ہیں لطفِ یار کو وجھِ سکوں",
+      "hi": "सब गलत कहते हैं लुतफ़-ए-यार को झ-ए-सुकूँ",
+      "ro": "sab galat̤ kahte haiñ lut̤f-e-yār ko wajh-e-sukūñ",
+      "scan_fits": [
+       10,
+       4,
+       3
+      ]
+     },
+     {
+      "ascii": "dard-e-dil us ne tau 'Hasrat' aur duunaa kar diyaa",
+      "ur": "دردِ دل اس نے تو ہسرت اور دونا کر دیا",
+      "hi": "दर्द-ए-दिल उस ने तौ हसरत और दूना कर दिया",
+      "ro": "dard-e-dil us ne tau 'hasrat' aur dūnā kar diyā",
+      "scan_fits": [
+       10,
+       32,
+       "H"
+      ]
+     }
+    ],
+    "scans_as_bahr": true
+   }
+  },
+  {
+   "n": 6,
+   "name": "Ramal Musaddas Mahzuuf",
+   "arkan": [
+    "Faa-i-laa-tun",
+    "Faa-i-laa-tun",
+    "Faa-i-lun (var. Faa-i-laan)"
+   ],
+   "weights": "2-1-2-2 (x2) / 2-1-2",
+   "matched_meter_id": 11,
+   "match_note": "matches app meter #11",
+   "own_verse": {
+    "poet": "Irfan 'Abid' (article author)",
+    "lines": [
+     {
+      "ascii": "ishq kaa haasil hai kyaa mat puuchhiye",
+      "ur": "اشق کا ہاسل ہے کیا مت پوچھیے",
+      "hi": "इश्क़ का हासिल है क्या मत पूछिये",
+      "ro": "ishq kā hāsil hai kyā mat pūchhiye",
+      "scan_fits": [
+       11
+      ]
+     },
+     {
+      "ascii": "kyaa milaa kyaa kho gayaa mat puuchhiye",
+      "ur": "کیا ملا کیا کھو گیا مت پوچھیے",
+      "hi": "क्या मिला क्या खो गया मत पूछिये",
+      "ro": "kyā milā kyā kho gayā mat pūchhiye",
+      "scan_fits": [
+       11,
+       24
+      ]
+     }
+    ],
+    "scans_as_bahr": true
+   },
+   "classic_verse": {
+    "poet": "Meer Taqi 'Meer'",
+    "lines": [
+     {
+      "ascii": "ibtidaa-e-ishq hai rotaa hai kyaa",
+      "ur": "ابتدائے اشق ہے روتا ہے کیا",
+      "hi": "इबतिदा-ए-इश्क़ है रोता है क्या",
+      "ro": "ibtidā-e-ishq hai rotā hai kyā",
+      "scan_fits": [
+       11,
+       15,
+       27,
+       "R6",
+       "R11",
+       "R5",
+       "R12"
+      ]
+     },
+     {
+      "ascii": "aage aage dekhiye hotaa hai kyaa",
+      "ur": "آگے آگے دیکھیے ہوتا ہے کیا",
+      "hi": "आगे आगे देखिये होता है क्या",
+      "ro": "āge āge dekhiye hotā hai kyā",
+      "scan_fits": [
+       11,
+       "R11",
+       "R12",
+       15,
+       "R6",
+       "R5"
+      ]
+     }
+    ],
+    "scans_as_bahr": true
+   }
+  },
+  {
+   "n": 7,
+   "name": "Mutaqaarib Saalim",
+   "arkan": [
+    "Fa-uu-lun",
+    "Fa-uu-lun",
+    "Fa-uu-lun",
+    "Fa-uu-lun"
+   ],
+   "weights": "1-2-2 (x4)",
+   "matched_meter_id": 28,
+   "match_note": "matches app meter #28",
+   "own_verse": {
+    "poet": "Irfan 'Abid' (article author)",
+    "lines": [
+     {
+      "ascii": "mu;habbat burii hai na nafrat burii hai",
+      "ur": "محبّت بری ہے ن نفرت بری ہے",
+      "hi": "मुहब्बत बुरी है न नफ़रत बुरी है",
+      "ro": "muḥabbat burī hai na nafrat burī hai",
+      "scan_fits": [
+       28
+      ]
+     },
+     {
+      "ascii": "burii hai tau har shai kii kasrat burii hai",
+      "ur": "بری ہے تو ہر شے کی کسرت بری ہے",
+      "hi": "बुरी है तौ हर शै की कसरत बुरी है",
+      "ro": "burī hai tau har shai kī kasrat burī hai",
+      "scan_fits": [
+       28,
+       23
+      ]
+     }
+    ],
+    "scans_as_bahr": true
+   },
+   "classic_verse": {
+    "poet": "'Bekhud' Dehlvi",
+    "lines": [
+     {
+      "ascii": "nah dekhaa thaa jo bazm-e-dushman me;N dekhaa",
+      "ur": "نہ دیکھا تھا جو بزمِ دشمن میں دیکھا",
+      "hi": "न देखा था जो बज़्म-ए-दुशमन में देखा",
+      "ro": "nah dekhā thā jo bazm-e-dushman meñ dekhā",
+      "scan_fits": [
+       28,
+       33,
+       34,
+       18,
+       19
+      ]
+     },
+     {
+      "ascii": "mu;habbat tamaashe dikhaatii hai kyaa kyaa",
+      "ur": "محبّت تماشے دکھاتی ہے کیا کیا",
+      "hi": "मुहब्बत तमाशे दिखाती है क्या क्या",
+      "ro": "muḥabbat tamāshe dikhātī hai kyā kyā",
+      "scan_fits": [
+       28,
+       21
+      ]
+     }
+    ],
+    "scans_as_bahr": true
+   }
+  },
+  {
+   "n": 8,
+   "name": "Mutaqaarib Musamman Maqbuuz Aslam (16 Ruknii)",
+   "arkan": [
+    "Fa-uu-lu",
+    "Faa-lun",
+    "Fa-uu-lu",
+    "Faa-lun",
+    "Fa-uu-lu",
+    "Faa-lun",
+    "Fa-uu-lu",
+    "Faa-lun"
+   ],
+   "weights": "1-2-1 / 2-2 (x4)",
+   "matched_meter_id": 30,
+   "match_note": "matches app meter #30",
+   "own_verse": {
+    "poet": "Irfan 'Abid' (article author)",
+    "lines": [
+     {
+      "ascii": "ho shaam-e-Gham jis qadar bhii lambii dhalegii yih bhii zaruur yaaro",
+      "ur": "ہو شامِ گھم جس قدر بھی لمبی دھلےگی یہ بھی زرور یارو",
+      "hi": "हो शाम-ए-घम जिस क़दर भी लमबी धलेगी ये भी ज़रूर यारो",
+      "ro": "ho shām-e-gham jis qadar bhī lambī dhalegī yih bhī zarūr yāro",
+      "scan_fits": [
+       30,
+       "H"
+      ]
+     },
+     {
+      "ascii": "kabhii to utregaa mere ghar me;N Khushii kii kirno;N kaa nuur yaaro",
+      "ur": "کبھی تو اترےگا میرے گھر میں کھشی کی کرنوں کا نور یارو",
+      "hi": "कभी तो उतरेगा मेरे घर में खुशी की किर्नों का नूर यारो",
+      "ro": "kabhī to utregā mere ghar meñ khushī kī kirnoñ kā nūr yāro",
+      "scan_fits": [
+       30
+      ]
+     }
+    ],
+    "scans_as_bahr": true
+   },
+   "classic_verse": {
+    "poet": "'Daag' Dehlvi",
+    "lines": [
+     {
+      "ascii": "sitam hii karnaa jafaa hii karnaa nigaah-e-ulfat kabhii nah karnaa",
+      "ur": "ستم ہی کرنا جفا ہی کرنا نگاہِ الفت کبھی نہ کرنا",
+      "hi": "सितम ही करना जफ़ा ही करना निगाह-ए-उलफ़त कभी न करना",
+      "ro": "sitam hī karnā jafā hī karnā nigāh-e-ulfat kabhī nah karnā",
+      "scan_fits": [
+       30,
+       "H"
+      ]
+     },
+     {
+      "ascii": "tumhe;N qasam hai hamaare sar kii hamaare ;haq me;N kamii nah karnaa",
+      "ur": "تمہیں قسم ہے ہمارے سر کی ہمارے حق میں کمی نہ کرنا",
+      "hi": "तुम्हें क़सम है हमारे सर की हमारे हक़ में कमी न करना",
+      "ro": "tumheñ qasam hai hamāre sar kī hamāre ḥaq meñ kamī nah karnā",
+      "scan_fits": [
+       30,
+       "H"
+      ]
+     }
+    ],
+    "scans_as_bahr": true
+   }
+  },
+  {
+   "n": 9,
+   "name": "Kaamil Saalim",
+   "arkan": [
+    "Mu-ta-faa-i-lun",
+    "Mu-ta-faa-i-lun",
+    "Mu-ta-faa-i-lun",
+    "Mu-ta-faa-i-lun"
+   ],
+   "weights": "1-1-2-1-2 (x4)",
+   "matched_meter_id": 37,
+   "match_note": "matches app meter #37",
+   "own_verse": {
+    "poet": "Irfan 'Abid' (article author)",
+    "lines": [
+     {
+      "ascii": "ki ga;Nwaa diye mai;N ne hosh bhii mujhe chain aa na sakaa kabhii",
+      "ur": "کی گنوا دیے میں نے ہوش بھی مجھے چین آ ن سکا کبھی",
+      "hi": "कि गंा दिये मैं ने होश भी मुझे चैन आ न सका कभी",
+      "ro": "ki gañwā diye maiñ ne hosh bhī mujhe chain ā na sakā kabhī",
+      "scan_fits": [
+       "H"
+      ]
+     },
+     {
+      "ascii": "terii yaad yuu;N hii jawaa;N rahii tujhe dil bhulaa na sakaa kabhii",
+      "ur": "تیری یاد یوں ہی جواں رہی تجھے دل بھلا ن سکا کبھی",
+      "hi": "तेरी याद यूँ ही जाँ रही तुझे दिल भुला न सका कभी",
+      "ro": "terī yād yūñ hī jawāñ rahī tujhe dil bhulā na sakā kabhī",
+      "scan_fits": [
+       "H"
+      ]
+     }
+    ],
+    "scans_as_bahr": false
+   },
+   "classic_verse": {
+    "poet": "Hakeem 'Momin'",
+    "lines": [
+     {
+      "ascii": "wuh jo ham me;N tum me;N qaraar thaa tumhe;N yaad ho kih nah yaad ho",
+      "ur": "وہ جو ہم میں تم میں قرار تھا تمہیں یاد ہو کہ نہ یاد ہو",
+      "hi": "ुह जो हम में तुम में क़रार था तुम्हें याद हो कि न याद हो",
+      "ro": "wuh jo ham meñ tum meñ qarār thā tumheñ yād ho kih nah yād ho",
+      "scan_fits": [
+       37,
+       "H"
+      ]
+     },
+     {
+      "ascii": "wahii yaanii waadaa nibaah kaa tumhe;N yaad ho kih nah yaad ho",
+      "ur": "وہی یانی وادا نباہ کا تمہیں یاد ہو کہ نہ یاد ہو",
+      "hi": "ही यानी ादा निबाह का तुम्हें याद हो कि न याद हो",
+      "ro": "wahī yānī wādā nibāh kā tumheñ yād ho kih nah yād ho",
+      "scan_fits": [
+       37,
+       "H"
+      ]
+     }
+    ],
+    "scans_as_bahr": true
+   }
+  },
+  {
+   "n": 10,
+   "name": "Mutadaarik Saalim",
+   "arkan": [
+    "Faa-i-lun",
+    "Faa-i-lun",
+    "Faa-i-lun",
+    "Faa-i-lun"
+   ],
+   "weights": "2-1-2 (x4)",
+   "matched_meter_id": null,
+   "match_note": "no exact match in the 37-meter catalog; this 4-foot Faa-i-lun x4 form is a shortened ('saalim', 4-rukn) usage of meter #12 (mutadārik musamman muzā'af sālim, which is normally 8 feet). Pritchett's handbook note on meter #12 already remarks it 'is sometimes used with only four feet; in this case the muzā'af is dropped from its name' — so this is that 4-foot variant, not a distinct catalog entry.",
+   "own_verse": {
+    "poet": "Irfan 'Abid' (article author)",
+    "lines": [
+     {
+      "ascii": "gul chiraaGho;N ko kar ham sare shaam de;N",
+      "ur": "گل چراگھوں کو کر ہم سرے شام دیں",
+      "hi": "गुल चिराघों को कर हम सरे शाम दें",
+      "ro": "gul chirāghoñ ko kar ham sare shām deñ",
+      "scan_fits": []
+     },
+     {
+      "ascii": "kyo;N bhalaa aatish-e-dil ko aaraam de;N",
+      "ur": "کیوں بھلا آتشِ دل کو آرام دیں",
+      "hi": "क्यों भला आतिश-ए-दिल को आराम दें",
+      "ro": "kyoñ bhalā ātish-e-dil ko ārām deñ",
+      "scan_fits": []
+     }
+    ],
+    "scans_as_bahr": false
+   },
+   "classic_verse": {
+    "poet": "Nida Fazli",
+    "lines": [
+     {
+      "ascii": "har taraf har jagah be-shumaar aadmii",
+      "ur": "ہر ترف ہر جگہ بے شمار آدمی",
+      "hi": "हर तरफ़ हर जगह बे-शुमार आदमी",
+      "ro": "har taraf har jagah be-shumār ādmī",
+      "scan_fits": []
+     },
+     {
+      "ascii": "phir bhii tanhaaiyo;N kaa shikaar aadmii",
+      "ur": "پھر بھی تنہایوں کا شکار آدمی",
+      "hi": "फिर भी तंहाइयों का शिकार आदमी",
+      "ro": "phir bhī tanhāiyoñ kā shikār ādmī",
+      "scan_fits": [
+       24,
+       11,
+       14
+      ]
+     }
+    ],
+    "scans_as_bahr": false
+   }
+  },
+  {
+   "n": 11,
+   "name": "Mazaar'a Musamman Akhrab",
+   "arkan": [
+    "Maf-uu-lu",
+    "Faa-i-laa-tun",
+    "Maf-uu-lu",
+    "Faa-i-laa-tun"
+   ],
+   "weights": "2-2-1 / 2-1-2-2 (x2)",
+   "matched_meter_id": 4,
+   "match_note": "matches app meter #4",
+   "own_verse": {
+    "poet": "Irfan 'Abid' (article author)",
+    "lines": [
+     {
+      "ascii": "mai;N beqaraar kyo;N huu;N dil beqaraar kyo;N hai",
+      "ur": "میں بیقرار کیوں ہوں دل بیقرار کیوں ہے",
+      "hi": "मैं बेक़रार क्यों हूँ दिल बेक़रार क्यों है",
+      "ro": "maiñ beqarār kyoñ hūñ dil beqarār kyoñ hai",
+      "scan_fits": [
+       4,
+       19
+      ]
+     },
+     {
+      "ascii": "us bewafaa se ab tak aaKhir yih pyaar kyo;N hai",
+      "ur": "اس بیوفا سے اب تک آکھر یہ پیار کیوں ہے",
+      "hi": "उस बेफ़ा से अब तक आखिर ये प्यार क्यों है",
+      "ro": "us bewafā se ab tak ākhir yih pyār kyoñ hai",
+      "scan_fits": [
+       4
+      ]
+     }
+    ],
+    "scans_as_bahr": true
+   },
+   "classic_verse": {
+    "poet": "Allama 'Iqbal'",
+    "lines": [
+     {
+      "ascii": "saare jahaa;N se achchhaa Hindostaa;N hamaaraa",
+      "ur": "سارے جہاں سے اچّھا ہندوستاں ہمارا",
+      "hi": "सारे जहाँ से अचछा हिंदोस्ताँ हमारा",
+      "ro": "sāre jahāñ se achchhā hindostāñ hamārā",
+      "scan_fits": [
+       4,
+       8,
+       7
+      ]
+     },
+     {
+      "ascii": "ham bulbule;N hai;N iskii yih gulsitaa;N hamaaraa",
+      "ur": "ہم بلبلیں ہیں اسکی یہ گلستاں ہمارا",
+      "hi": "हम बुलबुलें हैं इसकी ये गुलसिताँ हमारा",
+      "ro": "ham bulbuleñ haiñ iskī yih gulsitāñ hamārā",
+      "scan_fits": [
+       4,
+       7,
+       20
+      ]
+     }
+    ],
+    "scans_as_bahr": true
+   }
+  },
+  {
+   "n": 12,
+   "name": "Mazaar'a Musamman Akhrab Makfuuf Maqsuur",
+   "arkan": [
+    "Maf-uu-lu",
+    "Faa-i-laa-tu (var. Faa-i-laa-tun)",
+    "ma-faa-ii-lu (var. Maf-uu-lu)",
+    "Faa-i-laan (var. Faa-i-lun)"
+   ],
+   "weights": "2-2-1 / 2-1-2-1 / 1-2-2-1 / 2-1-2",
+   "matched_meter_id": 5,
+   "match_note": "matches app meter #5",
+   "own_verse": {
+    "poet": "Irfan 'Abid' (article author)",
+    "lines": [
+     {
+      "ascii": "kaise kahuu;N mai;N apnii kahaanii ko baar baar",
+      "ur": "کیسے کہوں میں اپنی کہانی کو بار بار",
+      "hi": "कैसे कहूँ मैं अपनी कहानी को बार बार",
+      "ro": "kaise kahūñ maiñ apnī kahānī ko bār bār",
+      "scan_fits": [
+       5
+      ]
+     },
+     {
+      "ascii": "kyo;N kar piyuu;Ngaa aa;Nkh ke paanii ko baar baar",
+      "ur": "کیوں کر پیونگا آنکھ کے پانی کو بار بار",
+      "hi": "क्यों कर पियूंगा आंख के पानी को बार बार",
+      "ro": "kyoñ kar piyūñgā āñkh ke pānī ko bār bār",
+      "scan_fits": [
+       5
+      ]
+     }
+    ],
+    "scans_as_bahr": true
+   },
+   "classic_verse": {
+    "poet": "Daag Dehlvi",
+    "lines": [
+     {
+      "ascii": "Khaatir se yaa lihaaz se mai;N maan tau gayaa",
+      "ur": "کھاتر سے یا لہاز سے میں مان تو گیا",
+      "hi": "खातिर से या लिहाज़ से मैं मान तौ गया",
+      "ro": "khātir se yā lihāz se maiñ mān tau gayā",
+      "scan_fits": [
+       5
+      ]
+     },
+     {
+      "ascii": "jhuu;Thii qasam se aap kaa iimaan tau gayaa",
+      "ur": "جھوٹھی قسم سے آپ کا ایمان تو گیا",
+      "hi": "झूठी क़सम से आप का ईमान तौ गया",
+      "ro": "jhūṭhī qasam se āp kā īmān tau gayā",
+      "scan_fits": [
+       5
+      ]
+     }
+    ],
+    "scans_as_bahr": true
+   }
+  },
+  {
+   "n": 13,
+   "name": "Mujtas Musamman Makhbuun Maqsuur",
+   "arkan": [
+    "Ma-faa-i-lun",
+    "Fa-i-laa-tun",
+    "Ma-faa-i-lun",
+    "Fa-i-lun"
+   ],
+   "weights": "1-2-1-2 / 1-1-2-2 / 1-2-1-2 / 1-1-2",
+   "matched_meter_id": 34,
+   "match_note": "matches app meter #34",
+   "own_verse": {
+    "poet": "Irfan 'Abid' (article author)",
+    "lines": [
+     {
+      "ascii": "wafaa ke qaul se ham tau mukar nahii;N sakte",
+      "ur": "وفا کے قول سے ہم تو مکر نہیں سکتے",
+      "hi": "फ़ा के क़ौल से हम तौ मुकर नहीं सकते",
+      "ro": "wafā ke qaul se ham tau mukar nahīñ sakte",
+      "scan_fits": [
+       33,
+       34,
+       7,
+       4
+      ]
+     },
+     {
+      "ascii": "ki dushmanii me;N bhii had se guzar nahii;N sakte",
+      "ur": "کی دشمنی میں بھی ہد سے گزر نہیں سکتے",
+      "hi": "कि दुशमनी में भी हद से गुज़र नहीं सकते",
+      "ro": "ki dushmanī meñ bhī had se guzar nahīñ sakte",
+      "scan_fits": [
+       7,
+       20,
+       33,
+       34,
+       4
+      ]
+     }
+    ],
+    "scans_as_bahr": true
+   },
+   "classic_verse": {
+    "poet": "Faiz Ahmed 'Faiz'",
+    "lines": [
+     {
+      "ascii": "gulo;N me;N rang bhare baad-e-nau-bahaar chale",
+      "ur": "گلوں میں رنگ بھرے بادِ نو بہار چلے",
+      "hi": "गुलों में रंग भरे बाद-ए-नौ-बहार चले",
+      "ro": "guloñ meñ rang bhare bād-e-nau-bahār chale",
+      "scan_fits": [
+       34,
+       19
+      ]
+     },
+     {
+      "ascii": "chale bhii aao ki gulshan kaa kaar-o-baar chale",
+      "ur": "چلے بھی آو کی گلشن کا کار و بار چلے",
+      "hi": "चले भी आओ कि गुलशन का कार-ओ-बार चले",
+      "ro": "chale bhī āo ki gulshan kā kār-o-bār chale",
+      "scan_fits": [
+       34
+      ]
+     }
+    ],
+    "scans_as_bahr": true
+   }
+  }
+ ]
+}

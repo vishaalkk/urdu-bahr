@@ -2,11 +2,12 @@
   "metadata": {
     "title": "Attributions & Scholarly Citations",
     "description": "Primary academic and computational sources powering the Urdu Meter Handbook and Interactive Studio.",
-    "entries_count": 2
+    "entries_count": 3
   },
   "entries": [
     {
       "id": "pritchett_khaliq_1987",
+      "tag": "Pedagogical Foundation & Handbook",
       "authors": [
         "Frances W. Pritchett",
         "Khawaja Ahmad Khaliq Anjum"
@@ -20,7 +21,22 @@
       "related_project": "Also citing Frances W. Pritchett's monumental online research repository 'A Desertful of Roses: The Divan of Ghalib in Urdu with Complete Scansions and Commentary' (https://franpritchett.com/00ghalib/)."
     },
     {
+      "id": "urdupoetry_art5_bahr",
+      "tag": "Primary Source: Popular Bahr Reference",
+      "authors": [
+        "Irfan 'Abid'"
+      ],
+      "title": "Bah'r: The Backbone of Shaayari",
+      "urdu_title": "بحر: شاعری کی ریڑھ کی ہڈی",
+      "year": "19 July 2001",
+      "publisher_or_affiliation": "Urdu Poetry Archive, urdupoetry.com (Article Archive #5)",
+      "canonical_url": "https://www.urdupoetry.com/articles/art5.html",
+      "summary": "A widely-shared plain-language introduction to bah'r, teaching 13 of the most popular bah'rs (each with its arkaan/afa'il and an illustrative sher plus a classic couplet by a named ustaad) via the ghazal community's own ASCII romanization rather than academic transliteration. This app cross-references its 13 named bah'rs against Pritchett's 37-meter catalog (12 of the 13 match cleanly; the 13th, a 4-foot 'Mutadaarik Saalim', is a shortened usage of catalog meter #12 rather than a distinct meter) and folds 11 of its classic couplets in as extra examples on the matching meters in Meter › Lookup. See data/urdupoetry_bahrs.json for the full extraction, meter mapping, and scan verification, and docs/reviews/18-urdupoetry-bahrs.md for the write-up.",
+      "related_project": "Saved locally at data/sources/urdupoetry_art5.html so the extraction is reproducible."
+    },
+    {
       "id": "pue_ast_transliteration",
+      "tag": "Computational Linguistics & Script Engine",
       "authors": [
         "A. Sean Pue"
       ],

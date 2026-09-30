@@ -124,6 +124,12 @@ function devToAscii(str) {
 function romanToAscii(str) {
   if(!str) return '';
   let s = str.toLowerCase();
+  /* standalone / fused iẓāfat: 'dil e nādāñ', 'dile nādāñ' -> dil-e */
+  s = s.replace(/([a-zāīūñḍṭṛḥ])\s+e(?=\s)/g, '$1-e')
+       .replace(/\bdile\b/g, 'dil-e')
+       .replace(/\bnadan\b/g, 'naadaa;n')
+       /* Urdu words do not end in a short -a after i: diya, liya, kiya, dariya = -iyā */
+       .replace(/([a-z]i)ya\b/g, '$1yaa');
   s = s.replace(/\bhua\b/g, 'hu))aa')
        .replace(/\bkya\b/g, 'kyaa')
        .replace(/\bdava\b/g, 'davaa')
