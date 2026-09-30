@@ -6,8 +6,10 @@ src/fonts/, all licensed under the SIL Open Font License, Version 1.1
   (https://github.com/adobe-fonts/source-serif)
 - Inter — Copyright 2020 The Inter Project Authors
   (https://github.com/rsms/inter)
-- IBM Plex Mono — Copyright 2017 IBM Corp. with Reserved Font Name "Plex"
-  (https://github.com/IBM/plex)
+- Source Code Pro — Copyright 2010-2023 Adobe, with Reserved Font Name "Source"
+  (https://github.com/adobe-fonts/source-code-pro)
+- Noto Sans Mono — Copyright 2022 The Noto Project Authors
+  (https://github.com/notofonts/latin-greek-cyrillic)
 
 Each font was subsetted from the upstream google/fonts sources to the Latin
 characters, punctuation, and combining diacritics used by this app's Roman

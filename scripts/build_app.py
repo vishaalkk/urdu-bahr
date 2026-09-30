@@ -213,8 +213,8 @@ if (typeof Parser !== 'undefined') {{
 '''
 
 # ─── 3b. Embed offline fonts as base64 @font-face rules ───────────────────────
-# Source Serif 4 (400, 400 italic, 600), Inter (400, 500) and IBM Plex Mono
-# (400), subsetted to Latin + Latin Extended A/B/Additional + combining
+# Source Serif 4 (400, 400 italic, 600), Inter (400, 500), Source Code Pro (400, 600)
+# and Noto Sans Mono (400), subsetted to Latin + Latin Extended A/B/Additional + combining
 # diacritics + the transliteration/pattern marks this app actually uses
 # (see LICENSES/OFL-fonts.txt for provenance). Embedding them keeps the app
 # at zero runtime network requests instead of loading from Google Fonts.
@@ -224,7 +224,9 @@ FONT_FACES = [
     ('Source Serif 4', 'normal', 600, 'src/fonts/SourceSerif4-SemiBold.woff2'),
     ('Inter', 'normal', 400, 'src/fonts/Inter-Regular.woff2'),
     ('Inter', 'normal', 500, 'src/fonts/Inter-Medium.woff2'),
-    ('IBM Plex Mono', 'normal', 400, 'src/fonts/IBMPlexMono-Regular.woff2'),
+    ('Source Code Pro', 'normal', 400, 'src/fonts/SourceCodePro-Regular.woff2'),
+    ('Source Code Pro', 'normal', 600, 'src/fonts/SourceCodePro-SemiBold.woff2'),
+    ('Noto Sans Mono', 'normal', 400, 'src/fonts/NotoSansMono-Regular.woff2'),
 ]
 
 def build_font_face_css(faces):

@@ -567,3 +567,6 @@ html[data-script="hi"] .chips .fname { font-family: var(--deva); }
 .chips.orig { opacity: .72; transform: scale(.92); transform-origin: center top; pointer-events: none; }
 .chips.orig .fs, .chips.orig .fname { pointer-events: none; }
 .edit-compare-foot { text-align: center; margin-top: 2px; }
+
+/* Meter patterns and weight marks use Noto Sans Mono; Roman text keeps Source Code Pro (--mono) */
+.pg, .cae, .blk, .ss-pat, .ss-pat-key, .sc-w, .fstrip .blk { font-family: var(--mono-pat); }

@@ -1,7 +1,7 @@
 /* ============================================================
    Baḥr Visual Design System — "Quiet Manuscript"
    Ink on paper + greys. Type does the hierarchy, not boxes.
-   Source Serif 4 (verse/headings/notes) + Inter (UI) + IBM Plex Mono
+   Source Serif 4 (verse/headings/notes) + Inter (UI) + Source Code Pro (Roman text) + Noto Sans Mono (meter patterns)
    (patterns/numbers only). Gold is the one UI accent; teal/rose are
    syllable-weight colours only. See docs/RESKIN_BRIEF.md.
    ============================================================ */
@@ -39,7 +39,9 @@
   --sans: 'Inter', system-ui, -apple-system, sans-serif;
   --display: var(--serif);
   --body: var(--sans);
-  --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  --mono-ro: 'Source Code Pro', 'Noto Sans Mono', ui-monospace, Menlo, monospace;    /* Roman verse, syllables, glossary */
+  --mono-pat: 'Noto Sans Mono', 'Source Code Pro', ui-monospace, Menlo, monospace;   /* meter patterns and weight marks */
+  --mono: var(--mono-ro);
   --urdu: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', serif;
   --deva: 'Noto Sans Devanagari', 'Kohinoor Devanagari', sans-serif;
 
