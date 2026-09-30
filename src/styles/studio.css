@@ -1,0 +1,519 @@
+/* ============================================================
+   Ghazal Writing Studio & Decipher Scansion Trainer Styles
+   "Quiet Manuscript": Hairlines + whitespace, typography hierarchy.
+   Shares design tokens with base.css, pages.css, verse.css.
+   ============================================================ */
+
+/* Page Shell & Spacing */
+.studio-root {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--sp-4) var(--sp-5) var(--sp-8);
+}
+
+.studio-head {
+  margin-bottom: var(--sp-5);
+}
+
+/* Mode Switcher Tabs (uses site .seg pattern) */
+.studio-tabs {
+  margin: var(--sp-4) 0 var(--sp-6);
+  border-bottom: 1px solid var(--line);
+}
+
+/* ============================================================
+   Mode 1: Ghazal Writing Studio
+   ============================================================ */
+
+/* Anchor Model Selector */
+.anchor-section {
+  padding-bottom: var(--sp-5);
+  margin-bottom: var(--sp-6);
+  border-bottom: 1px solid var(--line);
+}
+
+.anchor-chips {
+  display: flex;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  margin: var(--sp-3) 0 var(--sp-4);
+}
+
+.anchor-chip {
+  padding: 6px 14px;
+  border: 1px solid var(--line2);
+  border-radius: var(--radius-pill);
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--dim);
+  background: transparent;
+  cursor: pointer;
+  transition: all 150ms ease-out;
+}
+
+.anchor-chip:hover {
+  border-color: var(--gold);
+  color: var(--ink);
+}
+
+.anchor-chip.on {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 9%, transparent);
+  font-weight: 500;
+}
+
+.anchor-citation {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding: var(--sp-3) 0 0;
+  flex-wrap: wrap;
+}
+
+.anchor-verse {
+  font-family: var(--urdu);
+  font-size: 22px;
+  line-height: 1.8;
+  color: var(--ink);
+  direction: rtl;
+}
+
+.anchor-meta {
+  font-family: var(--serif);
+  font-size: 14px;
+  color: var(--dim);
+}
+
+/* Couplets Composing Section */
+.couplet-group {
+  padding: var(--sp-5) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.couplet-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--sp-3);
+}
+
+.couplet-title {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.misra-row {
+  margin-bottom: var(--sp-5);
+}
+
+.misra-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-1);
+}
+
+.misra-label {
+  font-family: var(--sans);
+  font-size: 11.5px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.misra-rhyme-tag {
+  font-family: var(--sans);
+  font-size: 11.5px;
+  color: var(--dim);
+}
+
+.misra-rhyme-tag.valid {
+  color: var(--ok);
+}
+
+.misra-rhyme-tag.warn {
+  color: var(--no);
+}
+
+.studio-input {
+  width: 100%;
+  border: 1px solid var(--line2);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--ink);
+  padding: 10px 14px;
+  font-family: var(--urdu);
+  font-size: 24px;
+  line-height: 2;
+  direction: rtl;
+  box-sizing: border-box;
+  transition: border-color 150ms ease-out, background 150ms ease-out;
+}
+
+.studio-input:focus {
+  outline: none;
+  border-color: var(--gold);
+  background: var(--bg2);
+}
+
+.studio-input::placeholder {
+  color: var(--ghost);
+  font-size: 18px;
+}
+
+/* Scansion Track below input */
+.scansion-track {
+  margin-top: var(--sp-2);
+  min-height: 38px;
+}
+
+/* Matla & Ghazal Architecture Callouts */
+.architecture-status {
+  margin-top: var(--sp-5);
+}
+
+/* ============================================================
+   Mode 2: Decipher the Baḥr (Scansion Trainer)
+   ============================================================ */
+
+.trainer-section {
+  padding-bottom: var(--sp-6);
+}
+
+/* Mystery Verse Showcase */
+.mystery-verse-display {
+  text-align: center;
+  padding: var(--sp-5) var(--sp-4);
+  margin-bottom: var(--sp-5);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--bg2);
+}
+
+.mystery-verse-poet {
+  font-family: var(--sans);
+  font-size: 11.5px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: var(--sp-1);
+}
+
+.mystery-verse-urdu {
+  font-family: var(--urdu);
+  font-size: 28px;
+  line-height: 2;
+  color: var(--ink);
+  direction: rtl;
+  margin-bottom: var(--sp-1);
+}
+
+.mystery-verse-roman {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--dim);
+  margin-bottom: var(--sp-3);
+}
+
+.mystery-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--faint);
+  padding: 3px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line2);
+  background: var(--bg);
+}
+
+.mystery-badge.unlocked {
+  border-color: var(--ok);
+  color: var(--ok);
+  background: color-mix(in srgb, var(--ok) 8%, transparent);
+}
+
+/* Interactive Syllable Track (Taqtīʿ Board) */
+.taqti-track {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 12px;
+  margin: var(--sp-5) 0 var(--sp-4);
+  flex-wrap: wrap;
+}
+
+/* Interactive Syllable Column */
+.syl-col {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  user-select: none;
+  transition: transform 120ms ease;
+}
+
+.syl-col.active {
+  transform: translateY(-3px);
+}
+
+.syl-token {
+  font-family: var(--urdu);
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--ink);
+  direction: rtl;
+}
+
+.syl-roman-label {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--dim);
+}
+
+/* Syllable Chip Slot */
+.syl-chip-slot {
+  width: 44px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line2);
+  background: var(--bg);
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--faint);
+  border-bottom: 2px solid transparent;
+  transition: all 120ms ease-out;
+}
+
+.syl-col.active .syl-chip-slot {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 8%, var(--bg));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--gold) 20%, transparent);
+}
+
+.syl-chip-slot.short {
+  border-color: var(--mark-s);
+  border-bottom: 3px dotted var(--mark-s);
+  color: var(--teal);
+  background: color-mix(in srgb, var(--teal) 6%, var(--bg));
+}
+
+.syl-chip-slot.long {
+  border-color: var(--mark-l);
+  border-bottom: 3px solid var(--mark-l);
+  color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 6%, var(--bg));
+}
+
+.syl-chip-slot.error {
+  border-color: var(--no);
+  animation: sylHitch 250ms ease;
+}
+
+@keyframes sylHitch {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+
+.syl-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ghost);
+}
+
+/* Tapper Controls (Refined Text & Choice Buttons) */
+.tapper-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sp-3);
+  max-width: 520px;
+  margin: var(--sp-5) auto var(--sp-4);
+}
+
+.tapper-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--line2);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--ink);
+  cursor: pointer;
+  text-align: start;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+
+.tapper-btn:hover {
+  border-color: var(--gold);
+  background: var(--bg2);
+}
+
+.tapper-btn .btn-badge {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--line2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 12px/1 var(--mono);
+  color: var(--faint);
+}
+
+.tapper-btn.short:hover .btn-badge {
+  border-color: var(--mark-s);
+  color: var(--teal);
+}
+
+.tapper-btn.long:hover .btn-badge {
+  border-color: var(--mark-l);
+  color: var(--gold);
+}
+
+.tapper-btn-title {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.tapper-btn-sub {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--faint);
+}
+
+/* Auxiliary Bar */
+.tapper-aux-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--sp-4);
+  margin-top: var(--sp-3);
+  flex-wrap: wrap;
+}
+
+/* Live Meter Radar Table */
+.radar-section {
+  margin-top: var(--sp-6);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--line);
+}
+
+.radar-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--sp-3);
+}
+
+.radar-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.radar-row {
+  border-bottom: 1px solid var(--line);
+  transition: background 150ms ease;
+}
+
+.radar-row.active-match {
+  background: color-mix(in srgb, var(--gold) 4%, transparent);
+}
+
+.radar-row.locked {
+  background: color-mix(in srgb, var(--ok) 8%, transparent);
+}
+
+.radar-row.eliminated {
+  opacity: 0.4;
+}
+
+.radar-cell {
+  padding: 8px 6px;
+  font-size: 13px;
+}
+
+.radar-name {
+  font-family: var(--serif);
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.radar-pattern {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--dim);
+}
+
+.radar-tag {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  text-align: end;
+  white-space: nowrap;
+}
+
+.radar-tag.match {
+  color: var(--ok);
+  font-weight: 500;
+}
+
+.radar-tag.elim {
+  color: var(--faint);
+}
+
+.radar-tag.locked {
+  color: var(--ok);
+  font-weight: 600;
+}
+
+@media (max-width: 767px) {
+  .tapper-controls {
+    grid-template-columns: 1fr;
+  }
+  .radar-pattern {
+    display: none;
+  }
+}
+
+/* Toast Notification */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: var(--bg);
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity 180ms ease-out;
+  pointer-events: none;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toast.show {
+  opacity: 1;
+}
+

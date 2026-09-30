@@ -49,7 +49,7 @@
 .dr-word { font-size: 26px; }
 .dr-word.urdu { font-family: var(--urdu); font-size: 30px; line-height: 2; }
 /* hidden pattern (before answering): quiet placeholder bars, not dashed noise */
-.dr-card .strip .blk.c { border-bottom: 3px solid var(--line2); color: transparent; }
+.dr-card .blk.c { border-bottom: 3px solid var(--line2); color: transparent; }   /* unrevealed placeholder: no dot, no weight */
 
 /* ---- choices: numbered tiles, 2 columns for short answers, 1 for verses ---- */
 .dr-choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-2); margin: var(--sp-3) 0; counter-reset: drc; }
@@ -111,3 +111,27 @@
 .dr-opt span { font-size: 13px; color: var(--faint); }
 .dr-answer { display: flex; align-items: center; gap: var(--sp-3); margin: var(--sp-2) 0; }
 .dr-fb .fb-text { margin-bottom: var(--sp-2); }
+
+/* ---- Match Baḥr: anchor couplet with a big Listen, candidates each with their own Listen ---- */
+.dr-match-stage { gap: var(--sp-3); }
+.dr-listen { display: flex; flex-direction: column; align-items: center; gap: var(--sp-1); }
+.dr-listen-cap { font: 500 11.5px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
+.dr-anchor { display: flex; flex-direction: column; align-items: center; gap: var(--sp-1); }
+.dr-anchor .dr-verse { font-size: 20px; line-height: 1.6; }
+.dr-anchor .dr-verse.urdu { font-family: var(--urdu); font-size: 26px; line-height: 2; }
+.dr-match-choices { grid-template-columns: 1fr; }
+.dr-mrow { display: flex; align-items: center; gap: var(--sp-2); }
+.dr-mrow .dr-choice { flex: 1; min-width: 0; }
+.dr-mrow .dr-cand-play { flex: none; }
+.dr-fam.urdu { font-family: var(--urdu); font-size: 18px; }
+.dr-shared { justify-content: center; }
+.dr-shared-cap { margin: 0 0 var(--sp-2); text-align: center; }
+
+/* Pattern strips follow the reading direction of the script: Urdu runs right to left (bars, option patterns and the
+   playback highlight all travel the way the verse is read); Roman and Devanagari stay left to right (verse.css). */
+html[data-script="ur"] .dr-card :is(.dr-strip, .dr-pat, .dr-ans-strip, .strip) { direction: rtl; }
+/* Playback highlight: wash only. No lift and no border growth, so a lit bar never jumps or detaches from the row. */
+.dr-card .blk.lit { transform: none; border-bottom-width: 3px; }
+.dr-card .blk.c.lit { background: color-mix(in srgb, var(--gold) 28%, transparent); }
+
+.dr-practice-link { text-align: center; margin: var(--sp-3) 0 0; }

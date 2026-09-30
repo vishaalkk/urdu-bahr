@@ -4,14 +4,15 @@ function renderBibliography() {
   if(!list || !BIBLIOGRAPHY_DATA || !BIBLIOGRAPHY_DATA.entries) return;
 
   list.innerHTML = BIBLIOGRAPHY_DATA.entries.map((e, idx) => {
-    const isPritchett = (idx === 0);
+    // Older entries predate the `tag` field, so fall back to the original two-entry assumption.
+    const tag = e.tag || (idx === 0 ? 'Pedagogical Foundation & Handbook' : 'Computational Linguistics & Script Engine');
     const authorsDisp = (e.authors || []).join(' & ');
     return `
       <div class="bib-entry" id="bib-${e.id}">
         <div class="bib-entry-head">
           <div>
             <span class="bib-year mono">${e.year}</span>
-            <span class="bib-tag">${isPritchett ? 'Pedagogical Foundation & Handbook' : 'Computational Linguistics & Script Engine'}</span>
+            <span class="bib-tag">${tag}</span>
             <h3 class="bib-title">${e.title}</h3>
             ${e.urdu_title ? `<div class="bib-urdu-title">${e.urdu_title}</div>` : ''}
             <div class="bib-authors">${authorsDisp}</div>

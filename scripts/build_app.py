@@ -23,6 +23,15 @@ with open('data/ghalib_extended.json', 'r', encoding='utf-8') as f:
 
 with open('data/mir_extended.json', 'r', encoding='utf-8') as f:
     MIR_EXT = json.load(f)
+# Famous couplets from Irfan 'Abid's urdupoetry.com bahr article (data/urdupoetry_bahrs.json
+# has the full article extraction + scan verification; this is just the subset wired into
+# Meter > Lookup as extra examples). See scripts/incorporate_iqbal.js for the sibling pattern.
+with open('data/urdupoetry_verses.json', 'r', encoding='utf-8') as f:
+    URDUPOETRY_EXT = json.load(f)
+# Iqbal: Frances Pritchett's pages, scraped by scripts/scrape_iqbal.py (+ incorporate_iqbal.js).
+# Only feeds the word map below, so typed Iqbal lines get her spelling.
+with open('data/iqbal_corpus.json', 'r', encoding='utf-8') as f:
+    IQBAL = [p for p in json.load(f) if p['lines'] and isinstance(p['lines'][0], dict)]
 
 # Full per-line data (ascii/ur/hi/ro) for every retained ghazal, not just a
 # truncated preview — see docs/reviews/12's lesson: a preview-only "opening
@@ -49,14 +58,26 @@ MIR_EXT_PREVIEW = [{
 
 # Word-level Urdu -> Pritchett-ASCII dictionary, built from every line we have
 # verified translation for (226 exercise lines + 2920 Ghalib-extended lines +
-# 3110 Mir-extended lines). Used at runtime so a *novel* typed line composed
+# 3110 Mir-extended lines + 339 Iqbal lines from Pritchett's pages). Used at runtime so a *novel* typed line composed
 # mostly of known ghazal vocabulary can still be routed through the real Pue
 # parser, instead of the lossy hand-rolled character map, whenever every word
 # in it is recognized.
+def _split_hyphens(tokens):
+    # Fran hyphenates compounds (kaav-kaav-e, ((ajz-o-qaalib) where Urdu writes separate
+    # words: split them, keeping iẓāfat -e on its word and -o- as the word و
+    # (same rule as scripts/build_fran_lexicon.py)
+    out = []
+    for t in tokens:
+        for i, p in enumerate(t.split('-')):
+            if i and p in ('e', 'ye') and out: out[-1] += '-' + p
+            elif p: out.append(p)
+    return out
 _word_pair_freq = Counter()
-for _g in EXERCISES + GHALIB_EXT + MIR_EXT:
+for _g in EXERCISES + GHALIB_EXT + MIR_EXT + IQBAL:
     for _l in _g['lines']:
         _uw, _aw = _l['ur'].split(), _l['ascii'].split()
+        if len(_uw) != len(_aw):
+            _aw = _split_hyphens(_aw)
         if len(_uw) != len(_aw):
             continue
         for _u, _a in zip(_uw, _aw):
@@ -140,17 +161,17 @@ const fams = [
   gz:[{p:'Ghalib',ascii:'baaziichah-e a:tfaal hai dunyaa mire aage',ascii2:'hotaa hai shab-o-roz tamaashaa mire aage',ref:'Ghalib 208'}]},
  {id:'yihnathi',meters:[36],shape:true,pattern:'- - = - / = - = = // - - = - / = - = =',pair:'Two mirrored halves; an extra short may sit just before the break.',
   gz:[{p:'Ghalib',ascii:'yih nah thii hamaarii qismat kih vi.saal-e yaar hotaa',ascii2:'agar aur jiite rahte yahii intizaar hotaa',ref:'Ghalib 20'}]},
- {id:'nuktachin',meters:[18,19],shape:true,pattern:'x - = = / - - = = / - - = = / = =',pair:'The final long may split into two shorts; the first long may be short.',
+ {id:'nuktachin',meters:[18,19],shape:true,pattern:'x - = = / - - = = / - - = = / = =',pair:'The next-to-last long may split into two shorts; the first long may be short.',
   gz:[{p:'Ghalib',ascii:'nuktah-chii;N hai ;Gam-e dil us ko sunaa))e nah bane',ascii2:'kyaa bane baat jahaa;N baat banaa))e nah bane',ref:'Ghalib 191'},
       {p:'Atish',ascii:';hasrat-e jalvah-e diidaar li))e phirtii hai',ref:'handbook ex. 9'}]},
- {id:'harek',meters:[33,34],shape:true,pattern:'- = - = / - - = = / - = - = / = =',pair:'The final long may split into two shorts.',
+ {id:'harek',meters:[33,34],shape:true,pattern:'- = - = / - - = = / - = - = / = =',pair:'The next-to-last long may split into two shorts.',
   gz:[{p:'Ghalib',ascii:'har ek baat pah kahte ho tum kih tuu kyaa hai',ascii2:'tumhii;N kaho kih yih andaaz-e guftaguu kyaa hai',ref:'Ghalib 178'},
       {p:'Ghalib',ascii:'bahut sahii ;Gam-e giitii sharaab kam kyaa hai',ref:'Ghalib 216'},
       {p:'Atish',ascii:'yih aarzuu thii tujhe gul ke ruu bah ruu karte',ref:'handbook ex. 10'}]},
  {id:'muddat',meters:[5],shape:true,pattern:'= = - / = - = - / - = = - / = - =',
   gz:[{p:'Ghalib',ascii:'muddat hu))ii hai yaar ko mihmaa;N kiye hu))e',ascii2:'josh-e qada;h se bazm charaaGaa;N kiye hu))e',ref:'Ghalib 233'},
       {p:'Zauq',ascii:'laa))ii ;hayaat aa))e qa.zaa le chalii chale',ref:'handbook ex. 12'}]},
- {id:'milne',meters:[25],shape:true,pattern:'= - - = / - = - = // = - - = / - = - =',pair:'Two halves; an extra short may sit before the break (the ر of the second دیر).',
+ {id:'milne',meters:[25],shape:true,pattern:'= - - = / - = - = // = - - = / - = - =',pair:'Two halves; an extra short may sit before the break.',
   gz:[{p:'Mir',ascii:'milne lage ho der der dekhiye kyaa hai kyaa nahii;N',ref:'handbook ex. 3'}]},
  {id:'use',meters:[27],cell:'- = = =',reps:3,clip:'last cell clipped to – = =',pattern:'- = = = / - = = = / - = =',
   gz:[{p:'Zauq',ascii:'use ham ne bahut ;Dhuu;N;Dhaa nah paayaa',ref:'handbook ex. 11'}]},
@@ -258,6 +279,7 @@ substitutions = {
     'METER_MAP_DATA': json.dumps(meter_map_data, ensure_ascii=False),
     'GHALIB_EXT_DATA': json.dumps(GHALIB_EXT_PREVIEW, ensure_ascii=False),
     'MIR_EXT_DATA': json.dumps(MIR_EXT_PREVIEW, ensure_ascii=False),
+    'URDUPOETRY_DATA': json.dumps(URDUPOETRY_EXT, ensure_ascii=False),
     'WORD_ASCII_MAP': json.dumps(WORD_ASCII_MAP, ensure_ascii=False),
     'FAMS': fams_json,
     # meter_map_bundled and rhythm_roll_bundled are NOT placeholders in the JS,
@@ -294,7 +316,7 @@ def build_js_chunk(files):
 
 # Find which JS files are in script1 (pue + engine) vs script2 (rest)
 js_files_in_manifest = manifest['js']
-script1_files = [f for f in js_files_in_manifest if '00-pue-parser' in f or '01-engine' in f]
+script1_files = [f for f in js_files_in_manifest if '00-pue-parser' in f or '01b-hypothesis' in f or '01-engine' in f]
 script2_files = [f for f in js_files_in_manifest if f not in script1_files]
 
 script1_content = build_js_chunk(script1_files)
@@ -357,7 +379,11 @@ full_html = f"""<!DOCTYPE html>
 
 {get_bp('about')}
 
+{get_bp('guide')}
+
 {get_bp('tap')}
+
+{get_bp('practice')}
 
 {get_bp('footer')}
 
@@ -379,7 +405,7 @@ full_html = f"""<!DOCTYPE html>
 
 
 # ─── 7b. Structural checks: every body partial used, sections balanced ──────
-_used = {'header','home','nav','settings','scan','ghazals','about','tap','footer'}
+_used = {'header','home','nav','settings','scan','ghazals','about','guide','tap','practice','footer'}
 _unused = [k for k in body_parts if k not in _used and not any(k == g or k.startswith(g + '-') for g in ('weight','meter'))]
 if _unused:
     raise SystemExit(f"build_app: manifest body partials not placed in the page: {_unused}")

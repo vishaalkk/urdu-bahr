@@ -1,13 +1,16 @@
 
   <!-- Subtab 3: Look up -->
   <div id="meterPanelLookup" class="subpanel">
-    <div class="card lookup-head-card">
-      <h2 class="section-title lookup-title">All 37 classical meters</h2>
+    <div class="lookup-head">
+      <h2 class="section-title lookup-title">Classical meters</h2>
       <p class="small dim lookup-desc">Filter through classical meters, rubāʿī forms, and Hindi meters.</p>
-      <div class="lookup-chips-row">
-        <button class="tagbtn on" id="filterMeterAll" onclick="filterMeterLookup('all')">All 37</button>
-        <button class="tagbtn" id="filterMeterRubai" onclick="filterMeterLookup('rubai')">Rubāʿī</button>
-        <button class="tagbtn" id="filterMeterHindi" onclick="filterMeterLookup('hindi')">Hindi</button>
+      <div class="subtabs seg" role="tablist" aria-label="Meter kinds">
+        <button class="seg-btn on" id="filterMeterAll" onclick="filterMeterLookup('all')">All</button>
+        <button class="seg-btn" id="filterMeterRubai" onclick="filterMeterLookup('rubai')">Rubāʿī</button>
+        <button class="seg-btn" id="filterMeterHindi" onclick="filterMeterLookup('hindi')">Hindi</button>
+      </div>
+      <div class="row ghazal-controls">
+        <span id="meterLookupCount" class="ghazal-collection-count">37 meters</span>
       </div>
     </div>
     <div id="allMetersList">

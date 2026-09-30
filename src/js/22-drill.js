@@ -24,7 +24,7 @@ var DR_TYPES = {
     { key: 'bahr', label: 'Which bahr' },
     { key: 'limping', label: 'In the bahr, or limping?' },
     { key: 'foot', label: 'Which foot' },
-    { key: 'ghazal', label: 'Which ghazal' }
+    { key: 'match', label: 'Match Baḥr' }
   ]
 };
 var DR_SOURCES = [
@@ -44,7 +44,16 @@ function drEsc(s) {
 }
 function drLabelForSource(k) { return k === 'handbook' ? 'Handbook' : k === 'ghalib' ? 'Ghalib' : k === 'mir' ? 'Mir' : k; }
 function drCapFirst(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
-function drRawFromSeq(seq) { return seq.map(w => w === 'l' ? '=' : w === 's' ? '-' : w === 'x' ? 'x' : '-').join(' '); }
+function drRawFromSeq(seq) { return seq.map(w => w === 'l' ? '=' : w === 's' ? '-' : w === 'x' ? 'x' : w === '/' ? '/' : '-').join(' '); }
+/* playSeq may carry '/' foot delimiters: audio and the strip need them, the syllable-only paths do not */
+function drSyls(seq) { return seq.filter(w => w !== '/'); }
+function drStripTokens(seq) { return seq.map(w => w === '/' ? '|' : w); }
+function drScript() { return (typeof currentScript !== 'undefined') ? currentScript : 'ur'; }
+/* stop any drill audio (and its ▶/❚❚ state) so it never outlives the question it belonged to */
+function drStopAudio() {
+  if (typeof pbCancel === 'function') pbCancel();
+  else if (typeof stopAll === 'function') stopAll();
+}
 
 function drFlipOne(seq) {
   const t = seq.slice();
@@ -78,6 +87,17 @@ function drActiveTypes(tab) {
   return keys.filter(k => st.types.has(k));
 }
 
+/* Other-family meters that fit this line almost as well as the best one (cost within `gap`). A flexible syllable can make
+   one line fit several meters; Pritchett settles it from the rest of the ghazal, which a one-line drill can't show.
+   Drills prefer lines where this is empty. Variants inside one family (14/15, 18/19...) don't count as ambiguity. */
+function fitAmbiguity(res, gap) {
+  const f = (res && res.fits) || [];
+  if (f.length < 2) return [];
+  const g = gap == null ? 1.5 : gap, b = f[0], fb = (typeof famOfMeter !== 'undefined') ? famOfMeter[b.meter.id] : null;
+  return f.slice(1).filter(x => x.c <= b.c + g && (!fb || (typeof famOfMeter !== 'undefined' && famOfMeter[x.meter.id] !== fb)));
+}
+window.fitAmbiguity = fitAmbiguity;
+
 /* sample one confident-scan (cost <= 2.5) real line from the chosen sources.
    Lazy: a handful of random line + Scan.scanLine tries, never the whole corpus. */
 function drSample(sources) {
@@ -92,6 +112,7 @@ function drSample(sources) {
     let res, fit;
     try { res = Scan.scanLine(line.ur); fit = res.fits && res.fits[0]; } catch (e) { continue; }
     if (!fit || typeof verdictOf !== 'function' || verdictOf(fit.c)[0] !== 'ok') continue;
+    if (tries < 18 && fitAmbiguity(res).length) continue;   // prefer lines that fit one family only; relax if none found
     return { source: src, item, line, res, fit };
   }
   return null;
@@ -131,16 +152,18 @@ function drGenWeigh() {
     const pats = drParseWt(item.wt);
     const correct = pats[0];
     if (!correct || correct.length < 2 || correct.length > 4) continue;   // one syllable is too easy
-    const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
-    const wordDisp = (typeof getDictWordDisplay === 'function') ? getDictWordDisplay(item, cs) : (item.ascii || item.syl || '');
     const distractors = drDistractors(correct, 2);
     const choices = drShuffle([correct, ...distractors]);
     return {
       type: 'weigh', source: 'handbook',
       playSeq: null,
-      promptHTML: `<div class="dr-word ${cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${drEsc(wordDisp)}</div>` +
-        (item.mean ? `<p class="dr-mean">${drEsc(item.mean.replace(/^"|"$/g, ''))}</p>` : '') + `<p class="dr-ask">Pick its long–short pattern.</p>`,
-      choices: choices.map(c => ({ html: drPatHTML(c), seq: c })),
+      promptFn: () => {
+        const cs = drScript();
+        const wordDisp = (typeof getDictWordDisplay === 'function') ? getDictWordDisplay(item, cs) : (item.ascii || item.syl || '');
+        return `<div class="dr-word ${cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${drEsc(wordDisp)}</div>` +
+          (item.mean ? `<p class="dr-mean">${drEsc(item.mean.replace(/^"|"$/g, ''))}</p>` : '') + `<p class="dr-ask">Pick its long–short pattern.</p>`;
+      },
+      choices: choices.map(c => ({ seq: c })),
       correctIndex: choices.findIndex(c => c === correct),
       answerSeqs: [correct],
       reason: `This is how it scans.`
@@ -156,15 +179,17 @@ function drGenFlexFixed() {
     const pats = drParseWt(item.wt);
     if (!pats.length) continue;
     const flexible = pats.some(p => p.includes('x'));
-    const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
-    const wordDisp = (typeof getDictWordDisplay === 'function') ? getDictWordDisplay(item, cs) : (item.ascii || item.syl || '');
     const opts = [{ html: '<span class="dr-opt"><b>Flexible</b><span>a syllable can be read long or short</span></span>', val: true },
                   { html: '<span class="dr-opt"><b>Fixed</b><span>always the same long–short pattern</span></span>', val: false }];
     return {
       type: 'flexfixed', source: 'handbook',
       playSeq: null,
-      promptHTML: `<div class="dr-word ${cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${drEsc(wordDisp)}</div>` +
-        (item.mean ? `<p class="dr-mean">${drEsc(item.mean.replace(/^"|"$/g, ''))}</p>` : '') + `<p class="dr-ask">Can its weight bend to fit the meter?</p>`,
+      promptFn: () => {
+        const cs = drScript();
+        const wordDisp = (typeof getDictWordDisplay === 'function') ? getDictWordDisplay(item, cs) : (item.ascii || item.syl || '');
+        return `<div class="dr-word ${cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${drEsc(wordDisp)}</div>` +
+          (item.mean ? `<p class="dr-mean">${drEsc(item.mean.replace(/^"|"$/g, ''))}</p>` : '') + `<p class="dr-ask">Can its weight bend to fit the meter?</p>`;
+      },
       answerSeqs: pats.slice(0, 3),
       choices: opts,
       correctIndex: opts.findIndex(o => o.val === flexible),
@@ -183,19 +208,22 @@ function drGenNoteType(sources, matcher) {
     const withNotes = drNoteSegments(s.res, exp);
     const hit = withNotes.find(w => matcher(w.note));
     if (!hit) continue;
-    const correct = hit.seg.syl.map(x => x.resolved);
-    if (!correct.length) continue;
-    const distractors = drDistractors(correct, 2);
-    const choices = drShuffle([correct, ...distractors]);
-    const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
-    const phraseDisp = cs === 'ur' ? hit.phrase : (typeof translitText === 'function' ? translitText(hit.phrase, cs) : hit.phrase);
+    const segSeq = hit.seg.syl.map(x => x.resolved);
+    if (!segSeq.length) continue;
+    // ask about one syllable (the flexible one if there is one, else the last) as plain Short vs Long
+    const target = hit.seg.syl.find(x => x.native === 'x') || hit.seg.syl[hit.seg.syl.length - 1];
+    if (target.resolved !== 'l' && target.resolved !== 's') continue;
     return {
       type: 'note', source: s.source,
-      playSeq: null, revealSyl: hit.seg.syl,
-      promptHTML: `<div class="dr-word ${cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${drEsc(phraseDisp)}</div><p class="dr-ask">How is this read in the line?</p>`,
-      choices: choices.map(c => ({ html: drPatHTML(c), seq: c })),
-      correctIndex: choices.findIndex(c => c === correct),
-      answerSeqs: [correct],
+      playSeq: segSeq, revealSyl: hit.seg.syl,
+      promptFn: () => {
+        const cs = drScript();
+        const phraseDisp = cs === 'ur' ? hit.phrase : (typeof translitText === 'function' ? translitText(hit.phrase, cs) : hit.phrase);
+        return `<div class="dr-word ${cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${drEsc(phraseDisp)}</div><p class="dr-ask">In this line, is the syllable “${drEsc(target.text || '')}” short or long?</p>`;
+      },
+      choices: [{ html: '<span class="dr-opt"><b>Short (–)</b></span>', val: 's' }, { html: '<span class="dr-opt"><b>Long (=)</b></span>', val: 'l' }],
+      correctIndex: target.resolved === 's' ? 0 : 1,
+      answerSeqs: [segSeq],
       reason: drCapFirst(hit.note) + '.'
     };
   }
@@ -221,55 +249,161 @@ function drGenBahr(sources) {
     if (pool.length < 2) continue;
     const opts = drShuffle([fam, ...drShuffle(pool).slice(0, 3)]).slice(0, Math.min(4, pool.length + 1));
     let exp; try { exp = Scan.explain(s.res, s.fit); } catch (e) { continue; }
+    // '/' between feet: audio pauses there (footGapSecs) and the strip draws dividers
+    const playSeq = [];
+    exp.syl.forEach((x, k) => { if (k > 0 && x.foot !== exp.syl[k - 1].foot) playSeq.push('/'); playSeq.push(x.resolved); });
     return {
       type: 'bahr', source: s.source,
-      playSeq: exp.syl.map(x => x.resolved),
+      playSeq,
       promptHTML: `<p class="dim small">Listen, then name the bahr.</p>`,
-      choices: opts.map(f => ({ html: `<span class="dr-verse ${(typeof currentScript !== 'undefined' && currentScript === 'ur') ? 'urdu' : ''}">${drEsc(drFamText(f))}</span>`, fam: f })),
+      choices: opts.map(f => ({ fam: f })),
       correctIndex: opts.findIndex(f => f.id === fam.id),
-      reason: `Same bahr as “${drEsc(drFamText(fam))}”.`
+      reasonFn: () => `Same bahr as “${drEsc(drFamText(fam))}”.`
     };
   }
   return null;
 }
 
-function drGenGhazal(sources) {
+/* ---------- Match Baḥr: an anchor couplet + candidate verses by other poets ----------
+   Nothing is pre-rendered: the question holds raw objects ({item, src, line, p, ...}) and
+   renderPrompt / render / reasonRender / revealRender build the HTML at render time, so the
+   script switcher re-renders them (see drOnScriptChange). The anchor comes from the ticked sources;
+   candidates are drawn from every bundled corpus so the poets vary. Exactly one candidate
+   scans to the anchor's meter (another poet); the distractors are other poets in a different
+   baḥr family. */
+function drPoetKey(item, src) { return String(item.poet || drLabelForSource(src)).toLowerCase().trim(); }
+function drMetersOf(it) { const m = it.meters || it.m || it.meter; return (Array.isArray(m) ? m : [m]).map(String); }
+function drScanLine(line, strict) {
+  if (!line || !line.ur) return null;
+  let res, fit, exp;
+  try {
+    res = Scan.scanLine(line.ur); fit = res.fits && res.fits[0];
+    if (!fit || typeof verdictOf !== 'function' || verdictOf(fit.c)[0] !== 'ok') return null;
+    if (strict && fitAmbiguity(res).length) return null;
+    exp = Scan.explain(res, fit);
+  } catch (e) { return null; }
+  if (!exp || !exp.syl || exp.syl.length < 6) return null;
+  return { res, fit, exp, p: exSeq(exp), mid: String(fit.meter.id) };
+}
+/* a confident-scanning line from the item (a few random tries), or null */
+function drScanFromItem(item) {
+  const lines = drShuffle(item.lines || []).slice(0, 5);
+  for (const strict of [true, false]) for (const line of lines) { const sc = drScanLine(line, strict); if (sc) return Object.assign({ line }, sc); }
+  return null;
+}
+function drMatchPool() {
   const pool = [];
-  sources.forEach(src => drCorpusFor(src).forEach(item => { if (item.lines && item.lines.length) pool.push({ src, item }); }));
-  if (pool.length < 3) return null;
-  for (let tries = 0; tries < 20; tries++) {
+  DR_SOURCES.forEach(s => drCorpusFor(s.key).forEach(item => {
+    if (item.lines && item.lines.length) pool.push({ src: s.key, item, poet: drPoetKey(item, s.key), meters: drMetersOf(item) });
+  }));
+  return pool;
+}
+function drMatchLineHTML(ln) {
+  const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
+  const cls = cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : '');
+  return `<span class="dr-verse ${cls}">${drEsc(ln[cs] || ln.ur)}</span>`;
+}
+function drMatchPoet(o) { return drEsc(o.item.poet || drLabelForSource(o.src)); }
+
+function drGenMatch(sources) {
+  if (typeof FAMS === 'undefined' || typeof famOfMeter === 'undefined' || typeof exSeq !== 'function') return null;
+  const pool = drMatchPool();
+  if (pool.length < 8) return null;
+  for (let tries = 0; tries < 25; tries++) {
     const s = drSample(sources);
     if (!s) continue;
-    // distractors must be in a different meter, or the pattern alone can't decide the answer
+    let aExp; try { aExp = Scan.explain(s.res, s.fit); } catch (e) { continue; }
+    if (!aExp || aExp.syl.length < 6) continue;
     const mid = String(s.fit.meter.id);
-    const metersOf = it => { const m = it.meters || it.m || it.meter; return (Array.isArray(m) ? m : [m]).map(String); };
-    const distractors = drShuffle(pool.filter(p => !(p.item === s.item && p.src === s.source) && !metersOf(p.item).includes(mid))).slice(0, 2);
-    if (distractors.length < 2) continue;
-    let exp; try { exp = Scan.explain(s.res, s.fit); } catch (e) { continue; }
-    const optsRaw = drShuffle([
-      { item: s.item, src: s.source, line: s.line },
-      ...distractors.map(d => ({ item: d.item, src: d.src, line: drPick(d.item.lines) }))
-    ]);
-    const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
-    const isRtl = cs === 'ur';
+    const fam = famOfMeter[s.fit.meter.id] || famOfMeter[mid];
+    if (!fam) continue;
+    const famMeters = fam.meters.map(String);
+    const aPoet = drPoetKey(s.item, s.source);
+    // anchor: the couplet the line belongs to, when its partner line scans in the same meter
+    const idx = s.item.lines.indexOf(s.line);
+    const partner = idx >= 0 ? s.item.lines[idx % 2 === 0 ? idx + 1 : idx - 1] : null;
+    const psc = partner && drScanLine(partner);
+    const anchorLines = [{ line: s.line, p: exSeq(aExp) }];
+    if (psc && psc.mid === mid) {
+      const pl = { line: partner, p: psc.p };
+      if (idx % 2 === 0) anchorLines.push(pl); else anchorLines.unshift(pl);
+    }
+    // the one that matches: another poet, same meter
+    let correct = null;
+    for (const x of drShuffle(pool.filter(x => x.poet !== aPoet && x.meters.includes(mid))).slice(0, 6)) {
+      const sc = drScanFromItem(x.item);
+      if (sc && sc.mid === mid) { correct = Object.assign({ src: x.src, item: x.item, poetKey: x.poet }, sc); break; }
+    }
+    if (!correct) continue;
+    // distractors: other poets, each in a different baḥr family from the anchor and from each other
+    const want = 2 + Math.floor(Math.random() * 2);   // 3 or 4 candidates in all
+    const usedPoets = new Set([aPoet, correct.poetKey]), usedFams = new Set([fam.id]);
+    const others = [];
+    for (const x of drShuffle(pool.filter(x => !x.meters.some(m => famMeters.includes(m))))) {
+      if (others.length >= want) break;
+      if (usedPoets.has(x.poet)) continue;
+      const sc = drScanFromItem(x.item);
+      if (!sc || famMeters.includes(sc.mid)) continue;
+      const f = famOfMeter[sc.fit.meter.id] || famOfMeter[sc.mid];
+      if (f && usedFams.has(f.id)) continue;
+      usedPoets.add(x.poet); if (f) usedFams.add(f.id);
+      others.push(Object.assign({ src: x.src, item: x.item, poetKey: x.poet }, sc));
+    }
+    if (others.length < 2) continue;
+    const cands = drShuffle([correct, ...others].map(c => ({ src: c.src, item: c.item, line: c.line, p: c.p, ok: c === correct })));
+    const anchor = { src: s.source, item: s.item, lines: anchorLines, fam, shared: aExp.syl.map(x => x.resolved), sharedFeet: aExp.syl.map(x => x.foot) };
+    const correctIndex = cands.findIndex(c => c.ok);
     return {
-      type: 'ghazal', source: s.source,
-      playSeq: exp.syl.map(x => x.resolved),
-      promptHTML: `<p class="dim small">Only the pattern plays. Which verse rides on it?</p>`,
-      choices: optsRaw.map(o => {
-        const txt = o.line[cs] || o.line.ur;
-        return {
-          html: `<span class="dr-verse ${isRtl ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${drEsc(txt)}</span>` +
-                `<span class="tiny faint dr-choice-meta"> — ${drEsc(o.item.poet || drLabelForSource(o.src))}</span>`,
-          match: o
-        };
-      }),
-      correctIndex: optsRaw.findIndex(o => o.item === s.item && o.src === s.source),
-      reason: `“${drEsc(s.line[cs] || s.line.ur)}” — ${drEsc(s.item.poet || drLabelForSource(s.source))}.`
+      type: 'match', source: s.source, playSeq: null, anchor, cands, correctIndex,
+      renderPrompt: function (tab) {
+        return `<div class="dr-listen"><button type="button" class="play dr-play" aria-label="Listen" data-label="Listen" onclick="drMatchPlay('${tab}','anchor',0,this)">▶︎</button><span class="dr-listen-cap">Listen</span></div>` +
+          `<div class="dr-anchor">${anchor.lines.map(l => drMatchLineHTML(l.line)).join('')}<span class="tiny faint dr-choice-meta">${drMatchPoet(anchor)}</span></div>` +
+          `<p class="dr-ask">Which of these verses rides on the same rhythm?</p>`;
+      },
+      choices: cands.map((c, i) => ({
+        cand: c,
+        render: function (tab) {
+          return `<div class="dr-mrow"><button type="button" class="play sm dr-cand-play" aria-label="Listen" data-label="Listen" onclick="drMatchPlay('${tab}','cand',${i},this)">▶︎</button>` +
+            `<button type="button" class="dr-choice" data-idx="${i}" onclick="drAnswer('${tab}',${i})">${drMatchLineHTML(c.line)}<span class="tiny faint dr-choice-meta"> — ${drMatchPoet(c)}</span></button></div>`;
+        }
+      })),
+      reasonRender: function (ok, chosen) {
+        if (ok) {
+          const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
+          const fl = (typeof getLineDisplay === 'function' && typeof famLabel === 'function') ? getLineDisplay(famLabel(fam), cs) : drEsc(fam.pattern || '');
+          return `same rhythm. Both ride the baḥr of <span class="dr-fam ${cs === 'ur' ? 'urdu' : ''}">${fl}</span>.`;
+        }
+        const want = anchor.shared.length, got = cands[chosen].p.seq.length;
+        const hint = got !== want
+          ? `that one runs ${got > want ? 'longer' : 'shorter'} than the couplet above. Listen for how many beats it takes.`
+          : `it is the same length, but its long and short beats fall in different places. Listen for where the couplet leans.`;
+        return `not the same rhythm; ${hint} The matching verse is marked below.`;
+      },
+      revealRender: function (tab) {
+        const c = cands[correctIndex];
+        const toks = [];
+        anchor.shared.forEach((v, i) => { if (i > 0 && anchor.sharedFeet[i] !== anchor.sharedFeet[i - 1]) toks.push('|'); toks.push(v); });
+        return `<div class="dr-answer dr-shared"><button type="button" class="play sm dr-ans-play" aria-label="Hear both" data-label="Hear both" onclick="drMatchPlay('${tab}','both',0,this)">▶︎</button>` +
+          `<span class="dr-ans-strip" id="dr-${tab}-match-strip"><span class="dr-pat">${strip(toks)}</span></span></div>` +
+          `<p class="tiny faint dr-shared-cap">The shared rhythm of ${drMatchPoet(anchor)} and ${drMatchPoet(c)}.</p>`;
+      }
     };
   }
   return null;
 }
+
+/* Listen buttons for Match Baḥr. 'anchor' plays the couplet's lines, 'cand' one candidate,
+   'both' the anchor's first line then the matching verse (foot gaps come from play()). */
+function drMatchPlay(tab, kind, i, btn) {
+  const q = DR[tab] && DR[tab].current;
+  if (!q || q.type !== 'match' || typeof pbToggle !== 'function') return;
+  const host = document.getElementById('dr-' + tab + '-match-strip');
+  const lit = p => { const n = host ? [...host.querySelectorAll('.blk')] : []; return n.length === p.seq.length ? n : null; };
+  if (kind === 'anchor') pbToggle('drill-anchor:' + tab, btn, () => q.anchor.lines.map(l => ({ p: l.p, nodes: null, groups: null })));
+  else if (kind === 'cand') pbToggle('drill-cand:' + tab + ':' + i, btn, () => [{ p: q.cands[i].p, nodes: null, groups: null }]);
+  else pbToggle('drill-both:' + tab, btn, () => [q.anchor.lines[0].p, q.cands[q.correctIndex].p].map(p => ({ p, nodes: lit(p), groups: null })));
+}
+window.drMatchPlay = drMatchPlay;
 
 function drGenLimping(sources) {
   for (let tries = 0; tries < 15; tries++) {
@@ -352,7 +486,7 @@ function drGenerate(tab) {
       if (type === 'bahr') q = drGenBahr(sources);
       else if (type === 'limping') q = drGenLimping(sources);
       else if (type === 'foot') q = drGenFoot(sources);
-      else if (type === 'ghazal') q = drGenGhazal(sources);
+      else if (type === 'match') q = drGenMatch(sources);
     }
     if (q) {
       q.kind = type;
@@ -367,10 +501,23 @@ function drGenerate(tab) {
 var DR_QUESTION = {
   weigh: 'Weigh the word', flexfixed: 'Flexible or fixed?', izafat: 'Iẓāfat — how is it read?',
   grafting: 'Grafting — how is it read?', ojoin: "'O' joining — how is it read?",
-  bahr: 'Which bahr is this?', limping: 'In the bahr, or limping?', foot: 'Which foot changed?', ghazal: 'Which verse rides on this?'
+  bahr: 'Which bahr is this?', limping: 'In the bahr, or limping?', foot: 'Which foot changed?', match: 'Match Baḥr'
 };
 /* a weight pattern as the same coloured bars used everywhere else */
 function drPatHTML(seq) { return `<span class="dr-pat">${(typeof strip === 'function') ? strip(seq) : drPatText(seq)}</span>`; }
+/* choices hold raw objects (seq / fam / match) and are turned into HTML at render time,
+   so a script switch (Urdu / हिन्दी / Roman) re-renders them in the new script */
+function drChoiceHTML(c) {
+  const cs = drScript(), cls = cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : '');
+  if (c.seq) return drPatHTML(c.seq);
+  if (c.fam) return `<span class="dr-verse ${cs === 'ur' ? 'urdu' : ''}">${drEsc(drFamText(c.fam))}</span>`;
+  if (c.match) {
+    const o = c.match, txt = o.line[cs] || o.line.ur;
+    return `<span class="dr-verse ${cls}">${drEsc(txt)}</span>` +
+           `<span class="tiny faint dr-choice-meta"> — ${drEsc(o.item.poet || drLabelForSource(o.src))}</span>`;
+  }
+  return c.html;
+}
 
 /* ---------- mount / render / interact ---------- */
 function drDefaultState() { return { types: new Set(['all']), sources: new Set(['all']), correct: 0, attempted: 0, current: null }; }
@@ -384,7 +531,7 @@ function drShellHTML(tab) {
     <div class="card dr-card">
       <div class="dr-card-head">
         <span class="dr-qlabel" id="dr-${tab}-qlabel"></span>
-        <span class="dr-head-right"><span class="eyebrow dr-tag" id="dr-${tab}-tag"></span><span class="mono tiny dr-score" id="dr-${tab}-score">0 / 0</span></span>
+        <span class="dr-head-right"><span class="eyebrow dr-tag" id="dr-${tab}-tag"></span><span class="mono tiny dr-score" id="dr-${tab}-score">Score: 0 / 0</span></span>
       </div>
       ${(typeof legendHTML === 'function') ? legendHTML('dr-legend') : ''}
       <div class="dr-prompt" id="dr-${tab}-prompt"></div>
@@ -392,6 +539,7 @@ function drShellHTML(tab) {
       <div class="dr-choices" id="dr-${tab}-choices"></div>
       <div class="fb dr-fb" id="dr-${tab}-fb"></div>
     </div>
+    <p class="tiny faint dr-practice-link">Rather tap the rhythm out yourself? <a href="#/lab/practice">Practice with the 1 and 2 keys →</a></p>
   </div>`;
 }
 
@@ -412,6 +560,7 @@ function drRenderFilterChips(tab) {
   if (srcHost) srcHost.innerHTML = drChipsHTML(tab, 'source', DR_SOURCES);
 }
 function drFilterClick(tab, kind, key) {
+  drStopAudio();
   if (!DR[tab]) DR[tab] = drDefaultState();
   const sel = kind === 'type' ? DR[tab].types : DR[tab].sources;
   if (key === 'all') { sel.clear(); sel.add('all'); }
@@ -430,7 +579,7 @@ function drRenderQuestion(tab) {
   const q = st.current;
   const tagEl = $('dr-' + tab + '-tag'), promptEl = $('dr-' + tab + '-prompt'), stripEl = $('dr-' + tab + '-strip'),
         choicesEl = $('dr-' + tab + '-choices'), fbEl = $('dr-' + tab + '-fb'), scoreEl = $('dr-' + tab + '-score');
-  if (scoreEl) scoreEl.textContent = st.correct + ' / ' + st.attempted;
+  if (scoreEl) scoreEl.textContent = 'Score: ' + st.correct + ' / ' + st.attempted;
   if (!q) {
     if (tagEl) tagEl.textContent = '';
     if (promptEl) promptEl.innerHTML = '<p class="dim small">No questions available for this filter yet — try a different source or type.</p>';
@@ -439,15 +588,17 @@ function drRenderQuestion(tab) {
     if (fbEl) { fbEl.innerHTML = ''; fbEl.className = 'fb dr-fb'; }
     return;
   }
-  if (tagEl) tagEl.textContent = drLabelForSource(q.source);
+  if (tagEl) tagEl.textContent = 'Source: ' + drLabelForSource(q.source);
   const qlEl = $('dr-' + tab + '-qlabel'); if (qlEl) qlEl.textContent = q.label || '';
-  if (promptEl) promptEl.innerHTML = (q.playSeq ? `<button type="button" class="play dr-play" aria-label="Listen" data-label="Listen" onclick="drPlayToggle('${tab}',this)">▶︎</button>` : '') + `<div class="dr-stage">${q.promptHTML || ''}</div>`;
-  if (stripEl) stripEl.innerHTML = q.playSeq ? strip(q.answered ? q.playSeq : q.playSeq.map(() => 'c')) : '';
+  if (promptEl) promptEl.innerHTML = q.renderPrompt ? `<div class="dr-stage dr-match-stage">${q.renderPrompt(tab)}</div>` : (q.playSeq ? `<button type="button" class="play dr-play" aria-label="Listen" data-label="Listen" onclick="drPlayToggle('${tab}',this)">▶︎</button>` : '') + `<div class="dr-stage">${q.promptFn ? q.promptFn() : (q.promptHTML || '')}</div>`;
+  if (stripEl) stripEl.innerHTML = q.playSeq ? strip(drStripTokens(q.answered ? q.playSeq : q.playSeq.map(w => w === '/' ? '/' : 'c'))) : '';
   if (choicesEl) {
-    choicesEl.innerHTML = q.choices.map((c, i) => `<button type="button" class="dr-choice" data-idx="${i}" ${q.answered ? 'disabled' : ''} onclick="drAnswer('${tab}',${i})">${c.html}</button>`).join('');
+    choicesEl.classList.toggle('dr-match-choices', !!q.cands);
+    choicesEl.innerHTML = q.choices.map((c, i) => c.render ? c.render(tab) : `<button type="button" class="dr-choice" data-idx="${i}" ${q.answered ? 'disabled' : ''} onclick="drAnswer('${tab}',${i})">${drChoiceHTML(c)}</button>`).join('');
     if (q.answered) {
       const btns = [...choicesEl.querySelectorAll('.dr-choice')];
       btns.forEach((b, i) => {
+        b.disabled = true;
         if (i === q.correctIndex) b.classList.add('ans-ok');
         if (i === q.chosenIndex && i !== q.correctIndex) b.classList.add('ans-no');
       });
@@ -456,13 +607,14 @@ function drRenderQuestion(tab) {
   if (fbEl) {
     if (q.answered) {
       const ok = q.chosenIndex === q.correctIndex;
-      if (q.revealSyl && !q.revealHTML && typeof chipsHTML === 'function') {
-        q.revealHTML = `<div class="chips dr-reveal">${chipsHTML(q.revealSyl, null, null)}</div>`;
-      }
+      const reason = q.reasonRender ? q.reasonRender(ok, q.chosenIndex) : (q.reasonFn ? q.reasonFn() : q.reason);
+      // rebuilt each render (chips depend on the current script)
+      const revealHTML = q.revealRender ? q.revealRender(tab)
+        : (q.revealSyl && typeof chipsHTML === 'function') ? `<div class="chips dr-reveal">${chipsHTML(q.revealSyl, null, null)}</div>` : (q.revealHTML || '');
       fbEl.className = 'fb dr-fb ' + (ok ? 'ok' : 'no');
       const ans = (q.answerSeqs || []).map((sq, k) => `<div class="dr-answer"><button type="button" class="play sm dr-ans-play" aria-label="Hear it" data-label="Hear it" onclick="drAnswerPlay('${tab}',${k},this)">▶︎</button><span class="dr-ans-strip" id="dr-${tab}-ans-${k}">${drPatHTML(sq)}</span></div>`).join('');
-      fbEl.innerHTML = `<div class="fb-text">${ok ? '✓ Right' : '✗ Not quite'} — ${q.reason}</div>` +
-        ans + (q.revealHTML || '') +
+      fbEl.innerHTML = `<div class="fb-text">${ok ? '✓ Right' : '✗ Not quite'} — ${reason}</div>` +
+        ans + revealHTML +
         `<button type="button" class="btn gold sm fb-next-btn" id="dr-${tab}-next" onclick="drNext('${tab}')">Next ▸</button>`;
     } else {
       fbEl.className = 'fb dr-fb'; fbEl.innerHTML = '';
@@ -479,6 +631,10 @@ function drAnswer(tab, idx) {
   drRenderQuestion(tab);
   const nb = $('dr-' + tab + '-next'); if (nb) nb.focus();
   // hear the right answer: its bars light up as it plays (meter questions replay what they played)
+  if (q.type === 'match') {
+    if (idx === q.correctIndex) { const hb = document.querySelector('#dr-' + tab + '-fb .dr-ans-play'); if (hb) drMatchPlay(tab, 'both', 0, hb); }
+    return;
+  }
   const first = typeof document !== 'undefined' && document.querySelector ? document.querySelector('#dr-' + tab + '-fb .dr-ans-play') : null;
   if (first) drAnswerPlay(tab, 0, first);
   else if (q.playSeq) { const pb = document.querySelector && document.querySelector('#dr-' + tab + '-prompt .dr-play'); if (pb) drPlayToggle(tab, pb); }
@@ -492,7 +648,18 @@ function drAnswerPlay(tab, k, btn) {
 }
 window.drAnswerPlay = drAnswerPlay;
 
+/* the header script switch changed: redraw the open questions in the new script */
+function drOnScriptChange() {
+  ['weight', 'meter'].forEach(tab => {
+    if (!DR[tab] || !DR[tab].current || !$('dr-' + tab + '-prompt')) return;
+    if (typeof PB !== 'undefined' && PB.playing && /^drill/.test(PB.key || '') && typeof pbCancel === 'function') pbCancel();
+    drRenderQuestion(tab);
+  });
+}
+window.drOnScriptChange = drOnScriptChange;
+
 function drNext(tab) {
+  drStopAudio();
   if (!DR[tab]) DR[tab] = drDefaultState();
   DR[tab].current = drGenerate(tab);
   drRenderQuestion(tab);
@@ -522,7 +689,7 @@ function drPlayToggle(tab, btn) {
   }
   btn.classList.add('playing'); btn.textContent = '❚❚';
   const nodes = host ? [...host.querySelectorAll('.blk')] : [];
-  play(q.playSeq, {
+  play(drSyls(q.playSeq), {
     onStep: nodes.length ? litter(nodes) : undefined,
     onEnd: () => { btn.classList.remove('playing'); btn.textContent = '▶︎'; }
   });
@@ -536,6 +703,7 @@ function mountDrill(tab) {
   if (!drReady) { const q = (window.__drPending = window.__drPending || []); if (q.indexOf(tab) === -1) q.push(tab); return; }
   const panel = $(tab === 'weight' ? 'weightPanelDrill' : 'meterPanelDrill');
   if (!panel) return;
+  drStopAudio();
   let root = panel.querySelector('.dr-root');
   if (!root) {
     panel.innerHTML = drShellHTML(tab);

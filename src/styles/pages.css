@@ -62,7 +62,14 @@ header#siteHeader {
   transition: color 150ms ease-out;
 }
 .scriptbtn:hover { color: var(--ink); }
-.scriptbtn.on { color: var(--ink); }
+.scriptbtn.on {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
 .settings-btn {
   background: none;
   border: 0;
@@ -262,6 +269,7 @@ main, .wrap { max-width: 760px; }
 #weight-section .card,
 #meter-section .card,
 #about-section .card,
+#guide-section .card,
 #ghazals-section .card:not(.couplet-card) {
   background: none;
   border: 0;
@@ -346,8 +354,197 @@ main, .wrap { max-width: 760px; }
 .wbtn.sel { border-style: solid; border-color: var(--gold); background: color-mix(in srgb, var(--gold) 14%, transparent); }
 .wbtn.ov { border-color: var(--rose); }
 
-.optrow { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px dashed var(--line); cursor: pointer; }
-.optrow.on { color: var(--gold); }
+/* Syllable/word inspector popup in Scan tab */
+.card.word-card {
+  margin: 14px auto 10px;
+  max-width: 440px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm, 8px);
+  padding: 12px 14px;
+  text-align: left;
+  direction: ltr;
+  box-shadow: 0 2px 8px rgba(21, 18, 14, 0.06);
+}
+.word-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.word-card-title {
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink);
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  line-height: 1.4;
+}
+.word-card-token {
+  font-weight: 600;
+  color: var(--ink);
+}
+.word-card-token.urdu {
+  font-family: var(--urdu);
+  font-size: 18px;
+  direction: rtl;
+  display: inline-block;
+  line-height: 1.3;
+}
+.word-card-sub {
+  font-family: var(--sans);
+  font-size: 11.5px;
+  color: var(--faint);
+  margin-top: 2px;
+  line-height: 1.35;
+}
+.word-card-close {
+  background: transparent;
+  border: 0;
+  color: var(--faint);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  line-height: 1;
+  transition: color 120ms ease, background 120ms ease;
+  flex-shrink: 0;
+}
+.word-card-close:hover {
+  color: var(--ink);
+  background: var(--bg2);
+}
+.word-card-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 6px 0;
+}
+.optrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+.optrow:hover {
+  background: color-mix(in srgb, var(--ink) 4%, transparent);
+  border-color: var(--line);
+}
+.optrow.on {
+  background: color-mix(in srgb, var(--gold) 10%, transparent);
+  border-color: color-mix(in srgb, var(--gold) 35%, transparent);
+  color: var(--ink);
+}
+.optrow-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+.word-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+  color: var(--dim);
+  font-weight: 500;
+  transition: all 120ms ease;
+  flex-shrink: 0;
+}
+.optrow.on .word-badge {
+  background: var(--gold);
+  color: var(--onGold, #fff);
+  font-weight: 600;
+}
+.optrow-desc {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--faint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.optrow.on .optrow-desc {
+  color: var(--ink);
+  font-weight: 500;
+}
+.optrow-mark {
+  font-size: 13px;
+  color: var(--gold);
+  font-weight: 700;
+  width: 16px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.word-card-actions {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+.word-action-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--line2);
+  background: var(--bg2);
+  color: var(--dim);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 120ms ease;
+  white-space: nowrap;
+}
+.word-action-btn:hover {
+  border-color: var(--gold);
+  color: var(--ink);
+}
+.word-action-btn.active {
+  background: color-mix(in srgb, var(--gold) 12%, transparent);
+  border-color: var(--gold);
+  color: var(--gold);
+  font-weight: 600;
+}
+.symbol-tashdid {
+  font-family: var(--urdu);
+  font-size: 18px;
+  line-height: 1;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 2px;
+  color: inherit;
+}
+.symbol-izafat {
+  font-family: var(--sans);
+  font-size: 11.5px;
+  opacity: 0.85;
+  margin-left: 2px;
+}
 
 /* Grid / table (tap-along diagnostics) */
 .grid { overflow-x: auto; margin: 8px 0; }
@@ -632,6 +829,88 @@ main, .wrap { max-width: 760px; }
 .constr-row { display: flex; align-items: center; gap: var(--sp-2); }
 .constr-arrow { padding: 0 var(--sp-1); }
 
+/* Handbook citation on a rule card: small, quiet, links to Pritchett's own section */
+.hb-ref { display: inline-block; margin-top: var(--sp-2); font-family: var(--sans); font-size: 12px; letter-spacing: 0.02em; color: var(--faint); text-decoration: none; border-bottom: 1px dotted var(--line); }
+a.hb-ref:hover { color: var(--ink); }
+.hb-attrib { margin: var(--sp-2) 0 var(--sp-4); }
+
+/* Weight › Learn: grouping + corpus evidence */
+.group-title { margin: var(--sp-6) 0 var(--sp-1); font-family: var(--serif); font-size: var(--fs-xl); font-weight: 500; color: var(--ink); padding-top: var(--sp-3); border-top: 1px solid var(--line); }
+.group-sec { color: var(--faint); font-weight: 400; margin-left: var(--sp-1); }
+.group-lead { margin: 0 0 var(--sp-3); }
+.constr-group + .constr-group { margin-top: var(--sp-4); }
+.corpus-card { background: var(--bg2); }
+.corpus-head { margin-bottom: var(--sp-2); }
+.corpus-tag { color: var(--faint); text-transform: uppercase; letter-spacing: 0.06em; margin-right: var(--sp-1); }
+.corpus-hi { text-decoration: underline; text-decoration-color: var(--mark-x); text-decoration-thickness: 2px; text-underline-offset: 6px; }
+.corpus-chips { flex: 1; min-width: 0; }
+/* one syllable, lit on every layer (Urdu letters, Roman piece, weight block) while it sounds */
+.sy { border-radius: 3px; transition: background-color .08s; }
+.sy.lit { background: color-mix(in srgb, var(--gold) 22%, transparent); }
+.sy.l.lit { background: color-mix(in srgb, var(--mark-l) 30%, transparent); }
+.sy.s.lit { background: color-mix(in srgb, var(--mark-s) 32%, transparent); }
+.sy.x.lit { background: color-mix(in srgb, var(--mark-x) 30%, transparent); }
+@media (prefers-reduced-motion: reduce) { .sy { transition: none; } }
+.corpus-src { display: inline-block; margin-top: var(--sp-1); font-family: var(--sans); color: var(--faint); text-decoration: none; border-bottom: 1px dotted var(--line); }
+.corpus-src:hover { color: var(--ink); }
+.corpus-note { margin: var(--sp-3) 0 0; }
+.corpus-stat { margin: 0; }
+.flex-group { margin-top: var(--sp-2); }
+.flex-cap { margin-bottom: var(--sp-1); }
+.flex-row { display: grid; grid-template-columns: 3.2em minmax(6em, 1fr) 9.5em; align-items: center; gap: var(--sp-2); padding: 2px 0; }
+.flex-w { font-size: var(--fs-lg); line-height: 1.6; text-align: center; }
+.flex-bar { display: flex; height: 10px; border-radius: 5px; overflow: hidden; background: var(--line); }
+.flex-bar i { display: block; height: 100%; }
+.flex-bar .fb-l { background: var(--mark-l); }
+.flex-bar .fb-s { background: var(--mark-s); }
+.flex-n { white-space: nowrap; }
+@media (max-width: 480px) { .flex-row { grid-template-columns: 2.8em 1fr; } .flex-n { grid-column: 2; margin-top: -2px; } }
+
+/* Weight › Learn: four-stage lesson */
+/* Bezel: the one bevelled, rectangular control used across the lesson (stage stepper, example labels, fold-outs, stage buttons).
+   Tokens only, so it follows the theme; the weight variants reuse the long / short / flexible mark colours. */
+.step, .corpus-label, .constr-more > summary, .card-more > summary, .stage-nav .btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-1);
+  min-height: 34px; padding: 4px 14px;
+  font-family: var(--sans); font-size: 14px; font-weight: 500; line-height: 1.2; letter-spacing: 0;
+  color: var(--ink); background: var(--bg);
+  border: 1px solid var(--line2); border-radius: 6px;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 80%, transparent), inset 0 -1px 0 var(--line), 0 1px 1px var(--line);
+  cursor: pointer; text-transform: none; white-space: nowrap;
+  transition: border-color 150ms ease-out, background-color 150ms ease-out;
+}
+.corpus-label { cursor: default; min-height: 28px; padding: 2px 12px; font-size: 13px; margin-bottom: var(--sp-3); }
+.step:hover, .constr-more > summary:hover, .card-more > summary:hover, .stage-nav .btn:hover { border-color: var(--gold); color: var(--ink); }
+.step:focus-visible, .stage-nav .btn:focus-visible, .constr-more > summary:focus-visible, .card-more > summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.step.on, .stage-nav .btn.gold { background: var(--bg3); border-color: var(--gold); font-weight: 600; }
+.step .step-n { font-size: 12px; color: var(--faint); font-weight: 400; }
+.step.on .step-n { color: var(--ink); }
+.corpus-label.l { color: var(--gold); border-color: var(--mark-l); }
+.corpus-label.s { color: var(--teal); border-color: var(--mark-s); }
+.constr-more > summary, .card-more > summary { list-style: none; width: fit-content; }
+.constr-more > summary::-webkit-details-marker, .card-more > summary::-webkit-details-marker { display: none; }
+.constr-more > summary::after, .card-more > summary::after { content: '+'; color: var(--faint); font-weight: 400; }
+.constr-more[open] > summary::after, .card-more[open] > summary::after { content: '–'; }
+.constr-more > summary .dim { font-weight: 400; }
+.constr-more { margin: var(--sp-3) 0 var(--sp-4); }
+.constr-more[open] > summary, .card-more[open] > summary { margin-bottom: var(--sp-3); }
+.card-more { margin-top: var(--sp-3); }
+
+.stage[hidden] { display: none; }
+.stepper { display: flex; gap: var(--sp-2); margin: var(--sp-3) 0 var(--sp-4); overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px; scrollbar-width: none; }
+.stepper::-webkit-scrollbar { display: none; }
+.stage-nav { display: flex; justify-content: space-between; align-items: center; gap: var(--sp-2); margin-top: var(--sp-6); padding-top: var(--sp-4); border-top: 1px solid var(--line); flex-wrap: wrap; }
+.intro-card .special-syll-row { justify-content: space-around; }
+.corpus-card .constr-ex { border-top: 0; padding-top: 0; margin: var(--sp-5) 0 0; }
+.corpus-card .constr-ex:first-child { margin-top: 0; }
+.corpus-card .flex-pair .constr-ex:first-of-type { margin-top: var(--sp-2); }
+/* the word a verse is about: the chip that shows which way a flexible syllable went */
+.chip-hi { outline: 2px solid color-mix(in srgb, var(--ink) 55%, transparent); outline-offset: 2px; border-radius: 4px; }
+.corpus-meta { margin-top: var(--sp-1); font-family: var(--sans); }
+.corpus-stat-line { margin: var(--sp-2) 0 0; }
+.flex-pair + .flex-pair { margin-top: var(--sp-7, 48px); }
+.flex-pair-word { font-size: 40px; line-height: 1.4; text-align: center; }
+
 /* Weight › Learn › "Special cases": several single-reading examples side by side */
 .special-syll-row { flex-wrap: wrap; align-items: flex-start; gap: var(--sp-5); }
 .special-syll-ex { margin: 0; padding: 0; border: 0; min-width: 7em; }
@@ -709,6 +988,17 @@ main, .wrap { max-width: 760px; }
 #about-section .card { border-top: 1px solid var(--line); padding-top: var(--sp-4) !important; }
 #about-section .card:first-of-type { border-top: 0; padding-top: 0 !important; }
 #about-section p { font-family: var(--sans); }
+
+/* ============================================================
+   Guide / How to Use page
+   ============================================================ */
+#guide-section h2 { font-family: var(--serif); font-weight: 500; color: var(--ink); margin-bottom: var(--sp-2); }
+#guide-section .card { border-top: 1px solid var(--line); padding-top: var(--sp-4) !important; margin: var(--sp-5) 0; }
+#guide-section .card:first-of-type { border-top: 0; padding-top: 0 !important; }
+#guide-section p { font-family: var(--sans); line-height: 1.6; margin-bottom: var(--sp-2); }
+.guide-list { margin: var(--sp-2) 0 var(--sp-3) var(--sp-4); font-family: var(--sans); line-height: 1.65; color: var(--ink); }
+.guide-list li { margin-bottom: var(--sp-2); }
+.guide-list ul { margin: var(--sp-2) 0 var(--sp-2) var(--sp-4); }
 
 .bib-entry { padding: var(--sp-5) 0; border-top: 1px solid var(--line); }
 .bib-entry:first-child { border-top: 0; padding-top: 0; }
@@ -869,3 +1159,24 @@ main, .wrap { max-width: 760px; }
 .ghazal-head .ghazal-desc { margin-top: var(--sp-1); line-height: 1.6; }
 .ghazal-head .ghazal-grouping-note { margin-top: var(--sp-2); }
 .ghazal-controls { margin-top: var(--sp-4); }
+
+/* word panel: per-syllable long/short verdicts (Scan.sylRule) */
+.syl-rules { margin: 6px 0 10px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.syl-pick { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 8px; direction: inherit; }
+.syl-tab { font: inherit; font-family: var(--urdu); font-size: 18px; padding: 2px 10px; border: 1px solid var(--line); border-radius: 6px; background: transparent; color: var(--ink); cursor: pointer; }
+html[data-script="ro"] .syl-tab, html[data-script="hi"] .syl-tab { font-family: inherit; font-size: 15px; }
+.syl-tab.on { border-color: var(--gold); background: color-mix(in srgb, var(--gold) 10%, transparent); }
+.syl-tab.missing { border-style: dashed; color: var(--no); }
+.syl-opts { display: flex; gap: 8px; }
+.syl-opt { flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: 8px; justify-content: center; padding: 8px 10px; font: inherit; font-size: 14px;
+  border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--ink); cursor: pointer; }
+.syl-opt.on { border-color: var(--gold); background: color-mix(in srgb, var(--gold) 10%, transparent); }
+.syl-opt:disabled { cursor: not-allowed; opacity: .55; }
+.syl-opt-v { font-size: 12px; }
+.syl-opt.v-ok .syl-opt-v { color: var(--ok); }
+.syl-opt.v-no .syl-opt-v { color: var(--no); }
+.syl-opt.v-rare .syl-opt-v { color: var(--no); font-style: italic; }
+.syl-opt-rule { font-size: 11px; color: var(--dim, inherit); opacity: .75; }
+.syl-why { font-size: 13px; line-height: 1.45; margin: 8px 0 0; }
+.syl-why-no { display: block; margin-top: 4px; color: var(--no); }
+.word-card-sec { margin-top: 4px; }

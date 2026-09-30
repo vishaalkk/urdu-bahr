@@ -311,7 +311,6 @@
 .card.callout-mismatch .note-sub { margin-top: 4px; }
 .card.key-card { margin: 0 0 10px; padding: 10px 12px; background: var(--bg3); }
 .card.misra-card { background: var(--bg3); border: 1px solid var(--line2); }
-.card.word-card { margin: 6px 0; background: var(--bg3); }
 .card-head { justify-content: space-between; align-items: center; margin: 0; }
 .card-head.tight { margin: 0 0 8px; }
 .row.tight-top { margin-top: 0; }
@@ -422,15 +421,15 @@
 
 /* ---- Syllable rows in couplet boxes: large by default; a row that would overflow is
    shrunk just enough to fit on one line (--fit set by fitChipRows() in JS, 0.55–1) ---- */
-.cbox-scan .chips, .couplet-scan-box .chips { flex-wrap: nowrap; overflow-x: hidden; gap: 0; padding-bottom: 2px; --fit: 1; }
-.cbox-scan .fgrp, .couplet-scan-box .fgrp { padding: 0 calc(12px * var(--fit)); }
-.cbox-scan .fchips, .couplet-scan-box .fchips { gap: calc(7px * var(--fit)); }
-.cbox-scan .chip:not(.roman):not(.deva), .couplet-scan-box .chip:not(.roman):not(.deva) {
+.cbox-scan .chips, .couplet-scan-box .chips, .corpus-chips { flex-wrap: nowrap; overflow-x: hidden; gap: 0; padding-bottom: 2px; --fit: 1; }
+.cbox-scan .fgrp, .couplet-scan-box .fgrp, .corpus-chips .fgrp { padding: 0 calc(12px * var(--fit)); }
+.cbox-scan .fchips, .couplet-scan-box .fchips, .corpus-chips .fchips { gap: calc(7px * var(--fit)); }
+.cbox-scan .chip:not(.roman):not(.deva), .couplet-scan-box .chip:not(.roman):not(.deva), .corpus-chips .chip:not(.roman):not(.deva) {
   font-size: calc(27px * var(--fit)); padding-left: calc(6px * var(--fit)); padding-right: calc(6px * var(--fit)); padding-bottom: calc(12px * var(--fit)); }
-.cbox-scan .chip.roman, .couplet-scan-box .chip.roman { font-size: calc(18px * var(--fit)); padding-left: calc(5px * var(--fit)); padding-right: calc(5px * var(--fit)); }
-.cbox-scan .chip.deva, .couplet-scan-box .chip.deva { font-size: calc(20px * var(--fit)); padding-left: calc(5px * var(--fit)); padding-right: calc(5px * var(--fit)); }
-.cbox-scan .fname, .couplet-scan-box .fname { font-size: calc(16px * var(--fit)); }
-.cbox-scan .cw .fs, .couplet-scan-box .cw .fs { font-size: calc(12.5px * var(--fit)); }
+.cbox-scan .chip.roman, .couplet-scan-box .chip.roman, .corpus-chips .chip.roman { font-size: calc(18px * var(--fit)); padding-left: calc(5px * var(--fit)); padding-right: calc(5px * var(--fit)); }
+.cbox-scan .chip.deva, .couplet-scan-box .chip.deva, .corpus-chips .chip.deva { font-size: calc(20px * var(--fit)); padding-left: calc(5px * var(--fit)); padding-right: calc(5px * var(--fit)); }
+.cbox-scan .fname, .couplet-scan-box .fname, .corpus-chips .fname { font-size: calc(16px * var(--fit)); }
+.cbox-scan .cw .fs, .couplet-scan-box .cw .fs, .corpus-chips .cw .fs { font-size: calc(12.5px * var(--fit)); }
 
 /* Word-level playback highlight (Meter › Look up couplets): a word is lit while any of its
    syllables sound; grafted words (one .word span per orthographic word) light together
@@ -453,7 +452,7 @@
 
 /* Row that would still overflow at the --fit floor wraps between feet, never inside one
    (.fgrp stays intact — .fchips never wraps). No horizontal scrollbar either way. */
-.cbox-scan .chips.wrap-feet, .couplet-scan-box .chips.wrap-feet {
+.cbox-scan .chips.wrap-feet, .couplet-scan-box .chips.wrap-feet, .corpus-chips.wrap-feet {
   flex-wrap: wrap; overflow-x: visible;
 }
 
@@ -510,6 +509,31 @@ html[data-script="hi"] .chips .fname { font-family: var(--deva); }
 .cbox-scan .cw .fs:hover, .couplet-scan-box .cw .fs:hover, .card .cw .fs:hover { color: var(--gold); background: color-mix(in srgb, var(--gold) 10%, transparent); }
 .fgrp.litf .cw .fs, .fgrp.resume-at .cw .fs { color: var(--gold); }
 .cw .fs.fs-extra { font-family: var(--sans); font-style: italic; color: var(--ghost); }
+.chip.clash { border-bottom-color: var(--no) !important; border-bottom-style: dashed !important; }
+.chip.extra { border-color: var(--no); background: color-mix(in srgb, var(--no) 10%, transparent); }
+.unscanned-diag {
+  margin: 10px auto 4px;
+  max-width: 520px;
+  padding: 8px 12px;
+  background: color-mix(in srgb, var(--ink) 2%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  text-align: start;
+}
+.unscanned-diag .diag-meta {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 13px;
+}
+.unscanned-diag .diag-body {
+  margin-top: 5px;
+  font-size: 13px;
+  color: var(--dim);
+  line-height: 1.5;
+}
 
 /* Legend: one line, left-aligned, everywhere (wraps only when the screen is too narrow) */
 .legend, .legend.top, .legend.legend-sticky, .dr-legend.legend {
@@ -533,3 +557,13 @@ html[data-script="hi"] .chips .fname { font-family: var(--deva); }
 }
 .legend .lg-item:focus-visible { box-shadow: 0 0 0 2px var(--gold); border-radius: 4px; }
 .legend .lg-item:nth-last-child(-n+2)::after { left: auto; right: 0; }   /* keep the last popups on screen */
+
+/* ---- learner edits: missing slots, forced weights, the focused syllable, original vs edit ---- */
+.chip.missing { background: transparent; border: 1px dashed var(--no); color: var(--no); min-width: 1.6em; opacity: .8; }
+.chip.forced { box-shadow: inset 0 -3px 0 color-mix(in srgb, var(--gold) 55%, transparent); }
+.cw.ssel .chip { outline: 2px solid var(--gold); outline-offset: 2px; }
+.edit-compare { margin: 6px 0 2px; }
+.edit-compare-head { gap: 8px; align-items: center; }
+.chips.orig { opacity: .72; transform: scale(.92); transform-origin: center top; pointer-events: none; }
+.chips.orig .fs, .chips.orig .fname { pointer-events: none; }
+.edit-compare-foot { text-align: center; margin-top: 2px; }

@@ -222,18 +222,19 @@ function play(seq,opts){
   const beat=60/(opts.bpm||settings.bpm); let t=A.ctx.currentTime+0.16; const t0=t;
   const F=opts.feet, cae=opts.cae||[];
   seq.forEach((v,i)=>{
-    const isLong=(v==='l'||v==='x'); let dur=(isLong?2:1)*beat;
+    const rest=(v==='rl'||v==='rs');                               /* a syllable the meter wants but the line lacks: silence */
+    const isLong=(v==='l'||v==='x'||v==='rl'); let dur=(isLong?2:1)*beat;
     let vol=v==='c'?0.45:1, hold=0.97;
     if(F){ const fs=(i===0||F[i]!==F[i-1]), fe=(i===seq.length-1||F[i+1]!==F[i]);
       if(fs && i>0 && cae.includes(F[i])) t+=beat*0.6;              /* breath at the mid-line break */
       else if(fs && i>0) t+=beat*(settings.footGap!=null?settings.footGap:0.5); /* short rest between feet */
-      if(fs && settings.footPulse!==false && v!=='c') footThump(t,0.9);
+      if(fs && settings.footPulse!==false && v!=='c') footThump(t,0.9);   /* kept on a gap: the pulse with no syllable is what makes it audible */
       if(!fs && v!=='c') vol*=0.84;                                   /* stress the foot's first syllable */
       if(fe && i<seq.length-1){ dur*=1.07; hold=0.82; }               /* a little lift at the end of each foot */
     }
     if(opts.cadence!==false && i===seq.length-1 && seq.length>4){ dur*=1.4; if(settings.sound==='tablarec') hold=0.6; } /* no long ring on the final tabla stroke */
-    if(!(v==='c' && settings.sound==='tablarec')) syllableSound(t,dur,isLong,vol,i/Math.max(1,seq.length-1),hold); /* extrametrical syllable: no stroke on tabla */
-    if(opts.onStep) A.timers.push(setTimeout(()=>opts.onStep(i),(t-A.ctx.currentTime)*1000));
+    if(!rest && !(v==='c' && settings.sound==='tablarec')) syllableSound(t,dur,isLong,vol,i/Math.max(1,seq.length-1),hold); /* extrametrical syllable: no stroke on tabla */
+    if(opts.onStep) A.timers.push(setTimeout(()=>opts.onStep(i,dur*1000),(t-A.ctx.currentTime)*1000));
     t+=dur;
   });
   if(opts.onEnd) A.timers.push(setTimeout(opts.onEnd,(t-A.ctx.currentTime)*1000+60));
@@ -277,8 +278,8 @@ function pbRunLine(li, foot) {
   const lit = L.nodes ? litter(L.nodes) : null;
   const wl = L.words ? pbWordLit(L.words) : null;
   play(p.seq.slice(s0), { pb: true, feet: p.feet.slice(s0), cae: p.cae.filter(c => c > foot),
-    onStep: i => { const gi = i + s0; PB.pos = { line: li, foot: p.feet[gi] };
-      if (lit) lit(gi);
+    onStep: (i, ms) => { const gi = i + s0; PB.pos = { line: li, foot: p.feet[gi] };
+      if (lit) lit(gi, ms);
       if (wl && L.e && L.e.syl[gi]) wl(L.e.syl[gi].word, L.e.syl[gi].wordTo);
       if (L.groups) { L.groups.forEach(g => g.classList.remove('litf')); const g = L.groups[p.feet[gi]]; if (g) g.classList.add('litf'); } },
     onEnd: () => { if (L.groups) L.groups.forEach(g => g.classList.remove('litf'));
@@ -342,7 +343,8 @@ window.pbToggle = pbToggle; window.pbFromFoot = pbFromFoot; window.pbCancel = pb
 window.pbNodes = pbNodes; window.pbWords = pbWords; window.pbWordsMatching = pbWordsMatching;
 window.pbTogglePattern = pbTogglePattern;
 
-function litter(nodes){ return i=>{ nodes.forEach(n=>n.classList.remove('lit')); const n=nodes[i]; if(n){n.classList.add('lit'); setTimeout(()=>n.classList.remove('lit'),240);} }; }
+/* ms = how long the syllable sounds (long ~2 beats, short ~1): the light stays on for that long, so the eye can follow duration too. */
+function litter(nodes){ return (i,ms)=>{ nodes.forEach(n=>n.classList.remove('lit')); const n=nodes[i]; if(n){n.classList.add('lit'); setTimeout(()=>n.classList.remove('lit'), ms>0?Math.max(140,ms*0.92):240);} }; }
 
 /* sound sheet */
 function openSound(){ renderSoundOpts(); if($('soundSheet')) $('soundSheet').classList.add('on'); }

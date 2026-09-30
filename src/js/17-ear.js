@@ -43,9 +43,11 @@ function bestGhazalLinkForMeter(mId) {
 
 /* Two groups: counting bahrs repeat one cell (f.cell is set); shape bahrs are a
    fixed contour with no clean repeat (everything else). §Round3 "Meter › Learn". */
+/* which handbook rule each family's allowance note (and the meter list itself) rests on */
+const FAM_RULES = { dilenadan: 'M6.1-anceps', hazaron: 'M6.1-cheat-final', yihnathi: 'M6.1-cheat-caesura', nuktachin: 'M6.1-anceps', harek: 'M6.1-pairs', milne: 'M6.1-cheat-caesura', ulti: 'M6.2-hindi-length' };
 const FAM_GROUPS = [
-  { key: 'counting', title: 'Counting bahrs', explainer: '<b class="t L">● Counting bahr</b> — one cell repeated; "3 or 4 feet" just means how many times, with the last often clipped. Count the pulses.', test: f => !!f.cell },
-  { key: 'shape', title: 'Shape bahrs', explainer: '<b class="t S">◆ Shape bahr</b> — one fixed contour, no clean repeat. Don\'t dissect it; hold it as a melody.', test: f => !f.cell }
+  { key: 'counting', title: 'Counting bahrs', explainer: '<b class="t L">● Counting bahr</b> — one cell repeated; "3 or 4 feet" just means how many times, with the last often clipped. Count the pulses.', app: true, test: f => !!f.cell },
+  { key: 'shape', title: 'Shape bahrs', explainer: '<b class="t S">◆ Shape bahr</b> — one fixed contour, no clean repeat. Don\'t dissect it; hold it as a melody.', app: true, test: f => !f.cell }
 ];
 
 function famRowHTML(f) {
@@ -76,7 +78,7 @@ function famRowHTML(f) {
 
       // 3. Allowance note (§5.5)
       if (f.pair) {
-        h += `<div class="fam-allowance">Allowance note: ${f.pair}</div>`;
+        h += `<div class="fam-allowance">Allowance note: ${f.pair} ${hbRef(FAM_RULES[f.id] || 'M6.1-pairs', f.hindi ? '6.2' : '6.1')}</div>`;
       }
 
       // 4. Variant meters in fam.meters (§5.5)

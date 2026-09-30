@@ -1,0 +1,37 @@
+/* Baḥr Practice Editor — Quiet Manuscript: no cards, text buttons, hairlines. */
+#practice-section .pr-title { font-family: var(--serif); font-weight: 400; margin: var(--sp-4) 0 var(--sp-2); }
+#practice-section .pr-lede { color: var(--dim); max-width: 60ch; }
+.pr-line { font-family: var(--urdu); font-size: 28px; line-height: 2; margin: var(--sp-6) 0 var(--sp-3); text-align: center; color: var(--ink); }
+html[data-script="ro"] .pr-line, html[data-script="hi"] .pr-line { font-family: var(--serif); font-size: 22px; line-height: 1.5; }
+.pr-chips { margin: var(--sp-5) 0 var(--sp-3); min-height: 84px; }
+.pr-chips .chips { justify-content: center; margin: 0; }
+.pr-chips .chip { min-width: 26px; color: var(--dim); }
+.pr-chips .chip.l, .pr-chips .chip.s { color: var(--ink); }
+.pr-chips .fs.pr-mark { font-size: 15px; min-height: 20px; color: var(--dim); }
+/* the glowing cursor: gold underline + soft wash on the active syllable */
+.pr-chips .chip.cur { border-bottom: 3px solid var(--gold); background: color-mix(in srgb, var(--gold) 14%, transparent); animation: prPulse 1.4s ease-in-out infinite; }
+@keyframes prPulse { 0%, 100% { background: color-mix(in srgb, var(--gold) 10%, transparent); } 50% { background: color-mix(in srgb, var(--gold) 26%, transparent); } }
+/* a completed foot: grouped by hairlines, briefly lit green */
+.pr-chips .fgrp.pr-closed { border-radius: 6px; padding: 0 12px; }
+.pr-chips .fgrp.pr-closed.litf { background: color-mix(in srgb, var(--ok) 14%, transparent); }
+/* a weight that contradicts the engine's reading */
+.chip.clash { background: color-mix(in srgb, var(--no) 14%, transparent); border-bottom: 3px solid var(--no); animation: prShake .32s; }
+@keyframes prShake { 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
+.pr-hint { min-height: 1.6em; text-align: center; color: var(--dim); font-family: var(--serif); font-style: italic; margin: var(--sp-2) 0 var(--sp-4); }
+.pr-hint.warn { color: var(--no); }
+.pr-hint.ok { color: var(--ok); }
+.pr-keys { display: flex; flex-wrap: wrap; gap: var(--sp-4); justify-content: center; align-items: center; }
+.pr-keys .pr-key { font-size: 17px; padding: 10px 22px; border: 1px solid var(--line2); border-radius: 8px; color: var(--ink); }
+.pr-keys .pr-key b { color: var(--gold); margin-right: 6px; }
+.pr-reveal { margin-top: var(--sp-7); }
+.pr-reveal:empty { display: none; }
+.pr-reveal { border-top: 1px solid var(--line); padding-top: var(--sp-5); text-align: center; }
+.pr-reveal .pr-score { font-family: var(--serif); font-size: 18px; margin: 0 0 var(--sp-3); }
+.pr-reveal .pr-bahr { font-family: var(--serif); font-size: 20px; margin: var(--sp-4) 0 var(--sp-2); }
+.pr-reveal .chips { justify-content: center; }
+.pr-reveal .row { justify-content: center; margin-top: var(--sp-4); }
+@media (prefers-reduced-motion: reduce) { .pr-chips .chip.cur, .chip.clash { animation: none; } }
+
+.pr-fam { font-style: italic; }
+.pr-fam.urdu { font-style: normal; }
+.pr-tech, .pr-flexnote { max-width: 46ch; margin-left: auto; margin-right: auto; text-align: center; }

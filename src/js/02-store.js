@@ -10,6 +10,18 @@ const store = {
 const PRITCHETT_BOOK = 'https://franpritchett.com/00ghalib/meterbk/';
 const PRITCHETT_CH = { ch0: '00_intro', ch1: '01_genrules', ch2: '02_flexibility', ch3: '03_special', ch4: '04_irregular',
   ch5: '05_feet', ch6: '06_meters', ch7: '07_scanning', ch8: '08_eyetoear' };
+/* Handbook citations on rule cards (Weight/Meter > Learn, legend). A card names an engine-lab/rules.json id;
+   its section is read off the id (F3.2-consonant -> 3.2) and links to that section on Pritchett's own page. */
+function ruleSec(rule) { const m = /^[A-Z]+(\d+(?:\.\d+)?)/.exec(rule || ''); return m ? m[1] : null; }
+function hbUrl(sec) {
+  const s = String(sec || ''), ch = PRITCHETT_CH['ch' + s.split('.')[0]];
+  return ch ? PRITCHETT_BOOK + ch + '.html' + (s.indexOf('.') > 0 ? '#' + s.replace('.', '_') : '') : PRITCHETT_BOOK + '00_index.html';
+}
+function hbRef(rule, sec) {
+  sec = sec || ruleSec(rule);
+  if (!sec) return '';
+  return '<a class="hb-ref" data-rule="' + (rule || '') + '" href="' + hbUrl(sec) + '" target="_blank" rel="noopener" title="Read this section in Pritchett\'s handbook">Handbook §' + sec + ' ↗</a>';
+}
 let currentRoute = '';
 const subTabMemory = {
   weight: store.get('subTab:weight', 'learn'),
@@ -111,7 +123,9 @@ function handleRoute(targetHash) {
     'scan': 'scan-section',
     'ghazals': 'ghazals-section',
     'about': 'about-section',
-    'lab': 'tap-section'
+    'guide': 'guide-section',
+    'how-to-use': 'guide-section',
+    'lab': (parts[1] === 'practice' ? 'practice-section' : 'tap-section')
   };
 
   // Hide all sections, show active
@@ -170,6 +184,11 @@ function handleRoute(targetHash) {
   } else if (root === 'about') {
     if (typeof document !== 'undefined') document.title = 'About — Baḥr';
     if (typeof renderBibliography === 'function') renderBibliography();
+  } else if (root === 'guide' || root === 'how-to-use') {
+    if (typeof document !== 'undefined') document.title = 'How to Use — Baḥr';
+  } else if (root === 'lab' && parts[1] === 'practice') {
+    if (typeof document !== 'undefined') document.title = 'Practice — Baḥr';
+    if (typeof mountPractice === 'function') mountPractice();
   } else if (root === 'lab' && parts[1] === 'tap') {
     if (typeof document !== 'undefined') document.title = 'Tap Along — Baḥr';
     if (typeof echoNew === 'function') echoNew();
@@ -235,6 +254,7 @@ function showMeterSubtab(sub, params) {
     if (typeof renderWeak === 'function') renderWeak();
   } else if (sub === 'lookup') {
     if (params && params.open != null && typeof lookupExpandedId !== 'undefined') lookupExpandedId = String(params.open);
+    updateMeterLookupCount(['rubai', 'hindi'].find(k => { const b = $('filterMeter' + (k === 'rubai' ? 'Rubai' : 'Hindi')); return b && b.classList.contains('on'); }) || 'all');
     if (typeof renderFams === 'function') renderFams();
     if (params && params.open != null) scrollToLater('m-row-' + params.open);
   }
@@ -254,7 +274,16 @@ function filterMeterLookup(kind) {
                                     (kind === 'rubai' && id === 'filterMeterRubai') ||
                                     (kind === 'hindi' && id === 'filterMeterHindi'));
   });
+  updateMeterLookupCount(kind);
   if (typeof renderFams === 'function') renderFams();
+}
+
+function updateMeterLookupCount(kind) {
+  const el = $('meterLookupCount');
+  if (!el || typeof Scan === 'undefined' || !Scan.METERS) return;
+  const n = kind === 'hindi' ? 1
+    : Scan.METERS.filter(m => kind === 'rubai' ? m.kind === 'rubai' : (m.kind !== 'rubai' && String(m.id) !== 'H')).length;
+  el.textContent = n + (n === 1 ? ' meter' : ' meters');
 }
 
 function onHandbookBack() {
@@ -285,47 +314,7 @@ function handleGhazalsRoute(parts, params) {
 }
 
 let activeCollection = 'handbook';
-function switchCollection(col) {
-  activeCollection = col;
-  const btns = {
-    'handbook': 'colBtnHandbook',
-    'ghalib': 'colBtnGhalib',
-    'mir': 'colBtnMir'
-  };
-  Object.keys(btns).forEach(k => {
-    const el = $(btns[k]);
-    if (el) el.classList.toggle('on', k === col);
-  });
-
-  const descs = {
-    'handbook': 'The handbook\'s exercise ghazals, with Frances Pritchett\'s notes. <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/10_ex_01_06.html" target="_blank" rel="noopener">Her exercises<span class="ext">↗</span></a> · <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/11_exnotes.html" target="_blank" rel="noopener">answers &amp; notes<span class="ext">↗</span></a>',
-    'ghalib': "Ghalib's divan, scanned and meter-checked by the engine.",
-    'mir': "Mir Taqi Mir, scanned and meter-checked by the engine."
-  };
-  if ($('colDesc')) $('colDesc').innerHTML = descs[col] || '';   // descriptions may carry links (trusted, static)
-
-  const eyebrowCounts = {
-    handbook: (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) ? EXERCISES_DATA.length : 24,
-    ghalib: (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) ? GHALIB_EXT_DATA.length : 234,
-    mir: (typeof MIR_EXT_DATA !== 'undefined' && Array.isArray(MIR_EXT_DATA)) ? MIR_EXT_DATA.length : 429
-  };
-  if ($('ghazalCollectionCount')) $('ghazalCollectionCount').textContent = eyebrowCounts[col] + ' ghazals';
-
-  const cHandbook = $('handbookExContainer');
-  const cGhalib = $('ghalibContainer');
-  const cMir = $('mirContainer');
-
-  if (cHandbook) cHandbook.style.display = (col === 'handbook') ? 'block' : 'none';
-  if (cGhalib) cGhalib.style.display = (col === 'ghalib') ? 'block' : 'none';
-  if (cMir) cMir.style.display = (col === 'mir') ? 'block' : 'none';
-
-  if (col === 'handbook' && typeof renderExercises === 'function') renderExercises();
-  if (col === 'ghalib' && typeof renderGhalibExt === 'function') renderGhalibExt();
-  if (col === 'mir' && typeof renderMirExt === 'function') renderMirExt();
-
-  populateGhazalMeterFilter(col);
-}
-
+// switchCollection lives in 09-exercises-module.js
 function populateGhazalMeterFilter(col) {
   const sel = $('ghazalMeterFilter');
   if (!sel) return;

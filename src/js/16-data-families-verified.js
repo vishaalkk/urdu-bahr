@@ -7,7 +7,7 @@ const famOfMeter={}; FAMS.forEach(f=>f.meters.forEach(m=>famOfMeter[m]=f));
 function patSeq(raw){ const fs=Scan.patternFeet(raw); const seq=[],feet=[],cae=[]; fs.forEach((f,fi)=>{ if(f.caeBefore) cae.push(fi); f.toks.forEach(t=>{ seq.push(t==='x'?'l':t); feet.push(fi); }); }); return {seq,feet,cae}; }
 function exSeq(e){ return {seq:e.syl.map(s=>s.resolved), feet:e.syl.map(s=>s.foot), cae:(e.feet||[]).map((F,i)=>F&&F.cae?i:-1).filter(i=>i>=0)}; }
 function playPat(raw,nodes){ const p=patSeq(raw); return play(p.seq,{feet:p.feet,cae:p.cae,onStep:nodes?litter(nodes):null}); }
-function playEx(e,nodes,groups){ const p=exSeq(e); return play(p.seq,{feet:p.feet,cae:p.cae,onStep:i=>{ if(nodes)litter(nodes)(i); if(groups){ groups.forEach(g=>g.classList.remove('litf')); const g=groups[e.syl[i].foot]; if(g) g.classList.add('litf'); } }}); }
+function playEx(e,nodes,groups){ const p=exSeq(e); return play(p.seq,{feet:p.feet,cae:p.cae,onStep:(i,ms)=>{ if(nodes)litter(nodes)(i,ms); if(groups){ groups.forEach(g=>g.classList.remove('litf')); const g=groups[e.syl[i].foot]; if(g) g.classList.add('litf'); } }}); }
 /* pattern with named feet (handbook convention, left→right) */
 function feetStrip(raw){ return '<div class="fstrip">'+Scan.patternFeet(raw).map(f=>`${f.caeBefore?'<span class="cae">//</span>':''}<span class="fbox"><span class="strip tight">${strip(f.toks)}</span><span class="fn">${f.ro.join('·')}</span></span>`).join('')+'</div>'; }
 /* rendering helpers */
@@ -15,17 +15,22 @@ function strip(tokens){ return tokens.map(t=>t==='|'?'<span class="ft"></span>':
 function sylls(tokens){ return tokens.filter(t=>t==='l'||t==='s'||t==='x'||t==='c'); }
 function famLabel(f){ return f.gz[0]; }
 function chipHTML(s,i,li,override,gpos){
-  const cls=[s.resolved==='c'?'c':s.resolved, s.native==='x'?'flex':'', s.last?'wend':''].join(' ');
+  const cls=[s.missing?'missing':(s.resolved==='c'?'c':s.resolved), s.native==='x'?'flex':'', s.last?'wend':'', s.clash?'clash':'', s.extra?'extra':'', s.forced?'forced':''].join(' ');
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
   const isRtl = (cs === 'ur');
   const txt = (cs === 'ur' || !s.text || s.text === '·') ? s.text : (override!=null ? override : (typeof translitText === 'function' ? translitText(s.text, cs) : s.text));
   const scriptCls = cs === 'hi' ? 'deva' : (cs !== 'ur' ? 'roman' : '');
   const clickable = li!=null;
   const wsel = clickable && selWord && selWord[0]===li && selWord[1]===s.word;
+  const ssel = wsel && selWord[2]===i;
   const wov = clickable && ovr[li] && ovr[li][s.word];
-  const cwCls=['cw', clickable?'click':'', wsel?'wsel':'', wov?'wov':'', gpos?'g '+gpos:''].join(' ').replace(/\s+/g,' ').trim();
-  const click = clickable ? ` onclick="pickWord(${li},${s.word})"` : '';
-  return `<span class="${cwCls}"${click}><span class="chip ${cls} ${scriptCls}" data-i="${i}">${txt}</span><span class="fs${s.fsyl==='+'?' fs-extra':''}" onclick="pbFromFoot(event,this)" title="${s.fsyl==='+'?'Extra syllable the meter doesn\'t count (Pritchett: a cheat syllable)':'Play from this foot'}">${s.fsyl==='+'?'extra':(s.fsyl||'')}</span></span>`;
+  const cwCls=['cw', clickable?'click':'', wsel?'wsel':'', ssel?'ssel':'', wov?'wov':'', gpos?'g '+gpos:''].join(' ').replace(/\s+/g,' ').trim();
+  const click = clickable ? ` onclick="pickSyl(${li},${s.word},${i})"` : '';
+  const tip = s.missing ? `Missing: the bahr expects a ${s.expected==='s'?'short (–)':'long (=)'} syllable here`
+    : s.clash ? `Wrong weight for the bahr: it needs ${s.expected==='l'?'long (=)':'short (–)'} here`
+    : s.extra ? 'Extra syllable: the bahr has no room for it'
+    : (s.fsyl==='+'?'Extra syllable the meter doesn\'t count':'Play from this foot');
+  return `<span class="${cwCls}"${click}><span class="chip ${cls} ${scriptCls}" data-i="${i}">${txt}</span><span class="fs${s.fsyl==='+'?' fs-extra':''}" onclick="pbFromFoot(event,this)" title="${tip}">${s.fsyl==='+'?'extra':(s.fsyl||'')}</span></span>`;
 }
 /* position of each syllable inside a grafted run (words joined across the space): g-start / g-mid / g-end */
 function graftPos(syl){
@@ -36,9 +41,20 @@ function graftPos(syl){
 function romanOverridesFor(syl,r,lineObj){
   if(!r||!lineObj||typeof wordRomanMap!=='function'||typeof syllabifyRoman!=='function') return [];
   const wmap=wordRomanMap(lineObj,r); if(!wmap) return [];
-  const counts={}, ordinals=[], pieces={};
-  syl.forEach(s=>{ const o=counts[s.word]||0; ordinals.push(o); counts[s.word]=o+1; });
-  return syl.map((s,i)=>{ if(!(s.word in pieces)){ const w=wmap[s.word]; pieces[s.word]=w?syllabifyRoman(w,counts[s.word]):null; } const p=pieces[s.word]; return p?p[ordinals[i]]:null; });
+  return romanPiecesFor(syl,wmap);
+}
+/* The one place that knows how a row of chips is laid out: reading direction follows the script (Roman and Devanagari
+   run left to right; a missing class is what once showed Roman chips backwards), and Roman pieces come from the line's
+   own Roman when given ({r, ro}). If the chips cannot be built the row falls back to plain weight blocks, never to nothing. */
+function chipRowHTML(syl,feet,o){
+  o=o||{};
+  const cs=(typeof currentScript!=='undefined')?currentScript:'ur';
+  const cls=['chips',cs==='ur'?'':'ltr',o.cls||''].join(' ').replace(/\s+/g,' ').trim();
+  let inner;
+  try { inner=chipsHTML(syl,feet,o.li==null?null:o.li,(o.r&&o.ro)?{r:o.r,lineObj:{ro:o.ro}}:undefined); }
+  catch(err){ inner=strip(syl.map(s=>s.resolved==='c'?'c':s.resolved)); }
+  if(o.hiSyl) o.hiSyl.forEach(i=>{ inner=inner.replace(new RegExp('(class="chip )([^"]*" data-i="'+i+'")'),'$1chip-hi $2'); });
+  return `<div class="${cls}">${inner}</div>`;
 }
 function chipsHTML(syl,feet,li,roCtx){
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
@@ -68,7 +84,7 @@ function wrapWordsHTML(text) {
 function fitChipRows(root){
   if (typeof document === 'undefined' || typeof document.querySelectorAll !== 'function') return;
   const FLOOR = 0.7;
-  (root || document).querySelectorAll('.cbox-scan .chips, .couplet-scan-box .chips').forEach(ch => {
+  (root || document).querySelectorAll('.cbox-scan .chips, .couplet-scan-box .chips, .corpus-chips').forEach(ch => {
     if (!ch.clientWidth) return;                      // hidden box: fitted when shown
     // Measure what the feet need side by side. (scrollWidth misses the part of a centred
     // row that overflows to the start side, so it under-reports and rows got clipped.)

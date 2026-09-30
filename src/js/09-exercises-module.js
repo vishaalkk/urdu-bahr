@@ -405,6 +405,7 @@ function syncCollectionButtons() {
 }
 
 function switchCollection(col) {
+  if (typeof closeGhazalReader === 'function') closeGhazalReader();   // on mobile the reader covers the tabs
   const searchActive = !!($('ghazalSearchInput') && $('ghazalSearchInput').value.trim());
   if (searchActive) {
     // While a query is active, the segmented control filters the merged
@@ -419,6 +420,7 @@ function switchCollection(col) {
   activeCollection = col;
   searchCollectionFilter = 'all';
   syncCollectionButtons();
+  if (typeof setHashQuiet === 'function') setHashQuiet(`/ghazals/${col}`);
 
   const descs = {
     'handbook': 'The handbook\'s exercise ghazals, with Frances Pritchett\'s notes. <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/10_ex_01_06.html" target="_blank" rel="noopener">Her exercises<span class="ext">↗</span></a> · <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/11_exnotes.html" target="_blank" rel="noopener">answers &amp; notes<span class="ext">↗</span></a>',

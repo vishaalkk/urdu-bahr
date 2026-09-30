@@ -12,45 +12,87 @@
 
   <!-- Subtab 1: Learn -->
   <div id="weightPanelLearn" class="subpanel">
-    <div class="card words-card small">
-      <h2 class="section-title words-title">Words we use</h2>
-      <dl class="words-def-list">
-        <dt class="mono">miṣraʿ</dt>
-        <dd class="dim">A single line or hemistich of poetry.</dd>
-        <dt class="mono">sheʿr</dt>
-        <dd class="dim">A complete, self-contained two-line couplet.</dd>
-        <dt class="mono">baḥr</dt>
-        <dd class="dim">The meter or rhythmic pattern that a poem follows.</dd>
-        <dt class="mono">rukn</dt>
-        <dd class="dim">A metrical foot (e.g. mafāʿīlun, fāʿilātun).</dd>
-        <dt class="mono">dum / da</dt>
-        <dd class="dim">Vocal mnemonics for long (=) and short (–) syllables.</dd>
-      </dl>
+    <p class="tiny dim hb-attrib">Adapted from Frances W. Pritchett &amp; Khawaja Ahmad Khaliq Anjum, <i>Urdu Meter: A Practical Handbook</i>. The explanations here are in our own words and use her terms; each card links to the section it follows, where her own wording is.</p>
+
+    <nav class="stepper" id="weightStepper" aria-label="Weight lesson steps"></nav>
+
+    <!-- Stage 1: what weight is, and how to split and weigh a word with the fixed rules -->
+    <div class="stage" data-stage="1">
+      <h2 class="section-title">What weight is</h2>
+      <p class="small dim group-lead">Every syllable is long (=) or short (–), and a meter is a pattern of them. To read a line, split each word into syllables and weigh each one.</p>
+      <div class="card intro-card"><div id="introEx" class="row constr-row special-syll-row"></div></div>
+      <h3 class="group-title">The rules</h3>
+      <div class="card small" data-rule-card>
+        <p><strong class="weight-term">Rule one: a syllable is two letters or one.</strong> Count letters, not sounds: every letter of the alphabet, the doubled letter a tashdīd stands for, the madd on Alif (Alif Madd, آ), and a hamza inside a word.</p>
+        <details class="card-more"><summary class="tiny dim">More: what meter ignores</summary>
+          <p><strong class="weight-term">Invisible to meter:</strong> the marks zer, zabar and pesh; the aspiration ھ (do-chashmī he); the nasal ں (nūn-e ghunnah); the dotless ی that carries a hamza. Older texts write plain gol he for aspiration; it is still invisible when it aspirates.</p>
+        </details>
+        <a class="hb-ref" data-rule="L1.2-letters" href="https://franpritchett.com/00ghalib/meterbk/01_genrules.html#1_2" target="_blank" rel="noopener">Handbook §1.2 &#8599;</a>
+      </div>
+      <div class="card small" data-rule-card>
+        <p><strong class="weight-term">The weight law.</strong> <span class="L">Two letters → long (=)</span>. <span class="S">One letter → short (–)</span>. A long is meant to last about double a short. A syllable that may go either way is called flexible.</p>
+        <a class="hb-ref" data-rule="S1.5-weight" href="https://franpritchett.com/00ghalib/meterbk/01_genrules.html#1_5" target="_blank" rel="noopener">Handbook §1.5 &#8599;</a>
+      </div>
+      <div class="card small" data-rule-card>
+        <p><strong class="weight-term">Rule two: begin with a consonant if you can.</strong> Every letter counts as a consonant except Alif (ا) and Alif Madd (آ), which are always vowels, and و, ی, ے when they are the second letter of a syllable. Syllables that begin with Alif (ا) or Alif Madd (آ) normally occur only at the start of a word. ع and a hamza inside a word act as consonants; a hamza is never the second letter of a syllable.</p>
+        <div id="ruleTwoEx" class="row constr-row special-syll-row"></div>
+        <a class="hb-ref" data-rule="S1.3-onset" href="https://franpritchett.com/00ghalib/meterbk/01_genrules.html#1_3" target="_blank" rel="noopener">Handbook §1.3 &#8599;</a>
+      </div>
+      <div class="card small" data-rule-card>
+      <p><strong class="weight-term">Rule three: the split follows pronunciation.</strong> Use the ordinary spoken word, not the spelling alone; when unsure, ask a native speaker or check a dictionary that marks pronunciation.</p>
+      <a class="hb-ref" data-rule="S1.4-pronunciation" href="https://franpritchett.com/00ghalib/meterbk/01_genrules.html#1_4" target="_blank" rel="noopener">Handbook §1.4 &#8599;</a>
+    </div>
+      <div id="specialSyll" class="constr-container"></div>
     </div>
 
-    <h2 class="section-title">Letters &amp; weight</h2>
-    <div class="card small">
-      <p><strong class="weight-term">Three rules.</strong> A syllable is <strong class="weight-term">two letters or one</strong>. It <strong class="weight-term">starts with a consonant</strong> if it can. The split <strong class="weight-term">follows pronunciation</strong>.</p>
-      <p><strong class="weight-term">The weight law.</strong> <span class="L">Two letters → long (=)</span>. <span class="S">One letter → short (–)</span>.</p>
-      <p><strong class="weight-term">Invisible to meter:</strong> zer/zabar/pesh, the aspiration ھ, the nasal ں. <strong class="weight-term">Counts:</strong> hamza ء and ع as full consonants; tashdīd doubles its letter; آ is two letters.</p>
+    <!-- Stage 2: flexible syllables -->
+    <div class="stage" data-stage="2" hidden>
+      <h2 class="section-title">Flexible syllables</h2>
+      <p class="small dim group-lead">Some syllables can be long or short. The meter of the line decides which.</p>
+      <h3 class="group-title">Short words</h3>
+      <div class="card small" data-rule-card>
+        <p><strong class="weight-term">Small words like <span class="urdu ur-always">ہے</span> and <span class="urdu ur-always">میں</span> can go either way.</strong> Many common one-syllable words (<span class="urdu urdu-monos ur-always">کو، سے، کا، ہے، میں، بھی، نے، ہوں، یہ، وہ، جو، تو</span>, and also <span class="urdu urdu-monos ur-always">دو، تھا، ہی، سا، سی، کے، کی، ہو، یوں</span>) are flexible: two letters, so normally long, but the poet may scan them short. Once the meter of a line is known, each one is simply long or short there. The form is consonant + vowel or consonant + h; particles, pronouns, postpositions and verb forms are the likeliest to bend. When in doubt, treat every such one-syllable word as flexible on a first reading.</p>
+        <a class="hb-ref" data-rule="F2.1-listed-monosyllable" href="https://franpritchett.com/00ghalib/meterbk/02_flexibility.html#2_1" target="_blank" rel="noopener">Handbook §2.1 &#8599;</a>
+      </div>
+      <div id="flexVerses"></div>
+      <div class="card small" data-rule-card>
+        <p><strong class="weight-term">Words that do not bend.</strong> <span class="urdu urdu-monos ur-always">تا، گو، یا</span> are virtually always long; so are <span class="urdu urdu-monos ur-always">کیا، کیوں، جیوں</span> (one long syllable despite the cluster) and Arabic or Persian noun monosyllables such as <em>mai</em>, <em>jaa</em>, <em>juu</em>. In modern usage <span class="urdu urdu-monos ur-always">بہ، کہ، نہ</span> are always short (Mir sometimes scans kih and nah long).</p>
+        <a class="hb-ref" data-rule="F2.1-always-long" href="https://franpritchett.com/00ghalib/meterbk/02_flexibility.html#2_1" target="_blank" rel="noopener">Handbook §2.1 &#8599;</a>
+      </div>
+      <div class="card small" data-rule-card>
+        <p><strong class="weight-term">The word <span class="urdu ur-always">اور</span> (<em>aur</em>).</strong> A special case that is a common source of error: it is scanned (= –) as two syllables or (=) as one.</p>
+        <a class="hb-ref" data-rule="F2.1-aur" href="https://franpritchett.com/00ghalib/meterbk/02_flexibility.html#2_1" target="_blank" rel="noopener">Handbook §2.1 &#8599;</a>
+      </div>
+      <div id="aurVerses"></div>
+      <h3 class="group-title">Longer words</h3>
+      <div class="card small" data-rule-card>
+        <p><strong class="weight-term">Word endings can bend too.</strong> Inside longer words, flexibility is almost always at the end. A final two-letter syllable ending in ی, ے or ہ is nearly always flexible; one ending in و or alif often is (more in Indic verb forms than in Persian or Arabic words). Exceptions in the middle of a word are rare (<em>koī</em> = x x). As a rule of thumb, treat every final consonant + vowel (or consonant + h) syllable as flexible until the meter says otherwise.</p>
+        <a class="hb-ref" data-rule="F2.2-final-ii-e-h" href="https://franpritchett.com/00ghalib/meterbk/02_flexibility.html#2_2" target="_blank" rel="noopener">Handbook §2.2 &#8599;</a>
+      </div>
+      <div class="card small" data-rule-card>
+        <p><strong class="weight-term">Words that can split two ways.</strong> Some consonant-heavy words may be divided in two ways: <em>barhaman</em> (= – =) or (– = =); <em>barkat</em> (= =) or, in the older Arabic reading, (– – =).</p>
+        <a class="hb-ref" data-rule="F2.3-alternate-split" href="https://franpritchett.com/00ghalib/meterbk/02_flexibility.html#2_3" target="_blank" rel="noopener">Handbook §2.3 &#8599;</a>
+      </div>
+      <div class="card small" data-rule-card>
+        <p><strong class="weight-term">Spelling that shows the scansion.</strong> Some words change their weight when their spelling changes, and are then scanned exactly as written: <em>meraa</em> (= x) versus <em>miraa</em> (– x); <em>ek</em> (= –) versus <em>ik</em> or <em>yak</em> (=); <em>vahaa&ntilde;</em> (– x) versus <em>vaa&ntilde;</em> (=). A tashdīd may also be present without being written, as in <em>rakhaa</em>: (– x) or (= x).</p>
+        <a class="hb-ref" data-rule="T2.4-flexible-spelling" href="https://franpritchett.com/00ghalib/meterbk/02_flexibility.html#2_4" target="_blank" rel="noopener">Handbook §2.4 &#8599;</a>
+      </div>
     </div>
 
-    <h2 class="section-title">Special cases</h2>
-    <p class="small dim">A few words split differently than the three rules alone would predict.</p>
-    <div id="specialSyll" class="constr-container"></div>
-
-    <h2 class="section-title">Bending</h2>
-    <div class="card small">
-      <p><strong class="weight-term">Flexibility in Urdu prosody.</strong> Many common monosyllables (<span class="urdu urdu-monos ur-always">کو، سے، کا، ہے، میں، بھی، نے، ہوں، یہ، وہ، جو، تو</span>) can count as long (=) or short (–) according to the requirement of the meter.</p>
-      <p>Final vowels before vowels, the Persian iẓāfat connector (ِ / <em>-e</em>), and the conjunction <em>o</em> ("and") bridge words or alter lengths.</p>
+    <!-- Stage 3: joins across words -->
+    <div class="stage" data-stage="3" hidden>
+      <h2 class="section-title">Across word boundaries</h2>
+      <p class="small dim group-lead">The page shows separate words, but the voice runs some of them together. When a line seems a syllable too long or too short, look for a join: the iẓāfat, grafting, or the conjunction <em>o</em>.</p>
+      <div id="constr" class="constr-container"></div>
     </div>
 
-    <h2 class="section-title">Across word boundaries</h2>
-    <p class="small dim">The usual reason a line that looks wrong is right. Tap ▶︎ to hear before → after.</p>
-    <div id="constr" class="constr-container"></div>
-
+    <!-- Stage 4: reference -->
+    <div class="stage" data-stage="4" hidden>
+      <h2 class="section-title">Reference</h2>
+      <div id="constrRef" class="constr-container"></div>
     <div class="go-deeper card small">
       <span class="go-deeper-tag mono tiny">Go deeper</span>
       <p class="go-deeper-links"><a href="https://franpritchett.com/00ghalib/meterbk/01_genrules.html" target="_blank" rel="noopener">Pritchett, ch. 1 — General Rules ↗</a> &nbsp;·&nbsp; <a href="https://franpritchett.com/00ghalib/meterbk/02_flexibility.html" target="_blank" rel="noopener">Pritchett, ch. 2 — Flexibility ↗</a> &nbsp;·&nbsp; <a href="https://franpritchett.com/00ghalib/meterbk/03_special.html" target="_blank" rel="noopener">Pritchett, ch. 3 — Special Constructions ↗</a></p>
+    </div>
     </div>
   </div>

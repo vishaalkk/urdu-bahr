@@ -1,0 +1,16 @@
+<!-- ===================== BAHR PRACTICE EDITOR (Route #/lab/practice) ===================== -->
+<section id="practice-section" class="tab-view" style="display:none;">
+  <h2 class="sec">Practice</h2>
+  <h3 class="pr-title">Tap the rhythm, syllable by syllable</h3>
+  <p class="small pr-lede">Say the line aloud. For each syllable press <b>1</b> if it is quick, <b>2</b> if it is held. When a foot is complete it will group together and play back. The names come at the end.</p>
+  <div id="practiceLine" class="pr-line" dir="auto"></div>
+  <div id="practiceChips" class="pr-chips" aria-live="polite"></div>
+  <p id="practiceHint" class="pr-hint" role="status" aria-live="polite">&nbsp;</p>
+  <div class="pr-keys" id="practiceKeys">
+    <button class="btn pr-key" id="prShort" onclick="prPress('s')" aria-label="Short syllable, key 1"><b class="mono">1</b> Short</button>
+    <button class="btn pr-key" id="prLong" onclick="prPress('l')" aria-label="Long syllable, key 2"><b class="mono">2</b> Long</button>
+    <button class="btn ghost sm" id="prBack" onclick="prBack()" aria-label="Step back, key Backspace">&larr; Back</button>
+    <button class="btn ghost sm" onclick="prNew()">Another line</button>
+  </div>
+  <div id="practiceReveal" class="pr-reveal"></div>
+</section>

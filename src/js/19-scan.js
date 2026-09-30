@@ -243,21 +243,24 @@ function loadEx(v){ if(v===''){curEx=null;return;} curEx=EXERCISES[+v]; if($('sc
 function loadSample(i){ if($('scanIn')) $('scanIn').value=SAMPLES[i][1]; ovr={}; curEx=null; if($('exSel')) $('exSel').value=''; runScan(); }
 let ovr={}, lastScan=null, selWord=null, scanRolls={};
 function verdictOf(c){ return c<=2.5?['ok','Scans']:c<=5?['warn','Scans, with stretches']:['no','Strained — probably not']; }
-/* colour a raw pattern string (= long, - short, x either, / foot break) */
+/* colour a raw pattern string (= long, - short, x shortenable long, / foot break) */
 function patGlyphs(raw){
   return String(raw).split('').map(ch=>ch==='='?'<span class="pg l">=</span>':ch==='-'?'<span class="pg s">-</span>':ch==='x'?'<span class="pg x">x</span>':ch==='/'?'<span class="pg sep">/</span>':ch).join('');
 }
+/* Legend entries. `rule` = engine-lab/rules.json id (cited as a Handbook section in the tooltip); `app: true` = this app's
+   own notation or convention, not the handbook's. */
+const LEGEND_ITEMS = [
+  { rule: 'S1.5-weight', tip: "A long syllable: two letters. Shown as a solid underline or =. Sung 'dum' in this app.", body: `<i class="sw c-l"></i><span class="lg-or">/</span><span class="pg l">=</span> long <span class="lg-note">(dum)</span>` },
+  { rule: 'S1.5-weight', tip: "A short syllable: one letter. Shown as a dotted underline or \u2013. Sung 'da' in this app.", body: `<i class="sw c-s"></i><span class="lg-or">/</span><span class="pg s">\u2013</span> short <span class="lg-note">(da)</span>` },
+  { rule: 'F2.1-listed-monosyllable', tip: "A flexible syllable: two letters, so normally long, but it may be scanned short (\u06a9\u0648\u060c \u0633\u06d2\u060c \u06c1\u06d2\u2026, and many word-final syllables). The meter decides; the underline shows the reading chosen.", body: `<i class="sw c-x"></i>flexible` },
+  { rule: 'M6.1-anceps', sec: '7', tip: "In a meter pattern, x marks a position that may be long or short, as with the first syllable of meters 14 to 19.", body: `<span class="pg x">x</span> long or short`, app: true },
+  { rule: 'M6.1-cheat-final', tip: "One extra short syllable the meter doesn't count: allowed at the end of a line and, in some meters, just before the mid-line break. Pritchett calls it a 'cheat' syllable.", body: `<i class="sw c-c"></i>extra` },
+  { rule: 'F3.1-graft', tip: "Words joined across the space and read as one, e.g. \u0101\u1e33hir is \u2192 \u0101\u00b7\u1e33hi\u00b7ris.", body: `<i class="sw c-g"></i>grafted` }
+];
 function legendHTML(cls){
   // one compact line; each item explains itself on hover or tap (data-tip, styled in verse.css)
-  const item = (tip, body) => `<span class="lg-item" tabindex="0" data-tip="${tip}">${body}</span>`;
-  return `<div class="legend${cls?' '+cls:''}">`
-    + item("A long syllable — sung 'dum'. Shown as a solid underline or =.", `<i class="sw c-l"></i><span class="lg-or">/</span><span class="pg l">=</span> long <span class="lg-note">(dum)</span>`)
-    + item("A short syllable — sung 'da'. Shown as a dotted underline or –.", `<i class="sw c-s"></i><span class="lg-or">/</span><span class="pg s">–</span> short <span class="lg-note">(da)</span>`)
-    + item("A word whose syllable can be read long or short (کو، سے، ہے…). The meter decides which — the underline shows the reading chosen.", `<i class="sw c-x"></i>flexible`)
-    + item("A slot in the meter's own pattern that accepts long or short. About the meter, not the word.", `<span class="pg x">x</span> either`)
-    + item("One extra short syllable the meter doesn't count — allowed at the end of a line (and in some meters at the mid-line break). Pritchett calls it a 'cheat' syllable.", `<i class="sw c-c"></i>extra`)
-    + item("Words joined across the space and read as one (e.g. aḳhir us → ā·khi·ras).", `<i class="sw c-g"></i>grafted`)
-    + `</div>`;
+  const item = it => { const sec = it.sec || ruleSec(it.rule); return `<span class="lg-item" tabindex="0" data-tip="${it.tip} (Handbook \u00a7${sec})">${it.body}</span>`; };
+  return `<div class="legend${cls?' '+cls:''}">` + LEGEND_ITEMS.map(item).join('') + `</div>`;
 }
 const FAM_TITLES = {
   'hazaron': "Bahr of Hazāroñ Ḳhvāhisheñ",
@@ -339,6 +342,68 @@ function meterLabel(m, opts){
   if (tech) return `${numStr} — ${tech}`;
   return numStr;
 }
+/* per-word Devanagari/Roman for a line only partly in the verified word map */
+function urduWordsToScripts(line){
+  if(typeof wordAscii!=='function' || !window.p_hi || !window.p_di) return null;
+  const hi=[], ro=[], literal=/[\u064B-\u065F\u0670]/.test(line);
+  for(const w of line.split(/\s+/).filter(Boolean)){
+    const a=wordAscii(w, literal); let h='', r='';
+    if(a){ try{ h=window.p_hi.parse(a); r=window.p_di.parse(a); }catch(e){ h=r=''; } }
+    hi.push(h || (typeof urduToDevanagari==='function'?urduToDevanagari(w):w));
+    ro.push(r || (typeof urduToRoman==='function'?urduToRoman(w):w));
+  }
+  return {hi:hi.join(' '), ro:ro.join(' ')};
+}
+/* one typed line → {ur, hi, ro, ascii, isApprox}: a known corpus verse verbatim, else
+   Pue's parsers on the word-map ASCII, else word by word. opts.skipKnown bypasses the
+   verbatim lookup (tests/benchmark.js uses it to measure the fallbacks on Fran's lines). */
+function lineScripts(rawL, opts){
+  opts = opts || {};
+  rawL = (rawL || '').normalize('NFC');
+  const nk = (typeof normVerseKey === 'function') ? normVerseKey(rawL) : '';
+  let urduL = rawL;
+  let lineObj = null;
+
+  if(!opts.skipKnown && typeof KNOWN_VERSES !== 'undefined' && KNOWN_VERSES[nk]) {
+    lineObj = KNOWN_VERSES[nk];
+    urduL = lineObj.ur;
+  } else if(/[\u0600-\u06FF]/.test(rawL)) {
+    urduL = rawL;
+    const wa = (typeof urduLineToAscii==='function') ? urduLineToAscii(rawL) : {allKnown:false};
+    let hi='', ro='';
+    if(wa.allKnown){
+      try { if(window.p_hi) hi = window.p_hi.parse(wa.ascii); } catch(e){}
+      try { if(window.p_di) ro = window.p_di.parse(wa.ascii); } catch(e){}
+    }
+    if(wa.allKnown && hi && ro){
+      lineObj = { ur: rawL, hi, ro, ascii: wa.ascii, isApprox: false };
+    } else {
+      /* word by word: known words keep their verified spelling, only the unknown ones
+         fall back to the letter map (which can't see short vowels: ستاروں → stāroñ) */
+      const per = (typeof urduWordsToScripts==='function') ? urduWordsToScripts(rawL) : null;
+      lineObj = { ur: rawL, hi: per ? per.hi : (typeof urduToDevanagari==='function'?urduToDevanagari(rawL):rawL), ro: per ? per.ro : (typeof urduToRoman==='function'?urduToRoman(rawL):rawL), ascii: rawL, isApprox: true };
+    }
+  } else if(/[\u0900-\u097F]/.test(rawL)) {
+    const asc = (typeof devToAscii==='function') ? devToAscii(rawL) : rawL;
+    let ur = '';
+    try { if(window.p_ur) ur = window.p_ur.parse(asc); } catch(e){}
+    let ro = '';
+    try { if(window.p_di) ro = window.p_di.parse(asc); } catch(e){}
+    urduL = ur || rawL;
+    lineObj = { ur: urduL, hi: rawL, ro: ro || rawL, ascii: asc };
+  } else {
+    const asc = (typeof romanToAscii==='function') ? romanToAscii(rawL) : rawL;
+    let ur = '';
+    try { if(window.p_ur) ur = window.p_ur.parse(asc); } catch(e){}
+    let hi = '';
+    try { if(window.p_hi) hi = window.p_hi.parse(asc); } catch(e){}
+    let ro = '';
+    try { if(window.p_di) ro = window.p_di.parse(asc); } catch(e){}
+    urduL = ur || rawL;
+    lineObj = { ur: urduL, hi: hi || rawL, ro: ro || rawL, ascii: asc };
+  }
+  return lineObj;
+}
 function runScan(){
   const rawLines=$('scanIn').value.split('\n').map(s=>s.trim()).filter(Boolean);
   if(typeof setHashQuiet==='function' && typeof location!=='undefined' && /^#\/scan/.test(location.hash||'')) setHashQuiet(rawLines.length ? '/scan?t=' + encodeURIComponent(rawLines.join('\n')) : '/scan');
@@ -352,47 +417,8 @@ function runScan(){
   const lines = [];
   const lineObjs = [];
   rawLines.forEach(rawL => {
-    rawL = (rawL || '').normalize('NFC');
-    const nk = (typeof normVerseKey === 'function') ? normVerseKey(rawL) : '';
-    let urduL = rawL;
-    let lineObj = null;
-
-    if(typeof KNOWN_VERSES !== 'undefined' && KNOWN_VERSES[nk]) {
-      lineObj = KNOWN_VERSES[nk];
-      urduL = lineObj.ur;
-    } else if(/[\u0600-\u06FF]/.test(rawL)) {
-      urduL = rawL;
-      const wa = (typeof urduLineToAscii==='function') ? urduLineToAscii(rawL) : {allKnown:false};
-      let hi='', ro='';
-      if(wa.allKnown){
-        try { if(window.p_hi) hi = window.p_hi.parse(wa.ascii); } catch(e){}
-        try { if(window.p_di) ro = window.p_di.parse(wa.ascii); } catch(e){}
-      }
-      if(wa.allKnown && hi && ro){
-        lineObj = { ur: rawL, hi, ro, ascii: wa.ascii, isApprox: false };
-      } else {
-        lineObj = { ur: rawL, hi: (typeof urduToDevanagari==='function'?urduToDevanagari(rawL):rawL), ro: (typeof urduToRoman==='function'?urduToRoman(rawL):rawL), ascii: rawL, isApprox: true };
-      }
-    } else if(/[\u0900-\u097F]/.test(rawL)) {
-      const asc = (typeof devToAscii==='function') ? devToAscii(rawL) : rawL;
-      let ur = '';
-      try { if(window.p_ur) ur = window.p_ur.parse(asc); } catch(e){}
-      let ro = '';
-      try { if(window.p_di) ro = window.p_di.parse(asc); } catch(e){}
-      urduL = ur || rawL;
-      lineObj = { ur: urduL, hi: rawL, ro: ro || rawL, ascii: asc };
-    } else {
-      const asc = (typeof romanToAscii==='function') ? romanToAscii(rawL) : rawL;
-      let ur = '';
-      try { if(window.p_ur) ur = window.p_ur.parse(asc); } catch(e){}
-      let hi = '';
-      try { if(window.p_hi) hi = window.p_hi.parse(asc); } catch(e){}
-      let ro = '';
-      try { if(window.p_di) ro = window.p_di.parse(asc); } catch(e){}
-      urduL = ur || rawL;
-      lineObj = { ur: urduL, hi: hi || rawL, ro: ro || rawL, ascii: asc };
-    }
-    urduL = (urduL || '').normalize('NFC');
+    const lineObj = lineScripts(rawL);
+    const urduL = ((lineObj && lineObj.ur) || rawL).normalize('NFC');
     lines.push(urduL);
     lineObjs.push(lineObj);
   });
@@ -406,24 +432,31 @@ function runScan(){
   const btnPlay = $('btnPlayCouplet');
   if(btnPlay) btnPlay.classList.toggle('hidden', lines.length <= 1);
 
-  const results=lines.map((l,i)=>Scan.scanLine(l,ovr[i]));
-  lastScan={lines,rawLines,lineObjs,results};
+  /* The bahr is decided on the text as written; a learner's edits are then judged only
+     against that original bahr, even when the edited line happens to fit another one. */
+  const base=lines.map(l=>Scan.scanLine(l));
+  const results=lines.map((l,i)=>hasEdits(i)?Scan.scanLine(l,ovr[i]):base[i]);
+  lastScan={lines,rawLines,lineObjs,results,base};
   let h='';
   /* stacking / multi-line harmony */
   let common=null;
   if(lines.length>1){
-    const PAIRS=[[1,9],[14,15],[16,17],[18,19],[33,34]];
+    const PAIRS=SCAN_PAIRS;
     const inPair=new Set(PAIRS.flat());
     const groups=Scan.METERS.map(m=>m.id).filter(id=>!inPair.has(id)).map(id=>[id]).concat(PAIRS).concat([['H']]);
-    const tot=groups.map(g=>{let c=0,fits=[]; for(const r of results){const f=r.fits.filter(x=>g.includes(x.meter.id)).sort((a,b)=>a.c-b.c)[0]; if(!f){return null;} c+=f.c; fits.push(f);} return {id:g[0],group:g,c,fits};}).filter(Boolean).sort((a,b)=>a.c-b.c);
+    const tot=groups.map(g=>{let c=0,fits=[]; for(const r of base){const f=r.fits.filter(x=>g.includes(x.meter.id)).sort((a,b)=>a.c-b.c)[0]; if(!f){return null;} c+=f.c; fits.push(f);} return {id:g[0],group:g,c,fits};}).filter(Boolean).sort((a,b)=>a.c-b.c);
     common=tot[0]||null;
     if(!common){
-      let bestG=null; groups.forEach(g=>{ let n=0,c=0; const miss=[]; results.forEach((r,li)=>{const f=r.fits.filter(x=>g.includes(x.meter.id)).sort((a,b)=>a.c-b.c)[0]; if(f){n++;c+=f.c;} else miss.push(li+1);});
+      let bestG=null; groups.forEach(g=>{ let n=0,c=0; const miss=[]; base.forEach((r,li)=>{const f=r.fits.filter(x=>g.includes(x.meter.id)).sort((a,b)=>a.c-b.c)[0]; if(f){n++;c+=f.c;} else miss.push(li+1);});
         if(n>=2 && (!bestG||n>bestG.n||(n===bestG.n&&c<bestG.c))) bestG={g,n,c,miss}; });
       lastScan.near=bestG; }
     lastScan.forced = common && common.c/lines.length<=5 ? common.fits : null;
+  }
+  lastScan.anchor = lines.map((l,li)=>(lastScan.forced && lastScan.forced[li]) || base[li].fits[0] || null);
+  lastScan.disp = lastScan.anchor.map((a,li)=>anchoredFit(li,a));
+  if(lines.length>1){
     if(lastScan.forced){
-      const _fcd=lastScan.forced, _f0=_fcd[0], _m=_f0.meter, _per=common.c/lines.length, [_vc,_vt]=verdictOf(_per), _fam=famOfMeter[_m.id];
+      const _fcd=lastScan.disp, _f0=lastScan.anchor[0], _m=_f0.meter, _per=common.c/lines.length, [_vc,_vt]=verdictOf(_per), _fam=famOfMeter[_m.id];
       const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
       const isRtl = (cs === 'ur');
       const famDisp = _fam ? famLabel(_fam) : null;
@@ -438,7 +471,7 @@ function runScan(){
         h+=`<div class="ss-name">${_tech || meterLabel(_m,{tech:false})}</div>`;
         { const _rawTech = (typeof METERS_DATA !== 'undefined' && METERS_DATA.standard) ? ((METERS_DATA.standard.find(x => x.id === _m.id) || {}).name || '') : (METER_TECH_NAMES[_m.id] || '');
           const _ur = aruzName(_rawTech).ur; if(_ur) h+=`<div class="ss-name-ur">${_ur}</div>`; }
-        if(_m.raw) h+=`<div class="ss-pat">${patGlyphs(_m.raw)}</div><div class="ss-pat-key"><span class="pg l">=</span> long <span class="pg s">-</span> short${/x/.test(_m.raw)?' <span class="pg x">x</span> either (long or short)':''} <span class="pg sep">/</span> foot break</div>`;
+        if(_m.raw) h+=`<div class="ss-pat">${patGlyphs(_m.raw)}</div><div class="ss-pat-key"><span class="pg l">=</span> long <span class="pg s">-</span> short${/x/.test(_m.raw)?' <span class="pg x">x</span> shortenable long (may scan = or –)':''} <span class="pg sep">/</span> foot break</div>`;
         if(_fam){
           if(_famIsWhatWasScanned) h+=`<div class="ss-ref"><span class="ss-lbl">This couplet is the reference example for this bahr</span></div>`;
           else h+=`<div class="ss-ref"><span class="ss-lbl">Same bahr as</span><span class="${isRtl?'urdu':'ro'} ss-verse">${famTxt}</span><span class="ss-cite">${cs==='ro'?famDisp.ref:famDisp.ro+' — '+famDisp.ref}</span></div>`;
@@ -446,7 +479,7 @@ function runScan(){
         }
         h+=`</div>`; }
       /* answer key if exercise */
-      if(curEx){ const _hit=_fcd.every(f=>exMeters(curEx).includes(f.meter.id)); h+=`<p class="tiny muted mt-loose">Pritchett's answer key (ch. 11): <b class="t">${exMeters(curEx).map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b> — ${_hit?'<span class="ok-text">the scanner agrees ✓</span>':'<span class="no-text">the scanner disagrees ✗</span>'}</p>`; }
+      if(curEx){ const _hit=lastScan.forced.every(f=>exMeters(curEx).includes(f.meter.id)); h+=`<p class="tiny muted mt-loose">Pritchett's answer key (ch. 11): <b class="t">${exMeters(curEx).map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b> — ${_hit?'<span class="ok-text">the scanner agrees ✓</span>':'<span class="no-text">the scanner disagrees ✗</span>'}</p>`; }
       h+=legendHTML('legend-sticky');
       /* lines grouped into couplets (shers) of 2, each its own bordered card */
       for(let _i=0;_i<results.length;_i+=2){
@@ -459,12 +492,14 @@ function runScan(){
       h+=`<div class="card callout-mismatch"><div class="row">Differing or Strained Meters Between Misras</div><div class="muted small note-sub">No single classical bahr fits every misra. Inspect individual misra scans below.</div></div>`;
       for(let _i=0;_i<results.length;_i+=2){
         const _li2 = (_i+1<results.length) ? _i+1 : null;
-        h+=coupletCard(_i,_li2,results[_i],null,lineObjs[_i],_li2!=null?results[_li2]:null,null,_li2!=null?lineObjs[_li2]:null,`Couplet ${(_i/2)+1}`);
+        const _f1 = lastScan.disp[_i];
+        const _f2 = _li2!=null ? lastScan.disp[_li2] : null;
+        h+=coupletCard(_i,_li2,results[_i],_f1,lineObjs[_i],_li2!=null?results[_li2]:null,_f2,_li2!=null?lineObjs[_li2]:null,`Couplet ${(_i/2)+1}`);
       }
     }
   } else {
     h+=legendHTML('legend-sticky');
-    results.forEach((r,li)=>{ h+=lineHTML(r,li,null,lineObjs[0]); });
+    results.forEach((r,li)=>{ h+=lineHTML(r,li,lastScan.disp[li],lineObjs[0]); });
   }
   $('scanOut').innerHTML=h;
   scanRolls = {};
@@ -545,21 +580,22 @@ function stackInner(lines,results,common,tot){
     ${fam?`<div class="row"><button class="btn sm" onclick="go('bahr');document.getElementById('fam-${fam.id}').scrollIntoView()">More ghazals in this bahr ›</button></div>`:''}`;
 }
 function lineHTML(r,li,forced,lineObj){
-  const f=forced||r.fits[0];
+  const f=forced!==undefined ? forced : (r.fits&&r.fits[0]);   /* null: doesn't scan in its bahr */
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
   const isRtl = (cs === 'ur');
   const lObj = lineObj || (lastScan && lastScan.lineObjs && lastScan.lineObjs[li]) || (lastScan && lastScan.lines && lastScan.lines[li]);
   const dispL = (typeof getLineDisplay === 'function') ? getLineDisplay(lObj, cs) : (typeof lObj === 'string' ? lObj : (lObj ? lObj.ur : ''));
+  const canPlay = !!(f || (r && r.words && r.words.length));
 
-  let h=`<div class="card"><div class="row card-head"><span class="tiny muted">Misra ${li+1}</span>${f?`<span class="play sm" title="Hear this misra" aria-label="Hear this misra" data-label="Hear this misra" data-pb="line:${li}" onclick="playScan(${li},null,this)">▶︎</span>`:''}</div>`;
+  let h=`<div class="card"><div class="row card-head"><span class="tiny muted">Misra ${li+1}</span>${canPlay?`<span class="play sm" title="Hear this misra" aria-label="Hear this misra" data-label="Hear this misra" data-pb="line:${li}" onclick="playScan(${li},null,this)">▶︎</span>`:''}</div>`;
   if(dispL) h+=`<div class="misra-text ${isRtl ? '' : (cs==='hi'?'deva':'ltr')}">${dispL}</div>`;
   if(!f){
-    h+=`<div class="words ${isRtl?'rtl':'ltr'}">${r.words.map((w,wi)=>{
-      const wText = (cs === 'ur') ? w.raw : (typeof translitText === 'function' ? translitText(w.raw, cs) : w.raw);
-      return `<button class="wbtn ${selWord&&selWord[0]===li&&selWord[1]===wi?'sel':''} ${ovr[li]&&ovr[li][wi]?'ov':''} ${!isRtl?'roman':''}" onclick="pickWord(${li},${wi})">${wText}</button>`;
-    }).join('')}</div>`;
+    const e = explainUnscanned(r, li, benchmarkFit(li));
+    h+=editCompareHTML(li, isRtl);
+    h+=`<div class="chips ${isRtl?'':'ltr'}" id="sc${li}">${chipsHTML(e.syl,e.feet,li)}</div>`;
     if(selWord&&selWord[0]===li) h+=wordPanel(r,li,selWord[1]);
-    h+=`<div class="verdict no-fit">Doesn't scan as typed</div><p class="small muted">No bahr fits any reading. Tap a word to change its reading, add or remove an iẓāfat, or check the text (a doubled letter without tashdīd is the most common slip).</p></div>`;
+    h+=renderUnscannedDiagnostic(e, cs, isRtl, li);
+    h+='</div>';
     return h;
   }
   const e=Scan.explain(r,f), [vc,vt]=verdictOf(f.c), fam=famOfMeter[f.meter.id];
@@ -568,12 +604,14 @@ function lineHTML(r,li,forced,lineObj){
   const _lineUr = typeof lObj==='string' ? lObj : (lObj && lObj.ur) || '';
   const _famIsThisLine = famDisp && (typeof normVerseKey==='function') && normVerseKey(_lineUr)===normVerseKey(famDisp.ur||'');
   h+=`<div class="row"><span class="pill ${vc}">${vt}</span>${fam?(_famIsThisLine?`<span class="small muted">This is the reference example for this bahr</span>`:`<span class="small muted">Same bahr as</span><span class="${isRtl?'urdu':''} fam-inline">${famTxt}</span>`):`<span class="small muted">${meterLabel(f.meter)}</span>`}</div>`;
+  h+=editCompareHTML(li, isRtl);
   h+=`<div class="chips ${isRtl?'':'ltr'}" id="sc${li}">${chipsHTML(e.syl,e.feet,li)}</div>`;
+  if(hasEdits(li)) h+=`<p class="tiny muted mt-note">Your edit still scans in the original bahr: the flexibility rules absorb it.</p>`;
   if(selWord&&selWord[0]===li) h+=wordPanel(r,li,selWord[1]);
   if(f.meter.id==='H' && lastScan.lines.length===1) h+=`<p class="tiny X mt-2">Mir's Hindi meter is loose enough that even some ordinary sentences fit it. One line proves little — add the rest of the ghazal.</p>`;
   const notes=[...new Set(e.notes.map(n=>`${n.word}: ${n.note}`))].filter(n=>!/: $/.test(n));
   if(notes.length) h+=`<p class="tiny muted mt-note">${notes.join(' · ')}</p>`;
-  if(!forced){ const alts=r.fits.slice(1,4).filter(x=>x.c-f.c<1.2); if(alts.length) h+=`<p class="tiny muted">Also fits: ${alts.map(x=>famOfMeter[x.meter.id]?`<span class="${isRtl?'urdu':''} fam-inline xs">${(typeof getLineDisplay==='function')?getLineDisplay(famLabel(famOfMeter[x.meter.id]),cs):famLabel(famOfMeter[x.meter.id]).ur}</span>`:meterLabel(x.meter)).join(' · ')} — add the other misra to decide.</p>`; }
+  if(!hasEdits(li) && !lastScan.forced){ const alts=r.fits.slice(1,4).filter(x=>x.c-f.c<1.2); if(alts.length) h+=`<p class="tiny muted">Also fits: ${alts.map(x=>famOfMeter[x.meter.id]?`<span class="${isRtl?'urdu':''} fam-inline xs">${(typeof getLineDisplay==='function')?getLineDisplay(famLabel(famOfMeter[x.meter.id]),cs):famLabel(famOfMeter[x.meter.id]).ur}</span>`:meterLabel(x.meter)).join(' · ')} — add the other misra to decide.</p>`; }
   return h+'</div>';
 }
 function misraText(li,lineObj){
@@ -584,22 +622,119 @@ function misraText(li,lineObj){
   if(!dispL) return '';
   return `<div class="misra-text ${isRtl ? '' : (cs==='hi'?'deva':'ltr')}">${dispL}</div>`;
 }
+const SCAN_PAIRS=[[1,9],[14,15],[16,17],[18,19],[33,34]];
+const sameBahr=(a,b)=>a===b || SCAN_PAIRS.some(p=>p.includes(a)&&p.includes(b));
+/* does line li carry any learner edit? (an override object left at its defaults doesn't count) */
+function hasEdits(li){
+  const L=ovr[li]; if(!L) return false;
+  return Object.values(L).some(o=>o && (o.opt!=null || o.suffix!==undefined || o.tashdid!==undefined || o.noGraft || (o.force && Object.keys(o.force).length)));
+}
+/* the fit shown for line li: the original bahr's fit, or — once edited — the edited line's
+   fit in that same bahr, or null (doesn't scan in it any more) */
+function anchoredFit(li,anchor){
+  if(!anchor || !hasEdits(li)) return anchor;
+  const r=lastScan.results[li];
+  return (r.fits||[]).filter(f=>sameBahr(f.meter.id,anchor.meter.id)).sort((x,y)=>x.c-y.c)[0] || null;
+}
+/* the meter an unscanned misra is measured against: its own original bahr, else its
+   partner misra's, else the bahr most of the other lines share */
+function benchmarkFit(li){
+  const R = lastScan && lastScan.results; if(!R) return null;
+  if(lastScan.anchor && lastScan.anchor[li]) return lastScan.anchor[li];
+  const p = li%2===0 ? (li+1<R.length ? li+1 : null) : li-1;
+  const pf = p!=null && lastScan.anchor && lastScan.anchor[p];
+  if(pf) return pf;
+  const g = lastScan.near && lastScan.near.g, m = g && Scan.METERS.find(x=>x.id===g[0]);
+  return m ? {meter:m} : null;
+}
+/* syllables of line li as displayed (and played): the anchored fit's scansion, or the diagnosis */
+function lineExplain(li){
+  const r=lastScan.results[li], f=lastScan.disp ? lastScan.disp[li] : (r.fits&&r.fits[0]);
+  return f ? Scan.explain(r,f) : explainUnscanned(r,li,benchmarkFit(li));
+}
+/* the original (unedited) line's scansion, for the A/B comparison */
+function originalExplain(li){
+  const a=lastScan.anchor && lastScan.anchor[li];
+  return a ? Scan.explain(lastScan.base[li],a) : null;
+}
+/* a line that no longer scans: aligned against the target bahr so clashing, extra and
+   missing syllables are pinpointed; without a target (or in Mir's Hindi meter, which is
+   counted in beats, not slots) it is shown as typed */
+function explainUnscanned(r, li, targetFit) {
+  if (!r || !r.words) return { syl: [], feet: [], notes: [] };
+  const m = targetFit && targetFit.meter;
+  if (m && m.vars) {
+    const d = Scan.diagnose(r, m);
+    if (d) return Object.assign(d, { targetFit, diff: d.extraCount - d.missingCount });
+  }
+  const out = [];
+  r.words.forEach((w, wi) => {
+    const u = r.units && r.units[wi] && r.units[wi][0];
+    const opt = u && u.opts[0]; if (!opt) return;
+    const texts = Scan.alignTexts([w.raw], opt.syl);
+    opt.syl.forEach((sy, k) => out.push({ text: texts[k] || '·', native: sy.w, resolved: sy.w === 'x' ? 'l' : sy.w, word: wi, wordTo: wi, last: k === opt.syl.length - 1, oi: opt._oi, k, forced: !!sy.forced }));
+  });
+  const feet = [];
+  out.forEach((s, i) => { const fi = Math.floor(i / 4); s.foot = fi; s.fsyl = s.resolved === 'l' ? '=' : '–';
+    if (!feet[fi]) feet[fi] = { idx: [], ro: [], ur: '', name: '', cae: false }; feet[fi].idx.push(i); });
+  return { syl: out, feet, notes: [], diff: 0, targetFit: null, clashCount: 0, extraCount: 0, missingCount: 0 };
+}
+function renderUnscannedDiagnostic(e, cs, isRtl, li) {
+  let h = `<div class="unscanned-diag">`;
+  const edited = li != null && hasEdits(li);
+  if (e.targetFit) {
+    const fam = famOfMeter[e.targetFit.meter.id];
+    const famDisp = fam ? famLabel(fam) : null;
+    const famTxt = famDisp ? ((typeof getLineDisplay === 'function') ? getLineDisplay(famDisp, cs) : famDisp.ur) : meterLabel(e.targetFit.meter);
+    const own = li != null && lastScan.anchor && lastScan.anchor[li];
+    h += `<div class="verdict no-fit">${edited ? 'Your edit breaks the meter' : "Doesn't scan as typed"}</div>`;
+    h += `<div class="diag-meta"><span class="tiny muted">${own ? 'Measured against its original bahr:' : 'Measured against the partner misra’s bahr:'}</span> <span class="${isRtl ? 'urdu' : 'mono'} fam-inline sm">${famTxt}</span></div>`;
+    const parts = [];
+    const pl = (n, w) => `${n} ${w}${n > 1 ? 's' : ''}`;
+    if (e.clashCount) parts.push(`<strong class="t">${pl(e.clashCount, 'syllable')}</strong> with the wrong weight (dashed)`);
+    if (e.extraCount) parts.push(`<strong class="t">${pl(e.extraCount, 'extra syllable')}</strong> the bahr has no room for`);
+    if (e.missingCount) parts.push(`<strong class="t">${pl(e.missingCount, 'missing syllable')}</strong> (the gaps, heard as silence)`);
+    h += `<div class="diag-body">${parts.length ? parts.join(' · ') + '.' : 'No classical bahr fits every syllable.'} Tap ▶︎ to hear where the rhythm limps${edited ? ', then play the original to compare' : ''}.</div>`;
+  } else {
+    h += `<div class="verdict no-fit">Doesn't scan as typed (${e.syl.length} syllables)</div>`;
+    h += `<div class="diag-body">No classical bahr fits these syllables. Tap ▶︎ to hear the rhythm as typed, or tap a syllable to change its reading.</div>`;
+  }
+  h += `</div>`;
+  return h;
+}
+/* the edit bar shown under an edited line: original chips with their own ▶︎, and a reset */
+function editCompareHTML(li, isRtl) {
+  if (!hasEdits(li)) return '';
+  const o = originalExplain(li);
+  let h = `<div class="edit-compare"><div class="row edit-compare-head"><span class="tiny muted">Original</span>`;
+  if (o) h += `<span class="play sm" title="Hear the original" aria-label="Hear the original" data-label="Hear the original" data-pb="orig:${li}" onclick="playOriginal(${li},this)">▶︎</span>`;
+  h += `<button type="button" class="btn link sm" onclick="resetEdits(${li})">Undo edits</button></div>`;
+  if (o) h += `<div class="chips orig ${isRtl ? '' : 'ltr'}" id="sco${li}">${chipsHTML(o.syl, o.feet, null)}</div>`;
+  h += `<div class="tiny muted edit-compare-foot">Your edit ↓</div></div>`;
+  return h;
+}
+function playOriginal(li, btn) {
+  if (!lastScan || !lastScan.base || !lastScan.base[li]) return;
+  pbToggle('orig:' + li, btn, () => { const e = originalExplain(li), host = $('sco' + li); return e && host ? [Object.assign({ e }, pbNodes(host))] : null; });
+}
+function resetEdits(li) { delete ovr[li]; if (selWord && selWord[0] === li) selWord = null; runScan(); }
 function misraScan(r,li,forced){
-  const f=forced||r.fits[0];
+  const f=forced!==undefined ? forced : (r.fits&&r.fits[0]);
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
   const isRtl = (cs === 'ur');
   let h='';
   if(!f){
-    h+=`<div class="words ${isRtl?'rtl':'ltr'}">${r.words.map((w,wi)=>{
-      const wText = (cs === 'ur') ? w.raw : (typeof translitText === 'function' ? translitText(w.raw, cs) : w.raw);
-      return `<button class="wbtn ${selWord&&selWord[0]===li&&selWord[1]===wi?'sel':''} ${ovr[li]&&ovr[li][wi]?'ov':''} ${!isRtl?'roman':''}" onclick="pickWord(${li},${wi})">${wText}</button>`;
-    }).join('')}</div>`;
+    const e = explainUnscanned(r, li, benchmarkFit(li));
+    h+=editCompareHTML(li, isRtl);
+    h+=`<div class="chips ${isRtl?'':'ltr'}" id="sc${li}">${chipsHTML(e.syl,e.feet,li)}</div>`;
     if(selWord&&selWord[0]===li) h+=wordPanel(r,li,selWord[1]);
-    h+=`<div class="verdict no-fit">Doesn't scan as typed</div><p class="small muted">No bahr fits any reading. Tap a word to change its reading, add or remove an iẓāfat, or check the text (a doubled letter without tashdīd is the most common slip).</p>`;
+    h+=renderUnscannedDiagnostic(e, cs, isRtl, li);
     return h;
   }
   const e=Scan.explain(r,f);
+  h+=editCompareHTML(li, isRtl);
   h+=`<div class="chips ${isRtl?'':'ltr'}" id="sc${li}">${chipsHTML(e.syl,e.feet,li)}</div>`;
+  if(hasEdits(li)) h+=`<p class="tiny muted mt-note">Your edit still scans in the original bahr: the flexibility rules absorb it.</p>`;
   if(selWord&&selWord[0]===li) h+=wordPanel(r,li,selWord[1]);
   const notes=[...new Set(e.notes.map(n=>`${n.word}: ${n.note}`))].filter(n=>!/: $/.test(n));
   if(notes.length) h+=`<p class="scan-notes">${notes.join(' · ')}</p>`;
@@ -607,7 +742,7 @@ function misraScan(r,li,forced){
 }
 /* one container per couplet: both misras' text together, then both misras' scansion stacked, one play button for the whole couplet */
 function coupletCard(li1,li2,r1,f1,lineObj1,r2,f2,lineObj2,label){
-  const canPlay = !!(f1 || (r2 && (f2||(r2.fits&&r2.fits[0]))));
+  const canPlay = !!((r1 && r1.words && r1.words.length) || (r2 && r2.words && r2.words.length));
   let h=`<div class="card misra-card"><div class="row card-head tight">`;
   h+=`<span class="tiny muted">${label}</span>`;
   h+=canPlay?`<span class="play sm" title="Hear this couplet" aria-label="Hear this couplet" data-label="Hear this couplet" data-pb="scan:${li1}${li2!=null?','+li2:''}" onclick="playCouplet(${li1},${li2!=null?li2:'null'},null,this)">▶︎</span>`:'';
@@ -624,8 +759,9 @@ function playCouplet(li1,li2,start,btn){
   pbToggle('scan:'+li1+','+li2, btn, ()=>{
     const out=[];
     [li1,li2].forEach(li=>{ if(li==null||!lastScan.results[li]) return;
-      const r=lastScan.results[li], f=(lastScan.forced&&lastScan.forced[li])||r.fits[0];
-      if(f && $('sc'+li)) out.push(Object.assign({e:Scan.explain(r,f)}, pbNodes($('sc'+li)))); });
+      const host = $('sc'+li);
+      if(host) out.push(Object.assign({e:lineExplain(li)}, pbNodes(host)));
+    });
     return out;
   }, start);
 }
@@ -635,34 +771,162 @@ function scanPlayAll(start,btn){
   btn = btn || $('btnPlayCouplet');
   pbToggle('scan:all', btn, ()=>{
     const out=[];
-    lastScan.results.forEach((r,li)=>{ const f=(lastScan.forced&&lastScan.forced[li])||r.fits[0];
-      if(f && $('sc'+li)) out.push(Object.assign({e:Scan.explain(r,f)}, pbNodes($('sc'+li)))); });
+    lastScan.results.forEach((r,li)=>{
+      const host = $('sc'+li);
+      if(host) out.push(Object.assign({e:lineExplain(li)}, pbNodes(host)));
+    });
     return out;
   }, start);
 }
 window.scanPlayAll = scanPlayAll;
 function playScan(li,start,btn){ if(!lastScan||!lastScan.results[li]) return;
   btn = btn || document.querySelector(`[data-pb="line:${li}"]`);
-  pbToggle('line:'+li, btn, ()=>{ const r=lastScan.results[li]; const f=(lastScan.forced&&lastScan.forced[li])||r.fits[0];
-    if(!f||!$('sc'+li)) return null;
-    return [Object.assign({e:Scan.explain(r,f)}, pbNodes($('sc'+li)))]; }, start); }
+  pbToggle('line:'+li, btn, ()=>{
+    const host = $('sc'+li);
+    return host ? [Object.assign({e:lineExplain(li)}, pbNodes(host))] : null;
+  }, start);
+}
 function pickWord(li,wi){ selWord=(selWord&&selWord[0]===li&&selWord[1]===wi)?null:[li,wi]; runScan(); }
+/* tap a syllable chip: open its word's panel focused on that syllable (tap again to close) */
+function pickSyl(li,wi,si){ selWord=(selWord&&selWord[0]===li&&selWord[1]===wi&&selWord[2]===si)?null:[li,wi,si]; runScan(); }
+/* the per-syllable part of the word panel: long / short, each judged by Scan.sylRule */
+function sylRulesHTML(li,wi,allOpts,key){
+  const ex=lineExplain(li), mine=ex.syl.map((s,i)=>Object.assign({i},s)).filter(s=>s.word<=wi && wi<=s.wordTo);
+  if(!mine.length) return '';
+  const focus=mine.find(s=>selWord && s.i===selWord[2]) || mine.find(s=>!s.missing) || mine[0];
+  let h=`<div class="syl-rules">`;
+  h+=`<div class="syl-pick">${mine.map(s=>`<button type="button" class="syl-tab ${s.i===focus.i?'on':''} ${s.missing?'missing':''}" onclick="pickSyl(${li},${wi},${s.i})">${s.missing?'·':s.text}</button>`).join('')}</div>`;
+  if(focus.missing){
+    h+=`<p class="syl-why">The bahr expects a ${focus.expected==='s'?'short':'long'} syllable here that the line doesn't have. Add a word, or pick a reading with more syllables.</p></div>`; return h;
+  }
+  if(focus.graft){
+    h+=`<p class="syl-why">This syllable belongs to a grafted run: the words are scanned as one (3.1). Choose <i>No grafting</i> below to weigh this word's syllables on their own.</p></div>`; return h;
+  }
+  const op=allOpts[focus.oi];
+  if(!op || !op.syl[focus.k]){ h+='</div>'; return h; }
+  const rule=Scan.sylRule(op,focus.k,key), native=op.syl[focus.k].w;
+  const cur=focus.resolved==='c'||focus.resolved==='s'?'s':'l';
+  const o=(ovr[li]&&ovr[li][wi])||{}, forcedHere=o.opt===focus.oi && o.force && o.force[focus.k];
+  const btn=(w,label)=>{ const r=rule[w], on=cur===w, dis=r.v==='no' && !on;
+    return `<button type="button" class="syl-opt ${on?'on':''} v-${r.v}" ${dis?'disabled':''} onclick="forceSyl(${li},${wi},${focus.oi},${focus.k},'${w}')" title="${r.why.replace(/"/g,'&quot;')}">
+      <span class="syl-opt-w mono">${label}</span><span class="syl-opt-v">${r.v==='ok'?'✓':r.v==='rare'?'rare':'✗'}</span><span class="syl-opt-rule">§${r.rule}</span></button>`; };
+  h+=`<div class="syl-opts">${btn('l','= long')}${btn('s','– short')}</div>`;
+  const other=cur==='l'?'s':'l';
+  h+=`<p class="syl-why"><b>${native==='x'?'Flexible.':(cur==='l'?'Long.':'Short.')}</b> ${rule[cur].why}${rule[other].v!=='ok'?` <span class="syl-why-no">${other==='l'?'Long':'Short'}: ${rule[other].why}</span>`:''}</p>`;
+  if(native==='x' && !forcedHere) h+=`<p class="syl-why tiny muted">The meter reads it ${cur==='l'?'long':'short'} here. Force the other weight to hear the line limp.</p>`;
+  if(forcedHere) h+=`<button type="button" class="btn link sm" onclick="unforceSyl(${li},${wi},${focus.k})">Let the meter decide</button>`;
+  h+='</div>';
+  return h;
+}
+function forceSyl(li,wi,oi,k,w){
+  const o=ens(li,wi); if(o.opt!==oi){ o.opt=oi; o.force={}; }
+  o.force=o.force||{}; o.force[k]=w; runScan();
+}
+function unforceSyl(li,wi,k){ const o=ens(li,wi); if(o.force) delete o.force[k]; runScan(); }
 function wordPanel(r,li,wi){
   const w=r.words[wi]; const o=(ovr[li]&&ovr[li][wi])||{};
-  const own=Scan.scanWord(w.raw,o.suffix!==undefined?o.suffix:null).opts;
+  const isTash = (o.tashdid !== undefined) ? !!o.tashdid : /[\u0651\uFE7C]/.test(w.raw);
+  const rawWord = (typeof Scan.applyTashdid === 'function') ? Scan.applyTashdid(w.raw, isTash) : w.raw;
+  const allOpts=Scan.scanWord(rawWord,(o.suffix!==undefined?o.suffix:w.suffix)||null).opts;   /* same list buildUnits pins from */
   const wStr=op=>op.syl.map(s=>s.w==='l'?'=':s.w==='s'?'–':'x').join(' ');
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
   const isRtl = (cs === 'ur');
-  const wDisp = (cs === 'ur') ? w.raw : ((typeof translitText === 'function') ? translitText(w.raw, cs) : w.raw);
-  let h=`<div class="card word-card"><div class="tiny muted">Readings of <span class="${isRtl?'urdu':''} fam-inline">${wDisp}</span> — pick one, or let the meter choose</div>`;
-  h+=`<div class="optrow ${o.opt==null?'on':''}" onclick="setOpt(${li},${wi},null)"><span class="mono small">auto</span><span class="tiny muted">let the bahr decide</span></div>`;
-  own.forEach((op,oi)=>{ h+=`<div class="optrow ${o.opt===oi?'on':''}" onclick="setOpt(${li},${wi},${oi})"><span class="mono small opt-w">${wStr(op)}</span><span class="tiny muted">${op.n||''}</span></div>`; });
-  h+=`<div class="row"><button class="btn sm" onclick="toggleIz(${li},${wi})">${(o.suffix!==undefined?o.suffix:w.suffix)==='iz'?'Remove iẓāfat':'Add iẓāfat ِ'}</button><button class="btn sm" onclick="toggleGraft(${li},${wi})">${o.noGraft?'Allow grafting':'No grafting here'}</button></div></div>`;
+  const wDisp = (cs === 'ur') ? rawWord : ((typeof translitText === 'function') ? translitText(rawWord, cs) : rawWord);
+  const isIz = (o.suffix !== undefined ? o.suffix : w.suffix) === 'iz';
+  const isNoGraft = !!o.noGraft;
+
+  // Prune phantom combinatorial options (cost >= 3.0 when lower-cost options exist)
+  const minCost = Math.min(...allOpts.map(x => x.c));
+  const validCost = allOpts.filter(op => op.c <= Math.max(minCost + 1.5, 2.0));
+
+  // De-duplicate options that produce identical weight patterns
+  const seen = new Set();
+  const own = [];
+  validCost.forEach(op => {
+    const pat = wStr(op);
+    if (!seen.has(pat)) {
+      seen.add(pat);
+      own.push({ op, origIndex: allOpts.indexOf(op) });   /* index into the full list: buildUnits pins own[ov.opt] */
+    }
+  });
+
+  let h=`<div class="card word-card">`;
+  h+=`<div class="word-card-head">`;
+  h+=`<div class="word-card-title-group">`;
+  h+=`<div class="word-card-title"><span class="muted">Readings for</span><span class="${isRtl?'urdu':''} fam-inline word-card-token">${wDisp}</span></div>`;
+  const subMsg = own.length > 1
+    ? 'Select an alternate weight or let the meter choose'
+    : 'This word has a fixed metrical weight in Urdu prosody';
+  h+=`<div class="word-card-sub">${subMsg}</div>`;
+  h+=`</div>`;
+  h+=`<button type="button" class="word-card-close" onclick="selWord=null; runScan();" aria-label="Close readings menu" title="Close">✕</button>`;
+  h+=`</div>`;
+
+  h+=sylRulesHTML(li,wi,allOpts,typeof lexKey==='function'?lexKey(rawWord):rawWord);
+  if (own.length > 1) h+=`<div class="word-card-sub word-card-sec">Readings of the whole word</div>`;
+  h+=`<div class="word-card-opts">`;
+  if (own.length > 1) {
+    h+=`<div class="optrow ${o.opt==null?'on':''}" onclick="setOpt(${li},${wi},null)" role="button" tabindex="0">`;
+    h+=`<div class="optrow-main"><span class="mono word-badge">auto</span><span class="optrow-desc">let the bahr decide</span></div>`;
+    h+=`<span class="optrow-mark">${o.opt==null?'✓':''}</span>`;
+    h+=`</div>`;
+  }
+
+  function readingBreakdown(op) {
+    return op.syl.map(s => {
+      const glyphs = s.t.map(ch => ch === 'AA' ? 'آ' : ch).join('');
+      return (cs === 'ur' || typeof translitText !== 'function') ? glyphs : translitText(glyphs, cs);
+    }).join(' · ');
+  }
+
+  function readingDesc(op, oi) {
+    if (op.n) return op.n;
+    const brk = readingBreakdown(op);
+    if (oi === 0) return `standard (${brk})`;
+    return `alternate (${brk})`;
+  }
+
+  own.forEach(({ op, origIndex }, idx) => {
+    const isSel = (own.length === 1) ? true : (o.opt === origIndex);
+    h+=`<div class="optrow ${isSel?'on':''}" onclick="setOpt(${li},${wi},${origIndex})" role="button" tabindex="0">`;
+    h+=`<div class="optrow-main"><span class="mono word-badge">${wStr(op)}</span><span class="optrow-desc">${own.length === 1 ? 'standard fixed weight (' + readingBreakdown(op) + ')' : readingDesc(op, idx)}</span></div>`;
+    h+=`<span class="optrow-mark">${isSel?'✓':''}</span>`;
+    h+=`</div>`;
+  });
+  h+=`</div>`;
+
+  const NON_GRAM_MODS = new Set([
+    'تجھے','مجھے','ہمیں','انہیں','انھیں','تمھیں','تمہیں','تمہارا','تمہاری','تمہارے','تمھارا','تمھاری','تمھارے',
+    'تو','تُو','تھا','تھے','تھی','تھیں','جو','دو','سا','سے','سی','سو','کا','کے','کی','کو','میں','نے','وہ','یہ',
+    'ہو','ہوں','ہی','ہے','ہیں','یوں','نہ','کہ','بہ','اور','ایک','اک','کیا','کیوں','کوئی','آپ','میرا','میری','میرے'
+  ]);
+  const lk = typeof lexKey === 'function' ? lexKey(w.raw) : w.raw.replace(/[\u064B-\u065F\u0670\u0640]/g,'');
+  const allowIz = isIz || !NON_GRAM_MODS.has(lk);
+  const allowTash = isTash || (!NON_GRAM_MODS.has(lk) && Scan.applyTashdid(w.raw, true) !== w.raw);
+
+  h+=`<div class="word-card-actions">`;
+  if (allowIz) {
+    h+=`<button type="button" class="word-action-btn ${isIz?'active':''}" onclick="toggleIz(${li},${wi})">${isIz ? 'Remove iẓāfat' : 'Add iẓāfat'}<span class="symbol-izafat">(-e)</span></button>`;
+  }
+  if (allowTash) {
+    h+=`<button type="button" class="word-action-btn ${isTash?'active':''}" onclick="toggleTashdid(${li},${wi})">${isTash ? 'Remove tashdīd' : 'Add tashdīd'}<span class="symbol-tashdid">ـّ</span></button>`;
+  }
+  h+=`<button type="button" class="word-action-btn ${isNoGraft?'active':''}" onclick="toggleGraft(${li},${wi})">${isNoGraft ? 'Allow grafting' : 'No grafting'}</button>`;
+  h+=`</div>`;
+  h+=`</div>`;
+
   return h;
 }
 function ens(li,wi){ ovr[li]=ovr[li]||{}; ovr[li][wi]=ovr[li][wi]||{}; return ovr[li][wi]; }
-function setOpt(li,wi,oi){ ens(li,wi).opt=oi; runScan(); }
-function toggleIz(li,wi){ const o=ens(li,wi), w=lastScan.results[li].words[wi]; const cur=o.suffix!==undefined?o.suffix:w.suffix; o.suffix=cur==='iz'?null:'iz'; o.opt=null; runScan(); }
+function setOpt(li,wi,oi){ const o=ens(li,wi); o.opt=oi; o.force={}; runScan(); }
+function toggleIz(li,wi){ const o=ens(li,wi), w=lastScan.results[li].words[wi]; const cur=o.suffix!==undefined?o.suffix:w.suffix; o.suffix=cur==='iz'?null:'iz'; o.opt=null; o.force={}; runScan(); }
+function toggleTashdid(li,wi){
+  const o=ens(li,wi), w=lastScan.results[li].words[wi];
+  const curHas = (o.tashdid !== undefined) ? !!o.tashdid : /[\u0651\uFE7C]/.test(w.raw);
+  o.tashdid = !curHas;
+  o.opt = null; o.force = {};
+  runScan();
+}
 function toggleGraft(li,wi){ const o=ens(li,wi); o.noGraft=!o.noGraft; runScan(); }
 let scanTimer = null;
 function onScanComposerInput() {
@@ -713,6 +977,15 @@ function renderLineScan(text, container, lineObjIn, meterId) {
   let h = '';
   if (!f) {
     h += `<div class="verdict no-meter">No meter fits every syllable.</div>`;
+    const nn = r.near && r.near[0], nd = nn && Scan.diagnose(r, nn.meter);
+    if (nd) {
+      const pl = (n, w) => `${n} ${w}${n > 1 ? 's' : ''}`, bits = [];
+      if (nn.clashes.length) bits.push(pl(nn.clashes.length, 'clashing syllable'));
+      if (nn.extra) bits.push(pl(nn.extra, 'extra syllable'));
+      if (nn.missing) bits.push(pl(nn.missing, 'missing syllable'));
+      h += `<div class="diag-meta"><span class="tiny muted">Nearest:</span> <span class="${isRtl ? 'urdu' : 'mono'} fam-inline sm">${meterLabel(nn.meter)}</span> <span class="tiny muted">${bits.join(' · ')}</span></div>`;
+      h += `<div class="chips ${isRtl?'':'ltr'}">${chipsHTML(nd.syl, nd.feet, null, { r, lineObj: lineObj || { ur: urduL } })}</div>`;
+    }
   } else {
     const e = Scan.explain(r, f);
     const id = 'lineScan_' + Math.random().toString(36).slice(2, 8);
