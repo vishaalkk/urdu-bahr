@@ -89,6 +89,21 @@ const ROUTES = [
       const row = d.getElementById('fam-' + f0);
       row && row.querySelectorAll('.couplet-card .play').length ? ok('Meter › Learn family expands to playable couplet boxes') : fail('family row has no couplet boxes');
     }
+    /* Weight > Learn is a four-stage lesson: the router hides every <section>, so each stage (and its content) must
+       actually be visible after navigation and after stepping (this once shipped blank). */
+    {
+      w.location.hash = '#/weight/learn'; w.dispatchEvent(new w.HashChangeEvent('hashchange')); await wait(200);
+      const vis = el => { for (let e = el; e && e !== d.body; e = e.parentElement) if (w.getComputedStyle(e).display === 'none' || e.hidden) return false; return true; };
+      const stages = [...d.querySelectorAll('#weightPanelLearn .stage')];
+      const dead = [];
+      for (let n = 1; n <= stages.length; n++) {
+        w.showStage(n, false);
+        const st = stages[n - 1];
+        if (!vis(st) || st.textContent.trim().length < 200 || st.querySelectorAll('.card').length < 1) dead.push(n);
+      }
+      w.showStage(1, false);
+      stages.length === 4 && !dead.length ? ok('Weight › Learn: all 4 stages show their content') : fail('Weight › Learn stages blank or missing: ' + (dead.join(',') || stages.length + ' stages'));
+    }
     w.location.hash = '#/ghazals'; w.dispatchEvent(new w.HashChangeEvent('hashchange')); await wait(200);
     if (typeof w.searchGhazalIndex === 'function') {
       const hits = q => { const r = w.searchGhazalIndex(q) || {}; return Object.values(r).reduce((n, set) => n + set.size, 0); };
@@ -97,6 +112,71 @@ const ROUTES = [
       a > 0 && a === b ? ok(`search is diacritic-insensitive (khvahish = ḳhvāhish: ${a} hits)`) : fail(`search mismatch: khvahish=${a}, ḳhvāhish=${b}`);
     } else fail('searchGhazalIndex missing');
     if (errors.length) fail('script error in feature checks: ' + errors[0]);
+    w.close();
+  }
+
+  console.log('Scan editing');
+  {
+    /* two misras fit, the third doesn't: its chips are benchmarked against the shared bahr */
+    const L = ['دلِ ناداں تجھے ہوا کیا ہے', 'آخر اس درد کی دوا کیا ہے', 'یہ بالکل غلط اور بے وزن جملہ ہے جو کسی بحر میں نہیں'];
+    const { dom, errors } = load('#/scan?t=' + encodeURIComponent(L.join('\n')));
+    await wait(1500);
+    const w = dom.window, d = w.document;
+    let err = null; try { w.runScan(); } catch (e) { err = e.message; }
+    err || errors.length ? fail('partly-metrical input throws: ' + (err || errors[0]))
+      : d.getElementById('sc2') && d.querySelector('#scanOut .unscanned-diag') ? ok('unscanned misra renders chips + diagnostic') : fail('unscanned misra has no chips/diagnostic');
+    /* pinning a reading from the word panel pins that same reading in the engine */
+    w.pickWord(0, 4);
+    const rows = [...d.querySelectorAll('#scanOut .word-card .optrow')];
+    const pick = rows.find(r => /setOpt\(0,4,[1-9]/.test(r.getAttribute('onclick') || ''));
+    if (!pick) fail('word panel offers no alternate reading for کیا');
+    else {
+      const want = pick.querySelector('.word-badge').textContent.trim();
+      pick.click();
+      const o = w.eval("ovr")[0][4].opt, got = w.Scan.scanWord('کیا').opts[o].syl.map(x => x.w === 'l' ? '=' : x.w === 's' ? '–' : 'x').join(' ');
+      got === want ? ok(`pinned reading matches the row clicked (${want})`) : fail(`clicked ${want}, engine pinned ${got}`);
+    }
+    w.close();
+  }
+
+  console.log('Learner edits (validator + original bahr)');
+  {
+    const L = ['دلِ ناداں تجھے ہوا کیا ہے', 'آخر اس درد کی دوا کیا ہے'];
+    const { dom, errors } = load('#/scan?t=' + encodeURIComponent(L.join('\n')));
+    await wait(1500);
+    const w = dom.window, d = w.document;
+    const sylOf = (li, wi) => [...d.querySelectorAll('#sc' + li + ' .cw')].filter(x => new RegExp('pickSyl\\(' + li + ',' + wi + ',').test(x.getAttribute('onclick') || ''));
+    sylOf(0, 2)[0].click();                                   // ت of تجھے: one letter, can't be long
+    const lng = [...d.querySelectorAll('.syl-opt')][0];
+    lng && lng.disabled && /1\.5/.test(lng.textContent) ? ok('one-letter syllable: "long" refused, citing §1.5') : fail('one-letter syllable could be made long');
+    sylOf(0, 2)[1].click();                                   // جھے: flexible, meter reads it long
+    const sh = [...d.querySelectorAll('.syl-opt')].find(b => !b.classList.contains('on') && !b.disabled);
+    if (!sh) fail('flexible syllable offers no other weight');
+    else {
+      sh.click();
+      const diag = d.querySelector('#scanOut .unscanned-diag');
+      diag && /original bahr/.test(diag.textContent) && d.querySelectorAll('#sc0 .chip.clash').length === 1 && d.getElementById('sco0')
+        ? ok('forcing it short breaks the ORIGINAL bahr: one clash, original row shown') : fail('forced edit not judged against the original bahr');
+      w.resetEdits(0);
+      !d.querySelector('#scanOut .unscanned-diag') ? ok('Undo edits restores the scan') : fail('Undo edits left the line broken');
+    }
+    if (errors.length) fail('script error in edit checks: ' + errors[0]);
+    w.close();
+  }
+  {
+    /* Iqbal, sitāroñ se āge (Pritchett: - = = / - = = / - = = / - = =): Roman chips follow the syllables */
+    const L = ['ستاروں سے آگے جہاں اور بھی ہیں', 'ابھی عشق کے امتحاں اور بھی ہیں'];
+    const { dom, errors } = load('#/scan?t=' + encodeURIComponent(L.join('\n')));
+    await wait(1500);
+    const w = dom.window, d = w.document;
+    w.eval('currentScript="ro"'); w.runScan();
+    const chips = li => [...d.querySelectorAll('#sc' + li + ' .chip')].map(c => c.textContent.trim()).join(' ');
+    const want1 = 'a bhī ʿish q ke im ti ḥāñ au r bhī haiñ';
+    chips(1) === want1 ? ok('Roman chips split at the scanner\'s syllables (ʿish·q, au·r)') : fail(`Roman chips: "${chips(1)}" ≠ "${want1}"`);
+    const m0 = d.querySelector('.misra-text').textContent;
+    /^\s*sitāroñ se āge jahāñ aur bhī haiñ/.test(m0) && !/approximate/.test(m0) ? ok('Iqbal line uses Pritchett\'s spelling (sitāroñ…), not the letter-map guess') : fail('Iqbal line 1 Roman: ' + m0.trim());
+    chips(0) === 'si tā roñ se ā ge ja hāñ au r bhī haiñ' ? ok('line-1 chips: si·tā·roñ … ja·hāñ au·r') : fail('line-1 chips: ' + chips(0));
+    if (errors.length) fail('script error in Roman checks: ' + errors[0]);
     w.close();
   }
 

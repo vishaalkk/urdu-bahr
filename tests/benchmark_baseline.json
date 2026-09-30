@@ -1,0 +1,22 @@
+{
+  "ghalib": {
+    "lines": 3658,
+    "meter.top1": 91.03,
+    "meter.top3": 95.43,
+    "verbatim.roman": 99.21,
+    "verbatim.hindi": 99.15,
+    "typed.romanWord": 74.03,
+    "typed.hindiWord": 73.9,
+    "typed.romanLine": 31.41
+  },
+  "mir": {
+    "lines": 3110,
+    "meter.top1": 93.89,
+    "meter.top3": 98.71,
+    "verbatim.roman": 98.52,
+    "verbatim.hindi": 98.52,
+    "typed.romanWord": 77.22,
+    "typed.hindiWord": 77.2,
+    "typed.romanLine": 34.02
+  }
+}

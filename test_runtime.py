@@ -335,12 +335,13 @@ def run_tests():
     print(f"\n[TEST 6] Bibliography & Script Switcher Verification:")
     with open('data/bibliography.json', 'r', encoding='utf-8') as f:
         bib = json.load(f)
-    assert len(bib['entries']) == 2, f"Expected exactly 2 entries, got {len(bib['entries'])}"
-    print(f"  Total bibliography entries: {len(bib['entries'])} (Frances Pritchett & Sean Pue)")
+    assert len(bib['entries']) == 3, f"Expected exactly 3 entries, got {len(bib['entries'])}"
+    print(f"  Total bibliography entries: {len(bib['entries'])} (Frances Pritchett, Sean Pue & UrduPoetry)")
 
     entry_ids = [e['id'] for e in bib['entries']]
     assert 'pritchett_khaliq_1987' in entry_ids, "Missing Frances Pritchett attribution"
     assert 'pue_ast_transliteration' in entry_ids, "Missing Sean Pue AST graph attribution"
+    assert 'urdupoetry_art5_bahr' in entry_ids, "Missing UrduPoetry bahr-reference attribution"
     print("  ✓ Frances Pritchett's website and Sean Pue's AST engine exclusively and prominently credited.")
 
     # Check presence of script switcher buttons in compiled HTML
