@@ -36,7 +36,6 @@ Scan inspector/audio/guide/corpora/benchmark; Match Bahr; Practice Editor; engin
 | Aruuz oracle | agent-a9f8c548cd5839744 | engine-py/oracle/PROGRESS.md | DONE; report docs/reviews/20 (squash old logs/ commit before merging) |
 
 ## Untracked on purpose
-- docs/reviews/23-aruuz-study.md: QUARANTINED (derived from GPL sources; license decision pending). Verdict: nothing there fixes our bugs beyond what we did; ideas only.
 - studio_mockup.html, src/styles/studio.css: Gemini Studio, rejected (docs/reviews/19).
 - (docs/reviews/24 DRY audit was never run.)
 

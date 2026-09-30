@@ -68,4 +68,4 @@ like a mallet instrument, so judge it by ear before defaulting it on.
   `/private/tmp/claude-501/-Users-vishalk-personal-repo-urdu-bahr/d53bbc33-6bcb-4099-9c82-c3b1cd6b1dd3/scratchpad/rhythm-demo/demo.html`
 - Draft patch (not applied) implementing the recommended combination against
   `original_base.html`:
-  `/Users/vishalk/personal-repo/urdu-bahr/features/voice-flow/rhythm_sound.patch`
+  `features/voice-flow/rhythm_sound.patch`

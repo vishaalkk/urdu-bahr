@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-27  
 **Source:** Frances W. Pritchett's "A Desertful of Roses" (https://franpritchett.com/00ghalib)  
-**Output:** `/Users/vishalk/personal-repo/urdu-bahr/data/ghalib_full_corpus.json`  
+**Output:** `data/ghalib_full_corpus.json`  
 
 ## Overview
 

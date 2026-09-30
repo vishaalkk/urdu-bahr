@@ -5,7 +5,7 @@
 
 > **Target Audience**: Any AI agent or developer continuing work on this repository.
 > **Date**: September 2026
-> **Workspace**: `/Users/vishalk/personal-repo/urdu-bahr`
+> **Workspace**: `.`
 
 ---
 
