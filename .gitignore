@@ -25,3 +25,6 @@ _site/
 # Not published (the site links to franpritchett.com instead) and not needed to build.
 data/handbook_verbatim.json
 source_data/
+
+# Third-party clones used by gt-lab (re-clone: see gt-lab/README)
+gt-lab/vendor/

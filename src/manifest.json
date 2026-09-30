@@ -5,7 +5,8 @@
     "src/styles/verse.css",
     "src/styles/pages.css",
     "src/styles/drill.css",
-    "src/styles/home.css"
+    "src/styles/home.css",
+    "src/styles/practice.css"
   ],
   "body": [
     "src/body/header.html",
@@ -19,13 +20,16 @@
     "src/body/scan.html",
     "src/body/ghazals.html",
     "src/body/about.html",
+    "src/body/guide.html",
     "src/body/tap.html",
+    "src/body/practice.html",
     "src/body/footer.html",
     "src/body/nav.html",
     "src/body/settings.html"
   ],
   "js": [
     "src/js/00-pue-parser.js",
+    "src/js/01b-hypothesis-costs.js",
     "src/js/01-engine.js",
     "src/js/02-store.js",
     "src/js/03-data-expanded-encyclopedia.js",
@@ -43,7 +47,9 @@
     "src/js/18b-meter-label.js",
     "src/js/19-scan.js",
     "src/js/20-bahr.js",
+    "src/js/20b-weight-corpus.js",
     "src/js/21-learn.js",
-    "src/js/22-drill.js"
+    "src/js/22-drill.js",
+    "src/js/23-practice.js"
   ]
 }
