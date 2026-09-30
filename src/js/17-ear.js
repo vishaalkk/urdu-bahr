@@ -106,9 +106,92 @@ function famRowHTML(f) {
     return h;
 }
 
+/* ================= FEET LESSON (Meter › Learn, Handbook ch. 5) =================
+   syllables have weight → certain weights make a foot (rukn) → certain feet make a bahr.
+   Foot names, syllables and patterns come from the engine's FEET table, so the lesson can't drift from the scanner. */
+const FEET_CORE = [
+  { pat: '- = =',   ur: 'فعولن',   meter: 'Mutaqārib', note: 'short, long, long' },
+  { pat: '= - = =', ur: 'فاعلاتن', meter: 'Ramal',     note: 'long, short, long, long' },
+  { pat: '- = = =', ur: 'مفاعیلن', meter: 'Hazaj',     note: 'short, then three longs' },
+  { pat: '= = - =', ur: 'مستفعلن', meter: 'Rajaz',     note: 'two longs, short, long' }
+];
+const FEET_DEMO_UR = 'ہزاروں خواہشیں ایسی کہ ہر خواہش پہ دم نکلے';
+const HB_FEET = 'https://franpritchett.com/00ghalib/meterbk/05_feet.html';
+
+function feetLessonHTML() {
+  const cards = FEET_CORE.map((f, i) => {
+    const fp = Scan.patternFeet(f.pat)[0];
+    const cells = fp.ro.map((syl, k) => { const t = fp.toks[k]; return `<span class="sc ${t}"><span class="sc-t">${syl}</span><span class="sc-w">${t === 'l' ? '= dum' : '&ndash; da'}</span></span>`; }).join('');
+    return `<div class="foot-card" id="footCard${i}">
+      <div class="foot-card-head">
+        <span class="fn foot-card-ro">${fp.ro.join('·')}</span>
+        <span class="foot-card-tag tiny">&#9733; sālim</span>
+      </div>
+      <div class="urdu ur-always foot-card-ur">${f.ur}</div>
+      <div class="tiny dim">Base foot of Baḥr-e ${f.meter} &middot; ${fp.toks.reduce((n, t) => n + (t === 'l' ? 2 : 1), 0)} mātrās</div>
+      <div class="sc-row">${cells}</div>
+      <p class="small foot-card-pat"><b>Pattern:</b> ${fp.toks.map(t => `<span class="pg ${t}">${t === 'l' ? '=' : '&ndash;'}</span>`).join(' ')} &mdash; ${f.note}.</p>
+      <button class="btn link foot-card-play" aria-label="Listen to ${fp.ro.join('')}" onclick="feetPlay(${i},this)">&#9654;&#xFE0E; Listen</button>
+    </div>`;
+  }).join('');
+  return `
+  <h2 class="section-title">Syllables, feet, bahr</h2>
+  <ol class="feet-ladder small">
+    <li><b>A word has syllables.</b> Each one has a weight: long (<span class="pg l">=</span>) or short (<span class="pg s">&ndash;</span>).</li>
+    <li><b>Certain weights add up to a foot</b> (<i>rukn</i>, plural <i>arkān</i>). A foot is a short fixed pattern, like a bar of music.</li>
+    <li><b>Certain feet make a bahr.</b> A line (miṣraʿ) is two to four feet, and the bahr is the feet it repeats.</li>
+  </ol>
+  <h3 class="group-title">Feet have names that sound like themselves</h3>
+  <p class="small dim group-lead">Classical prosodists named each foot with a coined word built on the Arabic root <i>f-ʿ-l</i> (&ldquo;to do&rdquo;), and each name scans as the foot it names. Say <i>fa&middot;ʿū&middot;lun</i>: <i>fa</i> is one letter and short, <i>ʿū</i> and <i>lun</i> are two letters each and long. That is <span class="pg s">&ndash;</span> <span class="pg l">=</span> <span class="pg l">=</span>. The names are called <i>afāʿīl</i>.</p>
+  <p class="small dim">Four feet you will meet again and again. Press <b>Listen</b> and each syllable lights as it is sung.</p>
+  <div class="foot-grid">${cards}</div>
+  <h3 class="group-title">Whole feet and altered feet</h3>
+  <p class="small dim group-lead">A few feet are <i>sālim</i> (sound): mafāʿīlun, fāʿilātun, mustafʿilun, fāʿilun, faʿūlun and mutafāʿilun. The rest are sound feet with a syllable shortened, dropped or joined, <i>muzāḥaf</i> (altered). When a line can be read more than one way, prefer the reading with more sound feet. Some altered feet share a name with another, as <i>faʿlun</i> (= =) and <i>faʿilun</i> (&ndash; &ndash; =), so the meter decides which one a line uses.</p>
+  <h3 class="group-title">Feet run across words</h3>
+  <p class="small dim group-lead">A foot doesn&rsquo;t stop where a word does. Here is one line cut into its feet; play it and watch each foot light up.</p>
+  <div class="home-example">
+    <div class="home-example-head">
+      <span class="home-example-verse urdu" id="feetDemoVerse"></span>
+      <button class="play" id="feetDemoPlay" aria-label="Play" onclick="feetDemoPlay(this)">▶︎</button>
+    </div>
+    <div id="feetDemoScan"></div>
+  </div>
+  <div class="go-deeper card small"><span class="go-deeper-tag mono tiny">Go deeper</span>
+    <p class="go-deeper-links"><a class="hb-ref" data-rule="M6.1-pairs" href="${HB_FEET}" target="_blank" rel="noopener">Pritchett, ch. 5 &mdash; Metrical Feet &#8599;</a></p></div>`;
+}
+function renderFeetLesson() {
+  const host = $('feetLesson');
+  if (!host || typeof Scan === 'undefined' || typeof strip !== 'function') return;
+  host.innerHTML = feetLessonHTML();
+  const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
+  const v = $('feetDemoVerse');
+  if (v) {
+    v.className = 'home-example-verse ' + (cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : 'mono'));
+    if (typeof v.setAttribute === 'function') v.setAttribute('dir', cs === 'ur' ? 'rtl' : 'ltr');
+    v.innerHTML = (typeof getLineDisplay === 'function') ? getLineDisplay(FEET_DEMO_UR, cs) : FEET_DEMO_UR;
+  }
+  if (typeof renderLineScan === 'function') renderLineScan(FEET_DEMO_UR, $('feetDemoScan'));
+}
+function feetPlay(i, btn) {
+  const f = FEET_CORE[i]; if (!f || typeof pbTogglePattern !== 'function') return;
+  const card = btn.closest('.foot-card');
+  pbTogglePattern('foot:' + i, btn, f.pat, card ? [...card.querySelectorAll('.sc')] : null);
+}
+function feetDemoPlay(btn) {
+  const host = $('feetDemoScan');
+  if (!host || typeof pbToggle !== 'function') return;
+  pbToggle('feet:demo', btn, () => {
+    const r = Scan.scanLine(FEET_DEMO_UR), fit = r.fits[0];
+    if (!fit) return null;
+    return [Object.assign({ e: Scan.explain(r, fit) }, pbNodes(host))];
+  });
+}
+window.renderFeetLesson = renderFeetLesson; window.feetPlay = feetPlay; window.feetDemoPlay = feetDemoPlay;
+
 function renderEarFams() {
   const host = $('earFams');
   if (!host) return;
+  renderFeetLesson();
 
   const legendHost = $('meterLearnLegend');
   if (legendHost && typeof legendHTML === 'function') legendHost.innerHTML = legendHTML('legend-sticky');

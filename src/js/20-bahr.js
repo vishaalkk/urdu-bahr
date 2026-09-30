@@ -75,6 +75,7 @@ function renderFams() {
     (typeof el.className === 'string' && el.className.indexOf('on') !== -1)
   );
 
+  if (hasOn($('filterMeterFeet')) && typeof renderFeetCatalog === 'function') renderFeetCatalog();
   let activeKind = lookupFilterKind || 'all';
   if (hasOn($('filterMeterRubai'))) {
     activeKind = 'rubai';
@@ -264,3 +265,89 @@ window.renderFams = renderFams;
 window.toggleMeterLookupExpand = toggleMeterLookupExpand;
 window.famPulsePlay = famPulsePlay;
 window.famSing = famSing;
+
+
+/* ================= FEET CATALOG (Meter › Look up › Feet, Handbook ch. 5) =================
+   Built from the engine's FEET table; "used in" is computed from the meter list, so it can't drift from it. */
+const FEET_SALIM = new Set(['slll', 'lsll', 'llsl', 'lsl', 'sll', 'sslsl']);
+/* where the Handbook says a foot turns up (our words; everything else about a foot is computed) */
+const FEET_NOTES = {
+  lls: 'Usually the first foot of a line; not in rubāʿī.',
+  lssl: 'Rare.',
+  l: 'Usually the last foot; rare outside rubāʿī.',
+  slls: 'Seldom the first or the last foot.',
+  sslsl: 'Rare.',
+  ssls: 'Very rare; nearly always the first and third foot.',
+  ssl: 'Almost never the first foot.'
+};
+let feetFilter = 'all', feetQuery = '';
+function feetSimple(t) { return (t || '').toString().normalize('NFD').replace(/[̀-ͯʻʿʼ'’·\s.\-]/g, '').toLowerCase(); }
+function feetRows() {
+  const used = {};
+  (Scan.METERS || []).forEach(m => {
+    if (m.kind === 'hindi') return;
+    const seen = new Set();
+    Scan.patternFeet(m.raw).forEach(f => { const k = f.pat; if (!seen.has(k)) { seen.add(k); (used[k] = used[k] || []).push(m.id); } });
+  });
+  const byUr = {};
+  Object.keys(Scan.FEET).forEach(k => { const u = Scan.FEET[k][1]; (byUr[u] = byUr[u] || []).push(k); });
+  return Object.keys(Scan.FEET).map(pat => {
+    const ro = Scan.FEET[pat][0], ur = Scan.FEET[pat][1];
+    const toks = pat.split('');
+    const twins = byUr[ur].filter(k => k !== pat);
+    return {
+      pat, ro, ur, toks, raw: toks.map(t => t === 'l' ? '=' : '-').join(' '),
+      salim: FEET_SALIM.has(pat),
+      twin: twins.length ? twins.map(k => Scan.FEET[k][0].join('·') + ' (' + k.split('').map(t => t === 'l' ? '=' : '–').join(' ') + ')').join(', ') : '',
+      meters: (used[pat] || []).slice().sort((a, b) => String(a).localeCompare(String(b), undefined, { numeric: true }))
+    };
+  });
+}
+/* a meter number as a link that opens that meter in Look up; rubāʿī ids are "R5" → "rubāʿī 5" */
+function feetMeterLink(id) {
+  const rub = /^R/.test(String(id)), n = String(id).replace(/^R/, '');
+  return `<a class="ft-meter" href="#/meter/lookup?open=${id}" title="Open ${rub ? 'rubāʿī form' : 'meter'} ${n} in Look up">${rub ? 'rubāʿī ' : 'meter '}${n}</a>`;
+}
+function filterFeet(kind, query) {
+  if (kind) {
+    feetFilter = kind;
+    ['all', 'salim', 'muzahaf', 'long', 'short'].forEach(k => { const b = $('feetF_' + k); if (b && b.classList) b.classList.toggle('on', k === kind); });
+  }
+  if (typeof query === 'string') feetQuery = query;
+  renderFeetCatalog();
+}
+function renderFeetCatalog() {
+  const host = $('feetList'); if (!host || typeof Scan === 'undefined') return;
+  const all = feetRows();
+  const q = feetSimple(feetQuery), qp = feetQuery.replace(/[–−]/g, '-').replace(/\s+/g, '');
+  const rows = all.filter(r => {
+    if (feetFilter === 'salim' && !r.salim) return false;
+    if (feetFilter === 'muzahaf' && r.salim) return false;
+    if (feetFilter === 'long' && r.toks[0] !== 'l') return false;
+    if (feetFilter === 'short' && r.toks[0] !== 's') return false;
+    if (!q && !qp) return true;
+    const isPat = /^[=\-]+$/.test(qp);
+    return isPat ? r.raw.replace(/\s/g, '').startsWith(qp) : (feetSimple(r.ro.join('')).includes(q) || r.ur.includes(feetQuery.trim()));
+  });
+  if ($('feetCount')) $('feetCount').textContent = `Showing ${rows.length} of ${all.length} feet`;
+  host.innerHTML = rows.length ? `<table class="feet-table">
+    <thead><tr><th>Foot</th><th>Syllables</th><th>Pattern</th><th>Where it occurs</th><th><span class="sr-only">Play</span></th></tr></thead>
+    <tbody>` + rows.map(r => {
+    const idx = all.indexOf(r);
+    const notes = [FEET_NOTES[r.pat], r.twin ? 'Double identity: also ' + r.twin + '. The meter decides which.' : '',
+      r.meters.length ? 'Found in ' + r.meters.map(feetMeterLink).join(', ') + '.' : 'Only as a variant inside longer feet.'].filter(Boolean).join(' ');
+    return `<tr class="foot-tr">
+      <td class="ft-name"><span class="ft-mark" title="${r.salim ? 'Sālim: an original foot' : 'Altered: a variant of an original foot'}">${r.salim ? '&#9733;' : '&#9671;'}</span><span class="urdu ur-always foot-row-ur">${r.ur}</span><span class="fn">${r.ro.join('')}</span></td>
+      <td class="ft-syl mono">${r.ro.join(' · ')}</td>
+      <td class="ft-pat"><span class="strip tight">${strip(r.toks)}</span></td>
+      <td class="ft-notes small dim">${notes}</td>
+      <td class="ft-play"><button class="play sm" aria-label="Play ${r.ro.join('')}" onclick="feetRowPlay(${idx},this)">▶︎</button></td>
+    </tr>`;
+  }).join('') + '</tbody></table>' : '<p class="small dim">No foot matches.</p>';
+}
+function feetRowPlay(i, btn) {
+  const r = feetRows()[i]; if (!r || typeof pbTogglePattern !== 'function') return;
+  const row = btn.closest('.foot-tr');
+  pbTogglePattern('footrow:' + r.pat, btn, r.raw, row ? [...row.querySelectorAll('.blk')] : null);
+}
+window.filterFeet = filterFeet; window.renderFeetCatalog = renderFeetCatalog; window.feetRowPlay = feetRowPlay;

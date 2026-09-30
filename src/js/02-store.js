@@ -254,7 +254,8 @@ function showMeterSubtab(sub, params) {
     if (typeof renderWeak === 'function') renderWeak();
   } else if (sub === 'lookup') {
     if (params && params.open != null && typeof lookupExpandedId !== 'undefined') lookupExpandedId = String(params.open);
-    updateMeterLookupCount(['rubai', 'hindi'].find(k => { const b = $('filterMeter' + (k === 'rubai' ? 'Rubai' : 'Hindi')); return b && b.classList.contains('on'); }) || 'all');
+    if (params && params.open != null && typeof filterMeterLookup === 'function') filterMeterLookup(/^R/.test(String(params.open)) ? 'rubai' : 'all');
+    updateMeterLookupCount(['rubai', 'hindi', 'feet'].find(k => { const b = $('filterMeter' + (k === 'rubai' ? 'Rubai' : k === 'hindi' ? 'Hindi' : 'Feet')); return b && b.classList.contains('on'); }) || 'all');
     if (typeof renderFams === 'function') renderFams();
     if (params && params.open != null) scrollToLater('m-row-' + params.open);
   }
@@ -268,19 +269,25 @@ function scrollToLater(id) {
 }
 
 function filterMeterLookup(kind) {
-  ['filterMeterAll', 'filterMeterRubai', 'filterMeterHindi'].forEach(id => {
+  ['filterMeterAll', 'filterMeterRubai', 'filterMeterHindi', 'filterMeterFeet'].forEach(id => {
     const el = $(id);
     if (el) el.classList.toggle('on', (kind === 'all' && id === 'filterMeterAll') ||
                                     (kind === 'rubai' && id === 'filterMeterRubai') ||
-                                    (kind === 'hindi' && id === 'filterMeterHindi'));
+                                    (kind === 'hindi' && id === 'filterMeterHindi') ||
+                                    (kind === 'feet' && id === 'filterMeterFeet'));
   });
+  const feet = kind === 'feet';
+  if ($('feetLookupSection')) $('feetLookupSection').hidden = !feet;
+  if ($('allMetersList')) $('allMetersList').hidden = feet;
   updateMeterLookupCount(kind);
+  if (feet && typeof renderFeetCatalog === 'function') { renderFeetCatalog(); return; }
   if (typeof renderFams === 'function') renderFams();
 }
 
 function updateMeterLookupCount(kind) {
   const el = $('meterLookupCount');
   if (!el || typeof Scan === 'undefined' || !Scan.METERS) return;
+  if (kind === 'feet') { el.textContent = Object.keys(Scan.FEET).length + ' feet'; return; }
   const n = kind === 'hindi' ? 1
     : Scan.METERS.filter(m => kind === 'rubai' ? m.kind === 'rubai' : (m.kind !== 'rubai' && String(m.id) !== 'H')).length;
   el.textContent = n + (n === 1 ? ' meter' : ' meters');

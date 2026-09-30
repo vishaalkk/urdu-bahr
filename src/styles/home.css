@@ -90,3 +90,10 @@
   border-top: 1px solid var(--line);
   padding-top: var(--sp-3);
 }
+
+.home-legend-key { margin-top: var(--sp-3); max-width: var(--prose-max); }
+
+/* Key under the legend: term and definition share a baseline; inline Nastaliq must not stretch the line */
+.home-legend-key { align-items: baseline; }
+.home-legend-key dd { line-height: 1.6; }
+.home-legend-key .urdu { line-height: 1; vertical-align: baseline; }

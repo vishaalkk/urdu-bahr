@@ -75,8 +75,10 @@ for (const f of ['weight.html', 'meter.html', 'home.html']) {
   });
 }
 const wsrc = fs.readFileSync(path.join(root, 'src', 'body', 'weight.html'), 'utf8');
-if (!/Adapted from Frances W\. Pritchett/.test(wsrc)) bad('weight.html: attribution line missing');
-if (!/Adapted from Frances W\. Pritchett/.test(fs.readFileSync(path.join(root, 'src', 'body', 'meter.html'), 'utf8'))) bad('meter.html: attribution line missing');
+/* credit lives in the site footer and each tab's "Go deeper" links, not in a banner atop every tab */
+if (!/Pritchett/.test(fs.readFileSync(path.join(root, 'src', 'body', 'footer.html'), 'utf8'))) bad('footer.html: Handbook credit missing');
+if (!/franpritchett\.com\/00ghalib\/meterbk/.test(wsrc)) bad('weight.html: no Handbook links');
+if (!/franpritchett\.com\/00ghalib\/meterbk\/05_feet/.test(fs.readFileSync(path.join(root, 'src', 'js', '17-ear.js'), 'utf8'))) bad('Feet lesson: no ch. 5 link');
 /* rendered cards carry their citation */
 const rendered = get('CONSTR').map((c, i) => c.app ? null : get('hbRef')(c.rule, c.sec));
 rendered.forEach((r, i) => { if (r !== null && !/Handbook §\d/.test(r)) bad('CONSTR card ' + i + ' renders without a citation'); });
