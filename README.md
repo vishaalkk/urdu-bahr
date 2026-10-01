@@ -37,7 +37,8 @@ data/                   JSON compiled into index.html (handbook, exercises, mete
 source_data/            Raw scraped handbook HTML/text (build input; not published)
 pritchett_scripts/      A. Sean Pue's ghalib.js transliteration engine (Apache-2.0)
 features/               Standalone widget experiments (not in the app)
-docs/                   Design specs (REDESIGN_HANDOFF.md, RESKIN_BRIEF.md), reviews, mockup
+CLAUDE.md               Project guide: workflow rules, architecture, gotchas
+docs/                   Design principles (DESIGN_PRINCIPLES.md), reviews
 LICENSES/               Third-party notices (ghalib.js Apache-2.0, OFL fonts)
 ```
 
