@@ -263,6 +263,18 @@ const CORP_X = [];
 /* One real line, drawn like every verse in the app: the line in Urdu and Roman (the join highlighted), the syllable
    chips with their weights, the meter's name, and a ▶ that lights all of them together. It is scanned at render time
    in Pritchett's meter for its ghazal. */
+/* The stored Roman, split to line up with e.w. A hyphenated Roman word can cover two Urdu words (dar-o-dīvār for در و دیوار),
+   so when the token counts differ, split on hyphens and give each e.w entry as many pieces as it has Urdu words.
+   Null when it still doesn't line up (the caller falls back to machine transliteration). */
+function corpusRomanWords(e) {
+  const toks = e.ro.split(/\s+/);
+  if (toks.length === e.w.length) return toks;
+  const need = e.w.map(w => w.split(/\s+/).length);
+  const pieces = toks.flatMap(t => t.split('-'));
+  if (pieces.length !== need.reduce((a, b) => a + b, 0)) return null;
+  let at = 0;
+  return need.map(k => pieces.slice(at, at += k).join('-'));
+}
 function corpusExample(e, label) {
   let r, f;
   try { r = Scan.scanLine(e.w.join(' ')); f = (r.fits || []).find(x => String(x.meter.id) === String(e.m)); } catch (err) { f = null; }
@@ -272,8 +284,8 @@ function corpusExample(e, label) {
   const hiSyl = new Set(x.syl.map((s, i) => inHi(s.word) ? i : -1).filter(i => i >= 0));
   /* the line in the chosen script only (the chips below are in it too); the join stays underlined in every script */
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
-  const ro = e.ro.split(/\s+/);
-  const wordIn = (w, i) => cs === 'ur' ? w : (cs === 'ro' && ro.length === e.w.length) ? ro[i] : translitText(w, cs);
+  const ro = corpusRomanWords(e);
+  const wordIn = (w, i) => cs === 'ur' ? w : (cs === 'ro' && ro) ? ro[i] : translitText(w, cs);
   const span = (w, i) => `<span class="word${inHi(i) ? ' corpus-hi' : ''}" data-w="${i}">${wordIn(w, i)}</span>`;
   return `
     <div class="constr-ex corpus-ex" data-x="${id}">

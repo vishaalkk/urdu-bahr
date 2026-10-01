@@ -21,7 +21,7 @@ html[data-script="ro"] .pr-line, html[data-script="hi"] .pr-line { font-family: 
 .pr-hint.warn { color: var(--no); }
 .pr-hint.ok { color: var(--ok); }
 .pr-keys { display: flex; flex-wrap: wrap; gap: var(--sp-4); justify-content: center; align-items: center; }
-.pr-keys .pr-key { font-size: 17px; padding: 10px 22px; border: 1px solid var(--line2); border-radius: 8px; color: var(--ink); }
+.pr-keys .pr-key { letter-spacing: 0; text-transform: none; font-size: 17px; padding: 10px 22px; border: 1px solid var(--line2); border-radius: 8px; color: var(--ink); }
 .pr-keys .pr-key b { color: var(--gold); margin-right: 6px; }
 .pr-reveal { margin-top: var(--sp-7); }
 .pr-reveal:empty { display: none; }

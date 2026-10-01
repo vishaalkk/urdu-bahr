@@ -21,9 +21,9 @@ var DR_TYPES = {
     { key: 'ojoin', label: "'O' joins" }
   ],
   meter: [
-    { key: 'bahr', label: 'Which bahr' },
-    { key: 'limping', label: 'In the bahr, or limping?' },
-    { key: 'foot', label: 'Which foot' }
+    { key: 'bahr', label: 'Bahr' },
+    { key: 'limping', label: 'Limping' },
+    { key: 'foot', label: 'Foot' }
   ],
   match: [
     { key: 'match', label: 'Match Baḥr' }
@@ -220,12 +220,19 @@ function drGenNoteType(sources, matcher) {
     // ask about one syllable (the flexible one if there is one, else the last) as plain Short vs Long
     const target = hit.seg.syl.find(x => x.native === 'x') || hit.seg.syl[hit.seg.syl.length - 1];
     if (target.resolved !== 'l' && target.resolved !== 's') continue;
+    /* the corpus line's own Roman for this phrase; the letter map can't see short vowels (ban → bn, harīf → hrif) */
+    let phraseRo = '';
+    try {
+      const wm = (typeof wordRomanMap === 'function') ? wordRomanMap(s.line, s.res) : null;
+      const part = wm ? wm.slice(hit.seg.from, hit.seg.to + 1) : [];
+      if (part.length && part.every(Boolean)) phraseRo = part.join(' ');
+    } catch (e) { phraseRo = ''; }
     return {
       type: 'note', source: s.source,
       playSeq: segSeq, revealSyl: hit.seg.syl,
       promptFn: () => {
         const cs = drScript();
-        const phraseDisp = cs === 'ur' ? hit.phrase : (typeof translitText === 'function' ? translitText(hit.phrase, cs) : hit.phrase);
+        const phraseDisp = cs === 'ur' ? hit.phrase : (cs === 'ro' && phraseRo) ? phraseRo : (typeof translitText === 'function' ? translitText(hit.phrase, cs) : hit.phrase);
         return `<div class="dr-word ${cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : '')}">${drEsc(phraseDisp)}</div><p class="dr-ask">In this line, is the syllable “${drEsc(target.text || '')}” short or long?</p>`;
       },
       choices: [{ html: '<span class="dr-opt"><b>Short (–)</b></span>', val: 's' }, { html: '<span class="dr-opt"><b>Long (=)</b></span>', val: 'l' }],

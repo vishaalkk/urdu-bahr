@@ -169,63 +169,71 @@ header#siteHeader {
   gap: 16px;
 }
 header#siteHeader h1 {
-  font-family: var(--display);
+  font-family: var(--sans);
   font-weight: 500;
-  font-size: 22px;
+  font-size: 13px;
   margin: 0;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
   line-height: 1;
 }
-header#siteHeader h1 .d { color: var(--faint); font-family: var(--urdu); font-weight: normal; margin-left: 8px; font-size: 0.85em; }
+header#siteHeader h1 .d { color: var(--faint); font-family: var(--urdu); font-weight: normal; margin-left: 10px; font-size: 18px; letter-spacing: normal; text-transform: none; }
 
 /* Buttons & Controls — text, not boxes. See RESKIN_BRIEF §3. */
 .btn {
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 11.5px;
   font-weight: 500;
-  min-height: 40px;
-  padding: 8px 4px;
-  border-radius: 0;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  min-height: 36px;
+  padding: 4px 12px;
+  border-radius: 4px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  border: 0;
+  border: 1px solid var(--line2);
   background: transparent;
   color: var(--faint);
-  transition: color 150ms ease-out, transform 80ms ease-out;
+  transition: color 150ms ease-out, border-color 150ms ease-out, background-color 150ms ease-out, transform 80ms ease-out;
   user-select: none;
 }
-.btn:hover:not(:disabled) { color: var(--ink); }
+.btn:hover:not(:disabled) { color: var(--ink); border-color: var(--ink); }
 .btn:active { transform: scale(0.97); }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
-.btn.gold {
-  color: var(--gold);
-  font-weight: 600;
-}
-.btn.gold:hover:not(:disabled) { color: var(--gold); filter: brightness(1.15); }
+/* primary: ink hairline + faint tint */
+.btn.gold { color: var(--ink); border-color: var(--ink); background: color-mix(in srgb, var(--ink) 6%, transparent); }
+.btn.gold:hover:not(:disabled) { background: color-mix(in srgb, var(--ink) 10%, transparent); }
 
-.btn.ghost {
-  color: var(--faint);
-}
+/* ghost: caps text with no box until hovered */
+.btn.ghost { color: var(--faint); border-color: transparent; padding-left: 6px; padding-right: 6px; }
 .btn.ghost:hover:not(:disabled) { color: var(--ink); }
 
+/* link: inline underlined text, sentence case */
 .btn.link {
   color: var(--dim);
   min-height: auto;
   padding: 0;
+  border: 0;
+  border-radius: 0;
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 14px;
   text-decoration: underline;
   text-decoration-color: var(--line2);
 }
-.btn.link:hover:not(:disabled) { color: var(--gold); text-decoration-color: var(--gold); }
+.btn.link:hover:not(:disabled) { color: var(--gold); text-decoration-color: var(--gold); border: 0; }
 
 .btn.sm {
-  min-height: 32px;
-  padding: 4px 2px;
-  font-size: var(--fs-sm);
+  min-height: 30px;
+  padding: 3px 10px;
+  font-size: 11px;
 }
+.btn.sm.ghost { padding-left: 6px; padding-right: 6px; }
+.btn.link.sm { min-height: auto; padding: 0; font-size: var(--fs-sm); }
 .btn.wide { width: 100%; }
 
 /* Circular audio play button — flat ring, no glow (RESKIN_BRIEF §3, "must keep") */
