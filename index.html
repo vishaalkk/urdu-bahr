@@ -1571,19 +1571,10 @@ main, .wrap { max-width: 760px; }
   background: none; border: 0; min-height: auto; padding: 0;
   color: var(--faint); font-family: var(--sans); font-size: 14px;
 }
-.ghazal-search-input {
-  flex: 1; min-width: 140px; max-width: 220px; margin-left: auto;
-  background: none; border: 0; border-bottom: 1px solid var(--line);
-  min-height: auto; border-radius: 0; padding: 2px 0;
-  color: var(--ink); font-family: var(--sans); font-size: 14px;
-}
-.ghazal-search-input:focus { border-color: var(--gold); }
 
 /* Poets ▾: a flat fold-out under the collection tabs. A filter line, then one hairline row per poet (name, count).
    No surface, no shadow: the page head is not a menu. Script text keeps sentence case and no tracking. */
 .poet-picker { margin: calc(-1 * var(--sp-3)) 0 var(--sp-4); padding: 0 0 var(--sp-3); border-bottom: 1px solid var(--line); }
-.poet-picker-filter { width: 100%; max-width: 260px; min-height: auto; background: none; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; padding: 4px 0; color: var(--ink); font-family: var(--sans); font-size: 14px; }
-.poet-picker-filter:focus { border-color: var(--gold); }
 .poet-picker-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); column-gap: var(--sp-5); margin-top: var(--sp-2); }
 .poet-opt { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-3); min-height: 38px; padding: 6px 0; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: none; color: var(--dim); font-family: var(--serif); font-size: var(--fs-base); text-align: start; text-transform: none; letter-spacing: 0; }
 .poet-opt:hover, .poet-opt:focus-visible { color: var(--ink); }
@@ -1852,11 +1843,6 @@ a.hb-ref:hover { color: var(--ink); }
 .lookup-title { margin: 0 0 var(--sp-1); }
 .lookup-desc { margin-bottom: var(--sp-3); font-family: var(--sans); color: var(--dim); }
 .lookup-search-row { margin-top: var(--sp-2); width: 100%; }
-.dict-search-input {
-  width: 100%; min-width: 0; background: none; border: 0; border-bottom: 1px solid var(--line);
-  border-radius: 0; min-height: auto; padding: var(--sp-2) 0; font-family: var(--sans);
-}
-.dict-search-input:focus { border-color: var(--gold); }
 .lookup-tag-row { display: flex; margin-top: var(--sp-3); gap: var(--sp-4); }
 
 .dict-list { display: flex; flex-direction: column; margin-top: var(--sp-4); }
@@ -2132,8 +2118,6 @@ html[data-script="ro"] .syl-tab, html[data-script="hi"] .syl-tab { font-family: 
 /* Meter › Look up › Feet */
 .feet-controls { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--sp-3) var(--sp-5); margin-top: var(--sp-3); }
 .feet-controls .subtabs.seg { margin: 0; border-bottom: 0; }
-.feet-search { flex: 1; min-width: 200px; font: inherit; font-size: 14px; padding: 6px 0; border: 0; border-bottom: 1px solid var(--line2); background: none; color: var(--ink); border-radius: 0; }
-.feet-search:focus { outline: none; border-bottom-color: var(--gold); }
 .foot-row-ur { font-size: var(--fs-lg); }
 .foot-salim { color: var(--ink); }
 .feet-foot { margin-top: var(--sp-4); }
@@ -2144,8 +2128,11 @@ html[data-script="ro"] .syl-tab, html[data-script="hi"] .syl-tab { font-family: 
 .ft-num, .ft-mora { color: var(--faint); font-size: 13px; }
 .ft-name { white-space: nowrap; }
 .ft-name .foot-row-ur { display: block; }
-.ft-name .fn { font-size: 13px; }
-.ft-syl { font-size: 13px; white-space: nowrap; }
+.ft-name .fn { font-size: 15px; }
+.ft-syl { white-space: nowrap; }
+.ft-cells { display: inline-flex; gap: var(--sp-2); }
+.ft-cell { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.ft-cell-t { font-size: 12px; color: var(--dim); }
 .ft-status { white-space: nowrap; font-size: 13px; }
 .ft-notes { min-width: 200px; max-width: 34ch; }
 @media (max-width: 767px) {
@@ -2159,8 +2146,11 @@ html[data-script="ro"] .syl-tab, html[data-script="hi"] .syl-tab { font-family: 
 }
 .ft-mark { color: var(--gold); display: inline-block; width: 1.3em; font-weight: 400; }
 .feet-legend { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-5); margin-top: var(--sp-3); }
-.feet-legend #feetCount { margin-left: auto; }
-.ft-name { display: flex; align-items: baseline; gap: var(--sp-2); }
+.ft-sort { font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+.ft-sort:hover, .ft-sort.on { color: var(--ink); }
+.ft-arrow { font-size: 11px; line-height: 1; color: var(--faint); }
+.ft-sort:hover .ft-arrow, .ft-sort.on .ft-arrow { color: var(--ink); }
+.ft-name-in { display: flex; align-items: baseline; gap: var(--sp-2); }   /* flex on the cell itself would drop it out of the row's border line */
 .ft-name .foot-row-ur, .ft-name .fn { display: inline; }
 .ft-meter { white-space: nowrap; }
 
@@ -2199,6 +2189,24 @@ html[data-script="ro"] .syl-tab, html[data-script="hi"] .syl-tab { font-family: 
 .lt.dbl { border: 1px dotted var(--faint); border-radius: 3px; }
 .letter-cap { margin: 0; line-height: 1.45; text-align: center; }
 .letter-cap a { color: inherit; }
+
+/* Search fields (Ghazals, Poets, Weight look-up, Feet): a faint magnifier, serif text, one hairline underneath, no focus box.
+   After the Columbia Urdu Poetry Group's search. The icon is an inline SVG so nothing loads from the network. */
+.ghazal-search-input, .dict-search-input, .poet-picker-filter, .feet-search {
+  min-height: auto; min-width: 140px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: 2px 50%; background-size: 16px;
+  padding: var(--sp-2) 0 var(--sp-2) 28px; color: var(--ink); font-family: var(--serif); font-size: 17px; outline: none; box-shadow: none;
+}
+.ghazal-search-input { display: block; width: 100%; max-width: 560px; margin: 0 0 var(--sp-4); }
+.col-filter-label { margin: calc(var(--sp-2) * -1) 0 var(--sp-2); }
+.dict-search-input { width: 100%; }
+.poet-picker-filter { width: 100%; max-width: 280px; }
+.feet-search { flex: 1; }
+.ghazal-search-input::placeholder, .dict-search-input::placeholder, .poet-picker-filter::placeholder, .feet-search::placeholder { color: var(--faint); font-style: normal; }
+.ghazal-search-input:focus, .dict-search-input:focus, .poet-picker-filter:focus, .feet-search:focus,
+.ghazal-search-input:focus-visible, .dict-search-input:focus-visible, .poet-picker-filter:focus-visible, .feet-search:focus-visible { outline: none !important; box-shadow: none; border-bottom-color: var(--gold); }
+@media (max-width: 767px) { .ghazal-search-input { max-width: none; margin-left: 0; width: 100%; } }
 
 /* ================= SHARED DRILL ENGINE (round 2, G3) =================
    Styles for src/js/22-drill.js's mountDrill('weight'|'meter'). Quiet
@@ -2524,7 +2532,7 @@ html[data-script="ro"] .pr-line, html[data-script="hi"] .pr-line { font-family: 
         </div>
         <p class="home-row-desc dim small">What makes a syllable long or short.</p>
       </a>
-      <a class="home-row" href="#/meter/learn">
+      <a class="home-row" href="#/meter">
         <div class="home-row-head">
           <span class="home-row-name">Meter</span>
           <span class="home-row-arrow">›</span>
@@ -2700,6 +2708,8 @@ html[data-script="ro"] .pr-line, html[data-script="hi"] .pr-line { font-family: 
     <div class="stage" data-stage="4" hidden>
       <h2 class="section-title">Reference</h2>
       <div id="constrRef" class="constr-container"></div>
+    <p class="small dim">Next: weights group into named patterns. <a href="#/meter/feet">Meet the feet &rarr;</a></p>
+
     <div class="go-deeper card small">
       <span class="go-deeper-tag mono tiny">Go deeper</span>
       <p class="go-deeper-links"><a href="https://franpritchett.com/00ghalib/meterbk/01_genrules.html" target="_blank" rel="noopener">Pritchett, ch. 1 — General Rules ↗</a> &nbsp;·&nbsp; <a href="https://franpritchett.com/00ghalib/meterbk/02_flexibility.html" target="_blank" rel="noopener">Pritchett, ch. 2 — Flexibility ↗</a> &nbsp;·&nbsp; <a href="https://franpritchett.com/00ghalib/meterbk/03_special.html" target="_blank" rel="noopener">Pritchett, ch. 3 — Special Constructions ↗</a></p>
@@ -2741,17 +2751,29 @@ html[data-script="ro"] .pr-line, html[data-script="hi"] .pr-line { font-family: 
     <h1 class="page-title sr-only">Meter</h1>
     <div class="lede dim small">Every bahr is a tune. Hear it, then learn to recognise it.</div>
     <div class="subtabs seg" role="tablist" aria-label="Meter sub-tabs">
-      <button class="seg-btn on" role="tab" id="meterSubLearn" aria-selected="true" onclick="navigate('/meter/learn')">Learn</button>
+      <button class="seg-btn on" role="tab" id="meterSubFeet" aria-selected="true" onclick="navigate('/meter/feet')">Feet</button>
+      <button class="seg-btn" role="tab" id="meterSubBuhur" aria-selected="false" onclick="navigate('/meter/buhur')">Buḥūr</button>
       <button class="seg-btn" role="tab" id="meterSubDrill" aria-selected="false" onclick="navigate('/meter/drill')">Drill</button>
       <button class="seg-btn" role="tab" id="meterSubLookup" aria-selected="false" onclick="navigate('/meter/lookup')">Look up</button>
     </div>
   </div>
 
-  <!-- Subtab 1: Learn -->
-  <div id="meterPanelLearn" class="subpanel">
+  <!-- Subtab 1: Feet -->
+  <div id="meterPanelFeet" class="subpanel">
     <div id="feetLesson"></div>
 
-    <h2 class="section-title fam-lesson-title">Hear the bahrs</h2>
+    <h2 class="section-title fam-lesson-title">All the feet</h2>
+      <div class="feet-controls">
+        <input type="search" id="feetSearch" class="feet-search" placeholder="Find a foot: mafaʿilun, = = -, فعولن" aria-label="Search feet" oninput="filterFeet(this.value)">
+      </div>
+      <p class="tiny dim feet-legend"><span><b class="ft-mark">&#9733;</b> sālim: an original foot</span> <span><b class="ft-mark">&#9671;</b> muzāḥaf: a variant of one</span></p>
+      <div id="feetList"></div>
+      <p class="tiny dim feet-foot">The Handbook&rsquo;s order lists feet that begin with long syllables first, then those that begin short.
+        <a class="hb-ref" data-rule="M6.1-pairs" href="https://franpritchett.com/00ghalib/meterbk/05_feet.html" target="_blank" rel="noopener">Handbook ch. 5 &#8599;</a></p>
+  </div>
+
+  <!-- Subtab 2: Buḥūr -->
+  <div id="meterPanelBuhur" class="subpanel">
     <div id="meterLearnLegend"></div>
 
     <p class="small dim">Pick a family to hear its tune sung as <b class="t L">dum</b> (long) and <b class="t S">da</b> (short), then sing along as the syllables light up.</p>
@@ -2777,27 +2799,10 @@ html[data-script="ro"] .pr-line, html[data-script="hi"] .pr-line { font-family: 
         <button class="seg-btn on" id="filterMeterAll" onclick="filterMeterLookup('all')">All</button>
         <button class="seg-btn" id="filterMeterRubai" onclick="filterMeterLookup('rubai')">Rubāʿī</button>
         <button class="seg-btn" id="filterMeterHindi" onclick="filterMeterLookup('hindi')">Hindi</button>
-        <button class="seg-btn" id="filterMeterFeet" onclick="filterMeterLookup('feet')">Feet</button>
       </div>
       <div class="row ghazal-controls">
         <span id="meterLookupCount" class="ghazal-collection-count">37 meters</span>
       </div>
-    </div>
-    <div id="feetLookupSection" hidden>
-      <div class="feet-controls">
-        <div class="subtabs seg feet-filter" role="tablist" aria-label="Feet filter">
-          <button class="seg-btn on" id="feetF_all" onclick="filterFeet('all')">All</button>
-          <button class="seg-btn" id="feetF_salim" onclick="filterFeet('salim')">Sālim</button>
-          <button class="seg-btn" id="feetF_muzahaf" onclick="filterFeet('muzahaf')">Altered</button>
-          <button class="seg-btn" id="feetF_long" onclick="filterFeet('long')">Starts long</button>
-          <button class="seg-btn" id="feetF_short" onclick="filterFeet('short')">Starts short</button>
-        </div>
-        <input type="search" id="feetSearch" class="feet-search" placeholder="Find a foot: mafaʿilun, = = -, فعولن" aria-label="Search feet" oninput="filterFeet(null, this.value)">
-      </div>
-      <p class="tiny dim feet-legend"><span><b class="ft-mark">&#9733;</b> sālim: an original foot</span> <span><b class="ft-mark">&#9671;</b> altered: a variant of one</span> <span id="feetCount"></span></p>
-      <div id="feetList"></div>
-      <p class="tiny dim feet-foot">Listed in the Handbook&rsquo;s order: feet that begin with long syllables first, then those that begin short.
-        <a class="hb-ref" data-rule="M6.1-pairs" href="https://franpritchett.com/00ghalib/meterbk/05_feet.html" target="_blank" rel="noopener">Handbook ch. 5 &#8599;</a></p>
     </div>
     <div id="allMetersList">
       <div id="allMeters"></div>
@@ -2848,6 +2853,9 @@ html[data-script="ro"] .pr-line, html[data-script="hi"] .pr-line { font-family: 
   <div class="page-head ghazal-head">
     <div class="eyebrow" id="ghazalEyebrow">Handbook · 24 ghazals</div>
     <h1 class="page-title sr-only">Ghazals</h1>
+    <!-- One search for the whole tab: it covers every collection -->
+    <input type="search" id="ghazalSearchInput" class="ghazal-search-input" placeholder="Search every collection: poet, first line, or number" aria-label="Search all ghazals" autocomplete="off" oninput="onGhazalSearch()">
+    <div class="tiny dim col-filter-label" id="colFilterLabel" hidden>Showing matches from all collections. Pick one to narrow them.</div>
     <!-- Collection segmented control -->
     <div class="subtabs seg" role="tablist" aria-label="Collections">
       <button class="seg-btn on" id="colBtnHandbook" onclick="switchCollection('handbook')">Handbook</button>
@@ -2862,10 +2870,9 @@ html[data-script="ro"] .pr-line, html[data-script="hi"] .pr-line { font-family: 
     <div id="colDesc" class="dim ghazal-desc">The handbook's exercise ghazals, with Frances Pritchett's notes. <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/10_ex_01_06.html" target="_blank" rel="noopener">Her exercises<span class="ext">↗</span></a> · <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/11_exnotes.html" target="_blank" rel="noopener">answers &amp; notes<span class="ext">↗</span></a></div>
     <p class="ghazal-grouping-note">Grouped by bahr. Each group is named after a well-known verse in that meter — not necessarily a line from this collection. Tap a group to open it.</p>
 
-    <!-- Controls row: count + search -->
+    <!-- Controls row: count -->
     <div class="row ghazal-controls">
       <span id="ghazalCollectionCount" class="ghazal-collection-count">24 ghazals</span>
-      <input type="text" id="ghazalSearchInput" class="ghazal-search-input" placeholder="Search poet, first line, or number — all collections" oninput="onGhazalSearch()">
     </div>
   </div>
 
@@ -4641,7 +4648,7 @@ function hbRef(rule, sec) {
 let currentRoute = '';
 const subTabMemory = {
   weight: store.get('subTab:weight', 'learn'),
-  meter: store.get('subTab:meter', 'learn')
+  meter: store.get('subTab:meter', 'feet')
 };
 
 function navigate(path, replace) {
@@ -4674,11 +4681,11 @@ function go(id) {
     'exercises': '/ghazals/handbook',
     'scan': '/scan',
     'studio': '/scan',
-    'bahr': '/meter/learn',
+    'bahr': '/meter/buhur',
     'dictionary': '/weight/lookup',
     'bibliography': '/about'
   };
-  const target = map[id] || '/meter/learn';
+  const target = map[id] || '/meter/buhur';
   navigate(target);
 }
 
@@ -4783,8 +4790,9 @@ function handleRoute(targetHash) {
     showWeightSubtab(sub);
     if (typeof document !== 'undefined') document.title = 'Weight — Baḥr';
   } else if (root === 'meter') {
-    let sub = parts[1] || subTabMemory.meter || 'learn';
-    if (!['learn', 'drill', 'lookup'].includes(sub)) sub = 'learn';
+    let sub = parts[1] || subTabMemory.meter || 'feet';
+    if (sub === 'learn') sub = 'buhur';   // old links and saved state: Learn became Buḥūr
+    if (!['feet', 'buhur', 'drill', 'lookup'].includes(sub)) sub = 'feet';
     if (parts[1] !== sub) setHashQuiet('/meter/' + sub + (raw && raw.indexOf('?') !== -1 ? raw.slice(raw.indexOf('?')) : ''));
     subTabMemory.meter = sub;
     store.set('subTab:meter', sub);
@@ -4868,7 +4876,8 @@ function showWeightSubtab(sub) {
 
 function showMeterSubtab(sub, params) {
   const tabs = {
-    learn: { btn: 'meterSubLearn', panel: 'meterPanelLearn' },
+    feet: { btn: 'meterSubFeet', panel: 'meterPanelFeet' },
+    buhur: { btn: 'meterSubBuhur', panel: 'meterPanelBuhur' },
     drill: { btn: 'meterSubDrill', panel: 'meterPanelDrill' },
     lookup: { btn: 'meterSubLookup', panel: 'meterPanelLookup' }
   };
@@ -4882,7 +4891,10 @@ function showMeterSubtab(sub, params) {
     if (p) p.style.display = on ? 'block' : 'none';
   });
 
-  if (sub === 'learn') {
+  if (sub === 'feet') {
+    if (typeof renderFeetLesson === 'function') renderFeetLesson();
+    if (typeof renderFeetCatalog === 'function') renderFeetCatalog();
+  } else if (sub === 'buhur') {
     if (typeof renderEarFams === 'function') renderEarFams();
     if (typeof renderEar === 'function') renderEar();
     if (params && params.open && typeof earPick === 'function') earPick(params.open);
@@ -4894,11 +4906,11 @@ function showMeterSubtab(sub, params) {
   } else if (sub === 'lookup') {
     if (params && params.open != null && typeof lookupExpandedId !== 'undefined') lookupExpandedId = String(params.open);
     if (params && params.open != null && typeof filterMeterLookup === 'function') filterMeterLookup(/^R/.test(String(params.open)) ? 'rubai' : 'all');
-    updateMeterLookupCount(['rubai', 'hindi', 'feet'].find(k => { const b = $('filterMeter' + (k === 'rubai' ? 'Rubai' : k === 'hindi' ? 'Hindi' : 'Feet')); return b && b.classList.contains('on'); }) || 'all');
+    updateMeterLookupCount(['rubai', 'hindi'].find(k => { const b = $('filterMeter' + (k === 'rubai' ? 'Rubai' : 'Hindi')); return b && b.classList.contains('on'); }) || 'all');
     if (typeof renderFams === 'function') renderFams();
     if (params && params.open != null) scrollToLater('m-row-' + params.open);
   }
-  if (sub === 'learn' && params && params.open) scrollToLater('fam-' + params.open);
+  if (sub === 'buhur' && params && params.open) scrollToLater('fam-' + params.open);
 }
 
 /* after a shared link opens something, bring it into view once it's rendered */
@@ -4908,25 +4920,19 @@ function scrollToLater(id) {
 }
 
 function filterMeterLookup(kind) {
-  ['filterMeterAll', 'filterMeterRubai', 'filterMeterHindi', 'filterMeterFeet'].forEach(id => {
+  ['filterMeterAll', 'filterMeterRubai', 'filterMeterHindi'].forEach(id => {
     const el = $(id);
     if (el) el.classList.toggle('on', (kind === 'all' && id === 'filterMeterAll') ||
                                     (kind === 'rubai' && id === 'filterMeterRubai') ||
-                                    (kind === 'hindi' && id === 'filterMeterHindi') ||
-                                    (kind === 'feet' && id === 'filterMeterFeet'));
+                                    (kind === 'hindi' && id === 'filterMeterHindi'));
   });
-  const feet = kind === 'feet';
-  if ($('feetLookupSection')) $('feetLookupSection').hidden = !feet;
-  if ($('allMetersList')) $('allMetersList').hidden = feet;
   updateMeterLookupCount(kind);
-  if (feet && typeof renderFeetCatalog === 'function') { renderFeetCatalog(); return; }
   if (typeof renderFams === 'function') renderFams();
 }
 
 function updateMeterLookupCount(kind) {
   const el = $('meterLookupCount');
   if (!el || typeof Scan === 'undefined' || !Scan.METERS) return;
-  if (kind === 'feet') { el.textContent = Object.keys(Scan.FEET).length + ' feet'; return; }
   const n = kind === 'hindi' ? 1
     : Scan.METERS.filter(m => kind === 'rubai' ? m.kind === 'rubai' : (m.kind !== 'rubai' && String(m.id) !== 'H')).length;
   el.textContent = n + (n === 1 ? ' meter' : ' meters');
@@ -5622,6 +5628,7 @@ function setScriptMode(mode) {
   if(typeof renderMirExt === 'function') renderMirExt();
   if(typeof renderDictionary === 'function') renderDictionary();
   if(typeof renderFams === 'function') renderFams();
+  if(typeof renderFeetCatalog === 'function') renderFeetCatalog();
   if(typeof renderLearnExamples === 'function') renderLearnExamples();
   if(typeof runStudioScan === 'function') runStudioScan();
   if(typeof runScan === 'function' && $('scanIn') && $('scanIn').value) runScan();
@@ -6056,7 +6063,10 @@ function onGhazalSearch() {
   clearTimeout(ghazalSearchDebounce);
   ghazalSearchDebounce = setTimeout(() => {
     const q = ($('ghazalSearchInput') && $('ghazalSearchInput').value.trim()) || '';
-    if (!q) searchCollectionFilter = 'all';
+    if (!q) {
+      searchCollectionFilter = 'all';
+      if ($('ghazalCollectionCount') && typeof collectionData === 'function') $('ghazalCollectionCount').textContent = collectionData(activeCollection).length + ' ghazals';
+    }
     renderGhazalsList();
     // shareable: the address bar carries the search
     if (typeof setHashQuiet === 'function') setHashQuiet(q ? '/ghazals?q=' + encodeURIComponent(q) : '/ghazals/' + (typeof activeCollection !== 'undefined' ? activeCollection : 'handbook'));
@@ -6069,6 +6079,7 @@ window.onGhazalSearch = onGhazalSearch;
 function syncCollectionButtons() {
   const searchActive = !!($('ghazalSearchInput') && $('ghazalSearchInput').value.trim());
   const on = searchActive ? searchCollectionFilter : activeCollection;
+  if ($('colFilterLabel')) $('colFilterLabel').hidden = !searchActive;   // while searching, the tabs narrow the results
   const btns = { handbook: 'colBtnHandbook', ghalib: 'colBtnGhalib', mir: 'colBtnMir' };
   Object.keys(btns).forEach(k => {
     const el = $(btns[k]);
@@ -6306,9 +6317,10 @@ function renderUniversalSearchResults(q) {
     });
   }
 
-  if ($('ghazalEyebrow')) {
-    const scope = searchCollectionFilter !== 'all' ? colNames[searchCollectionFilter] : 'All collections';
-    $('ghazalEyebrow').textContent = `${scope} · ${rows.length} match${rows.length === 1 ? '' : 'es'}`;
+  if ($('ghazalEyebrow')) $('ghazalEyebrow').textContent = '';
+  if ($('ghazalCollectionCount')) {
+    const scope = searchCollectionFilter !== 'all' ? 'in ' + colNames[searchCollectionFilter] : 'across all collections';
+    $('ghazalCollectionCount').textContent = `${rows.length} match${rows.length === 1 ? '' : 'es'} ${scope}`;
   }
 
   if (!rows.length) {
@@ -7886,8 +7898,8 @@ function feetLessonHTML() {
   <p class="small dim group-lead">Classical prosodists named each foot with a coined word built on the Arabic root <i>f-ʿ-l</i> (&ldquo;to do&rdquo;), and each name scans as the foot it names. Say <i>fa&middot;ʿū&middot;lun</i>: <i>fa</i> is one letter and short, <i>ʿū</i> and <i>lun</i> are two letters each and long. That is <span class="pg s">&ndash;</span> <span class="pg l">=</span> <span class="pg l">=</span>. The names are called <i>afāʿīl</i>.</p>
   <p class="small dim">Four feet you will meet again and again. Press <b>Listen</b> and each syllable lights as it is sung.</p>
   <div class="foot-grid">${cards}</div>
-  <h3 class="group-title">Whole feet and altered feet</h3>
-  <p class="small dim group-lead">A few feet are <i>sālim</i> (sound): mafāʿīlun, fāʿilātun, mustafʿilun, fāʿilun, faʿūlun and mutafāʿilun. The rest are sound feet with a syllable shortened, dropped or joined, <i>muzāḥaf</i> (altered). When a line can be read more than one way, prefer the reading with more sound feet. Some altered feet share a name with another, as <i>faʿlun</i> (= =) and <i>faʿilun</i> (&ndash; &ndash; =), so the meter decides which one a line uses.</p>
+  <h3 class="group-title">Sālim and muzāḥaf feet</h3>
+  <p class="small dim group-lead">The <i>afāʿīl</i> are of two kinds: a small number of original or <i>sālim</i> (sound) ones, namely mafāʿīlun, fāʿilātun, mustafʿilun, fāʿilun, faʿūlun and mutafāʿilun, and a large number of variant or <i>muzāḥaf</i> forms derived from these by shortening, dropping or joining a syllable. When a line of poetry can be divided into feet in more than one way, the best division is considered to be the one that relies more on original afāʿīl and less on variants. Some muzāḥaf feet share a name with another, as <i>faʿlun</i> (= =) and <i>faʿilun</i> (&ndash; &ndash; =), so the meter decides which one a line uses.</p>
   <h3 class="group-title">Feet run across words</h3>
   <p class="small dim group-lead">A foot doesn&rsquo;t stop where a word does. Here is one line cut into its feet; play it and watch each foot light up.</p>
   <div class="home-example">
@@ -7932,8 +7944,6 @@ window.renderFeetLesson = renderFeetLesson; window.feetPlay = feetPlay; window.f
 function renderEarFams() {
   const host = $('earFams');
   if (!host) return;
-  renderFeetLesson();
-
   const legendHost = $('meterLearnLegend');
   if (legendHost && typeof legendHTML === 'function') legendHost.innerHTML = legendHTML('legend-sticky');
 
@@ -7953,12 +7963,12 @@ function toggleFamExpand(id, e) {
     earCur = null;
     store.set('earCur', null);
     renderEarFams();
-    if (typeof setHashQuiet === 'function') setHashQuiet('/meter/learn');
+    if (typeof setHashQuiet === 'function') setHashQuiet('/meter/buhur');
   } else {
     earCur = id;
     store.set('earCur', id);
     renderEarFams();
-    if (typeof setHashQuiet === 'function') setHashQuiet('/meter/learn?open=' + id);
+    if (typeof setHashQuiet === 'function') setHashQuiet('/meter/buhur?open=' + id);
   }
 }
 
@@ -9554,7 +9564,6 @@ function renderFams() {
     (typeof el.className === 'string' && el.className.indexOf('on') !== -1)
   );
 
-  if (hasOn($('filterMeterFeet')) && typeof renderFeetCatalog === 'function') renderFeetCatalog();
   let activeKind = lookupFilterKind || 'all';
   if (hasOn($('filterMeterRubai'))) {
     activeKind = 'rubai';
@@ -9753,7 +9762,7 @@ const FEET_NOTES = {
   ssls: 'Very rare; nearly always the first and third foot.',
   ssl: 'Almost never the first foot.'
 };
-let feetFilter = 'all', feetQuery = '';
+let feetSortKey = '', feetSortDir = 0, feetQuery = '';   // dir: 1 ascending, -1 descending, 0 = Handbook order
 function feetSimple(t) { return (t || '').toString().normalize('NFD').replace(/[̀-ͯʻʿʼ'’·\s.\-]/g, '').toLowerCase(); }
 function feetRows() {
   const used = {};
@@ -9776,16 +9785,24 @@ function feetRows() {
     };
   });
 }
-/* a meter number as a link that opens that meter in Look up; rubāʿī ids are "R5" → "rubāʿī 5" */
+/* a meter number as a link that opens that meter in Look up; rubāʿī ids are "R5" → "5" under a "Rubāʿī" label */
 function feetMeterLink(id) {
   const rub = /^R/.test(String(id)), n = String(id).replace(/^R/, '');
-  return `<a class="ft-meter" href="#/meter/lookup?open=${id}" title="Open ${rub ? 'rubāʿī form' : 'meter'} ${n} in Look up">${rub ? 'rubāʿī ' : 'meter '}${n}</a>`;
+  return `<a class="ft-meter" href="#/meter/lookup?open=${id}" title="Open ${rub ? 'rubāʿī form' : 'meter'} ${n} in Look up">${n}</a>`;
 }
-function filterFeet(kind, query) {
-  if (kind) {
-    feetFilter = kind;
-    ['all', 'salim', 'muzahaf', 'long', 'short'].forEach(k => { const b = $('feetF_' + k); if (b && b.classList) b.classList.toggle('on', k === kind); });
-  }
+/* "Meters 1, 2, 5 · Rubāʿī 5, 6": one label per group, not one per number */
+function feetMetersHTML(ids) {
+  const rub = ids.filter(id => /^R/.test(String(id))), reg = ids.filter(id => !/^R/.test(String(id)));
+  return [reg.length ? 'Meters ' + reg.map(feetMeterLink).join(', ') : '', rub.length ? 'Rubāʿī ' + rub.map(feetMeterLink).join(', ') : ''].filter(Boolean).join(' · ');
+}
+/* click a column head: ascending, then descending, then back to the Handbook's order */
+function sortFeet(key) {
+  if (feetSortKey !== key) { feetSortKey = key; feetSortDir = 1; }
+  else if (feetSortDir === 1) feetSortDir = -1;
+  else { feetSortKey = ''; feetSortDir = 0; }
+  renderFeetCatalog();
+}
+function filterFeet(query) {
   if (typeof query === 'string') feetQuery = query;
   renderFeetCatalog();
 }
@@ -9794,25 +9811,26 @@ function renderFeetCatalog() {
   const all = feetRows();
   const q = feetSimple(feetQuery), qp = feetQuery.replace(/[–−]/g, '-').replace(/\s+/g, '');
   const rows = all.filter(r => {
-    if (feetFilter === 'salim' && !r.salim) return false;
-    if (feetFilter === 'muzahaf' && r.salim) return false;
-    if (feetFilter === 'long' && r.toks[0] !== 'l') return false;
-    if (feetFilter === 'short' && r.toks[0] !== 's') return false;
     if (!q && !qp) return true;
     const isPat = /^[=\-]+$/.test(qp);
     return isPat ? r.raw.replace(/\s/g, '').startsWith(qp) : (feetSimple(r.ro.join('')).includes(q) || r.ur.includes(feetQuery.trim()));
   });
-  if ($('feetCount')) $('feetCount').textContent = `Showing ${rows.length} of ${all.length} feet`;
+  /* stable sorts, so ties keep the Handbook's order. Foot: sālim first when ascending. Syllables: short to long (mātrās,
+     then syllable count). Where it occurs: fewest meters first. */
+  const mora = r => r.toks.reduce((n, t) => n + (t === 'l' ? 2 : 1), 0);
+  const by = { foot: (a, b) => b.salim - a.salim, syl: (a, b) => mora(a) - mora(b) || a.toks.length - b.toks.length, occ: (a, b) => a.meters.length - b.meters.length }[feetSortKey];
+  if (by && feetSortDir) rows.sort((a, b) => feetSortDir * by(a, b));
+  const th = (key, label) => `<th aria-sort="${feetSortKey === key ? (feetSortDir === 1 ? 'ascending' : 'descending') : 'none'}"><button class="ft-sort${feetSortKey === key ? ' on' : ''}" onclick="sortFeet('${key}')">${label}<span class="ft-arrow" aria-hidden="true">${feetSortKey === key ? (feetSortDir === 1 ? '&#9650;' : '&#9660;') : '&#9660;'}</span></button></th>`;
+  const urduOn = (typeof currentScript === 'undefined' || currentScript === 'ur');   // Urdu mode shows the foot in Urdu; Roman, Devanagari and ASCII show its Roman name
   host.innerHTML = rows.length ? `<table class="feet-table">
-    <thead><tr><th>Foot</th><th>Syllables</th><th>Pattern</th><th>Where it occurs</th><th><span class="sr-only">Play</span></th></tr></thead>
+    <thead><tr>${th('foot', 'Foot')}${th('syl', 'Syllables')}${th('occ', 'Where it occurs')}<th><span class="sr-only">Play</span></th></tr></thead>
     <tbody>` + rows.map(r => {
     const idx = all.indexOf(r);
     const notes = [FEET_NOTES[r.pat], r.twin ? 'Double identity: also ' + r.twin + '. The meter decides which.' : '',
-      r.meters.length ? 'Found in ' + r.meters.map(feetMeterLink).join(', ') + '.' : 'Only as a variant inside longer feet.'].filter(Boolean).join(' ');
+      r.meters.length ? feetMetersHTML(r.meters) : 'Only as a variant inside longer feet.'].filter(Boolean).join(' ');
     return `<tr class="foot-tr">
-      <td class="ft-name"><span class="ft-mark" title="${r.salim ? 'Sālim: an original foot' : 'Altered: a variant of an original foot'}">${r.salim ? '&#9733;' : '&#9671;'}</span><span class="urdu ur-always foot-row-ur">${r.ur}</span><span class="fn">${r.ro.join('')}</span></td>
-      <td class="ft-syl mono">${r.ro.join(' · ')}</td>
-      <td class="ft-pat"><span class="strip tight">${strip(r.toks)}</span></td>
+      <td class="ft-name"><span class="ft-name-in"><span class="ft-mark" title="${r.salim ? 'Sālim: an original foot' : 'Muzāḥaf: a variant of an original foot'}">${r.salim ? '&#9733;' : '&#9671;'}</span>${urduOn ? `<span class="urdu ur-always foot-row-ur">${r.ur}</span>` : `<span class="fn foot-row-ro">${r.ro.join('')}</span>`}</span></td>
+      <td class="ft-syl"><span class="ft-cells">${r.toks.map((t, k) => `<span class="ft-cell"><span class="ft-cell-t mono">${r.ro[k]}</span><span class="blk ${t}">${t === 'l' ? '=' : '–'}</span></span>`).join('')}</span></td>
       <td class="ft-notes small dim">${notes}</td>
       <td class="ft-play"><button class="play sm" aria-label="Play ${r.ro.join('')}" onclick="feetRowPlay(${idx},this)">▶︎</button></td>
     </tr>`;
@@ -9823,7 +9841,7 @@ function feetRowPlay(i, btn) {
   const row = btn.closest('.foot-tr');
   pbTogglePattern('footrow:' + r.pat, btn, r.raw, row ? [...row.querySelectorAll('.blk')] : null);
 }
-window.filterFeet = filterFeet; window.renderFeetCatalog = renderFeetCatalog; window.feetRowPlay = feetRowPlay;
+window.filterFeet = filterFeet; window.sortFeet = sortFeet; window.renderFeetCatalog = renderFeetCatalog; window.feetRowPlay = feetRowPlay;
 
 /* GENERATED by scripts/weight_corpus.js; do not edit. Corpus evidence for Weight > Learn: Ghalib + Mir lines whose top-1
    fit is Pritchett's own meter. Counts are of the app's scan of those lines, not her scansion. */

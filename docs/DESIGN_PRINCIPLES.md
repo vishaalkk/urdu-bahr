@@ -173,7 +173,7 @@ Decisions carried over from the earlier rounds; they apply across all tabs.
   `play()` / `playPat()` directly from a user-facing button.
 - **One legend** (`legendHTML(cls)` in `19-scan.js`): shows the mark *and* the symbol — long `=` (dum), short
   `–` (da), flexible, either `x`, cheat, grafted. Sticky (`legend-sticky`) under the site header in the ghazal
-  reader, Scan results, Meter Learn/Look up and the drills; it must never cover content. Do not write another.
+  reader, Scan results, Meter Buḥūr/Look up and the drills; it must never cover content. Do not write another.
 - **One drill engine** (`22-drill.js`, `drill.css`) for Weight › Drill and Meter › Drill: one card, a queue of
   mixed question types, filter chips for type and source (Handbook / Ghalib / Mir), a quiet ✓/✗ with a
   one-line reason and Next, session score only. Questions come from confident scans only (strain ≤ 2.5).
@@ -185,7 +185,7 @@ Decisions carried over from the earlier rounds; they apply across all tabs.
 - **Playback highlight** (see §6) works across wrapped rows. Rows shrink via `--fit` to a 0.7 floor, then wrap
   **between feet, never inside one**; there are no horizontal scrollbars in couplet boxes.
 - **Meter identity** is the famous misra (in the current script) plus its pattern strip. Official ʿarūz names
-  are secondary: never a row's main label, at most small faint print. Meter Learn groups families into
+  are secondary: never a row's main label, at most small faint print. Meter › Buḥūr groups families into
   *Counting bahrs* and *Shape bahrs*.
 - **Ghazals:** the list is grouped by meter (group header = famous misra + pattern + count; rows = number +
   first line). In Ghalib/Mir rows the number is Fran's number linked to her page, without repeating the poet.
@@ -209,7 +209,7 @@ Decisions carried over from the earlier rounds; they apply across all tabs.
 - **Audience:** someone who knows Urdu by ear (not necessarily the script) and wants to learn meter: syllable
   weight, scansion, an ear for the bahr. No lesson plan, no streaks, no "today" card.
 - **Four skill tabs: Weight · Meter · Scan · Ghazals**, plus Home (landing), Guide and About reached from the footer.
-  Weight and Meter each have sub-tabs **Learn · Drill · Look up**; Scan and Ghazals have none.
+  Weight has sub-tabs **Learn · Drill · Look up**; Meter has **Feet · Buḥūr · Drill · Look up**; Scan and Ghazals have none.
   A tab click returns to that tab's last sub-tab.
 - **Header:** title · script switch (اردو / देव / Roman) · ⚙ settings. Theme, voice, tempo, foot pause, drum and ASCII
   live in the settings sheet. Nav is a fixed bottom bar under 768px and inline in the header from 768px.

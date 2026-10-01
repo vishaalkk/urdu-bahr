@@ -117,7 +117,6 @@ function renderFams() {
     (typeof el.className === 'string' && el.className.indexOf('on') !== -1)
   );
 
-  if (hasOn($('filterMeterFeet')) && typeof renderFeetCatalog === 'function') renderFeetCatalog();
   let activeKind = lookupFilterKind || 'all';
   if (hasOn($('filterMeterRubai'))) {
     activeKind = 'rubai';
@@ -316,7 +315,7 @@ const FEET_NOTES = {
   ssls: 'Very rare; nearly always the first and third foot.',
   ssl: 'Almost never the first foot.'
 };
-let feetFilter = 'all', feetQuery = '';
+let feetSortKey = '', feetSortDir = 0, feetQuery = '';   // dir: 1 ascending, -1 descending, 0 = Handbook order
 function feetSimple(t) { return (t || '').toString().normalize('NFD').replace(/[̀-ͯʻʿʼ'’·\s.\-]/g, '').toLowerCase(); }
 function feetRows() {
   const used = {};
@@ -339,16 +338,24 @@ function feetRows() {
     };
   });
 }
-/* a meter number as a link that opens that meter in Look up; rubāʿī ids are "R5" → "rubāʿī 5" */
+/* a meter number as a link that opens that meter in Look up; rubāʿī ids are "R5" → "5" under a "Rubāʿī" label */
 function feetMeterLink(id) {
   const rub = /^R/.test(String(id)), n = String(id).replace(/^R/, '');
-  return `<a class="ft-meter" href="#/meter/lookup?open=${id}" title="Open ${rub ? 'rubāʿī form' : 'meter'} ${n} in Look up">${rub ? 'rubāʿī ' : 'meter '}${n}</a>`;
+  return `<a class="ft-meter" href="#/meter/lookup?open=${id}" title="Open ${rub ? 'rubāʿī form' : 'meter'} ${n} in Look up">${n}</a>`;
 }
-function filterFeet(kind, query) {
-  if (kind) {
-    feetFilter = kind;
-    ['all', 'salim', 'muzahaf', 'long', 'short'].forEach(k => { const b = $('feetF_' + k); if (b && b.classList) b.classList.toggle('on', k === kind); });
-  }
+/* "Meters 1, 2, 5 · Rubāʿī 5, 6": one label per group, not one per number */
+function feetMetersHTML(ids) {
+  const rub = ids.filter(id => /^R/.test(String(id))), reg = ids.filter(id => !/^R/.test(String(id)));
+  return [reg.length ? 'Meters ' + reg.map(feetMeterLink).join(', ') : '', rub.length ? 'Rubāʿī ' + rub.map(feetMeterLink).join(', ') : ''].filter(Boolean).join(' · ');
+}
+/* click a column head: ascending, then descending, then back to the Handbook's order */
+function sortFeet(key) {
+  if (feetSortKey !== key) { feetSortKey = key; feetSortDir = 1; }
+  else if (feetSortDir === 1) feetSortDir = -1;
+  else { feetSortKey = ''; feetSortDir = 0; }
+  renderFeetCatalog();
+}
+function filterFeet(query) {
   if (typeof query === 'string') feetQuery = query;
   renderFeetCatalog();
 }
@@ -357,25 +364,26 @@ function renderFeetCatalog() {
   const all = feetRows();
   const q = feetSimple(feetQuery), qp = feetQuery.replace(/[–−]/g, '-').replace(/\s+/g, '');
   const rows = all.filter(r => {
-    if (feetFilter === 'salim' && !r.salim) return false;
-    if (feetFilter === 'muzahaf' && r.salim) return false;
-    if (feetFilter === 'long' && r.toks[0] !== 'l') return false;
-    if (feetFilter === 'short' && r.toks[0] !== 's') return false;
     if (!q && !qp) return true;
     const isPat = /^[=\-]+$/.test(qp);
     return isPat ? r.raw.replace(/\s/g, '').startsWith(qp) : (feetSimple(r.ro.join('')).includes(q) || r.ur.includes(feetQuery.trim()));
   });
-  if ($('feetCount')) $('feetCount').textContent = `Showing ${rows.length} of ${all.length} feet`;
+  /* stable sorts, so ties keep the Handbook's order. Foot: sālim first when ascending. Syllables: short to long (mātrās,
+     then syllable count). Where it occurs: fewest meters first. */
+  const mora = r => r.toks.reduce((n, t) => n + (t === 'l' ? 2 : 1), 0);
+  const by = { foot: (a, b) => b.salim - a.salim, syl: (a, b) => mora(a) - mora(b) || a.toks.length - b.toks.length, occ: (a, b) => a.meters.length - b.meters.length }[feetSortKey];
+  if (by && feetSortDir) rows.sort((a, b) => feetSortDir * by(a, b));
+  const th = (key, label) => `<th aria-sort="${feetSortKey === key ? (feetSortDir === 1 ? 'ascending' : 'descending') : 'none'}"><button class="ft-sort${feetSortKey === key ? ' on' : ''}" onclick="sortFeet('${key}')">${label}<span class="ft-arrow" aria-hidden="true">${feetSortKey === key ? (feetSortDir === 1 ? '&#9650;' : '&#9660;') : '&#9660;'}</span></button></th>`;
+  const urduOn = (typeof currentScript === 'undefined' || currentScript === 'ur');   // Urdu mode shows the foot in Urdu; Roman, Devanagari and ASCII show its Roman name
   host.innerHTML = rows.length ? `<table class="feet-table">
-    <thead><tr><th>Foot</th><th>Syllables</th><th>Pattern</th><th>Where it occurs</th><th><span class="sr-only">Play</span></th></tr></thead>
+    <thead><tr>${th('foot', 'Foot')}${th('syl', 'Syllables')}${th('occ', 'Where it occurs')}<th><span class="sr-only">Play</span></th></tr></thead>
     <tbody>` + rows.map(r => {
     const idx = all.indexOf(r);
     const notes = [FEET_NOTES[r.pat], r.twin ? 'Double identity: also ' + r.twin + '. The meter decides which.' : '',
-      r.meters.length ? 'Found in ' + r.meters.map(feetMeterLink).join(', ') + '.' : 'Only as a variant inside longer feet.'].filter(Boolean).join(' ');
+      r.meters.length ? feetMetersHTML(r.meters) : 'Only as a variant inside longer feet.'].filter(Boolean).join(' ');
     return `<tr class="foot-tr">
-      <td class="ft-name"><span class="ft-mark" title="${r.salim ? 'Sālim: an original foot' : 'Altered: a variant of an original foot'}">${r.salim ? '&#9733;' : '&#9671;'}</span><span class="urdu ur-always foot-row-ur">${r.ur}</span><span class="fn">${r.ro.join('')}</span></td>
-      <td class="ft-syl mono">${r.ro.join(' · ')}</td>
-      <td class="ft-pat"><span class="strip tight">${strip(r.toks)}</span></td>
+      <td class="ft-name"><span class="ft-name-in"><span class="ft-mark" title="${r.salim ? 'Sālim: an original foot' : 'Muzāḥaf: a variant of an original foot'}">${r.salim ? '&#9733;' : '&#9671;'}</span>${urduOn ? `<span class="urdu ur-always foot-row-ur">${r.ur}</span>` : `<span class="fn foot-row-ro">${r.ro.join('')}</span>`}</span></td>
+      <td class="ft-syl"><span class="ft-cells">${r.toks.map((t, k) => `<span class="ft-cell"><span class="ft-cell-t mono">${r.ro[k]}</span><span class="blk ${t}">${t === 'l' ? '=' : '–'}</span></span>`).join('')}</span></td>
       <td class="ft-notes small dim">${notes}</td>
       <td class="ft-play"><button class="play sm" aria-label="Play ${r.ro.join('')}" onclick="feetRowPlay(${idx},this)">▶︎</button></td>
     </tr>`;
@@ -386,4 +394,4 @@ function feetRowPlay(i, btn) {
   const row = btn.closest('.foot-tr');
   pbTogglePattern('footrow:' + r.pat, btn, r.raw, row ? [...row.querySelectorAll('.blk')] : null);
 }
-window.filterFeet = filterFeet; window.renderFeetCatalog = renderFeetCatalog; window.feetRowPlay = feetRowPlay;
+window.filterFeet = filterFeet; window.sortFeet = sortFeet; window.renderFeetCatalog = renderFeetCatalog; window.feetRowPlay = feetRowPlay;

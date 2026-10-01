@@ -8,27 +8,10 @@
         <button class="seg-btn on" id="filterMeterAll" onclick="filterMeterLookup('all')">All</button>
         <button class="seg-btn" id="filterMeterRubai" onclick="filterMeterLookup('rubai')">Rubāʿī</button>
         <button class="seg-btn" id="filterMeterHindi" onclick="filterMeterLookup('hindi')">Hindi</button>
-        <button class="seg-btn" id="filterMeterFeet" onclick="filterMeterLookup('feet')">Feet</button>
       </div>
       <div class="row ghazal-controls">
         <span id="meterLookupCount" class="ghazal-collection-count">37 meters</span>
       </div>
-    </div>
-    <div id="feetLookupSection" hidden>
-      <div class="feet-controls">
-        <div class="subtabs seg feet-filter" role="tablist" aria-label="Feet filter">
-          <button class="seg-btn on" id="feetF_all" onclick="filterFeet('all')">All</button>
-          <button class="seg-btn" id="feetF_salim" onclick="filterFeet('salim')">Sālim</button>
-          <button class="seg-btn" id="feetF_muzahaf" onclick="filterFeet('muzahaf')">Altered</button>
-          <button class="seg-btn" id="feetF_long" onclick="filterFeet('long')">Starts long</button>
-          <button class="seg-btn" id="feetF_short" onclick="filterFeet('short')">Starts short</button>
-        </div>
-        <input type="search" id="feetSearch" class="feet-search" placeholder="Find a foot: mafaʿilun, = = -, فعولن" aria-label="Search feet" oninput="filterFeet(null, this.value)">
-      </div>
-      <p class="tiny dim feet-legend"><span><b class="ft-mark">&#9733;</b> sālim: an original foot</span> <span><b class="ft-mark">&#9671;</b> altered: a variant of one</span> <span id="feetCount"></span></p>
-      <div id="feetList"></div>
-      <p class="tiny dim feet-foot">Listed in the Handbook&rsquo;s order: feet that begin with long syllables first, then those that begin short.
-        <a class="hb-ref" data-rule="M6.1-pairs" href="https://franpritchett.com/00ghalib/meterbk/05_feet.html" target="_blank" rel="noopener">Handbook ch. 5 &#8599;</a></p>
     </div>
     <div id="allMetersList">
       <div id="allMeters"></div>

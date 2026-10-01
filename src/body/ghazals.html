@@ -3,6 +3,9 @@
   <div class="page-head ghazal-head">
     <div class="eyebrow" id="ghazalEyebrow">Handbook · 24 ghazals</div>
     <h1 class="page-title sr-only">Ghazals</h1>
+    <!-- One search for the whole tab: it covers every collection -->
+    <input type="search" id="ghazalSearchInput" class="ghazal-search-input" placeholder="Search every collection: poet, first line, or number" aria-label="Search all ghazals" autocomplete="off" oninput="onGhazalSearch()">
+    <div class="tiny dim col-filter-label" id="colFilterLabel" hidden>Showing matches from all collections. Pick one to narrow them.</div>
     <!-- Collection segmented control -->
     <div class="subtabs seg" role="tablist" aria-label="Collections">
       <button class="seg-btn on" id="colBtnHandbook" onclick="switchCollection('handbook')">Handbook</button>
@@ -17,10 +20,9 @@
     <div id="colDesc" class="dim ghazal-desc">The handbook's exercise ghazals, with Frances Pritchett's notes. <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/10_ex_01_06.html" target="_blank" rel="noopener">Her exercises<span class="ext">↗</span></a> · <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/11_exnotes.html" target="_blank" rel="noopener">answers &amp; notes<span class="ext">↗</span></a></div>
     <p class="ghazal-grouping-note">Grouped by bahr. Each group is named after a well-known verse in that meter — not necessarily a line from this collection. Tap a group to open it.</p>
 
-    <!-- Controls row: count + search -->
+    <!-- Controls row: count -->
     <div class="row ghazal-controls">
       <span id="ghazalCollectionCount" class="ghazal-collection-count">24 ghazals</span>
-      <input type="text" id="ghazalSearchInput" class="ghazal-search-input" placeholder="Search poet, first line, or number — all collections" oninput="onGhazalSearch()">
     </div>
   </div>
 

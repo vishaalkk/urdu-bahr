@@ -637,19 +637,10 @@ main, .wrap { max-width: 760px; }
   background: none; border: 0; min-height: auto; padding: 0;
   color: var(--faint); font-family: var(--sans); font-size: 14px;
 }
-.ghazal-search-input {
-  flex: 1; min-width: 140px; max-width: 220px; margin-left: auto;
-  background: none; border: 0; border-bottom: 1px solid var(--line);
-  min-height: auto; border-radius: 0; padding: 2px 0;
-  color: var(--ink); font-family: var(--sans); font-size: 14px;
-}
-.ghazal-search-input:focus { border-color: var(--gold); }
 
 /* Poets ▾: a flat fold-out under the collection tabs. A filter line, then one hairline row per poet (name, count).
    No surface, no shadow: the page head is not a menu. Script text keeps sentence case and no tracking. */
 .poet-picker { margin: calc(-1 * var(--sp-3)) 0 var(--sp-4); padding: 0 0 var(--sp-3); border-bottom: 1px solid var(--line); }
-.poet-picker-filter { width: 100%; max-width: 260px; min-height: auto; background: none; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; padding: 4px 0; color: var(--ink); font-family: var(--sans); font-size: 14px; }
-.poet-picker-filter:focus { border-color: var(--gold); }
 .poet-picker-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); column-gap: var(--sp-5); margin-top: var(--sp-2); }
 .poet-opt { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-3); min-height: 38px; padding: 6px 0; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: none; color: var(--dim); font-family: var(--serif); font-size: var(--fs-base); text-align: start; text-transform: none; letter-spacing: 0; }
 .poet-opt:hover, .poet-opt:focus-visible { color: var(--ink); }
@@ -918,11 +909,6 @@ a.hb-ref:hover { color: var(--ink); }
 .lookup-title { margin: 0 0 var(--sp-1); }
 .lookup-desc { margin-bottom: var(--sp-3); font-family: var(--sans); color: var(--dim); }
 .lookup-search-row { margin-top: var(--sp-2); width: 100%; }
-.dict-search-input {
-  width: 100%; min-width: 0; background: none; border: 0; border-bottom: 1px solid var(--line);
-  border-radius: 0; min-height: auto; padding: var(--sp-2) 0; font-family: var(--sans);
-}
-.dict-search-input:focus { border-color: var(--gold); }
 .lookup-tag-row { display: flex; margin-top: var(--sp-3); gap: var(--sp-4); }
 
 .dict-list { display: flex; flex-direction: column; margin-top: var(--sp-4); }
@@ -1198,8 +1184,6 @@ html[data-script="ro"] .syl-tab, html[data-script="hi"] .syl-tab { font-family: 
 /* Meter › Look up › Feet */
 .feet-controls { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--sp-3) var(--sp-5); margin-top: var(--sp-3); }
 .feet-controls .subtabs.seg { margin: 0; border-bottom: 0; }
-.feet-search { flex: 1; min-width: 200px; font: inherit; font-size: 14px; padding: 6px 0; border: 0; border-bottom: 1px solid var(--line2); background: none; color: var(--ink); border-radius: 0; }
-.feet-search:focus { outline: none; border-bottom-color: var(--gold); }
 .foot-row-ur { font-size: var(--fs-lg); }
 .foot-salim { color: var(--ink); }
 .feet-foot { margin-top: var(--sp-4); }
@@ -1210,8 +1194,11 @@ html[data-script="ro"] .syl-tab, html[data-script="hi"] .syl-tab { font-family: 
 .ft-num, .ft-mora { color: var(--faint); font-size: 13px; }
 .ft-name { white-space: nowrap; }
 .ft-name .foot-row-ur { display: block; }
-.ft-name .fn { font-size: 13px; }
-.ft-syl { font-size: 13px; white-space: nowrap; }
+.ft-name .fn { font-size: 15px; }
+.ft-syl { white-space: nowrap; }
+.ft-cells { display: inline-flex; gap: var(--sp-2); }
+.ft-cell { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.ft-cell-t { font-size: 12px; color: var(--dim); }
 .ft-status { white-space: nowrap; font-size: 13px; }
 .ft-notes { min-width: 200px; max-width: 34ch; }
 @media (max-width: 767px) {
@@ -1225,8 +1212,11 @@ html[data-script="ro"] .syl-tab, html[data-script="hi"] .syl-tab { font-family: 
 }
 .ft-mark { color: var(--gold); display: inline-block; width: 1.3em; font-weight: 400; }
 .feet-legend { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-5); margin-top: var(--sp-3); }
-.feet-legend #feetCount { margin-left: auto; }
-.ft-name { display: flex; align-items: baseline; gap: var(--sp-2); }
+.ft-sort { font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+.ft-sort:hover, .ft-sort.on { color: var(--ink); }
+.ft-arrow { font-size: 11px; line-height: 1; color: var(--faint); }
+.ft-sort:hover .ft-arrow, .ft-sort.on .ft-arrow { color: var(--ink); }
+.ft-name-in { display: flex; align-items: baseline; gap: var(--sp-2); }   /* flex on the cell itself would drop it out of the row's border line */
 .ft-name .foot-row-ur, .ft-name .fn { display: inline; }
 .ft-meter { white-space: nowrap; }
 
@@ -1265,3 +1255,21 @@ html[data-script="ro"] .syl-tab, html[data-script="hi"] .syl-tab { font-family: 
 .lt.dbl { border: 1px dotted var(--faint); border-radius: 3px; }
 .letter-cap { margin: 0; line-height: 1.45; text-align: center; }
 .letter-cap a { color: inherit; }
+
+/* Search fields (Ghazals, Poets, Weight look-up, Feet): a faint magnifier, serif text, one hairline underneath, no focus box.
+   After the Columbia Urdu Poetry Group's search. The icon is an inline SVG so nothing loads from the network. */
+.ghazal-search-input, .dict-search-input, .poet-picker-filter, .feet-search {
+  min-height: auto; min-width: 140px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: 2px 50%; background-size: 16px;
+  padding: var(--sp-2) 0 var(--sp-2) 28px; color: var(--ink); font-family: var(--serif); font-size: 17px; outline: none; box-shadow: none;
+}
+.ghazal-search-input { display: block; width: 100%; max-width: 560px; margin: 0 0 var(--sp-4); }
+.col-filter-label { margin: calc(var(--sp-2) * -1) 0 var(--sp-2); }
+.dict-search-input { width: 100%; }
+.poet-picker-filter { width: 100%; max-width: 280px; }
+.feet-search { flex: 1; }
+.ghazal-search-input::placeholder, .dict-search-input::placeholder, .poet-picker-filter::placeholder, .feet-search::placeholder { color: var(--faint); font-style: normal; }
+.ghazal-search-input:focus, .dict-search-input:focus, .poet-picker-filter:focus, .feet-search:focus,
+.ghazal-search-input:focus-visible, .dict-search-input:focus-visible, .poet-picker-filter:focus-visible, .feet-search:focus-visible { outline: none !important; box-shadow: none; border-bottom-color: var(--gold); }
+@media (max-width: 767px) { .ghazal-search-input { max-width: none; margin-left: 0; width: 100%; } }

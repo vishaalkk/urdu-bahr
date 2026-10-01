@@ -4,17 +4,29 @@
     <h1 class="page-title sr-only">Meter</h1>
     <div class="lede dim small">Every bahr is a tune. Hear it, then learn to recognise it.</div>
     <div class="subtabs seg" role="tablist" aria-label="Meter sub-tabs">
-      <button class="seg-btn on" role="tab" id="meterSubLearn" aria-selected="true" onclick="navigate('/meter/learn')">Learn</button>
+      <button class="seg-btn on" role="tab" id="meterSubFeet" aria-selected="true" onclick="navigate('/meter/feet')">Feet</button>
+      <button class="seg-btn" role="tab" id="meterSubBuhur" aria-selected="false" onclick="navigate('/meter/buhur')">Buḥūr</button>
       <button class="seg-btn" role="tab" id="meterSubDrill" aria-selected="false" onclick="navigate('/meter/drill')">Drill</button>
       <button class="seg-btn" role="tab" id="meterSubLookup" aria-selected="false" onclick="navigate('/meter/lookup')">Look up</button>
     </div>
   </div>
 
-  <!-- Subtab 1: Learn -->
-  <div id="meterPanelLearn" class="subpanel">
+  <!-- Subtab 1: Feet -->
+  <div id="meterPanelFeet" class="subpanel">
     <div id="feetLesson"></div>
 
-    <h2 class="section-title fam-lesson-title">Hear the bahrs</h2>
+    <h2 class="section-title fam-lesson-title">All the feet</h2>
+      <div class="feet-controls">
+        <input type="search" id="feetSearch" class="feet-search" placeholder="Find a foot: mafaʿilun, = = -, فعولن" aria-label="Search feet" oninput="filterFeet(this.value)">
+      </div>
+      <p class="tiny dim feet-legend"><span><b class="ft-mark">&#9733;</b> sālim: an original foot</span> <span><b class="ft-mark">&#9671;</b> muzāḥaf: a variant of one</span></p>
+      <div id="feetList"></div>
+      <p class="tiny dim feet-foot">The Handbook&rsquo;s order lists feet that begin with long syllables first, then those that begin short.
+        <a class="hb-ref" data-rule="M6.1-pairs" href="https://franpritchett.com/00ghalib/meterbk/05_feet.html" target="_blank" rel="noopener">Handbook ch. 5 &#8599;</a></p>
+  </div>
+
+  <!-- Subtab 2: Buḥūr -->
+  <div id="meterPanelBuhur" class="subpanel">
     <div id="meterLearnLegend"></div>
 
     <p class="small dim">Pick a family to hear its tune sung as <b class="t L">dum</b> (long) and <b class="t S">da</b> (short), then sing along as the syllables light up.</p>

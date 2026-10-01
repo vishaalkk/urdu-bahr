@@ -152,8 +152,8 @@ function feetLessonHTML() {
   <p class="small dim group-lead">Classical prosodists named each foot with a coined word built on the Arabic root <i>f-ʿ-l</i> (&ldquo;to do&rdquo;), and each name scans as the foot it names. Say <i>fa&middot;ʿū&middot;lun</i>: <i>fa</i> is one letter and short, <i>ʿū</i> and <i>lun</i> are two letters each and long. That is <span class="pg s">&ndash;</span> <span class="pg l">=</span> <span class="pg l">=</span>. The names are called <i>afāʿīl</i>.</p>
   <p class="small dim">Four feet you will meet again and again. Press <b>Listen</b> and each syllable lights as it is sung.</p>
   <div class="foot-grid">${cards}</div>
-  <h3 class="group-title">Whole feet and altered feet</h3>
-  <p class="small dim group-lead">A few feet are <i>sālim</i> (sound): mafāʿīlun, fāʿilātun, mustafʿilun, fāʿilun, faʿūlun and mutafāʿilun. The rest are sound feet with a syllable shortened, dropped or joined, <i>muzāḥaf</i> (altered). When a line can be read more than one way, prefer the reading with more sound feet. Some altered feet share a name with another, as <i>faʿlun</i> (= =) and <i>faʿilun</i> (&ndash; &ndash; =), so the meter decides which one a line uses.</p>
+  <h3 class="group-title">Sālim and muzāḥaf feet</h3>
+  <p class="small dim group-lead">The <i>afāʿīl</i> are of two kinds: a small number of original or <i>sālim</i> (sound) ones, namely mafāʿīlun, fāʿilātun, mustafʿilun, fāʿilun, faʿūlun and mutafāʿilun, and a large number of variant or <i>muzāḥaf</i> forms derived from these by shortening, dropping or joining a syllable. When a line of poetry can be divided into feet in more than one way, the best division is considered to be the one that relies more on original afāʿīl and less on variants. Some muzāḥaf feet share a name with another, as <i>faʿlun</i> (= =) and <i>faʿilun</i> (&ndash; &ndash; =), so the meter decides which one a line uses.</p>
   <h3 class="group-title">Feet run across words</h3>
   <p class="small dim group-lead">A foot doesn&rsquo;t stop where a word does. Here is one line cut into its feet; play it and watch each foot light up.</p>
   <div class="home-example">
@@ -198,8 +198,6 @@ window.renderFeetLesson = renderFeetLesson; window.feetPlay = feetPlay; window.f
 function renderEarFams() {
   const host = $('earFams');
   if (!host) return;
-  renderFeetLesson();
-
   const legendHost = $('meterLearnLegend');
   if (legendHost && typeof legendHTML === 'function') legendHost.innerHTML = legendHTML('legend-sticky');
 
@@ -219,12 +217,12 @@ function toggleFamExpand(id, e) {
     earCur = null;
     store.set('earCur', null);
     renderEarFams();
-    if (typeof setHashQuiet === 'function') setHashQuiet('/meter/learn');
+    if (typeof setHashQuiet === 'function') setHashQuiet('/meter/buhur');
   } else {
     earCur = id;
     store.set('earCur', id);
     renderEarFams();
-    if (typeof setHashQuiet === 'function') setHashQuiet('/meter/learn?open=' + id);
+    if (typeof setHashQuiet === 'function') setHashQuiet('/meter/buhur?open=' + id);
   }
 }
 

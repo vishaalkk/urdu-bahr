@@ -25,7 +25,7 @@ function hbRef(rule, sec) {
 let currentRoute = '';
 const subTabMemory = {
   weight: store.get('subTab:weight', 'learn'),
-  meter: store.get('subTab:meter', 'learn')
+  meter: store.get('subTab:meter', 'feet')
 };
 
 function navigate(path, replace) {
@@ -58,11 +58,11 @@ function go(id) {
     'exercises': '/ghazals/handbook',
     'scan': '/scan',
     'studio': '/scan',
-    'bahr': '/meter/learn',
+    'bahr': '/meter/buhur',
     'dictionary': '/weight/lookup',
     'bibliography': '/about'
   };
-  const target = map[id] || '/meter/learn';
+  const target = map[id] || '/meter/buhur';
   navigate(target);
 }
 
@@ -167,8 +167,9 @@ function handleRoute(targetHash) {
     showWeightSubtab(sub);
     if (typeof document !== 'undefined') document.title = 'Weight — Baḥr';
   } else if (root === 'meter') {
-    let sub = parts[1] || subTabMemory.meter || 'learn';
-    if (!['learn', 'drill', 'lookup'].includes(sub)) sub = 'learn';
+    let sub = parts[1] || subTabMemory.meter || 'feet';
+    if (sub === 'learn') sub = 'buhur';   // old links and saved state: Learn became Buḥūr
+    if (!['feet', 'buhur', 'drill', 'lookup'].includes(sub)) sub = 'feet';
     if (parts[1] !== sub) setHashQuiet('/meter/' + sub + (raw && raw.indexOf('?') !== -1 ? raw.slice(raw.indexOf('?')) : ''));
     subTabMemory.meter = sub;
     store.set('subTab:meter', sub);
@@ -252,7 +253,8 @@ function showWeightSubtab(sub) {
 
 function showMeterSubtab(sub, params) {
   const tabs = {
-    learn: { btn: 'meterSubLearn', panel: 'meterPanelLearn' },
+    feet: { btn: 'meterSubFeet', panel: 'meterPanelFeet' },
+    buhur: { btn: 'meterSubBuhur', panel: 'meterPanelBuhur' },
     drill: { btn: 'meterSubDrill', panel: 'meterPanelDrill' },
     lookup: { btn: 'meterSubLookup', panel: 'meterPanelLookup' }
   };
@@ -266,7 +268,10 @@ function showMeterSubtab(sub, params) {
     if (p) p.style.display = on ? 'block' : 'none';
   });
 
-  if (sub === 'learn') {
+  if (sub === 'feet') {
+    if (typeof renderFeetLesson === 'function') renderFeetLesson();
+    if (typeof renderFeetCatalog === 'function') renderFeetCatalog();
+  } else if (sub === 'buhur') {
     if (typeof renderEarFams === 'function') renderEarFams();
     if (typeof renderEar === 'function') renderEar();
     if (params && params.open && typeof earPick === 'function') earPick(params.open);
@@ -278,11 +283,11 @@ function showMeterSubtab(sub, params) {
   } else if (sub === 'lookup') {
     if (params && params.open != null && typeof lookupExpandedId !== 'undefined') lookupExpandedId = String(params.open);
     if (params && params.open != null && typeof filterMeterLookup === 'function') filterMeterLookup(/^R/.test(String(params.open)) ? 'rubai' : 'all');
-    updateMeterLookupCount(['rubai', 'hindi', 'feet'].find(k => { const b = $('filterMeter' + (k === 'rubai' ? 'Rubai' : k === 'hindi' ? 'Hindi' : 'Feet')); return b && b.classList.contains('on'); }) || 'all');
+    updateMeterLookupCount(['rubai', 'hindi'].find(k => { const b = $('filterMeter' + (k === 'rubai' ? 'Rubai' : 'Hindi')); return b && b.classList.contains('on'); }) || 'all');
     if (typeof renderFams === 'function') renderFams();
     if (params && params.open != null) scrollToLater('m-row-' + params.open);
   }
-  if (sub === 'learn' && params && params.open) scrollToLater('fam-' + params.open);
+  if (sub === 'buhur' && params && params.open) scrollToLater('fam-' + params.open);
 }
 
 /* after a shared link opens something, bring it into view once it's rendered */
@@ -292,25 +297,19 @@ function scrollToLater(id) {
 }
 
 function filterMeterLookup(kind) {
-  ['filterMeterAll', 'filterMeterRubai', 'filterMeterHindi', 'filterMeterFeet'].forEach(id => {
+  ['filterMeterAll', 'filterMeterRubai', 'filterMeterHindi'].forEach(id => {
     const el = $(id);
     if (el) el.classList.toggle('on', (kind === 'all' && id === 'filterMeterAll') ||
                                     (kind === 'rubai' && id === 'filterMeterRubai') ||
-                                    (kind === 'hindi' && id === 'filterMeterHindi') ||
-                                    (kind === 'feet' && id === 'filterMeterFeet'));
+                                    (kind === 'hindi' && id === 'filterMeterHindi'));
   });
-  const feet = kind === 'feet';
-  if ($('feetLookupSection')) $('feetLookupSection').hidden = !feet;
-  if ($('allMetersList')) $('allMetersList').hidden = feet;
   updateMeterLookupCount(kind);
-  if (feet && typeof renderFeetCatalog === 'function') { renderFeetCatalog(); return; }
   if (typeof renderFams === 'function') renderFams();
 }
 
 function updateMeterLookupCount(kind) {
   const el = $('meterLookupCount');
   if (!el || typeof Scan === 'undefined' || !Scan.METERS) return;
-  if (kind === 'feet') { el.textContent = Object.keys(Scan.FEET).length + ' feet'; return; }
   const n = kind === 'hindi' ? 1
     : Scan.METERS.filter(m => kind === 'rubai' ? m.kind === 'rubai' : (m.kind !== 'rubai' && String(m.id) !== 'H')).length;
   el.textContent = n + (n === 1 ? ' meter' : ' meters');

@@ -391,7 +391,10 @@ function onGhazalSearch() {
   clearTimeout(ghazalSearchDebounce);
   ghazalSearchDebounce = setTimeout(() => {
     const q = ($('ghazalSearchInput') && $('ghazalSearchInput').value.trim()) || '';
-    if (!q) searchCollectionFilter = 'all';
+    if (!q) {
+      searchCollectionFilter = 'all';
+      if ($('ghazalCollectionCount') && typeof collectionData === 'function') $('ghazalCollectionCount').textContent = collectionData(activeCollection).length + ' ghazals';
+    }
     renderGhazalsList();
     // shareable: the address bar carries the search
     if (typeof setHashQuiet === 'function') setHashQuiet(q ? '/ghazals?q=' + encodeURIComponent(q) : '/ghazals/' + (typeof activeCollection !== 'undefined' ? activeCollection : 'handbook'));
@@ -404,6 +407,7 @@ window.onGhazalSearch = onGhazalSearch;
 function syncCollectionButtons() {
   const searchActive = !!($('ghazalSearchInput') && $('ghazalSearchInput').value.trim());
   const on = searchActive ? searchCollectionFilter : activeCollection;
+  if ($('colFilterLabel')) $('colFilterLabel').hidden = !searchActive;   // while searching, the tabs narrow the results
   const btns = { handbook: 'colBtnHandbook', ghalib: 'colBtnGhalib', mir: 'colBtnMir' };
   Object.keys(btns).forEach(k => {
     const el = $(btns[k]);
@@ -641,9 +645,10 @@ function renderUniversalSearchResults(q) {
     });
   }
 
-  if ($('ghazalEyebrow')) {
-    const scope = searchCollectionFilter !== 'all' ? colNames[searchCollectionFilter] : 'All collections';
-    $('ghazalEyebrow').textContent = `${scope} · ${rows.length} match${rows.length === 1 ? '' : 'es'}`;
+  if ($('ghazalEyebrow')) $('ghazalEyebrow').textContent = '';
+  if ($('ghazalCollectionCount')) {
+    const scope = searchCollectionFilter !== 'all' ? 'in ' + colNames[searchCollectionFilter] : 'across all collections';
+    $('ghazalCollectionCount').textContent = `${rows.length} match${rows.length === 1 ? '' : 'es'} ${scope}`;
   }
 
   if (!rows.length) {

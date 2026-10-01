@@ -26,7 +26,7 @@ const text = el => el.textContent.replace(/\s+/g, ' ').trim();
 
 const ROUTES = [
   ['#/weight', 'weightPanelLearn', 500], ['#/weight/drill', 'weightPanelDrill', 60], ['#/weight/lookup', 'weightPanelLookup', 500],
-  ['#/meter', 'meterPanelLearn', 500], ['#/meter/drill', 'meterPanelDrill', 60], ['#/meter/lookup', 'meterPanelLookup', 500],
+  ['#/meter', 'meterPanelFeet', 500], ['#/meter/buhur', 'meterPanelBuhur', 500], ['#/meter/drill', 'meterPanelDrill', 60], ['#/meter/lookup', 'meterPanelLookup', 500],
   ['#/scan', 'scan-section', 100], ['#/ghazals', 'ghazals-section', 500]
 ];
 
@@ -213,11 +213,11 @@ const ROUTES = [
       w.close();
     };
     await check('#/meter/lookup?open=26', (w, d) => { const r = d.getElementById('m-row-26'); return r && r.classList.contains('expanded') ? true : 'meter #26 not expanded'; }, 'Look up opens a specific meter');
-    await check('#/meter/learn', (w, d) => { const n = d.querySelectorAll('#feetLesson .foot-card').length; return n === 4 && d.querySelector('#feetDemoScan .fgrp') ? true : `Feet lesson: ${n} cards, demo feet ${!!d.querySelector('#feetDemoScan .fgrp')}`; }, 'Meter › Learn shows the Feet lesson');
-    await check('#/meter/lookup', (w, d) => { w.filterMeterLookup('feet'); const n = d.querySelectorAll('#feetList .foot-tr').length; w.filterFeet('salim'); const s = d.querySelectorAll('#feetList .foot-tr').length; w.filterFeet('all', '= = -'); const p = d.querySelectorAll('#feetList .foot-tr').length; w.filterFeet('all', 'mafailun'); const r = d.querySelectorAll('#feetList .foot-tr').length; return n === 20 && s === 6 && p >= 1 && r >= 1 ? true : `feet catalog: all ${n}, salim ${s}, pattern ${p}, roman ${r}`; }, 'Look up › Feet lists the catalog and filters it');
+    await check('#/meter/feet', (w, d) => { const n = d.querySelectorAll('#feetLesson .foot-card').length; return n === 4 && d.querySelector('#feetDemoScan .fgrp') ? true : `Feet lesson: ${n} cards, demo feet ${!!d.querySelector('#feetDemoScan .fgrp')}`; }, 'Meter › Feet shows the Feet lesson');
+    await check('#/meter/feet', (w, d) => { const n = d.querySelectorAll('#feetList .foot-tr').length; w.sortFeet('foot'); const s = d.querySelectorAll('#feetList .foot-tr:nth-child(-n+6) .ft-name .ft-mark').length && [...d.querySelectorAll('#feetList .foot-tr:nth-child(-n+6) .ft-mark')].filter(m => m.textContent.charCodeAt(0) === 9733).length; w.sortFeet('foot'); w.sortFeet('foot'); w.filterFeet('= = -'); const p = d.querySelectorAll('#feetList .foot-tr').length; w.filterFeet('mafailun'); const r = d.querySelectorAll('#feetList .foot-tr').length; return n === 20 && s === 6 && p >= 1 && r >= 1 ? true : `feet catalog: all ${n}, salim ${s}, pattern ${p}, roman ${r}`; }, 'Feet lists the catalog and filters it');
     await check('#/meter/lookup?open=R5', (w, d) => { const r = d.getElementById('m-row-R5'); return r && r.querySelector('.meter-label-pattern') ? true : 'rubai R5 row not shown'; }, 'Look up shows a rubāʿī form from a link (it has nothing to expand, so it is a plain row)');
-    await check('#/meter/lookup', (w, d) => { w.filterMeterLookup('feet'); const a = d.querySelector('#feetList a.ft-meter'); return a && /open=/.test(a.getAttribute('href')) ? true : 'no meter links in Feet notes'; }, 'Feet notes link to their meters');
-    await check('#/meter/learn?open=' + 'hazaron', (w, d) => { const r = d.getElementById('fam-hazaron'); return r && r.querySelector('.couplet-card') ? true : 'family not expanded'; }, 'Learn opens a specific family');
+    await check('#/meter/feet', (w, d) => { const a = d.querySelector('#feetList a.ft-meter'); return a && /open=/.test(a.getAttribute('href')) ? true : 'no meter links in Feet notes'; }, 'Feet notes link to their meters');
+    await check('#/meter/buhur?open=' + 'hazaron', (w, d) => { const r = d.getElementById('fam-hazaron'); return r && r.querySelector('.couplet-card') ? true : 'family not expanded'; }, 'Buḥūr opens a specific family');
     await check('#/scan?t=' + encodeURIComponent('دلِ ناداں تجھے ہوا کیا ہے\nآخر اس درد کی دوا کیا ہے'), (w, d) => d.querySelectorAll('#scanOut .chip').length > 10 ? true : 'verse not scanned', 'Scan link scans the shared verse');
     await check('#/ghazals?q=' + encodeURIComponent('ghalib'), (w, d) => (d.getElementById('ghazalSearchInput').value === 'ghalib' && /Ghalib/.test(d.getElementById('ghazals-section').textContent)) ? true : 'search not applied', 'Ghazals search link fills and runs the search');
     await check('#/ghazals/ghalib', (w, d) => (w.eval('GHALIB_EXT_DATA.length') === 234 && /^Ghalib$/.test(d.getElementById('colBtnGhalib').textContent.trim()) && /234 ghazals/.test(d.getElementById('ghazalCollectionCount').textContent)) ? true : 'Ghalib count ' + w.eval('GHALIB_EXT_DATA.length') + ' / label ' + d.getElementById('colBtnGhalib').textContent + ' / count ' + (d.getElementById('ghazalCollectionCount') || {}).textContent, 'all 234 Ghalib ghazals present and labelled');
