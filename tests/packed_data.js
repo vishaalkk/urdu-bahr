@@ -44,7 +44,9 @@ if (app && app.ghazals) {
         lines++;
         const y = x.lines[li] || {};
         ['ur', 'hi', 'ro', 'ascii'].forEach(f => { if ((y[f] || '') !== (l[f] || '')) { bad++; if (bad < 6) check(false, `${k} #${g.id} line ${li + 1}: ${f} differs: ${JSON.stringify(y[f])} vs ${JSON.stringify(l[f])}`); } });
-        check(l.ur && l.hi, `${k} #${g.id} line ${li + 1}: missing Urdu or Devanagari`);
+        check(l.ur, `${k} #${g.id} line ${li + 1}: missing Urdu`);
+        // a Roman or Devanagari column that holds Urdu script would show Urdu in the wrong script mode (Rekhta's Iqbal pages do this)
+        check(!/[\u0600-\u06FF]/.test(l.hi || '') && !/[\u0600-\u06FF]/.test(l.ro || ''), `${k} #${g.id} line ${li + 1}: Urdu script in the Roman or Devanagari column`);
       });
     });
   });

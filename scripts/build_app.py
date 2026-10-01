@@ -135,6 +135,10 @@ for _k0, _cnt0 in _casual_freq[0].items():
     _k1 = _casual_key(_cnt0.most_common(1)[0][0], 1)
     if _cnt0.most_common(1)[0][1] < 0.10 * _loose_total.get(_k1, 0):
         ROMAN_CASUAL_MAP[0].pop(_k0, None)
+# Typed-Roman fallback: words the poets have and Pritchett's map lacks, each spelling verified to give the right Urdu word
+# (data/roman_fallback.json, built by scripts/build_roman_fallback.js)
+with open('data/roman_fallback.json', 'r', encoding='utf-8') as f:
+    ROMAN_FALLBACK = json.load(f)
 _ki_next = {}
 for _g in EXERCISES + GHALIB_EXT + MIR_EXT + IQBAL + OTHERS_WORDS:
     for _l in _g['lines']:
@@ -344,6 +348,7 @@ substitutions = {
     'WORD_ASCII_MAP': json.dumps(WORD_ASCII_MAP, ensure_ascii=False),
     'ROMAN_CASUAL_MAP': json.dumps(ROMAN_CASUAL_MAP, ensure_ascii=False),
     'KI_NEXT': json.dumps(KI_NEXT, ensure_ascii=False),
+    'ROMAN_FALLBACK': _dumps_json(ROMAN_FALLBACK),
     'FAMS': fams_json,
     # meter_map_bundled and rhythm_roll_bundled are NOT placeholders in the JS,
     # they are embedded directly in 04- and 05- files — those files in src/js/

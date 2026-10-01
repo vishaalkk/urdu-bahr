@@ -9,6 +9,7 @@
 // built from Pritchett's corpora only, so the Rekhta poets are unseen by it too. `typed.*` in tests/benchmark.js cannot judge this:
 // it types Urdu and reads Roman, the other direction.
 const fs = require('fs');
+const path = require('path');
 const vm = require('vm');
 const { root, loadEngine } = require('./lib_scan');
 
@@ -52,6 +53,13 @@ const SPLIT = new Set();
     Object.entries(byLoose).forEach(([k1, s]) => { if (s.size > 1) SPLIT.add(k1); });
 }
 
+// hold the test poets out of the typed-Roman fallback word list too: rebuild (and re-verify) it without them and swap it in
+{
+    const { execFileSync } = require('child_process'), os = require('os');
+    const out = path.join(os.tmpdir(), 'fallback_heldout.json');
+    execFileSync('node', [path.join(root, 'scripts/build_roman_fallback.js'), '--exclude', poets.join(','), '--out', out], { stdio: 'ignore' });
+    run(`Object.keys(ROMAN_FALLBACK).forEach(k => delete ROMAN_FALLBACK[k]); Object.assign(ROMAN_FALLBACK, ${fs.readFileSync(out, 'utf8')});`);
+}
 run(`COLLOCATIONS.L1 = {}; COLLOCATIONS.R1 = {};`);
 const a = score('no neighbour table');
 const table = JSON.parse(fs.readFileSync(tablePath, 'utf8'));

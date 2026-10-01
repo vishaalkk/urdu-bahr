@@ -56,6 +56,7 @@ def couplet_key(lines):
 
 # Rekhta's Iqbal pages (and a few others) use the Arabic forms of yeh and kaf; Urdu writes ی and ک. The engine already treats
 # them as the same letters; the app's letter maps and fonts expect the Urdu forms.
+ARABIC = re.compile(r'[\u0600-\u06ff]')   # some Rekhta pages carry Urdu script in the Devanagari column: blank it, the app converts from the Urdu
 ARABIC_TO_URDU = str.maketrans({'ي': 'ی', 'ى': 'ی', 'ك': 'ک'})
 
 
@@ -117,7 +118,7 @@ def main():
         seen[key]['url'].add(g['url'])
         seen[key]['couplet'].add(ck)
         out[key].append({'id': None, 'url': g['url'], 'meters': g['meters'], 'n': g['lines_count'],
-                         'lines': [{'ur': urdu(l['ur']), 'hi': l['hi'], 'ro': l['ro']} for l in g['lines']], '_ck': ck})
+                         'lines': [{'ur': urdu(l['ur']), 'hi': '' if ARABIC.search(l['hi']) else l['hi'], 'ro': l['ro']} for l in g['lines']], '_ck': ck})
 
     # 3. ids: keep any id a previous build gave; new ghazals get max+1, in a stable (URL) order
     for key, gs in out.items():

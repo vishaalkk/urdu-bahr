@@ -142,9 +142,9 @@ function casualKey(s, level) {   // level 0 strict (long vowels kept), 1 loose, 
   return level >= 1 ? s.replace(/(.)\1+/g, '$1') : s.replace(/([^aiu])\1+/g, '$1');
 }
 const CASUAL_SPECIAL = /[ḥṣẓżẕṡṭḍṛġḳʿʾñ;:()]/;   // spelled with marks (or already ASCII): the letter rules read these exactly
-function casualLookup(plain) {
+function casualLookup(plain, minLv, maxLv) {   // levels minLv..maxLv (default all three)
   if (typeof ROMAN_CASUAL_MAP === 'undefined') return null;
-  for (let lv = 0; lv < 3; lv++) {
+  for (let lv = minLv || 0; lv <= (maxLv == null ? 2 : maxLv); lv++) {
     const k = casualKey(plain, lv);
     if (Object.prototype.hasOwnProperty.call(ROMAN_CASUAL_MAP[lv], k)) return ROMAN_CASUAL_MAP[lv][k];
   }
@@ -167,6 +167,15 @@ function collocSpelling(key, prevWord, nextWord) {
   if (key === 'ki') return label === 'ki' ? 'kih' : label === 'kii' ? 'kii' : null;   // Rekhta writes ki for کہ and kī for کی
   return (label && ROMAN_CASUAL_MAP[0][label]) || null;
 }
+/* Fallback word list for typed Roman (ROMAN_FALLBACK, data/roman_fallback.json, built by scripts/build_roman_fallback.js): words the
+   Rekhta poets have and Pritchett's classical corpora lack (khud, khushbu, khatra, zinda, varna). Keyed like ROMAN_CASUAL_MAP[1] (loose
+   casual key); each spelling is checked to give the right Urdu word through the real pipeline (Pritchett's ASCII writes a silent v
+   in خوش = ;xvush and a final h in زندہ = zindah, which Roman hides). It holds no key her map has, so it fills gaps and never
+   overrides her. Measured on held-out poets with scripts/casual_roman_eval.js. */
+function rekhtaFallback(plain) {
+  if (typeof ROMAN_FALLBACK === 'undefined') return null;
+  return ROMAN_FALLBACK[casualKey(plain, 1)] || null;
+}
 function casualRomanLine(line) {
   const toks = line.split(/(\s+)/), words = toks.filter(t => t && !/^\s+$/.test(t));
   let wi = 0;
@@ -188,7 +197,9 @@ function casualRomanLine(line) {
         return n ? (n[1] > 2 * n[0] ? 'kii' : 'kih') : 'kii';
       }
       if (CASUAL_ALIAS[plain]) return CASUAL_ALIAS[plain];
-      return casualLookup(plain) || rekhtaMarks(piece);
+      /* Pritchett's strict and loose matches, then the poets' verified word list, and only then her laxest match (o~u, e~i), which
+         otherwise hijacks khud as khod (کھود) */
+      return casualLookup(plain, 0, 1) || rekhtaFallback(plain) || casualLookup(plain, 2, 2) || rekhtaMarks(piece);
     }).join('-');
   }).join('');
   return out.replace(/(\S)\s+o\s+(\S)/g, '$1-o-$2');   // dard o gham -> dard-o-gham (the conjunction و)
@@ -327,7 +338,9 @@ function urduToDevanagari(str) {
     'ض': 'ज़', 'ط': 'त', 'ظ': 'ज़', 'ع': '', 'غ': 'ग़', 'ف': 'फ़', 'ق': 'क़',
     'ک': 'क', 'گ': 'ग', 'ل': 'ल', 'م': 'म', 'ن': 'न', 'ں': 'ँ', 'و': 'ो',
     'ہ': 'ह', 'ۂ': 'ह-ए', 'ھ': 'ह', 'ء': '', 'ی': 'ी', 'ے': 'े', 'ۓ': 'ए',
-    'ِ': '-ए-', 'ُ': 'ु', 'َ': ''
+    'ِ': '-ए-', 'ُ': 'ु', 'َ': '',
+    /* hamza on yeh / waw, tanwin, the Urdu comma, and the Arabic forms of yeh, alef maksura and kaf (Rekhta's Iqbal pages use them) */
+    'ئ': 'ए', 'ؤ': 'ओ', 'ً': 'ं', '،': ',', 'ي': 'ी', 'ى': 'ा', 'ك': 'क', 'ٰ': 'ा'
   };
   let out = '';
   for(let i = 0; i < s.length; i++) {
@@ -362,7 +375,8 @@ function urduToRoman(str) {
     'ض': 'ẓ', 'ط': 't̤', 'ظ': 'z̤', 'ع': 'ʿ', 'غ': 'ġh', 'ف': 'f', 'ق': 'q',
     'ک': 'k', 'گ': 'g', 'ل': 'l', 'م': 'm', 'ن': 'n', 'ں': 'ñ', 'و': 'o',
     'ہ': 'h', 'ۂ': 'h-e', 'ھ': 'h', 'ء': 'ʾ', 'ی': 'ī', 'ے': 'e', 'ۓ': 'ʾe',
-    'ِ': '-e', 'ُ': 'u', 'َ': 'a'
+    'ِ': '-e', 'ُ': 'u', 'َ': 'a',
+    'ئ': 'ʾ', 'ؤ': 'ʾ', 'ً': 'an', '،': ',', 'ي': 'ī', 'ى': 'ā', 'ك': 'k', 'ٰ': 'ā'
   };
   let out = '';
   for(let i = 0; i < s.length; i++) {

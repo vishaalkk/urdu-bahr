@@ -294,7 +294,7 @@ const ROUTES = [
     }, "Roman letters match Pritchett's (ż ẓ ṡ ʾ), going both ways");
     // casual typed Roman (no diacritics, Rekhta-style spellings) must reach the right Urdu word
     await check('#/scan', (w) => {
-      const want = { 'ye': 'یہ', 'vo': 'وہ', 'wo': 'وہ', 'na': 'نہ', 'pe': 'پہ', 'ishq': 'عشق', 'gham': 'غم', 'aaj': 'آج', 'mohabbat': 'محبت', 'shaa.ir': 'شاعر', 'sub.h': 'صبح', 'mehmaan': 'مہمان', 'ulTi': 'الٹی' }, bad = [];
+      const want = { 'ye': 'یہ', 'vo': 'وہ', 'wo': 'وہ', 'na': 'نہ', 'pe': 'پہ', 'ishq': 'عشق', 'gham': 'غم', 'aaj': 'آج', 'mohabbat': 'محبت', 'shaa.ir': 'شاعر', 'sub.h': 'صبح', 'mehmaan': 'مہمان', 'ulTi': 'الٹی', 'khushbu': 'خوشبو', 'zinda': 'زندہ', 'varna': 'ورنہ', 'khud': 'خود', 'ahista': 'آہستہ' }, bad = [];
       for (const r in want) { const ur = w.lineScripts(r).ur.normalize('NFC').replace(/[\u064B-\u065F\u0651]/g, ''); if (ur !== want[r]) bad.push(r + ' gives ' + ur + ' (want ' + want[r] + ')'); }
       const ki = w.lineScripts('dil mein ye ki tum aao').ur, ko = w.lineScripts('mohabbat kii baat hai').ur;
       if (!/کہ/.test(ki)) bad.push('ki before a pronoun should be کہ: ' + ki);

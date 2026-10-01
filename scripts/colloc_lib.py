@@ -27,7 +27,7 @@ def casual_key(a, level=1):
         a = a.replace('aa', 'a').replace('ii', 'i').replace('uu', 'u')
     if level >= 2:
         a = a.replace('o', 'u').replace('e', 'i')
-    return re.sub(r'([^aiu])\1+', r'\1', a)
+    return re.sub(r'(.)\1+' if level >= 1 else r'([^aiu])\1+', r'\1', a)   # same as casualKey() in src/js/05-translit-helpers.js
 
 
 def label(w):
