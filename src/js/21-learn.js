@@ -270,13 +270,15 @@ function corpusExample(e, label) {
   const id = CORP_X.push(Scan.explain(r, f)) - 1, x = CORP_X[id];
   const inHi = i => i >= e.hi[0] && i <= e.hi[1];
   const hiSyl = new Set(x.syl.map((s, i) => inHi(s.word) ? i : -1).filter(i => i >= 0));
+  /* the line in the chosen script only (the chips below are in it too); the join stays underlined in every script */
+  const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
   const ro = e.ro.split(/\s+/);
-  const span = (w, i) => `<span class="word${inHi(i) ? ' corpus-hi' : ''}" data-w="${i}">${w}</span>`;
+  const wordIn = (w, i) => cs === 'ur' ? w : (cs === 'ro' && ro.length === e.w.length) ? ro[i] : translitText(w, cs);
+  const span = (w, i) => `<span class="word${inHi(i) ? ' corpus-hi' : ''}" data-w="${i}">${wordIn(w, i)}</span>`;
   return `
     <div class="constr-ex corpus-ex" data-x="${id}">
       ${label ? `<div class="corpus-label ${label.cls || ''}">${label.t}</div>` : ''}
-      <div class="urdu constr-urdu ur-always corpus-line">${e.w.map(span).join(' ')}</div>
-      <div class="ro dim small constr-ro corpus-ro">${ro.length === e.w.length ? ro.map(span).join(' ') : e.ro}</div>
+      <div class="urdu constr-urdu corpus-line">${e.w.map(span).join(' ')}</div>
       <div class="row constr-row">
         <span class="play sm" role="button" tabindex="0" data-label="Play line" aria-label="Play line" onclick="corpPlay(${id},this)" data-pb="none">▶︎</span>
         ${chipRowHTML(x.syl, x.feet, { r, ro: e.ro, cls: 'corpus-chips', hiSyl })}
@@ -294,10 +296,7 @@ function corpusCard(k) {
 function corpPlay(id, btn) {
   const host = btn.closest('.corpus-ex'), x = CORP_X[id];
   if (!host || !x) return;
-  const urW = [...host.querySelectorAll('.corpus-line .word')], roW = [...host.querySelectorAll('.corpus-ro .word')];
-  const words = urW.map((w, i) => ({ classList: {
-    add: c => { w.classList.add(c); if (roW.length === urW.length) roW[i].classList.add(c); },
-    remove: c => { w.classList.remove(c); if (roW.length === urW.length) roW[i].classList.remove(c); } } }));
+  const words = [...host.querySelectorAll('.corpus-line .word')];
   pbToggle('corp:' + id, btn, () => [Object.assign({ e: x, words }, pbNodes(host))]);
 }
 window.corpPlay = corpPlay;
@@ -378,7 +377,7 @@ function renderLearnExamples() { renderConstr(); renderFlexEvidence(); refitLear
 window.renderLearnExamples = renderLearnExamples;
 
 /* The first screen: two words taken apart before any rule is stated. */
-const INTRO_WORDS = [['کتاب', 'kitāb', '- = -', 'ki-tā-b'], ['مدّت', 'muddat', '= =', 'mud-dat'], ['ملک', 'mulk', '= -', 'mul-k']];
+const INTRO_WORDS = [['دل', 'dil', '=', 'dil'], ['مدّت', 'muddat', '= =', 'mud-dat'], ['کتاب', 'kitāb', '- = -', 'ki-tā-b']];   // one, two, three syllables; none is reused in the rules below
 function renderIntroEx() {
   const host = $('introEx');
   if (!host) return;
@@ -418,15 +417,13 @@ function wordExample(e, onclick) {
     <div class="constr-ex special-syll-ex">
       <div class="urdu constr-urdu ur-always">${parts ? parts.map((p, i) => `<span class="sy sy-u ${wts[i]}">${p}</span>`).join('') : `<span class="sy sy-u">${e[0]}</span>`}</div>
       <div class="ro dim small constr-ro">${e[3] ? sylSpans(e[3], 'sy-r', wts) : e[1]}</div>
-      <div class="row">
-        <span class="play sm" role="button" tabindex="0" data-label="Play example" aria-label="Play example" onclick="${onclick}">▶︎</span>
-        <div class="strip">${strip(Scan.parseRaw(e[2]))}</div>
-      </div>
+      <div class="strip">${strip(Scan.parseRaw(e[2]))}</div>
+      <span class="play sm" role="button" tabindex="0" data-label="Play example" aria-label="Play example" onclick="${onclick}">▶︎</span>
     </div>`;
 }
 /* the three-consonant card follows Rule three; the ا و ی examples sit inside Rule two */
 const SPECIAL_HOST = { 0: 'specialSyll' };
-const RULE_TWO_EX = [['کو', 'ko', '=', 'ko'], ['وقت', 'vaqt', '= -', 'vaq-t'], ['یار', 'yār', '= -', 'yā-r']];
+const RULE_TWO_EX = [['کو', 'ko', '=', 'ko'], ['وطن', 'vatan', '- =', 'va-tan'], ['یار', 'yār', '= -', 'yā-r']];
 function ruleTwoPlay(ei, btn) {
   const e = RULE_TWO_EX[ei];
   pbToggle('rule2:' + ei, btn, () => [rawPbLine(e[2], null, btn.closest('.constr-ex'))]);

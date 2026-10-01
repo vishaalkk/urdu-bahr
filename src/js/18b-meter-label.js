@@ -35,6 +35,10 @@ window.aruzName = aruzName;
  *   count: number
  * }
  */
+/* Mir's Hindi meter as Pritchett charts it (M1): eight feet of two longs, 15 long-beats in all.
+   Any even-numbered long may be two shorts instead (rarely the 8th); see the note in Look up. */
+const HINDI_PATTERN = '= = / = = / = = / = = // = = / = = / = = / =';
+
 function meterLabelInfo(mOrId) {
   if (!mOrId) return null;
   const rawId = (typeof mOrId === 'object' && mOrId !== null) ? mOrId.id : mOrId;
@@ -47,6 +51,7 @@ function meterLabelInfo(mOrId) {
   let name = '';
   if (idStr === 'H') {
     name = "Mir's Hindi meter";
+    if (!pattern || pattern === 'Hindi') pattern = HINDI_PATTERN;   // the scanner's synthetic 'H' fit carries no pattern of its own
   } else if (typeof METERS_DATA !== 'undefined' && METERS_DATA.standard) {
     const meta = METERS_DATA.standard.find(m => String(m.id) === idStr);
     if (meta) {

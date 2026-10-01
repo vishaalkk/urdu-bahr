@@ -9,10 +9,26 @@
 
 var PR_LONGV = /[اآویےى]/;   /* ا آ و ی ے ى */
 
-/* Build a practice item from an Urdu line, or null if the scan is not confident/simple enough. */
-function prBuild(ur, strict) {
+/* the baḥr family a meter id belongs to (ids can be numbers, strings or 'H') */
+function prFamOf(id) {
+  if (typeof famOfMeter === 'undefined' || id == null) return null;
+  return famOfMeter[id] || famOfMeter[String(id)] || famOfMeter[Number(id)] || null;
+}
+
+/* Build a practice item from an Urdu line, or null if the scan is not confident/simple enough.
+   `ctxMeter` is the meter of the page the learner came from (Scan's reading, the ghazal's baḥr): the
+   line is read in that baḥr's family, so the reveal agrees with what they were just looking at. */
+function prBuild(ur, strict, ctxMeter) {
   var res, fit, e;
   try { res = Scan.scanLine(ur); fit = res.fits && res.fits[0]; } catch (err) { return null; }
+  if (ctxMeter != null && ctxMeter !== '' && fit) {
+    var cf = prFamOf(ctxMeter);
+    var pick = (res.fits || []).filter(function (f) {
+      return String(f.meter.id) === String(ctxMeter) || (cf && prFamOf(f.meter.id) === cf);
+    })[0];
+    if (!pick) return null;
+    fit = pick;
+  }
   if (!fit || !fit.seq || fit.c > 2.5) return null;
   var alt = (typeof fitAmbiguity === 'function') ? fitAmbiguity(res) : [];
   if (strict && alt.length) return null;   /* one line that fits two families can't be settled without the rest of the ghazal */
@@ -24,6 +40,20 @@ function prBuild(ur, strict) {
     if (syl[i].cheat || syl[i].foot == null) return null;
   }
   return { ur: ur, res: res, fit: fit, e: e, alt: alt, marks: [], miss: {}, done: false };
+}
+
+/* Can this line be tapped out? (memoised: Scan and the Ghazals reader ask while rendering) */
+var PR_OKCACHE;   /* created on first use: the router can render a scan before this file's top level has run */
+function prPracticable(ur, ctxMeter) {
+  if (!ur) return false;
+  if (!PR_OKCACHE) PR_OKCACHE = {};
+  var k = ur + '|' + (ctxMeter == null ? '' : ctxMeter);
+  if (!(k in PR_OKCACHE)) PR_OKCACHE[k] = !!prBuild(ur, false, ctxMeter);
+  return PR_OKCACHE[k];
+}
+/* href that opens Practice on this line, read in the given meter's baḥr when known */
+function prLinkFor(ur, ctxMeter) {
+  return '#/lab/practice?t=' + encodeURIComponent(ur) + (ctxMeter != null && ctxMeter !== '' ? '&m=' + encodeURIComponent(ctxMeter) : '');
 }
 
 /* Plain-language reason a weight is wrong. `want` is the engine's weight, 'l' or 's'. */
@@ -68,11 +98,11 @@ function prMistakes(P) { var n = 0; for (var k in P.miss) n += P.miss[k]; return
 function prFirstTry(P) { var n = 0; for (var i = 0; i < P.e.syl.length; i++) if (!P.miss[i]) n++; return n; }
 
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { prBuild: prBuild, prHint: prHint, prJudge: prJudge, prFootsOf: prFootsOf, prApply: prApply, prUndo: prUndo, prMistakes: prMistakes, prFirstTry: prFirstTry };
+  module.exports = { prBuild: prBuild, prPracticable: prPracticable, prLinkFor: prLinkFor, prHint: prHint, prJudge: prJudge, prFootsOf: prFootsOf, prApply: prApply, prUndo: prUndo, prMistakes: prMistakes, prFirstTry: prFirstTry };
 }
 
 /* ---------------- DOM / audio part ---------------- */
-var PRS = { P: null, timer: null, clashAt: -1 };
+var PRS = { P: null, timer: null, clashAt: -1, fromLine: null };
 
 function prCorpusLines() {
   var out = [];
@@ -204,23 +234,38 @@ function prHearAll() {
   playEx(P.e, nodes, [].slice.call(box.querySelectorAll('.fgrp')));
 }
 
-function prNew() {
+function prSetLine(P) {
   prClearTimer(); if (typeof stopAll === 'function') stopAll();
   PRS.clashAt = -1;
   var host = document.getElementById('practiceReveal'); if (host) host.innerHTML = '';
-  PRS.P = prPickItem();
-  if (!PRS.P) { var L = document.getElementById('practiceLine'); if (L) L.textContent = 'No line available.'; return; }
+  PRS.P = P;
+  if (!P) { var L = document.getElementById('practiceLine'); if (L) L.textContent = 'No line available.'; return; }
   prSetHint('Ready. Say the first syllable, then press 1 or 2.');
   prRender();
 }
+function prNew() { prSetLine(prPickItem()); }
 /* function declarations are hoisted across the whole bundle, so the router can call this before
    `var PRS` above has run: bail out then (the self-mount at the bottom picks the route up). */
-function mountPractice() { if (!PRS) return; if (!PRS.P) prNew(); else prRender(); }
+function mountPractice(params) {
+  if (!PRS) return;
+  var t = params && params.t, key = t ? t + '|' + (params.m || '') : null;
+  if (t && key !== PRS.fromLine) {   /* "Practice this line" from Scan or Ghazals */
+    PRS.fromLine = key;
+    var P = prBuild(t, false, params.m);
+    if (P) { prSetLine(P); return; }
+    prNew();
+    prSetHint('That line is too irregular to tap out, so here is another one.');
+    return;
+  }
+  if (!PRS.P) prNew(); else prRender();
+}
 
 if (typeof document !== 'undefined') {
   document.addEventListener('keydown', function (ev) {
     var sec = document.getElementById('practice-section');
     if (!sec || !sec.classList || !sec.classList.contains('on') || sec.style.display === 'none') return;
+    var tapPanel = document.getElementById('practicePanelTap');
+    if (tapPanel && tapPanel.style.display === 'none') return;   /* Match Baḥr is showing; 1-4 answer there */
     if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
     var t = ev.target && ev.target.tagName;
     if (t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT') return;
@@ -234,5 +279,5 @@ if (typeof document !== 'undefined') {
    load of #/lab/practice reaches mountPractice before it exists. Pick up here. */
 if (typeof document !== 'undefined') {
   var prSec = document.getElementById('practice-section');
-  if (prSec && prSec.classList && typeof prSec.classList.contains === 'function' && prSec.classList.contains('on')) mountPractice();
+  if (prSec && prSec.classList && typeof prSec.classList.contains === 'function' && prSec.classList.contains('on')) mountPractice(typeof parseHash === 'function' ? parseHash().params : null);
 }

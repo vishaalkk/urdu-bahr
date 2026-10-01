@@ -66,6 +66,47 @@ function toggleMeterLookupExpand(id, e) {
   if (typeof setHashQuiet === 'function') setHashQuiet('/meter/lookup' + (lookupExpandedId != null ? '?open=' + lookupExpandedId : ''));
 }
 
+/* Look up › Hindi: why Mir's Hindi meter is a different kind of meter, and how its lines vary.
+   Written from Pritchett's Handbook 6.2 and the Mir chart (M1). The strips show the base line
+   and two variants, so the "even-numbered long becomes two shorts" rule can be seen, not just read. */
+function hindiAboutHTML() {
+  const strips = [
+    ['The base line', '= = / = = / = = / = = // = = / = = / = = / ='],
+    ['2nd long as two shorts', '= - - / = = / = = / = = // = = / = = / = = / ='],
+    ['2nd and 6th longs as two shorts', '= - - / = = / = - - / = = // = = / = = / = = / =']
+  ].map(r => `<div class="hindi-form"><span class="hindi-form-name small dim">${r[0]}</span>${feetStrip(r[1])}</div>`).join('');
+  return `<div class="hindi-about card">
+    <h3 class="hindi-about-title">Why this meter is different</h3>
+    <p>Almost every bahr is <b>positional</b>: a fixed sequence of long and short syllables, taken from the Arabic and Persian tradition. Mir&rsquo;s Hindi meter is <b>moric</b>, like many Indian meters. What is held steady is the <i>length</i> of the line, not the exact run of syllables. Two shorts count the same as one long.</p>
+    <h4>What stays fixed</h4>
+    <ul>
+      <li>Eight feet to the line.</li>
+      <li>The last syllable is long (an extra short may follow it, unscanned, as in every meter).</li>
+      <li>Short syllables come in pairs, and the two shorts of a pair may have at most one long between them (<span class="mono">- = -</span>, rare).</li>
+    </ul>
+    <h4>What varies</h4>
+    <p>Any even-numbered long may be said as two shorts, though this is rare for the 8th. So one ghazal can have lines of different syllable counts that are all the same length. This is why a Hindi-meter ghazal can look irregular, line to line, when you scan it as an ordinary meter.</p>
+    <div class="hindi-forms">${strips}</div>
+    <h4>How long a line is</h4>
+    <p>Usually fifteen longs: eight in the first four feet, seven in the last four. Mir and others also use fourteen (seven and seven) and sixteen (eight and eight), and shorter forms turn up too. A half-length form is also used in Urdu.</p>
+    <h4>Where it comes from</h4>
+    <p>Mir made it famous, though Mir Jafar Zatalli (d. 1712) seems to have used it first, in some long satirical poems. Scholars argue over whether it was invented new, already fits inside the classical system, or is a Hindi meter adapted for Urdu. Most now take the last view. In classical terms it could be called <i>mutaqārib muṡamman muzāʿaf</i> with varying changes, but that name does little to help someone scanning a line.</p>
+    <p class="tiny dim">The scanner reads these lines by total length, so it will accept any of the forms above. One line alone proves little, because ordinary sentences can fit this meter. Add the rest of the ghazal.</p>
+    <p class="tiny dim">Source: Pritchett, Handbook <a href="https://franpritchett.com/00ghalib/meterbk/06_meters.html" target="_blank" rel="noopener">§6.2 ↗</a>, and her <a href="https://franpritchett.com/00garden/apparatus/txt_meters.html" target="_blank" rel="noopener">chart of Mir&rsquo;s meters ↗</a> (M1).</p>
+  </div>`;
+}
+
+/* "Collapse" at the foot of an open row: close it and bring its header back into view
+   (a long row leaves the header far above, under the pinned legend). */
+function collapseMeterRow(id) {
+  toggleMeterLookupExpand(id, null);
+  setTimeout(() => {
+    const el = $('m-row-' + id);
+    if (el && typeof window.scrollTo === 'function') window.scrollTo({ top: el.getBoundingClientRect().top + (window.pageYOffset || 0) - 130, behavior: 'smooth' });
+  }, 60);
+}
+window.collapseMeterRow = collapseMeterRow;
+
 function renderFams() {
   const host = $('allMeters');
   if (!host) return;
@@ -99,7 +140,7 @@ function renderFams() {
   const isRtl = (cs === 'ur');
 
   const legend = (typeof legendHTML === 'function') ? legendHTML('legend-sticky') : '';
-  host.innerHTML = legend + metersToRender.map(m => {
+  host.innerHTML = legend + (activeKind === 'hindi' ? hindiAboutHTML() : '') + metersToRender.map(m => {
     const mId = m.id;
     const idStr = String(mId);
     const isExpanded = (lookupExpandedId === idStr);
@@ -108,40 +149,34 @@ function renderFams() {
     const info = (typeof meterLabelInfo === 'function') ? meterLabelInfo(mId) : null;
     const matchInfo = (typeof bestGhazalLinkForMeter === 'function') ? bestGhazalLinkForMeter(mId) : { count: 0, link: `#/ghazals?meter=${mId}` };
 
-    let h = `<div class="meter-row card ${isExpanded ? 'expanded' : ''}" id="m-row-${idStr}">`;
-    h += `<div class="meter-row-header" onclick="toggleMeterLookupExpand('${idStr}', event)">`;
-    h += `<div class="fam-label-wrap">${labelHtml}</div>`;
-    h += `<button class="icon-btn fam-toggle-btn" aria-label="${isExpanded ? 'Collapse' : 'Expand'}">${isExpanded ? '▴' : '▾'}</button>`;
-    h += `</div>`;
+    // What opening the row would show. A meter with nothing to add (no note, no couplets, no
+    // ghazals) is not expandable: its label already carries the pattern, feet and name.
+    // Notes start with Pritchett's ASCII name in [brackets], which the header shows properly;
+    // "Has caesura." is dropped because the // in the pattern says so and the legend explains it.
+    const meta = (typeof METERS_DATA !== 'undefined' && METERS_DATA.standard) ? METERS_DATA.standard.find(x => String(x.id) === idStr) : null;
+    const note = meta ? (meta.notes || '').replace(/^\s*\[[^\]]*\]\.?\s*/, '').replace(/^\s*Has caesura\.?\s*/, '').trim() : '';
+    const couplets = meterCoupletsHTML(mId, 'lk');
+    const expandable = !!(note || couplets.trim() || matchInfo.count > 0);
+    const open = expandable && isExpanded;
 
-    if (isExpanded) {
+    let h = `<div class="meter-row card ${open ? 'expanded' : ''} ${expandable ? '' : 'static'}" id="m-row-${idStr}">`;
+    if (expandable) {
+      h += `<div class="meter-row-header" onclick="toggleMeterLookupExpand('${idStr}', event)">`;
+      h += `<div class="fam-label-wrap">${labelHtml}</div>`;
+      h += `<button class="icon-btn fam-toggle-btn" aria-label="${open ? 'Collapse' : 'Expand'}" aria-expanded="${open}">${open ? '▴' : '▾'}</button>`;
+      h += `</div>`;
+    } else {
+      h += `<div class="meter-row-header"><div class="fam-label-wrap">${labelHtml}<p class="tiny faint meter-row-none">No ghazals in our collections use this meter.</p></div></div>`;
+    }
+
+    if (open) {
       h += `<div class="meter-row-details">`;
-
-      // (pattern + feet are already in the header label)
-      if (idStr === 'H') {
-        h += `<div class="meter-detail-section"><div class="fam-allowance">Mir's Hindi meter: about 15 long-beats; every even-numbered long except the 8th may become two shorts.</div></div>`;
-      }
-
-      // 2. Metadata notes & caesura
-      const meta = (typeof METERS_DATA !== 'undefined' && METERS_DATA.standard) ? METERS_DATA.standard.find(x => String(x.id) === idStr) : null;
-      if (meta) {
-        if (meta.caesura) {
-          h += `<div class="meter-meta-notes">Caesura // between hemistich halves</div>`;
-        }
-        // notes start with Pritchett's ASCII name in [brackets] — already shown properly in the header
-        const note = (meta.notes || '').replace(/^\s*\[[^\]]*\]\.?\s*/, '').trim();
-        if (note) h += `<div class="meter-meta-notes">${note}</div>`;
-      }
-
-      h += meterCoupletsHTML(mId, 'lk');
-
-      // 4. Ghazal link
+      if (note) h += `<div class="meter-meta-notes">${note}</div>`;
+      h += couplets;
       if (matchInfo.count > 0) {
-        h += `<div class="fam-action-row">`;
-        h += `<a href="${matchInfo.link}" class="small btn link">${matchInfo.count} ghazals in this meter ›</a>`;
-        h += `</div>`;
+        h += `<div class="fam-action-row"><a href="${matchInfo.link}" class="small btn link">${matchInfo.count} ghazals in this meter ›</a></div>`;
       }
-
+      h += `<div class="meter-collapse-row"><button type="button" class="btn link sm faint" onclick="collapseMeterRow('${idStr}')">Collapse ▴</button></div>`;
       h += `</div>`;
     }
 

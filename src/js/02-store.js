@@ -187,8 +187,9 @@ function handleRoute(targetHash) {
   } else if (root === 'guide' || root === 'how-to-use') {
     if (typeof document !== 'undefined') document.title = 'How to Use — Baḥr';
   } else if (root === 'lab' && parts[1] === 'practice') {
+    const sub = parts[2] === 'match' ? 'match' : 'tap';
     if (typeof document !== 'undefined') document.title = 'Practice — Baḥr';
-    if (typeof mountPractice === 'function') mountPractice();
+    showPracticeSub(sub, params);
   } else if (root === 'lab' && parts[1] === 'tap') {
     if (typeof document !== 'undefined') document.title = 'Tap Along — Baḥr';
     if (typeof echoNew === 'function') echoNew();
@@ -197,6 +198,24 @@ function handleRoute(targetHash) {
   if (typeof window !== 'undefined' && typeof window.scrollTo === 'function' && !params.keepScroll) {
     window.scrollTo(0, 0);
   }
+}
+
+function showPracticeSub(sub, params) {
+  const tabs = {
+    tap: { btn: 'practiceSubTap', panel: 'practicePanelTap' },
+    match: { btn: 'practiceSubMatch', panel: 'practicePanelMatch' }
+  };
+  Object.keys(tabs).forEach(k => {
+    const b = $(tabs[k].btn), p = $(tabs[k].panel);
+    const on = (k === sub);
+    if (b) {
+      if (b.classList && typeof b.classList.toggle === 'function') b.classList.toggle('on', on);
+      if (typeof b.setAttribute === 'function') b.setAttribute('aria-selected', on ? 'true' : 'false');
+    }
+    if (p) p.style.display = on ? 'block' : 'none';
+  });
+  if (sub === 'match') { if (typeof mountDrill === 'function') mountDrill('match'); }
+  else if (typeof mountPractice === 'function') mountPractice(params);
 }
 
 function showWeightSubtab(sub) {

@@ -187,8 +187,8 @@ const ROUTES = [
     const lg = d.createElement('div'); lg.innerHTML = w.legendHTML('legend-sticky');
     const items = [...lg.querySelectorAll('.lg-item')];
     const labels = items.map(i => i.textContent.replace(/\s+/g, ' ').trim()).join(' | ');
-    items.length === 6 && items.every(i => (i.getAttribute('data-tip') || '').length > 20) && /extra/.test(labels) && !/cheat/.test(labels)
-      ? ok('legend: 6 items, each with an explanation; uses "extra"') : fail('legend items: ' + labels);
+    items.length === 7 && items.every(i => (i.getAttribute('data-tip') || '').length > 20) && /extra/.test(labels) && !/cheat/.test(labels)
+      ? ok('legend: 7 items, each with an explanation; uses "extra"') : fail('legend items: ' + labels);
     w.setScriptMode('ro'); await wait(200);
     const head = d.querySelector('#handbookExContainer .meter-group-head'); if (head) head.click(); await wait(100);   // groups start collapsed
     const gv = d.querySelector('#handbookExContainer .meter-group-verse');
@@ -207,7 +207,7 @@ const ROUTES = [
     const check = async (hash, test, label) => {
       const { dom, errors } = load(hash); await wait(1500);
       const w = dom.window;
-      let res; try { res = test(w, w.document); } catch (e) { res = 'threw ' + e.message; }
+      let res; try { res = await test(w, w.document); } catch (e) { res = 'threw ' + e.message; }
       if (errors.length) fail(`${hash}: script error — ${errors[0]}`);
       else res === true ? ok(`${label}  (${hash})`) : fail(`${label} (${hash}): ${res}`);
       w.close();
@@ -215,12 +215,50 @@ const ROUTES = [
     await check('#/meter/lookup?open=26', (w, d) => { const r = d.getElementById('m-row-26'); return r && r.classList.contains('expanded') ? true : 'meter #26 not expanded'; }, 'Look up opens a specific meter');
     await check('#/meter/learn', (w, d) => { const n = d.querySelectorAll('#feetLesson .foot-card').length; return n === 4 && d.querySelector('#feetDemoScan .fgrp') ? true : `Feet lesson: ${n} cards, demo feet ${!!d.querySelector('#feetDemoScan .fgrp')}`; }, 'Meter › Learn shows the Feet lesson');
     await check('#/meter/lookup', (w, d) => { w.filterMeterLookup('feet'); const n = d.querySelectorAll('#feetList .foot-tr').length; w.filterFeet('salim'); const s = d.querySelectorAll('#feetList .foot-tr').length; w.filterFeet('all', '= = -'); const p = d.querySelectorAll('#feetList .foot-tr').length; w.filterFeet('all', 'mafailun'); const r = d.querySelectorAll('#feetList .foot-tr').length; return n === 20 && s === 6 && p >= 1 && r >= 1 ? true : `feet catalog: all ${n}, salim ${s}, pattern ${p}, roman ${r}`; }, 'Look up › Feet lists the catalog and filters it');
-    await check('#/meter/lookup?open=R5', (w, d) => { const r = d.getElementById('m-row-R5'); return r && r.classList.contains('expanded') ? true : 'rubai R5 not opened'; }, 'Look up opens a rubāʿī form from a link');
+    await check('#/meter/lookup?open=R5', (w, d) => { const r = d.getElementById('m-row-R5'); return r && r.querySelector('.meter-label-pattern') ? true : 'rubai R5 row not shown'; }, 'Look up shows a rubāʿī form from a link (it has nothing to expand, so it is a plain row)');
     await check('#/meter/lookup', (w, d) => { w.filterMeterLookup('feet'); const a = d.querySelector('#feetList a.ft-meter'); return a && /open=/.test(a.getAttribute('href')) ? true : 'no meter links in Feet notes'; }, 'Feet notes link to their meters');
     await check('#/meter/learn?open=' + 'hazaron', (w, d) => { const r = d.getElementById('fam-hazaron'); return r && r.querySelector('.couplet-card') ? true : 'family not expanded'; }, 'Learn opens a specific family');
     await check('#/scan?t=' + encodeURIComponent('دلِ ناداں تجھے ہوا کیا ہے\nآخر اس درد کی دوا کیا ہے'), (w, d) => d.querySelectorAll('#scanOut .chip').length > 10 ? true : 'verse not scanned', 'Scan link scans the shared verse');
     await check('#/ghazals?q=' + encodeURIComponent('ghalib'), (w, d) => (d.getElementById('ghazalSearchInput').value === 'ghalib' && /Ghalib/.test(d.getElementById('ghazals-section').textContent)) ? true : 'search not applied', 'Ghazals search link fills and runs the search');
     await check('#/ghazals/ghalib', (w, d) => (w.eval('GHALIB_EXT_DATA.length') === 234 && /^Ghalib$/.test(d.getElementById('colBtnGhalib').textContent.trim()) && /234 ghazals/.test(d.getElementById('ghazalCollectionCount').textContent)) ? true : 'Ghalib count ' + w.eval('GHALIB_EXT_DATA.length') + ' / label ' + d.getElementById('colBtnGhalib').textContent + ' / count ' + (d.getElementById('ghazalCollectionCount') || {}).textContent, 'all 234 Ghalib ghazals present and labelled');
+    const PR_LINE = 'دلِ ناداں تجھے ہوا کیا ہے';
+    await check('#/lab/practice', (w, d) => d.getElementById('practicePanelTap').style.display !== 'none' && d.getElementById('practicePanelMatch').style.display === 'none' && d.querySelectorAll('#practiceChips .chip').length > 5 ? true : 'Practice should open on the tapper', 'Practice opens on Tap a line');
+    await check('#/lab/practice?t=' + encodeURIComponent(PR_LINE), (w, d) => d.getElementById('practiceLine').textContent.trim() === PR_LINE ? true : 'line was ' + d.getElementById('practiceLine').textContent, 'Practice this line loads the given line into the tapper');
+    await check('#/lab/practice/match', (w, d) => d.getElementById('practicePanelMatch').style.display !== 'none' && d.querySelector('#practicePanelMatch .dr-match-stage') && d.getElementById('practiceSubMatch').classList.contains('on') ? true : 'Match Baḥr not showing', 'Practice › Match Baḥr opens from a link');
+    await check('#/scan?t=' + encodeURIComponent(PR_LINE + '\nآخر اس درد کی دوا کیا ہے'), (w, d) => d.querySelector('#scanOut a.practice-this[href^="#/lab/practice?t="]') ? true : 'no Practice link under the scanned line', 'Scan offers Practice this line');
+    await check('#/ghazals/ghalib/1', (w, d) => d.querySelector('#readerCouplets a[href^="#/lab/practice?t="]') ? true : 'no Practice button in the ghazal reader', 'Ghazals reader offers Practice on a couplet');
+    await check('#/ghazals/ghalib/1', (w, d) => { const a = d.querySelector('#readerCouplets a[href^="#/lab/practice?t="]'); if (!a) return 'no Practice button'; const q = new URLSearchParams(a.getAttribute('href').split('?')[1]); const m = q.get('m'), P = w.prBuild(q.get('t'), false, m); return m && P && (String(P.fit.meter.id) === m || w.prFamOf(P.fit.meter.id) === w.prFamOf(m)) ? true : 'Practice would read the line in a different bahr than the ghazal (' + m + ')'; }, "Practice reads the line in the ghazal's own bahr");
+    // The source HTML splits a line's first letter into its own <font> tag; an import once turned that into "t uhmateñ" / "ت اہمتیں".
+    await check('#/home', (w) => { const bad = []; w.eval('EXERCISES_DATA').forEach(g => (g.lines_full || []).forEach(l => ['ur', 'ro', 'hi', 'ascii'].forEach(k => { if (/^\S (?=\S)/.test(l[k] || '') && !/^[aoeAOE] /.test(l[k])) bad.push(l[k]); }))); return bad.length ? 'single-letter first word: ' + bad[0] : true; }, 'Handbook lines have no split first letter');
+    await check('#/meter/lookup?open=H', (w, d) => { w.filterMeterLookup('hindi'); const r = d.getElementById('m-row-H'); const n = r ? r.querySelectorAll('.meter-label-pattern .fstrip .fgrp, .meter-label-pattern .fstrip .foot, .meter-label-pattern .fstrip > *').length : 0; return r && r.querySelector('.meter-label-pattern') && n >= 8 ? true : 'Hindi meter row shows no feet (' + n + ')'; }, 'Look up › Hindi shows its feet');
+    await check('#/meter/lookup', (w, d) => { w.filterMeterLookup('hindi'); const a = d.querySelector('#allMeters .hindi-about'); return a && a.querySelectorAll('.hindi-form .fstrip').length === 3 && /Zatalli/.test(a.textContent) ? true : 'Hindi explainer missing or incomplete'; }, 'Look up › Hindi explains the meter and its variants');
+    await check('#/meter/lookup?open=26', (w, d) => { const r = d.getElementById('m-row-26'); const b = r && r.querySelector('.meter-collapse-row button'); if (!b) return 'no Collapse button'; b.click(); return d.getElementById('m-row-26').classList.contains('expanded') ? 'row stayed open' : true; }, 'Look up rows collapse from the foot of an open row');
+    await check('#/weight/learn', async (w, d) => {
+      const ex = () => d.querySelector('#flexVerses .corpus-ex');
+      const line = () => ex().querySelector('.corpus-line');
+      if (!ex()) return 'no flex example';
+      if (ex().querySelector('.corpus-ro')) return 'a separate Roman line is still drawn';
+      if (!/[\u0600-\u06FF]/.test(line().textContent)) return 'Urdu mode: the line is not Urdu';
+      const n = line().querySelectorAll('.word').length, hi = line().querySelectorAll('.corpus-hi').length;
+      w.setScriptMode('ro'); await new Promise(r => setTimeout(r, 200));
+      const lr = line().textContent;
+      if (/[\u0600-\u06FF]/.test(lr) || !/[a-z]/i.test(lr)) return 'Roman mode: the line is not Roman: ' + lr;
+      if (line().querySelectorAll('.word').length !== n || line().querySelectorAll('.corpus-hi').length !== hi) return 'highlights changed with the script';
+      if (ex().querySelectorAll('.corpus-line').length !== 1) return 'more than one line drawn';
+      w.setScriptMode('hi'); await new Promise(r => setTimeout(r, 200));
+      if (!/[\u0900-\u097F]/.test(line().textContent)) return 'Devanagari mode: the line is not Devanagari';
+      w.setScriptMode('ur'); return true;
+    }, 'Weight › Flexible: example line follows the script, no separate Roman line, highlight kept');
+    await check('#/weight/learn', (w, d) => {
+      const words = sel => [...d.querySelectorAll(sel + ' .special-syll-ex .constr-urdu')].map(n => n.textContent.replace(/\s+/g, ''));
+      const intro = words('#introEx'), r2 = words('#ruleTwoEx'), three = words('#specialSyll');
+      if (intro.length !== 3 || r2.length !== 3 || three.length !== 3) return `example counts ${intro.length}/${r2.length}/${three.length}`;
+      const all = [...intro, ...r2, ...three];
+      if (new Set(all).size !== all.length) return 'a word example is repeated across Basics: ' + all.join(' ');
+      const ex = d.querySelector('#introEx .special-syll-ex');
+      const kids = [...ex.children].map(c => c.className.split(' ')[0] || c.tagName);
+      return /strip/.test(kids[kids.length - 2]) && /play/.test(kids[kids.length - 1]) ? true : 'column order: ' + kids.join(',');
+    }, 'Weight › Basics: word examples are distinct and stacked word, Roman, bars, ▶');
     await check('', (w) => w.location.hash === '#/home' ? true : 'landed on ' + w.location.hash, 'bare URL lands on Home');
     await check('#/home', (w, d) => { const s = d.getElementById('home-section'); return s && s.classList.contains('on') && /Weight/.test(s.textContent) && /Ghazals/.test(s.textContent) ? true : 'home section not rendered'; }, 'Home renders its content');
     // Round 3: inside the (single-collection) Mir list the group header carries the

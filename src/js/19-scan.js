@@ -255,6 +255,7 @@ const LEGEND_ITEMS = [
   { rule: 'F2.1-listed-monosyllable', tip: "A flexible syllable: two letters, so normally long, but it may be scanned short (\u06a9\u0648\u060c \u0633\u06d2\u060c \u06c1\u06d2\u2026, and many word-final syllables). The meter decides; the underline shows the reading chosen.", body: `<i class="sw c-x"></i>flexible` },
   { rule: 'M6.1-anceps', sec: '7', tip: "In a meter pattern, x marks a position that may be long or short, as with the first syllable of meters 14 to 19.", body: `<span class="pg x">x</span> long or short`, app: true },
   { rule: 'M6.1-cheat-final', tip: "One extra short syllable the meter doesn't count: allowed at the end of a line and, in some meters, just before the mid-line break. Pritchett calls it a 'cheat' syllable.", body: `<i class="sw c-c"></i>extra` },
+  { rule: 'M6.1-cheat-caesura', tip: "The break in the middle of the line, between its two hemistich halves. Where a meter has one, the pattern shows //. In some meters one extra short syllable may sit just before it.", body: `<span class="cae">//</span> caesura` },
   { rule: 'F3.1-graft', tip: "Words joined across the space and read as one, e.g. \u0101\u1e33hir is \u2192 \u0101\u00b7\u1e33hi\u00b7ris.", body: `<i class="sw c-g"></i>grafted` }
 ];
 function legendHTML(cls){
@@ -611,6 +612,7 @@ function lineHTML(r,li,forced,lineObj){
   if(f.meter.id==='H' && lastScan.lines.length===1) h+=`<p class="tiny X mt-2">Mir's Hindi meter is loose enough that even some ordinary sentences fit it. One line proves little — add the rest of the ghazal.</p>`;
   const notes=[...new Set(e.notes.map(n=>`${n.word}: ${n.note}`))].filter(n=>!/: $/.test(n));
   if(notes.length) h+=`<p class="tiny muted mt-note">${notes.join(' · ')}</p>`;
+  if(!hasEdits(li) && _lineUr && typeof prPracticable==='function' && prPracticable(_lineUr,f.meter.id)) h+=`<p class="tiny mt-note"><a class="practice-this" href="${prLinkFor(_lineUr,f.meter.id)}">Practice this line: tap its rhythm →</a></p>`;
   if(!hasEdits(li) && !lastScan.forced){ const alts=r.fits.slice(1,4).filter(x=>x.c-f.c<1.2); if(alts.length) h+=`<p class="tiny muted">Also fits: ${alts.map(x=>famOfMeter[x.meter.id]?`<span class="${isRtl?'urdu':''} fam-inline xs">${(typeof getLineDisplay==='function')?getLineDisplay(famLabel(famOfMeter[x.meter.id]),cs):famLabel(famOfMeter[x.meter.id]).ur}</span>`:meterLabel(x.meter)).join(' · ')} — add the other misra to decide.</p>`; }
   return h+'</div>';
 }
@@ -746,6 +748,8 @@ function coupletCard(li1,li2,r1,f1,lineObj1,r2,f2,lineObj2,label){
   let h=`<div class="card misra-card"><div class="row card-head tight">`;
   h+=`<span class="tiny muted">${label}</span>`;
   h+=canPlay?`<span class="play sm" title="Hear this couplet" aria-label="Hear this couplet" data-label="Hear this couplet" data-pb="scan:${li1}${li2!=null?','+li2:''}" onclick="playCouplet(${li1},${li2!=null?li2:'null'},null,this)">▶︎</span>`:'';
+  const _pr=[[li1,lineObj1,f1],[li2,lineObj2,f2]].map(([li,o,f])=>{ if(li==null||!f||hasEdits(li)) return null; const u=typeof o==='string'?o:(o&&o.ur)||''; return (u&&typeof prPracticable==='function'&&prPracticable(u,f.meter.id))?{u,m:f.meter.id}:null; }).find(Boolean);
+  if(_pr) h+=`<a class="btn ghost sm practice-this" href="${prLinkFor(_pr.u,_pr.m)}" title="Tap this line's rhythm yourself">Practice</a>`;
   h+='</div>';
   h+='<div class="cbox-verse">'+misraText(li1,lineObj1)+(li2!=null && r2 ? misraText(li2,lineObj2) : '')+'</div>';
   h+='<div class="cbox-scan">'+misraScan(r1,li1,f1)+'</div>';

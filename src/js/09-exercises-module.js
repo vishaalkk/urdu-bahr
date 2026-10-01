@@ -854,6 +854,7 @@ function openGhazalReader(col, id) {
           <span class="vnum">Couplet ${vNum}</span>
           <div class="row couplet-acts">
             <span class="play sm" role="button" tabindex="0" aria-label="Play couplet" data-label="Play couplet" data-pb="reader:${c}" onclick="playReaderCoupletByIndex(${c}, null, this)">▶︎</span>
+            ${practiceLineBtn(l1, l2, item)}
             <button class="btn ghost sm" onclick="toggleCoupletScan(${c})">Scan</button>
           </div>
         </div>
@@ -918,6 +919,14 @@ function openGhazalReader(col, id) {
   }
 }
 window.openGhazalReader = openGhazalReader;
+
+/* "Practice" button for a couplet: opens the tapper on its first line that can be tapped out; nothing if neither can */
+function practiceLineBtn(l1, l2, item) {
+  if (typeof prPracticable !== 'function') return '';
+  const m = (typeof drMetersOf === 'function' && item) ? drMetersOf(item)[0] : null;   // the ghazal's own baḥr
+  const ur = [l1, l2].map(l => l && l.ur).find(u => u && prPracticable(u, m));
+  return ur ? `<a class="btn ghost sm" href="${prLinkFor(ur, m)}" title="Tap this line's rhythm yourself">Practice</a>` : '';
+}
 
 function closeGhazalReader() {
   curReaderCol = null;

@@ -914,8 +914,11 @@ a.hb-ref:hover { color: var(--ink); }
 .flex-pair-word { font-size: 40px; line-height: 1.4; text-align: center; }
 
 /* Weight › Learn › "Special cases": several single-reading examples side by side */
-.special-syll-row { flex-wrap: wrap; align-items: flex-start; gap: var(--sp-5); }
-.special-syll-ex { margin: 0; padding: 0; border: 0; min-width: 7em; }
+/* each word is one centred column: the word, its Roman, the weight bars, then the ▶ */
+.special-syll-row { flex-wrap: wrap; align-items: flex-start; justify-content: center; gap: var(--sp-6); }
+.special-syll-ex { margin: 0; padding: 0; border: 0; min-width: 7em; display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--sp-2); }
+.special-syll-ex .constr-urdu, .special-syll-ex .constr-ro { margin-bottom: 0; }
+.special-syll-ex .strip { justify-content: center; }
 
 .lookup-title { margin: 0 0 var(--sp-1); }
 .lookup-desc { margin-bottom: var(--sp-3); font-family: var(--sans); color: var(--dim); }
@@ -1231,3 +1234,28 @@ html[data-script="ro"] .syl-tab, html[data-script="hi"] .syl-tab { font-family: 
 .ft-name { display: flex; align-items: baseline; gap: var(--sp-2); }
 .ft-name .foot-row-ur, .ft-name .fn { display: inline; }
 .ft-meter { white-space: nowrap; }
+
+/* Look up › Hindi explainer */
+.hindi-about { margin: var(--sp-3) 0 var(--sp-4); max-width: 68ch; }
+.hindi-about p, .hindi-about li { font-family: var(--serif); line-height: 1.55; }
+.hindi-about-title { font-family: var(--serif); font-weight: 500; margin: 0 0 var(--sp-2); }
+.hindi-about h4 { font-family: var(--sans); font-size: var(--fs-xs); letter-spacing: .06em; text-transform: uppercase; color: var(--faint); font-weight: 500; margin: var(--sp-4) 0 var(--sp-1); }
+.hindi-forms { display: grid; gap: var(--sp-2); margin: var(--sp-3) 0; overflow-x: auto; }
+.hindi-form { display: grid; gap: 2px; }
+
+/* Look up: meter rows. One hairline between rows; an open row is a tinted block with an accent bar,
+   and its couplets are small paper boxes rather than a stack of rules. (#meter-section .card in this
+   file zeroes every card, so these selectors carry the id to win.) */
+#meter-section .meter-row { margin: 0; padding: var(--sp-4) var(--sp-3); border-top: 1px solid var(--line); border-radius: 0; }
+#meter-section .meter-row + .meter-row { padding-top: var(--sp-4); }
+#meter-section .meter-row.expanded { background: color-mix(in srgb, var(--gold) 6%, var(--bg)); box-shadow: inset 3px 0 0 var(--gold); }
+#meter-section .meter-row-header { padding: 0; }
+#meter-section .meter-row.static .meter-row-header { cursor: default; }
+.meter-row-none { text-align: center; margin: var(--sp-1) 0 0; }
+#meter-section .meter-row-details { margin: var(--sp-2) 0 0; padding: 0; border-top: 0; }
+#meter-section .meter-row-details .couplet-card { margin: var(--sp-4) 0 0; padding: 0; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); overflow: hidden; }
+#meter-section .meter-row-details .couplet-card .couplet-head { border-bottom: 0; padding-top: var(--sp-2); padding-bottom: 0; }
+#meter-section .meter-row-details .cbox-verse { padding-top: var(--sp-2); padding-bottom: var(--sp-4); }
+#meter-section .meter-row-details .couplet-scan-box > div { border-top: 1px solid var(--line); }
+#meter-section .meter-row-details .fam-section-label { margin-top: var(--sp-4); }
+.meter-collapse-row { display: flex; justify-content: flex-end; margin-top: var(--sp-2); }

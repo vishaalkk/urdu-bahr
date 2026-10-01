@@ -5,7 +5,7 @@ NOTHING IS PUSHED (user wants to test locally first). A pre-push hook (.git/hook
 
 ## Local testing checklist (browser; nothing below was checked in a real browser)
 Run: `npm run build && python3 -m http.server 8000`, open http://localhost:8000/
-- Meter > Drill: Match Bahr (anchor + 3-4 candidates, each Listen), Which bahr foot pauses, Next stops audio, script toggle re-renders, Source/Score badges.
+- Practice > Match Bahr (moved from Meter > Drill; anchor + 3-4 candidates, each Listen); Meter > Drill: Which bahr foot pauses, Next stops audio, script toggle re-renders, Source/Score badges.
 - Meter > Lookup: All / Rubai / Hindi segmented control + count. Ghazals on mobile: switching collection closes the reader.
 - #/lab/practice: 1/2 syllable tapper (no nav link yet; add one from Meter or Home if kept).
 - Scan: type a broken line -> "Nearest:" meter with clash chips (near-fit). Type unmarked Urdu (no zer) -> learned iz/o hypotheses; `دل ناداں` gives 9 first, 14 second (known limit).

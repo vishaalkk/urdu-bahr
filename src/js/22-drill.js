@@ -1,6 +1,6 @@
 /* ================= SHARED DRILL ENGINE (round 2, G3) =================
-   One engine, mounted into both Weight › Drill and Meter › Drill by
-   mountDrill('weight'|'meter'). Generates fresh questions on the fly from
+   One engine, mounted into Weight › Drill and Meter › Drill by
+   mountDrill('weight'|'meter'), and into Practice › Match Baḥr by mountDrill('match'). Generates fresh questions on the fly from
    the word bank (GLOSSARY_DATA) and the three verse corpora (EXERCISES_DATA /
    GHALIB_EXT_DATA / MIR_EXT_DATA) via the scanner (Scan.scanLine/explain),
    confident scans only (verdictOf(fit.c)[0]==='ok', i.e. cost <= 2.5).
@@ -10,7 +10,7 @@
    yet), routed through pbTogglePattern when the Player agent adds it; see
    drPlayToggle()'s fallback and the final report. */
 
-var DR = { weight: null, meter: null };
+var DR = { weight: null, meter: null, match: null };
 
 var DR_TYPES = {
   weight: [
@@ -23,10 +23,15 @@ var DR_TYPES = {
   meter: [
     { key: 'bahr', label: 'Which bahr' },
     { key: 'limping', label: 'In the bahr, or limping?' },
-    { key: 'foot', label: 'Which foot' },
+    { key: 'foot', label: 'Which foot' }
+  ],
+  match: [
     { key: 'match', label: 'Match Baḥr' }
   ]
 };
+/* the panel each drill mounts into (Match Baḥr lives on the Practice page) */
+var DR_PANELS = { weight: 'weightPanelDrill', meter: 'meterPanelDrill', match: 'practicePanelMatch' };
+function drPanel(tab) { return $(DR_PANELS[tab]); }
 var DR_SOURCES = [
   { key: 'handbook', label: 'Handbook' },
   { key: 'ghalib', label: 'Ghalib' },
@@ -482,11 +487,12 @@ function drGenerate(tab) {
       else if (type === 'izafat') q = drGenNoteType(sources, n => /iẓāfat/i.test(n));
       else if (type === 'grafting') q = drGenNoteType(sources, n => /grafting/i.test(n));
       else if (type === 'ojoin') q = drGenNoteType(sources, n => /^o joins/i.test(n));
+    } else if (tab === 'match') {
+      q = drGenMatch(sources);
     } else {
       if (type === 'bahr') q = drGenBahr(sources);
       else if (type === 'limping') q = drGenLimping(sources);
       else if (type === 'foot') q = drGenFoot(sources);
-      else if (type === 'match') q = drGenMatch(sources);
     }
     if (q) {
       q.kind = type;
@@ -525,13 +531,13 @@ function drDefaultState() { return { types: new Set(['all']), sources: new Set([
 function drShellHTML(tab) {
   return `<div class="dr-root">
     <div class="dr-filters">
-      <div class="dr-filter-row"><span class="eyebrow">Question types</span><div class="dr-chips" data-kind="type" data-tab="${tab}"></div></div>
+      ${tab === 'match' ? '' : `<div class="dr-filter-row"><span class="eyebrow">Question types</span><div class="dr-chips" data-kind="type" data-tab="${tab}"></div></div>`}
       <div class="dr-filter-row"><span class="eyebrow">Source</span><div class="dr-chips" data-kind="source" data-tab="${tab}"></div></div>
     </div>
     <div class="card dr-card">
       <div class="dr-card-head">
         <span class="dr-qlabel" id="dr-${tab}-qlabel"></span>
-        <span class="dr-head-right"><span class="eyebrow dr-tag" id="dr-${tab}-tag"></span><span class="mono tiny dr-score" id="dr-${tab}-score">Score: 0 / 0</span></span>
+        <span class="dr-head-right"><span class="eyebrow dr-tag" id="dr-${tab}-tag"></span>${tab === 'match' ? '' : `<span class="mono tiny dr-score" id="dr-${tab}-score">Score: 0 / 0</span>`}</span>
       </div>
       ${(typeof legendHTML === 'function') ? legendHTML('dr-legend') : ''}
       <div class="dr-prompt" id="dr-${tab}-prompt"></div>
@@ -539,7 +545,7 @@ function drShellHTML(tab) {
       <div class="dr-choices" id="dr-${tab}-choices"></div>
       <div class="fb dr-fb" id="dr-${tab}-fb"></div>
     </div>
-    <p class="tiny faint dr-practice-link">Rather tap the rhythm out yourself? <a href="#/lab/practice">Practice with the 1 and 2 keys →</a></p>
+    ${tab === 'match' ? '' : '<p class="tiny faint dr-practice-link">Ready for whole lines? <a href="#/lab/practice">Tap a line</a> or <a href="#/lab/practice/match">match a verse to its bahr →</a></p>'}
   </div>`;
 }
 
@@ -552,7 +558,7 @@ function drChipsHTML(tab, kind, items) {
   return h;
 }
 function drRenderFilterChips(tab) {
-  const panel = $(tab === 'weight' ? 'weightPanelDrill' : 'meterPanelDrill');
+  const panel = drPanel(tab);
   if (!panel) return;
   const typeHost = panel.querySelector('.dr-chips[data-kind="type"]');
   const srcHost = panel.querySelector('.dr-chips[data-kind="source"]');
@@ -650,7 +656,7 @@ window.drAnswerPlay = drAnswerPlay;
 
 /* the header script switch changed: redraw the open questions in the new script */
 function drOnScriptChange() {
-  ['weight', 'meter'].forEach(tab => {
+  ['weight', 'meter', 'match'].forEach(tab => {
     if (!DR[tab] || !DR[tab].current || !$('dr-' + tab + '-prompt')) return;
     if (typeof PB !== 'undefined' && PB.playing && /^drill/.test(PB.key || '') && typeof pbCancel === 'function') pbCancel();
     drRenderQuestion(tab);
@@ -701,7 +707,7 @@ window.drPlayToggle = drPlayToggle;
 var drReady;   // undefined until the end of this file runs
 function mountDrill(tab) {
   if (!drReady) { const q = (window.__drPending = window.__drPending || []); if (q.indexOf(tab) === -1) q.push(tab); return; }
-  const panel = $(tab === 'weight' ? 'weightPanelDrill' : 'meterPanelDrill');
+  const panel = drPanel(tab);
   if (!panel) return;
   drStopAudio();
   let root = panel.querySelector('.dr-root');
@@ -721,10 +727,12 @@ if (typeof document !== 'undefined' && typeof document.addEventListener === 'fun
     if (ev.defaultPrevented) return;
     const tgt = ev.target;
     if (tgt && tgt.tagName && /^(INPUT|TEXTAREA|SELECT)$/.test(tgt.tagName)) return;
-    ['weight', 'meter'].forEach(tab => {
-      const panel = $(tab === 'weight' ? 'weightPanelDrill' : 'meterPanelDrill');
+    ['weight', 'meter', 'match'].forEach(tab => {
+      const panel = drPanel(tab);
       const st = DR[tab];
       if (!panel || panel.style.display === 'none' || !st || !st.current) return;
+      const sec = panel.closest && panel.closest('.tab-view');
+      if (sec && sec.classList && !sec.classList.contains('on')) return;   // the page holding this drill is not on screen
       const q = st.current;
       if (!q.answered && /^[1-4]$/.test(ev.key)) {
         const idx = +ev.key - 1;
@@ -742,7 +750,7 @@ if (typeof document !== 'undefined' && typeof document.addEventListener === 'fun
    showWeightSubtab/showMeterSubtab tried to call it. Pick up here. */
 drReady = true;
 (window.__drPending || []).splice(0).forEach(tab => mountDrill(tab));
-['weight', 'meter'].forEach(tab => {
-  const panel = $(tab === 'weight' ? 'weightPanelDrill' : 'meterPanelDrill');
+['weight', 'meter', 'match'].forEach(tab => {
+  const panel = drPanel(tab);
   if (panel && panel.style && panel.style.display === 'block') mountDrill(tab);
 });
