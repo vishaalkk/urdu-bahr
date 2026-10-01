@@ -135,3 +135,6 @@ html[data-script="ur"] .dr-card :is(.dr-strip, .dr-pat, .dr-ans-strip, .strip) {
 .dr-card .blk.c.lit { background: color-mix(in srgb, var(--gold) 28%, transparent); }
 
 .dr-practice-link { text-align: center; margin: var(--sp-3) 0 0; }
+
+/* Source filter: "All" and "Pick…", with the full list folded out underneath */
+.dr-pick-list { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: var(--sp-1); padding-top: var(--sp-2); }

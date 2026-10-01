@@ -302,30 +302,64 @@ const ROUTES = [
       const dard = w.lineScripts('dard o gham').ur; if (!/درد و غم/.test(dard)) bad.push('dard o gham: ' + dard);
       return bad.length ? bad.join(' | ') : true;
     }, 'Typed Roman without diacritics (ye vo na pe ishq gham aaj, Rekhta marks) reads as the right Urdu');
-    // More Poets (Rekhta): the fourth collection
-    await check('#/ghazals/others', (w, d) => {
-      if (!d.getElementById('colBtnOthers').classList.contains('on')) return 'More Poets button not on';
-      if (!/6 ghazals/.test(d.getElementById('ghazalCollectionCount').textContent)) return 'count: ' + d.getElementById('ghazalCollectionCount').textContent;
-      const heads = d.querySelectorAll('#othersExtList .meter-group-head'); if (!heads.length) return 'no meter groups';
+    // Poets (Rekhta; the six hand-checked keep their verified Roman): one named collection per poet, chosen from Poets ▾
+    await check('#/ghazals/jaun', (w, d) => {
+      const tab = d.getElementById('colBtnPoets');
+      if (!tab.classList.contains('on')) return 'Poets tab not on';
+      if (!/Jaun/.test(tab.textContent)) return 'the tab should name the poet: ' + tab.textContent;
+      const n = w.collectionData('jaun').length;
+      if (n < 100 || !new RegExp(n + ' ghazals').test(d.getElementById('ghazalCollectionCount').textContent)) return 'count: ' + d.getElementById('ghazalCollectionCount').textContent + ' vs ' + n;
+      const heads = d.querySelectorAll('#poetExtList .meter-group-head'); if (!heads.length) return 'no meter groups';
       heads.forEach(h => h.click());
-      const rows = [...d.querySelectorAll('#othersExtList .vrow')]; if (rows.length !== 6) return rows.length + ' rows';
-      return /Faiz|Dagh|Jigar|Firaq|Hasrat/.test(rows.map(r => r.querySelector('.vnum').textContent).join(' ')) ? true : 'rows carry no poet names';
-    }, 'Ghazals › More Poets lists the six ghazals by bahr, with poet names');
-    await check('#/ghazals/others/1', (w, d) => /Faiz/.test(d.getElementById('readerTitle').textContent) && /Rekhta/.test(d.getElementById('readerTitle').textContent) && d.querySelectorAll('#readerCouplets .couplet-card').length === 7 ? true : 'reader: ' + d.getElementById('readerTitle').textContent + ' / ' + d.querySelectorAll('#readerCouplets .couplet-card').length + ' couplets', 'More Poets reader opens with poet, source and its couplets');
-    await check('#/ghazals?q=faiz', (w, d) => /More Poets/.test(d.getElementById('ghazalUniversalResults').textContent) ? true : 'search for Faiz finds nothing in More Poets', 'Search finds More Poets by poet name');
+      const rows = [...d.querySelectorAll('#poetExtList .vrow')]; if (rows.length !== n) return rows.length + ' of ' + n + ' rows';
+      const a = rows[0].querySelector('a.fran-link');
+      return a && /rekhta\.org\/ghazals\//.test(a.href) ? true : 'rows should link to the ghazal on Rekhta';
+    }, 'Ghazals › a poet (Jaun) lists their ghazals by bahr, each linked to Rekhta');
+    await check('#/ghazals/mir', (w, d) => {
+      w.togglePoetPicker(true);
+      const box = d.getElementById('poetPicker'); if (box.classList.contains('hidden')) return 'picker did not open';
+      const names = [...d.querySelectorAll('#poetPickerList .poet-opt')].map(b => b.dataset.poet);
+      if (names.length !== w.eval('POET_LIST').length || names.length < 10) return 'picker lists ' + names.length + ' poets';
+      d.getElementById('poetPickerFilter').value = 'jau'; w.renderPoetPickerList();
+      const f = [...d.querySelectorAll('#poetPickerList .poet-opt')].map(b => b.dataset.poet);
+      if (f.join() !== 'jaun') return 'filter "jau" gives ' + f.join();
+      d.getElementById('poetPickerFilter').value = 'جون'; w.renderPoetPickerList();
+      if ([...d.querySelectorAll('#poetPickerList .poet-opt')].map(b => b.dataset.poet).join() !== 'jaun') return 'Urdu name does not filter';
+      w.togglePoetPicker(false);
+      return box.classList.contains('hidden') ? true : 'picker did not close';
+    }, 'Poets ▾ opens a list of every poet, filters by Roman or Urdu name, and closes');
+    await check('#/ghazals/others/1', (w, d) => {
+      if (w.location.hash !== '#/ghazals/faiz/18') return 'old More Poets link went to ' + w.location.hash;
+      const t = d.getElementById('readerTitle');
+      return /Faiz/.test(t.textContent) && t.querySelector('a[href*="rekhta.org"]') && d.querySelectorAll('#readerCouplets .couplet-card').length === 7 ? true : 'reader: ' + t.textContent + ' / ' + d.querySelectorAll('#readerCouplets .couplet-card').length;
+    }, 'The old #/ghazals/others/1 link lands on Faiz in the reader, linked to Rekhta');
+    await check('#/ghazals/others', (w) => w.location.hash === '#/ghazals/faiz' ? true : 'old collection link went to ' + w.location.hash, 'The old #/ghazals/others link lands on a poet, not a blank page');
+    await check('#/ghazals?q=faiz', (w, d) => /Faiz/.test(d.getElementById('ghazalUniversalResults').textContent) ? true : 'search for Faiz finds nothing', 'Search finds a poet by name');
+    await check('#/ghazals?q=%D8%AC%D9%88%D9%86', (w, d) => /Jaun/.test(d.getElementById('ghazalUniversalResults').textContent) ? true : 'search for جون finds nothing', 'Search finds a poet by their Urdu name');
     await check('#/home', (w) => {
       const bad = [];
-      if (w.bestGhazalLinkForMeter(34).count < 1) bad.push('meter 34 does not count the Faiz ghazal');
-      if (w.drCorpusFor('others').length !== 6) bad.push('drill corpus');
-      if (!w.eval('DR_SOURCES').some(s => s.key === 'others')) bad.push('drill source chip');
+      if (w.bestGhazalLinkForMeter(34).count < 1) bad.push('meter 34 counts no poet ghazal');
+      if (w.drCorpusFor('jaun').length !== w.collectionData('jaun').length) bad.push('drill corpus');
+      const src = w.eval('DR_SOURCES').map(s => s.key);
+      if (!['handbook', 'ghalib', 'mir', 'jaun', 'faiz'].every(k => src.includes(k)) || src.includes('others')) bad.push('drill sources: ' + src.join());
+      // "All" keeps Handbook/Ghalib/Mir/poets balanced; picking sources narrows to exactly those
+      w.eval("DR.meter = drDefaultState()");
+      if (w.eval("drActiveSources('meter')").join() !== 'handbook,ghalib,mir,@poets') bad.push('All sources: ' + w.eval("drActiveSources('meter')").join());
+      w.eval("DR.meter.sources = new Set(['jaun','mir'])");
+      if (w.eval("drActiveSources('meter')").join() !== 'mir,jaun') bad.push('picked sources: ' + w.eval("drActiveSources('meter')").join());
+      const closed = w.eval("drChipsHTML('meter','source',DR_SOURCES)");
+      if (!/Pick/.test(closed) || /Jaun/.test(closed)) bad.push('Pick… should hide the list until opened');
+      w.eval("DR.meter.pickOpen = true");
+      if (!/dr-pick-list/.test(w.eval("drChipsHTML('meter','source',DR_SOURCES)"))) bad.push('Pick… did not open the list');
       if (w.eval('prCorpusLines()').length < w.collectionData('ghalib').length) bad.push('practice corpus');
       const famOf = w.eval('famOfMeter'), fam = id => (famOf[id] && famOf[id].id) || String(id);
-      w.collectionData('others').forEach(g => {
+      // the hand-checked ghazals are verified, so each must scan in its declared bahr family
+      [].concat(...w.eval('POET_LIST').map(p => w.collectionData(p.key))).filter(g => g.verified).forEach(g => {
         let ok = 0, n = 0; g.lines.forEach(l => { n++; try { const f = w.Scan.scanLine(l.ur).fits[0]; if (f && g.meters.some(m => fam(m) === fam(f.meter.id))) ok++; } catch (e) {} });
         if (ok / n < 0.6) bad.push(g.poet + ' ' + g.id + ': only ' + ok + '/' + n + ' lines scan in its declared bahr family');
       });
       return bad.length ? bad.join(' | ') : true;
-    }, 'More Poets feeds Look up, the drills, Practice, and scans in its declared bahr');
+    }, 'Poets feed Look up, the drills (All / Pick…), Practice, and the hand-checked ghazals scan in their declared bahr');
     await check('', (w) => w.location.hash === '#/home' ? true : 'landed on ' + w.location.hash, 'bare URL lands on Home');
     await check('#/home', (w, d) => { const s = d.getElementById('home-section'); return s && s.classList.contains('on') && /Weight/.test(s.textContent) && /Ghazals/.test(s.textContent) ? true : 'home section not rendered'; }, 'Home renders its content');
     // Round 3: inside the (single-collection) Mir list the group header carries the

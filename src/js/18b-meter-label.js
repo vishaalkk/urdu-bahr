@@ -81,9 +81,9 @@ function meterLabelInfo(mOrId) {
     });
   }
 
-  if (typeof OTHERS_DATA !== 'undefined' && Array.isArray(OTHERS_DATA)) {
-    OTHERS_DATA.forEach(e => { if (Array.isArray(e.meters) && e.meters.some(x => String(x) === idStr)) count++; });
-  }
+  poetCollections().forEach(([, items]) => {
+    items.forEach(e => { if (Array.isArray(e.meters) && e.meters.some(x => String(x) === idStr)) count++; });
+  });
 
   // 3. Verse resolution priority: (1) FAMS, (2) EXERCISES_DATA, (3) GHALIB_EXT_DATA, (4) MIR_EXT_DATA
   let verse = null;

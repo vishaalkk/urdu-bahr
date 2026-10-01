@@ -964,7 +964,7 @@ function renderLineScan(text, container, lineObjIn, meterId) {
   const nk = (typeof normVerseKey === 'function') ? normVerseKey(rawL) : '';
   let lineObj = (lineObjIn && lineObjIn.ur) ? lineObjIn : ((typeof KNOWN_VERSES !== 'undefined' && KNOWN_VERSES[nk]) ? KNOWN_VERSES[nk] : null);
   let urduL = lineObj ? lineObj.ur : rawL;
-  const r = Scan.scanLine(urduL);
+  const r = Scan.scanLine(lineObj && typeof lineScanText === 'function' ? lineScanText(lineObj) : urduL);   // Rekhta lines: with their Roman's hints
   let f;
   if (Array.isArray(meterId)) {
     // The line belongs to a ghazal locked to one (or a paired pair) of these

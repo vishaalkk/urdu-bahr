@@ -13,7 +13,9 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
    `src/fonts` and inlined at build.
 6. **Do not touch the scansion engine** (`src/js/01-engine.js` block from `(function(root){ 'use strict'; /* ---------- meters`
    to `})(this);`). `tests/corpus_scan.js` slices the source on those exact strings. Engine and transliteration changes
-   are separate, deliberate work.
+   are separate, deliberate work. The one routine exception is lexicon data: words are added to the unwritten-tashdid block
+   with `scripts/find_tashdid_words.js`, one reading at cost 0 each (several tie across meters and flip Ghalib/Mir results),
+   and only if `node tests/benchmark.js` stays at its floors.
 7. **Nothing may regress Fran's Ghalib/Mir transliteration and meters.** `tests/benchmark.js` enforces floors in
    `tests/benchmark_baseline.json`; raise a floor only with `--update`, never lower it.
 8. **No inline `style=""` for anything visual**, in markup or JS template strings. Use classes and tokens.
@@ -33,11 +35,21 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
 | `#/weight/{learn\|drill\|lookup}` | Weight |
 | `#/meter/{learn\|drill\|lookup}` | Meter (`?open=<famId>`, `?meter=<id>`) |
 | `#/scan` | Scan (`?g=ghalib/21` scans a ghazal by reference) |
-| `#/ghazals/{collection}[/{id}]` | List and reader. Query: `?meter=<id>&q=<text>` |
+| `#/ghazals/{collection}[/{id}]` | List and reader; collection = `handbook`, `ghalib`, `mir` or a poet key (`jaun`, `faiz`, …; the Poets ▾ picker). `#/ghazals/others[/N]` redirects. Query: `?meter=<id>&q=<text>` |
 | `#/guide`, `#/about` | How to use; sources and scanner accuracy |
 | `#/lab/tap`, `#/lab/practice` | Unlinked/experimental |
 | `#/handbook/chN` | Redirects to that chapter on Pritchett's site (no in-app reader) |
 
+- **Poets** (Rekhta): `data/poets_extended.json`, built by `scripts/build_poets.py`, is the shipped data (one collection per poet; ids
+  are stable, matched by Rekhta URL; each ghazal links to its Rekhta page). Pipeline, all local: `scripts/import_*.py` (scrape) →
+  `data/poets/` → `node scripts/scan_poets.js` (meter per ghazal through the real engine, `scripts/lib_scan.js`) →
+  `data/poets_scanned/` → `build_poets.py`. The scrape and scan folders are gitignored. Rekhta lines are scanned with the izafat,
+  tashdid and pen-name hints their Roman gives (`rekhtaScanText` / `lineScanText`, `src/js/05-translit-helpers.js`). Poet data does NOT
+  feed `WORD_ASCII_MAP`, `ROMAN_CASUAL_MAP` or the known-verse index: Rekhta's Roman must not override Pritchett's.
+- **Collocations**: `data/collocations.json` (`scripts/build_collocations.py`) holds neighbour rules for typed Roman
+  (`collocSpelling` in `05-translit-helpers.js`). Judge changes with `scripts/colloc_benchmark.py` and `scripts/casual_roman_eval.js`
+  (typed Roman → right Urdu word, table mined without the test poets). `tests/benchmark.js` `typed.*` goes the other way (Urdu → Roman)
+  and cannot see them.
 - Navigating away stops playback (`pbCancel`). Last route is stored under `lastRoute`.
 - Persistence is `store` / `localStorage`: script, theme, settings (voice, tempo, foot gap, drum, ASCII), `lastRoute`,
   per-tab last sub-tab, `stats`.

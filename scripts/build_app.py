@@ -1,5 +1,5 @@
 import json
-import re, re, os, subprocess, base64
+import re, re, os, sys, subprocess, base64
 from collections import Counter
 
 # ─── 1. Load datasets ─────────────────────────────────────────────────────────
@@ -60,14 +60,17 @@ MIR_EXT_PREVIEW = [{
     'lines': [{'ascii': l['ascii'], 'ur': l['ur'], 'hi': l['hi'], 'ro': l['ro']} for l in g['lines']],
 } for g in MIR_EXT]
 
-OTHERS_PREVIEW = [{
-    'id': g['id'],
-    'poet': g['poet'],
-    'meters': g['meters'],
-    'source': g.get('source', ''),
-    'n': g['lines_count'],
-    'lines': [{'ascii': l['ascii'], 'ur': l['ur'], 'hi': l['hi'], 'ro': l['ro']} for l in g['lines']],
-} for g in OTHERS_EXT]
+# Neighbour rules that pick between spellings of one typed word (scripts/build_collocations.py; benchmark: scripts/colloc_benchmark.py)
+with open('data/collocations.json', 'r', encoding='utf-8') as f:
+    COLLOCATIONS = json.load(f)
+# Poet collections of the Ghazals tab beyond Ghalib and Mir (Rekhta; the six hand-checked ones keep their verified Roman),
+# built by scripts/build_poets.py. Deliberately NOT fed to the word maps below: their Roman is Rekhta's, not Pritchett's.
+with open('data/poets_extended.json', 'r', encoding='utf-8') as f:
+    POETS = json.load(f)
+# the poets, Ghalib and Mir ship as a word dictionary plus id lines (see scripts/pack_verses.py); the app unpacks them at load
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from pack_verses import pack_poets as _pack_poets, pack_list as _pack_list, dumps as _dumps_json
+POETS_PACKED = _pack_poets(POETS)
 # only lines whose converted Urdu matched Rekhta's Urdu feed the word maps below (their ascii spelling is trustworthy)
 OTHERS_WORDS = [{'lines': [l for l in g['lines'] if l.get('verified')]} for g in OTHERS_EXT]
 
@@ -124,6 +127,14 @@ for (_u, _a), _c in _word_pair_freq.items():
     for _lv in range(3):
         _casual_freq[_lv].setdefault(_casual_key(_a, _lv), Counter())[_a] += _c
 ROMAN_CASUAL_MAP = [{_k: _cnt.most_common(1)[0][0] for _k, _cnt in _f.items()} for _f in _casual_freq]
+# A strict (level 0) entry shadows the looser levels, so it must have real support. Typed "ka" matched a one-off "ka" in the corpora
+# and never reached "kaa" (کا, 3000 uses); "bhi" matched one "bhi" against 523 "bhii". Keep a strict entry only if its spelling
+# makes up >= 10% of its loose (level 1) group; otherwise the typed word falls through to the common spelling.
+_loose_total = {_k: sum(_c.values()) for _k, _c in _casual_freq[1].items()}
+for _k0, _cnt0 in _casual_freq[0].items():
+    _k1 = _casual_key(_cnt0.most_common(1)[0][0], 1)
+    if _cnt0.most_common(1)[0][1] < 0.10 * _loose_total.get(_k1, 0):
+        ROMAN_CASUAL_MAP[0].pop(_k0, None)
 _ki_next = {}
 for _g in EXERCISES + GHALIB_EXT + MIR_EXT + IQBAL + OTHERS_WORDS:
     for _l in _g['lines']:
@@ -325,9 +336,10 @@ substitutions = {
     'GLOSSARY_DATA': json.dumps(GLOSSARY, ensure_ascii=False),
     'BIBLIOGRAPHY_DATA': json.dumps(BIBLIOGRAPHY, ensure_ascii=False),
     'METER_MAP_DATA': json.dumps(meter_map_data, ensure_ascii=False),
-    'GHALIB_EXT_DATA': json.dumps(GHALIB_EXT_PREVIEW, ensure_ascii=False),
-    'MIR_EXT_DATA': json.dumps(MIR_EXT_PREVIEW, ensure_ascii=False),
-    'OTHERS_DATA': json.dumps(OTHERS_PREVIEW, ensure_ascii=False),
+    'GHALIB_EXT_DATA': _dumps_json(_pack_list(GHALIB_EXT_PREVIEW)),
+    'MIR_EXT_DATA': _dumps_json(_pack_list(MIR_EXT_PREVIEW)),
+    'COLLOCATIONS': json.dumps(COLLOCATIONS, ensure_ascii=False, separators=(',', ':')),
+    'POETS_DATA': _dumps_json(POETS_PACKED),
     'URDUPOETRY_DATA': json.dumps(URDUPOETRY_EXT, ensure_ascii=False),
     'WORD_ASCII_MAP': json.dumps(WORD_ASCII_MAP, ensure_ascii=False),
     'ROMAN_CASUAL_MAP': json.dumps(ROMAN_CASUAL_MAP, ensure_ascii=False),

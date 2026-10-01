@@ -325,8 +325,16 @@ function onHandbookBack() {
 }
 
 function handleGhazalsRoute(parts, params) {
-  const sub = parts[1] || 'handbook';
-  const ghazalId = parts[2] || null;
+  let sub = parts[1] || 'handbook';
+  let ghazalId = parts[2] || null;
+  // the old "More Poets" collection (#/ghazals/others[/N]) now lives under each poet
+  if (sub === 'others') {
+    const moved = ghazalId && POETS_DATA.legacy && POETS_DATA.legacy['others/' + ghazalId];
+    if (moved) { setHashQuiet('/ghazals/' + moved); [sub, ghazalId] = moved.split('/'); }
+    else { sub = 'faiz'; ghazalId = null; setHashQuiet('/ghazals/faiz'); }
+  } else if (!GHAZAL_COLS.includes(sub)) {
+    sub = 'handbook'; ghazalId = null;
+  }
 
   if (ghazalId) {
     openGhazalReader(sub, ghazalId);

@@ -31,3 +31,10 @@ gt-lab/vendor/
 
 # Rekhta source text for More Poets: local only (scripts/build_others.js reads it; data/others_extended.json is what ships)
 data/sources/others_rekhta.md
+
+# Rekhta scrape and scan intermediates: local only. data/poets_extended.json (built by scripts/build_poets.py) is what ships.
+# Re-create: scripts/import_rekhta_poets.py, scripts/import_faiz.py, then node scripts/scan_poets.js
+data/poets/
+data/poets_scanned/
+data/faiz_verses.json
+data/faiz_scanned.json

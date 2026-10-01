@@ -65,10 +65,11 @@ MIR_EXT_DATA.forEach(g => {
   if(g.lines) g.lines.forEach(l => registerKnownVerse(l));
 });
 
-// "More Poets" (Rekhta): same reason.
-OTHERS_DATA.forEach(g => {
-  if(g.lines) g.lines.forEach(l => registerKnownVerse(l));
-});
+// The poet collections: only the hand-checked ghazals (their Roman is verified) are known verses, as the old "More Poets" were.
+// Rekhta's own Roman is not registered: typed lines keep Pritchett's spelling (ʿishq, imtiḥāñ, āge) wherever she has one.
+poetCollections().forEach(([, items]) => items.forEach(g => {
+  if(g.verified && g.lines) g.lines.forEach(l => registerKnownVerse(l));
+}));
 
 // Index all family famous verses (25 verses across 12 families)
 function indexFamsVerses() {
@@ -155,20 +156,36 @@ function rekhtaMarks(piece) {
   return piece.replace(/(?<=[a-zāīūñ])T/g, ';t').replace(/(?<=[a-zāīūñ])D(?!h)/g, ';d').replace(/Ḍ|Ṛ/g, ';r')
     .replace(/\.h/g, ';h').replace(/\.(e|ī|ii|ai)/g, '))$1').replace(/\.([aiuāū])/g, '(($1');
 }
+/* Neighbour rules (data/collocations.json, built by scripts/build_collocations.py): a typed word whose casual key stands for
+   several words (rah / raah, ab / aab) is settled by the word before it (L1) or after it (R1). A rule answers with the strict
+   casual key, which ROMAN_CASUAL_MAP[0] turns into the full spelling. null when no rule applies. */
+function collocSpelling(key, prevWord, nextWord) {
+  if (typeof COLLOCATIONS === 'undefined' || typeof ROMAN_CASUAL_MAP === 'undefined') return null;
+  const nb = w => (w ? casualKey(w.split('-')[w === prevWord ? w.split('-').length - 1 : 0], 1) : '');
+  const pk = nb(prevWord), nk = nb(nextWord);
+  const label = (pk && COLLOCATIONS.L1[pk + ' ' + key]) || (nk && COLLOCATIONS.R1[key + ' ' + nk]);
+  if (key === 'ki') return label === 'ki' ? 'kih' : label === 'kii' ? 'kii' : null;   // Rekhta writes ki for کہ and kī for کی
+  return (label && ROMAN_CASUAL_MAP[0][label]) || null;
+}
 function casualRomanLine(line) {
   const toks = line.split(/(\s+)/), words = toks.filter(t => t && !/^\s+$/.test(t));
   let wi = 0;
   const out = toks.map(tok => {
     if (!tok || /^\s+$/.test(tok)) return tok;
-    const next = words[++wi] || '';
+    const next = words[++wi] || '', prev = words[wi - 2] || '';
     tok = tok.replace(/^['’‘]+|['’‘]+$/g, '');   // a quoted takhallus: 'dāġh'
     return tok.split('-').map((piece, i) => {
       const plain = piece.toLowerCase();
       if (i > 0 && (plain === 'e' || plain === 'ye' || plain === 'o')) return piece;
       if (plain.length < 2 || !/^[a-zāīū.]+$/.test(plain) || CASUAL_SPECIAL.test(piece)) return rekhtaMarks(piece);
-      if (plain === 'ki') {   // کہ (that, as Rekhta writes it) unless the next word is one that follows کی (of) far more often
+      if (!tok.includes('-')) {   // hyphenated compounds keep their own pieces
+        const c = collocSpelling(casualKey(plain, 1), prev, next);
+        if (c) return c;
+      }
+      if (plain === 'ki') {   // کہ (that) or کی (of): the next word decides where the corpora know it (KI_NEXT); کی is the commoner reading
+        // overall (54% of Pritchett's, 69% of Rekhta's poets), so it is the default when the next word is unknown
         const n = (typeof KI_NEXT !== 'undefined' && KI_NEXT[casualKey(next.split('-')[0], 1)]) || null;
-        return n && n[1] > 2 * n[0] ? 'kii' : 'kih';
+        return n ? (n[1] > 2 * n[0] ? 'kii' : 'kih') : 'kii';
       }
       if (CASUAL_ALIAS[plain]) return CASUAL_ALIAS[plain];
       return casualLookup(plain) || rekhtaMarks(piece);
@@ -212,6 +229,83 @@ function romanToAscii(str) {
        .replace(/u([aā])/g, 'u))$1');
   return s;
 }
+
+/* Rekhta's Urdu is unvocalised, so what the engine cannot see in it, the Roman does say. The Roman is split on
+   spaces and hyphens; where it lines up word-for-word with the Urdu, each Urdu word gets
+     - a zer for iẓāfat (bulbul-e-betāb; ۂ for a final ہ), and
+     - a shadda on the letter the Roman doubles (jannat, muqaddar, patthar = pat+thar), the one unwritten-tashdid case.
+   The engine reads written marks literally. The takhallus sign ؔ (U+0614) is stripped: it is a name mark, not a letter.
+   A line that does not align keeps its plain Urdu.
+   (Used by the reader and Look up scans for Rekhta lines, and by scripts/lib_scan.js: one copy.) */
+const RK_NON_LATIN = /[\u0600-\u06ff\u0900-\u097f]/;
+const RK_ROMAN_VOWEL = /[aeiouāīūñ]/;
+const RK_URDU_NONCONS = /[اآىیےںءأئؤۂھً-ٰٟؔ]/;   // و ہ ی can be consonants: tried per word below
+const RK_MAYBE_CONS = ['و', 'ی', 'ہ'];
+const RK_DIGRAPH_H = /[bcdgjkpstṭḍṛḳġ]/;
+
+function rkRomanConsonants(word) {   // [{ch, dbl}] one entry per consonant letter ('th' = one), doubled letters marked
+    const w = word.toLowerCase().replace(/[-’‘ʾ']/g, ''), out = [];
+    let afterVowel = true;
+    for (let i = 0; i < w.length; i++) {
+        const c = w[i];
+        if (RK_ROMAN_VOWEL.test(c)) { afterVowel = true; continue; }
+        const last = out[out.length - 1];
+        if (c === '.') {   // .a .i .u = ʿain (ta.alluq); .e .ī after a vowel = hamza (aa.e), which is not a consonant here
+            if (/[aiu]/.test(w[i + 1] || '')) { out.push({ ch: 'ʿ', dbl: false }); afterVowel = false; }
+            continue;
+        }
+        if (c === 'h' && last && !afterVowel && last.ch.length === 2 && last.ch[1] === 'h') continue;   // chh: the h of an aspirate already taken
+        let unit = c;
+        if (w[i + 1] === 'h' && RK_DIGRAPH_H.test(c)) { unit = c + 'h'; i++; }
+        if (last && !afterVowel && (last.ch === unit || (unit.length === 2 && last.ch === unit[0]))) { last.dbl = true; last.ch = unit; }
+        else out.push({ ch: unit, dbl: false });
+        afterVowel = false;
+    }
+    return out;
+}
+
+function rkAddTashdid(uw, rw) {   // uw: one Urdu word, rw: its Roman; returns uw with a shadda where Roman doubles a consonant
+    if (/ّ/.test(uw)) return uw;
+    const rc = rkRomanConsonants(rw);
+    const di = rc.findIndex(u => u.dbl);
+    if (di < 0) return uw;
+    const letters = [...uw.normalize('NFC')];
+    for (let mask = 0; mask < 8; mask++) {   // which of و ی ہ count as consonants in this word
+        const extra = RK_MAYBE_CONS.filter((_, k) => mask & (1 << k));
+        const cons = [];
+        letters.forEach((ch, i) => { if (!RK_URDU_NONCONS.test(ch) && (!RK_MAYBE_CONS.includes(ch) || extra.includes(ch))) cons.push(i); });
+        if (cons.length === rc.length) { letters.splice(cons[di] + 1, 0, 'ّ'); return letters.join(''); }
+    }
+    return uw;   // not a clean letter-for-letter match: leave it
+}
+
+function rekhtaScanText(ur, ro) {
+    const plain = ur.replace(/ؔ/g, '');
+    if (!ro || RK_NON_LATIN.test(ro)) return plain;
+    const uw = plain.split(/\s+/).filter(Boolean);
+    const parts = [];
+    ro.replace(/\s+e(?=\s|$)/g, '-e').split(/\s+/).filter(Boolean).forEach(tok =>
+        tok.split('-').forEach((p, i) => {
+            if (i > 0 && /^(e|ye)$/i.test(p) && parts.length) parts[parts.length - 1].iz = true;
+            else if (p) parts.push({ ro: p, iz: false });
+        }));
+    if (parts.length !== uw.length) return plain;
+    return uw.map((w, i) => {
+        w = rkAddTashdid(w, parts[i].ro);
+        if (!parts[i].iz || /[ِٔ]$/.test(w) || /ے$/.test(w)) return w;
+        return /[ہۂ]$/.test(w) ? w.replace(/[ہۂ]$/, 'ۂ') : w + 'ِ';
+    }).join(' ');
+}
+
+/* The text to scan for a ghazal line: a Rekhta line (marked `rk` when the poet data loads) is scanned with the izafat, tashdid and
+   pen-name hints its Roman gives; every other line scans as written. Cached on the line. */
+function lineScanText(lineObj) {
+  if (!lineObj) return '';
+  if (!lineObj.rk || !lineObj.ro) return lineObj.ur || '';
+  if (lineObj._sc === undefined) lineObj._sc = rekhtaScanText(lineObj.ur || '', lineObj.ro);
+  return lineObj._sc;
+}
+window.lineScanText = lineScanText;
 
 function urduToDevanagari(str) {
   if(!str) return '';

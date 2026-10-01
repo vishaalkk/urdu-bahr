@@ -23,7 +23,7 @@ function _meterCollections() {
   if (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) out.push(['handbook', EXERCISES_DATA, it => it.poet || 'Handbook', it => it.meters || it.m]);
   if (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) out.push(['ghalib', GHALIB_EXT_DATA, () => 'Ghalib', it => it.meters || it.meter || it.m]);
   if (typeof MIR_EXT_DATA !== 'undefined' && Array.isArray(MIR_EXT_DATA)) out.push(['mir', MIR_EXT_DATA, () => 'Mir', it => it.meters || it.meter || it.m]);
-  if (typeof OTHERS_DATA !== 'undefined' && Array.isArray(OTHERS_DATA)) out.push(['others', OTHERS_DATA, it => it.poet || 'Poet', it => it.meters || it.meter || it.m]);
+  poetCollections().forEach(([key, items]) => out.push([key, items, it => it.poet || key, it => it.meters || it.meter || it.m]));
   // urdupoetry.com's "Bah'r: The Backbone of Shaayari" article (Irfan 'Abid', 2001) — its classic
   // couplet for each bahr it names, folded in last so it only adds to (never crowds out) the
   // handbook/Ghalib/Mir examples above. See data/urdupoetry_bahrs.json for the full article extraction.
@@ -209,9 +209,9 @@ function meterCoupletsHTML(mId, pfx) {
       const w2 = dispWordWrap(c.l2, cs);
       // only handbook/Ghalib/Mir have a Ghazals browse page to link to; other collections
       // (e.g. the urdupoetry.com article's couplets) just show the poet's name, unlinked.
-      const browsable = c.col === 'handbook' || c.col === 'ghalib' || c.col === 'mir' || c.col === 'others';
+      const browsable = c.col === 'handbook' || c.col === 'ghalib' || c.col === 'mir' || isPoetCol(c.col);
       const head = browsable
-        ? `<a class="vnum" href="#/ghazals/${c.col}/${c.id}" onclick="event.stopPropagation()">${c.poet}${c.col !== 'handbook' && c.col !== 'others' ? ' ' + ((typeof franNum === 'function' ? franNum(c.col, c.item) : null) || c.id) : ''} ›</a>`
+        ? `<a class="vnum" href="#/ghazals/${c.col}/${c.id}" onclick="event.stopPropagation()">${c.poet}${c.col !== 'handbook' && !isPoetCol(c.col) ? ' ' + ((typeof franNum === 'function' ? franNum(c.col, c.item) : null) || c.id) : ''} ›</a>`
         : `<span class="vnum">${c.poet} — urdupoetry.com</span>`;
       h += `<div class="card couplet-card">`;
       h += `<div class="row couplet-head">${head}`;
@@ -271,7 +271,7 @@ function playLookupCouplet(mId, i, start, btn, pfx) {
     if (typeof Scan === 'undefined' || !Scan.scanLine) return null;
     const out = [];
     [c.l1, c.l2].forEach((l, k) => {
-      const r = Scan.scanLine(l.ur); if (!r || !r.fits || !r.fits.length) return;
+      const r = Scan.scanLine(lineScanText(l)); if (!r || !r.fits || !r.fits.length) return;
       const f = r.fits.find(x => String(x.meter.id) === String(mId)) || r.fits[0];
       const e = Scan.explain(r, f);
       const wordsHost = $(`${pfx}Words_${mId}_${i}_${k + 1}`);

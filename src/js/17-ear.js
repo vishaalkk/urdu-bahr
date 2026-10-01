@@ -23,13 +23,16 @@ function bestGhazalLinkForMeter(mId) {
       if (match) mr++;
     });
   }
-  if (typeof OTHERS_DATA !== 'undefined' && Array.isArray(OTHERS_DATA)) {
-    OTHERS_DATA.forEach(e => { if (Array.isArray(e.meters) && e.meters.some(x => String(x) === idStr)) ot++; });
-  }
+  let bestPoet = { key: null, n: 0 };
+  poetCollections().forEach(([key, items]) => {
+    const n = items.filter(e => Array.isArray(e.meters) && e.meters.some(x => String(x) === idStr)).length;
+    ot += n;
+    if (n > bestPoet.n) bestPoet = { key, n };
+  });
   const total = hb + gh + mr + ot;
   let bestColl = 'ghalib';
   let bestCount = gh;
-  if (ot > bestCount) { bestColl = 'others'; bestCount = ot; }
+  if (bestPoet.n > bestCount) { bestColl = bestPoet.key; bestCount = bestPoet.n; }
   if (mr > bestCount) {
     bestColl = 'mir';
     bestCount = mr;

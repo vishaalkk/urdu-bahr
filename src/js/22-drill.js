@@ -35,9 +35,15 @@ function drPanel(tab) { return $(DR_PANELS[tab]); }
 var DR_SOURCES = [
   { key: 'handbook', label: 'Handbook' },
   { key: 'ghalib', label: 'Ghalib' },
-  { key: 'mir', label: 'Mir' },
-  { key: 'others', label: 'More Poets' }
-];
+  { key: 'mir', label: 'Mir' }
+].concat(POET_LIST.map(p => ({ key: p.key, label: p.name })));
+/* "All" keeps the old balance: Handbook, Ghalib, Mir and the poets together as one weighted pool (not 16 equal sources) */
+var DR_ALL = ['handbook', 'ghalib', 'mir', '@poets'];
+function drPickPoet() {
+  let n = Math.random() * POET_LIST.reduce((t, p) => t + p.count, 0);
+  for (const p of POET_LIST) { if ((n -= p.count) < 0) return p.key; }
+  return POET_LIST[0].key;
+}
 
 /* ---------- small utilities ---------- */
 function drSym(w) { return w === 'l' ? '=' : w === 's' ? '–' : w === 'x' ? 'x' : '·'; }
@@ -48,7 +54,7 @@ function drEsc(s) {
   if (typeof escapeHtml === 'function') return escapeHtml(s);
   return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
-function drLabelForSource(k) { return k === 'handbook' ? 'Handbook' : k === 'ghalib' ? 'Ghalib' : k === 'mir' ? 'Mir' : k === 'others' ? 'More Poets' : k; }
+function drLabelForSource(k) { return k === 'handbook' ? 'Handbook' : k === 'ghalib' ? 'Ghalib' : k === 'mir' ? 'Mir' : isPoetCol(k) ? poetMeta(k).name : k; }
 function drCapFirst(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
 function drRawFromSeq(seq) { return seq.map(w => w === 'l' ? '=' : w === 's' ? '-' : w === 'x' ? 'x' : w === '/' ? '/' : '-').join(' '); }
 /* playSeq may carry '/' foot delimiters: audio and the strip need them, the syllable-only paths do not */
@@ -80,12 +86,12 @@ function drCorpusFor(key) {
   if (key === 'handbook') return (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) ? EXERCISES_DATA : [];
   if (key === 'ghalib') return (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) ? GHALIB_EXT_DATA : [];
   if (key === 'mir') return (typeof MIR_EXT_DATA !== 'undefined' && Array.isArray(MIR_EXT_DATA)) ? MIR_EXT_DATA : [];
-  if (key === 'others') return (typeof OTHERS_DATA !== 'undefined' && Array.isArray(OTHERS_DATA)) ? OTHERS_DATA : [];
+  if (isPoetCol(key)) return poetItems(key);
   return [];
 }
 function drActiveSources(tab) {
   const st = DR[tab], keys = DR_SOURCES.map(x => x.key);
-  if (!st || !st.sources || st.sources.has('all') || !st.sources.size) return keys;
+  if (!st || !st.sources || st.sources.has('all') || !st.sources.size) return DR_ALL;
   return keys.filter(k => st.sources.has(k));
 }
 function drActiveTypes(tab) {
@@ -109,7 +115,8 @@ window.fitAmbiguity = fitAmbiguity;
    Lazy: a handful of random line + Scan.scanLine tries, never the whole corpus. */
 function drSample(sources) {
   for (let tries = 0; tries < 25; tries++) {
-    const src = drPick(sources);
+    let src = drPick(sources);
+    if (src === '@poets') src = drPickPoet();
     const corpus = drCorpusFor(src);
     if (!corpus.length) continue;
     const item = drPick(corpus);
@@ -312,10 +319,17 @@ function drMatchPool() {
   }));
   return pool;
 }
+/* a line in the current script; a few Rekhta lines carry no Roman or Devanagari, so convert from the Urdu rather than show it unchanged */
+function drLineText(ln, cs) {
+  if (ln[cs]) return ln[cs];
+  if (cs === 'ro' && typeof urduToRoman === 'function') return urduToRoman(ln.ur);
+  if (cs === 'hi' && typeof urduToDevanagari === 'function') return urduToDevanagari(ln.ur);
+  return ln.ur;
+}
 function drMatchLineHTML(ln) {
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
   const cls = cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : '');
-  return `<span class="dr-verse ${cls}">${drEsc(ln[cs] || ln.ur)}</span>`;
+  return `<span class="dr-verse ${cls}">${drEsc(drLineText(ln, cs))}</span>`;
 }
 function drMatchPoet(o) { return drEsc(o.item.poet || drLabelForSource(o.src)); }
 
@@ -527,7 +541,7 @@ function drChoiceHTML(c) {
   if (c.seq) return drPatHTML(c.seq);
   if (c.fam) return `<span class="dr-verse ${cs === 'ur' ? 'urdu' : ''}">${drEsc(drFamText(c.fam))}</span>`;
   if (c.match) {
-    const o = c.match, txt = o.line[cs] || o.line.ur;
+    const o = c.match, txt = drLineText(o.line, cs);
     return `<span class="dr-verse ${cls}">${drEsc(txt)}</span>` +
            `<span class="tiny faint dr-choice-meta"> — ${drEsc(o.item.poet || drLabelForSource(o.src))}</span>`;
   }
@@ -563,9 +577,22 @@ function drChipsHTML(tab, kind, items) {
   const sel = kind === 'type' ? state.types : state.sources;
   const allOn = sel.has('all');
   let h = `<button type="button" class="chipbtn ${allOn ? 'on' : ''}" onclick="drFilterClick('${tab}','${kind}','all')">All</button>`;
+  if (kind === 'source') {
+    // 16 sources do not fit as chips: "Pick…" folds out the full list (the flat "+ more" pattern), and shows how many are chosen
+    const n = allOn ? 0 : sel.size, open = !!state.pickOpen;
+    h += `<button type="button" class="chipbtn ${n ? 'on' : ''}" aria-expanded="${open}" onclick="drTogglePick('${tab}')">Pick${n ? ' · ' + n : '…'}</button>`;
+    if (open) h += `<div class="dr-pick-list">` + items.map(it => `<button type="button" class="chipbtn ${!allOn && sel.has(it.key) ? 'on' : ''}" aria-pressed="${!allOn && sel.has(it.key)}" onclick="drFilterClick('${tab}','source','${it.key}')">${drEsc(it.label)}</button>`).join('') + `</div>`;
+    return h;
+  }
   h += items.map(it => `<button type="button" class="chipbtn ${!allOn && sel.has(it.key) ? 'on' : ''}" onclick="drFilterClick('${tab}','${kind}','${it.key}')">${drEsc(it.label)}</button>`).join('');
   return h;
 }
+function drTogglePick(tab) {
+  if (!DR[tab]) DR[tab] = drDefaultState();
+  DR[tab].pickOpen = !DR[tab].pickOpen;
+  drRenderFilterChips(tab);
+}
+window.drTogglePick = drTogglePick;
 function drRenderFilterChips(tab) {
   const panel = drPanel(tab);
   if (!panel) return;
