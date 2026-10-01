@@ -179,6 +179,19 @@ lex('کہہ',[{w:['l','s'],c:0},{w:['l'],c:0.3,n:'kah as one long syllable'},{w:
 lex('تکلف',[{w:['l','l'],c:0},{w:['s','l','s'],c:0},{w:['s','l','l'],c:0.3,n:'takalluf as - = ='},{w:['s','s','l'],c:0.6},{w:['l','s','s'],c:6}]);
 lex('تجلی',[{w:['l','x'],c:0},{w:['s','l','l'],c:0.3,n:'tajallī as - = ='},{w:['s','s','x'],c:0.6},{w:['s','l','s'],c:4}]);
 lex('تمہیں انہیں انھیں تمھیں',[{w:['s','x'],c:0}]);
+/* Handbook 1.2/1.4: a nasalizing نن in the first syllable of an Indic verb, a silent ع, and muñh: the letter rules alone allow other splits,
+   so the pronunciation is stated here. The other splits stay available, at a cost, for poets who scan them differently. */
+lex('شروع',[{w:['s','l','s'],c:0},{w:['l','l'],c:1.2},{w:['s','s','l'],c:1.2}]);
+lex('ہنسنا',[{w:['l','x'],c:0},{w:['s','l','x'],c:1.2}]);
+lex('منہ',[{w:['l'],c:0},{w:['l','s'],c:0.5},{w:['s','x'],c:0.5}]);
+/* Words whose tashdīd is nearly always left unwritten (Handbook 1.2: the doubled letter counts). Without it the letters divide as
+   mud-t / mu-dt; with it, mud-dat. The raw readings stay, at a cost. Not listed on purpose: ḥaqq, ḳhaṭṭ, rabb and the other
+   word-final geminates (an extra overlong reading made scans slightly worse), and ḥasrat, qismat (no hidden doubling). */
+lex('مدت لذت منت شدت عزت قوت نیت',[{w:['l','l'],c:0},{w:['l','s'],c:0.6},{w:['s','l'],c:0.6}]);
+lex('محبت',[{w:['s','l','l'],c:0},{w:['l','l'],c:0.6},{w:['s','l','s'],c:0.6}]);
+lex('تمنا',[{w:['s','l','x'],c:0},{w:['l','x'],c:0.6}]);
+lex('مدعا',[{w:['l','s','x'],c:0},{w:['l','x'],c:0.6}]);
+lex('ذرہ',[{w:['l','x'],c:0},{w:['l','s'],c:0.4}]);
 lex('اللہ اللٰہ',[{w:['l','l','s'],c:0},{w:['l','l'],c:0.3,n:'allāh as (= =)'}]);
 lex('گیان',[{w:['l','s'],c:0}]);
 lex('بالکل',[{w:['l','l'],c:0}]);

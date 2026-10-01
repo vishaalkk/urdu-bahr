@@ -405,9 +405,13 @@ function lineScripts(rawL, opts){
   }
   return lineObj;
 }
+/* set when Scan was opened on a whole ghazal ("ghalib/21"): the address then stays #/scan?g=ghalib/21 until the text is changed */
+var scanGhazalRef;   // no initialiser: the router can set it before this file's top level runs
 function runScan(){
   const rawLines=$('scanIn').value.split('\n').map(s=>s.trim()).filter(Boolean);
-  if(typeof setHashQuiet==='function' && typeof location!=='undefined' && /^#\/scan/.test(location.hash||'')) setHashQuiet(rawLines.length ? '/scan?t=' + encodeURIComponent(rawLines.join('\n')) : '/scan');
+  const sameGhazal = !!scanGhazalRef && typeof ghazalScanText==='function' && ghazalScanText(scanGhazalRef)===rawLines.join('\n');
+  if(!sameGhazal) scanGhazalRef='';
+  if(typeof setHashQuiet==='function' && typeof location!=='undefined' && /^#\/scan/.test(location.hash||'')) setHashQuiet(rawLines.length ? (sameGhazal ? '/scan?g=' + scanGhazalRef : '/scan?t=' + encodeURIComponent(rawLines.join('\n'))) : '/scan');
   if(!rawLines.length){
     $('scanOut').innerHTML='';
     if($('studioResults')) $('studioResults').innerHTML='';

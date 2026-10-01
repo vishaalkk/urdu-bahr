@@ -251,14 +251,39 @@ const ROUTES = [
     }, 'Weight › Flexible: example line follows the script, no separate Roman line, highlight kept');
     await check('#/weight/learn', (w, d) => {
       const words = sel => [...d.querySelectorAll(sel + ' .special-syll-ex .constr-urdu')].map(n => n.textContent.replace(/\s+/g, ''));
-      const intro = words('#introEx'), r2 = words('#ruleTwoEx'), three = words('#specialSyll');
-      if (intro.length !== 3 || r2.length !== 3 || three.length !== 3) return `example counts ${intro.length}/${r2.length}/${three.length}`;
-      const all = [...intro, ...r2, ...three];
+      const intro = words('#introEx'), one = words('#ruleOneEx'), oneMore = words('#ruleOneMoreEx'), two = words('#ruleTwoEx'), three = words('#specialSyll');
+      if (intro.length !== 3 || one.length !== 7 || oneMore.length !== 3 || two.length !== 8 || three.length !== 3) return `example counts ${[intro, one, oneMore, two, three].map(a => a.length)}`;
+      const all = [...intro, ...one, ...oneMore, ...two, ...three];
       if (new Set(all).size !== all.length) return 'a word example is repeated across Basics: ' + all.join(' ');
       const ex = d.querySelector('#introEx .special-syll-ex');
       const kids = [...ex.children].map(c => c.className.split(' ')[0] || c.tagName);
       return /strip/.test(kids[kids.length - 2]) && /play/.test(kids[kids.length - 1]) ? true : 'column order: ' + kids.join(',');
     }, 'Weight › Basics: word examples are distinct and stacked word, Roman, bars, ▶');
+    // Each letter-rule example is Pritchett's reading of the word: the engine must be able to produce it, the letters row must have one
+    // group per syllable, and the words the letter rules alone cannot settle (shuruuʿ, hañsnā, muñh) must come out right by default.
+    await check('#/weight/learn', (w, d) => {
+      const EX = w.eval('LETTER_EX'), bad = [];
+      const match = (p, o) => { const a = p.replace(/[^=\-x]/g, '').split('').map(c => c === '-' ? 's' : 'l').join(''), b = o.syl.map(s => s.w).join(''); return a.length === b.length && [...a].every((c, i) => b[i] === 'x' || b[i] === c || (b[i] !== 's' && c === 'l')); };
+      EX.forEach(e => {
+        const o = (w.Scan.scanWord(e.w) || {}).opts || [], n = e.p.replace(/[^=\-x]/g, '').length, groups = e.L.split(' | ').length;
+        if (!o.some(x => match(e.p, x))) bad.push(e.w + ': engine has no reading ' + e.p);
+        if (groups !== n) bad.push(e.w + ': ' + groups + ' letter groups for ' + n + ' syllables');
+        if (['شروع', 'ہنسنا', 'منہ'].includes(e.w) && !match(e.p, o[0])) bad.push(e.w + ': engine default is not ' + e.p);
+      });
+      const rendered = d.querySelectorAll('.letter-ex').length;
+      return bad.length ? bad.join(' | ') : rendered === EX.length ? true : rendered + ' of ' + EX.length + ' letter examples rendered';
+    }, 'Weight › Basics: the engine reads every letter-rule example as Pritchett does');
+    await check('#/ghazals/ghalib/1', async (w, d) => {
+      const btn = d.getElementById('readerCouplets').querySelector('button[onclick^="editCurrentInScan"]'); if (!btn) return 'no Edit in Scan button';
+      btn.click(); await new Promise(r => setTimeout(r, 300));
+      const h1 = w.location.hash; if (h1 !== '#/scan?g=ghalib/1') return 'Edit in Scan address is ' + h1.slice(0, 80);
+      if (d.querySelectorAll('#scanOut .chip').length < 20) return 'ghazal not scanned';
+      w.document.getElementById('scanIn').value += '\nدل'; w.runScan();
+      return /^#\/scan\?t=/.test(w.location.hash) ? true : 'after editing the text the address is ' + w.location.hash.slice(0, 40);
+    }, 'Edit in Scan keeps a short address (#/scan?g=ghalib/1) until the text changes');
+    await check('#/scan?g=ghalib/1', (w, d) => d.querySelectorAll('#scanOut .chip').length > 20 && w.location.hash === '#/scan?g=ghalib/1' ? true : 'link did not scan the ghazal: ' + w.location.hash.slice(0, 60), 'A #/scan?g= link scans that ghazal and stays short');
+    // words whose tashdīd is left unwritten: with or without the mark, the engine's first reading is the geminated one
+    await check('#/home', (w) => { const want = { 'مدت': 'll', 'مدّت': 'll', 'محبت': 'sll', 'تمنا': 'slx', 'مدعا': 'lsx', 'ذرہ': 'lx' }, bad = []; for (const k in want) { const o = (w.Scan.scanWord(k) || {}).opts || [], got = o[0] ? o[0].syl.map(s => s.w).join('') : ''; if (got !== want[k]) bad.push(k + ' ' + got); } return bad.length ? 'default reading wrong: ' + bad.join(', ') : true; }, 'Unwritten-tashdīd words read as geminates by default');
     await check('', (w) => w.location.hash === '#/home' ? true : 'landed on ' + w.location.hash, 'bare URL lands on Home');
     await check('#/home', (w, d) => { const s = d.getElementById('home-section'); return s && s.classList.contains('on') && /Weight/.test(s.textContent) && /Ghazals/.test(s.textContent) ? true : 'home section not rendered'; }, 'Home renders its content');
     // Round 3: inside the (single-collection) Mir list the group header carries the

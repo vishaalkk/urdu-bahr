@@ -1044,9 +1044,22 @@ function playReaderCoupletByIndex(c, start, btn) {
 }
 window.playReaderCoupletByIndex = playReaderCoupletByIndex;
 
+/* "ghalib/21" -> that ghazal's Urdu lines joined for the Scan box, or null. Lets Scan carry a short link (#/scan?g=ghalib/21)
+   instead of the whole text percent-encoded. */
+function ghazalScanText(ref) {
+  const [col, id] = String(ref || '').split('/');
+  const data = col === 'handbook' ? (typeof EXERCISES_DATA !== 'undefined' ? EXERCISES_DATA : null)
+    : col === 'ghalib' ? (typeof GHALIB_EXT_DATA !== 'undefined' ? GHALIB_EXT_DATA : null)
+    : col === 'mir' ? (typeof MIR_EXT_DATA !== 'undefined' ? MIR_EXT_DATA : null) : null;
+  const item = data && data.find(x => String(x.id) === String(id));
+  return item && item.lines ? item.lines.map(l => (l.ur || '').trim()).filter(Boolean).join('\n') : null;
+}
+window.ghazalScanText = ghazalScanText;
+
 function editCurrentInScan(col, id) {
   const lines = getCurrentReaderLines();
   if (!lines) return;
+  scanGhazalRef = col + '/' + id;   // runScan keeps the address short while the text is still this ghazal
   if (typeof navigate === 'function') {
     navigate('/scan');
   } else if (typeof go === 'function') {

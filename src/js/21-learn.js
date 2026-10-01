@@ -377,7 +377,7 @@ function renderLearnExamples() { renderConstr(); renderFlexEvidence(); refitLear
 window.renderLearnExamples = renderLearnExamples;
 
 /* The first screen: two words taken apart before any rule is stated. */
-const INTRO_WORDS = [['دل', 'dil', '=', 'dil'], ['مدّت', 'muddat', '= =', 'mud-dat'], ['کتاب', 'kitāb', '- = -', 'ki-tā-b']];   // one, two, three syllables; none is reused in the rules below
+const INTRO_WORDS = [['دل', 'dil', '=', 'dil'], ['شامل', 'shāmil', '= =', 'shā-mil'], ['کتاب', 'kitāb', '- = -', 'ki-tā-b']];   // one, two, three syllables; none is reused in the rules below
 function renderIntroEx() {
   const host = $('introEx');
   if (!host) return;
@@ -423,14 +423,64 @@ function wordExample(e, onclick) {
 }
 /* the three-consonant card follows Rule three; the ا و ی examples sit inside Rule two */
 const SPECIAL_HOST = { 0: 'specialSyll' };
-const RULE_TWO_EX = [['کو', 'ko', '=', 'ko'], ['وطن', 'vatan', '- =', 'va-tan'], ['یار', 'yār', '= -', 'yā-r']];
-function ruleTwoPlay(ei, btn) {
-  const e = RULE_TWO_EX[ei];
-  pbToggle('rule2:' + ei, btn, () => [rawPbLine(e[2], null, btn.closest('.constr-ex'))]);
+/* Examples for Rules one and two. Each word is shown as its Urdu, its Roman by syllable, the letters that meter counts
+   (grouped by syllable; faded = not counted; dotted = a doubled letter written once as a tashdīd), the weight bars and a ▶.
+   L: syllables separated by " | ", letters by spaces; "~x" = not counted, "×x" = doubled by tashdīd, "M" = the madd on alif.
+   The pattern p is Pritchett's reading of the word; tests/dom_smoke.js checks the engine can produce it. */
+const SCRIPT_URL = 'https://franpritchett.com/00urdu/urduscript/';
+const scriptLink = (n, t) => `<a href="${SCRIPT_URL}section${n}.html" target="_blank" rel="noopener">${t} ↗</a>`;
+const LETTER_EX = [
+  /* Rule one */
+  { host: 'ruleOneEx', w: 'مدّت', ro: 'mud-dat', p: '= =', L: 'م د | ×د ت', c: 'A tashdīd stands for a doubled letter, so it counts twice: mud-dat.' },
+  { host: 'ruleOneEx', w: 'آج', ro: 'ā-j', p: '= -', L: 'ا M | ج', c: 'Alif madd counts as two letters (alif and madd), so ā is a long syllable by itself.' },
+  { host: 'ruleOneEx', w: 'کھانا', ro: 'khā-nā', p: '= =', L: 'ک ~ھ ا | ن ا', c: `The aspirating ھ (do-chashmī he) does not count: ک and ا make one long syllable. ${scriptLink(10, 'Script §10')}` },
+  { host: 'ruleOneEx', w: 'کہنا', ro: 'kah-nā', p: '= =', L: 'ک ہ | ن ا', c: 'A plain ہ does count. The weights match کھانا, but the split is different.' },
+  { host: 'ruleOneEx', w: 'کہاں', ro: 'ka-hāñ', p: '- =', L: 'ک | ہ ا ~ں', c: `The nasalizing ں (nūn-e ghunnah) does not count either: ka is short, hāñ is long. ${scriptLink(9, 'Script §9')}` },
+  { host: 'ruleOneEx', w: 'جائے', ro: 'jā-ʾe', p: '= =', L: 'ج ا | ء ے', c: 'A hamza inside a word is a letter, and a consonant. The ی-shaped seat under it does not count.' },
+  { host: 'ruleOneEx', w: 'گئے', ro: 'ga-ʾe', p: '- =', L: 'گ | ء ے', c: 'A hamza always starts a syllable here; it is never the second letter of one.' },
+  /* Rule one, the ن exceptions (in the fold) */
+  { host: 'ruleOneMoreEx', w: 'منہ', ro: 'muñh', p: '=', L: 'م ~ن ہ', c: `Here ن only nasalizes the vowel, so muñh is two letters: one long syllable. ${scriptLink(9, 'Script §9')}` },
+  { host: 'ruleOneMoreEx', w: 'ہنسنا', ro: 'hañs-nā', p: '= =', L: 'ہ ~ن س | ن ا', c: `The ن in the first syllable is a nasalizer (hañsnā, "to laugh"). A jazm over س, when it is written, says the same thing: it closes the syllable. ${scriptLink(5, 'Script §5')}` },
+  { host: 'ruleOneMoreEx', w: 'رنگ', ro: 'ran-g', p: '= -', L: 'ر ن | گ', c: 'Persian nouns keep a full ن, so rang is three letters: ran-g.' },
+  /* Rule two */
+  { host: 'ruleTwoEx', w: 'کو', ro: 'ko', p: '=', L: 'ک و', c: 'و as the second letter is a vowel: ko is one long syllable.' },
+  { host: 'ruleTwoEx', w: 'وطن', ro: 'va-tan', p: '- =', L: 'و | ط ن', c: 'و that begins a syllable is a consonant: va, then tan.' },
+  { host: 'ruleTwoEx', w: 'یار', ro: 'yā-r', p: '= -', L: 'ی ا | ر', c: 'ی that begins a syllable is a consonant, and ا is its vowel: yā, then r.' },
+  { host: 'ruleTwoEx', w: 'معنی', ro: 'maʿ-nī', p: '= =', L: 'م ع | ن ی', c: 'ع counts as a consonant even where it is barely heard.' },
+  { host: 'ruleTwoEx', w: 'شروع', ro: 'shu-rū-ʿ', p: '- = -', L: 'ش | ر و | ع', c: 'The silent final ع is still a letter, so it makes a short syllable of its own.' },
+  { host: 'ruleTwoEx', w: 'ابھی', ro: 'a-bhī', p: '- =', L: 'ا | ب ~ھ ی', c: 'A vowel can stand alone only at the start of a word: a is a short syllable.' },
+  { host: 'ruleTwoEx', w: 'آدمی', ro: 'ā-d-mī', p: '= - =', L: 'ا M | د | م ی', c: 'آ opens the word as a syllable of its own; after it, each syllable starts with a consonant.' },
+  { host: 'ruleTwoEx', w: 'قرآن', ro: 'qur-ā-n', p: '= = -', L: 'ق ر | ا M | ن', c: 'The rare exception: a vowel-only syllable inside a word, and always alif madd.' }
+];
+/* letters row: ~x not counted, ×x doubled, M the madd mark; one .sy-u group per syllable so ▶ lights it with its bar */
+function lettersRow(L, wts) {
+  const chip = t => t === 'M' ? '<span class="lt">◌&#x0653;</span>'
+    : t[0] === '~' ? `<span class="lt off" title="not counted">${t.slice(1)}</span>`
+    : t[0] === '×' ? `<span class="lt dbl" title="doubled by the tashdīd">${t.slice(1)}</span>`
+    : `<span class="lt">${t}</span>`;
+  return `<div class="letters" dir="rtl">${L.split(' | ').map((g, i) => `<span class="sy sy-u ${wts[i] || ''}">${g.split(' ').map(chip).join('')}</span>`).join('')}</div>`;
 }
-window.ruleTwoPlay = ruleTwoPlay;
+function letterExample(e, i) {
+  const wts = sylls(Scan.parseRaw(e.p)).map(t => t === 'l' ? 'l' : t === 's' ? 's' : 'x');
+  return `
+    <div class="constr-ex special-syll-ex letter-ex">
+      <div class="urdu constr-urdu ur-always">${e.w}</div>
+      <div class="ro dim small constr-ro">${sylSpans(e.ro, 'sy-r', wts)}</div>
+      ${lettersRow(e.L, wts)}
+      <div class="strip">${strip(Scan.parseRaw(e.p))}</div>
+      <span class="play sm" role="button" tabindex="0" data-label="Play example" aria-label="Play example" onclick="letterPlay(${i},this)">▶︎</span>
+      <p class="letter-cap tiny dim">${e.c}</p>
+    </div>`;
+}
+function letterPlay(i, btn) {
+  const e = LETTER_EX[i];
+  pbToggle('letters:' + i, btn, () => [rawPbLine(e.p, null, btn.closest('.constr-ex'))]);
+}
+window.letterPlay = letterPlay;
 function renderSpecialSyll() {
-  if ($('ruleTwoEx')) $('ruleTwoEx').innerHTML = RULE_TWO_EX.map((e, ei) => wordExample(e, `ruleTwoPlay(${ei},this)`)).join('');
+  ['ruleOneEx', 'ruleOneMoreEx', 'ruleTwoEx'].forEach(h => {
+    if ($(h)) $(h).innerHTML = LETTER_EX.map((e, i) => e.host === h ? letterExample(e, i) : '').join('');
+  });
   SPECIAL_SYLL.forEach((c, ci) => {
     const host = $(SPECIAL_HOST[ci]);
     if (!host) return;

@@ -177,6 +177,10 @@ function handleRoute(targetHash) {
   } else if (root === 'scan') {
     if (typeof document !== 'undefined') document.title = 'Scan — Baḥr';
     initScanEmptyState();
+    if (params && params.g && $('scanIn') && typeof ghazalScanText === 'function') {   // #/scan?g=ghalib/21: a whole ghazal by reference
+      const txt = ghazalScanText(params.g);
+      if (txt && $('scanIn').value !== txt) { scanGhazalRef = params.g; $('scanIn').value = txt; if (typeof runScan === 'function') runScan(); }
+    }
     if (params && params.t && $('scanIn') && $('scanIn').value !== params.t && typeof runScan === 'function') { $('scanIn').value = params.t; runScan(); }
   } else if (root === 'ghazals') {
     if (typeof document !== 'undefined') document.title = 'Ghazals — Baḥr';

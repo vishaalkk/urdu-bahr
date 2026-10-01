@@ -2186,6 +2186,20 @@ html[data-script="ro"] .syl-tab, html[data-script="hi"] .syl-tab { font-family: 
 #meter-section .meter-row-details .fam-section-label { margin-top: var(--sp-4); }
 .meter-collapse-row { display: flex; justify-content: flex-end; margin-top: var(--sp-2); }
 
+/* Weight › Basics letter examples: the letters meter counts, grouped by syllable */
+.letter-row { align-items: flex-start; }
+.letter-ex { max-width: 13em; }
+.letters { display: flex; justify-content: center; gap: var(--sp-3); font-family: var(--urdu); font-size: 22px; line-height: 1.5; }
+.letters .sy { display: inline-flex; gap: 2px; padding: 0 4px; border-bottom: 1px solid var(--line2); }
+.lt { min-width: .9em; text-align: center; }
+.lt.off { opacity: .4; border: 1px dashed var(--line2); border-radius: 3px; }
+.lt.dbl { border: 1px dotted var(--faint); border-radius: 3px; }
+.letter-cap { margin: 0; line-height: 1.45; text-align: center; }
+.letter-cap a { color: inherit; }
+
+/* Weight › Learn stage buttons: the id rule above flattens .btn.gold into bare text; the "next" button keeps the bevel like its neighbours */
+#weight-section .stage-nav .btn.gold { background: var(--bg3); border: 1px solid var(--gold); padding: 4px 14px; color: var(--ink); font-weight: 600; }
+
 /* ================= SHARED DRILL ENGINE (round 2, G3) =================
    Styles for src/js/22-drill.js's mountDrill('weight'|'meter'). Quiet
    Manuscript: no shaded panels, one bordered card, type does the hierarchy. */
@@ -2614,8 +2628,11 @@ html[data-script="ro"] .pr-line, html[data-script="hi"] .pr-line { font-family: 
       <h3 class="group-title">The rules</h3>
       <div class="card small" data-rule-card>
         <p><strong class="weight-term">Rule one: a syllable is two letters or one.</strong> Count letters, not sounds: every letter of the alphabet, the doubled letter a tashdīd stands for, the madd on Alif (Alif Madd, آ), and a hamza inside a word.</p>
+        <div id="ruleOneEx" class="row constr-row special-syll-row letter-row"></div>
         <details class="card-more"><summary class="tiny dim">More: what meter ignores</summary>
-          <p><strong class="weight-term">Invisible to meter:</strong> the marks zer, zabar and pesh; the aspiration ھ (do-chashmī he); the nasal ں (nūn-e ghunnah); the dotless ی that carries a hamza. Older texts write plain gol he for aspiration; it is still invisible when it aspirates.</p>
+          <p><strong class="weight-term">Invisible to meter:</strong> the marks zer, zabar, pesh and jazm (<a href="https://franpritchett.com/00urdu/urduscript/section05.html" target="_blank" rel="noopener">script §5 ↗</a>); the aspiration ھ (do-chashmī he, <a href="https://franpritchett.com/00urdu/urduscript/section10.html" target="_blank" rel="noopener">§10 ↗</a>); the nasal ں (nūn-e ghunnah, <a href="https://franpritchett.com/00urdu/urduscript/section09.html" target="_blank" rel="noopener">§9 ↗</a>); the dotless ی that carries a hamza. Older texts write plain gol he for aspiration; it is still invisible when it aspirates. A written jazm over a consonant says it has no vowel of its own, so it closes a syllable.</p>
+          <p class="small dim">A nasalizing ن can also sit in the middle of a word. It usually comes after a long vowel; the exceptions are mostly Indic verbs with ن in the first syllable.</p>
+          <div id="ruleOneMoreEx" class="row constr-row special-syll-row letter-row"></div>
         </details>
         <a class="hb-ref" data-rule="L1.2-letters" href="https://franpritchett.com/00ghalib/meterbk/01_genrules.html#1_2" target="_blank" rel="noopener">Handbook §1.2 &#8599;</a>
       </div>
@@ -3645,6 +3662,19 @@ lex('کہہ',[{w:['l','s'],c:0},{w:['l'],c:0.3,n:'kah as one long syllable'},{w:
 lex('تکلف',[{w:['l','l'],c:0},{w:['s','l','s'],c:0},{w:['s','l','l'],c:0.3,n:'takalluf as - = ='},{w:['s','s','l'],c:0.6},{w:['l','s','s'],c:6}]);
 lex('تجلی',[{w:['l','x'],c:0},{w:['s','l','l'],c:0.3,n:'tajallī as - = ='},{w:['s','s','x'],c:0.6},{w:['s','l','s'],c:4}]);
 lex('تمہیں انہیں انھیں تمھیں',[{w:['s','x'],c:0}]);
+/* Handbook 1.2/1.4: a nasalizing نن in the first syllable of an Indic verb, a silent ع, and muñh: the letter rules alone allow other splits,
+   so the pronunciation is stated here. The other splits stay available, at a cost, for poets who scan them differently. */
+lex('شروع',[{w:['s','l','s'],c:0},{w:['l','l'],c:1.2},{w:['s','s','l'],c:1.2}]);
+lex('ہنسنا',[{w:['l','x'],c:0},{w:['s','l','x'],c:1.2}]);
+lex('منہ',[{w:['l'],c:0},{w:['l','s'],c:0.5},{w:['s','x'],c:0.5}]);
+/* Words whose tashdīd is nearly always left unwritten (Handbook 1.2: the doubled letter counts). Without it the letters divide as
+   mud-t / mu-dt; with it, mud-dat. The raw readings stay, at a cost. Not listed on purpose: ḥaqq, ḳhaṭṭ, rabb and the other
+   word-final geminates (an extra overlong reading made scans slightly worse), and ḥasrat, qismat (no hidden doubling). */
+lex('مدت لذت منت شدت عزت قوت نیت',[{w:['l','l'],c:0},{w:['l','s'],c:0.6},{w:['s','l'],c:0.6}]);
+lex('محبت',[{w:['s','l','l'],c:0},{w:['l','l'],c:0.6},{w:['s','l','s'],c:0.6}]);
+lex('تمنا',[{w:['s','l','x'],c:0},{w:['l','x'],c:0.6}]);
+lex('مدعا',[{w:['l','s','x'],c:0},{w:['l','x'],c:0.6}]);
+lex('ذرہ',[{w:['l','x'],c:0},{w:['l','s'],c:0.4}]);
 lex('اللہ اللٰہ',[{w:['l','l','s'],c:0},{w:['l','l'],c:0.3,n:'allāh as (= =)'}]);
 lex('گیان',[{w:['l','s'],c:0}]);
 lex('بالکل',[{w:['l','l'],c:0}]);
@@ -4683,6 +4713,10 @@ function handleRoute(targetHash) {
   } else if (root === 'scan') {
     if (typeof document !== 'undefined') document.title = 'Scan — Baḥr';
     initScanEmptyState();
+    if (params && params.g && $('scanIn') && typeof ghazalScanText === 'function') {   // #/scan?g=ghalib/21: a whole ghazal by reference
+      const txt = ghazalScanText(params.g);
+      if (txt && $('scanIn').value !== txt) { scanGhazalRef = params.g; $('scanIn').value = txt; if (typeof runScan === 'function') runScan(); }
+    }
     if (params && params.t && $('scanIn') && $('scanIn').value !== params.t && typeof runScan === 'function') { $('scanIn').value = params.t; runScan(); }
   } else if (root === 'ghazals') {
     if (typeof document !== 'undefined') document.title = 'Ghazals — Baḥr';
@@ -6373,9 +6407,22 @@ function playReaderCoupletByIndex(c, start, btn) {
 }
 window.playReaderCoupletByIndex = playReaderCoupletByIndex;
 
+/* "ghalib/21" -> that ghazal's Urdu lines joined for the Scan box, or null. Lets Scan carry a short link (#/scan?g=ghalib/21)
+   instead of the whole text percent-encoded. */
+function ghazalScanText(ref) {
+  const [col, id] = String(ref || '').split('/');
+  const data = col === 'handbook' ? (typeof EXERCISES_DATA !== 'undefined' ? EXERCISES_DATA : null)
+    : col === 'ghalib' ? (typeof GHALIB_EXT_DATA !== 'undefined' ? GHALIB_EXT_DATA : null)
+    : col === 'mir' ? (typeof MIR_EXT_DATA !== 'undefined' ? MIR_EXT_DATA : null) : null;
+  const item = data && data.find(x => String(x.id) === String(id));
+  return item && item.lines ? item.lines.map(l => (l.ur || '').trim()).filter(Boolean).join('\n') : null;
+}
+window.ghazalScanText = ghazalScanText;
+
 function editCurrentInScan(col, id) {
   const lines = getCurrentReaderLines();
   if (!lines) return;
+  scanGhazalRef = col + '/' + id;   // runScan keeps the address short while the text is still this ghazal
   if (typeof navigate === 'function') {
     navigate('/scan');
   } else if (typeof go === 'function') {
@@ -8426,9 +8473,13 @@ function lineScripts(rawL, opts){
   }
   return lineObj;
 }
+/* set when Scan was opened on a whole ghazal ("ghalib/21"): the address then stays #/scan?g=ghalib/21 until the text is changed */
+var scanGhazalRef;   // no initialiser: the router can set it before this file's top level runs
 function runScan(){
   const rawLines=$('scanIn').value.split('\n').map(s=>s.trim()).filter(Boolean);
-  if(typeof setHashQuiet==='function' && typeof location!=='undefined' && /^#\/scan/.test(location.hash||'')) setHashQuiet(rawLines.length ? '/scan?t=' + encodeURIComponent(rawLines.join('\n')) : '/scan');
+  const sameGhazal = !!scanGhazalRef && typeof ghazalScanText==='function' && ghazalScanText(scanGhazalRef)===rawLines.join('\n');
+  if(!sameGhazal) scanGhazalRef='';
+  if(typeof setHashQuiet==='function' && typeof location!=='undefined' && /^#\/scan/.test(location.hash||'')) setHashQuiet(rawLines.length ? (sameGhazal ? '/scan?g=' + scanGhazalRef : '/scan?t=' + encodeURIComponent(rawLines.join('\n'))) : '/scan');
   if(!rawLines.length){
     $('scanOut').innerHTML='';
     if($('studioResults')) $('studioResults').innerHTML='';
@@ -9800,7 +9851,7 @@ function renderLearnExamples() { renderConstr(); renderFlexEvidence(); refitLear
 window.renderLearnExamples = renderLearnExamples;
 
 /* The first screen: two words taken apart before any rule is stated. */
-const INTRO_WORDS = [['دل', 'dil', '=', 'dil'], ['مدّت', 'muddat', '= =', 'mud-dat'], ['کتاب', 'kitāb', '- = -', 'ki-tā-b']];   // one, two, three syllables; none is reused in the rules below
+const INTRO_WORDS = [['دل', 'dil', '=', 'dil'], ['شامل', 'shāmil', '= =', 'shā-mil'], ['کتاب', 'kitāb', '- = -', 'ki-tā-b']];   // one, two, three syllables; none is reused in the rules below
 function renderIntroEx() {
   const host = $('introEx');
   if (!host) return;
@@ -9846,14 +9897,64 @@ function wordExample(e, onclick) {
 }
 /* the three-consonant card follows Rule three; the ا و ی examples sit inside Rule two */
 const SPECIAL_HOST = { 0: 'specialSyll' };
-const RULE_TWO_EX = [['کو', 'ko', '=', 'ko'], ['وطن', 'vatan', '- =', 'va-tan'], ['یار', 'yār', '= -', 'yā-r']];
-function ruleTwoPlay(ei, btn) {
-  const e = RULE_TWO_EX[ei];
-  pbToggle('rule2:' + ei, btn, () => [rawPbLine(e[2], null, btn.closest('.constr-ex'))]);
+/* Examples for Rules one and two. Each word is shown as its Urdu, its Roman by syllable, the letters that meter counts
+   (grouped by syllable; faded = not counted; dotted = a doubled letter written once as a tashdīd), the weight bars and a ▶.
+   L: syllables separated by " | ", letters by spaces; "~x" = not counted, "×x" = doubled by tashdīd, "M" = the madd on alif.
+   The pattern p is Pritchett's reading of the word; tests/dom_smoke.js checks the engine can produce it. */
+const SCRIPT_URL = 'https://franpritchett.com/00urdu/urduscript/';
+const scriptLink = (n, t) => `<a href="${SCRIPT_URL}section${n}.html" target="_blank" rel="noopener">${t} ↗</a>`;
+const LETTER_EX = [
+  /* Rule one */
+  { host: 'ruleOneEx', w: 'مدّت', ro: 'mud-dat', p: '= =', L: 'م د | ×د ت', c: 'A tashdīd stands for a doubled letter, so it counts twice: mud-dat.' },
+  { host: 'ruleOneEx', w: 'آج', ro: 'ā-j', p: '= -', L: 'ا M | ج', c: 'Alif madd counts as two letters (alif and madd), so ā is a long syllable by itself.' },
+  { host: 'ruleOneEx', w: 'کھانا', ro: 'khā-nā', p: '= =', L: 'ک ~ھ ا | ن ا', c: `The aspirating ھ (do-chashmī he) does not count: ک and ا make one long syllable. ${scriptLink(10, 'Script §10')}` },
+  { host: 'ruleOneEx', w: 'کہنا', ro: 'kah-nā', p: '= =', L: 'ک ہ | ن ا', c: 'A plain ہ does count. The weights match کھانا, but the split is different.' },
+  { host: 'ruleOneEx', w: 'کہاں', ro: 'ka-hāñ', p: '- =', L: 'ک | ہ ا ~ں', c: `The nasalizing ں (nūn-e ghunnah) does not count either: ka is short, hāñ is long. ${scriptLink(9, 'Script §9')}` },
+  { host: 'ruleOneEx', w: 'جائے', ro: 'jā-ʾe', p: '= =', L: 'ج ا | ء ے', c: 'A hamza inside a word is a letter, and a consonant. The ی-shaped seat under it does not count.' },
+  { host: 'ruleOneEx', w: 'گئے', ro: 'ga-ʾe', p: '- =', L: 'گ | ء ے', c: 'A hamza always starts a syllable here; it is never the second letter of one.' },
+  /* Rule one, the ن exceptions (in the fold) */
+  { host: 'ruleOneMoreEx', w: 'منہ', ro: 'muñh', p: '=', L: 'م ~ن ہ', c: `Here ن only nasalizes the vowel, so muñh is two letters: one long syllable. ${scriptLink(9, 'Script §9')}` },
+  { host: 'ruleOneMoreEx', w: 'ہنسنا', ro: 'hañs-nā', p: '= =', L: 'ہ ~ن س | ن ا', c: `The ن in the first syllable is a nasalizer (hañsnā, "to laugh"). A jazm over س, when it is written, says the same thing: it closes the syllable. ${scriptLink(5, 'Script §5')}` },
+  { host: 'ruleOneMoreEx', w: 'رنگ', ro: 'ran-g', p: '= -', L: 'ر ن | گ', c: 'Persian nouns keep a full ن, so rang is three letters: ran-g.' },
+  /* Rule two */
+  { host: 'ruleTwoEx', w: 'کو', ro: 'ko', p: '=', L: 'ک و', c: 'و as the second letter is a vowel: ko is one long syllable.' },
+  { host: 'ruleTwoEx', w: 'وطن', ro: 'va-tan', p: '- =', L: 'و | ط ن', c: 'و that begins a syllable is a consonant: va, then tan.' },
+  { host: 'ruleTwoEx', w: 'یار', ro: 'yā-r', p: '= -', L: 'ی ا | ر', c: 'ی that begins a syllable is a consonant, and ا is its vowel: yā, then r.' },
+  { host: 'ruleTwoEx', w: 'معنی', ro: 'maʿ-nī', p: '= =', L: 'م ع | ن ی', c: 'ع counts as a consonant even where it is barely heard.' },
+  { host: 'ruleTwoEx', w: 'شروع', ro: 'shu-rū-ʿ', p: '- = -', L: 'ش | ر و | ع', c: 'The silent final ع is still a letter, so it makes a short syllable of its own.' },
+  { host: 'ruleTwoEx', w: 'ابھی', ro: 'a-bhī', p: '- =', L: 'ا | ب ~ھ ی', c: 'A vowel can stand alone only at the start of a word: a is a short syllable.' },
+  { host: 'ruleTwoEx', w: 'آدمی', ro: 'ā-d-mī', p: '= - =', L: 'ا M | د | م ی', c: 'آ opens the word as a syllable of its own; after it, each syllable starts with a consonant.' },
+  { host: 'ruleTwoEx', w: 'قرآن', ro: 'qur-ā-n', p: '= = -', L: 'ق ر | ا M | ن', c: 'The rare exception: a vowel-only syllable inside a word, and always alif madd.' }
+];
+/* letters row: ~x not counted, ×x doubled, M the madd mark; one .sy-u group per syllable so ▶ lights it with its bar */
+function lettersRow(L, wts) {
+  const chip = t => t === 'M' ? '<span class="lt">◌&#x0653;</span>'
+    : t[0] === '~' ? `<span class="lt off" title="not counted">${t.slice(1)}</span>`
+    : t[0] === '×' ? `<span class="lt dbl" title="doubled by the tashdīd">${t.slice(1)}</span>`
+    : `<span class="lt">${t}</span>`;
+  return `<div class="letters" dir="rtl">${L.split(' | ').map((g, i) => `<span class="sy sy-u ${wts[i] || ''}">${g.split(' ').map(chip).join('')}</span>`).join('')}</div>`;
 }
-window.ruleTwoPlay = ruleTwoPlay;
+function letterExample(e, i) {
+  const wts = sylls(Scan.parseRaw(e.p)).map(t => t === 'l' ? 'l' : t === 's' ? 's' : 'x');
+  return `
+    <div class="constr-ex special-syll-ex letter-ex">
+      <div class="urdu constr-urdu ur-always">${e.w}</div>
+      <div class="ro dim small constr-ro">${sylSpans(e.ro, 'sy-r', wts)}</div>
+      ${lettersRow(e.L, wts)}
+      <div class="strip">${strip(Scan.parseRaw(e.p))}</div>
+      <span class="play sm" role="button" tabindex="0" data-label="Play example" aria-label="Play example" onclick="letterPlay(${i},this)">▶︎</span>
+      <p class="letter-cap tiny dim">${e.c}</p>
+    </div>`;
+}
+function letterPlay(i, btn) {
+  const e = LETTER_EX[i];
+  pbToggle('letters:' + i, btn, () => [rawPbLine(e.p, null, btn.closest('.constr-ex'))]);
+}
+window.letterPlay = letterPlay;
 function renderSpecialSyll() {
-  if ($('ruleTwoEx')) $('ruleTwoEx').innerHTML = RULE_TWO_EX.map((e, ei) => wordExample(e, `ruleTwoPlay(${ei},this)`)).join('');
+  ['ruleOneEx', 'ruleOneMoreEx', 'ruleTwoEx'].forEach(h => {
+    if ($(h)) $(h).innerHTML = LETTER_EX.map((e, i) => e.host === h ? letterExample(e, i) : '').join('');
+  });
   SPECIAL_SYLL.forEach((c, ci) => {
     const host = $(SPECIAL_HOST[ci]);
     if (!host) return;

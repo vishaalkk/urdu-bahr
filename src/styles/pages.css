@@ -1259,3 +1259,17 @@ html[data-script="ro"] .syl-tab, html[data-script="hi"] .syl-tab { font-family: 
 #meter-section .meter-row-details .couplet-scan-box > div { border-top: 1px solid var(--line); }
 #meter-section .meter-row-details .fam-section-label { margin-top: var(--sp-4); }
 .meter-collapse-row { display: flex; justify-content: flex-end; margin-top: var(--sp-2); }
+
+/* Weight › Basics letter examples: the letters meter counts, grouped by syllable */
+.letter-row { align-items: flex-start; }
+.letter-ex { max-width: 13em; }
+.letters { display: flex; justify-content: center; gap: var(--sp-3); font-family: var(--urdu); font-size: 22px; line-height: 1.5; }
+.letters .sy { display: inline-flex; gap: 2px; padding: 0 4px; border-bottom: 1px solid var(--line2); }
+.lt { min-width: .9em; text-align: center; }
+.lt.off { opacity: .4; border: 1px dashed var(--line2); border-radius: 3px; }
+.lt.dbl { border: 1px dotted var(--faint); border-radius: 3px; }
+.letter-cap { margin: 0; line-height: 1.45; text-align: center; }
+.letter-cap a { color: inherit; }
+
+/* Weight › Learn stage buttons: the id rule above flattens .btn.gold into bare text; the "next" button keeps the bevel like its neighbours */
+#weight-section .stage-nav .btn.gold { background: var(--bg3); border: 1px solid var(--gold); padding: 4px 14px; color: var(--ink); font-weight: 600; }
