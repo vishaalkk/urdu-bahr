@@ -70,7 +70,7 @@ openers.forEach(o => {
 });
 { const a = romanToAscii('dil e nadan'), b = romanToAscii('dil-e-nādāñ'), c = romanToAscii('dile nadan');
   add('6 fix: roman iẓāfat', 'dil e nadan / dile nadan', 'dil-e naadaa;n', a + ' | ' + c, a === 'dil-e naadaa;n' && c === 'dil-e naadaa;n');
-  add('6 fix: roman iẓāfat', 'ordinary word ending in e untouched', 'ye hai', romanToAscii('ye hai'), romanToAscii('ye hai') === 'ye hai'); }
+  add('6 fix: roman iẓāfat', 'ordinary word ending in e untouched (ye is the casual spelling of yih)', 'yih hai', romanToAscii('ye hai'), romanToAscii('ye hai') === 'yih hai'); }
 
 /* ---------- report ---------- */
 cases.forEach(c => console.log((c.pass ? 'PASS ' : c.known ? 'KNOWN-LIMIT ' : 'FAIL ') + '[' + c.group + '] ' + c.name + '\n      expected: ' + c.expected + '\n      actual:   ' + c.actual + (c.extra ? '\n      note:     ' + c.extra : '')));

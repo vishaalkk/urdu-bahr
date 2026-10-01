@@ -108,7 +108,8 @@ function prCorpusLines() {
   var out = [];
   [typeof EXERCISES_DATA !== 'undefined' ? EXERCISES_DATA : null,
    typeof GHALIB_EXT_DATA !== 'undefined' ? GHALIB_EXT_DATA : null,
-   typeof MIR_EXT_DATA !== 'undefined' ? MIR_EXT_DATA : null].forEach(function (d) {
+   typeof MIR_EXT_DATA !== 'undefined' ? MIR_EXT_DATA : null,
+   typeof OTHERS_DATA !== 'undefined' ? OTHERS_DATA : null].forEach(function (d) {
     if (Array.isArray(d)) d.forEach(function (g) { (g.lines || []).forEach(function (l) { if (l && l.ur) out.push(l.ur); }); });
   });
   return out;

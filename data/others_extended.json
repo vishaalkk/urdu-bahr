@@ -1,0 +1,1080 @@
+[
+ {
+  "id": 1,
+  "poet": "Faiz Ahmed Faiz",
+  "source": "Rekhta",
+  "meters": [
+   34
+  ],
+  "lines_count": 14,
+  "lines": [
+   {
+    "ascii": "gulo;n me;n rang bhare baad-e-nau-bahaar chale",
+    "ur": "گلوں میں رنگ بھرے باد نوبہار چلے",
+    "hi": "गुलों में रंग भरे बाद-ए-नौ-बहार चले",
+    "ro": "guloñ meñ rang bhare bād-e-nau-bahār chale"
+   },
+   {
+    "ascii": "chale bhii aa))o kih gulshan kaa kaarobaar chale",
+    "ur": "چلے بھی آؤ کہ گلشن کا کاروبار چلے",
+    "hi": "चले भी आओ कि गुलशन का कारोबार चले",
+    "ro": "chale bhī āʾo kih gulshan kā kārobār chale",
+    "verified": true
+   },
+   {
+    "ascii": "qafas udaas hai yaaro .sabaa se kuchh to kaho",
+    "ur": "قفس اداس ہے یارو صبا سے کچھ تو کہو",
+    "hi": "क़फ़स उदास है यारो सबा से कुछ तो कहो",
+    "ro": "qafas udās hai yāro ṣabā se kuchh to kaho",
+    "verified": true
+   },
+   {
+    "ascii": "kahii;n to ba;hr-e-;xudaa aaj ;zikr-e-yaar chale",
+    "ur": "کہیں تو بہر خدا آج ذکر یار چلے",
+    "hi": "कहीं तो बहर-ए-ख़ुदा आज ज़िक्र-ए-यार चले",
+    "ro": "kahīñ to baḥr-e-ḳhudā āj żikr-e-yār chale"
+   },
+   {
+    "ascii": "kabhii to .sub;h tire kunj-e-lab se ho aa;gaaz",
+    "ur": "کبھی تو صبح ترے کنج لب سے ہو آغاز",
+    "hi": "कभी तो सुब्ह तिरे कुंज-ए-लब से हो आग़ाज़",
+    "ro": "kabhī to ṣubḥ tire kunj-e-lab se ho āġhāz",
+    "verified": true
+   },
+   {
+    "ascii": "kabhii to shab sar-e-kaakul se mushk-baar chale",
+    "ur": "کبھی تو شب سر کاکل سے مشکبار چلے",
+    "hi": "कभी तो शब सर-ए-काकुल से मुश्क-बार चले",
+    "ro": "kabhī to shab sar-e-kākul se mushk-bār chale"
+   },
+   {
+    "ascii": "ba;raa hai dard kaa rishta yih dil ;gariib sahii",
+    "ur": "بڑا ہے درد کا رشتہ یہ دل غریب سہی",
+    "hi": "बड़ा है दर्द का रिश्ता ये दिल ग़रीब सही",
+    "ro": "baṛā hai dard kā rishta yih dil ġharīb sahī"
+   },
+   {
+    "ascii": "tumhaare naam pah aa))e;nge ;gam-gusaar chale",
+    "ur": "تمہارے نام پہ آئیں گے غم گسار چلے",
+    "hi": "तुम्हारे नाम पे आएँगे ग़म-गुसार चले",
+    "ro": "tumhāre nām pah āʾeñge ġham-gusār chale",
+    "verified": true
+   },
+   {
+    "ascii": "jo ham pah gu;zrii so gu;zrii magar shab-e-hijraa;n",
+    "ur": "جو ہم پہ گزری سو گزری مگر شب ہجراں",
+    "hi": "जो हम पे गुज़री सो गुज़री मगर शब-ए-हिज्राँ",
+    "ro": "jo ham pah gużrī so gużrī magar shab-e-hijrāñ"
+   },
+   {
+    "ascii": "hamaare ashk tirii ((aaqibat sa;nvaar chale",
+    "ur": "ہمارے اشک تری عاقبت سنوار چلے",
+    "hi": "हमारे अश्क तिरी आक़िबत सँवार चले",
+    "ro": "hamāre ashk tirī ʿāqibat sañvār chale",
+    "verified": true
+   },
+   {
+    "ascii": ";hu.zuur-e-yaar hu))ii daftar-e-junuu;n kii :talab",
+    "ur": "حضور یار ہوئی دفتر جنوں کی طلب",
+    "hi": "हुज़ूर-ए-यार हुई दफ़्तर-ए-जुनूँ की तलब",
+    "ro": "ḥuẓūr-e-yār huʾī daftar-e-junūñ kī t̤alab",
+    "verified": true
+   },
+   {
+    "ascii": "girah me;n le ke garebaa;n kaa taar taar chale",
+    "ur": "گرہ میں لے کے گریباں کا تار تار چلے",
+    "hi": "गिरह में ले के गरेबाँ का तार तार चले",
+    "ro": "girah meñ le ke garebāñ kā tār tār chale",
+    "verified": true
+   },
+   {
+    "ascii": "maqaam fai.z ko))ii raah me;n jachaa hii nahii;n",
+    "ur": "مقام فیضؔ کوئی راہ میں جچا ہی نہیں",
+    "hi": "मक़ाम फ़ैज़ कोई राह में जचा ही नहीं",
+    "ro": "maqām faiẓ koʾī rāh meñ jachā hī nahīñ",
+    "verified": true
+   },
+   {
+    "ascii": "jo kuu-e-yaar se nikle to suu-e-daar chale",
+    "ur": "جو کوئے یار سے نکلے تو سوئے دار چلے",
+    "hi": "जो कू-ए-यार से निकले तो सू-ए-दार चले",
+    "ro": "jo kū-e-yār se nikle to sū-e-dār chale",
+    "verified": true
+   }
+  ]
+ },
+ {
+  "id": 2,
+  "poet": "Dagh Dehlvi",
+  "source": "Rekhta",
+  "meters": [
+   5
+  ],
+  "lines_count": 18,
+  "lines": [
+   {
+    "ascii": ";xaatir se yaa lihaaz se mai;n maa;n to gayaa",
+    "ur": "خاطر سے یا لحاظ سے میں مان تو گیا",
+    "hi": "ख़ातिर से या लिहाज़ से मैं मान तो गया",
+    "ro": "ḳhātir se yā lihāz se maiñ māñ to gayā"
+   },
+   {
+    "ascii": "jhuu;te qasam se aap kaa iimaan to gayaa",
+    "ur": "جھوٹی قسم سے آپ کا ایمان تو گیا",
+    "hi": "झूटी क़सम से आप का ईमान तो गया",
+    "ro": "jhūṭe qasam se āp kā īmān to gayā"
+   },
+   {
+    "ascii": "dil le ke muft kahte hai;n kuchh kaam kaa nahii;n",
+    "ur": "دل لے کے مفت کہتے ہیں کچھ کام کا نہیں",
+    "hi": "दिल ले के मुफ़्त कहते हैं कुछ काम का नहीं",
+    "ro": "dil le ke muft kahte haiñ kuchh kām kā nahīñ",
+    "verified": true
+   },
+   {
+    "ascii": "ul;tii shikaayate;n huii;n i;hsaa;n to gayaa",
+    "ur": "الٹی شکایتیں ہوئیں احسان تو گیا",
+    "hi": "उल्टी शिकायतें हुईं एहसान तो गया",
+    "ro": "ulṭī shikāyateñ huīñ iḥsāñ to gayā"
+   },
+   {
+    "ascii": ";dartaa huu;n dekh kar dil-e-be-aarzuu ko mai;n",
+    "ur": "ڈرتا ہوں دیکھ کر دل بے آرزو کو میں",
+    "hi": "डरता हूँ देख कर दिल-ए-बे-आरज़ू को मैं",
+    "ro": "ḍartā hūñ dekh kar dil-e-be-ārzū ko maiñ",
+    "verified": true
+   },
+   {
+    "ascii": "sunsaan ghar yih kyuu;n nah ho mihmaan to gayaa",
+    "ur": "سنسان گھر یہ کیوں نہ ہو مہمان تو گیا",
+    "hi": "सुनसान घर ये क्यूँ न हो मेहमान तो गया",
+    "ro": "sunsān ghar yih kyūñ nah ho mihmān to gayā",
+    "verified": true
+   },
+   {
+    "ascii": "kyaa aa))e raa;hat aa))ii jo kunj-e-mazaar me;n",
+    "ur": "کیا آئے راحت آئی جو کنج مزار میں",
+    "hi": "क्या आए राहत आई जो कुंज-ए-मज़ार में",
+    "ro": "kyā āʾe rāḥat āʾī jo kunj-e-mazār meñ",
+    "verified": true
+   },
+   {
+    "ascii": "vuh valvala vuh shauq vuh armaan to gayaa",
+    "ur": "وہ ولولہ وہ شوق وہ ارمان تو گیا",
+    "hi": "वो वलवला वो शौक़ वो अरमान तो गया",
+    "ro": "vuh valvala vuh shauq vuh armān to gayā"
+   },
+   {
+    "ascii": "dekhaa hai but-kade me;n jo ai shai;x kuchh nah puuchh",
+    "ur": "دیکھا ہے بت کدے میں جو اے شیخ کچھ نہ پوچھ",
+    "hi": "देखा है बुत-कदे में जो ऐ शैख़ कुछ न पूछ",
+    "ro": "dekhā hai but-kade meñ jo ai shaiḳh kuchh nah pūchh",
+    "verified": true
+   },
+   {
+    "ascii": "iimaan kii to yih hai kih iimaan to gayaa",
+    "ur": "ایمان کی تو یہ ہے کہ ایمان تو گیا",
+    "hi": "ईमान की तो ये है कि ईमान तो गया",
+    "ro": "īmān kī to yih hai kih īmān to gayā",
+    "verified": true
+   },
+   {
+    "ascii": "ifshaa-e-raaz-e-((ishq me;n go zillate;n huii;n",
+    "ur": "افشائے راز عشق میں گو ذلتیں ہوئیں",
+    "hi": "इफ़्शा-ए-राज़-ए-इश्क़ में गो ज़िल्लतें हुईं",
+    "ro": "ifshā-e-rāz-e-ʿishq meñ go zillateñ huīñ"
+   },
+   {
+    "ascii": "lekin use jataa to diyaa jaan to gayaa",
+    "ur": "لیکن اسے جتا تو دیا جان تو گیا",
+    "hi": "लेकिन उसे जता तो दिया जान तो गया",
+    "ro": "lekin use jatā to diyā jān to gayā",
+    "verified": true
+   },
+   {
+    "ascii": "go namaa-bar se ;xush nah hu))aa par hazaar shukr",
+    "ur": "گو نامہ بر سے خوش نہ ہوا پر ہزار شکر",
+    "hi": "गो नामा-बर से ख़ुश न हुआ पर हज़ार शुक्र",
+    "ro": "go namā-bar se ḳhush nah huʾā par hazār shukr"
+   },
+   {
+    "ascii": "mujh ko vuh mere naam se pahchaan to gayaa",
+    "ur": "مجھ کو وہ میرے نام سے پہچان تو گیا",
+    "hi": "मुझ को वो मेरे नाम से पहचान तो गया",
+    "ro": "mujh ko vuh mere nām se pahchān to gayā",
+    "verified": true
+   },
+   {
+    "ascii": "bazm-e-((aduu me;n .suurat-e-parvaana dil miraa",
+    "ur": "بزم عدو میں صورت پروانہ دل مرا",
+    "hi": "बज़्म-ए-अदू में सूरत-ए-परवाना दिल मिरा",
+    "ro": "bazm-e-ʿadū meñ ṣūrat-e-parvāna dil mirā"
+   },
+   {
+    "ascii": "go rashk se jalaa tire qurbaa;n to gayaa",
+    "ur": "گو رشک سے جلا ترے قربان تو گیا",
+    "hi": "गो रश्क से जला तिरे क़ुर्बान तो गया",
+    "ro": "go rashk se jalā tire qurbāñ to gayā"
+   },
+   {
+    "ascii": "hosh-o-;havaas-o-taab-o-tavaa;n daa;g jaa chuke",
+    "ur": "ہوش و حواس و تاب و تواں داغؔ جا چکے",
+    "hi": "होश ओ हवास ओ ताब ओ तवाँ दाग़ जा चुके",
+    "ro": "hosh-o-ḥavās-o-tāb-o-tavāñ dāġh jā chuke",
+    "verified": true
+   },
+   {
+    "ascii": "ab ham bhii jaane vaale hai;n saamaan to gayaa",
+    "ur": "اب ہم بھی جانے والے ہیں سامان تو گیا",
+    "hi": "अब हम भी जाने वाले हैं सामान तो गया",
+    "ro": "ab ham bhī jāne vāle haiñ sāmān to gayā",
+    "verified": true
+   }
+  ]
+ },
+ {
+  "id": 3,
+  "poet": "Dagh Dehlvi",
+  "source": "Rekhta",
+  "meters": [
+   30
+  ],
+  "lines_count": 26,
+  "lines": [
+   {
+    "ascii": "sitam hii karnaa jafaa hii karnaa nigaah-e-ulfat kabhii nah karnaa",
+    "ur": "ستم ہی کرنا جفا ہی کرنا نگاہ الفت کبھی نہ کرنا",
+    "hi": "सितम ही करना जफ़ा ही करना निगाह-ए-उल्फ़त कभी न करना",
+    "ro": "sitam hī karnā jafā hī karnā nigāh-e-ulfat kabhī nah karnā",
+    "verified": true
+   },
+   {
+    "ascii": "tumhe;n qasam hai hamaare sar kii hamaare ;haq me;n kamii nah karnaa",
+    "ur": "تمہیں قسم ہے ہمارے سر کی ہمارے حق میں کمی نہ کرنا",
+    "hi": "तुम्हें क़सम है हमारे सर की हमारे हक़ में कमी न करना",
+    "ro": "tumheñ qasam hai hamāre sar kī hamāre ḥaq meñ kamī nah karnā",
+    "verified": true
+   },
+   {
+    "ascii": "hamaarii mayyat pah tum jo aanaa to chaar aa;nsuu bahaa ke jaanaa",
+    "ur": "ہماری میت پہ تم جو آنا تو چار آنسو بہا کے جانا",
+    "hi": "हमारी मय्यत पे तुम जो आना तो चार आँसू बहा के जाना",
+    "ro": "hamārī mayyat pah tum jo ānā to chār āñsū bahā ke jānā",
+    "verified": true
+   },
+   {
+    "ascii": ";zaraa rahe paas-e-aabruu bhii kahii;n hamaarii ha;nsii nah karnaa",
+    "ur": "ذرا رہے پاس آبرو بھی کہیں ہماری ہنسی نہ کرنا",
+    "hi": "ज़रा रहे पास-ए-आबरू भी कहीं हमारी हँसी न करना",
+    "ro": "żarā rahe pās-e-ābrū bhī kahīñ hamārī hañsī nah karnā",
+    "verified": true
+   },
+   {
+    "ascii": "kahaa;n kaa aanaa kahaa;n kaa jaanaa vuh jaante hii nahii;n yih rasme;n",
+    "ur": "کہاں کا آنا کہاں کا جانا وہ جانتے ہی نہیں یہ رسمیں",
+    "hi": "कहाँ का आना कहाँ का जाना वो जानते ही नहीं ये रस्में",
+    "ro": "kahāñ kā ānā kahāñ kā jānā vuh jānte hī nahīñ yih rasmeñ",
+    "verified": true
+   },
+   {
+    "ascii": "vahaa;n hai va((de kii bhii yih .suurat kabhii to karnaa kabhii nah karnaa",
+    "ur": "وہاں ہے وعدے کی بھی یہ صورت کبھی تو کرنا کبھی نہ کرنا",
+    "hi": "वहाँ है वअदे की भी ये सूरत कभी तो करना कभी न करना",
+    "ro": "vahāñ hai vaʿde kī bhī yih ṣūrat kabhī to karnā kabhī nah karnā",
+    "verified": true
+   },
+   {
+    "ascii": "liye to chalte hai;n ;ha.zrat-e-dil tumhe;n bhii us anjuman me;n lekin",
+    "ur": "لیے تو چلتے ہیں حضرت دل تمہیں بھی اس انجمن میں لیکن",
+    "hi": "लिए तो चलते हैं हज़रत-ए-दिल तुम्हें भी उस अंजुमन में लेकिन",
+    "ro": "liye to chalte haiñ ḥaẓrat-e-dil tumheñ bhī us anjuman meñ lekin",
+    "verified": true
+   },
+   {
+    "ascii": "hamaare pahluu me;n bai;th kar tum hamii;n se pahluu-tahii nah karnaa",
+    "ur": "ہمارے پہلو میں بیٹھ کر تم ہمیں سے پہلو تہی نہ کرنا",
+    "hi": "हमारे पहलू में बैठ कर तुम हमीं से पहलू-तही न करना",
+    "ro": "hamāre pahlū meñ baiṭh kar tum hamīñ se pahlū-tahī nah karnā",
+    "verified": true
+   },
+   {
+    "ascii": "nahii;n hai kuchh qatl un kaa aasaa;n yih sa;xt-jaa;n hai;n bure balaa ke",
+    "ur": "نہیں ہے کچھ قتل ان کا آساں یہ سخت جاں ہیں برے بلا کے",
+    "hi": "नहीं है कुछ क़त्ल उन का आसाँ ये सख़्त-जाँ हैं बुरे बला के",
+    "ro": "nahīñ hai kuchh qatl un kā āsāñ yih saḳht-jāñ haiñ bure balā ke",
+    "verified": true
+   },
+   {
+    "ascii": "qa.zaa ko pahle shariik karnaa yih kaam apnii ;xushii nah karnaa",
+    "ur": "قضا کو پہلے شریک کرنا یہ کام اپنی خوشی نہ کرنا",
+    "hi": "क़ज़ा को पहले शरीक करना ये काम अपनी ख़ुशी न करना",
+    "ro": "qaẓā ko pahle sharīk karnā yih kām apnī ḳhushī nah karnā"
+   },
+   {
+    "ascii": "halaak andaaz-e-va.sl karnaa kih pardaa rah jaa))e kuchh hamaaraa",
+    "ur": "ہلاک انداز وصل کرنا کہ پردہ رہ جائے کچھ ہمارا",
+    "hi": "हलाक अंदाज़-ए-वस्ल करना कि पर्दा रह जाए कुछ हमारा",
+    "ro": "halāk andāz-e-vaṣl karnā kih pardā rah jāʾe kuchh hamārā"
+   },
+   {
+    "ascii": ";gam-e-judaa))ii me;n ;xaak kar ke kahii;n ((aduu kii ;xushii nah karnaa",
+    "ur": "غم جدائی میں خاک کر کے کہیں عدو کی خوشی نہ کرنا",
+    "hi": "ग़म-ए-जुदाई में ख़ाक कर के कहीं अदू की ख़ुशी न करना",
+    "ro": "ġham-e-judāʾī meñ ḳhāk kar ke kahīñ ʿadū kī ḳhushī nah karnā"
+   },
+   {
+    "ascii": "mirii to hai baat zahr un ko vuh un ke ma:tlab hii kii nah kyuu;n ho",
+    "ur": "مری تو ہے بات زہر ان کو وہ ان کے مطلب ہی کی نہ کیوں ہو",
+    "hi": "मिरी तो है बात ज़हर उन को वो उन के मतलब ही की न क्यूँ हो",
+    "ro": "mirī to hai bāt zahr un ko vuh un ke mat̤lab hī kī nah kyūñ ho",
+    "verified": true
+   },
+   {
+    "ascii": "kih un se jo iltijaa se kahnaa ;gazab hai un ko vahii nah karnaa",
+    "ur": "کہ ان سے جو التجا سے کہنا غضب ہے ان کو وہی نہ کرنا",
+    "hi": "कि उन से जो इल्तिजा से कहना ग़ज़ब है उन को वही न करना",
+    "ro": "kih un se jo iltijā se kahnā ġhazab hai un ko vahī nah karnā"
+   },
+   {
+    "ascii": "hu))aa agar shauq aa))ine se to ru;x rahe raastii kii jaanib",
+    "ur": "ہوا اگر شوق آئنے سے تو رخ رہے راستی کی جانب",
+    "hi": "हुआ अगर शौक़ आइने से तो रुख़ रहे रास्ती की जानिब",
+    "ro": "huʾā agar shauq āʾine se to ruḳh rahe rāstī kī jānib",
+    "verified": true
+   },
+   {
+    "ascii": "mi;saal-e-((aari.z safaa))ii rakhnaa baa-ra;ng-e-kaakul kajii nah karnaa",
+    "ur": "مثال عارض صفائی رکھنا برنگ کاکل کجی نہ کرنا",
+    "hi": "मिसाल-ए-आरिज़ सफ़ाई रखना ब-रंग-ए-काकुल कजी न करना",
+    "ro": "miṡāl-e-ʿāriẓ safāʾī rakhnā bā-rañg-e-kākul kajī nah karnā"
+   },
+   {
+    "ascii": "vuh hii hamaaraa :tariiq-e-ulfat kih dushmano;n se bhii mil ke chalnaa",
+    "ur": "وہ ہی ہمارا طریق الفت کہ دشمنوں سے بھی مل کے چلنا",
+    "hi": "वो ही हमारा तरीक़-ए-उल्फ़त कि दुश्मनों से भी मिल के चलना",
+    "ro": "vuh hī hamārā t̤arīq-e-ulfat kih dushmanoñ se bhī mil ke chalnā",
+    "verified": true
+   },
+   {
+    "ascii": "yih ek sheva tiraa sitamgar kih dost se dostii nah karnaa",
+    "ur": "یہ ایک شیوہ ترا ستم گر کہ دوست سے دوستی نہ کرنا",
+    "hi": "ये एक शेवा तिरा सितमगर कि दोस्त से दोस्ती न करना",
+    "ro": "yih ek sheva tirā sitamgar kih dost se dostī nah karnā"
+   },
+   {
+    "ascii": "ham ek rastaa galii kaa us kii dikhaa ke dil ko hu))e pashemaa;n",
+    "ur": "ہم ایک رستہ گلی کا اس کی دکھا کے دل کو ہوئے پشیماں",
+    "hi": "हम एक रस्ता गली का उस की दिखा के दिल को हुए पशेमाँ",
+    "ro": "ham ek rastā galī kā us kī dikhā ke dil ko huʾe pashemāñ"
+   },
+   {
+    "ascii": "yih ;ha.zrat-e-;xizr ko jataa do kisii kii tum rahbarii nah karnaa",
+    "ur": "یہ حضرت خضر کو جتا دو کسی کی تم رہبری نہ کرنا",
+    "hi": "ये हज़रत-ए-ख़िज़्र को जता दो किसी की तुम रहबरी न करना",
+    "ro": "yih ḥaẓrat-e-ḳhizr ko jatā do kisī kī tum rahbarī nah karnā"
+   },
+   {
+    "ascii": "bayaa;n-e-dard-e-firaaq kaisaa kih hai vahaa;n apnii yih ;haqiiqat",
+    "ur": "بیان درد فراق کیسا کہ ہے وہاں اپنی یہ حقیقت",
+    "hi": "बयान-ए-दर्द-ए-फ़िराक़ कैसा कि है वहाँ अपनी ये हक़ीक़त",
+    "ro": "bayāñ-e-dard-e-firāq kaisā kih hai vahāñ apnī yih ḥaqīqat"
+   },
+   {
+    "ascii": "jo baat karnii to naala karnaa nahii;n to vuh bhii kabhii nah karnaa",
+    "ur": "جو بات کرنی تو نالہ کرنا نہیں تو وہ بھی کبھی نہ کرنا",
+    "hi": "जो बात करनी तो नाला करना नहीं तो वो भी कभी न करना",
+    "ro": "jo bāt karnī to nāla karnā nahīñ to vuh bhī kabhī nah karnā"
+   },
+   {
+    "ascii": "madaar hai naaseho tumhii;n par tamaam ab us kii mun.sifii kaa",
+    "ur": "مدار ہے ناصحو تمہیں پر تمام اب اس کی منصفی کا",
+    "hi": "मदार है नासेहो तुम्हीं पर तमाम अब उस की मुंसिफ़ी का",
+    "ro": "madār hai nāseho tumhīñ par tamām ab us kī munṣifī kā"
+   },
+   {
+    "ascii": ";zaraa to kahnaa ;xudaa-lagii bhii faqa:t su;xan-parvarii nah karnaa",
+    "ur": "ذرا تو کہنا خدا لگی بھی فقط سخن پروری نہ کرنا",
+    "hi": "ज़रा तो कहना ख़ुदा-लगी भी फ़क़त सुख़न-परवरी न करना",
+    "ro": "żarā to kahnā ḳhudā-lagī bhī faqat̤ suḳhan-parvarī nah karnā",
+    "verified": true
+   },
+   {
+    "ascii": "burii hai ai daa;g raah-e-ulfat ;xudaa nah le jaa))e aise raste",
+    "ur": "بری ہے اے داغؔ راہ الفت خدا نہ لے جائے ایسے رستے",
+    "hi": "बुरी है ऐ दाग़ राह-ए-उल्फ़त ख़ुदा न ले जाए ऐसे रस्ते",
+    "ro": "burī hai ai dāġh rāh-e-ulfat ḳhudā nah le jāʾe aise raste",
+    "verified": true
+   },
+   {
+    "ascii": "jo apnii tum ;xair chaahte ho to bhuul kar dil-lagii nah karnaa",
+    "ur": "جو اپنی تم خیر چاہتے ہو تو بھول کر دل لگی نہ کرنا",
+    "hi": "जो अपनी तुम ख़ैर चाहते हो तो भूल कर दिल-लगी न करना",
+    "ro": "jo apnī tum ḳhair chāhte ho to bhūl kar dil-lagī nah karnā",
+    "verified": true
+   }
+  ]
+ },
+ {
+  "id": 4,
+  "poet": "Jigar Moradabadi",
+  "source": "Rekhta",
+  "meters": [
+   7
+  ],
+  "lines_count": 44,
+  "lines": [
+   {
+    "ascii": "ik laf:z-e-mu;habbat kaa adnaa yih fasaanaa hai",
+    "ur": "اک لفظ محبت کا ادنیٰ یہ فسانا ہے",
+    "hi": "इक लफ़्ज़-ए-मोहब्बत का अदना ये फ़साना है",
+    "ro": "ik lafz̤-e-muḥabbat kā adnā yih fasānā hai"
+   },
+   {
+    "ascii": "sim;te to dil-e-((aashiq phaile to zamaanaa hai",
+    "ur": "سمٹے تو دل عاشق پھیلے تو زمانا ہے",
+    "hi": "सिमटे तो दिल-ए-आशिक़ फैले तो ज़माना है",
+    "ro": "simṭe to dil-e-ʿāshiq phaile to zamānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "yih kis kaa ta.savvur hai yih kis kaa fasaanaa hai",
+    "ur": "یہ کس کا تصور ہے یہ کس کا فسانا ہے",
+    "hi": "ये किस का तसव्वुर है ये किस का फ़साना है",
+    "ro": "yih kis kā taṣavvur hai yih kis kā fasānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "jo ashk hai aa;nkho;n me;n tasbii;h kaa daanaa hai",
+    "ur": "جو اشک ہے آنکھوں میں تسبیح کا دانا ہے",
+    "hi": "जो अश्क है आँखों में तस्बीह का दाना है",
+    "ro": "jo ashk hai āñkhoñ meñ tasbīḥ kā dānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "dil sa;ng-e-malaamat kaa har-chand nishaanaa hai",
+    "ur": "دل سنگ ملامت کا ہر چند نشانا ہے",
+    "hi": "दिल संग-ए-मलामत का हर-चंद निशाना है",
+    "ro": "dil sañg-e-malāmat kā har-chand nishānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "dil phir bhii miraa dil hai dil hii to zamaanaa hai",
+    "ur": "دل پھر بھی مرا دل ہے دل ہی تو زمانا ہے",
+    "hi": "दिल फिर भी मिरा दिल है दिल ही तो ज़माना है",
+    "ro": "dil phir bhī mirā dil hai dil hī to zamānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "ham ((ishq ke maaro;n kaa itnaa hii fasaanaa hai",
+    "ur": "ہم عشق کے ماروں کا اتنا ہی فسانا ہے",
+    "hi": "हम इश्क़ के मारों का इतना ही फ़साना है",
+    "ro": "ham ʿishq ke māroñ kā itnā hī fasānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "rone ko nahii;n ko))ii ha;nsne ko zamaanaa hai",
+    "ur": "رونے کو نہیں کوئی ہنسنے کو زمانا ہے",
+    "hi": "रोने को नहीं कोई हँसने को ज़माना है",
+    "ro": "rone ko nahīñ koʾī hañsne ko zamānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "vuh aur vafaa-dushman maane;nge nah maanaa hai",
+    "ur": "وہ اور وفا دشمن مانیں گے نہ مانا ہے",
+    "hi": "वो और वफ़ा-दुश्मन मानेंगे न माना है",
+    "ro": "vuh aur vafā-dushman māneñge nah mānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "sab dil kii sharaarat hai aa;nkho;n kaa bahaanaa hai",
+    "ur": "سب دل کی شرارت ہے آنکھوں کا بہانا ہے",
+    "hi": "सब दिल की शरारत है आँखों का बहाना है",
+    "ro": "sab dil kī sharārat hai āñkhoñ kā bahānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "shaa((ir huu;n mai;n shaa((ir huu;n meraa hii zamaanaa hai",
+    "ur": "شاعر ہوں میں شاعر ہوں میرا ہی زمانا ہے",
+    "hi": "शाइर हूँ मैं शाइर हूँ मेरा ही ज़माना है",
+    "ro": "shāʿir hūñ maiñ shāʿir hūñ merā hī zamānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "fi:trat miraa aa))iinaa qudrat miraa shaanaa hai",
+    "ur": "فطرت مرا آئینا قدرت مرا شانا ہے",
+    "hi": "फ़ितरत मिरा आईना क़ुदरत मिरा शाना है",
+    "ro": "fit̤rat mirā āʾīnā qudrat mirā shānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "jo un pah guzartii hai kis ne use jaanaa hai",
+    "ur": "جو ان پہ گزرتی ہے کس نے اسے جانا ہے",
+    "hi": "जो उन पे गुज़रती है किस ने उसे जाना है",
+    "ro": "jo un pah guzartī hai kis ne use jānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "apnii hii mu.siibat hai apnaa hii fasaanaa hai",
+    "ur": "اپنی ہی مصیبت ہے اپنا ہی فسانا ہے",
+    "hi": "अपनी ही मुसीबत है अपना ही फ़साना है",
+    "ro": "apnī hī muṣībat hai apnā hī fasānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "kyaa ;husn ne samjhaa hai kyaa ((ishq ne jaanaa hai",
+    "ur": "کیا حسن نے سمجھا ہے کیا عشق نے جانا ہے",
+    "hi": "क्या हुस्न ने समझा है क्या इश्क़ ने जाना है",
+    "ro": "kyā ḥusn ne samjhā hai kyā ʿishq ne jānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "ham ;xaak-nashiino;n kii thokar me;n zamaanaa hai",
+    "ur": "ہم خاک نشینوں کی ٹھوکر میں زمانا ہے",
+    "hi": "हम ख़ाक-नशीनों की ठोकर में ज़माना है",
+    "ro": "ham ḳhāk-nashīnoñ kī thokar meñ zamānā hai"
+   },
+   {
+    "ascii": "aa;gaaz-e-mu;habbat hai aanaa hai nah jaanaa hai",
+    "ur": "آغاز محبت ہے آنا ہے نہ جانا ہے",
+    "hi": "आग़ाज़-ए-मोहब्बत है आना है न जाना है",
+    "ro": "āġhāz-e-muḥabbat hai ānā hai nah jānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "ashko;n kii ;hukuumat hai aaho;n kaa zamaanaa hai",
+    "ur": "اشکوں کی حکومت ہے آہوں کا زمانا ہے",
+    "hi": "अश्कों की हुकूमत है आहों का ज़माना है",
+    "ro": "ashkoñ kī ḥukūmat hai āhoñ kā zamānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "aa;nkho;n me;n naamii sii hai chup chup se vuh bai;the hai;n",
+    "ur": "آنکھوں میں نمی سی ہے چپ چپ سے وہ بیٹھے ہیں",
+    "hi": "आँखों में नमी सी है चुप चुप से वो बैठे हैं",
+    "ro": "āñkhoñ meñ nāmī sī hai chup chup se vuh baiṭhe haiñ"
+   },
+   {
+    "ascii": "naazuk sii nigaaho;n me;n naazuk saa fasaanaa hai",
+    "ur": "نازک سی نگاہوں میں نازک سا فسانا ہے",
+    "hi": "नाज़ुक सी निगाहों में नाज़ुक सा फ़साना है",
+    "ro": "nāzuk sī nigāhoñ meñ nāzuk sā fasānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "ham dard-baa-dil naalaa;n vuh dast-baa-dil hairaa;n",
+    "ur": "ہم درد بہ دل نالاں وہ دست بہ دل حیراں",
+    "hi": "हम दर्द-ब-दिल नालाँ वो दस्त-ब-दिल हैराँ",
+    "ro": "ham dard-bā-dil nālāñ vuh dast-bā-dil hairāñ"
+   },
+   {
+    "ascii": "ai ((ishq to kyaa :zaalim teraa hii zamaanaa hai",
+    "ur": "اے عشق تو کیا ظالم تیرا ہی زمانا ہے",
+    "hi": "ऐ इश्क़ तो क्या ज़ालिम तेरा ही ज़माना है",
+    "ro": "ai ʿishq to kyā z̤ālim terā hī zamānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "yaa vuh the ;xafaa ham se yaa ham hai;n ;xafaa un se",
+    "ur": "یا وہ تھے خفا ہم سے یا ہم ہیں خفا ان سے",
+    "hi": "या वो थे ख़फ़ा हम से या हम हैं ख़फ़ा उन से",
+    "ro": "yā vuh the ḳhafā ham se yā ham haiñ ḳhafā un se",
+    "verified": true
+   },
+   {
+    "ascii": "kal un kaa zamaana thaa aaj apnaa zamaanaa hai",
+    "ur": "کل ان کا زمانہ تھا آج اپنا زمانا ہے",
+    "hi": "कल उन का ज़माना था आज अपना ज़माना है",
+    "ro": "kal un kā zamāna thā āj apnā zamānā hai"
+   },
+   {
+    "ascii": "ai ((ishq-e-junuu;n-pesha haa;n ((ishq-e-junuu;n-pesha",
+    "ur": "اے عشق جنوں پیشہ ہاں عشق جنوں پیشہ",
+    "hi": "ऐ इश्क़-ए-जुनूँ-पेशा हाँ इश्क़-ए-जुनूँ-पेशा",
+    "ro": "ai ʿishq-e-junūñ-pesha hāñ ʿishq-e-junūñ-pesha"
+   },
+   {
+    "ascii": "aaj ek sitamgar ko ha;ns ha;ns ke rulaanaa hai",
+    "ur": "آج ایک ستم گر کو ہنس ہنس کے رلانا ہے",
+    "hi": "आज एक सितमगर को हँस हँस के रुलाना है",
+    "ro": "āj ek sitamgar ko hañs hañs ke rulānā hai"
+   },
+   {
+    "ascii": "tho;rii sii ijaazat bhii ai bazm-gah-e-hastii",
+    "ur": "تھوڑی سی اجازت بھی اے بزم گہ ہستی",
+    "hi": "थोड़ी सी इजाज़त भी ऐ बज़्म-गह-ए-हस्ती",
+    "ro": "thoṛī sī ijāzat bhī ai bazm-gah-e-hastī",
+    "verified": true
+   },
+   {
+    "ascii": "aa nikle hai;n dam-bhar ko ronaa hai rulaanaa hai",
+    "ur": "آ نکلے ہیں دم بھر کو رونا ہے رلانا ہے",
+    "hi": "आ निकले हैं दम-भर को रोना है रुलाना है",
+    "ro": "ā nikle haiñ dam-bhar ko ronā hai rulānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "yih ((ishq nahii;n aasaa;n itnaa hii samajh liije",
+    "ur": "یہ عشق نہیں آساں اتنا ہی سمجھ لیجے",
+    "hi": "ये इश्क़ नहीं आसाँ इतना ही समझ लीजे",
+    "ro": "yih ʿishq nahīñ āsāñ itnā hī samajh līje",
+    "verified": true
+   },
+   {
+    "ascii": "ik aag kaa dariyaa hai aur duub ke jaanaa hai",
+    "ur": "اک آگ کا دریا ہے اور ڈوب کے جانا ہے",
+    "hi": "इक आग का दरिया है और डूब के जाना है",
+    "ro": "ik āg kā dariyā hai aur dūb ke jānā hai"
+   },
+   {
+    "ascii": ";xud ;husn-o-shabaab un kaa kyaa kam hai raqiib apnaa",
+    "ur": "خود حسن و شباب ان کا کیا کم ہے رقیب اپنا",
+    "hi": "ख़ुद हुस्न-ओ-शबाब उन का क्या कम है रक़ीब अपना",
+    "ro": "ḳhud ḥusn-o-shabāb un kā kyā kam hai raqīb apnā"
+   },
+   {
+    "ascii": "jab dekhiye ab vuh hai;n aa))iina hai shaanaa hai",
+    "ur": "جب دیکھیے اب وہ ہیں آئینہ ہے شانا ہے",
+    "hi": "जब देखिए अब वो हैं आईना है शाना है",
+    "ro": "jab dekhiye ab vuh haiñ āʾīna hai shānā hai"
+   },
+   {
+    "ascii": "ta.sviir ke do ru;x hai;n jaa;n aur ;gam-e-jaanaa;n",
+    "ur": "تصویر کے دو رخ ہیں جاں اور غم جاناں",
+    "hi": "तस्वीर के दो रुख़ हैं जाँ और ग़म-ए-जानाँ",
+    "ro": "taṣvīr ke do ruḳh haiñ jāñ aur ġham-e-jānāñ",
+    "verified": true
+   },
+   {
+    "ascii": "ik naqsh chhupaanaa hai ik naqsh dikhaanaa hai",
+    "ur": "اک نقش چھپانا ہے اک نقش دکھانا ہے",
+    "hi": "इक नक़्श छुपाना है इक नक़्श दिखाना है",
+    "ro": "ik naqsh chhupānā hai ik naqsh dikhānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "yih ;husn-o-jamaal un kaa yih ((ishq-o-shabaab apnaa",
+    "ur": "یہ حسن و جمال ان کا یہ عشق و شباب اپنا",
+    "hi": "ये हुस्न-ओ-जमाल उन का ये इश्क़-ओ-शबाब अपना",
+    "ro": "yih ḥusn-o-jamāl un kā yih ʿishq-o-shabāb apnā",
+    "verified": true
+   },
+   {
+    "ascii": "jiine kii tamannaa hai marne kaa zamaanaa hai",
+    "ur": "جینے کی تمنا ہے مرنے کا زمانا ہے",
+    "hi": "जीने की तमन्ना है मरने का ज़माना है",
+    "ro": "jīne kī tamannā hai marne kā zamānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "mujh ko isii dhun me;n hai har lahza basar karnaa",
+    "ur": "مجھ کو اسی دھن میں ہے ہر لحظہ بسر کرنا",
+    "hi": "मुझ को इसी धुन में है हर लहज़ा बसर करना",
+    "ro": "mujh ko isī dhun meñ hai har lahza basar karnā"
+   },
+   {
+    "ascii": "ab aa))e vuh ab aa))e laazim unhe;n aanaa hai",
+    "ur": "اب آئے وہ اب آئے لازم انہیں آنا ہے",
+    "hi": "अब आए वो अब आए लाज़िम उन्हें आना है",
+    "ro": "ab āʾe vuh ab āʾe lāzim unheñ ānā hai",
+    "verified": true
+   },
+   {
+    "ascii": ";xuddaarii-o-ma;hruumii ma;hruumii-o-;xuddaarii",
+    "ur": "خودداری و محرومی محرومی و خودداری",
+    "hi": "ख़ुद्दारी-ओ-महरूमी महरूमी-ओ-ख़ुद्दारी",
+    "ro": "ḳhuddārī-o-maḥrūmī maḥrūmī-o-ḳhuddārī"
+   },
+   {
+    "ascii": "ab dil ko ;xudaa rakhe ab dil kaa zamaanaa hai",
+    "ur": "اب دل کو خدا رکھے اب دل کا زمانا ہے",
+    "hi": "अब दिल को ख़ुदा रक्खे अब दिल का ज़माना है",
+    "ro": "ab dil ko ḳhudā rakhe ab dil kā zamānā hai",
+    "verified": true
+   },
+   {
+    "ascii": "ashko;n ke tabassum me;n aaho;n ke tarannum me;n",
+    "ur": "اشکوں کے تبسم میں آہوں کے ترنم میں",
+    "hi": "अश्कों के तबस्सुम में आहों के तरन्नुम में",
+    "ro": "ashkoñ ke tabassum meñ āhoñ ke tarannum meñ",
+    "verified": true
+   },
+   {
+    "ascii": "ma((asuum mu;habbat kaa ma((asuum fasaanaa hai",
+    "ur": "معصوم محبت کا معصوم فسانا ہے",
+    "hi": "मासूम मोहब्बत का मासूम फ़साना है",
+    "ro": "maʿasūm muḥabbat kā maʿasūm fasānā hai"
+   },
+   {
+    "ascii": "aa;nsuu to bahut se hai;n aa;nkho;n me;n jigar lekin",
+    "ur": "آنسو تو بہت سے ہیں آنکھوں میں جگرؔ لیکن",
+    "hi": "आँसू तो बहुत से हैं आँखों में जिगर लेकिन",
+    "ro": "āñsū to bahut se haiñ āñkhoñ meñ jigar lekin",
+    "verified": true
+   },
+   {
+    "ascii": "ba;ndh jaa))e so motii hai rah jaa))e so daanaa hai",
+    "ur": "بندھ جائے سو موتی ہے رہ جائے سو دانا ہے",
+    "hi": "बंध जाए सो मोती है रह जाए सो दाना है",
+    "ro": "bañdh jāʾe so motī hai rah jāʾe so dānā hai",
+    "verified": true
+   }
+  ]
+ },
+ {
+  "id": 5,
+  "poet": "Firaq Gorakhpuri",
+  "source": "Rekhta",
+  "meters": [
+   27
+  ],
+  "lines_count": 32,
+  "lines": [
+   {
+    "ascii": "sitaaro;n se ulajhtaa jaa rahaa huu;n",
+    "ur": "ستاروں سے الجھتا جا رہا ہوں",
+    "hi": "सितारों से उलझता जा रहा हूँ",
+    "ro": "sitāroñ se ulajhtā jā rahā hūñ",
+    "verified": true
+   },
+   {
+    "ascii": "shab-e-furqat bahut ghabraa rahaa huu;n",
+    "ur": "شب فرقت بہت گھبرا رہا ہوں",
+    "hi": "शब-ए-फ़ुर्क़त बहुत घबरा रहा हूँ",
+    "ro": "shab-e-furqat bahut ghabrā rahā hūñ",
+    "verified": true
+   },
+   {
+    "ascii": "tire ;gam ko bhii kuchh bahlaa rahaa huu;n",
+    "ur": "ترے غم کو بھی کچھ بہلا رہا ہوں",
+    "hi": "तिरे ग़म को भी कुछ बहला रहा हूँ",
+    "ro": "tire ġham ko bhī kuchh bahlā rahā hūñ",
+    "verified": true
+   },
+   {
+    "ascii": "jahaa;n ko bhii samajhtaa jaa rahaa huu;n",
+    "ur": "جہاں کو بھی سمجھتا جا رہا ہوں",
+    "hi": "जहाँ को भी समझता जा रहा हूँ",
+    "ro": "jahāñ ko bhī samajhtā jā rahā hūñ",
+    "verified": true
+   },
+   {
+    "ascii": "yaqii;n yih hai ;haqiiqat khul rahii hai",
+    "ur": "یقیں یہ ہے حقیقت کھل رہی ہے",
+    "hi": "यक़ीं ये है हक़ीक़त खुल रही है",
+    "ro": "yaqīñ yih hai ḥaqīqat khul rahī hai",
+    "verified": true
+   },
+   {
+    "ascii": "gumaa;n yih hai kih dhoke khaa rahaa huu;n",
+    "ur": "گماں یہ ہے کہ دھوکے کھا رہا ہوں",
+    "hi": "गुमाँ ये है कि धोके खा रहा हूँ",
+    "ro": "gumāñ yih hai kih dhoke khā rahā hūñ",
+    "verified": true
+   },
+   {
+    "ascii": "agar mumkin ho le le apnii aaha;t",
+    "ur": "اگر ممکن ہو لے لے اپنی آہٹ",
+    "hi": "अगर मुमकिन हो ले ले अपनी आहट",
+    "ro": "agar mumkin ho le le apnī āhaṭ",
+    "verified": true
+   },
+   {
+    "ascii": ";xabar do ;husn ko mai;n aa rahaa huu;n",
+    "ur": "خبر دو حسن کو میں آ رہا ہوں",
+    "hi": "ख़बर दो हुस्न को मैं आ रहा हूँ",
+    "ro": "ḳhabar do ḥusn ko maiñ ā rahā hūñ",
+    "verified": true
+   },
+   {
+    "ascii": "hade;n ;husn-o-mu;habbat kii milaa kar",
+    "ur": "حدیں حسن و محبت کی ملا کر",
+    "hi": "हदें हुस्न-ओ-मोहब्बत की मिला कर",
+    "ro": "hadeñ ḥusn-o-muḥabbat kī milā kar"
+   },
+   {
+    "ascii": "qayaamat par qayaamat dhaa rahaa huu;n",
+    "ur": "قیامت پر قیامت ڈھا رہا ہوں",
+    "hi": "क़यामत पर क़यामत ढा रहा हूँ",
+    "ro": "qayāmat par qayāmat dhā rahā hūñ"
+   },
+   {
+    "ascii": ";xabar hai tujh ko ai .zab:t-e-mu;habbat",
+    "ur": "خبر ہے تجھ کو اے ضبط محبت",
+    "hi": "ख़बर है तुझ को ऐ ज़ब्त-ए-मोहब्बत",
+    "ro": "ḳhabar hai tujh ko ai ẓabt̤-e-muḥabbat",
+    "verified": true
+   },
+   {
+    "ascii": "tire haatho;n me;n lu;taa jaa rahaa huu;n",
+    "ur": "ترے ہاتھوں میں لٹتا جا رہا ہوں",
+    "hi": "तिरे हाथों में लुटता जा रहा हूँ",
+    "ro": "tire hāthoñ meñ luṭā jā rahā hūñ"
+   },
+   {
+    "ascii": "a;sar bhii le rahaa huu;n terii chup kaa",
+    "ur": "اثر بھی لے رہا ہوں تیری چپ کا",
+    "hi": "असर भी ले रहा हूँ तेरी चुप का",
+    "ro": "aṡar bhī le rahā hūñ terī chup kā",
+    "verified": true
+   },
+   {
+    "ascii": "tujhe qaa))il bhii kartaa jaa rahaa huu;n",
+    "ur": "تجھے قائل بھی کرتا جا رہا ہوں",
+    "hi": "तुझे क़ाइल भी करता जा रहा हूँ",
+    "ro": "tujhe qāʾil bhī kartā jā rahā hūñ",
+    "verified": true
+   },
+   {
+    "ascii": "bharam tere sitam kaa khul chukaa hai",
+    "ur": "بھرم تیرے ستم کا کھل چکا ہے",
+    "hi": "भरम तेरे सितम का खुल चुका है",
+    "ro": "bharam tere sitam kā khul chukā hai",
+    "verified": true
+   },
+   {
+    "ascii": "mai;n tujh se aaj kyuu;n sharmaa rahaa huu;n",
+    "ur": "میں تجھ سے آج کیوں شرما رہا ہوں",
+    "hi": "मैं तुझ से आज क्यूँ शरमा रहा हूँ",
+    "ro": "maiñ tujh se āj kyūñ sharmā rahā hūñ",
+    "verified": true
+   },
+   {
+    "ascii": "unhii;n me;n raaz hai;n gul-baariyo;n ke",
+    "ur": "انہیں میں راز ہیں گلباریوں کے",
+    "hi": "उन्हीं में राज़ हैं गुल-बारियों के",
+    "ro": "unhīñ meñ rāz haiñ gul-bāriyoñ ke"
+   },
+   {
+    "ascii": "mai;n jo chingaariyaa;n barsaa rahaa huu;n",
+    "ur": "میں جو چنگاریاں برسا رہا ہوں",
+    "hi": "मैं जो चिंगारियाँ बरसा रहा हूँ",
+    "ro": "maiñ jo chingāriyāñ barsā rahā hūñ",
+    "verified": true
+   },
+   {
+    "ascii": "jo un ma((asuum aa;nkho;n ne diye the",
+    "ur": "جو ان معصوم آنکھوں نے دیے تھے",
+    "hi": "जो उन मासूम आँखों ने दिए थे",
+    "ro": "jo un maʿasūm āñkhoñ ne diye the"
+   },
+   {
+    "ascii": "vuh dhoke aaj tak mai;n khaa rahaa huu;n",
+    "ur": "وہ دھوکے آج تک میں کھا رہا ہوں",
+    "hi": "वो धोके आज तक मैं खा रहा हूँ",
+    "ro": "vuh dhoke āj tak maiñ khā rahā hūñ",
+    "verified": true
+   },
+   {
+    "ascii": "tire pahluu me;n kyuu;n hotaa hai mahsuus",
+    "ur": "ترے پہلو میں کیوں ہوتا ہے محسوس",
+    "hi": "तिरे पहलू में क्यूँ होता है महसूस",
+    "ro": "tire pahlū meñ kyūñ hotā hai mahsūs"
+   },
+   {
+    "ascii": "kih tujh se duur hotaa jaa rahaa huu;n",
+    "ur": "کہ تجھ سے دور ہوتا جا رہا ہوں",
+    "hi": "कि तुझ से दूर होता जा रहा हूँ",
+    "ro": "kih tujh se dūr hotā jā rahā hūñ",
+    "verified": true
+   },
+   {
+    "ascii": ";had-e-jo;r-o-karam se ba;rh chalaa ;husn",
+    "ur": "حد‌‌ جور‌ و کرم سے بڑھ چلا حسن",
+    "hi": "हद-ए-जोर-ओ-करम से बढ़ चला हुस्न",
+    "ro": "ḥad-e-joṛ-o-karam se baṛh chalā ḥusn"
+   },
+   {
+    "ascii": "nigaah-e-yaar ko yaad aa rahaa huu;n",
+    "ur": "نگاہ یار کو یاد آ رہا ہوں",
+    "hi": "निगाह-ए-यार को याद आ रहा हूँ",
+    "ro": "nigāh-e-yār ko yād ā rahā hūñ",
+    "verified": true
+   },
+   {
+    "ascii": "jo uljhe thii kabhii aadam ke haatho;n",
+    "ur": "جو الجھی تھی کبھی آدم کے ہاتھوں",
+    "hi": "जो उलझी थी कभी आदम के हाथों",
+    "ro": "jo uljhe thī kabhī ādam ke hāthoñ"
+   },
+   {
+    "ascii": "vuh gutthii aaj tak suljhaa rahaa huu;n",
+    "ur": "وہ گتھی آج تک سلجھا رہا ہوں",
+    "hi": "वो गुत्थी आज तक सुलझा रहा हूँ",
+    "ro": "vuh gutthī āj tak suljhā rahā hūñ",
+    "verified": true
+   },
+   {
+    "ascii": "mu;habbat ab mu;habbat ho chalii hai",
+    "ur": "محبت اب محبت ہو چلی ہے",
+    "hi": "मोहब्बत अब मोहब्बत हो चली है",
+    "ro": "muḥabbat ab muḥabbat ho chalī hai",
+    "verified": true
+   },
+   {
+    "ascii": "tujhe kuchh bhuultaa saa jaa rahaa huu;n",
+    "ur": "تجھے کچھ بھولتا سا جا رہا ہوں",
+    "hi": "तुझे कुछ भूलता सा जा रहा हूँ",
+    "ro": "tujhe kuchh bhūltā sā jā rahā hūñ",
+    "verified": true
+   },
+   {
+    "ascii": "ajal bhii jin ko sun kar jhuumtii hai",
+    "ur": "اجل بھی جن کو سن کر جھومتی ہے",
+    "hi": "अजल भी जिन को सुन कर झूमती है",
+    "ro": "ajal bhī jin ko sun kar jhūmtī hai",
+    "verified": true
+   },
+   {
+    "ascii": "vuh na;gme zindagii ke gaa rahaa huu;n",
+    "ur": "وہ نغمے زندگی کے گا رہا ہوں",
+    "hi": "वो नग़्मे ज़िंदगी के गा रहा हूँ",
+    "ro": "vuh naġhme zindagī ke gā rahā hūñ",
+    "verified": true
+   },
+   {
+    "ascii": "yih sannaa;taa hai mere paa;nv kii chaap",
+    "ur": "یہ سناٹا ہے میرے پاؤں کی چاپ",
+    "hi": "ये सन्नाटा है मेरे पाँव की चाप",
+    "ro": "yih sannāṭā hai mere pāñv kī chāp"
+   },
+   {
+    "ascii": "firaaq apnii kuchh aaha;t paa rahaa huu;n",
+    "ur": "فراقؔ اپنی کچھ آہٹ پا رہا ہوں",
+    "hi": "फ़िराक़ अपनी कुछ आहट पा रहा हूँ",
+    "ro": "firāq apnī kuchh āhaṭ pā rahā hūñ",
+    "verified": true
+   }
+  ]
+ },
+ {
+  "id": 6,
+  "poet": "Hasrat Mohani",
+  "source": "Rekhta",
+  "meters": [
+   10
+  ],
+  "lines_count": 18,
+  "lines": [
+   {
+    "ascii": ";husn-e-be-pardaa ko ;xud-bii;n vaa ;xud-aaraa kar diyaa",
+    "ur": "حسن بے پردا کو خودبین و خود آرا کر دیا",
+    "hi": "हुस्न-ए-बे-पर्दः को ख़ुद-बीन व ख़ुद-आरा कर दिया",
+    "ro": "ḥusn-e-be-pardā ko ḳhud-bīñ vā ḳhud-ārā kar diyā"
+   },
+   {
+    "ascii": "kyaa kiyaa mai;n ne kih i:zhaar-e-tamannaa kar diyaa",
+    "ur": "کیا کیا میں نے کہ اظہار تمنا کر دیا",
+    "hi": "क्या किया मैं ने कि इज़्हार-ए-तमन्ना कर दिया",
+    "ro": "kyā kiyā maiñ ne kih iz̤hār-e-tamannā kar diyā",
+    "verified": true
+   },
+   {
+    "ascii": "ba;rh ga))ii;n tum se to mil kar aur bhii betaabiyaa;n",
+    "ur": "بڑھ گئیں تم سے تو مل کر اور بھی بیتابیاں",
+    "hi": "बढ़ गईं तुम से तो मिल कर और भी बेताबियाँ",
+    "ro": "baṛh gaʾīñ tum se to mil kar aur bhī betābiyāñ",
+    "verified": true
+   },
+   {
+    "ascii": "ham yih samjhe the kih ab dil ko shakebaa kar diyaa",
+    "ur": "ہم یہ سمجھے تھے کہ اب دل کو شکیبا کر دیا",
+    "hi": "हम ये समझे थे कि अब दिल को शकेबा कर दिया",
+    "ro": "ham yih samjhe the kih ab dil ko shakebā kar diyā",
+    "verified": true
+   },
+   {
+    "ascii": "pa;rh ke teraa ;xat mire dil kii ((ajab ;haalat hu))ii",
+    "ur": "پڑھ کے تیرا خط مرے دل کی عجب حالت ہوئی",
+    "hi": "पढ़ के तेरा ख़त मिरे दिल की अजब हालत हुई",
+    "ro": "paṛh ke terā ḳhat mire dil kī ʿajab ḥālat huʾī"
+   },
+   {
+    "ascii": "i.z:tiraab-e-shauq ne ik ;hashr barpaa kar diyaa",
+    "ur": "اضطراب شوق نے اک حشر برپا کر دیا",
+    "hi": "इज़्तिराब-ए-शौक़ ने इक हश्र बरपा कर दिया",
+    "ro": "iẓt̤irāb-e-shauq ne ik ḥashr barpā kar diyā",
+    "verified": true
+   },
+   {
+    "ascii": "ham rahe yaa;n tak tirii ;xidmat me;n sargarm-e-niyaaz",
+    "ur": "ہم رہے یاں تک تری خدمت میں سرگرم نیاز",
+    "hi": "हम रहे याँ तक तिरी ख़िदमत में सरगर्म-ए-नियाज़",
+    "ro": "ham rahe yāñ tak tirī ḳhidmat meñ sargarm-e-niyāz",
+    "verified": true
+   },
+   {
+    "ascii": "tujh ko aa;xir aashnaa-e-naaz bejaa kar diyaa",
+    "ur": "تجھ کو آخر آشنائے ناز بے جا کر دیا",
+    "hi": "तुझ को आख़िर आश्ना-ए-नाज़ बेजा कर दिया",
+    "ro": "tujh ko āḳhir āshnā-e-nāz bejā kar diyā"
+   },
+   {
+    "ascii": "ab nahii;n dil ko kisii .suurat kisii pahluu qaraar",
+    "ur": "اب نہیں دل کو کسی صورت کسی پہلو قرار",
+    "hi": "अब नहीं दिल को किसी सूरत किसी पहलू क़रार",
+    "ro": "ab nahīñ dil ko kisī ṣūrat kisī pahlū qarār",
+    "verified": true
+   },
+   {
+    "ascii": "is nigaah-e-naaz ne kyaa si;hr aisaa kar diyaa",
+    "ur": "اس نگاہ ناز نے کیا سحر ایسا کر دیا",
+    "hi": "इस निगाह-ए-नाज़ ने क्या सेह्र ऐसा कर दिया",
+    "ro": "is nigāh-e-nāz ne kyā siḥr aisā kar diyā",
+    "verified": true
+   },
+   {
+    "ascii": "((ishq se tere ba;rhe kyaa kyaa dilo;n ke martabe",
+    "ur": "عشق سے تیرے بڑھے کیا کیا دلوں کے مرتبے",
+    "hi": "इश्क़ से तेरे बढ़े क्या क्या दिलों के मर्तबे",
+    "ro": "ʿishq se tere baṛhe kyā kyā diloñ ke martabe",
+    "verified": true
+   },
+   {
+    "ascii": "mihr zarro;n ko kiyaa qatro;n ko dariyaa kar diyaa",
+    "ur": "مہر ذروں کو کیا قطروں کو دریا کر دیا",
+    "hi": "मेहर ज़र्रों को किया क़तरों को दरिया कर दिया",
+    "ro": "mihr zarroñ ko kiyā qatroñ ko dariyā kar diyā"
+   },
+   {
+    "ascii": "kyuu;n nah ho;n terii mu;habbat se munavvar jaan-o-dil",
+    "ur": "کیوں نہ ہوں تیری محبت سے منور جان و دل",
+    "hi": "क्यूँ न हों तेरी मोहब्बत से मुनव्वर जान-ओ-दिल",
+    "ro": "kyūñ nah hoñ terī muḥabbat se munavvar jān-o-dil",
+    "verified": true
+   },
+   {
+    "ascii": "sham((a jab raushan hu))ii ghar me;n ujaalaa kar diyaa",
+    "ur": "شمع جب روشن ہوئی گھر میں اجالا کر دیا",
+    "hi": "शम्अ जब रौशन हुई घर में उजाला कर दिया",
+    "ro": "shamʿa jab raushan huʾī ghar meñ ujālā kar diyā",
+    "verified": true
+   },
+   {
+    "ascii": "terii ma;hfil se u;thaataa ;gair mujh ko kyaa majaal",
+    "ur": "تیری محفل سے اٹھاتا غیر مجھ کو کیا مجال",
+    "hi": "तेरी महफ़िल से उठाता ग़ैर मुझ को क्या मजाल",
+    "ro": "terī maḥfil se uṭhātā ġhair mujh ko kyā majāl",
+    "verified": true
+   },
+   {
+    "ascii": "dekhtaa thaa mai;n kih tuu ne bhii ishaaraa kar diyaa",
+    "ur": "دیکھتا تھا میں کہ تو نے بھی اشارہ کر دیا",
+    "hi": "देखता था मैं कि तू ने भी इशारः कर दिया",
+    "ro": "dekhtā thā maiñ kih tū ne bhī ishārā kar diyā"
+   },
+   {
+    "ascii": "sab ;galat kahte the lu:tf-e-yaar ko vaj))h-e-sukuu;n",
+    "ur": "سب غلط کہتے تھے لطف یار کو وجہ سکوں",
+    "hi": "सब ग़लत कहते थे लुत्फ़-ए-यार को वज्ह-ए-सुकूँ",
+    "ro": "sab ġhalat kahte the lut̤f-e-yār ko vajʾh-e-sukūñ"
+   },
+   {
+    "ascii": "dard-e-dil us ne to ;hasrat aur duunaa kar diyaa",
+    "ur": "درد دل اس نے تو حسرتؔ اور دونا کر دیا",
+    "hi": "दर्द-ए-दिल उस ने तो हसरत और दूना कर दिया",
+    "ro": "dard-e-dil us ne to ḥasrat aur dūnā kar diyā",
+    "verified": true
+   }
+  ]
+ }
+]

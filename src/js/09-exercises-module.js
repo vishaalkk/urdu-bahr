@@ -74,20 +74,34 @@ const POET_NAMES = {
   ghalib: ['Ghalib', 'غالب', 'ग़ालिब'],
   mir: ['Mir', 'میر', 'मीर']
 };
+/* "More Poets": each ghazal carries its own poet; these add the Urdu and Devanagari spellings (and common Roman ones) to the search */
+const OTHER_POET_NAMES = {
+  'Faiz Ahmed Faiz': ['Faiz', 'فیض', 'फ़ैज़'], 'Dagh Dehlvi': ['Dagh', 'Daagh', 'داغ', 'दाग़'], 'Jigar Moradabadi': ['Jigar', 'جگر', 'जिगर'],
+  'Firaq Gorakhpuri': ['Firaq', 'فراق', 'फ़िराक़'], 'Hasrat Mohani': ['Hasrat', 'حسرت', 'हसरत']
+};
+/* the collections of the Ghazals tab, in tab order, and where each one's data lives */
+const GHAZAL_COLS = ['handbook', 'ghalib', 'mir', 'others'];
+const COL_NAMES = { handbook: 'Handbook', ghalib: 'Ghalib', mir: 'Mir', others: 'More Poets' };
+function collectionData(col) {
+  const d = col === 'handbook' ? (typeof EXERCISES_DATA !== 'undefined' ? EXERCISES_DATA : null)
+    : col === 'ghalib' ? (typeof GHALIB_EXT_DATA !== 'undefined' ? GHALIB_EXT_DATA : null)
+    : col === 'mir' ? (typeof MIR_EXT_DATA !== 'undefined' ? MIR_EXT_DATA : null)
+    : col === 'others' ? (typeof OTHERS_DATA !== 'undefined' ? OTHERS_DATA : null) : null;
+  return Array.isArray(d) ? d : [];
+}
+window.collectionData = collectionData;
+/* the poet's first name for rows in the More Poets list ("Faiz Ahmed Faiz" -> "Faiz") */
+function poetShort(item) { return String((item && item.poet) || '').split(' ')[0]; }
 
 let GHAZAL_SEARCH_INDEX = null; // built lazily on first search; { col, id, hay } rows
 function buildGhazalSearchIndex() {
-  const cols = [
-    ['handbook', (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) ? EXERCISES_DATA : []],
-    ['ghalib', (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) ? GHALIB_EXT_DATA : []],
-    ['mir', (typeof MIR_EXT_DATA !== 'undefined' && Array.isArray(MIR_EXT_DATA)) ? MIR_EXT_DATA : []]
-  ];
+  const cols = GHAZAL_COLS.map(c => [c, collectionData(c)]);
   const idx = [];
   cols.forEach(([col, corpus]) => {
-    const poetNames = col === 'handbook' ? null : POET_NAMES[col];
+    const poetNames = POET_NAMES[col] || null;
     corpus.forEach(item => {
       const l1 = (item.lines && item.lines[0]) || null;
-      const fields = poetNames ? poetNames.slice() : [item.poet || ''];
+      const fields = poetNames ? poetNames.slice() : [item.poet || ''].concat(OTHER_POET_NAMES[item.poet] || []);
       fields.push(String(item.id));
       if (l1) fields.push(l1.ur || '', l1.hi || '', l1.ro || '', l1.ascii || '');
       idx.push({ col, id: String(item.id), hay: searchNorm(fields.filter(Boolean).join(' ')) });
@@ -97,7 +111,7 @@ function buildGhazalSearchIndex() {
 }
 window.buildGhazalSearchIndex = buildGhazalSearchIndex;
 
-/* -> { handbook: Set<id>, ghalib: Set<id>, mir: Set<id> } or null for an empty query.
+/* -> { handbook: Set<id>, ghalib: Set<id>, mir: Set<id>, others: Set<id> } or null for an empty query.
    All query words must appear (substring) in a row's haystack — good enough for
    short poet-name / first-line / number queries without needing real tokenization. */
 function searchGhazalIndex(q) {
@@ -105,7 +119,7 @@ function searchGhazalIndex(q) {
   if (!nq) return null;
   if (!GHAZAL_SEARCH_INDEX) buildGhazalSearchIndex();
   const terms = nq.split(' ').filter(Boolean);
-  const out = { handbook: new Set(), ghalib: new Set(), mir: new Set() };
+  const out = {}; GHAZAL_COLS.forEach(c => { out[c] = new Set(); });
   GHAZAL_SEARCH_INDEX.forEach(rec => {
     if (terms.every(t => rec.hay.indexOf(t) !== -1)) out[rec.col].add(rec.id);
   });
@@ -309,6 +323,7 @@ function getGhazalNavLabel(col, item) {
   const n = franNum(col, item);
   if (col === 'ghalib') return `Ghalib ${n}`;
   if (col === 'mir') return `Mir ${n}`;
+  if (col === 'others') return item.poet || 'More Poets';
   return `${col} ${item.id}`;
 }
 
@@ -319,10 +334,12 @@ function updateCollectionCounts() {
   const bH = $('colBtnHandbook');
   const bG = $('colBtnGhalib');
   const bM = $('colBtnMir');
+  const bO = $('colBtnOthers');
   if (bH) bH.textContent = 'Handbook';
   if (bG) bG.textContent = 'Ghalib';
   if (bM) bM.textContent = 'Mir';
-  const counts = { handbook: hLen, ghalib: gLen, mir: mLen };
+  if (bO) bO.textContent = 'More Poets';
+  const counts = { handbook: hLen, ghalib: gLen, mir: mLen, others: collectionData('others').length };
   const col = (typeof activeCollection !== 'undefined') ? activeCollection : 'handbook';
   if ($('ghazalCollectionCount')) $('ghazalCollectionCount').textContent = (counts[col] || hLen) + ' ghazals';
 }
@@ -332,10 +349,7 @@ function populateGhazalMeterFilter(col) {
   if (!sel) return;
 
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
-  let corpus = [];
-  if (col === 'handbook') corpus = (typeof EXERCISES_DATA !== 'undefined') ? EXERCISES_DATA : [];
-  else if (col === 'ghalib') corpus = (typeof GHALIB_EXT_DATA !== 'undefined') ? GHALIB_EXT_DATA : [];
-  else if (col === 'mir') corpus = (typeof MIR_EXT_DATA !== 'undefined') ? MIR_EXT_DATA : [];
+  const corpus = collectionData(col);
 
   const meterCounts = {};
   corpus.forEach(item => {
@@ -397,7 +411,7 @@ window.onGhazalSearch = onGhazalSearch;
 function syncCollectionButtons() {
   const searchActive = !!($('ghazalSearchInput') && $('ghazalSearchInput').value.trim());
   const on = searchActive ? searchCollectionFilter : activeCollection;
-  const btns = { handbook: 'colBtnHandbook', ghalib: 'colBtnGhalib', mir: 'colBtnMir' };
+  const btns = { handbook: 'colBtnHandbook', ghalib: 'colBtnGhalib', mir: 'colBtnMir', others: 'colBtnOthers' };
   Object.keys(btns).forEach(k => {
     const el = $(btns[k]);
     if (el) el.classList.toggle('on', k === on);
@@ -425,14 +439,16 @@ function switchCollection(col) {
   const descs = {
     'handbook': 'The handbook\'s exercise ghazals, with Frances Pritchett\'s notes. <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/10_ex_01_06.html" target="_blank" rel="noopener">Her exercises<span class="ext">↗</span></a> · <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/11_exnotes.html" target="_blank" rel="noopener">answers &amp; notes<span class="ext">↗</span></a>',
     'ghalib': "Ghalib's divan, scanned and meter-checked by the engine.",
-    'mir': "Mir Taqi Mir, scanned and meter-checked by the engine."
+    'mir': "Mir Taqi Mir, scanned and meter-checked by the engine.",
+    'others': 'Faiz, Dagh, Jigar, Firaq and Hasrat, with their Urdu, Devanagari and Roman from <a class="fran-link" href="https://www.rekhta.org" target="_blank" rel="noopener">Rekhta ↗</a>. The Roman is respelled in Pritchett\'s style.'
   };
   if ($('colDesc')) $('colDesc').innerHTML = descs[col] || '';   // descriptions may carry links (trusted, static)
 
   const eyebrowCounts = {
     handbook: (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) ? EXERCISES_DATA.length : 24,
     ghalib: (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) ? GHALIB_EXT_DATA.length : 234,
-    mir: (typeof MIR_EXT_DATA !== 'undefined' && Array.isArray(MIR_EXT_DATA)) ? MIR_EXT_DATA.length : 429
+    mir: (typeof MIR_EXT_DATA !== 'undefined' && Array.isArray(MIR_EXT_DATA)) ? MIR_EXT_DATA.length : 429,
+    others: collectionData('others').length
   };
   if ($('ghazalEyebrow')) $('ghazalEyebrow').textContent = '';   // the collection switch already says which one; shown only for search results
   if ($('ghazalCollectionCount')) $('ghazalCollectionCount').textContent = eyebrowCounts[col] + ' ghazals';
@@ -440,6 +456,8 @@ function switchCollection(col) {
   const cHandbook = $('handbookExContainer');
   const cGhalib = $('ghalibContainer');
   const cMir = $('mirContainer');
+  const cOthers = $('othersContainer');
+  if (cOthers) { cOthers.classList.toggle('hidden', col !== 'others'); cOthers.style.display = ''; }
 
   if (cHandbook) { cHandbook.classList.toggle('hidden', col !== 'handbook'); cHandbook.style.display = ''; }
   if (cGhalib) { cGhalib.classList.toggle('hidden', col !== 'ghalib'); cGhalib.style.display = ''; }
@@ -452,7 +470,7 @@ function switchCollection(col) {
 window.switchCollection = switchCollection;
 
 function renderZeroResults(col, selFilter, searchQ) {
-  const colNames = { handbook: 'Handbook', ghalib: 'Ghalib', mir: 'Mir' };
+  const colNames = COL_NAMES;
   const colName = colNames[col] || col;
 
   let msg = '';
@@ -460,14 +478,11 @@ function renderZeroResults(col, selFilter, searchQ) {
 
   if (selFilter !== 'all') {
     msg = `No ${colName.toLowerCase()} ghazals in this meter.`;
-    const otherCols = ['handbook', 'ghalib', 'mir'].filter(c => c !== col);
+    const otherCols = GHAZAL_COLS.filter(c => c !== col);
     const suggestions = [];
 
     otherCols.forEach(otherCol => {
-      let corpus = [];
-      if (otherCol === 'handbook') corpus = (typeof EXERCISES_DATA !== 'undefined') ? EXERCISES_DATA : [];
-      else if (otherCol === 'ghalib') corpus = (typeof GHALIB_EXT_DATA !== 'undefined') ? GHALIB_EXT_DATA : [];
-      else if (otherCol === 'mir') corpus = (typeof MIR_EXT_DATA !== 'undefined') ? MIR_EXT_DATA : [];
+      const corpus = collectionData(otherCol);
 
       const count = corpus.filter(item => {
         const mList = mListOf(item).map(String);
@@ -523,7 +538,7 @@ function getFilteredGhazals(col) {
       return true;
     });
   } else {
-    const corpus = (col === 'ghalib') ? ((typeof GHALIB_EXT_DATA !== 'undefined') ? GHALIB_EXT_DATA : []) : ((typeof MIR_EXT_DATA !== 'undefined') ? MIR_EXT_DATA : []);
+    const corpus = collectionData(col);
     return corpus.filter(g => {
       if (selFilter !== 'all') {
         const mList = mListOf(g).map(String);
@@ -553,7 +568,8 @@ function renderGhazalsList() {
 
   const uHost = $('ghazalUniversalResults');
   if (uHost) { uHost.classList.add('hidden'); uHost.style.display = 'none'; }
-  const cHandbook = $('handbookExContainer'), cGhalib = $('ghalibContainer'), cMir = $('mirContainer');
+  const cHandbook = $('handbookExContainer'), cGhalib = $('ghalibContainer'), cMir = $('mirContainer'), cOthers = $('othersContainer');
+  if (cOthers) { cOthers.classList.toggle('hidden', activeCollection !== 'others'); cOthers.style.display = ''; }
   if (cHandbook) { cHandbook.classList.toggle('hidden', activeCollection !== 'handbook'); cHandbook.style.display = ''; }
   if (cGhalib) { cGhalib.classList.toggle('hidden', activeCollection !== 'ghalib'); cGhalib.style.display = ''; }
   if (cMir) { cMir.classList.toggle('hidden', activeCollection !== 'mir'); cMir.style.display = ''; }
@@ -564,6 +580,8 @@ function renderGhazalsList() {
     renderCorpusList('ghalib');
   } else if (activeCollection === 'mir') {
     renderCorpusList('mir');
+  } else if (activeCollection === 'others') {
+    renderCorpusList('others');
   }
 }
 window.renderGhazalsList = renderGhazalsList;
@@ -573,8 +591,8 @@ window.renderGhazalsList = renderGhazalsList;
    narrows this to one collection. */
 function renderUniversalSearchResults(q) {
   const uHost = $('ghazalUniversalResults');
-  const cHandbook = $('handbookExContainer'), cGhalib = $('ghalibContainer'), cMir = $('mirContainer');
-  [cHandbook, cGhalib, cMir].forEach(el => { if (el) { el.classList.add('hidden'); el.style.display = 'none'; } });
+  const cHandbook = $('handbookExContainer'), cGhalib = $('ghalibContainer'), cMir = $('mirContainer'), cOthers = $('othersContainer');
+  [cHandbook, cGhalib, cMir, cOthers].forEach(el => { if (el) { el.classList.add('hidden'); el.style.display = 'none'; } });
   if (!uHost) return;
   uHost.classList.remove('hidden');
   uHost.style.display = 'block';
@@ -583,18 +601,15 @@ function renderUniversalSearchResults(q) {
   const idx = searchGhazalIndex(q);
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
   const langDir = getLangDir(cs);
-  const colNames = { handbook: 'Handbook', ghalib: 'Ghalib', mir: 'Mir' };
-  const cols = (searchCollectionFilter === 'all') ? ['handbook', 'ghalib', 'mir'] : [searchCollectionFilter];
+  const colNames = COL_NAMES;
+  const cols = (searchCollectionFilter === 'all') ? GHAZAL_COLS : [searchCollectionFilter];
 
   const rows = [];
   if (idx) {
     cols.forEach(col => {
       const ids = idx[col];
       if (!ids || !ids.size) return;
-      const corpus = col === 'handbook' ? ((typeof EXERCISES_DATA !== 'undefined') ? EXERCISES_DATA : [])
-        : col === 'ghalib' ? ((typeof GHALIB_EXT_DATA !== 'undefined') ? GHALIB_EXT_DATA : [])
-        : ((typeof MIR_EXT_DATA !== 'undefined') ? MIR_EXT_DATA : []);
-      corpus.forEach(item => { if (ids.has(String(item.id))) rows.push({ col, item }); });
+      collectionData(col).forEach(item => { if (ids.has(String(item.id))) rows.push({ col, item }); });
     });
   }
 
@@ -614,10 +629,10 @@ function renderUniversalSearchResults(q) {
     const { col, item } = r;
     const l1 = item.lines && item.lines[0];
     const disp1 = l1 ? ((typeof getLineDisplay === 'function') ? getLineDisplay(l1, cs) : (l1[cs] || l1.ur)) : '';
-    const who = col === 'handbook' ? (item.poet || 'Handbook') : colNames[col];
+    const who = (col === 'handbook' || col === 'others') ? (item.poet || colNames[col]) : colNames[col];
     return `
       <div class="vrow" role="link" tabindex="0" onclick="navigate('/ghazals/${col}/${item.id}')">
-        <span class="vnum">${col === 'handbook' ? escapeHtml(getGhazalNavLabel(col, item)) : franLinkHTML(col, item)}</span>
+        <span class="vnum">${col === 'handbook' || col === 'others' ? escapeHtml(col === 'others' ? poetShort(item) : getGhazalNavLabel(col, item)) : franLinkHTML(col, item)}</span>
         <div class="vtext">
           <div class="vline" ${langDir}>${disp1}</div>
           <div class="vmeta">
@@ -691,8 +706,8 @@ function renderHandbookList() {
 window.renderHandbookList = renderHandbookList;
 
 function renderCorpusList(col) {
-  const listEl = $(col === 'ghalib' ? 'ghalibExtList' : 'mirExtList');
-  const moreBtn = $(col === 'ghalib' ? 'ghalibExtMore' : 'mirExtMore');
+  const listEl = $(col === 'ghalib' ? 'ghalibExtList' : col === 'others' ? 'othersExtList' : 'mirExtList');
+  const moreBtn = $(col === 'ghalib' ? 'ghalibExtMore' : col === 'others' ? 'othersExtMore' : 'mirExtMore');
   if (!listEl) return;
 
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
@@ -717,7 +732,7 @@ function renderCorpusList(col) {
     // number (bare, e.g. "12 ↗") — no "Ghalib"/"Mir" prefix (round 3).
     return `
       <div class="vrow" role="link" tabindex="0" onclick="navigate('/ghazals/${col}/${g.id}')">
-        <span class="vnum">${franLinkHTML(col, g, { bare: true }) || escapeHtml('#' + g.id)}</span>
+        <span class="vnum">${col === 'others' ? escapeHtml(poetShort(g)) : (franLinkHTML(col, g, { bare: true }) || escapeHtml('#' + g.id))}</span>
         <div class="vtext">
           <div class="vline" ${langDir}>${disp1}</div>
         </div>
@@ -759,6 +774,12 @@ function showMoreMirExt() {
 }
 window.showMoreMirExt = showMoreMirExt;
 
+function showMoreOthersExt() {
+  ghazalShownCount += 30;
+  renderCorpusList('others');
+}
+window.showMoreOthersExt = showMoreOthersExt;
+
 function showMoreUniversal() {
   ghazalShownCount += 30;
   const q = $('ghazalSearchInput') ? $('ghazalSearchInput').value.trim() : '';
@@ -783,10 +804,7 @@ function openGhazalReader(col, id) {
     lView.style.display = 'none';
   }
 
-  let item = null;
-  if (col === 'handbook' && typeof EXERCISES_DATA !== 'undefined') item = EXERCISES_DATA.find(x => String(x.id) === String(id));
-  else if (col === 'ghalib' && typeof GHALIB_EXT_DATA !== 'undefined') item = GHALIB_EXT_DATA.find(x => String(x.id) === String(id));
-  else if (col === 'mir' && typeof MIR_EXT_DATA !== 'undefined') item = MIR_EXT_DATA.find(x => String(x.id) === String(id));
+  const item = collectionData(col).find(x => String(x.id) === String(id)) || null;
 
   curReaderItem = item;
   if (!item) return;
@@ -799,6 +817,8 @@ function openGhazalReader(col, id) {
   if (titleEl) {
     if (col === 'handbook') {
       titleEl.textContent = item.poet || 'Handbook';
+    } else if (col === 'others') {
+      titleEl.textContent = `${item.poet}${item.source ? ' · ' + item.source : ''}`;
     } else {
       titleEl.innerHTML = franLinkHTML(col, item) || escapeHtml(getGhazalNavLabel(col, item));
     }
@@ -895,7 +915,7 @@ function openGhazalReader(col, id) {
   let filtered = getFilteredGhazals(col);
   let curIdx = filtered.findIndex(x => String(x.id) === String(id));
   if (curIdx === -1) {
-    filtered = (col === 'handbook') ? ((typeof EXERCISES_DATA !== 'undefined') ? EXERCISES_DATA : []) : ((col === 'ghalib') ? ((typeof GHALIB_EXT_DATA !== 'undefined') ? GHALIB_EXT_DATA : []) : ((typeof MIR_EXT_DATA !== 'undefined') ? MIR_EXT_DATA : []));
+    filtered = collectionData(col);
     curIdx = filtered.findIndex(x => String(x.id) === String(id));
   }
   const prevGhazal = (curIdx > 0) ? filtered[curIdx - 1] : null;
@@ -1009,10 +1029,7 @@ function getCurrentReaderLines() {
   const { parts } = (typeof parseHash === 'function') ? parseHash() : { parts: [] };
   const col = parts[1] || 'handbook';
   const id = parts[2];
-  let item = null;
-  if (col === 'handbook' && typeof EXERCISES_DATA !== 'undefined') item = EXERCISES_DATA.find(x => String(x.id) === String(id));
-  else if (col === 'ghalib' && typeof GHALIB_EXT_DATA !== 'undefined') item = GHALIB_EXT_DATA.find(x => String(x.id) === String(id));
-  else if (col === 'mir' && typeof MIR_EXT_DATA !== 'undefined') item = MIR_EXT_DATA.find(x => String(x.id) === String(id));
+  const item = collectionData(col).find(x => String(x.id) === String(id));
   return item ? item.lines : null;
 }
 
@@ -1048,9 +1065,7 @@ window.playReaderCoupletByIndex = playReaderCoupletByIndex;
    instead of the whole text percent-encoded. */
 function ghazalScanText(ref) {
   const [col, id] = String(ref || '').split('/');
-  const data = col === 'handbook' ? (typeof EXERCISES_DATA !== 'undefined' ? EXERCISES_DATA : null)
-    : col === 'ghalib' ? (typeof GHALIB_EXT_DATA !== 'undefined' ? GHALIB_EXT_DATA : null)
-    : col === 'mir' ? (typeof MIR_EXT_DATA !== 'undefined' ? MIR_EXT_DATA : null) : null;
+  const data = collectionData(col);
   const item = data && data.find(x => String(x.id) === String(id));
   return item && item.lines ? item.lines.map(l => (l.ur || '').trim()).filter(Boolean).join('\n') : null;
 }

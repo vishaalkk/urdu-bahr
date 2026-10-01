@@ -35,7 +35,8 @@ function drPanel(tab) { return $(DR_PANELS[tab]); }
 var DR_SOURCES = [
   { key: 'handbook', label: 'Handbook' },
   { key: 'ghalib', label: 'Ghalib' },
-  { key: 'mir', label: 'Mir' }
+  { key: 'mir', label: 'Mir' },
+  { key: 'others', label: 'More Poets' }
 ];
 
 /* ---------- small utilities ---------- */
@@ -47,7 +48,7 @@ function drEsc(s) {
   if (typeof escapeHtml === 'function') return escapeHtml(s);
   return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
-function drLabelForSource(k) { return k === 'handbook' ? 'Handbook' : k === 'ghalib' ? 'Ghalib' : k === 'mir' ? 'Mir' : k; }
+function drLabelForSource(k) { return k === 'handbook' ? 'Handbook' : k === 'ghalib' ? 'Ghalib' : k === 'mir' ? 'Mir' : k === 'others' ? 'More Poets' : k; }
 function drCapFirst(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
 function drRawFromSeq(seq) { return seq.map(w => w === 'l' ? '=' : w === 's' ? '-' : w === 'x' ? 'x' : w === '/' ? '/' : '-').join(' '); }
 /* playSeq may carry '/' foot delimiters: audio and the strip need them, the syllable-only paths do not */
@@ -79,6 +80,7 @@ function drCorpusFor(key) {
   if (key === 'handbook') return (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) ? EXERCISES_DATA : [];
   if (key === 'ghalib') return (typeof GHALIB_EXT_DATA !== 'undefined' && Array.isArray(GHALIB_EXT_DATA)) ? GHALIB_EXT_DATA : [];
   if (key === 'mir') return (typeof MIR_EXT_DATA !== 'undefined' && Array.isArray(MIR_EXT_DATA)) ? MIR_EXT_DATA : [];
+  if (key === 'others') return (typeof OTHERS_DATA !== 'undefined' && Array.isArray(OTHERS_DATA)) ? OTHERS_DATA : [];
   return [];
 }
 function drActiveSources(tab) {

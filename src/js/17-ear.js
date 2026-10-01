@@ -4,7 +4,7 @@ let earCur = store.get('earCur', 'dilenadan');
 function bestGhazalLinkForMeter(mId) {
   if (!mId) return { link: '#/ghazals', count: 0, bestColl: 'ghalib' };
   const idStr = String(mId);
-  let hb = 0, gh = 0, mr = 0;
+  let hb = 0, gh = 0, mr = 0, ot = 0;
   if (typeof EXERCISES_DATA !== 'undefined' && Array.isArray(EXERCISES_DATA)) {
     EXERCISES_DATA.forEach(e => {
       const em = e.meters || e.m; const match = Array.isArray(em) ? em.some(x => String(x) === idStr) : String(em) === idStr;
@@ -23,9 +23,13 @@ function bestGhazalLinkForMeter(mId) {
       if (match) mr++;
     });
   }
-  const total = hb + gh + mr;
+  if (typeof OTHERS_DATA !== 'undefined' && Array.isArray(OTHERS_DATA)) {
+    OTHERS_DATA.forEach(e => { if (Array.isArray(e.meters) && e.meters.some(x => String(x) === idStr)) ot++; });
+  }
+  const total = hb + gh + mr + ot;
   let bestColl = 'ghalib';
   let bestCount = gh;
+  if (ot > bestCount) { bestColl = 'others'; bestCount = ot; }
   if (mr > bestCount) {
     bestColl = 'mir';
     bestCount = mr;

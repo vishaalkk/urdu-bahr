@@ -284,6 +284,48 @@ const ROUTES = [
     await check('#/scan?g=ghalib/1', (w, d) => d.querySelectorAll('#scanOut .chip').length > 20 && w.location.hash === '#/scan?g=ghalib/1' ? true : 'link did not scan the ghazal: ' + w.location.hash.slice(0, 60), 'A #/scan?g= link scans that ghazal and stays short');
     // words whose tashdīd is left unwritten: with or without the mark, the engine's first reading is the geminated one
     await check('#/home', (w) => { const want = { 'مدت': 'll', 'مدّت': 'll', 'محبت': 'sll', 'تمنا': 'slx', 'مدعا': 'lsx', 'ذرہ': 'lx' }, bad = []; for (const k in want) { const o = (w.Scan.scanWord(k) || {}).opts || [], got = o[0] ? o[0].syl.map(s => s.w).join('') : ''; if (got !== want[k]) bad.push(k + ' ' + got); } return bad.length ? 'default reading wrong: ' + bad.join(', ') : true; }, 'Unwritten-tashdīd words read as geminates by default');
+    // Roman letters follow Pritchett's own transliteration (ذ ż, ض ẓ, ث ṡ, ء ʾ): the Urdu->Roman helper must emit them and typed Roman must read them back
+    await check('#/scan', (w) => {
+      const letters = { 'ذ': 'ż', 'ض': 'ẓ', 'ث': 'ṡ', 'ص': 'ṣ', 'ظ': 'z\u0324', 'ء': 'ʾ' }, bad = [];
+      for (const u in letters) { if (w.urduToRoman(u) !== letters[u]) bad.push(u + ' gives ' + w.urduToRoman(u)); }
+      const typed = { 'żimme': 'ذ', 'ġhaẓab': 'ض', 'aṡar': 'ث', 'ẓarūrat': 'ض', 'ẕarūrat': 'ذ', 's\u0331ar': 'ث' };
+      for (const t in typed) { const ur = w.lineScripts(t + ' ' + t).ur.split(' ')[0]; if (!ur.includes(typed[t])) bad.push('typed ' + t + ' gives ' + ur); }
+      return bad.length ? bad.join(' | ') : true;
+    }, "Roman letters match Pritchett's (ż ẓ ṡ ʾ), going both ways");
+    // casual typed Roman (no diacritics, Rekhta-style spellings) must reach the right Urdu word
+    await check('#/scan', (w) => {
+      const want = { 'ye': 'یہ', 'vo': 'وہ', 'wo': 'وہ', 'na': 'نہ', 'pe': 'پہ', 'ishq': 'عشق', 'gham': 'غم', 'aaj': 'آج', 'mohabbat': 'محبت', 'shaa.ir': 'شاعر', 'sub.h': 'صبح', 'mehmaan': 'مہمان', 'ulTi': 'الٹی' }, bad = [];
+      for (const r in want) { const ur = w.lineScripts(r).ur.normalize('NFC').replace(/[\u064B-\u065F\u0651]/g, ''); if (ur !== want[r]) bad.push(r + ' gives ' + ur + ' (want ' + want[r] + ')'); }
+      const ki = w.lineScripts('dil mein ye ki tum aao').ur, ko = w.lineScripts('mohabbat kii baat hai').ur;
+      if (!/کہ/.test(ki)) bad.push('ki before a pronoun should be کہ: ' + ki);
+      if (!/کی/.test(ko)) bad.push('kii should be کی: ' + ko);
+      const dard = w.lineScripts('dard o gham').ur; if (!/درد و غم/.test(dard)) bad.push('dard o gham: ' + dard);
+      return bad.length ? bad.join(' | ') : true;
+    }, 'Typed Roman without diacritics (ye vo na pe ishq gham aaj, Rekhta marks) reads as the right Urdu');
+    // More Poets (Rekhta): the fourth collection
+    await check('#/ghazals/others', (w, d) => {
+      if (!d.getElementById('colBtnOthers').classList.contains('on')) return 'More Poets button not on';
+      if (!/6 ghazals/.test(d.getElementById('ghazalCollectionCount').textContent)) return 'count: ' + d.getElementById('ghazalCollectionCount').textContent;
+      const heads = d.querySelectorAll('#othersExtList .meter-group-head'); if (!heads.length) return 'no meter groups';
+      heads.forEach(h => h.click());
+      const rows = [...d.querySelectorAll('#othersExtList .vrow')]; if (rows.length !== 6) return rows.length + ' rows';
+      return /Faiz|Dagh|Jigar|Firaq|Hasrat/.test(rows.map(r => r.querySelector('.vnum').textContent).join(' ')) ? true : 'rows carry no poet names';
+    }, 'Ghazals › More Poets lists the six ghazals by bahr, with poet names');
+    await check('#/ghazals/others/1', (w, d) => /Faiz/.test(d.getElementById('readerTitle').textContent) && /Rekhta/.test(d.getElementById('readerTitle').textContent) && d.querySelectorAll('#readerCouplets .couplet-card').length === 7 ? true : 'reader: ' + d.getElementById('readerTitle').textContent + ' / ' + d.querySelectorAll('#readerCouplets .couplet-card').length + ' couplets', 'More Poets reader opens with poet, source and its couplets');
+    await check('#/ghazals?q=faiz', (w, d) => /More Poets/.test(d.getElementById('ghazalUniversalResults').textContent) ? true : 'search for Faiz finds nothing in More Poets', 'Search finds More Poets by poet name');
+    await check('#/home', (w) => {
+      const bad = [];
+      if (w.bestGhazalLinkForMeter(34).count < 1) bad.push('meter 34 does not count the Faiz ghazal');
+      if (w.drCorpusFor('others').length !== 6) bad.push('drill corpus');
+      if (!w.eval('DR_SOURCES').some(s => s.key === 'others')) bad.push('drill source chip');
+      if (w.eval('prCorpusLines()').length < w.collectionData('ghalib').length) bad.push('practice corpus');
+      const famOf = w.eval('famOfMeter'), fam = id => (famOf[id] && famOf[id].id) || String(id);
+      w.collectionData('others').forEach(g => {
+        let ok = 0, n = 0; g.lines.forEach(l => { n++; try { const f = w.Scan.scanLine(l.ur).fits[0]; if (f && g.meters.some(m => fam(m) === fam(f.meter.id))) ok++; } catch (e) {} });
+        if (ok / n < 0.6) bad.push(g.poet + ' ' + g.id + ': only ' + ok + '/' + n + ' lines scan in its declared bahr family');
+      });
+      return bad.length ? bad.join(' | ') : true;
+    }, 'More Poets feeds Look up, the drills, Practice, and scans in its declared bahr');
     await check('', (w) => w.location.hash === '#/home' ? true : 'landed on ' + w.location.hash, 'bare URL lands on Home');
     await check('#/home', (w, d) => { const s = d.getElementById('home-section'); return s && s.classList.contains('on') && /Weight/.test(s.textContent) && /Ghazals/.test(s.textContent) ? true : 'home section not rendered'; }, 'Home renders its content');
     // Round 3: inside the (single-collection) Mir list the group header carries the

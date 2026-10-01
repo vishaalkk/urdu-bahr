@@ -1,4 +1,5 @@
-import json, re, os, subprocess, base64
+import json
+import re, re, os, subprocess, base64
 from collections import Counter
 
 # ─── 1. Load datasets ─────────────────────────────────────────────────────────
@@ -23,6 +24,9 @@ with open('data/ghalib_extended.json', 'r', encoding='utf-8') as f:
 
 with open('data/mir_extended.json', 'r', encoding='utf-8') as f:
     MIR_EXT = json.load(f)
+# "More Poets": ghazals from Rekhta (Urdu and Devanagari as given; Roman converted to Pritchett's style), see scripts/build_others.js.
+with open('data/others_extended.json', 'r', encoding='utf-8') as f:
+    OTHERS_EXT = json.load(f)
 # Famous couplets from Irfan 'Abid's urdupoetry.com bahr article (data/urdupoetry_bahrs.json
 # has the full article extraction + scan verification; this is just the subset wired into
 # Meter > Lookup as extra examples). See scripts/incorporate_iqbal.js for the sibling pattern.
@@ -56,6 +60,17 @@ MIR_EXT_PREVIEW = [{
     'lines': [{'ascii': l['ascii'], 'ur': l['ur'], 'hi': l['hi'], 'ro': l['ro']} for l in g['lines']],
 } for g in MIR_EXT]
 
+OTHERS_PREVIEW = [{
+    'id': g['id'],
+    'poet': g['poet'],
+    'meters': g['meters'],
+    'source': g.get('source', ''),
+    'n': g['lines_count'],
+    'lines': [{'ascii': l['ascii'], 'ur': l['ur'], 'hi': l['hi'], 'ro': l['ro']} for l in g['lines']],
+} for g in OTHERS_EXT]
+# only lines whose converted Urdu matched Rekhta's Urdu feed the word maps below (their ascii spelling is trustworthy)
+OTHERS_WORDS = [{'lines': [l for l in g['lines'] if l.get('verified')]} for g in OTHERS_EXT]
+
 # Word-level Urdu -> Pritchett-ASCII dictionary, built from every line we have
 # verified translation for (226 exercise lines + 2920 Ghalib-extended lines +
 # 3110 Mir-extended lines + 339 Iqbal lines from Pritchett's pages). Used at runtime so a *novel* typed line composed
@@ -73,7 +88,7 @@ def _split_hyphens(tokens):
             elif p: out.append(p)
     return out
 _word_pair_freq = Counter()
-for _g in EXERCISES + GHALIB_EXT + MIR_EXT + IQBAL:
+for _g in EXERCISES + GHALIB_EXT + MIR_EXT + IQBAL + OTHERS_WORDS:
     for _l in _g['lines']:
         _uw, _aw = _l['ur'].split(), _l['ascii'].split()
         if len(_uw) != len(_aw):
@@ -87,6 +102,37 @@ for (_u, _a), _c in _word_pair_freq.items():
     if _u not in _word_best or _c > _word_best[_u][1]:
         _word_best[_u] = (_a, _c)
 WORD_ASCII_MAP = {_u: _a for _u, (_a, _c) in _word_best.items()}
+
+# Casual Roman -> Pritchett-ASCII: people type Roman without diacritics (ishq, gham, aaj, mohabbat), so a typed word is
+# looked up by a folded key. The key drops every diacritic and ascii marker (;N .s :t (( )) -) and folds long vowels,
+# doubled letters and w/v, so "mohabbat", "mu;habbat" and "muhabat" meet. Where several spellings share a key the most
+# frequent one wins. KI_NEXT decides the one spelling that cannot be told apart by itself: ki is kih (that) or kii (of),
+# judged by the word that follows. The same fold is written in src/js/05-translit-helpers.js (casualKey).
+def _casual_key(a, level):
+    # level 0 strict: long vowels kept (aa ii uu); 1 loose: long vowels folded; 2 lax: also o~u and e~i. Mirrors casualKey() in
+    # src/js/05-translit-helpers.js.
+    a = a.lower().replace(';g', 'gh').replace(';x', 'kh')
+    a = re.sub(r"[;.:()'\u2019\u2018\u02bf\u02be-]", '', a)
+    a = a.replace('oo', 'uu').replace('w', 'v')
+    if level >= 1: a = a.replace('aa', 'a').replace('ii', 'i').replace('uu', 'u')
+    if level >= 2: a = a.replace('o', 'u').replace('e', 'i')
+    return re.sub(r'(.)\1+' if level >= 1 else r'([^aiu])\1+', r'\1', a)
+_casual_freq = [{}, {}, {}]
+for (_u, _a), _c in _word_pair_freq.items():
+    _a = re.sub(r'-(e|ye)$', '', _a)
+    if '-' in _a or not _a: continue
+    for _lv in range(3):
+        _casual_freq[_lv].setdefault(_casual_key(_a, _lv), Counter())[_a] += _c
+ROMAN_CASUAL_MAP = [{_k: _cnt.most_common(1)[0][0] for _k, _cnt in _f.items()} for _f in _casual_freq]
+_ki_next = {}
+for _g in EXERCISES + GHALIB_EXT + MIR_EXT + IQBAL + OTHERS_WORDS:
+    for _l in _g['lines']:
+        _t = [re.sub(r'-(e|ye)$', '', x) for x in _l['ascii'].split()]
+        for _i in range(len(_t) - 1):
+            if _t[_i] in ('kih', 'kii'):
+                _slot = _ki_next.setdefault(_casual_key(_t[_i + 1], 1), [0, 0])
+                _slot[0 if _t[_i] == 'kih' else 1] += 1
+KI_NEXT = {_k: _v for _k, _v in _ki_next.items() if sum(_v) >= 3}
 
 # Load Sean Pue AST transliteration parser scripts
 with open('pritchett_scripts/urdu_parser_data.js', 'r', encoding='utf-8') as f:
@@ -281,8 +327,11 @@ substitutions = {
     'METER_MAP_DATA': json.dumps(meter_map_data, ensure_ascii=False),
     'GHALIB_EXT_DATA': json.dumps(GHALIB_EXT_PREVIEW, ensure_ascii=False),
     'MIR_EXT_DATA': json.dumps(MIR_EXT_PREVIEW, ensure_ascii=False),
+    'OTHERS_DATA': json.dumps(OTHERS_PREVIEW, ensure_ascii=False),
     'URDUPOETRY_DATA': json.dumps(URDUPOETRY_EXT, ensure_ascii=False),
     'WORD_ASCII_MAP': json.dumps(WORD_ASCII_MAP, ensure_ascii=False),
+    'ROMAN_CASUAL_MAP': json.dumps(ROMAN_CASUAL_MAP, ensure_ascii=False),
+    'KI_NEXT': json.dumps(KI_NEXT, ensure_ascii=False),
     'FAMS': fams_json,
     # meter_map_bundled and rhythm_roll_bundled are NOT placeholders in the JS,
     # they are embedded directly in 04- and 05- files — those files in src/js/

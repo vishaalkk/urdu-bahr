@@ -28,3 +28,6 @@ source_data/
 
 # Third-party clones used by gt-lab (re-clone: see gt-lab/README)
 gt-lab/vendor/
+
+# Rekhta source text for More Poets: local only (scripts/build_others.js reads it; data/others_extended.json is what ships)
+data/sources/others_rekhta.md

@@ -16,7 +16,8 @@ function normVerseKey(str) {
     .replace(/[ḍ]/g, 'd')
     .replace(/[ṛ]/g, 'r')
     .replace(/[ṣ]/g, 's')
-    .replace(/[żẕž]/g, 'z')
+    .replace(/[żẕẓž]/g, 'z')
+    .replace(/ṡ|s̱/g, 's')
     .replace(/[z̤]/g, 'z')
     .replace(/[t̤]/g, 't')
     .replace(/[ḥ]/g, 'h')
@@ -61,6 +62,11 @@ GHALIB_EXT_DATA.forEach(g => {
 
 // Index the extended Mir corpus too, for the same reason as the Ghalib block above.
 MIR_EXT_DATA.forEach(g => {
+  if(g.lines) g.lines.forEach(l => registerKnownVerse(l));
+});
+
+// "More Poets" (Rekhta): same reason.
+OTHERS_DATA.forEach(g => {
   if(g.lines) g.lines.forEach(l => registerKnownVerse(l));
 });
 
@@ -121,9 +127,59 @@ function devToAscii(str) {
   return out;
 }
 
+/* ---- Casual typed Roman (no diacritics): ishq, gham, aaj, mohabbat, ye, vo, na ----
+   Most people type Roman without ā ī ū ḳh ġh ʿ, so a typed word is looked up by a folded key in ROMAN_CASUAL_MAP (built from
+   every known ghazal word, most frequent spelling wins; see scripts/build_app.py, whose _casual_key this mirrors). Words typed
+   WITH Pritchett's marks are left to the letter rules, which read them exactly. */
+const CASUAL_ALIAS = { ye: 'yih', yeh: 'yih', yah: 'yih', vo: 'vuh', wo: 'vuh', woh: 'vuh', voh: 'vuh', na: 'nah', pe: 'pah',
+  keh: 'kih', hua: 'hu))aa', kya: 'kyaa', dava: 'davaa', nadan: 'naadaa;n', nadaan: 'naadaa;n', naadaan: 'naadaa;n', dile: 'dil-e', aaxir: 'aa;xir', kahi: 'kahii;N', nahin: 'nahii;N', nahi: 'nahii;N', mein: 'me;N', main: 'mai;N', hai: 'hai', hain: 'hai;N', hun: 'huu;N', hoon: 'huu;N' };
+function casualKey(s, level) {   // level 0 strict (long vowels kept), 1 loose, 2 lax (also o~u, e~i): mirrors _casual_key in build_app.py
+  s = s.normalize('NFC').toLowerCase().replace(/ā/g, 'aa').replace(/ī/g, 'ii').replace(/ū/g, 'uu').normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/;g/g, 'gh').replace(/;x/g, 'kh').replace(/[;.:()'’‘ʿʾ-]/g, '').replace(/oo/g, 'uu').replace(/w/g, 'v');
+  if (level >= 1) s = s.replace(/aa/g, 'a').replace(/ii/g, 'i').replace(/uu/g, 'u');
+  if (level >= 2) s = s.replace(/o/g, 'u').replace(/e/g, 'i');
+  return level >= 1 ? s.replace(/(.)\1+/g, '$1') : s.replace(/([^aiu])\1+/g, '$1');
+}
+const CASUAL_SPECIAL = /[ḥṣẓżẕṡṭḍṛġḳʿʾñ;:()]/;   // spelled with marks (or already ASCII): the letter rules read these exactly
+function casualLookup(plain) {
+  if (typeof ROMAN_CASUAL_MAP === 'undefined') return null;
+  for (let lv = 0; lv < 3; lv++) {
+    const k = casualKey(plain, lv);
+    if (Object.prototype.hasOwnProperty.call(ROMAN_CASUAL_MAP[lv], k)) return ROMAN_CASUAL_MAP[lv][k];
+  }
+  return null;
+}
+/* Rekhta-style marks, for a word the lookup does not know: a capital in the middle of a word is retroflex (jhūTī ṭ, ulTī ṭ, baḌā ṛ);
+   .e .ī after a vowel are a hamza (aa.e, jaa.e); .a .i .u are an ʿain (shā.ir, ma.asūm, va.ade); .h is ḥ (sub.h) */
+function rekhtaMarks(piece) {
+  return piece.replace(/(?<=[a-zāīūñ])T/g, ';t').replace(/(?<=[a-zāīūñ])D(?!h)/g, ';d').replace(/Ḍ|Ṛ/g, ';r')
+    .replace(/\.h/g, ';h').replace(/\.(e|ī|ii|ai)/g, '))$1').replace(/\.([aiuāū])/g, '(($1');
+}
+function casualRomanLine(line) {
+  const toks = line.split(/(\s+)/), words = toks.filter(t => t && !/^\s+$/.test(t));
+  let wi = 0;
+  const out = toks.map(tok => {
+    if (!tok || /^\s+$/.test(tok)) return tok;
+    const next = words[++wi] || '';
+    tok = tok.replace(/^['’‘]+|['’‘]+$/g, '');   // a quoted takhallus: 'dāġh'
+    return tok.split('-').map((piece, i) => {
+      const plain = piece.toLowerCase();
+      if (i > 0 && (plain === 'e' || plain === 'ye' || plain === 'o')) return piece;
+      if (plain.length < 2 || !/^[a-zāīū.]+$/.test(plain) || CASUAL_SPECIAL.test(piece)) return rekhtaMarks(piece);
+      if (plain === 'ki') {   // کہ (that, as Rekhta writes it) unless the next word is one that follows کی (of) far more often
+        const n = (typeof KI_NEXT !== 'undefined' && KI_NEXT[casualKey(next.split('-')[0], 1)]) || null;
+        return n && n[1] > 2 * n[0] ? 'kii' : 'kih';
+      }
+      if (CASUAL_ALIAS[plain]) return CASUAL_ALIAS[plain];
+      return casualLookup(plain) || rekhtaMarks(piece);
+    }).join('-');
+  }).join('');
+  return out.replace(/(\S)\s+o\s+(\S)/g, '$1-o-$2');   // dard o gham -> dard-o-gham (the conjunction و)
+}
+
 function romanToAscii(str) {
   if(!str) return '';
-  let s = str.toLowerCase();
+  let s = casualRomanLine(str).toLowerCase();
   /* standalone / fused iẓāfat: 'dil e nādāñ', 'dile nādāñ' -> dil-e */
   s = s.replace(/([a-zāīūñḍṭṛḥ])\s+e(?=\s)/g, '$1-e')
        .replace(/\bdile\b/g, 'dil-e')
@@ -145,7 +201,9 @@ function romanToAscii(str) {
        .replace(/ḍ/g, ';d')
        .replace(/ṛ/g, ';r')
        .replace(/ṣ/g, '.s')
-       .replace(/ż|ẕ/g, ';z')
+       .replace(/ż|ẕ/g, ';z')            /* ذ: Pritchett writes ż, scholars ẕ */
+       .replace(/ẓ/g, '.z')                /* ض */
+       .replace(/ṡ|s̱/g, ';s')              /* ث: Pritchett ṡ, scholars s̱ */
        .replace(/z̤/g, ':z')
        .replace(/t̤/g, ':t')
        .replace(/ḥ/g, ';h')
@@ -204,12 +262,12 @@ function urduToRoman(str) {
   multiMap.sort((a, b) => b[0].source.length - a[0].source.length);
   multiMap.forEach(([re, rep]) => { s = s.replace(re, rep); });
   const singleMap = {
-    'آ': 'ā', 'ا': 'ā', 'ب': 'b', 'پ': 'p', 'ت': 't', 'ٹ': 'ṭ', 'ث': 's̱',
-    'ج': 'j', 'چ': 'ch', 'ح': 'ḥ', 'خ': 'ḳh', 'د': 'd', 'ڈ': 'ḍ', 'ذ': 'ẕ',
+    'آ': 'ā', 'ا': 'ā', 'ب': 'b', 'پ': 'p', 'ت': 't', 'ٹ': 'ṭ', 'ث': 'ṡ',
+    'ج': 'j', 'چ': 'ch', 'ح': 'ḥ', 'خ': 'ḳh', 'د': 'd', 'ڈ': 'ḍ', 'ذ': 'ż',
     'ر': 'r', 'ڑ': 'ṛ', 'ز': 'z', 'ژ': 'zh', 'س': 's', 'ش': 'sh', 'ص': 'ṣ',
-    'ض': 'ż', 'ط': 't̤', 'ظ': 'z̤', 'ع': 'ʿ', 'غ': 'ġh', 'ف': 'f', 'ق': 'q',
+    'ض': 'ẓ', 'ط': 't̤', 'ظ': 'z̤', 'ع': 'ʿ', 'غ': 'ġh', 'ف': 'f', 'ق': 'q',
     'ک': 'k', 'گ': 'g', 'ل': 'l', 'م': 'm', 'ن': 'n', 'ں': 'ñ', 'و': 'o',
-    'ہ': 'h', 'ۂ': 'h-e', 'ھ': 'h', 'ء': '’', 'ی': 'ī', 'ے': 'e', 'ۓ': '’e',
+    'ہ': 'h', 'ۂ': 'h-e', 'ھ': 'h', 'ء': 'ʾ', 'ی': 'ī', 'ے': 'e', 'ۓ': 'ʾe',
     'ِ': '-e', 'ُ': 'u', 'َ': 'a'
   };
   let out = '';
