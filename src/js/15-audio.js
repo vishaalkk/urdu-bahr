@@ -66,6 +66,7 @@ function iosPlaybackSession(){
 function releaseSilentAudio(){
   if(iosSilentEl){ try{ iosSilentEl.pause(); iosSilentEl.removeAttribute('src'); iosSilentEl.load(); }catch(e){} iosSilentEl=null; }
   try{ if(navigator.audioSession) navigator.audioSession.type='auto'; }catch(e){}
+  try{ if(A.ctx && A.ctx.state==='running'){ const p=A.ctx.suspend(); if(p&&p.catch)p.catch(()=>{}); } }catch(e){}   /* a running context alone keeps the widget; ensure() resumes it on the next play */
   try{ if(navigator.mediaSession){ navigator.mediaSession.playbackState='none'; navigator.mediaSession.metadata=null; } }catch(e){}
 }
 function releaseAudioSession(){ try{ if(typeof pbCancel==='function') pbCancel(); else stopAll(); }catch(e){} releaseSilentAudio(); }
