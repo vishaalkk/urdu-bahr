@@ -38,7 +38,7 @@ const A={ctx:null,out:null,noise:null,timers:[],
     return true;
   },
   unlock(){ if(!this.ensure())return; try{const s=this.ctx.createBufferSource(); s.buffer=this.ctx.createBuffer(1,1,22050); s.connect(this.ctx.destination); s.start(0);}catch(e){}
-    iosPlaybackSession(); }
+  }
 };
 /* iPhone: Web Audio follows the ring/silent switch unless the page's audio session is 'playback'
    (like a music app). Safari 17+: navigator.audioSession; older iOS: a silent looping <audio>
@@ -60,8 +60,19 @@ function iosPlaybackSession(){
 }
 /* iOS only counts touchend/click as an audio-unlocking gesture (not pointerdown/touchstart); keep trying on
    every tap until the context is running, and resume it when the page comes back from the background. */
-['pointerdown','touchend','click','keydown'].forEach(ev=>document.addEventListener(ev,()=>{ if(!A.ctx||A.ctx.state!=='running'||(IS_IOS&&!iosSilentEl)) A.unlock(); },{passive:true}));
-document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible' && A.ctx && A.ctx.state!=='running'){ try{ A.ctx.resume(); }catch(e){} } });
+['pointerdown','touchend','click','keydown'].forEach(ev=>document.addEventListener(ev,()=>{ if(!A.ctx||A.ctx.state!=='running') A.unlock(); },{passive:true}));
+/* The silent <audio> keeps iOS's Now Playing widget alive, so it exists only while something sounds: play() starts it
+   (inside the tap) and releases it shortly after the last sound; the audio session falls back to 'auto'. */
+function releaseSilentAudio(){
+  if(iosSilentEl){ try{ iosSilentEl.pause(); iosSilentEl.removeAttribute('src'); iosSilentEl.load(); }catch(e){} iosSilentEl=null; }
+  try{ if(navigator.audioSession) navigator.audioSession.type='auto'; }catch(e){}
+  try{ if(navigator.mediaSession){ navigator.mediaSession.playbackState='none'; navigator.mediaSession.metadata=null; } }catch(e){}
+}
+function releaseAudioSession(){ try{ if(typeof pbCancel==='function') pbCancel(); else stopAll(); }catch(e){} releaseSilentAudio(); }
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='hidden') releaseAudioSession();
+  else if(A.ctx && A.ctx.state!=='running'){ try{ A.ctx.resume(); }catch(e){} } });
+if(typeof window.addEventListener==='function') window.addEventListener('pagehide',releaseAudioSession);
 
 function burst(t,freq,q,vol,dur,dest){
   const c=A.ctx, n=c.createBufferSource(); n.buffer=A.noise;
@@ -206,7 +217,7 @@ function footThump(t,vol){ const c=A.ctx,o=c.createOscillator(),g=c.createGain()
   o.frequency.setValueAtTime(95,t); o.frequency.exponentialRampToValueAtTime(58,t+0.18);
   g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.5*vol,t+0.006); g.gain.exponentialRampToValueAtTime(0.0005,t+0.3);
   o.connect(g); g.connect(A.dest||A.out); o.start(t); o.stop(t+0.32); }
-function stopAll(){ A.timers.forEach(clearTimeout); A.timers=[];
+function stopAll(){ A.timers.forEach(clearTimeout); A.timers=[]; clearTimeout(A.idleT); A.idleT=setTimeout(releaseSilentAudio,600);
   if(A.ctx && A.sess){ const g=A.sess, now=A.ctx.currentTime; try{ g.gain.cancelScheduledValues(now); g.gain.setValueAtTime(g.gain.value,now); g.gain.linearRampToValueAtTime(0,now+0.03); }catch(e){}
     setTimeout(()=>{ try{g.disconnect();}catch(e){} },80); A.sess=null; }
   if(typeof document!=='undefined' && typeof document.querySelectorAll==='function') document.querySelectorAll('.lit,.litf').forEach(n=>n.classList.remove('lit','litf')); }
@@ -215,6 +226,7 @@ function playLater(fn,ms){ A.timers.push(setTimeout(fn,ms)); }
 /* seq of 'l','s','x','c'; onStep(i) fires as each syllable sounds */
 function play(seq,opts){
   opts=opts||{}; if(!A.ensure())return 0;
+  iosPlaybackSession();                                          /* only while playing: starts in this tap, released after the last sound */
   if(!opts.pb && typeof pbDetach==='function') pbDetach(); /* something else is playing: couplet button goes back to ▶ */
   if((settings.sound==='rec'||settings.sound==='tablarec') && !A.rec){ loadRec().then(()=>play(seq,opts)); return (seq.length*1.5*60/settings.bpm); }
   stopAll();
@@ -238,6 +250,7 @@ function play(seq,opts){
     t+=dur;
   });
   if(opts.onEnd) A.timers.push(setTimeout(opts.onEnd,(t-A.ctx.currentTime)*1000+60));
+  clearTimeout(A.idleT); A.idleT=setTimeout(releaseSilentAudio,(t-A.ctx.currentTime)*1000+1500);
   return (t-t0);
 }
 /* ---------- Couplet/line player: ▶ ⇄ ❚❚, resume from the foot you stopped on ----------
