@@ -4,7 +4,7 @@
     <div class="eyebrow" id="ghazalEyebrow">Handbook · 24 ghazals</div>
     <h1 class="page-title sr-only">Ghazals</h1>
     <!-- One search for the whole tab: it covers every collection -->
-    <input type="search" id="ghazalSearchInput" class="ghazal-search-input" placeholder="Search every collection: poet, first line, or number" aria-label="Search all ghazals" autocomplete="off" oninput="onGhazalSearch()">
+    <input type="search" id="ghazalSearchInput" class="ghazal-search-input" aria-label="Search all ghazals" autocomplete="off" oninput="onGhazalSearch()">
     <div class="tiny dim col-filter-label" id="colFilterLabel" hidden>Showing matches from all collections. Pick one to narrow them.</div>
     <!-- Collection segmented control -->
     <div class="subtabs seg" role="tablist" aria-label="Collections">
@@ -14,7 +14,7 @@
       <button class="seg-btn" id="colBtnPoets" aria-haspopup="true" aria-expanded="false" aria-controls="poetPicker" onclick="togglePoetPicker()">Poets ▾</button>
     </div>
     <div id="poetPicker" class="poet-picker hidden">
-      <input type="search" id="poetPickerFilter" class="poet-picker-filter" placeholder="Find a poet" aria-label="Find a poet" autocomplete="off" oninput="renderPoetPickerList()">
+      <input type="search" id="poetPickerFilter" class="poet-picker-filter" aria-label="Find a poet" autocomplete="off" oninput="renderPoetPickerList()">
       <div id="poetPickerList" class="poet-picker-list"></div>
     </div>
     <div id="colDesc" class="dim ghazal-desc">The handbook's exercise ghazals, with Frances Pritchett's notes. <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/10_ex_01_06.html" target="_blank" rel="noopener">Her exercises<span class="ext">↗</span></a> · <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/11_exnotes.html" target="_blank" rel="noopener">answers &amp; notes<span class="ext">↗</span></a></div>
