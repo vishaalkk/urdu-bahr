@@ -43,36 +43,37 @@ const A={ctx:null,out:null,noise:null,timers:[],
 /* iPhone: Web Audio follows the ring/silent switch unless the page's audio session is 'playback'
    (like a music app). Safari 17+: navigator.audioSession; older iOS: a silent looping <audio>
    element started from a tap switches the session category. Both must start inside a gesture. */
-let iosSilentEl=null;
+let iosSilentEl=null, iosSilentUrl=null;
 const IS_IOS=typeof navigator!=='undefined' && (/iP(hone|ad|od)/.test(navigator.userAgent||'') || (/Macintosh/.test(navigator.userAgent||'') && navigator.maxTouchPoints>1));   /* iPadOS reports as a Mac */
 function iosPlaybackSession(){
-  try{ if(navigator.audioSession && navigator.audioSession.type!=='playback') navigator.audioSession.type='playback'; }catch(e){}
+  try{ if(navigator.audioSession){ if(navigator.audioSession.type!=='playback') navigator.audioSession.type='playback'; return; } }catch(e){}   /* modern iOS: no media element, so no Now Playing card */
   if(iosSilentEl || !IS_IOS || typeof Audio==='undefined') return;
   try{
     const rate=8000, n=rate/2, buf=new ArrayBuffer(44+n*2), v=new DataView(buf);   // 0.5 s of 16-bit mono silence
     const w=(o,str)=>{ for(let i=0;i<str.length;i++) v.setUint8(o+i,str.charCodeAt(i)); };
     w(0,'RIFF'); v.setUint32(4,36+n*2,true); w(8,'WAVE'); w(12,'fmt '); v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
     v.setUint32(24,rate,true); v.setUint32(28,rate*2,true); v.setUint16(32,2,true); v.setUint16(34,16,true); w(36,'data'); v.setUint32(40,n*2,true);
-    iosSilentEl=new Audio(URL.createObjectURL(new Blob([buf],{type:'audio/wav'})));
+    iosSilentUrl=URL.createObjectURL(new Blob([buf],{type:'audio/wav'})); iosSilentEl=new Audio(iosSilentUrl);
     iosSilentEl.loop=true; iosSilentEl.setAttribute('playsinline',''); iosSilentEl.volume=0.01;
     const p=iosSilentEl.play(); if(p&&p.catch) p.catch(()=>{ iosSilentEl=null; });   // retried on the next tap
   }catch(e){ iosSilentEl=null; }
 }
 /* iOS only counts touchend/click as an audio-unlocking gesture (not pointerdown/touchstart); keep trying on
    every tap until the context is running, and resume it when the page comes back from the background. */
-['pointerdown','touchend','click','keydown'].forEach(ev=>document.addEventListener(ev,()=>{ if(!A.ctx||A.ctx.state!=='running') A.unlock(); },{passive:true}));
+['pointerdown','touchend','click','keydown'].forEach(ev=>document.addEventListener(ev,()=>{ if(!A.released && (!A.ctx||A.ctx.state!=='running')) A.unlock(); },{passive:true}));
 /* The silent <audio> keeps iOS's Now Playing widget alive, so it exists only while something sounds: play() starts it
    (inside the tap) and releases it shortly after the last sound; the audio session falls back to 'auto'. */
 function releaseSilentAudio(){
   if(iosSilentEl){ try{ iosSilentEl.pause(); iosSilentEl.removeAttribute('src'); iosSilentEl.load(); }catch(e){} iosSilentEl=null; }
+  if(iosSilentUrl){ try{ URL.revokeObjectURL(iosSilentUrl); }catch(e){} iosSilentUrl=null; }
+  A.released=true;   /* taps stop resuming the context; the next play() does, inside its own tap */
   try{ if(navigator.audioSession) navigator.audioSession.type='auto'; }catch(e){}
   try{ if(A.ctx && A.ctx.state==='running'){ const p=A.ctx.suspend(); if(p&&p.catch)p.catch(()=>{}); } }catch(e){}   /* a running context alone keeps the widget; ensure() resumes it on the next play */
   try{ if(navigator.mediaSession){ navigator.mediaSession.playbackState='none'; navigator.mediaSession.metadata=null; } }catch(e){}
 }
 function releaseAudioSession(){ try{ if(typeof pbCancel==='function') pbCancel(); else stopAll(); }catch(e){} releaseSilentAudio(); }
 document.addEventListener('visibilitychange',()=>{
-  if(document.visibilityState==='hidden') releaseAudioSession();
-  else if(A.ctx && A.ctx.state!=='running'){ try{ A.ctx.resume(); }catch(e){} } });
+  if(document.visibilityState==='hidden') releaseAudioSession(); });
 if(typeof window.addEventListener==='function') window.addEventListener('pagehide',releaseAudioSession);
 
 function burst(t,freq,q,vol,dur,dest){
@@ -227,7 +228,7 @@ function playLater(fn,ms){ A.timers.push(setTimeout(fn,ms)); }
 /* seq of 'l','s','x','c'; onStep(i) fires as each syllable sounds */
 function play(seq,opts){
   opts=opts||{}; if(!A.ensure())return 0;
-  iosPlaybackSession();                                          /* only while playing: starts in this tap, released after the last sound */
+  A.released=false; iosPlaybackSession();                        /* only while playing: starts in this tap, released after the last sound */
   if(!opts.pb && typeof pbDetach==='function') pbDetach(); /* something else is playing: couplet button goes back to ▶ */
   if((settings.sound==='rec'||settings.sound==='tablarec') && !A.rec){ loadRec().then(()=>play(seq,opts)); return (seq.length*1.5*60/settings.bpm); }
   stopAll();
