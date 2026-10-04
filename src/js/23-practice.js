@@ -18,7 +18,7 @@ function prFamOf(id) {
 /* Build a practice item from an Urdu line, or null if the scan is not confident/simple enough.
    `ctxMeter` is the meter of the page the learner came from (Scan's reading, the ghazal's baḥr): the
    line is read in that baḥr's family, so the reveal agrees with what they were just looking at. */
-function prBuild(ur, strict, ctxMeter) {
+function prBuild(ur, strict, ctxMeter, ro) {
   var res, fit, e;
   try { res = Scan.scanLine(ur); fit = res.fits && res.fits[0]; } catch (err) { return null; }
   if (ctxMeter != null && ctxMeter !== '' && fit) {
@@ -39,7 +39,8 @@ function prBuild(ur, strict, ctxMeter) {
     if (syl[i].resolved !== 'l' && syl[i].resolved !== 's') return null;   /* skip extrametrical 'cheat' syllables */
     if (syl[i].cheat || syl[i].foot == null) return null;
   }
-  return { ur: ur, res: res, fit: fit, e: e, alt: alt, marks: [], miss: {}, done: false };
+  var lineObj = (ro ? { ur: ur, ro: ro } : null) || (typeof lineScripts === 'function' ? lineScripts(ur) : null);
+  return { ur: ur, res: res, fit: fit, e: e, alt: alt, marks: [], miss: {}, done: false, lineObj: lineObj, ro: ro };
 }
 
 /* Can this line be tapped out? (memoised: Scan and the Ghazals reader ask while rendering) */
@@ -52,8 +53,8 @@ function prPracticable(ur, ctxMeter) {
   return PR_OKCACHE[k];
 }
 /* href that opens Practice on this line, read in the given meter's baḥr when known */
-function prLinkFor(ur, ctxMeter) {
-  return '#/lab/practice?t=' + encodeURIComponent(ur) + (ctxMeter != null && ctxMeter !== '' ? '&m=' + encodeURIComponent(ctxMeter) : '');
+function prLinkFor(ur, ctxMeter, ro) {
+  return '#/lab/practice?t=' + encodeURIComponent(ur) + (ctxMeter != null && ctxMeter !== '' ? '&m=' + encodeURIComponent(ctxMeter) : '') + (ro ? '&ro=' + encodeURIComponent(ro) : '');
 }
 
 /* Plain-language reason a weight is wrong. `want` is the engine's weight, 'l' or 's'. */
@@ -129,7 +130,11 @@ function prSylText(s) {
 }
 function prLineText(P) {
   var cs = prScript();
-  return cs === 'ur' || typeof translitText !== 'function' ? P.ur : translitText(P.ur, cs);
+  if (cs === 'ur') return P.ur;
+  if (P && P.lineObj && typeof getLineDisplay === 'function') {
+    return getLineDisplay(P.lineObj, cs);
+  }
+  return typeof translitText === 'function' ? translitText(P.ur, cs) : P.ur;
 }
 function prEsc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
@@ -148,7 +153,14 @@ function prChipHTML(P, i) {
   var s = P.e.syl[i], m = P.marks[i], cs = prScript();
   var cls = ['chip', m || '', s.last ? 'wend' : '', cs === 'hi' ? 'deva' : (cs !== 'ur' ? 'roman' : ''),
     (!P.done && P.marks.length === i && PRS.clashAt !== i) ? 'cur' : '', PRS.clashAt === i ? 'clash' : ''].join(' ').replace(/\s+/g, ' ').trim();
-  return '<span class="cw"><span class="' + cls + '" data-i="' + i + '">' + prEsc(prSylText(s)) + '</span><span class="fs pr-mark">' + (m === 'l' ? '=' : m === 's' ? '–' : '&nbsp;') + '</span></span>';
+  if (!P._overrides) P._overrides = {};
+  if (P._overrides[cs] === undefined) {
+    P._overrides[cs] = (cs === 'ro' && P.lineObj && typeof romanOverridesFor === 'function')
+      ? romanOverridesFor(P.e.syl, P.res, P.lineObj)
+      : [];
+  }
+  var txt = (cs !== 'ur' && P._overrides[cs] && P._overrides[cs][i] != null) ? P._overrides[cs][i] : prSylText(s);
+  return '<span class="cw"><span class="' + cls + '" data-i="' + i + '">' + prEsc(txt) + '</span><span class="fs pr-mark">' + (m === 'l' ? '=' : m === 's' ? '–' : '&nbsp;') + '</span></span>';
 }
 /* completed feet are grouped (.fgrp); the rest stay a flat run of syllables. No foot names here. */
 function prChipsHTML(P) {
@@ -219,7 +231,8 @@ function prReveal() {
   var famVerse = fam && typeof famLabel === 'function' && typeof getLineDisplay === 'function' ? getLineDisplay(famLabel(fam), prScript()) : '';
   var nFlex = P.e.syl.filter(function (x) { return x.native === 'x'; }).length;
   var msg = prMistakes(P) === 0 ? 'Every syllable heard correctly. Lovely.' : ft + ' of ' + total + ' syllables on the first try. Each one you corrected is your ear learning.';
-  var chipsFull = (typeof chipsHTML === 'function') ? '<div class="chips ' + (prScript() === 'ur' ? '' : 'ltr') + '" id="prRevChips">' + chipsHTML(P.e.syl, P.e.feet) + '</div>' : '';
+  var roCtx = P.lineObj ? { r: P.res, lineObj: P.lineObj } : undefined;
+  var chipsFull = (typeof chipsHTML === 'function') ? '<div class="chips ' + (prScript() === 'ur' ? '' : 'ltr') + '" id="prRevChips">' + chipsHTML(P.e.syl, P.e.feet, null, roCtx) + '</div>' : '';
   host.innerHTML = '<p class="pr-score">' + prEsc(msg) + '</p>' + chipsFull +
     (famVerse ? '<p class="pr-bahr">Same rhythm as the famous verse <span class="pr-fam ' + (prScript() === 'ur' ? 'urdu' : '') + '">' + famVerse + '</span></p>' : '') +
     '<p class="pr-tech dim small">' + (info && info.name ? 'Technical name: <i>' + prEsc(info.name) + '</i>' : 'A classical rhythm') + '</p>' +
@@ -248,10 +261,10 @@ function prNew() { prSetLine(prPickItem()); }
    `var PRS` above has run: bail out then (the self-mount at the bottom picks the route up). */
 function mountPractice(params) {
   if (!PRS) return;
-  var t = params && params.t, key = t ? t + '|' + (params.m || '') : null;
+  var t = params && params.t, key = t ? t + '|' + (params.m || '') + '|' + (params.ro || '') : null;
   if (t && key !== PRS.fromLine) {   /* "Practice this line" from Scan or Ghazals */
     PRS.fromLine = key;
-    var P = prBuild(t, false, params.m);
+    var P = prBuild(t, false, params.m, params && params.ro);
     if (P) { prSetLine(P); return; }
     prNew();
     prSetHint('That line is too irregular to tap out, so here is another one.');

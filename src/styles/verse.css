@@ -127,11 +127,30 @@
 }
 .chip.roman { font-family: var(--mono); font-size: 14px; }
 .chip.deva { font-family: var(--deva); font-size: 16px; }
-.chip.l { border-color: var(--mark-l); border-bottom-width: 3px; }
-.chip.s { border-color: var(--mark-s); border-bottom-width: 2px; }
-.chip.c { border-color: var(--ghost); border-bottom-style: dashed; opacity: .7; }
-.chip.flex { color: var(--rose); }
-.chip.flex.l, .chip.flex.s { border-color: var(--mark-x); }
+.chip.l { border-color: var(--mark-l); border-bottom-width: 4px; }
+.chip.s { border-color: var(--mark-s); border-bottom-style: dotted; border-bottom-width: 3px; }
+.chip.c, .chip.extra {
+  background: transparent !important;
+  border: 1.5px dashed var(--ghost) !important;
+  border-bottom: 1.5px dashed var(--ghost) !important;
+  color: var(--ghost) !important;
+  opacity: 0.8;
+  box-shadow: none !important;
+}
+.chip.flex {
+  background: color-mix(in srgb, var(--rose) 24%, transparent);
+  color: var(--ink);
+}
+.chip.flex.l {
+  border-color: var(--mark-l);
+  border-bottom-style: solid;
+  border-bottom-width: 4px;
+}
+.chip.flex.s {
+  border-color: var(--mark-s);
+  border-bottom-style: dotted;
+  border-bottom-width: 3px;
+}
 
 .chip.wend { margin-inline-end: 8px; }
 
@@ -340,6 +359,7 @@
   padding-top: var(--sp-2); padding-bottom: var(--sp-2);
   margin: 0; border-bottom: 1px solid var(--line);
 }
+.couplet-head-left { display: inline-flex; align-items: center; gap: 8px; }
 .cbox-verse { padding-top: var(--sp-5); padding-bottom: var(--sp-5); }
 .cbox-verse .vline-lg, .cbox-verse .misra-text { text-align: center; margin: 0; border: 0; padding: 2px 0; }
 .cbox-scan, .couplet-scan-box > div {
@@ -369,6 +389,130 @@
 .ss-top { display: flex; gap: var(--sp-3); align-items: baseline; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
 .ss-top .pill { font-size: 12px; padding: 0; }
 .ss-num { color: var(--faint); }
+.pair-bahr-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--gold) 10%, transparent);
+  color: var(--gold);
+  border: 1px solid color-mix(in srgb, var(--gold) 30%, transparent);
+  cursor: help;
+  position: relative;
+  outline: none;
+  transition: all .12s;
+}
+.pair-bahr-pill:hover, .pair-bahr-pill:focus-visible {
+  background: var(--gold);
+  color: #fff;
+}
+.pair-bahr-pill .info-i {
+  font-size: 11px;
+  font-style: italic;
+  font-family: var(--serif);
+  font-weight: 600;
+  opacity: 0.9;
+}
+.pair-bahr-pill::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 8px);
+  transform: translateX(-50%) translateY(-2px);
+  z-index: 60;
+  width: max-content;
+  max-width: 320px;
+  white-space: normal;
+  text-align: left;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--bg);
+  font: 400 12.5px/1.45 var(--sans);
+  box-shadow: var(--shadow);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .12s, transform .12s;
+  pointer-events: none;
+  text-transform: none;
+  letter-spacing: normal;
+}
+.pair-bahr-pill:hover::after, .pair-bahr-pill:focus::after, .pair-bahr-pill:focus-within::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+.pair-bahr-pill.sm {
+  font-size: 11px;
+  padding: 1.5px 8px;
+  border-radius: 10px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  font-weight: 500;
+}
+.pair-bahr-pill.faint-pair {
+  opacity: 0.75;
+  border-color: color-mix(in srgb, var(--ghost) 30%, transparent);
+  color: var(--dim);
+  background: transparent;
+}
+.pair-bahr-pill.faint-pair:hover {
+  opacity: 1;
+  color: var(--gold);
+  border-color: color-mix(in srgb, var(--gold) 30%, transparent);
+  background: color-mix(in srgb, var(--gold) 8%, transparent);
+}
+.fstrip .alt-or {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--sans);
+  font-size: 11.5px;
+  color: var(--faint);
+  margin-left: 4px;
+}
+.fstrip .alt-or .alt-strip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.fstrip .alt-fn {
+  color: var(--faint);
+  font-size: 11.5px;
+}
+.sw-flex-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  min-width: 18px;
+  height: 16px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--rose) 28%, transparent);
+  font-family: 'Geeza Pro', 'Noto Naskh Arabic', 'DecoType Naskh', 'Arial', sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--rose);
+  vertical-align: middle;
+  margin-inline-end: 4px;
+}
+.sw-extra-tile {
+  display: inline-block;
+  width: 14px;
+  height: 11px;
+  border: 1.5px dashed var(--ghost);
+  border-radius: 3px;
+  background: transparent;
+  vertical-align: middle;
+  margin-inline-end: 3px;
+}
 .ss-name { font-family: var(--serif); font-size: 24px; line-height: 1.25; color: var(--ink); }
 .ss-name::first-letter { text-transform: uppercase; }
 .ss-pat { font-family: var(--mono); font-size: 14px; color: var(--dim); letter-spacing: .12em; white-space: nowrap; overflow-x: auto; max-width: 100%; }
@@ -379,8 +523,9 @@
 .ss-cite { font-family: var(--mono); font-size: 12px; color: var(--faint); }
 .ss-more { color: var(--gold); margin-top: var(--sp-1); }
 
-/* Urdu syllables: room under the letters so nuqtas/descenders clear the weight underline */
-.chip:not(.roman):not(.deva) { line-height: 2.1; padding-bottom: 9px; }
+/* Urdu syllables: room under the letters so nuqtas/descenders clear the weight underline;
+   extra padding on the right to cover the ascending kashish of kāf/gāf (کو، کا، etc.) */
+.chip:not(.roman):not(.deva) { line-height: 2.1; padding-bottom: 9px; padding-right: 10px; padding-left: 6px; }
 
 /* Grafting: a gold tie over the syllables whose words were joined across the space */
 .cw { padding-top: 9px; }

@@ -1054,6 +1054,18 @@ function wordRomanMap(lineObj,r){
   const spaceTokens=lineObj.ro.trim().split(/\s+/);
   const romanTokens=[];
   for(const tok of spaceTokens){
+    if (/^(al|ul|il)-/i.test(tok)) {
+      const rest = tok.slice(3).split(/-/);
+      let cur = tok.slice(0, 3) + rest[0];
+      for(let pi=1; pi<rest.length; pi++){
+        const piece = rest[pi];
+        const isIzafat = /^[aeiouāīūēōâîûêô]{1,2}$/.test(piece);
+        if(isIzafat){ cur += '-' + piece; }
+        else { romanTokens.push(cur); cur = piece; }
+      }
+      romanTokens.push(cur);
+      continue;
+    }
     const parts=tok.split(/-/);
     if(parts.length<=1){ romanTokens.push(tok); continue; }
     let cur=parts[0];

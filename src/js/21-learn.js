@@ -270,7 +270,14 @@ function corpusRomanWords(e) {
   const toks = e.ro.split(/\s+/);
   if (toks.length === e.w.length) return toks;
   const need = e.w.map(w => w.split(/\s+/).length);
-  const pieces = toks.flatMap(t => t.split('-'));
+  const pieces = toks.flatMap(t => {
+    if (/^(al|ul|il)-/i.test(t)) {
+      const rest = t.slice(3).split('-');
+      rest[0] = t.slice(0, 3) + rest[0];
+      return rest;
+    }
+    return t.split('-');
+  });
   if (pieces.length !== need.reduce((a, b) => a + b, 0)) return null;
   let at = 0;
   return need.map(k => pieces.slice(at, at += k).join('-'));
@@ -280,13 +287,24 @@ function corpusExample(e, label) {
   try { r = Scan.scanLine(e.w.join(' ')); f = (r.fits || []).find(x => String(x.meter.id) === String(e.m)); } catch (err) { f = null; }
   if (!f) return '';
   const id = CORP_X.push(Scan.explain(r, f)) - 1, x = CORP_X[id];
-  const inHi = i => i >= e.hi[0] && i <= e.hi[1];
+  const inHi = i => i >= e.hi[0] && i <= (e.hi[1] != null ? e.hi[1] : e.hi[0]);
   const hiSyl = new Set(x.syl.map((s, i) => inHi(s.word) ? i : -1).filter(i => i >= 0));
   /* the line in the chosen script only (the chips below are in it too); the join stays underlined in every script */
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
   const ro = corpusRomanWords(e);
   const wordIn = (w, i) => cs === 'ur' ? w : (cs === 'ro' && ro) ? ro[i] : translitText(w, cs);
   const span = (w, i) => `<span class="word${inHi(i) ? ' corpus-hi' : ''}" data-w="${i}">${wordIn(w, i)}</span>`;
+  const col = e.col || (e.poet ? ({
+    'allama iqbal': 'iqbal',
+    'ahmad faraz': 'faraz',
+    'faiz ahmad faiz': 'faiz',
+    'parveen shakir': 'parveen',
+    'jaun elia': 'jaun',
+    'mir taqi mir': 'mir'
+  }[e.poet.toLowerCase()]) : null);
+  const srcLink = col
+    ? `<a class="corpus-src" href="#/ghazals/${col}/${e.gz}" onclick="if(typeof navigate==='function'){navigate('/ghazals/${col}/${e.gz}');return false;}">${e.poet}, ghazal ${e.gz} ›</a>`
+    : `<a class="corpus-src" href="${e.url || '#'}" target="_blank" rel="noopener">${e.poet}, ghazal ${e.gz} ↗</a>`;
   return `
     <div class="constr-ex corpus-ex" data-x="${id}">
       ${label ? `<div class="corpus-label ${label.cls || ''}">${label.t}</div>` : ''}
@@ -295,7 +313,7 @@ function corpusExample(e, label) {
         <span class="play sm" role="button" tabindex="0" data-label="Play line" aria-label="Play line" onclick="corpPlay(${id},this)" data-pb="none">▶︎</span>
         ${chipRowHTML(x.syl, x.feet, { r, ro: e.ro, cls: 'corpus-chips', hiSyl })}
       </div>
-      <div class="corpus-meta tiny"><a class="corpus-src" href="${e.url}" target="_blank" rel="noopener">${e.poet}, ghazal ${e.gz} ↗</a></div>
+      <div class="corpus-meta tiny">${srcLink}</div>
     </div>`;
 }
 /* the verses that show a join: just the lines (the join is underlined, ▶ plays them) */
@@ -335,14 +353,70 @@ function renderConstr() {
 function readingPair(wordHtml, readings) {
   return `<div class="flex-pair"><div class="flex-pair-word urdu ur-always">${wordHtml}</div>${readings.map(([label, list]) => (list || []).map(e => corpusExample(e, label)).join('')).join('')}</div>`;
 }
+const FLEX_EXTENDED_VERSES = {
+  'کا': {
+    long: [
+      { poet: 'Allama Iqbal', col: 'iqbal', gz: 2, w: ['تھا', 'ضبط', 'بہت', 'مشکل', 'اس', 'سیل', 'معانی', 'کا'], ro: 'thā zabt̤ bahut mushkil is sail-e maʿānī kā', hi: [7, 7], m: 7 },
+      { poet: 'Mir Taqi Mir', col: 'mir', gz: 1, w: ['کہا', 'میں', 'نے', 'کتنا', 'ہے', 'گل', 'کا', 'ثبات'], ro: 'kahā maiñ ne kitnā hai gul kā s̱abāt', hi: [6, 6], m: 16 }
+    ],
+    short: [
+      { poet: 'Faiz Ahmad Faiz', col: 'faiz', gz: 18, w: ['چلے', 'بھی', 'آؤ', 'کہ', 'گلشن', 'کا', 'کاروبار', 'چلے'], ro: 'chale bhī āo kih gulshan kā kārobār chale', hi: [5, 5], m: 8 },
+      { poet: 'Parveen Shakir', col: 'parveen', gz: 1, w: ['اس', 'حبس', 'میں', 'بارش', 'کا', 'یہ', 'جھونکا', 'بھی', 'تو', 'دیکھوں'], ro: 'is ḥabs meñ bārish kā yih jhoñkā bhī to dekhūñ', hi: [4, 4], m: 8 }
+    ]
+  },
+  'تو': {
+    long: [
+      { poet: 'Ahmad Faraz', col: 'faraz', gz: 4, w: ['تو', 'خدا', 'ہے', 'نہ', 'مرا', 'عشق', 'فرشتوں', 'جیسا'], ro: 'tū ḳhudā hai nah mirā ʿishq farishtoñ jaisā', hi: [0, 0], m: 18 },
+      { poet: 'Jaun Elia', col: 'jaun', gz: 1, w: ['کوئی', 'تو', 'اپنے', 'گھر', 'گیا', 'ہوگا'], ro: 'koʾī to apne ghar gayā hogā', hi: [1, 1], m: 14 }
+    ],
+    short: [
+      { poet: 'Parveen Shakir', col: 'parveen', gz: 1, w: ['آواز', 'کے', 'ہم', 'راہ', 'سراپا', 'بھی', 'تو', 'دیکھوں'], ro: 'āvāz ke ham-rāh sarāpā bhī to dekhūñ', hi: [6, 6], m: 8 },
+      { poet: 'Mir Taqi Mir', col: 'mir', gz: 3, w: ['وعدہ', 'تو', 'کیا', 'اس', 'سے', 'دمِ', 'صبح', 'کا', 'لیکن'], ro: 'vaʿdah to kiyā us se dam-e subḥ kā lekin', hi: [1, 1], m: 19 }
+    ]
+  },
+  'سے': {
+    long: [
+      { poet: 'Faiz Ahmad Faiz', col: 'faiz', gz: 12, w: ['تجھ', 'سے', 'بھی', 'دل', 'فریب', 'ہیں', 'غم', 'روزگار', 'کے'], ro: 'tujh se bhī dil-fareb haiñ ġham rozgār ke', hi: [1, 1], m: 18 },
+      { poet: 'Mir Taqi Mir', col: 'mir', gz: 5, w: ['شام', 'سے', 'کچھ', 'بجھا', 'سا', 'رہتا', 'ہوں'], ro: 'shām se kuchh bujhā sā rahtā hūñ', hi: [1, 1], m: 23 }
+    ],
+    short: [
+      { poet: 'Ahmad Faraz', col: 'faraz', gz: 2, w: ['ہم', 'سے', 'درویشوں', 'کے', 'گھر', 'آؤ', 'تو', 'یاروں', 'کی', 'طرح'], ro: 'ham se darveshoñ ke ghar āo to yāroñ kī t̤araḥ', hi: [1, 1], m: 10 },
+      { poet: 'Jaun Elia', col: 'jaun', gz: 1, w: ['خود', 'سے', 'مایوس', 'ہو', 'کے', 'بیٹھا', 'ہوں'], ro: 'khud se māyūs ho ke baiṭhā hūñ', hi: [1, 1], m: 14 }
+    ]
+  },
+  'کو': {
+    long: [
+      { poet: 'Allama Iqbal', col: 'iqbal', gz: 6, w: ['نرالا', 'سارے', 'جہاں', 'سے', 'اس', 'کو', 'عرب', 'کے', 'معمار', 'نے', 'بنایا'], ro: 'nirālā sāre jahāñ se is ko ʿarab ke miʿmār ne banāyā', hi: [5, 5], m: 30 },
+      { poet: 'Ahmad Faraz', col: 'faraz', gz: 3, w: ['یہ', 'بھی', 'بہت', 'ہے', 'تجھ', 'کو', 'اگر', 'بھول', 'جائیں', 'ہم'], ro: 'yih bhī bahut hai tujh ko agar bhūl jāʾeñ ham', hi: [5, 5], m: 20 }
+    ],
+    short: [
+      { poet: 'Parveen Shakir', col: 'parveen', gz: 2, w: ['کر', 'کے', 'ذرے', 'کو', 'گہر', 'کیا', 'کرتے'], ro: 'kar ke zarre ko guhar kyā karte', hi: [3, 3], m: 14 },
+      { poet: 'Jaun Elia', col: 'jaun', gz: 3, w: ['کیسے', 'کہیں', 'کہ', 'تجھ', 'کو', 'بھی', 'ہم', 'سے', 'ہے', 'واسطہ', 'کوئی'], ro: 'kaise kaheñ kih tujh ko bhī ham se hai vāsiṭah koʾī', hi: [4, 4], m: 25 }
+    ]
+  }
+};
+const KOI_EXTENDED_VERSES = [
+  [{ t: '1. (– –)', cls: 's' }, [{ poet: 'Allama Iqbal', col: 'iqbal', gz: 16, w: ['نیا', 'جہاں', 'کوئی', 'اے', 'شمع', 'ڈھونڈیے', 'کہ', 'یہاں'], ro: 'nayā jahāñ koʾī ai shamʿa ḍhūñḍiye kih yahāñ', hi: [2, 2], m: 34 }]],
+  [{ t: '2. (– =)', cls: 'l' }, [{ poet: 'Parveen Shakir', col: 'parveen', gz: 5, w: ['کوئی', 'آہٹ', 'کوئی', 'آواز', 'کوئی', 'چاپ', 'نہیں'], ro: 'koʾī āhaṭ koʾī āvāz koʾī chāp nahīñ', hi: [4, 4], m: 19 }]],
+  [{ t: '3. (= –)', cls: 's' }, [{ poet: 'Jaun Elia', col: 'jaun', gz: 3, w: ['تو', 'نے', 'تو', 'ہم', 'سے', 'آج', 'تک', 'کوئی', 'گلہ', 'نہیں', 'کیا'], ro: 'tū ne to ham se āj tak koʾī gilah nahīñ kiyā', hi: [7, 7], m: 25 }]],
+  [{ t: '4. (= =)', cls: 'l' }, [{ poet: 'Faiz Ahmad Faiz', col: 'faiz', gz: 28, w: ['دل', 'میں', 'کوئی', 'گلا', 'نہیں', 'باقی'], ro: 'dil meñ koʾī gilā nahīñ bāqī', hi: [2, 2], m: 14 }]]
+];
 function renderFlexEvidence() {
   const C = typeof WEIGHT_CORPUS !== 'undefined' ? WEIGHT_CORPUS : null;
   if (!C) return;
   const L = { t: 'long (=)', cls: 'l' }, S = { t: 'short (–)', cls: 's' };
   const fh = $('flexVerses');
-  if (fh && C.flexv) fh.innerHTML = `<div class="card corpus-card small">${['ہے', 'میں'].map(w => readingPair(w, [[L, C.flexv[w].long], [S, C.flexv[w].short]])).join('')}</div>`;
+  const allFlex = Object.assign({}, C.flexv || {}, FLEX_EXTENDED_VERSES);
+  if (fh) {
+    const words = ['ہے', 'میں', 'کا', 'تو', 'سے', 'کو'].filter(w => allFlex[w]);
+    fh.innerHTML = `<div class="card corpus-card small">${words.map(w => readingPair(w, [[L, allFlex[w].long], [S, allFlex[w].short]])).join('')}</div>`;
+  }
   const ah = $('aurVerses');
   if (ah) ah.innerHTML = `<div class="card corpus-card small">${readingPair('اور', [[{ t: 'one syllable (=)', cls: 'l' }, C.examples.aur1], [{ t: 'two syllables (= –)', cls: 'two' }, C.examples.aur2]])}</div>`;
+  const kh = $('koiVerses');
+  if (kh) {
+    kh.innerHTML = `<div class="card corpus-card small"><div class="flex-pair"><div class="flex-pair-word urdu ur-always">کوئی</div><p class="tiny muted" style="text-align:center; max-width:480px; margin:var(--sp-1) auto var(--sp-4); text-wrap:balance; line-height:1.5;">Handbook \u00a72.2: <span class="mono">koī</span> is scanned (x x). Both syllables are flexible, yielding all four mathematical combinations:</p>${KOI_EXTENDED_VERSES.map(([label, list]) => list.map(e => corpusExample(e, label)).join('')).join('')}</div></div>`;
+  }
   const eh = $('finalEvidence'); if (eh) eh.innerHTML = '';
 }
 

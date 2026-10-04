@@ -98,9 +98,7 @@
    stay distinguishable even under full colour blindness or greyscale printing. */
 .chip.l { border-bottom-width: 4px; }
 .chip.s { border-bottom-style: dotted; border-bottom-width: 3px; }
-.chip.flex.l, .chip.flex.s { border-bottom-style: double; border-bottom-width: 5px; }
 .sw.c-s { border-bottom-style: dotted; border-bottom-width: 3px; }
-.sw.c-x { border-bottom-style: double; border-bottom-width: 5px; }
 
 /* Classic colours (opt-in): the original warm gold/teal/rose palette, no CVD
    shape cues needed since sighted classic users distinguish by hue alone —

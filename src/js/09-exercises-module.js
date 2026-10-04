@@ -135,14 +135,126 @@ window.searchGhazalIndex = searchGhazalIndex;
    the reader header's "Same bahr as …" reference line. Reads the FAMS/
    famOfMeter globals (owned by the Player & Meter agent's data file) but
    doesn't modify them. */
-function meterFamousLine(mId) {
-  if (!mId || typeof famOfMeter === 'undefined') return null;
-  const fam = famOfMeter[Number(mId)] || famOfMeter[String(mId)];
-  if (!fam || !fam.gz || !fam.gz[0]) return null;
-  const g = fam.gz[0];
+function poetPossessive(poet) {
+  if (!poet) return '';
+  const p = poet.trim();
+  if (/s$/i.test(p)) return `${p}'`;
+  return `${p}'s`;
+}
+
+const EXTENDED_METER_BENCHMARKS = {
+  faiz: {
+    33: { p: 'Faiz', ur: 'گلوں میں رنگ بھرے باد نوبہار چلے', ro: 'guloñ meñ rang bhare bād-e-naubahār chale', hi: 'गुलों में रंग भरे बाद-ए-नौबहार चले', ref: 'Faiz 3' },
+    34: { p: 'Faiz', ur: 'گلوں میں رنگ بھرے باد نوبہار چلے', ro: 'guloñ meñ rang bhare bād-e-naubahār chale', hi: 'गुलों में रंग भरे बाद-ए-नौबहार चले', ref: 'Faiz 3' },
+    18: { p: 'Faiz', ur: 'دل میں اب یوں ترے بھولے ہوئے غم آتے ہیں', ro: 'dil meñ ab yūñ tire bhūle hue ġham aate haiñ', hi: 'दिल में अब यूँ तिरे भूले हुए ग़म आते हैं', ref: 'Faiz 12' },
+    19: { p: 'Faiz', ur: 'دل میں اب یوں ترے بھولے ہوئے غم آتے ہیں', ro: 'dil meñ ab yūñ tire bhūle hue ġham aate haiñ', hi: 'दिल में अब यूँ तिरे भूले हुए ग़म आते हैं', ref: 'Faiz 12' },
+    14: { p: 'Faiz', ur: 'آئے کچھ ابر کچھ شراب آئے', ro: 'ā.e kuchh abr kuchh sharāb ā.e', hi: 'आए कुछ अब्र कुछ شراب आए', ref: 'Faiz 2' },
+    15: { p: 'Faiz', ur: 'آئے کچھ ابر کچھ شراب آئے', ro: 'ā.e kuchh abr kuchh sharāb ā.e', hi: 'आए कुछ अब्र कुछ شراب आए', ref: 'Faiz 2' }
+  },
+  iqbal: {
+    14: { p: 'Iqbal', ur: 'ستاروں سے آگے جہاں اور بھی ہیں', ro: 'sitāroñ se aage jahāñ aur bhī haiñ', hi: 'सितारों से आगे जहाँ और भी हैं', ref: 'Iqbal 2' },
+    15: { p: 'Iqbal', ur: 'ستاروں سے آگے جہاں اور بھی ہیں', ro: 'sitāroñ se aage jahāñ aur bhī haiñ', hi: 'सितारों से आगे जहाँ और भी हैं', ref: 'Iqbal 2' },
+    26: { p: 'Iqbal', ur: 'لب پہ آتی ہے دعا بن کے تمنا میری', ro: 'lab pe aatī hai duʿā ban ke tamannā merī', hi: 'लब पे आती है दुआ बन के तमन्ना मेरी', ref: 'Iqbal' },
+    33: { p: 'Iqbal', ur: 'کبھی اے حقیقتِ منتظر نظر آ لباسِ مجاز میں', ro: 'kabhī ai ḥaqīqat-e-muntaz̤ar nazar ā libās-e-majāz meñ', hi: 'कभी ऐ हक़ीक़त-ए-मुंतज़र नज़र आ लिबास-ए-मजाज़ में', ref: 'Iqbal' },
+    34: { p: 'Iqbal', ur: 'کبھی اے حقیقتِ منتظر نظر آ لباسِ مجاز میں', ro: 'kabhī ai ḥaqīqat-e-muntaz̤ar nazar ā libās-e-majāz meñ', hi: 'कभी ऐ हक़ीक़त-ए-मुंतज़र नज़र आ लिबास-ए-मजाज़ में', ref: 'Iqbal' }
+  },
+  faraz: {
+    33: { p: 'Faraz', ur: 'رنجش ہی سہی دل ہی دکھانے کے لیے آ', ro: 'ranjish hī sahī dil hī dukhāne ke liye ā', hi: 'रंजिश ہی सही दिल ही दुखाने के लिए आ', ref: 'Faraz 3' },
+    34: { p: 'Faraz', ur: 'رنجش ہی سہی دل ہی دکھانے کے لیے آ', ro: 'ranjish hī sahī dil hī dukhāne ke liye ā', hi: 'रंजिश ہی सही दिल ही दुखाने के लिए आ', ref: 'Faraz 3' },
+    18: { p: 'Faraz', ur: 'سنا ہے لوگ اسے آنکھ بھر کے دیکھتے ہیں', ro: 'sunā hai log use āñkh bhar ke dekhte haiñ', hi: 'सुना है लोग उसे आँख भर के देखते हैं', ref: 'Faraz 1' },
+    19: { p: 'Faraz', ur: 'سنا ہے لوگ اسے آنکھ بھر کے دیکھتے ہیں', ro: 'sunā hai log use āñkh bhar ke dekhte haiñ', hi: 'सुना है लोग उसे आँख भर के देखते हैं', ref: 'Faraz 1' },
+    14: { p: 'Faraz', ur: 'سلسلے توڑ گیا وہ سبھی جاتے جاتے', ro: 'silsile toḌ gayā vo sabhī jaate jaate', hi: 'सिलसिले तोड़ गया वो सभी जाते जाते', ref: 'Faraz 2' },
+    15: { p: 'Faraz', ur: 'سلسلے توڑ گیا وہ سبھی جاتے جاتے', ro: 'silsile toḌ gayā vo sabhī jaate jaate', hi: 'सिलसिले तोड़ गया वो सभी जाते जाते', ref: 'Faraz 2' }
+  },
+  parveen: {
+    14: { p: 'Parveen Shakir', ur: 'کو بہ کو پھیل گئی بات شناسائی کی', ro: 'kū-bah-kū phail ga.ī baat shanāsā.ī kī', hi: 'कू-ब-कू फैल गई बात शनासाई की', ref: 'Parveen 1' },
+    15: { p: 'Parveen Shakir', ur: 'کو بہ کو پھیل گئی بات شناسائی کی', ro: 'kū-bah-kū phail ga.ī baat shanāsā.ī kī', hi: 'कू-ब-कू फैल गई बात शनासाई की', ref: 'Parveen 1' },
+    18: { p: 'Parveen Shakir', ur: 'وہ تو خوشبو ہے ہواؤں میں بکھر جائے گا', ro: 'vo to ḳhushbū hai havāoñ meñ bikhar jā.egā', hi: 'वो तो ख़ुशबू है हवाओं में बिखर जाएगा', ref: 'Parveen 3' },
+    19: { p: 'Parveen Shakir', ur: 'وہ تو خوشبو ہے ہواؤں میں بکھر جائے گا', ro: 'vo to ḳhushbū hai havāoñ meñ bikhar jā.egā', hi: 'वो तो ख़ुशबू है हवाओं में बिखर जाएगा', ref: 'Parveen 3' }
+  },
+  jaun: {
+    33: { p: 'Jaun Elia', ur: 'شاید مجھے کسی سے محبت نہیں ہوئی', ro: 'shāyad mujhe kisī se maḥabbat nahīñ huī', hi: 'शायद मुझे किसी से मोहब्बत नहीं हुई', ref: 'Jaun 3' },
+    34: { p: 'Jaun Elia', ur: 'شاید مجھے کسی سے محبت نہیں ہوئی', ro: 'shāyad mujhe kisī se maḥabbat nahīñ huī', hi: 'शायद मुझे किसी से मोहब्बत नहीं हुई', ref: 'Jaun 3' },
+    14: { p: 'Jaun Elia', ur: 'بے قراری سی بے قراری ہے', ro: 'be-qarārī sī be-qarārī hai', hi: 'बे-क़रारी सी बे-क़रारी है', ref: 'Jaun 1' },
+    15: { p: 'Jaun Elia', ur: 'بے قراری سی بے قراری ہے', ro: 'be-qarārī sī be-qarārī hai', hi: 'बे-क़रारी सी बे-क़रारी है', ref: 'Jaun 1' }
+  }
+};
+
+function meterFamousLine(mId, item) {
+  if (!mId) return null;
+  const numId = Number(mId);
+  const fam = (typeof famOfMeter !== 'undefined') ? (famOfMeter[numId] || famOfMeter[String(mId)]) : null;
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
-  const text = (typeof getLineDisplay === 'function') ? getLineDisplay(g, cs) : (g[cs] || g.ur || '');
-  return text ? { text, poet: g.p || '' } : null;
+
+  const curCol = (typeof activeCollection !== 'undefined') ? activeCollection : '';
+  const curPoet = (item && item.poet) || (curCol && typeof COL_NAMES !== 'undefined' && COL_NAMES[curCol]) || '';
+  const poetKey = curPoet.toLowerCase();
+
+  // 1. Check extended modern poet benchmark
+  const pMap = (poetKey && EXTENDED_METER_BENCHMARKS[poetKey]) || (curCol && EXTENDED_METER_BENCHMARKS[curCol]);
+  if (pMap && pMap[numId]) {
+    const pEntry = pMap[numId];
+    const text = (typeof getLineDisplay === 'function') ? getLineDisplay(pEntry, cs) : (pEntry[cs] || pEntry.ur || '');
+    if (text) return { text, poet: pEntry.p || '', ref: pEntry.ref || '' };
+  }
+
+  // 2. Check if famOfMeter contains an entry for this poet
+  if (fam && fam.gz && fam.gz.length) {
+    if (poetKey) {
+      const match = fam.gz.find(x => x.p && x.p.toLowerCase().includes(poetKey));
+      if (match) {
+        const text = (typeof getLineDisplay === 'function') ? getLineDisplay(match, cs) : (match[cs] || match.ur || '');
+        return text ? { text, poet: match.p || '', ref: match.ref || '' } : null;
+      }
+    }
+  }
+
+  // 3. Balanced Cross-Poet Mix-and-Match:
+  if (fam && fam.gz && fam.gz.length) {
+    let chosen = null;
+    // Meter 14/15: if reading Ghalib, use Ghalib (Dil-e nadan). Otherwise, Mir's immortal "Hasti apni hubab ki si hai" (fam.gz[4])
+    if ((numId === 14 || numId === 15) && fam.gz[4]) {
+      chosen = (poetKey === 'ghalib' || curCol === 'ghalib') ? fam.gz[0] : fam.gz[4];
+    }
+    // Meter 18/19: if reading Ghalib, Atish's "Hasrat-e jalvah-e didar" (fam.gz[1]) so Ghalib doesn't cite Ghalib!
+    else if ((numId === 18 || numId === 19) && fam.gz[1]) {
+      chosen = (poetKey === 'ghalib' || curCol === 'ghalib') ? fam.gz[1] : fam.gz[0];
+    }
+    // Meter 33/34: if reading Ghalib, Atish's "Yih aarzu thii" (fam.gz[2]) so Ghalib doesn't cite Ghalib! Otherwise Faiz or Ghalib
+    else if ((numId === 33 || numId === 34)) {
+      if (poetKey === 'ghalib' || curCol === 'ghalib') {
+        chosen = fam.gz[2] || fam.gz[0];
+      } else if (EXTENDED_METER_BENCHMARKS.faiz && EXTENDED_METER_BENCHMARKS.faiz[33]) {
+        const fz = EXTENDED_METER_BENCHMARKS.faiz[33];
+        const text = (typeof getLineDisplay === 'function') ? getLineDisplay(fz, cs) : (fz[cs] || fz.ur || '');
+        return { text, poet: fz.p, ref: fz.ref };
+      }
+    }
+    // Meter 5: if reading Ghalib, Zauq's "Laii hayat aae qaza" (fam.gz[1]) so Ghalib doesn't cite Ghalib!
+    else if (numId === 5 && fam.gz[1]) {
+      chosen = (poetKey === 'ghalib' || curCol === 'ghalib') ? fam.gz[1] : fam.gz[0];
+    }
+    // Meter 10: if reading Ghalib, Jur'at's "Baal suljhaanaa" (fam.gz[2]) so Ghalib doesn't cite Ghalib!
+    else if (numId === 10 && fam.gz[2]) {
+      chosen = (poetKey === 'ghalib' || curCol === 'ghalib') ? fam.gz[2] : fam.gz[0];
+    }
+    // Meter 11: Mir Dard's "Tuhmaten chand" (fam.gz[1])
+    else if (numId === 11 && fam.gz[1]) {
+      chosen = fam.gz[1];
+    }
+    // Meter 26: if reading Ghalib, Vali's "Kiyaa mujh ishq ne" (fam.gz[1])
+    else if (numId === 26 && fam.gz[1]) {
+      chosen = (poetKey === 'ghalib' || curCol === 'ghalib') ? fam.gz[1] : fam.gz[0];
+    }
+
+    if (!chosen) chosen = fam.gz[0];
+    if (chosen) {
+      const text = (typeof getLineDisplay === 'function') ? getLineDisplay(chosen, cs) : (chosen[cs] || chosen.ur || '');
+      return text ? { text, poet: chosen.p || '', ref: chosen.ref || '' } : null;
+    }
+  }
+
+  return null;
 }
 
 /* PB-compatible "line" for a bare pattern string (no verse) — lets the
@@ -176,28 +288,105 @@ window.toggleReaderPatternPlay = toggleReaderPatternPlay;
    via renderMeterLabel() (18b-meter-label.js) because that component shows
    the famous misra as the PRIMARY line, which reads as though it were this
    ghazal's own first line. */
-function renderGhazalReaderHeader(mId) {
+function patEnding(raw){
+  if(!raw) return '';
+  const parts = String(raw).split('/');
+  return parts[parts.length - 1].trim();
+}
+
+function renderGhazalReaderHeader(mId, item) {
   if (!mId) return '';
   const info = (typeof meterLabelInfo === 'function') ? meterLabelInfo(mId) : null;
   if (!info) return '';
+  const pairGroup = (item && item.meters && item.meters.length > 1)
+    ? item.meters
+    : (typeof SCAN_PAIRS !== 'undefined' ? (SCAN_PAIRS.find(p => p.includes(Number(mId))) || null) : null);
+  const isPair = !!pairGroup;
+  const pairTip = 'Classic paired meters: In Classical Urdu prosody, these variation endings can be freely alternated within the same poem without breaking meter. (Handbook \u00a76.1)';
+  const pairPill = isPair ? ` <span class="pair-bahr-pill" tabindex="0" data-tip="${pairTip}">Paired Bahr</span>` : '';
   const canPlay = !!info.pattern;
-  const patternHtml = (info.pattern && typeof feetStrip === 'function') ? feetStrip(info.pattern) : '';
-  const numHtml = `<span class="mono">${escapeHtml(info.number)}</span>`;
-  const titleHtml = info.name ? `${numHtml} · ${escapeHtml(info.name)}` : numHtml;
-  const famous = meterFamousLine(mId);
+  let patternHtml = (info.pattern && typeof feetStrip === 'function') ? feetStrip(info.pattern) : '';
+  if (isPair && pairGroup && pairGroup.length === 2 && typeof Scan !== 'undefined' && Scan.METERS) {
+    const m1 = Scan.METERS.find(x => x.id === pairGroup[0]);
+    const m2 = Scan.METERS.find(x => x.id === pairGroup[1]);
+    const r1 = m1 ? (m1.raw || m1.pattern) : '';
+    const r2 = m2 ? (m2.raw || m2.pattern) : '';
+    if (r1 && r2 && typeof Scan.patternFeet === 'function') {
+      const p1 = Scan.patternFeet(r1);
+      const p2 = Scan.patternFeet(r2);
+      if (p1.length === p2.length && p1.length > 0) {
+        const lastIdx = p1.length - 1;
+        const f1L = p1[lastIdx];
+        const f2L = p2[lastIdx];
+        if (f1L.pat !== f2L.pat && typeof strip === 'function') {
+          const altToks = strip(f2L.toks);
+          const altFn = (f2L.ro && f2L.ro.length) ? ` <span class="alt-fn">(or ${f2L.ro.join('·')})</span>` : '';
+          const feetHtml = p1.map((f, i) => {
+            if (i === lastIdx) {
+              return `${f.caeBefore ? '<span class="cae">//</span>' : ''}<span class="fbox"><span class="strip tight">${strip(f.toks)} <span class="alt-or faint">(or <span class="alt-strip">${altToks}</span>)</span></span><span class="fn">${f.ro.join('·')}${altFn}</span></span>`;
+            }
+            return `${f.caeBefore ? '<span class="cae">//</span>' : ''}<span class="fbox"><span class="strip tight">${strip(f.toks)}</span><span class="fn">${f.ro.join('·')}</span></span>`;
+          }).join('');
+          patternHtml = `<div class="fstrip">${feetHtml}</div>`;
+        }
+      }
+    }
+  }
+  const numLabel = isPair ? ('Meter #' + pairGroup.join(' / #')) : info.number;
+  const numHtml = `<span class="mono reader-header-mnum">${escapeHtml(numLabel)}</span>`;
+  const famous = meterFamousLine(mId, item);
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
+  const langDir = (typeof getLangDir === 'function') ? getLangDir(cs) : '';
   const misraScriptCls = cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : 'roman');
-  const refHtml = famous
-    ? `<div class="reader-header-ref faint small">Same bahr as <span class="reader-header-misra ${misraScriptCls}">${escapeHtml(famous.text)}</span>${famous.poet ? ' – ' + escapeHtml(famous.poet) : ''}</div>`
+
+  let isSelf = false;
+  if (famous && item) {
+    const mRef = famous.ref ? famous.ref.match(/^([A-Za-z]+)\s+(\d+)$/) : null;
+    const curCol = (typeof activeCollection !== 'undefined') ? activeCollection : '';
+    if (mRef && item.id != null) {
+      const refPoet = mRef[1].toLowerCase();
+      const refNum = parseInt(mRef[2], 10);
+      const itemNum = parseInt(item.id, 10);
+      if (itemNum === refNum && (curCol === refPoet || (item.poet && item.poet.toLowerCase().includes(refPoet)))) {
+        isSelf = true;
+      }
+    }
+    if (!isSelf && item.lines && item.lines[0] && famous.text && typeof searchNorm === 'function') {
+      const l1 = item.lines[0];
+      const famNorm = searchNorm(famous.text);
+      if (famNorm && (
+        (l1.ur && searchNorm(l1.ur) === famNorm) ||
+        (l1.ro && searchNorm(l1.ro) === famNorm) ||
+        (l1.ascii && searchNorm(l1.ascii) === famNorm)
+      )) {
+        isSelf = true;
+      }
+    }
+  }
+
+  let introHtml = '';
+  if (famous) {
+    const introLabel = isSelf ? 'Signature verse for this bahr:' : `Same bahr as ${poetPossessive(famous.poet)}:`;
+    introHtml = `<span class="reader-header-intro dim"> · ${escapeHtml(introLabel)}</span>`;
+  }
+
+  const heroVerseHtml = famous
+    ? `<div class="reader-header-hero-verse reader-header-misra ${misraScriptCls}" ${langDir}>${escapeHtml(famous.text)}</div>`
     : '';
+
+  const techHtml = info.name
+    ? `<div class="reader-header-tech faint tiny">${escapeHtml(info.name)}</div>`
+    : '';
+
   return `
-    <div class="reader-header-comp">
-      <div class="row reader-header-title-row">
+    <div class="reader-header-comp reader-benchmark-card">
+      <div class="row reader-header-top-row">
         ${canPlay ? `<span class="play sm" role="button" tabindex="0" data-label="Play meter pattern" aria-label="Play meter pattern" onclick="toggleReaderPatternPlay('${info.id}', this)">▶︎</span>` : ''}
-        <span class="reader-header-title">${titleHtml}</span>
+        ${numHtml}${pairPill}${introHtml}
       </div>
+      ${heroVerseHtml}
       <div class="reader-header-pattern">${patternHtml}</div>
-      ${refHtml}
+      ${techHtml}
     </div>
   `;
 }
@@ -663,16 +852,16 @@ function renderUniversalSearchResults(q) {
     const l1 = item.lines && item.lines[0];
     const disp1 = l1 ? ((typeof getLineDisplay === 'function') ? getLineDisplay(l1, cs) : (l1[cs] || l1.ur)) : '';
     const who = (col === 'handbook' || isPoetCol(col)) ? (item.poet || colNames[col]) : colNames[col];
+    const isHb = (col === 'handbook');
+    const metaHtml = isHb
+      ? `<div class="vmeta"><span class="search-result-col">Handbook</span><span>·</span><span>${escapeHtml(who)}</span></div>`
+      : '';
     return `
       <div class="vrow" role="link" tabindex="0" onclick="navigate('/ghazals/${col}/${item.id}')">
         <span class="vnum">${col === 'handbook' ? escapeHtml(getGhazalNavLabel(col, item)) : isPoetCol(col) ? rekhtaLinkHTML(item) : franLinkHTML(col, item)}</span>
         <div class="vtext">
           <div class="vline" ${langDir}>${disp1}</div>
-          <div class="vmeta">
-            <span class="search-result-col">${colNames[col]}</span>
-            <span>·</span>
-            <span>${escapeHtml(who)}</span>
-          </div>
+          ${metaHtml}
         </div>
         <div class="vact"><span class="chevron">›</span></div>
       </div>
@@ -859,7 +1048,7 @@ function openGhazalReader(col, id) {
 
   const mId = mListOf(item)[0];
   const rHeader = $('readerHeader');
-  if (rHeader) rHeader.innerHTML = renderGhazalReaderHeader(mId);
+  if (rHeader) rHeader.innerHTML = renderGhazalReaderHeader(mId, item);
 
   // Intro note (Handbook only per §5.8)
   const introDiv = $('readerIntroNote');
@@ -892,6 +1081,9 @@ function openGhazalReader(col, id) {
     ${(typeof legendHTML === 'function') ? legendHTML('legend-sticky') : ''}
   `;
 
+  const readerMeters = mListOf(item);
+  const isPairGh = (readerMeters && readerMeters.length > 1 && typeof SCAN_PAIRS !== 'undefined' && SCAN_PAIRS.some(p => readerMeters.every(m => p.includes(Number(m)))));
+
   for (let c = 0; c < cCount; c++) {
     const l1 = lines[2 * c];
     const l2 = lines[2 * c + 1];
@@ -901,10 +1093,28 @@ function openGhazalReader(col, id) {
     const disp2 = (typeof getLineDisplay === 'function') ? getLineDisplay(l2, cs) : (l2[cs] || l2.ur);
     const vNote = (col === 'handbook' && item.notes && item.notes.verses && item.notes.verses[vNum]) ? item.notes.verses[vNum] : '';
 
+    let pairBadge = '';
+    if (isPairGh && typeof Scan !== 'undefined' && typeof lineScanText === 'function') {
+      const r1 = Scan.scanLine(lineScanText(l1));
+      const r2 = Scan.scanLine(lineScanText(l2));
+      const f1 = (r1 && r1.fits) ? (r1.fits.find(f => readerMeters.includes(f.meter.id)) || r1.fits[0]) : null;
+      const f2 = (r2 && r2.fits) ? (r2.fits.find(f => readerMeters.includes(f.meter.id)) || r2.fits[0]) : null;
+      if (f1 && f2 && f1.meter.id !== f2.meter.id) {
+        const e1 = (typeof patEnding === 'function') ? patEnding(f1.meter.raw || f1.meter.pattern) : '';
+        const e2 = (typeof patEnding === 'function') ? patEnding(f2.meter.raw || f2.meter.pattern) : '';
+        const tip = `Misra 1 uses Meter #${f1.meter.id} (${e1}), Misra 2 uses Meter #${f2.meter.id} (${e2}). In Classical Urdu prosody, these alternating cadences form an accepted paired meter (Handbook \u00a76.1).`;
+        pairBadge = ` <span class="pair-bahr-pill sm" tabindex="0" data-tip="${tip}">Paired · #${f1.meter.id} &amp; #${f2.meter.id}</span>`;
+      } else if (f1) {
+        const e1 = (typeof patEnding === 'function') ? patEnding(f1.meter.raw || f1.meter.pattern) : '';
+        const tip = `Both misras in this couplet use Meter #${f1.meter.id} (${e1}).`;
+        pairBadge = ` <span class="pair-bahr-pill sm faint-pair" tabindex="0" data-tip="${tip}">Meter #${f1.meter.id}</span>`;
+      }
+    }
+
     cHtml += `
       <div class="card couplet-card">
         <div class="row couplet-head">
-          <span class="vnum">Couplet ${vNum}</span>
+          <div class="row couplet-head-left"><span class="vnum">Couplet ${vNum}</span>${pairBadge}</div>
           <div class="row couplet-acts">
             <span class="play sm" role="button" tabindex="0" aria-label="Play couplet" data-label="Play couplet" data-pb="reader:${c}" onclick="playReaderCoupletByIndex(${c}, null, this)">▶︎</span>
             ${practiceLineBtn(l1, l2, item)}
@@ -977,8 +1187,8 @@ window.openGhazalReader = openGhazalReader;
 function practiceLineBtn(l1, l2, item) {
   if (typeof prPracticable !== 'function') return '';
   const m = (typeof drMetersOf === 'function' && item) ? drMetersOf(item)[0] : null;   // the ghazal's own baḥr
-  const ur = [l1, l2].map(l => l && l.ur).find(u => u && prPracticable(u, m));
-  return ur ? `<a class="btn ghost sm" href="${prLinkFor(ur, m)}" title="Tap this line's rhythm yourself">Practice</a>` : '';
+  const l = [l1, l2].find(x => x && x.ur && prPracticable(x.ur, m));
+  return l ? `<a class="btn ghost sm" href="${prLinkFor(l.ur, m, l.ro)}" title="Tap this line's rhythm yourself">Practice</a>` : '';
 }
 
 function closeGhazalReader() {

@@ -252,9 +252,9 @@ function patGlyphs(raw){
 const LEGEND_ITEMS = [
   { rule: 'S1.5-weight', tip: "A long syllable: two letters. Shown as a solid underline or =. Sung 'dum' in this app.", body: `<i class="sw c-l"></i><span class="lg-or">/</span><span class="pg l">=</span> long <span class="lg-note">(dum)</span>` },
   { rule: 'S1.5-weight', tip: "A short syllable: one letter. Shown as a dotted underline or \u2013. Sung 'da' in this app.", body: `<i class="sw c-s"></i><span class="lg-or">/</span><span class="pg s">\u2013</span> short <span class="lg-note">(da)</span>` },
-  { rule: 'F2.1-listed-monosyllable', tip: "A flexible syllable: two letters, so normally long, but it may be scanned short (\u06a9\u0648\u060c \u0633\u06d2\u060c \u06c1\u06d2\u2026, and many word-final syllables). The meter decides; the underline shows the reading chosen.", body: `<i class="sw c-x"></i>flexible` },
-  { rule: 'M6.1-anceps', sec: '7', tip: "In a meter pattern, x marks a position that may be long or short, as with the first syllable of meters 14 to 19.", body: `<span class="pg x">x</span> long or short`, app: true },
-  { rule: 'M6.1-cheat-final', tip: "One extra short syllable the meter doesn't count: allowed at the end of a line and, in some meters, just before the mid-line break. Pritchett calls it a 'cheat' syllable.", body: `<i class="sw c-c"></i>extra` },
+  { rule: 'F2.1-listed-monosyllable', tip: "A word or syllable that can be read long or short in Urdu (کو، سے، ہے…, and word-final vowels). The word itself can flex, but once the line's meter is established, its position locks it into either long or short.", body: `<span class="sw-flex-tile">کو</span> flexible` },
+  { rule: 'M6.1-anceps', sec: '7', tip: "In an abstract meter pattern, x marks an 'anceps' slot where the meter formula itself permits either a long or a short syllable without penalty (such as the opening position of meters 14–19).", body: `<span class="pg x">x</span> long or short`, app: true },
+  { rule: 'M6.1-cheat-final', tip: "One extra short syllable the meter doesn't count: allowed at the end of a line and, in some meters, just before the mid-line break. Pritchett calls it a 'cheat' syllable.", body: `<span class="sw-extra-tile"></span> extra` },
   { rule: 'M6.1-cheat-caesura', tip: "The break in the middle of the line, between its two hemistich halves. Where a meter has one, the pattern shows //. In some meters one extra short syllable may sit just before it.", body: `<span class="cae">//</span> caesura` },
   { rule: 'F3.1-graft', tip: "Words joined across the space and read as one, e.g. \u0101\u1e33hir is \u2192 \u0101\u00b7\u1e33hi\u00b7ris.", body: `<i class="sw c-g"></i>grafted` }
 ];
@@ -462,6 +462,7 @@ function runScan(){
   if(lines.length>1){
     if(lastScan.forced){
       const _fcd=lastScan.disp, _f0=lastScan.anchor[0], _m=_f0.meter, _per=common.c/lines.length, [_vc,_vt]=verdictOf(_per), _fam=famOfMeter[_m.id];
+      const _isPair = !!(common && common.group && common.group.length > 1);
       const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
       const isRtl = (cs === 'ur');
       const famDisp = _fam ? famLabel(_fam) : null;
@@ -470,13 +471,35 @@ function runScan(){
       h+='<div class="card">';
       /* summary: verdict · meter number / name / pattern / reference verse · more link */
       { const _tech = meterTechName(_m);
-        const _num = _m.id==='H' ? '' : (_m.kind==='rubai' ? ('Rubāʿī ' + (''+_m.id).replace(/^R/i,'')) : ('Meter #' + _m.id));
+        const _num = _m.id==='H' ? '' : (_m.kind==='rubai' ? ('Rubāʿī ' + (''+_m.id).replace(/^R/i,'')) : (_isPair ? ('Meter #' + common.group.join(' / #')) : ('Meter #' + _m.id)));
+        const _pairTip = _isPair ? `Classic paired meters (#${common.group.join(' & #')}): In Classical Urdu prosody, these variation endings can be freely alternated within the same poem without breaking meter. (Handbook \u00a76.1)` : '';
+        const _pairPill = _isPair ? `<span class="pair-bahr-pill" tabindex="0" data-tip="${_pairTip}">Paired Bahr</span>` : '';
         h+=`<div class="scan-summary">`;
-        h+=`<div class="ss-top"><span class="pill ${_vc}">${_vt}</span>${_num?`<span class="ss-num">${_num}</span>`:''}</div>`;
+        h+=`<div class="ss-top"><span class="pill ${_vc}">${_vt}</span>${_num?`<span class="ss-num">${_num}</span>`:''}${_pairPill}</div>`;
         h+=`<div class="ss-name">${_tech || meterLabel(_m,{tech:false})}</div>`;
         { const _rawTech = (typeof METERS_DATA !== 'undefined' && METERS_DATA.standard) ? ((METERS_DATA.standard.find(x => x.id === _m.id) || {}).name || '') : (METER_TECH_NAMES[_m.id] || '');
           const _ur = aruzName(_rawTech).ur; if(_ur) h+=`<div class="ss-name-ur">${_ur}</div>`; }
-        if(_m.raw) h+=`<div class="ss-pat">${patGlyphs(_m.raw)}</div><div class="ss-pat-key"><span class="pg l">=</span> long <span class="pg s">-</span> short${/x/.test(_m.raw)?' <span class="pg x">x</span> shortenable long (may scan = or –)':''} <span class="pg sep">/</span> foot break</div>`;
+        let _patStr = _m.raw ? patGlyphs(_m.raw) : '';
+        let _pairKeyNote = '';
+        if(_isPair && common.group && common.group.length === 2){
+          const _g = common.group;
+          const _m1 = Scan.METERS.find(x => x.id === _g[0]);
+          const _m2 = Scan.METERS.find(x => x.id === _g[1]);
+          const _r1 = _m1 ? (_m1.raw || _m1.pattern) : '';
+          const _r2 = _m2 ? (_m2.raw || _m2.pattern) : '';
+          if(_r1 && _r2){
+            const _f1 = _r1.split('/').map(s => s.trim());
+            const _f2 = _r2.split('/').map(s => s.trim());
+            if(_f1.length === _f2.length && _f1.slice(0, -1).join('/') === _f2.slice(0, -1).join('/')){
+              const _base = patGlyphs(_f1.slice(0, -1).join(' / '));
+              const _alt1 = patGlyphs(_f1[_f1.length - 1]);
+              const _alt2 = patGlyphs(_f2[_f2.length - 1]);
+              _patStr = `${_base} <span class="pg sep">/</span> <span class="pat-alt-cadence">[ ${_alt1} <span class="pg sep">|</span> ${_alt2} ]</span>`;
+              _pairKeyNote = ` <span class="pat-alt-cadence" style="margin-inline-start:6px;">[ ${_alt1} <span class="pg sep">|</span> ${_alt2} ]</span> alternating cadence`;
+            }
+          }
+        }
+        if(_patStr) h+=`<div class="ss-pat">${_patStr}</div><div class="ss-pat-key"><span class="pg l">=</span> long <span class="pg s">-</span> short${/x/.test(_m.raw)?' <span class="pg x">x</span> shortenable long (may scan = or –)':''} <span class="pg sep">/</span> foot break${_pairKeyNote}</div>`;
         if(_fam){
           if(_famIsWhatWasScanned) h+=`<div class="ss-ref"><span class="ss-lbl">This couplet is the reference example for this bahr</span></div>`;
           else h+=`<div class="ss-ref"><span class="ss-lbl">Same bahr as</span><span class="${isRtl?'urdu':'ro'} ss-verse">${famTxt}</span><span class="ss-cite">${cs==='ro'?famDisp.ref:famDisp.ro+' — '+famDisp.ref}</span></div>`;
@@ -489,7 +512,7 @@ function runScan(){
       /* lines grouped into couplets (shers) of 2, each its own bordered card */
       for(let _i=0;_i<results.length;_i+=2){
         const _li2 = (_i+1<results.length) ? _i+1 : null;
-        h+=coupletCard(_i,_li2,results[_i],_fcd[_i],lineObjs[_i],_li2!=null?results[_li2]:null,_li2!=null?_fcd[_li2]:null,_li2!=null?lineObjs[_li2]:null,`Couplet ${(_i/2)+1}`);
+        h+=coupletCard(_i,_li2,results[_i],_fcd[_i],lineObjs[_i],_li2!=null?results[_li2]:null,_li2!=null?_fcd[_li2]:null,_li2!=null?lineObjs[_li2]:null,`Couplet ${(_i/2)+1}`,{isPair:_isPair,group:common&&common.group});
       }
       h+='</div>';
     } else {
@@ -499,7 +522,7 @@ function runScan(){
         const _li2 = (_i+1<results.length) ? _i+1 : null;
         const _f1 = lastScan.disp[_i];
         const _f2 = _li2!=null ? lastScan.disp[_li2] : null;
-        h+=coupletCard(_i,_li2,results[_i],_f1,lineObjs[_i],_li2!=null?results[_li2]:null,_f2,_li2!=null?lineObjs[_li2]:null,`Couplet ${(_i/2)+1}`);
+        h+=coupletCard(_i,_li2,results[_i],_f1,lineObjs[_i],_li2!=null?results[_li2]:null,_f2,_li2!=null?lineObjs[_li2]:null,`Couplet ${(_i/2)+1}`,{isPair:false});
       }
     }
   } else {
@@ -614,9 +637,8 @@ function lineHTML(r,li,forced,lineObj){
   if(hasEdits(li)) h+=`<p class="tiny muted mt-note">Your edit still scans in the original bahr: the flexibility rules absorb it.</p>`;
   if(selWord&&selWord[0]===li) h+=wordPanel(r,li,selWord[1]);
   if(f.meter.id==='H' && lastScan.lines.length===1) h+=`<p class="tiny X mt-2">Mir's Hindi meter is loose enough that even some ordinary sentences fit it. One line proves little — add the rest of the ghazal.</p>`;
-  const notes=[...new Set(e.notes.map(n=>`${n.word}: ${n.note}`))].filter(n=>!/: $/.test(n));
-  if(notes.length) h+=`<p class="tiny muted mt-note">${notes.join(' · ')}</p>`;
-  if(!hasEdits(li) && _lineUr && typeof prPracticable==='function' && prPracticable(_lineUr,f.meter.id)) h+=`<p class="tiny mt-note"><a class="practice-this" href="${prLinkFor(_lineUr,f.meter.id)}">Practice this line: tap its rhythm →</a></p>`;
+  const _lineRo = typeof lObj==='object' ? (lObj && lObj.ro) : '';
+  if(!hasEdits(li) && _lineUr && typeof prPracticable==='function' && prPracticable(_lineUr,f.meter.id)) h+=`<p class="tiny mt-note"><a class="practice-this" href="${prLinkFor(_lineUr,f.meter.id,_lineRo)}">Practice this line: tap its rhythm →</a></p>`;
   if(!hasEdits(li) && !lastScan.forced){ const alts=r.fits.slice(1,4).filter(x=>x.c-f.c<1.2); if(alts.length) h+=`<p class="tiny muted">Also fits: ${alts.map(x=>famOfMeter[x.meter.id]?`<span class="${isRtl?'urdu':''} fam-inline xs">${(typeof getLineDisplay==='function')?getLineDisplay(famLabel(famOfMeter[x.meter.id]),cs):famLabel(famOfMeter[x.meter.id]).ur}</span>`:meterLabel(x.meter)).join(' · ')} — add the other misra to decide.</p>`; }
   return h+'</div>';
 }
@@ -746,14 +768,36 @@ function misraScan(r,li,forced){
   if(notes.length) h+=`<p class="scan-notes">${notes.join(' · ')}</p>`;
   return h;
 }
+function patEnding(raw){
+  if(!raw) return '';
+  const parts = String(raw).split('/');
+  return parts[parts.length - 1].trim();
+}
+
 /* one container per couplet: both misras' text together, then both misras' scansion stacked, one play button for the whole couplet */
-function coupletCard(li1,li2,r1,f1,lineObj1,r2,f2,lineObj2,label){
+function coupletCard(li1,li2,r1,f1,lineObj1,r2,f2,lineObj2,label,opts){
   const canPlay = !!((r1 && r1.words && r1.words.length) || (r2 && r2.words && r2.words.length));
+  const isPairPoem = !!(opts && opts.isPair);
+  let pairBadge = '';
+  if(f1 && f2 && f1.meter && f2.meter){
+    const m1 = f1.meter.id, m2 = f2.meter.id;
+    const isPairDiff = (m1 !== m2) && sameBahr(m1, m2);
+    if(isPairDiff){
+      const e1 = patEnding(f1.meter.raw || f1.meter.pattern);
+      const e2 = patEnding(f2.meter.raw || f2.meter.pattern);
+      const tip = `Misra 1 uses Meter #${m1} (${e1}), Misra 2 uses Meter #${m2} (${e2}). In Classical Urdu prosody, these alternating cadences form an accepted paired meter (Handbook \u00a76.1).`;
+      pairBadge = `<span class="pair-bahr-pill sm" tabindex="0" data-tip="${tip}">Paired · #${m1} &amp; #${m2}</span>`;
+    } else if(isPairPoem){
+      const e1 = patEnding(f1.meter.raw || f1.meter.pattern);
+      const tip = `Both misras in this couplet use Meter #${m1} (${e1}) within this paired bahr poem.`;
+      pairBadge = `<span class="pair-bahr-pill sm faint-pair" tabindex="0" data-tip="${tip}">Meter #${m1}</span>`;
+    }
+  }
   let h=`<div class="card misra-card"><div class="row card-head tight">`;
-  h+=`<span class="tiny muted">${label}</span>`;
+  h+=`<div class="row couplet-head-left"><span class="tiny muted">${label}</span>${pairBadge}</div>`;
   h+=canPlay?`<span class="play sm" title="Hear this couplet" aria-label="Hear this couplet" data-label="Hear this couplet" data-pb="scan:${li1}${li2!=null?','+li2:''}" onclick="playCouplet(${li1},${li2!=null?li2:'null'},null,this)">▶︎</span>`:'';
-  const _pr=[[li1,lineObj1,f1],[li2,lineObj2,f2]].map(([li,o,f])=>{ if(li==null||!f||hasEdits(li)) return null; const u=typeof o==='string'?o:(o&&o.ur)||''; return (u&&typeof prPracticable==='function'&&prPracticable(u,f.meter.id))?{u,m:f.meter.id}:null; }).find(Boolean);
-  if(_pr) h+=`<a class="btn ghost sm practice-this" href="${prLinkFor(_pr.u,_pr.m)}" title="Tap this line's rhythm yourself">Practice</a>`;
+  const _pr=[[li1,lineObj1,f1],[li2,lineObj2,f2]].map(([li,o,f])=>{ if(li==null||!f||hasEdits(li)) return null; const u=typeof o==='string'?o:(o&&o.ur)||''; const ro=typeof o==='object'?(o&&o.ro):''; return (u&&typeof prPracticable==='function'&&prPracticable(u,f.meter.id))?{u,m:f.meter.id,ro}:null; }).find(Boolean);
+  if(_pr) h+=`<a class="btn ghost sm practice-this" href="${prLinkFor(_pr.u,_pr.m,_pr.ro)}" title="Tap this line's rhythm yourself">Practice</a>`;
   h+='</div>';
   h+='<div class="cbox-verse">'+misraText(li1,lineObj1)+(li2!=null && r2 ? misraText(li2,lineObj2) : '')+'</div>';
   h+='<div class="cbox-scan">'+misraScan(r1,li1,f1)+'</div>';

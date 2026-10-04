@@ -118,9 +118,7 @@
    stay distinguishable even under full colour blindness or greyscale printing. */
 .chip.l { border-bottom-width: 4px; }
 .chip.s { border-bottom-style: dotted; border-bottom-width: 3px; }
-.chip.flex.l, .chip.flex.s { border-bottom-style: double; border-bottom-width: 5px; }
 .sw.c-s { border-bottom-style: dotted; border-bottom-width: 3px; }
-.sw.c-x { border-bottom-style: double; border-bottom-width: 5px; }
 
 /* Classic colours (opt-in): the original warm gold/teal/rose palette, no CVD
    shape cues needed since sighted classic users distinguish by hue alone —
@@ -491,11 +489,30 @@ textarea {
 }
 .chip.roman { font-family: var(--mono); font-size: 14px; }
 .chip.deva { font-family: var(--deva); font-size: 16px; }
-.chip.l { border-color: var(--mark-l); border-bottom-width: 3px; }
-.chip.s { border-color: var(--mark-s); border-bottom-width: 2px; }
-.chip.c { border-color: var(--ghost); border-bottom-style: dashed; opacity: .7; }
-.chip.flex { color: var(--rose); }
-.chip.flex.l, .chip.flex.s { border-color: var(--mark-x); }
+.chip.l { border-color: var(--mark-l); border-bottom-width: 4px; }
+.chip.s { border-color: var(--mark-s); border-bottom-style: dotted; border-bottom-width: 3px; }
+.chip.c, .chip.extra {
+  background: transparent !important;
+  border: 1.5px dashed var(--ghost) !important;
+  border-bottom: 1.5px dashed var(--ghost) !important;
+  color: var(--ghost) !important;
+  opacity: 0.8;
+  box-shadow: none !important;
+}
+.chip.flex {
+  background: color-mix(in srgb, var(--rose) 24%, transparent);
+  color: var(--ink);
+}
+.chip.flex.l {
+  border-color: var(--mark-l);
+  border-bottom-style: solid;
+  border-bottom-width: 4px;
+}
+.chip.flex.s {
+  border-color: var(--mark-s);
+  border-bottom-style: dotted;
+  border-bottom-width: 3px;
+}
 
 .chip.wend { margin-inline-end: 8px; }
 
@@ -704,6 +721,7 @@ textarea {
   padding-top: var(--sp-2); padding-bottom: var(--sp-2);
   margin: 0; border-bottom: 1px solid var(--line);
 }
+.couplet-head-left { display: inline-flex; align-items: center; gap: 8px; }
 .cbox-verse { padding-top: var(--sp-5); padding-bottom: var(--sp-5); }
 .cbox-verse .vline-lg, .cbox-verse .misra-text { text-align: center; margin: 0; border: 0; padding: 2px 0; }
 .cbox-scan, .couplet-scan-box > div {
@@ -733,6 +751,130 @@ textarea {
 .ss-top { display: flex; gap: var(--sp-3); align-items: baseline; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
 .ss-top .pill { font-size: 12px; padding: 0; }
 .ss-num { color: var(--faint); }
+.pair-bahr-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--gold) 10%, transparent);
+  color: var(--gold);
+  border: 1px solid color-mix(in srgb, var(--gold) 30%, transparent);
+  cursor: help;
+  position: relative;
+  outline: none;
+  transition: all .12s;
+}
+.pair-bahr-pill:hover, .pair-bahr-pill:focus-visible {
+  background: var(--gold);
+  color: #fff;
+}
+.pair-bahr-pill .info-i {
+  font-size: 11px;
+  font-style: italic;
+  font-family: var(--serif);
+  font-weight: 600;
+  opacity: 0.9;
+}
+.pair-bahr-pill::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 8px);
+  transform: translateX(-50%) translateY(-2px);
+  z-index: 60;
+  width: max-content;
+  max-width: 320px;
+  white-space: normal;
+  text-align: left;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--bg);
+  font: 400 12.5px/1.45 var(--sans);
+  box-shadow: var(--shadow);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .12s, transform .12s;
+  pointer-events: none;
+  text-transform: none;
+  letter-spacing: normal;
+}
+.pair-bahr-pill:hover::after, .pair-bahr-pill:focus::after, .pair-bahr-pill:focus-within::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+.pair-bahr-pill.sm {
+  font-size: 11px;
+  padding: 1.5px 8px;
+  border-radius: 10px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  font-weight: 500;
+}
+.pair-bahr-pill.faint-pair {
+  opacity: 0.75;
+  border-color: color-mix(in srgb, var(--ghost) 30%, transparent);
+  color: var(--dim);
+  background: transparent;
+}
+.pair-bahr-pill.faint-pair:hover {
+  opacity: 1;
+  color: var(--gold);
+  border-color: color-mix(in srgb, var(--gold) 30%, transparent);
+  background: color-mix(in srgb, var(--gold) 8%, transparent);
+}
+.fstrip .alt-or {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--sans);
+  font-size: 11.5px;
+  color: var(--faint);
+  margin-left: 4px;
+}
+.fstrip .alt-or .alt-strip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.fstrip .alt-fn {
+  color: var(--faint);
+  font-size: 11.5px;
+}
+.sw-flex-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  min-width: 18px;
+  height: 16px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--rose) 28%, transparent);
+  font-family: 'Geeza Pro', 'Noto Naskh Arabic', 'DecoType Naskh', 'Arial', sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--rose);
+  vertical-align: middle;
+  margin-inline-end: 4px;
+}
+.sw-extra-tile {
+  display: inline-block;
+  width: 14px;
+  height: 11px;
+  border: 1.5px dashed var(--ghost);
+  border-radius: 3px;
+  background: transparent;
+  vertical-align: middle;
+  margin-inline-end: 3px;
+}
 .ss-name { font-family: var(--serif); font-size: 24px; line-height: 1.25; color: var(--ink); }
 .ss-name::first-letter { text-transform: uppercase; }
 .ss-pat { font-family: var(--mono); font-size: 14px; color: var(--dim); letter-spacing: .12em; white-space: nowrap; overflow-x: auto; max-width: 100%; }
@@ -743,8 +885,9 @@ textarea {
 .ss-cite { font-family: var(--mono); font-size: 12px; color: var(--faint); }
 .ss-more { color: var(--gold); margin-top: var(--sp-1); }
 
-/* Urdu syllables: room under the letters so nuqtas/descenders clear the weight underline */
-.chip:not(.roman):not(.deva) { line-height: 2.1; padding-bottom: 9px; }
+/* Urdu syllables: room under the letters so nuqtas/descenders clear the weight underline;
+   extra padding on the right to cover the ascending kashish of kāf/gāf (کو، کا، etc.) */
+.chip:not(.roman):not(.deva) { line-height: 2.1; padding-bottom: 9px; padding-right: 10px; padding-left: 6px; }
 
 /* Grafting: a gold tie over the syllables whose words were joined across the space */
 .cw { padding-top: 9px; }
@@ -1683,16 +1826,80 @@ main, .wrap { max-width: 760px; }
 .ghazal-reader-view { margin-bottom: var(--sp-6); }
 .reader-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--sp-4); font-family: var(--sans); font-size: 13px; }
 .reader-header { margin-bottom: var(--sp-4); text-align: center; }
-/* Reader header component (round 2 D5.8): meter number+name, its pattern,
-   then a clearly-secondary "Same bahr as …" reference — all centred. */
-.reader-header-comp { display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); }
-.reader-header-title-row { justify-content: center; gap: var(--sp-2); }
-.reader-header-title { font: 400 20px/1.3 var(--serif); color: var(--ink); }
-.reader-header-pattern { display: flex; justify-content: center; }
-.reader-header-ref { margin-top: var(--sp-1); max-width: 480px; }
-.reader-header-misra.urdu { font-family: var(--urdu); }
-.reader-header-misra.deva { font-family: var(--deva); }
-.reader-header-misra.roman { font-family: var(--mono); }
+/* Reader header component (Option 2): Benchmark Card containing meter number,
+   prominent melodic anchor verse, interactive pattern strip, and faint technical name. */
+.reader-header-comp.reader-benchmark-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  border: 1px solid var(--line2);
+  border-radius: 12px;
+  background: var(--bg2);
+  padding: var(--sp-4) var(--sp-5);
+  margin: 0 auto var(--sp-5);
+  max-width: 640px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+.reader-header-top-row {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  font-size: 13.5px;
+}
+.reader-header-mnum {
+  font-weight: 600;
+  color: var(--ink);
+}
+.reader-header-intro {
+  font-family: var(--sans);
+  color: var(--dim);
+}
+.reader-header-hero-verse {
+  margin: var(--sp-1) 0 var(--sp-2);
+  color: var(--ink);
+  text-align: center;
+}
+.reader-header-hero-verse.urdu {
+  font-family: var(--urdu);
+  font-size: var(--fs-urdu-lg, 26px);
+  line-height: 2.1;
+  direction: rtl;
+}
+.reader-header-hero-verse.deva {
+  font-family: var(--deva);
+  font-size: var(--fs-deva, 20px);
+  line-height: 1.6;
+}
+.reader-header-hero-verse.roman {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 17.5px;
+  line-height: 1.5;
+}
+.reader-header-pattern {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.reader-header-tech {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--dim);
+  opacity: 0.85;
+  margin-top: 2px;
+}
+@media (max-width: 767px) {
+  .reader-header-comp.reader-benchmark-card {
+    padding: var(--sp-3) var(--sp-3);
+    max-width: none;
+    width: 100%;
+  }
+}
 .reader-intro-note { margin: var(--sp-4) 0; max-width: 640px; margin-left: auto; margin-right: auto; }
 .reader-actions {
   display: flex; justify-content: center; gap: var(--sp-6);
@@ -1834,7 +2041,7 @@ a.hb-ref:hover { color: var(--ink); }
 .corpus-meta { margin-top: var(--sp-1); font-family: var(--sans); }
 .corpus-stat-line { margin: var(--sp-2) 0 0; }
 .flex-pair + .flex-pair { margin-top: var(--sp-7, 48px); }
-.flex-pair-word { font-size: 40px; line-height: 1.4; text-align: center; }
+.flex-pair-word { font-size: 40px; line-height: 1.4; text-align: center; margin-bottom: var(--sp-3); }
 
 /* Weight › Learn › "Special cases": several single-reading examples side by side */
 /* each word is one centred column: the word, its Roman, the weight bars, then the ▶ */
@@ -2690,6 +2897,7 @@ html[data-script="ro"] .pr-line, html[data-script="hi"] .pr-line { font-family: 
         <p><strong class="weight-term">Word endings can bend too.</strong> Inside longer words, flexibility is almost always at the end. A final two-letter syllable ending in ی, ے or ہ is nearly always flexible; one ending in و or alif often is (more in Indic verb forms than in Persian or Arabic words). Exceptions in the middle of a word are rare (<em>koī</em> = x x). As a rule of thumb, treat every final consonant + vowel (or consonant + h) syllable as flexible until the meter says otherwise.</p>
         <a class="hb-ref" data-rule="F2.2-final-ii-e-h" href="https://franpritchett.com/00ghalib/meterbk/02_flexibility.html#2_2" target="_blank" rel="noopener">Handbook §2.2 &#8599;</a>
       </div>
+      <div id="koiVerses"></div>
       <div class="card small" data-rule-card>
         <p><strong class="weight-term">Words that can split two ways.</strong> Some consonant-heavy words may be divided in two ways: <em>barhaman</em> (= – =) or (– = =); <em>barkat</em> (= =) or, in the older Arabic reading, (– – =).</p>
         <a class="hb-ref" data-rule="F2.3-alternate-split" href="https://franpritchett.com/00ghalib/meterbk/02_flexibility.html#2_3" target="_blank" rel="noopener">Handbook §2.3 &#8599;</a>
@@ -2857,7 +3065,7 @@ html[data-script="ro"] .pr-line, html[data-script="hi"] .pr-line { font-family: 
     <div class="eyebrow" id="ghazalEyebrow">Handbook · 24 ghazals</div>
     <h1 class="page-title sr-only">Ghazals</h1>
     <!-- One search for the whole tab: it covers every collection -->
-    <input type="search" id="ghazalSearchInput" class="ghazal-search-input" aria-label="Search all ghazals" autocomplete="off" oninput="onGhazalSearch()">
+    <input type="search" id="ghazalSearchInput" class="ghazal-search-input" aria-label="Search all ghazals" placeholder="Search ghazals or verses across all poets…" autocomplete="off" oninput="onGhazalSearch()">
     <div class="tiny dim col-filter-label" id="colFilterLabel" hidden>Showing matches from all collections. Pick one to narrow them.</div>
     <!-- Collection segmented control -->
     <div class="subtabs seg" role="tablist" aria-label="Collections">
@@ -2867,7 +3075,7 @@ html[data-script="ro"] .pr-line, html[data-script="hi"] .pr-line { font-family: 
       <button class="seg-btn" id="colBtnPoets" aria-haspopup="true" aria-expanded="false" aria-controls="poetPicker" onclick="togglePoetPicker()">Poets ▾</button>
     </div>
     <div id="poetPicker" class="poet-picker hidden">
-      <input type="search" id="poetPickerFilter" class="poet-picker-filter" aria-label="Find a poet" autocomplete="off" oninput="renderPoetPickerList()">
+      <input type="search" id="poetPickerFilter" class="poet-picker-filter" aria-label="Find a poet" placeholder="Filter poets by name…" autocomplete="off" oninput="renderPoetPickerList()">
       <div id="poetPickerList" class="poet-picker-list"></div>
     </div>
     <div id="colDesc" class="dim ghazal-desc">The handbook's exercise ghazals, with Frances Pritchett's notes. <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/10_ex_01_06.html" target="_blank" rel="noopener">Her exercises<span class="ext">↗</span></a> · <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/11_exnotes.html" target="_blank" rel="noopener">answers &amp; notes<span class="ext">↗</span></a></div>
@@ -4566,6 +4774,18 @@ function wordRomanMap(lineObj,r){
   const spaceTokens=lineObj.ro.trim().split(/\s+/);
   const romanTokens=[];
   for(const tok of spaceTokens){
+    if (/^(al|ul|il)-/i.test(tok)) {
+      const rest = tok.slice(3).split(/-/);
+      let cur = tok.slice(0, 3) + rest[0];
+      for(let pi=1; pi<rest.length; pi++){
+        const piece = rest[pi];
+        const isIzafat = /^[aeiouāīūēōâîûêô]{1,2}$/.test(piece);
+        if(isIzafat){ cur += '-' + piece; }
+        else { romanTokens.push(cur); cur = piece; }
+      }
+      romanTokens.push(cur);
+      continue;
+    }
     const parts=tok.split(/-/);
     if(parts.length<=1){ romanTokens.push(tok); continue; }
     let cur=parts[0];
@@ -5810,14 +6030,126 @@ window.searchGhazalIndex = searchGhazalIndex;
    the reader header's "Same bahr as …" reference line. Reads the FAMS/
    famOfMeter globals (owned by the Player & Meter agent's data file) but
    doesn't modify them. */
-function meterFamousLine(mId) {
-  if (!mId || typeof famOfMeter === 'undefined') return null;
-  const fam = famOfMeter[Number(mId)] || famOfMeter[String(mId)];
-  if (!fam || !fam.gz || !fam.gz[0]) return null;
-  const g = fam.gz[0];
+function poetPossessive(poet) {
+  if (!poet) return '';
+  const p = poet.trim();
+  if (/s$/i.test(p)) return `${p}'`;
+  return `${p}'s`;
+}
+
+const EXTENDED_METER_BENCHMARKS = {
+  faiz: {
+    33: { p: 'Faiz', ur: 'گلوں میں رنگ بھرے باد نوبہار چلے', ro: 'guloñ meñ rang bhare bād-e-naubahār chale', hi: 'गुलों में रंग भरे बाद-ए-नौबहार चले', ref: 'Faiz 3' },
+    34: { p: 'Faiz', ur: 'گلوں میں رنگ بھرے باد نوبہار چلے', ro: 'guloñ meñ rang bhare bād-e-naubahār chale', hi: 'गुलों में रंग भरे बाद-ए-नौबहार चले', ref: 'Faiz 3' },
+    18: { p: 'Faiz', ur: 'دل میں اب یوں ترے بھولے ہوئے غم آتے ہیں', ro: 'dil meñ ab yūñ tire bhūle hue ġham aate haiñ', hi: 'दिल में अब यूँ तिरे भूले हुए ग़म आते हैं', ref: 'Faiz 12' },
+    19: { p: 'Faiz', ur: 'دل میں اب یوں ترے بھولے ہوئے غم آتے ہیں', ro: 'dil meñ ab yūñ tire bhūle hue ġham aate haiñ', hi: 'दिल में अब यूँ तिरे भूले हुए ग़म आते हैं', ref: 'Faiz 12' },
+    14: { p: 'Faiz', ur: 'آئے کچھ ابر کچھ شراب آئے', ro: 'ā.e kuchh abr kuchh sharāb ā.e', hi: 'आए कुछ अब्र कुछ شراب आए', ref: 'Faiz 2' },
+    15: { p: 'Faiz', ur: 'آئے کچھ ابر کچھ شراب آئے', ro: 'ā.e kuchh abr kuchh sharāb ā.e', hi: 'आए कुछ अब्र कुछ شراب आए', ref: 'Faiz 2' }
+  },
+  iqbal: {
+    14: { p: 'Iqbal', ur: 'ستاروں سے آگے جہاں اور بھی ہیں', ro: 'sitāroñ se aage jahāñ aur bhī haiñ', hi: 'सितारों से आगे जहाँ और भी हैं', ref: 'Iqbal 2' },
+    15: { p: 'Iqbal', ur: 'ستاروں سے آگے جہاں اور بھی ہیں', ro: 'sitāroñ se aage jahāñ aur bhī haiñ', hi: 'सितारों से आगे जहाँ और भी हैं', ref: 'Iqbal 2' },
+    26: { p: 'Iqbal', ur: 'لب پہ آتی ہے دعا بن کے تمنا میری', ro: 'lab pe aatī hai duʿā ban ke tamannā merī', hi: 'लब पे आती है दुआ बन के तमन्ना मेरी', ref: 'Iqbal' },
+    33: { p: 'Iqbal', ur: 'کبھی اے حقیقتِ منتظر نظر آ لباسِ مجاز میں', ro: 'kabhī ai ḥaqīqat-e-muntaz̤ar nazar ā libās-e-majāz meñ', hi: 'कभी ऐ हक़ीक़त-ए-मुंतज़र नज़र आ लिबास-ए-मजाज़ में', ref: 'Iqbal' },
+    34: { p: 'Iqbal', ur: 'کبھی اے حقیقتِ منتظر نظر آ لباسِ مجاز میں', ro: 'kabhī ai ḥaqīqat-e-muntaz̤ar nazar ā libās-e-majāz meñ', hi: 'कभी ऐ हक़ीक़त-ए-मुंतज़र नज़र आ लिबास-ए-मजाज़ में', ref: 'Iqbal' }
+  },
+  faraz: {
+    33: { p: 'Faraz', ur: 'رنجش ہی سہی دل ہی دکھانے کے لیے آ', ro: 'ranjish hī sahī dil hī dukhāne ke liye ā', hi: 'रंजिश ہی सही दिल ही दुखाने के लिए आ', ref: 'Faraz 3' },
+    34: { p: 'Faraz', ur: 'رنجش ہی سہی دل ہی دکھانے کے لیے آ', ro: 'ranjish hī sahī dil hī dukhāne ke liye ā', hi: 'रंजिश ہی सही दिल ही दुखाने के लिए आ', ref: 'Faraz 3' },
+    18: { p: 'Faraz', ur: 'سنا ہے لوگ اسے آنکھ بھر کے دیکھتے ہیں', ro: 'sunā hai log use āñkh bhar ke dekhte haiñ', hi: 'सुना है लोग उसे आँख भर के देखते हैं', ref: 'Faraz 1' },
+    19: { p: 'Faraz', ur: 'سنا ہے لوگ اسے آنکھ بھر کے دیکھتے ہیں', ro: 'sunā hai log use āñkh bhar ke dekhte haiñ', hi: 'सुना है लोग उसे आँख भर के देखते हैं', ref: 'Faraz 1' },
+    14: { p: 'Faraz', ur: 'سلسلے توڑ گیا وہ سبھی جاتے جاتے', ro: 'silsile toḌ gayā vo sabhī jaate jaate', hi: 'सिलसिले तोड़ गया वो सभी जाते जाते', ref: 'Faraz 2' },
+    15: { p: 'Faraz', ur: 'سلسلے توڑ گیا وہ سبھی جاتے جاتے', ro: 'silsile toḌ gayā vo sabhī jaate jaate', hi: 'सिलसिले तोड़ गया वो सभी जाते जाते', ref: 'Faraz 2' }
+  },
+  parveen: {
+    14: { p: 'Parveen Shakir', ur: 'کو بہ کو پھیل گئی بات شناسائی کی', ro: 'kū-bah-kū phail ga.ī baat shanāsā.ī kī', hi: 'कू-ब-कू फैल गई बात शनासाई की', ref: 'Parveen 1' },
+    15: { p: 'Parveen Shakir', ur: 'کو بہ کو پھیل گئی بات شناسائی کی', ro: 'kū-bah-kū phail ga.ī baat shanāsā.ī kī', hi: 'कू-ब-कू फैल गई बात शनासाई की', ref: 'Parveen 1' },
+    18: { p: 'Parveen Shakir', ur: 'وہ تو خوشبو ہے ہواؤں میں بکھر جائے گا', ro: 'vo to ḳhushbū hai havāoñ meñ bikhar jā.egā', hi: 'वो तो ख़ुशबू है हवाओं में बिखर जाएगा', ref: 'Parveen 3' },
+    19: { p: 'Parveen Shakir', ur: 'وہ تو خوشبو ہے ہواؤں میں بکھر جائے گا', ro: 'vo to ḳhushbū hai havāoñ meñ bikhar jā.egā', hi: 'वो तो ख़ुशबू है हवाओं में बिखर जाएगा', ref: 'Parveen 3' }
+  },
+  jaun: {
+    33: { p: 'Jaun Elia', ur: 'شاید مجھے کسی سے محبت نہیں ہوئی', ro: 'shāyad mujhe kisī se maḥabbat nahīñ huī', hi: 'शायद मुझे किसी से मोहब्बत नहीं हुई', ref: 'Jaun 3' },
+    34: { p: 'Jaun Elia', ur: 'شاید مجھے کسی سے محبت نہیں ہوئی', ro: 'shāyad mujhe kisī se maḥabbat nahīñ huī', hi: 'शायद मुझे किसी से मोहब्बत नहीं हुई', ref: 'Jaun 3' },
+    14: { p: 'Jaun Elia', ur: 'بے قراری سی بے قراری ہے', ro: 'be-qarārī sī be-qarārī hai', hi: 'बे-क़रारी सी बे-क़रारी है', ref: 'Jaun 1' },
+    15: { p: 'Jaun Elia', ur: 'بے قراری سی بے قراری ہے', ro: 'be-qarārī sī be-qarārī hai', hi: 'बे-क़रारी सी बे-क़रारी है', ref: 'Jaun 1' }
+  }
+};
+
+function meterFamousLine(mId, item) {
+  if (!mId) return null;
+  const numId = Number(mId);
+  const fam = (typeof famOfMeter !== 'undefined') ? (famOfMeter[numId] || famOfMeter[String(mId)]) : null;
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
-  const text = (typeof getLineDisplay === 'function') ? getLineDisplay(g, cs) : (g[cs] || g.ur || '');
-  return text ? { text, poet: g.p || '' } : null;
+
+  const curCol = (typeof activeCollection !== 'undefined') ? activeCollection : '';
+  const curPoet = (item && item.poet) || (curCol && typeof COL_NAMES !== 'undefined' && COL_NAMES[curCol]) || '';
+  const poetKey = curPoet.toLowerCase();
+
+  // 1. Check extended modern poet benchmark
+  const pMap = (poetKey && EXTENDED_METER_BENCHMARKS[poetKey]) || (curCol && EXTENDED_METER_BENCHMARKS[curCol]);
+  if (pMap && pMap[numId]) {
+    const pEntry = pMap[numId];
+    const text = (typeof getLineDisplay === 'function') ? getLineDisplay(pEntry, cs) : (pEntry[cs] || pEntry.ur || '');
+    if (text) return { text, poet: pEntry.p || '', ref: pEntry.ref || '' };
+  }
+
+  // 2. Check if famOfMeter contains an entry for this poet
+  if (fam && fam.gz && fam.gz.length) {
+    if (poetKey) {
+      const match = fam.gz.find(x => x.p && x.p.toLowerCase().includes(poetKey));
+      if (match) {
+        const text = (typeof getLineDisplay === 'function') ? getLineDisplay(match, cs) : (match[cs] || match.ur || '');
+        return text ? { text, poet: match.p || '', ref: match.ref || '' } : null;
+      }
+    }
+  }
+
+  // 3. Balanced Cross-Poet Mix-and-Match:
+  if (fam && fam.gz && fam.gz.length) {
+    let chosen = null;
+    // Meter 14/15: if reading Ghalib, use Ghalib (Dil-e nadan). Otherwise, Mir's immortal "Hasti apni hubab ki si hai" (fam.gz[4])
+    if ((numId === 14 || numId === 15) && fam.gz[4]) {
+      chosen = (poetKey === 'ghalib' || curCol === 'ghalib') ? fam.gz[0] : fam.gz[4];
+    }
+    // Meter 18/19: if reading Ghalib, Atish's "Hasrat-e jalvah-e didar" (fam.gz[1]) so Ghalib doesn't cite Ghalib!
+    else if ((numId === 18 || numId === 19) && fam.gz[1]) {
+      chosen = (poetKey === 'ghalib' || curCol === 'ghalib') ? fam.gz[1] : fam.gz[0];
+    }
+    // Meter 33/34: if reading Ghalib, Atish's "Yih aarzu thii" (fam.gz[2]) so Ghalib doesn't cite Ghalib! Otherwise Faiz or Ghalib
+    else if ((numId === 33 || numId === 34)) {
+      if (poetKey === 'ghalib' || curCol === 'ghalib') {
+        chosen = fam.gz[2] || fam.gz[0];
+      } else if (EXTENDED_METER_BENCHMARKS.faiz && EXTENDED_METER_BENCHMARKS.faiz[33]) {
+        const fz = EXTENDED_METER_BENCHMARKS.faiz[33];
+        const text = (typeof getLineDisplay === 'function') ? getLineDisplay(fz, cs) : (fz[cs] || fz.ur || '');
+        return { text, poet: fz.p, ref: fz.ref };
+      }
+    }
+    // Meter 5: if reading Ghalib, Zauq's "Laii hayat aae qaza" (fam.gz[1]) so Ghalib doesn't cite Ghalib!
+    else if (numId === 5 && fam.gz[1]) {
+      chosen = (poetKey === 'ghalib' || curCol === 'ghalib') ? fam.gz[1] : fam.gz[0];
+    }
+    // Meter 10: if reading Ghalib, Jur'at's "Baal suljhaanaa" (fam.gz[2]) so Ghalib doesn't cite Ghalib!
+    else if (numId === 10 && fam.gz[2]) {
+      chosen = (poetKey === 'ghalib' || curCol === 'ghalib') ? fam.gz[2] : fam.gz[0];
+    }
+    // Meter 11: Mir Dard's "Tuhmaten chand" (fam.gz[1])
+    else if (numId === 11 && fam.gz[1]) {
+      chosen = fam.gz[1];
+    }
+    // Meter 26: if reading Ghalib, Vali's "Kiyaa mujh ishq ne" (fam.gz[1])
+    else if (numId === 26 && fam.gz[1]) {
+      chosen = (poetKey === 'ghalib' || curCol === 'ghalib') ? fam.gz[1] : fam.gz[0];
+    }
+
+    if (!chosen) chosen = fam.gz[0];
+    if (chosen) {
+      const text = (typeof getLineDisplay === 'function') ? getLineDisplay(chosen, cs) : (chosen[cs] || chosen.ur || '');
+      return text ? { text, poet: chosen.p || '', ref: chosen.ref || '' } : null;
+    }
+  }
+
+  return null;
 }
 
 /* PB-compatible "line" for a bare pattern string (no verse) — lets the
@@ -5851,28 +6183,105 @@ window.toggleReaderPatternPlay = toggleReaderPatternPlay;
    via renderMeterLabel() (18b-meter-label.js) because that component shows
    the famous misra as the PRIMARY line, which reads as though it were this
    ghazal's own first line. */
-function renderGhazalReaderHeader(mId) {
+function patEnding(raw){
+  if(!raw) return '';
+  const parts = String(raw).split('/');
+  return parts[parts.length - 1].trim();
+}
+
+function renderGhazalReaderHeader(mId, item) {
   if (!mId) return '';
   const info = (typeof meterLabelInfo === 'function') ? meterLabelInfo(mId) : null;
   if (!info) return '';
+  const pairGroup = (item && item.meters && item.meters.length > 1)
+    ? item.meters
+    : (typeof SCAN_PAIRS !== 'undefined' ? (SCAN_PAIRS.find(p => p.includes(Number(mId))) || null) : null);
+  const isPair = !!pairGroup;
+  const pairTip = 'Classic paired meters: In Classical Urdu prosody, these variation endings can be freely alternated within the same poem without breaking meter. (Handbook \u00a76.1)';
+  const pairPill = isPair ? ` <span class="pair-bahr-pill" tabindex="0" data-tip="${pairTip}">Paired Bahr</span>` : '';
   const canPlay = !!info.pattern;
-  const patternHtml = (info.pattern && typeof feetStrip === 'function') ? feetStrip(info.pattern) : '';
-  const numHtml = `<span class="mono">${escapeHtml(info.number)}</span>`;
-  const titleHtml = info.name ? `${numHtml} · ${escapeHtml(info.name)}` : numHtml;
-  const famous = meterFamousLine(mId);
+  let patternHtml = (info.pattern && typeof feetStrip === 'function') ? feetStrip(info.pattern) : '';
+  if (isPair && pairGroup && pairGroup.length === 2 && typeof Scan !== 'undefined' && Scan.METERS) {
+    const m1 = Scan.METERS.find(x => x.id === pairGroup[0]);
+    const m2 = Scan.METERS.find(x => x.id === pairGroup[1]);
+    const r1 = m1 ? (m1.raw || m1.pattern) : '';
+    const r2 = m2 ? (m2.raw || m2.pattern) : '';
+    if (r1 && r2 && typeof Scan.patternFeet === 'function') {
+      const p1 = Scan.patternFeet(r1);
+      const p2 = Scan.patternFeet(r2);
+      if (p1.length === p2.length && p1.length > 0) {
+        const lastIdx = p1.length - 1;
+        const f1L = p1[lastIdx];
+        const f2L = p2[lastIdx];
+        if (f1L.pat !== f2L.pat && typeof strip === 'function') {
+          const altToks = strip(f2L.toks);
+          const altFn = (f2L.ro && f2L.ro.length) ? ` <span class="alt-fn">(or ${f2L.ro.join('·')})</span>` : '';
+          const feetHtml = p1.map((f, i) => {
+            if (i === lastIdx) {
+              return `${f.caeBefore ? '<span class="cae">//</span>' : ''}<span class="fbox"><span class="strip tight">${strip(f.toks)} <span class="alt-or faint">(or <span class="alt-strip">${altToks}</span>)</span></span><span class="fn">${f.ro.join('·')}${altFn}</span></span>`;
+            }
+            return `${f.caeBefore ? '<span class="cae">//</span>' : ''}<span class="fbox"><span class="strip tight">${strip(f.toks)}</span><span class="fn">${f.ro.join('·')}</span></span>`;
+          }).join('');
+          patternHtml = `<div class="fstrip">${feetHtml}</div>`;
+        }
+      }
+    }
+  }
+  const numLabel = isPair ? ('Meter #' + pairGroup.join(' / #')) : info.number;
+  const numHtml = `<span class="mono reader-header-mnum">${escapeHtml(numLabel)}</span>`;
+  const famous = meterFamousLine(mId, item);
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
+  const langDir = (typeof getLangDir === 'function') ? getLangDir(cs) : '';
   const misraScriptCls = cs === 'ur' ? 'urdu' : (cs === 'hi' ? 'deva' : 'roman');
-  const refHtml = famous
-    ? `<div class="reader-header-ref faint small">Same bahr as <span class="reader-header-misra ${misraScriptCls}">${escapeHtml(famous.text)}</span>${famous.poet ? ' – ' + escapeHtml(famous.poet) : ''}</div>`
+
+  let isSelf = false;
+  if (famous && item) {
+    const mRef = famous.ref ? famous.ref.match(/^([A-Za-z]+)\s+(\d+)$/) : null;
+    const curCol = (typeof activeCollection !== 'undefined') ? activeCollection : '';
+    if (mRef && item.id != null) {
+      const refPoet = mRef[1].toLowerCase();
+      const refNum = parseInt(mRef[2], 10);
+      const itemNum = parseInt(item.id, 10);
+      if (itemNum === refNum && (curCol === refPoet || (item.poet && item.poet.toLowerCase().includes(refPoet)))) {
+        isSelf = true;
+      }
+    }
+    if (!isSelf && item.lines && item.lines[0] && famous.text && typeof searchNorm === 'function') {
+      const l1 = item.lines[0];
+      const famNorm = searchNorm(famous.text);
+      if (famNorm && (
+        (l1.ur && searchNorm(l1.ur) === famNorm) ||
+        (l1.ro && searchNorm(l1.ro) === famNorm) ||
+        (l1.ascii && searchNorm(l1.ascii) === famNorm)
+      )) {
+        isSelf = true;
+      }
+    }
+  }
+
+  let introHtml = '';
+  if (famous) {
+    const introLabel = isSelf ? 'Signature verse for this bahr:' : `Same bahr as ${poetPossessive(famous.poet)}:`;
+    introHtml = `<span class="reader-header-intro dim"> · ${escapeHtml(introLabel)}</span>`;
+  }
+
+  const heroVerseHtml = famous
+    ? `<div class="reader-header-hero-verse reader-header-misra ${misraScriptCls}" ${langDir}>${escapeHtml(famous.text)}</div>`
     : '';
+
+  const techHtml = info.name
+    ? `<div class="reader-header-tech faint tiny">${escapeHtml(info.name)}</div>`
+    : '';
+
   return `
-    <div class="reader-header-comp">
-      <div class="row reader-header-title-row">
+    <div class="reader-header-comp reader-benchmark-card">
+      <div class="row reader-header-top-row">
         ${canPlay ? `<span class="play sm" role="button" tabindex="0" data-label="Play meter pattern" aria-label="Play meter pattern" onclick="toggleReaderPatternPlay('${info.id}', this)">▶︎</span>` : ''}
-        <span class="reader-header-title">${titleHtml}</span>
+        ${numHtml}${pairPill}${introHtml}
       </div>
+      ${heroVerseHtml}
       <div class="reader-header-pattern">${patternHtml}</div>
-      ${refHtml}
+      ${techHtml}
     </div>
   `;
 }
@@ -6338,16 +6747,16 @@ function renderUniversalSearchResults(q) {
     const l1 = item.lines && item.lines[0];
     const disp1 = l1 ? ((typeof getLineDisplay === 'function') ? getLineDisplay(l1, cs) : (l1[cs] || l1.ur)) : '';
     const who = (col === 'handbook' || isPoetCol(col)) ? (item.poet || colNames[col]) : colNames[col];
+    const isHb = (col === 'handbook');
+    const metaHtml = isHb
+      ? `<div class="vmeta"><span class="search-result-col">Handbook</span><span>·</span><span>${escapeHtml(who)}</span></div>`
+      : '';
     return `
       <div class="vrow" role="link" tabindex="0" onclick="navigate('/ghazals/${col}/${item.id}')">
         <span class="vnum">${col === 'handbook' ? escapeHtml(getGhazalNavLabel(col, item)) : isPoetCol(col) ? rekhtaLinkHTML(item) : franLinkHTML(col, item)}</span>
         <div class="vtext">
           <div class="vline" ${langDir}>${disp1}</div>
-          <div class="vmeta">
-            <span class="search-result-col">${colNames[col]}</span>
-            <span>·</span>
-            <span>${escapeHtml(who)}</span>
-          </div>
+          ${metaHtml}
         </div>
         <div class="vact"><span class="chevron">›</span></div>
       </div>
@@ -6534,7 +6943,7 @@ function openGhazalReader(col, id) {
 
   const mId = mListOf(item)[0];
   const rHeader = $('readerHeader');
-  if (rHeader) rHeader.innerHTML = renderGhazalReaderHeader(mId);
+  if (rHeader) rHeader.innerHTML = renderGhazalReaderHeader(mId, item);
 
   // Intro note (Handbook only per §5.8)
   const introDiv = $('readerIntroNote');
@@ -6567,6 +6976,9 @@ function openGhazalReader(col, id) {
     ${(typeof legendHTML === 'function') ? legendHTML('legend-sticky') : ''}
   `;
 
+  const readerMeters = mListOf(item);
+  const isPairGh = (readerMeters && readerMeters.length > 1 && typeof SCAN_PAIRS !== 'undefined' && SCAN_PAIRS.some(p => readerMeters.every(m => p.includes(Number(m)))));
+
   for (let c = 0; c < cCount; c++) {
     const l1 = lines[2 * c];
     const l2 = lines[2 * c + 1];
@@ -6576,10 +6988,28 @@ function openGhazalReader(col, id) {
     const disp2 = (typeof getLineDisplay === 'function') ? getLineDisplay(l2, cs) : (l2[cs] || l2.ur);
     const vNote = (col === 'handbook' && item.notes && item.notes.verses && item.notes.verses[vNum]) ? item.notes.verses[vNum] : '';
 
+    let pairBadge = '';
+    if (isPairGh && typeof Scan !== 'undefined' && typeof lineScanText === 'function') {
+      const r1 = Scan.scanLine(lineScanText(l1));
+      const r2 = Scan.scanLine(lineScanText(l2));
+      const f1 = (r1 && r1.fits) ? (r1.fits.find(f => readerMeters.includes(f.meter.id)) || r1.fits[0]) : null;
+      const f2 = (r2 && r2.fits) ? (r2.fits.find(f => readerMeters.includes(f.meter.id)) || r2.fits[0]) : null;
+      if (f1 && f2 && f1.meter.id !== f2.meter.id) {
+        const e1 = (typeof patEnding === 'function') ? patEnding(f1.meter.raw || f1.meter.pattern) : '';
+        const e2 = (typeof patEnding === 'function') ? patEnding(f2.meter.raw || f2.meter.pattern) : '';
+        const tip = `Misra 1 uses Meter #${f1.meter.id} (${e1}), Misra 2 uses Meter #${f2.meter.id} (${e2}). In Classical Urdu prosody, these alternating cadences form an accepted paired meter (Handbook \u00a76.1).`;
+        pairBadge = ` <span class="pair-bahr-pill sm" tabindex="0" data-tip="${tip}">Paired · #${f1.meter.id} &amp; #${f2.meter.id}</span>`;
+      } else if (f1) {
+        const e1 = (typeof patEnding === 'function') ? patEnding(f1.meter.raw || f1.meter.pattern) : '';
+        const tip = `Both misras in this couplet use Meter #${f1.meter.id} (${e1}).`;
+        pairBadge = ` <span class="pair-bahr-pill sm faint-pair" tabindex="0" data-tip="${tip}">Meter #${f1.meter.id}</span>`;
+      }
+    }
+
     cHtml += `
       <div class="card couplet-card">
         <div class="row couplet-head">
-          <span class="vnum">Couplet ${vNum}</span>
+          <div class="row couplet-head-left"><span class="vnum">Couplet ${vNum}</span>${pairBadge}</div>
           <div class="row couplet-acts">
             <span class="play sm" role="button" tabindex="0" aria-label="Play couplet" data-label="Play couplet" data-pb="reader:${c}" onclick="playReaderCoupletByIndex(${c}, null, this)">▶︎</span>
             ${practiceLineBtn(l1, l2, item)}
@@ -6652,8 +7082,8 @@ window.openGhazalReader = openGhazalReader;
 function practiceLineBtn(l1, l2, item) {
   if (typeof prPracticable !== 'function') return '';
   const m = (typeof drMetersOf === 'function' && item) ? drMetersOf(item)[0] : null;   // the ghazal's own baḥr
-  const ur = [l1, l2].map(l => l && l.ur).find(u => u && prPracticable(u, m));
-  return ur ? `<a class="btn ghost sm" href="${prLinkFor(ur, m)}" title="Tap this line's rhythm yourself">Practice</a>` : '';
+  const l = [l1, l2].find(x => x && x.ur && prPracticable(x.ur, m));
+  return l ? `<a class="btn ghost sm" href="${prLinkFor(l.ur, m, l.ro)}" title="Tap this line's rhythm yourself">Practice</a>` : '';
 }
 
 function closeGhazalReader() {
@@ -6850,10 +7280,20 @@ function renderDictionary() {
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
   const q = currentDictQuery.toLowerCase().trim();
 
+const INDIC_GLOSSARY_WORDS = new Set([
+  'aap hii', 'aaphii', 'aapii', 'u;Thaa', 'u;T;Thaa', 'idhar', 'iidhar', 'anjhuu', 'aur', 'bachchah', 'bachah', 'bahut', 'bhii', 'bhiitar', 'bhitar', 'byaah', 'byopaar', 'paa))o;N', 'paa;Nv', 'pachchiis', 'pachiis', 'priit', 'pret', 'prem', 'pakaa', 'pakkaa', 'pah', 'pahu;Nchnaa', 'po;Nchnaa', 'pahu;Nchaa', 'phuvaar', 'phuuhaar', 'phvaar', 'pyaar', 'pyaalah', 'tak', 'talak', 'tumhaaraa', 'to', 'tuu', 'thaa', 'tahah', 'ta))ii;N', 'teraa', 'tiraa', 'tevrii', 'tyuu;N', 'jidhar', 'jiidhar', 'jagah', 'jaagah', 'jo', 'juvaa', 'juvva', 'jvaar', 'jii', 'jyuu;N', 'chakhaa', 'chakkhaa', 'chuuhiyaa', 'chuhiyaa', 'chyuun;Tii', 'dukaan', 'duukaan', 'dukkaan', 'dulhan', 'duulhan', 'dupa;T;Tah', 'dopa;T;Tah', 'doraahaa', 'duulhaa', 'duulah', 'duu))ii', 'dhyaan', 'rakhaa', 'rakkhaa', 'saa', 'saajan', 'sajan', 'sarhaanaa', 'so', 'sau', 'suu', 'svaa;Ng', 'saa;Ng', 'suvar', 'suuraaj', 'svaraaj', 'se', 'shakar', 'shakkar', 'krishn', 'kaa', 'ko', 'ko))ii', "kah'h", 'kho))e', 'kahiye', 'kii', 'ke', 'kyaa', 'kiyaarii', 'kyaarii', 'kyuu;N', 'garhan', 'gahan', 'guuruu', 'guruu', 'ga))e', 'gyaan', 'likhaa', 'likkhaa', 'lohaar', 'luhaar', 'lek', 'maarg', 'muvaa', 'muu))ii', 'muu))e', 'muu;Nhah', 'miyaa;N', 'myaa;N', 'meraa', 'miraa', 'me;N', 'mai;N', 'naa))o', 'naav', 'nibaahnaa', 'nibhaanaa', 'nadii', 'naddii', 'nanhaa', 'nau', 'nah', 'nai', 'ne', 'vahaa;N', 'vaa;N', 'haa))e', 'hai', 'ho', 'huu))aa', 'huu))e', 'huu))ii', 'huu))ii;N', 'ho;N', 'huu;N', 'hii', 'hai;N', 'yahaa;N', 'yaa;N', 'yuu;N', 'ye'
+]);
+
+const PERSIAN_GLOSSARY_WORDS = new Set([
+  'aa;xir', 'aa;xiir', 'a;xiir', 'az', 'z', 'asharfii', 'ashrafii', 'aashkaar', 'aashkaaraa', 'aashiyaanah', 'aashiyaa;N', 'aagaah', 'aagah', 'ummiid', 'umiid', 'aa))iinah', 'aa))inah', 'yak', 'barhaman', 'barahman', 'barahnah', 'barhanah', 'buustaan', 'bustaan', 'bah', 'bayak', 'parvaa', 'parvaah', 'panaah', 'panah', 'pairaahan', 'pairahan', 'payaam', 'pai;Gaam', 'payambar', 'pai;Gambar', 'peshvaaz', 'pishvaaz', 'taa', 'tanuur', 'tannuur', 'tanduur', 'juzv', 'juz', ';xaamoshii', ';xamoshii', ';xaamushii', ';xi.zr', ';xi.zir', ';xa:trah', ';xa:tar', ';xvaam;xvaah', ';xvaahish', ';xvud', ';xvushii', 'daaman', 'daamaan', 'du;xtar', 'du;xt', 'do', 'dobaarah', 'dozaanuu', 'dogaanaa', 'dahan', 'dahaan', 'dahanah', 'diigar', 'digar', 'diivaanah', 'divaanah', 'raastah', 'rastah', 'raah', 'rah', 'ru;xsaar', 'ru;xsaarah', 'ruubah', 'ruubaah', 'rahguz;ar', 'raahguz;ar', 'rahguz;aar', 'raahguz;aar', 'zinhaar', 'ziinhaar', 'sih', 'sii', 'siyaah', 'siyah', 'shaah', 'shah', 'shubahah', 'shutur', 'ushtur', 'sharaar', 'sharar', 'sharaarah', 'firang', 'afrang', 'fuzuu;N', 'afzuu;N', 'fasaanah', 'afsaanah', 'fusurdah', 'afsurdah', 'fusuu;N', 'afsuu;N', 'fi;Gaa;N', 'af;Gaa;N', 'figaar', 'afgaar', 'fulaa;N', 'falaanaa', 'kaasah', 'kaas', 'kinaarah', 'kinaar', 'kih', 'gaah', 'gah', 'gar', 'agar', 'garchah', 'agarchah', 'gursanah', 'gurasnah', 'gulsitaa;N', 'gunaah', 'gunah', 'go', 'gauhar', 'guhar', 'laash', 'laashah', 'lekin', 'maah', 'mah', 'mihmaan', 'miinaar', 'minaar', 'naa;xuun', 'naa;xun', 'naagaah', 'naagahah', 'nashtar', 'neshtar', 'nigaah', 'nigah', 'naushah', 'naushaah', 'nayastaa;N', 'naisitaa;N', 'varnah', 'vagarnah', 'vuh', 'vai', 'hoshyaar', 'hushyaar', 'yaa', 'yuurish', 'yih'
+]);
+
   const filtered = GLOSSARY_DATA.filter(item => {
+    const isIndic = INDIC_GLOSSARY_WORDS.has(item.ascii) || (item.mean && item.mean.toLowerCase().includes('indic'));
+    const isPersian = PERSIAN_GLOSSARY_WORDS.has(item.ascii) || (item.mean && item.mean.toLowerCase().includes('pers'));
     if (currentDictTag === 'flex' && !item.wt.includes('x')) return false;
-    if (currentDictTag === 'persian' && !item.mean.toLowerCase().includes('pers')) return false;
-    if (currentDictTag === 'indic' && !item.mean.toLowerCase().includes('indic')) return false;
+    if (currentDictTag === 'persian' && !isPersian) return false;
+    if (currentDictTag === 'indic' && !isIndic) return false;
     if (!q) return true;
     const sylMatch = item.syl && item.syl.toLowerCase().includes(q);
     const asciiMatch = item.ascii && item.ascii.toLowerCase().includes(q);
@@ -8704,9 +9144,9 @@ function patGlyphs(raw){
 const LEGEND_ITEMS = [
   { rule: 'S1.5-weight', tip: "A long syllable: two letters. Shown as a solid underline or =. Sung 'dum' in this app.", body: `<i class="sw c-l"></i><span class="lg-or">/</span><span class="pg l">=</span> long <span class="lg-note">(dum)</span>` },
   { rule: 'S1.5-weight', tip: "A short syllable: one letter. Shown as a dotted underline or \u2013. Sung 'da' in this app.", body: `<i class="sw c-s"></i><span class="lg-or">/</span><span class="pg s">\u2013</span> short <span class="lg-note">(da)</span>` },
-  { rule: 'F2.1-listed-monosyllable', tip: "A flexible syllable: two letters, so normally long, but it may be scanned short (\u06a9\u0648\u060c \u0633\u06d2\u060c \u06c1\u06d2\u2026, and many word-final syllables). The meter decides; the underline shows the reading chosen.", body: `<i class="sw c-x"></i>flexible` },
-  { rule: 'M6.1-anceps', sec: '7', tip: "In a meter pattern, x marks a position that may be long or short, as with the first syllable of meters 14 to 19.", body: `<span class="pg x">x</span> long or short`, app: true },
-  { rule: 'M6.1-cheat-final', tip: "One extra short syllable the meter doesn't count: allowed at the end of a line and, in some meters, just before the mid-line break. Pritchett calls it a 'cheat' syllable.", body: `<i class="sw c-c"></i>extra` },
+  { rule: 'F2.1-listed-monosyllable', tip: "A word or syllable that can be read long or short in Urdu (کو، سے، ہے…, and word-final vowels). The word itself can flex, but once the line's meter is established, its position locks it into either long or short.", body: `<span class="sw-flex-tile">کو</span> flexible` },
+  { rule: 'M6.1-anceps', sec: '7', tip: "In an abstract meter pattern, x marks an 'anceps' slot where the meter formula itself permits either a long or a short syllable without penalty (such as the opening position of meters 14–19).", body: `<span class="pg x">x</span> long or short`, app: true },
+  { rule: 'M6.1-cheat-final', tip: "One extra short syllable the meter doesn't count: allowed at the end of a line and, in some meters, just before the mid-line break. Pritchett calls it a 'cheat' syllable.", body: `<span class="sw-extra-tile"></span> extra` },
   { rule: 'M6.1-cheat-caesura', tip: "The break in the middle of the line, between its two hemistich halves. Where a meter has one, the pattern shows //. In some meters one extra short syllable may sit just before it.", body: `<span class="cae">//</span> caesura` },
   { rule: 'F3.1-graft', tip: "Words joined across the space and read as one, e.g. \u0101\u1e33hir is \u2192 \u0101\u00b7\u1e33hi\u00b7ris.", body: `<i class="sw c-g"></i>grafted` }
 ];
@@ -8914,6 +9354,7 @@ function runScan(){
   if(lines.length>1){
     if(lastScan.forced){
       const _fcd=lastScan.disp, _f0=lastScan.anchor[0], _m=_f0.meter, _per=common.c/lines.length, [_vc,_vt]=verdictOf(_per), _fam=famOfMeter[_m.id];
+      const _isPair = !!(common && common.group && common.group.length > 1);
       const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
       const isRtl = (cs === 'ur');
       const famDisp = _fam ? famLabel(_fam) : null;
@@ -8922,13 +9363,35 @@ function runScan(){
       h+='<div class="card">';
       /* summary: verdict · meter number / name / pattern / reference verse · more link */
       { const _tech = meterTechName(_m);
-        const _num = _m.id==='H' ? '' : (_m.kind==='rubai' ? ('Rubāʿī ' + (''+_m.id).replace(/^R/i,'')) : ('Meter #' + _m.id));
+        const _num = _m.id==='H' ? '' : (_m.kind==='rubai' ? ('Rubāʿī ' + (''+_m.id).replace(/^R/i,'')) : (_isPair ? ('Meter #' + common.group.join(' / #')) : ('Meter #' + _m.id)));
+        const _pairTip = _isPair ? `Classic paired meters (#${common.group.join(' & #')}): In Classical Urdu prosody, these variation endings can be freely alternated within the same poem without breaking meter. (Handbook \u00a76.1)` : '';
+        const _pairPill = _isPair ? `<span class="pair-bahr-pill" tabindex="0" data-tip="${_pairTip}">Paired Bahr</span>` : '';
         h+=`<div class="scan-summary">`;
-        h+=`<div class="ss-top"><span class="pill ${_vc}">${_vt}</span>${_num?`<span class="ss-num">${_num}</span>`:''}</div>`;
+        h+=`<div class="ss-top"><span class="pill ${_vc}">${_vt}</span>${_num?`<span class="ss-num">${_num}</span>`:''}${_pairPill}</div>`;
         h+=`<div class="ss-name">${_tech || meterLabel(_m,{tech:false})}</div>`;
         { const _rawTech = (typeof METERS_DATA !== 'undefined' && METERS_DATA.standard) ? ((METERS_DATA.standard.find(x => x.id === _m.id) || {}).name || '') : (METER_TECH_NAMES[_m.id] || '');
           const _ur = aruzName(_rawTech).ur; if(_ur) h+=`<div class="ss-name-ur">${_ur}</div>`; }
-        if(_m.raw) h+=`<div class="ss-pat">${patGlyphs(_m.raw)}</div><div class="ss-pat-key"><span class="pg l">=</span> long <span class="pg s">-</span> short${/x/.test(_m.raw)?' <span class="pg x">x</span> shortenable long (may scan = or –)':''} <span class="pg sep">/</span> foot break</div>`;
+        let _patStr = _m.raw ? patGlyphs(_m.raw) : '';
+        let _pairKeyNote = '';
+        if(_isPair && common.group && common.group.length === 2){
+          const _g = common.group;
+          const _m1 = Scan.METERS.find(x => x.id === _g[0]);
+          const _m2 = Scan.METERS.find(x => x.id === _g[1]);
+          const _r1 = _m1 ? (_m1.raw || _m1.pattern) : '';
+          const _r2 = _m2 ? (_m2.raw || _m2.pattern) : '';
+          if(_r1 && _r2){
+            const _f1 = _r1.split('/').map(s => s.trim());
+            const _f2 = _r2.split('/').map(s => s.trim());
+            if(_f1.length === _f2.length && _f1.slice(0, -1).join('/') === _f2.slice(0, -1).join('/')){
+              const _base = patGlyphs(_f1.slice(0, -1).join(' / '));
+              const _alt1 = patGlyphs(_f1[_f1.length - 1]);
+              const _alt2 = patGlyphs(_f2[_f2.length - 1]);
+              _patStr = `${_base} <span class="pg sep">/</span> <span class="pat-alt-cadence">[ ${_alt1} <span class="pg sep">|</span> ${_alt2} ]</span>`;
+              _pairKeyNote = ` <span class="pat-alt-cadence" style="margin-inline-start:6px;">[ ${_alt1} <span class="pg sep">|</span> ${_alt2} ]</span> alternating cadence`;
+            }
+          }
+        }
+        if(_patStr) h+=`<div class="ss-pat">${_patStr}</div><div class="ss-pat-key"><span class="pg l">=</span> long <span class="pg s">-</span> short${/x/.test(_m.raw)?' <span class="pg x">x</span> shortenable long (may scan = or –)':''} <span class="pg sep">/</span> foot break${_pairKeyNote}</div>`;
         if(_fam){
           if(_famIsWhatWasScanned) h+=`<div class="ss-ref"><span class="ss-lbl">This couplet is the reference example for this bahr</span></div>`;
           else h+=`<div class="ss-ref"><span class="ss-lbl">Same bahr as</span><span class="${isRtl?'urdu':'ro'} ss-verse">${famTxt}</span><span class="ss-cite">${cs==='ro'?famDisp.ref:famDisp.ro+' — '+famDisp.ref}</span></div>`;
@@ -8941,7 +9404,7 @@ function runScan(){
       /* lines grouped into couplets (shers) of 2, each its own bordered card */
       for(let _i=0;_i<results.length;_i+=2){
         const _li2 = (_i+1<results.length) ? _i+1 : null;
-        h+=coupletCard(_i,_li2,results[_i],_fcd[_i],lineObjs[_i],_li2!=null?results[_li2]:null,_li2!=null?_fcd[_li2]:null,_li2!=null?lineObjs[_li2]:null,`Couplet ${(_i/2)+1}`);
+        h+=coupletCard(_i,_li2,results[_i],_fcd[_i],lineObjs[_i],_li2!=null?results[_li2]:null,_li2!=null?_fcd[_li2]:null,_li2!=null?lineObjs[_li2]:null,`Couplet ${(_i/2)+1}`,{isPair:_isPair,group:common&&common.group});
       }
       h+='</div>';
     } else {
@@ -8951,7 +9414,7 @@ function runScan(){
         const _li2 = (_i+1<results.length) ? _i+1 : null;
         const _f1 = lastScan.disp[_i];
         const _f2 = _li2!=null ? lastScan.disp[_li2] : null;
-        h+=coupletCard(_i,_li2,results[_i],_f1,lineObjs[_i],_li2!=null?results[_li2]:null,_f2,_li2!=null?lineObjs[_li2]:null,`Couplet ${(_i/2)+1}`);
+        h+=coupletCard(_i,_li2,results[_i],_f1,lineObjs[_i],_li2!=null?results[_li2]:null,_f2,_li2!=null?lineObjs[_li2]:null,`Couplet ${(_i/2)+1}`,{isPair:false});
       }
     }
   } else {
@@ -9066,9 +9529,8 @@ function lineHTML(r,li,forced,lineObj){
   if(hasEdits(li)) h+=`<p class="tiny muted mt-note">Your edit still scans in the original bahr: the flexibility rules absorb it.</p>`;
   if(selWord&&selWord[0]===li) h+=wordPanel(r,li,selWord[1]);
   if(f.meter.id==='H' && lastScan.lines.length===1) h+=`<p class="tiny X mt-2">Mir's Hindi meter is loose enough that even some ordinary sentences fit it. One line proves little — add the rest of the ghazal.</p>`;
-  const notes=[...new Set(e.notes.map(n=>`${n.word}: ${n.note}`))].filter(n=>!/: $/.test(n));
-  if(notes.length) h+=`<p class="tiny muted mt-note">${notes.join(' · ')}</p>`;
-  if(!hasEdits(li) && _lineUr && typeof prPracticable==='function' && prPracticable(_lineUr,f.meter.id)) h+=`<p class="tiny mt-note"><a class="practice-this" href="${prLinkFor(_lineUr,f.meter.id)}">Practice this line: tap its rhythm →</a></p>`;
+  const _lineRo = typeof lObj==='object' ? (lObj && lObj.ro) : '';
+  if(!hasEdits(li) && _lineUr && typeof prPracticable==='function' && prPracticable(_lineUr,f.meter.id)) h+=`<p class="tiny mt-note"><a class="practice-this" href="${prLinkFor(_lineUr,f.meter.id,_lineRo)}">Practice this line: tap its rhythm →</a></p>`;
   if(!hasEdits(li) && !lastScan.forced){ const alts=r.fits.slice(1,4).filter(x=>x.c-f.c<1.2); if(alts.length) h+=`<p class="tiny muted">Also fits: ${alts.map(x=>famOfMeter[x.meter.id]?`<span class="${isRtl?'urdu':''} fam-inline xs">${(typeof getLineDisplay==='function')?getLineDisplay(famLabel(famOfMeter[x.meter.id]),cs):famLabel(famOfMeter[x.meter.id]).ur}</span>`:meterLabel(x.meter)).join(' · ')} — add the other misra to decide.</p>`; }
   return h+'</div>';
 }
@@ -9198,14 +9660,36 @@ function misraScan(r,li,forced){
   if(notes.length) h+=`<p class="scan-notes">${notes.join(' · ')}</p>`;
   return h;
 }
+function patEnding(raw){
+  if(!raw) return '';
+  const parts = String(raw).split('/');
+  return parts[parts.length - 1].trim();
+}
+
 /* one container per couplet: both misras' text together, then both misras' scansion stacked, one play button for the whole couplet */
-function coupletCard(li1,li2,r1,f1,lineObj1,r2,f2,lineObj2,label){
+function coupletCard(li1,li2,r1,f1,lineObj1,r2,f2,lineObj2,label,opts){
   const canPlay = !!((r1 && r1.words && r1.words.length) || (r2 && r2.words && r2.words.length));
+  const isPairPoem = !!(opts && opts.isPair);
+  let pairBadge = '';
+  if(f1 && f2 && f1.meter && f2.meter){
+    const m1 = f1.meter.id, m2 = f2.meter.id;
+    const isPairDiff = (m1 !== m2) && sameBahr(m1, m2);
+    if(isPairDiff){
+      const e1 = patEnding(f1.meter.raw || f1.meter.pattern);
+      const e2 = patEnding(f2.meter.raw || f2.meter.pattern);
+      const tip = `Misra 1 uses Meter #${m1} (${e1}), Misra 2 uses Meter #${m2} (${e2}). In Classical Urdu prosody, these alternating cadences form an accepted paired meter (Handbook \u00a76.1).`;
+      pairBadge = `<span class="pair-bahr-pill sm" tabindex="0" data-tip="${tip}">Paired · #${m1} &amp; #${m2}</span>`;
+    } else if(isPairPoem){
+      const e1 = patEnding(f1.meter.raw || f1.meter.pattern);
+      const tip = `Both misras in this couplet use Meter #${m1} (${e1}) within this paired bahr poem.`;
+      pairBadge = `<span class="pair-bahr-pill sm faint-pair" tabindex="0" data-tip="${tip}">Meter #${m1}</span>`;
+    }
+  }
   let h=`<div class="card misra-card"><div class="row card-head tight">`;
-  h+=`<span class="tiny muted">${label}</span>`;
+  h+=`<div class="row couplet-head-left"><span class="tiny muted">${label}</span>${pairBadge}</div>`;
   h+=canPlay?`<span class="play sm" title="Hear this couplet" aria-label="Hear this couplet" data-label="Hear this couplet" data-pb="scan:${li1}${li2!=null?','+li2:''}" onclick="playCouplet(${li1},${li2!=null?li2:'null'},null,this)">▶︎</span>`:'';
-  const _pr=[[li1,lineObj1,f1],[li2,lineObj2,f2]].map(([li,o,f])=>{ if(li==null||!f||hasEdits(li)) return null; const u=typeof o==='string'?o:(o&&o.ur)||''; return (u&&typeof prPracticable==='function'&&prPracticable(u,f.meter.id))?{u,m:f.meter.id}:null; }).find(Boolean);
-  if(_pr) h+=`<a class="btn ghost sm practice-this" href="${prLinkFor(_pr.u,_pr.m)}" title="Tap this line's rhythm yourself">Practice</a>`;
+  const _pr=[[li1,lineObj1,f1],[li2,lineObj2,f2]].map(([li,o,f])=>{ if(li==null||!f||hasEdits(li)) return null; const u=typeof o==='string'?o:(o&&o.ur)||''; const ro=typeof o==='object'?(o&&o.ro):''; return (u&&typeof prPracticable==='function'&&prPracticable(u,f.meter.id))?{u,m:f.meter.id,ro}:null; }).find(Boolean);
+  if(_pr) h+=`<a class="btn ghost sm practice-this" href="${prLinkFor(_pr.u,_pr.m,_pr.ro)}" title="Tap this line's rhythm yourself">Practice</a>`;
   h+='</div>';
   h+='<div class="cbox-verse">'+misraText(li1,lineObj1)+(li2!=null && r2 ? misraText(li2,lineObj2) : '')+'</div>';
   h+='<div class="cbox-scan">'+misraScan(r1,li1,f1)+'</div>';
@@ -10137,7 +10621,14 @@ function corpusRomanWords(e) {
   const toks = e.ro.split(/\s+/);
   if (toks.length === e.w.length) return toks;
   const need = e.w.map(w => w.split(/\s+/).length);
-  const pieces = toks.flatMap(t => t.split('-'));
+  const pieces = toks.flatMap(t => {
+    if (/^(al|ul|il)-/i.test(t)) {
+      const rest = t.slice(3).split('-');
+      rest[0] = t.slice(0, 3) + rest[0];
+      return rest;
+    }
+    return t.split('-');
+  });
   if (pieces.length !== need.reduce((a, b) => a + b, 0)) return null;
   let at = 0;
   return need.map(k => pieces.slice(at, at += k).join('-'));
@@ -10147,13 +10638,24 @@ function corpusExample(e, label) {
   try { r = Scan.scanLine(e.w.join(' ')); f = (r.fits || []).find(x => String(x.meter.id) === String(e.m)); } catch (err) { f = null; }
   if (!f) return '';
   const id = CORP_X.push(Scan.explain(r, f)) - 1, x = CORP_X[id];
-  const inHi = i => i >= e.hi[0] && i <= e.hi[1];
+  const inHi = i => i >= e.hi[0] && i <= (e.hi[1] != null ? e.hi[1] : e.hi[0]);
   const hiSyl = new Set(x.syl.map((s, i) => inHi(s.word) ? i : -1).filter(i => i >= 0));
   /* the line in the chosen script only (the chips below are in it too); the join stays underlined in every script */
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
   const ro = corpusRomanWords(e);
   const wordIn = (w, i) => cs === 'ur' ? w : (cs === 'ro' && ro) ? ro[i] : translitText(w, cs);
   const span = (w, i) => `<span class="word${inHi(i) ? ' corpus-hi' : ''}" data-w="${i}">${wordIn(w, i)}</span>`;
+  const col = e.col || (e.poet ? ({
+    'allama iqbal': 'iqbal',
+    'ahmad faraz': 'faraz',
+    'faiz ahmad faiz': 'faiz',
+    'parveen shakir': 'parveen',
+    'jaun elia': 'jaun',
+    'mir taqi mir': 'mir'
+  }[e.poet.toLowerCase()]) : null);
+  const srcLink = col
+    ? `<a class="corpus-src" href="#/ghazals/${col}/${e.gz}" onclick="if(typeof navigate==='function'){navigate('/ghazals/${col}/${e.gz}');return false;}">${e.poet}, ghazal ${e.gz} ›</a>`
+    : `<a class="corpus-src" href="${e.url || '#'}" target="_blank" rel="noopener">${e.poet}, ghazal ${e.gz} ↗</a>`;
   return `
     <div class="constr-ex corpus-ex" data-x="${id}">
       ${label ? `<div class="corpus-label ${label.cls || ''}">${label.t}</div>` : ''}
@@ -10162,7 +10664,7 @@ function corpusExample(e, label) {
         <span class="play sm" role="button" tabindex="0" data-label="Play line" aria-label="Play line" onclick="corpPlay(${id},this)" data-pb="none">▶︎</span>
         ${chipRowHTML(x.syl, x.feet, { r, ro: e.ro, cls: 'corpus-chips', hiSyl })}
       </div>
-      <div class="corpus-meta tiny"><a class="corpus-src" href="${e.url}" target="_blank" rel="noopener">${e.poet}, ghazal ${e.gz} ↗</a></div>
+      <div class="corpus-meta tiny">${srcLink}</div>
     </div>`;
 }
 /* the verses that show a join: just the lines (the join is underlined, ▶ plays them) */
@@ -10202,14 +10704,70 @@ function renderConstr() {
 function readingPair(wordHtml, readings) {
   return `<div class="flex-pair"><div class="flex-pair-word urdu ur-always">${wordHtml}</div>${readings.map(([label, list]) => (list || []).map(e => corpusExample(e, label)).join('')).join('')}</div>`;
 }
+const FLEX_EXTENDED_VERSES = {
+  'کا': {
+    long: [
+      { poet: 'Allama Iqbal', col: 'iqbal', gz: 2, w: ['تھا', 'ضبط', 'بہت', 'مشکل', 'اس', 'سیل', 'معانی', 'کا'], ro: 'thā zabt̤ bahut mushkil is sail-e maʿānī kā', hi: [7, 7], m: 7 },
+      { poet: 'Mir Taqi Mir', col: 'mir', gz: 1, w: ['کہا', 'میں', 'نے', 'کتنا', 'ہے', 'گل', 'کا', 'ثبات'], ro: 'kahā maiñ ne kitnā hai gul kā s̱abāt', hi: [6, 6], m: 16 }
+    ],
+    short: [
+      { poet: 'Faiz Ahmad Faiz', col: 'faiz', gz: 18, w: ['چلے', 'بھی', 'آؤ', 'کہ', 'گلشن', 'کا', 'کاروبار', 'چلے'], ro: 'chale bhī āo kih gulshan kā kārobār chale', hi: [5, 5], m: 8 },
+      { poet: 'Parveen Shakir', col: 'parveen', gz: 1, w: ['اس', 'حبس', 'میں', 'بارش', 'کا', 'یہ', 'جھونکا', 'بھی', 'تو', 'دیکھوں'], ro: 'is ḥabs meñ bārish kā yih jhoñkā bhī to dekhūñ', hi: [4, 4], m: 8 }
+    ]
+  },
+  'تو': {
+    long: [
+      { poet: 'Ahmad Faraz', col: 'faraz', gz: 4, w: ['تو', 'خدا', 'ہے', 'نہ', 'مرا', 'عشق', 'فرشتوں', 'جیسا'], ro: 'tū ḳhudā hai nah mirā ʿishq farishtoñ jaisā', hi: [0, 0], m: 18 },
+      { poet: 'Jaun Elia', col: 'jaun', gz: 1, w: ['کوئی', 'تو', 'اپنے', 'گھر', 'گیا', 'ہوگا'], ro: 'koʾī to apne ghar gayā hogā', hi: [1, 1], m: 14 }
+    ],
+    short: [
+      { poet: 'Parveen Shakir', col: 'parveen', gz: 1, w: ['آواز', 'کے', 'ہم', 'راہ', 'سراپا', 'بھی', 'تو', 'دیکھوں'], ro: 'āvāz ke ham-rāh sarāpā bhī to dekhūñ', hi: [6, 6], m: 8 },
+      { poet: 'Mir Taqi Mir', col: 'mir', gz: 3, w: ['وعدہ', 'تو', 'کیا', 'اس', 'سے', 'دمِ', 'صبح', 'کا', 'لیکن'], ro: 'vaʿdah to kiyā us se dam-e subḥ kā lekin', hi: [1, 1], m: 19 }
+    ]
+  },
+  'سے': {
+    long: [
+      { poet: 'Faiz Ahmad Faiz', col: 'faiz', gz: 12, w: ['تجھ', 'سے', 'بھی', 'دل', 'فریب', 'ہیں', 'غم', 'روزگار', 'کے'], ro: 'tujh se bhī dil-fareb haiñ ġham rozgār ke', hi: [1, 1], m: 18 },
+      { poet: 'Mir Taqi Mir', col: 'mir', gz: 5, w: ['شام', 'سے', 'کچھ', 'بجھا', 'سا', 'رہتا', 'ہوں'], ro: 'shām se kuchh bujhā sā rahtā hūñ', hi: [1, 1], m: 23 }
+    ],
+    short: [
+      { poet: 'Ahmad Faraz', col: 'faraz', gz: 2, w: ['ہم', 'سے', 'درویشوں', 'کے', 'گھر', 'آؤ', 'تو', 'یاروں', 'کی', 'طرح'], ro: 'ham se darveshoñ ke ghar āo to yāroñ kī t̤araḥ', hi: [1, 1], m: 10 },
+      { poet: 'Jaun Elia', col: 'jaun', gz: 1, w: ['خود', 'سے', 'مایوس', 'ہو', 'کے', 'بیٹھا', 'ہوں'], ro: 'khud se māyūs ho ke baiṭhā hūñ', hi: [1, 1], m: 14 }
+    ]
+  },
+  'کو': {
+    long: [
+      { poet: 'Allama Iqbal', col: 'iqbal', gz: 6, w: ['نرالا', 'سارے', 'جہاں', 'سے', 'اس', 'کو', 'عرب', 'کے', 'معمار', 'نے', 'بنایا'], ro: 'nirālā sāre jahāñ se is ko ʿarab ke miʿmār ne banāyā', hi: [5, 5], m: 30 },
+      { poet: 'Ahmad Faraz', col: 'faraz', gz: 3, w: ['یہ', 'بھی', 'بہت', 'ہے', 'تجھ', 'کو', 'اگر', 'بھول', 'جائیں', 'ہم'], ro: 'yih bhī bahut hai tujh ko agar bhūl jāʾeñ ham', hi: [5, 5], m: 20 }
+    ],
+    short: [
+      { poet: 'Parveen Shakir', col: 'parveen', gz: 2, w: ['کر', 'کے', 'ذرے', 'کو', 'گہر', 'کیا', 'کرتے'], ro: 'kar ke zarre ko guhar kyā karte', hi: [3, 3], m: 14 },
+      { poet: 'Jaun Elia', col: 'jaun', gz: 3, w: ['کیسے', 'کہیں', 'کہ', 'تجھ', 'کو', 'بھی', 'ہم', 'سے', 'ہے', 'واسطہ', 'کوئی'], ro: 'kaise kaheñ kih tujh ko bhī ham se hai vāsiṭah koʾī', hi: [4, 4], m: 25 }
+    ]
+  }
+};
+const KOI_EXTENDED_VERSES = [
+  [{ t: '1. (– –)', cls: 's' }, [{ poet: 'Allama Iqbal', col: 'iqbal', gz: 16, w: ['نیا', 'جہاں', 'کوئی', 'اے', 'شمع', 'ڈھونڈیے', 'کہ', 'یہاں'], ro: 'nayā jahāñ koʾī ai shamʿa ḍhūñḍiye kih yahāñ', hi: [2, 2], m: 34 }]],
+  [{ t: '2. (– =)', cls: 'l' }, [{ poet: 'Parveen Shakir', col: 'parveen', gz: 5, w: ['کوئی', 'آہٹ', 'کوئی', 'آواز', 'کوئی', 'چاپ', 'نہیں'], ro: 'koʾī āhaṭ koʾī āvāz koʾī chāp nahīñ', hi: [4, 4], m: 19 }]],
+  [{ t: '3. (= –)', cls: 's' }, [{ poet: 'Jaun Elia', col: 'jaun', gz: 3, w: ['تو', 'نے', 'تو', 'ہم', 'سے', 'آج', 'تک', 'کوئی', 'گلہ', 'نہیں', 'کیا'], ro: 'tū ne to ham se āj tak koʾī gilah nahīñ kiyā', hi: [7, 7], m: 25 }]],
+  [{ t: '4. (= =)', cls: 'l' }, [{ poet: 'Faiz Ahmad Faiz', col: 'faiz', gz: 28, w: ['دل', 'میں', 'کوئی', 'گلا', 'نہیں', 'باقی'], ro: 'dil meñ koʾī gilā nahīñ bāqī', hi: [2, 2], m: 14 }]]
+];
 function renderFlexEvidence() {
   const C = typeof WEIGHT_CORPUS !== 'undefined' ? WEIGHT_CORPUS : null;
   if (!C) return;
   const L = { t: 'long (=)', cls: 'l' }, S = { t: 'short (–)', cls: 's' };
   const fh = $('flexVerses');
-  if (fh && C.flexv) fh.innerHTML = `<div class="card corpus-card small">${['ہے', 'میں'].map(w => readingPair(w, [[L, C.flexv[w].long], [S, C.flexv[w].short]])).join('')}</div>`;
+  const allFlex = Object.assign({}, C.flexv || {}, FLEX_EXTENDED_VERSES);
+  if (fh) {
+    const words = ['ہے', 'میں', 'کا', 'تو', 'سے', 'کو'].filter(w => allFlex[w]);
+    fh.innerHTML = `<div class="card corpus-card small">${words.map(w => readingPair(w, [[L, allFlex[w].long], [S, allFlex[w].short]])).join('')}</div>`;
+  }
   const ah = $('aurVerses');
   if (ah) ah.innerHTML = `<div class="card corpus-card small">${readingPair('اور', [[{ t: 'one syllable (=)', cls: 'l' }, C.examples.aur1], [{ t: 'two syllables (= –)', cls: 'two' }, C.examples.aur2]])}</div>`;
+  const kh = $('koiVerses');
+  if (kh) {
+    kh.innerHTML = `<div class="card corpus-card small"><div class="flex-pair"><div class="flex-pair-word urdu ur-always">کوئی</div><p class="tiny muted" style="text-align:center; max-width:480px; margin:var(--sp-1) auto var(--sp-4); text-wrap:balance; line-height:1.5;">Handbook \u00a72.2: <span class="mono">koī</span> is scanned (x x). Both syllables are flexible, yielding all four mathematical combinations:</p>${KOI_EXTENDED_VERSES.map(([label, list]) => list.map(e => corpusExample(e, label)).join('')).join('')}</div></div>`;
+  }
   const eh = $('finalEvidence'); if (eh) eh.innerHTML = '';
 }
 
@@ -11231,7 +11789,7 @@ function prFamOf(id) {
 /* Build a practice item from an Urdu line, or null if the scan is not confident/simple enough.
    `ctxMeter` is the meter of the page the learner came from (Scan's reading, the ghazal's baḥr): the
    line is read in that baḥr's family, so the reveal agrees with what they were just looking at. */
-function prBuild(ur, strict, ctxMeter) {
+function prBuild(ur, strict, ctxMeter, ro) {
   var res, fit, e;
   try { res = Scan.scanLine(ur); fit = res.fits && res.fits[0]; } catch (err) { return null; }
   if (ctxMeter != null && ctxMeter !== '' && fit) {
@@ -11252,7 +11810,8 @@ function prBuild(ur, strict, ctxMeter) {
     if (syl[i].resolved !== 'l' && syl[i].resolved !== 's') return null;   /* skip extrametrical 'cheat' syllables */
     if (syl[i].cheat || syl[i].foot == null) return null;
   }
-  return { ur: ur, res: res, fit: fit, e: e, alt: alt, marks: [], miss: {}, done: false };
+  var lineObj = (ro ? { ur: ur, ro: ro } : null) || (typeof lineScripts === 'function' ? lineScripts(ur) : null);
+  return { ur: ur, res: res, fit: fit, e: e, alt: alt, marks: [], miss: {}, done: false, lineObj: lineObj, ro: ro };
 }
 
 /* Can this line be tapped out? (memoised: Scan and the Ghazals reader ask while rendering) */
@@ -11265,8 +11824,8 @@ function prPracticable(ur, ctxMeter) {
   return PR_OKCACHE[k];
 }
 /* href that opens Practice on this line, read in the given meter's baḥr when known */
-function prLinkFor(ur, ctxMeter) {
-  return '#/lab/practice?t=' + encodeURIComponent(ur) + (ctxMeter != null && ctxMeter !== '' ? '&m=' + encodeURIComponent(ctxMeter) : '');
+function prLinkFor(ur, ctxMeter, ro) {
+  return '#/lab/practice?t=' + encodeURIComponent(ur) + (ctxMeter != null && ctxMeter !== '' ? '&m=' + encodeURIComponent(ctxMeter) : '') + (ro ? '&ro=' + encodeURIComponent(ro) : '');
 }
 
 /* Plain-language reason a weight is wrong. `want` is the engine's weight, 'l' or 's'. */
@@ -11342,7 +11901,11 @@ function prSylText(s) {
 }
 function prLineText(P) {
   var cs = prScript();
-  return cs === 'ur' || typeof translitText !== 'function' ? P.ur : translitText(P.ur, cs);
+  if (cs === 'ur') return P.ur;
+  if (P && P.lineObj && typeof getLineDisplay === 'function') {
+    return getLineDisplay(P.lineObj, cs);
+  }
+  return typeof translitText === 'function' ? translitText(P.ur, cs) : P.ur;
 }
 function prEsc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
@@ -11361,7 +11924,14 @@ function prChipHTML(P, i) {
   var s = P.e.syl[i], m = P.marks[i], cs = prScript();
   var cls = ['chip', m || '', s.last ? 'wend' : '', cs === 'hi' ? 'deva' : (cs !== 'ur' ? 'roman' : ''),
     (!P.done && P.marks.length === i && PRS.clashAt !== i) ? 'cur' : '', PRS.clashAt === i ? 'clash' : ''].join(' ').replace(/\s+/g, ' ').trim();
-  return '<span class="cw"><span class="' + cls + '" data-i="' + i + '">' + prEsc(prSylText(s)) + '</span><span class="fs pr-mark">' + (m === 'l' ? '=' : m === 's' ? '–' : '&nbsp;') + '</span></span>';
+  if (!P._overrides) P._overrides = {};
+  if (P._overrides[cs] === undefined) {
+    P._overrides[cs] = (cs === 'ro' && P.lineObj && typeof romanOverridesFor === 'function')
+      ? romanOverridesFor(P.e.syl, P.res, P.lineObj)
+      : [];
+  }
+  var txt = (cs !== 'ur' && P._overrides[cs] && P._overrides[cs][i] != null) ? P._overrides[cs][i] : prSylText(s);
+  return '<span class="cw"><span class="' + cls + '" data-i="' + i + '">' + prEsc(txt) + '</span><span class="fs pr-mark">' + (m === 'l' ? '=' : m === 's' ? '–' : '&nbsp;') + '</span></span>';
 }
 /* completed feet are grouped (.fgrp); the rest stay a flat run of syllables. No foot names here. */
 function prChipsHTML(P) {
@@ -11432,7 +12002,8 @@ function prReveal() {
   var famVerse = fam && typeof famLabel === 'function' && typeof getLineDisplay === 'function' ? getLineDisplay(famLabel(fam), prScript()) : '';
   var nFlex = P.e.syl.filter(function (x) { return x.native === 'x'; }).length;
   var msg = prMistakes(P) === 0 ? 'Every syllable heard correctly. Lovely.' : ft + ' of ' + total + ' syllables on the first try. Each one you corrected is your ear learning.';
-  var chipsFull = (typeof chipsHTML === 'function') ? '<div class="chips ' + (prScript() === 'ur' ? '' : 'ltr') + '" id="prRevChips">' + chipsHTML(P.e.syl, P.e.feet) + '</div>' : '';
+  var roCtx = P.lineObj ? { r: P.res, lineObj: P.lineObj } : undefined;
+  var chipsFull = (typeof chipsHTML === 'function') ? '<div class="chips ' + (prScript() === 'ur' ? '' : 'ltr') + '" id="prRevChips">' + chipsHTML(P.e.syl, P.e.feet, null, roCtx) + '</div>' : '';
   host.innerHTML = '<p class="pr-score">' + prEsc(msg) + '</p>' + chipsFull +
     (famVerse ? '<p class="pr-bahr">Same rhythm as the famous verse <span class="pr-fam ' + (prScript() === 'ur' ? 'urdu' : '') + '">' + famVerse + '</span></p>' : '') +
     '<p class="pr-tech dim small">' + (info && info.name ? 'Technical name: <i>' + prEsc(info.name) + '</i>' : 'A classical rhythm') + '</p>' +
@@ -11461,10 +12032,10 @@ function prNew() { prSetLine(prPickItem()); }
    `var PRS` above has run: bail out then (the self-mount at the bottom picks the route up). */
 function mountPractice(params) {
   if (!PRS) return;
-  var t = params && params.t, key = t ? t + '|' + (params.m || '') : null;
+  var t = params && params.t, key = t ? t + '|' + (params.m || '') + '|' + (params.ro || '') : null;
   if (t && key !== PRS.fromLine) {   /* "Practice this line" from Scan or Ghazals */
     PRS.fromLine = key;
-    var P = prBuild(t, false, params.m);
+    var P = prBuild(t, false, params.m, params && params.ro);
     if (P) { prSetLine(P); return; }
     prNew();
     prSetHint('That line is too irregular to tap out, so here is another one.');
