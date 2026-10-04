@@ -38,3 +38,11 @@ data/poets/
 data/poets_scanned/
 data/faiz_verses.json
 data/faiz_scanned.json
+data/columbia_*.json
+data/sufinama_*.json
+data/mir_enriched.json
+
+# Local mockups & reference docs
+studio_mockup.html
+*.pdf
+

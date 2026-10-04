@@ -37,7 +37,6 @@ POETS = [
     {"file": "jaun_eliya.txt", "name": "Jaun Eliya", "id": "jaun"},
     {"file": "nazeer_akbarabadi.txt", "name": "Nazeer Akbarabadi", "id": "nazeer"},
     {"file": "parveen_shakir.txt", "name": "Parveen Shakir", "id": "parveen"},
-    {"file": "riyaz_khairabadi.txt", "name": "Riyaz Khairabadi", "id": "riyaz"},
     {"file": "siraj_aurangabadi.txt", "name": "Siraj Aurangabadi", "id": "siraj"},
 ]
 

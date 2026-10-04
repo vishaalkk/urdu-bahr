@@ -24,24 +24,102 @@ OUT = os.path.join(DATA, 'poets_extended.json')
 
 # key: (display name, Urdu, Hindi, aliases for search). The key is the route: #/ghazals/<key>/<id>
 POETS = {
-    'atish':   ('Atish', 'Khwaja Haidar Ali Atish', 'آتش', 'आतिश', ['Haidar Ali Atish']),
-    'dagh':    ('Dagh', 'Dagh Dehlvi', 'داغ', 'दाग़', ['Dagh Dehlavi', 'Daagh']),
-    'faiz':    ('Faiz', 'Faiz Ahmed Faiz', 'فیض', 'फ़ैज़', []),
-    'faraz':   ('Faraz', 'Ahmad Faraz', 'فراز', 'फ़राज़', []),
-    'firaq':   ('Firaq', 'Firaq Gorakhpuri', 'فراق', 'फ़िराक़', []),
-    'hasrat':  ('Hasrat', 'Hasrat Mohani', 'حسرت', 'हसरत', []),
-    'iqbal':   ('Iqbal', 'Allama Iqbal', 'اقبال', 'इक़बाल', ['Muhammad Iqbal']),
-    'jaun':    ('Jaun', 'Jaun Elia', 'جون', 'जौन', ['Jaun Eliya']),   # Rekhta spells it Eliya
-    'jigar':   ('Jigar', 'Jigar Moradabadi', 'جگر', 'जिगर', []),
-    'nazeer':  ('Nazeer', 'Nazeer Akbarabadi', 'نظیر', 'नज़ीर', ['Nazir Akbarabadi']),
-    'parveen': ('Parveen', 'Parveen Shakir', 'پروین شاکر', 'परवीन शाकिर', []),
-    'riyaz':   ('Riyaz', 'Riyaz Khairabadi', 'ریاض', 'रियाज़', []),
-    'siraj':   ('Siraj', 'Siraj Aurangabadi', 'سراج', 'सिराज', []),
+    'atish':          ('Atish', 'Khwaja Haidar Ali Atish', 'آتش', 'आतिश', ['Haidar Ali Atish']),
+    'dagh':           ('Dagh', 'Dagh Dehlvi', 'داغ', 'दाग़', ['Dagh Dehlavi', 'Daagh', 'Daagh Dehlvi']),
+    'faiz':           ('Faiz', 'Faiz Ahmed Faiz', 'فیض', 'फ़ैज़', []),
+    'faraz':          ('Faraz', 'Ahmad Faraz', 'فراز', 'फ़राज़', []),
+    'firaq':          ('Firaq', 'Firaq Gorakhpuri', 'فراق', 'फ़िराक़', []),
+    'hasrat':         ('Hasrat', 'Hasrat Mohani', 'حسرت', 'हसरत', []),
+    'iqbal':          ('Iqbal', 'Allama Iqbal', 'اقبال', 'इक़बाल', ['Muhammad Iqbal']),
+    'jaun':           ('Jaun', 'Jaun Elia', 'جون', 'जौन', ['Jaun Eliya']),   # Rekhta spells it Eliya
+    'jigar':          ('Jigar', 'Jigar Moradabadi', 'جگر', 'जिगर', []),
+    'nazeer':         ('Nazeer', 'Nazeer Akbarabadi', 'نظیر', 'नज़ीर', ['Nazir Akbarabadi']),
+    'parveen':        ('Parveen', 'Parveen Shakir', 'پروین شاکر', 'परवीन शाकिर', []),
+    'siraj':          ('Siraj', 'Siraj Aurangabadi', 'سراج', 'सिराज', []),
+    # Poets curated by Columbia Urdu Poetry Group
+    'ada':            ('Ada', 'Ada Jafri', 'ادا', 'अदा', ['Ada Jafrey']),
+    'adil':           ('Adil', 'Adil Mansuri', 'عادل', 'आदिल', ['Adil Mansoori']),
+    'akbar':          ('Akbar', 'Akbar Allahabadi', 'اکبر', 'अकबर', ['Akbar Ilahabadi']),
+    'ali_ahmed':      ('Ali Ahmed', 'Ali Ahmed Jalili', 'علی احمد', 'अली अहमद', ['Ali Ahmad Jalili']),
+    'natiq':          ('Natiq', 'Ali Akbar Natiq', 'ناطق', 'नातिक़', ['Ali Akbar Natiq']),
+    'sardar_jafri':   ('Sardar Jafri', 'Ali Sardar Jafri', 'سردار جعفری', 'सरदार जाफ़री', ['Ali Sardar Jafri']),
+    'hali':           ('Hali', 'Altaf Hussain Hali', 'حالی', 'हाली', ['Altaf Husain Hali']),
+    'ameer_meenai':   ('Ameer Meenai', 'Ameer Meenai', 'امیر مینائی', 'अमीर मीनाई', ['Amir Meenai', 'Amir Minai']),
+    'anwar_shuoor':   ('Anwar Shuoor', 'Anwar Shuoor', 'انور شعور', 'अनवर शऊर', []),
+    'aziz_hamid':     ('Aziz Hamid', 'Aziz Hamid Madni', 'عزیز حامد', 'अज़ीज़ हामिद', ['Aziz Hamid Madani']),
+    'zafar':          ('Zafar', 'Bahadur Shah Zafar', 'ظفر', 'ज़फ़र', ['Bahadur Shah Zafar']),
+    'bashir_badr':    ('Bashir Badr', 'Bashir Badr', 'بشیر بدر', 'बशीर बद्र', []),
+    'fani':           ('Fani', 'Fani Badayuni', 'فانی', 'फ़ानी', ['Fani Budauni']),
+    'neeraj':         ('Neeraj', 'Gopal Das Neeraj', 'نیرج', 'नीरज', ['Gopaldas Neeraj']),
+    'hafeez_h':       ('Hafeez Hoshiarpuri', 'Hafeez Hoshiarpuri', 'حفیظ ہوشیارپوری', 'हफ़ीज़ होशियारपुरी', []),
+    'hari_chand':     ('Hari Chand', 'Hari Chand Akhtar', 'ہری چند', 'हरी चंद', ['Hari Chand Akhtar']),
+    'himayat_ali':    ('Himayat Ali', 'Himayat Ali Shayar', 'حمایت علی', 'हिमायत अली', ['Himayat Ali Shair']),
+    'nasikh':         ('Nasikh', 'Imam Baksh Nasikh', 'ناسخ', 'नासिख़', ['Imam Bakhsh Nasikh']),
+    'insha':          ('Insha', 'Insha Allah Khan', 'انشا', 'इंशा', ['Insha Allah Khan Insha']),
+    'irfan_sattar':   ('Irfan Sattar', 'Irfan Sattar', 'عرفان ستار', 'इरफ़ान सत्तार', []),
+    'jamal_panipati': ('Jamal Panipati', 'Jamal Panipati', 'جمال پانی پتی', 'जमाल पानीपती', []),
+    'javed_akhtar':   ('Javed Akhtar', 'Javed Akhtar', 'جاوید اختر', 'जावेद अख़्तर', []),
+    'josh':           ('Josh', 'Josh Malihabadi', 'جوش', 'जोश', ['Shabbir Hasan Khan']),
+    'kaleem_aajiz':   ('Kaleem Aajiz', 'Kaleem Aajiz', 'کلیم عاجز', 'कलीम आजिज़', ['Kalim Aajiz']),
+    'kishwar':        ('Kishwar', 'Kishwar Naheed', 'کشور', 'किश्वर', ['Kishwar Naheed']),
+    'mah_laqa':       ('Mah Laqa Bai', 'Mah Laqa Bai', 'ماہ لقا بائی', 'माह लक़ा बाई', ['Mah Laqa Chanda']),
+    'makhdoom':       ('Makhdoom', 'Makhdoom Mohiuddin', 'مخدوم', 'मख़दूम', ['Makhdum Mohiuddin']),
+    'anees':          ('Anees', 'Mir Anees', 'انیس', 'अनीस', ['Mir Babar Ali Anees', 'Meer Anees']),
+    'dard':           ('Dard', 'Khwaja Mir Dard', 'درد', 'दर्द', ['Mir Dard', 'Khwaja Meer Dard']),
+    'momin':          ('Momin', 'Momin Khan Momin', 'مومن', 'मोमिन', []),
+    'munir_niazi':    ('Munir Niazi', 'Munir Niazi', 'منیر نیازی', 'मुनीर नियाज़ी', ['Muneer Niyazi']),
+    'mustafa_zaidi':  ('Mustafa Zaidi', 'Mustafa Zaidi', 'مصطفیٰ زیدی', 'मुस्तफ़ा ज़ैदी', []),
+    'naseer_turabi':  ('Naseer Turabi', 'Naseer Turabi', 'نصیر ترابی', 'नसीर तुराबी', []),
+    'nasir_kazmi':    ('Nasir Kazmi', 'Nasir Kazmi', 'ناصر کاظمی', 'नासिर काज़मी', []),
+    'nushur':         ('Nushur', 'Nushur Wahidi', 'نشور', 'नशूर', ['Nushur Wahidi']),
+    'obaidullah':     ('Obaidullah', 'Obaidullah Aleem', 'عبید اللہ علیم', 'उबैदुल्लाह अलीम', []),
+    'pirzada':        ('Pirzada Qasim', 'Pirzada Qasim', 'پیرزادہ قاسم', 'पीरज़ादा क़ासिम', []),
+    'qamar':          ('Qamar', 'Qamar Jalalvi', 'قمر', 'क़मर', ['Qamar Jalalvi']),
+    'qateel':         ('Qateel', 'Qateel Shifai', 'قتیل', 'क़तील', ['Qateel Shifai']),
+    'rasa_chughtai':  ('Rasa Chughtai', 'Rasa Chughtai', 'رسا چغتائی', 'रसा चुग़ताई', []),
+    'saghar':         ('Saghar', 'Saghar Siddiqui', 'ساغر', 'साग़र', ['Saghar Siddiqui']),
+    'saleem_ahmed':   ('Saleem Ahmed', 'Saleem Ahmed', 'سلیم احمد', 'सलीम अहमद', []),
+    'saleem_kausar':  ('Saleem Kausar', 'Saleem Kausar', 'سلیم کوثر', 'सलीम कौसर', []),
+    'sauda':          ('Sauda', 'Mirza Rafi Sauda', 'سودا', 'सौदा', ['Mirza Muhammad Rafi Sauda']),
+    'seemab':         ('Seemab', 'Seemab Akbarabadi', 'سیماب', 'सीमाब', ['Seemab Akbarabadi']),
+    'shah_niyaz':     ('Shah Niyaz', 'Shah Niyaz Barelvi', 'شاہ نیاز', 'शाह नियाज़', []),
+    'shakeel':        ('Shakeel', 'Shakeel Badayuni', 'شکیل', 'शकील', ['Shakeel Badayuni']),
+    'suroor':         ('Suroor', 'Suroor Barabankvi', 'سرور', 'सरूर', ['Suroor Barabankvi']),
+    'yagana':         ('Yagana', 'Yagana Changezi', 'یگانہ', 'यगाना', ['Mirza Yagana Changezi']),
+    'zauq':           ('Zauq', 'Sheikh Ibrahim Zauq', 'ذوق', 'ज़ौक़', ['Mohammad Ibrahim Zauq', 'Ibrahim Zauq']),
+    # Sufi poets from Sufinama
+    'zaheen':         ('Zaheen', 'Zaheen Shah Taji', 'ذہین', 'ज़हीन', ['Zaheen Shah Taji', 'Zaheen Taji', 'Baba Zaheen Shah Taji']),
+    'bedam':          ('Bedam', 'Bedam Shah Warsi', 'بیدم', 'बेदम', ['Bedam Shah Warsi', 'Bedam Warsi']),
+    'jami':           ('Jami', 'Nur al-Din Abd al-Rahman Jami', 'جامی', 'जामी', ['Maulana Jami', 'Abdur Rahman Jami', 'Nur al-Din Abd al-Rahman']),
+    'bu_ali':         ('Bu Ali', 'Bu Ali Shah Qalandar', 'بو علی', 'बू علی', ['Sharafuddin Bu Ali Qalandar', 'Bu Ali Qalandar', 'Bu Ali Shah']),
+    'khusrau':        ('Khusrau', 'Amir Khusrau', 'خسرو', 'ख़ुसरो', ['Hazrat Amir Khusrau', 'Amir Khusro', "Ab'ul Hasan Yamin al-Din Khusrow", 'Amir Khusrow']),
 }
 # name = the pen name (tabs, list rows, search tags, sort order); full = the whole name (the Poets picker, the collection note)
 KEY_OF = {alias.lower(): k for k, v in POETS.items() for alias in v[4]}
 KEY_OF.update({v[0].lower(): k for k, v in POETS.items()})
 KEY_OF.update({v[1].lower(): k for k, v in POETS.items()})
+
+# Manually settled meters (Dakhini dialect, Hindi matraic geets, Rekhta unvocalized verses)
+MANUAL_METERS = {
+    ('atish', 83): [18],
+    ('faraz', 7): [5],
+    ('faraz', 13): ['H'],
+    ('faraz', 47): ['H'],
+    ('faraz', 98): ['H'],
+    ('faraz', 117): [18],
+    ('iqbal', 22): [10],
+    ('jaun', 16): ['H'],
+    ('jaun', 27): [39],
+    ('jaun', 113): ['H'],
+    ('nazeer', 163): [14],
+    ('nazeer', 190): [30],
+    ('parveen', 57): ['H'],
+    ('parveen', 79): [25],
+    ('siraj', 2): [5],
+    ('siraj', 35): [10],
+    ('siraj', 71): [18, 19],
+    ('siraj', 81): [38],
+}
 
 MARKS = re.compile(r'[ً-ٰٟـ‌‍ّؔٔ]')
 KEEP = re.compile(r'[^ء-ۿ]')
@@ -120,6 +198,59 @@ def main():
         out[key].append({'id': None, 'url': g['url'], 'meters': g['meters'], 'n': g['lines_count'],
                          'lines': [{'ur': urdu(l['ur']), 'hi': '' if ARABIC.search(l['hi']) else l['hi'], 'ro': l['ro']} for l in g['lines']], '_ck': ck})
 
+    # 2b. Columbia Urdu Poetry Group
+    columbia_file = os.path.join(DATA, 'columbia_scanned.json')
+    if os.path.exists(columbia_file):
+        for g in load(columbia_file):
+            key = KEY_OF.get(g['poet'].lower())
+            if not key:
+                continue
+            ck = couplet_key(g['lines'])
+            if ck in seen[key]['couplet'] or (g['url'] and g['url'] in seen[key]['url']):
+                continue
+            seen[key]['url'].add(g['url'])
+            seen[key]['couplet'].add(ck)
+            entry = {
+                'id': None,
+                'url': g['url'],
+                'meters': g['meters'],
+                'n': g['lines_count'],
+                'lines': [{'ur': urdu(l['ur']), 'hi': '' if ARABIC.search(l['hi']) else l['hi'], 'ro': l['ro']} for l in g['lines']],
+                '_ck': ck
+            }
+            out[key].append(entry)
+
+    # 2c. Sufinama
+    sufinama_file = os.path.join(DATA, 'sufinama_scanned.json')
+    category_to_key = {
+        'ameer_meenai': 'ameer_meenai',
+        'zaheen': 'zaheen',
+        'bedam': 'bedam',
+        'jami': 'jami',
+        'bu_ali': 'bu_ali',
+        'khusrau_persian': 'khusrau',
+        'khusrau_urdu': 'khusrau',
+    }
+    if os.path.exists(sufinama_file):
+        for g in load(sufinama_file):
+            key = category_to_key.get(g.get('category')) or KEY_OF.get(g['poet'].lower())
+            if not key or key not in out:
+                continue
+            ck = couplet_key(g['lines'])
+            if ck in seen[key]['couplet'] or (g['url'] and g['url'] in seen[key]['url']):
+                continue
+            seen[key]['url'].add(g['url'])
+            seen[key]['couplet'].add(ck)
+            entry = {
+                'id': None,
+                'url': g['url'],
+                'meters': g['meters'],
+                'n': g['lines_count'],
+                'lines': [{'ur': urdu(l['ur']), 'hi': '' if ARABIC.search(l['hi']) else l['hi'], 'ro': l['ro']} for l in g['lines']],
+                '_ck': ck
+            }
+            out[key].append(entry)
+
     # 3. ids: keep any id a previous build gave; new ghazals get max+1, in a stable (URL) order
     for key, gs in out.items():
         prev = previous.get(key, {'url': {}, 'couplet': {}})
@@ -135,6 +266,9 @@ def main():
             g['id'] = nid
             nid += 1
         gs.sort(key=lambda x: x['id'])
+        for g in gs:
+            if (key, g['id']) in MANUAL_METERS:
+                g['meters'] = MANUAL_METERS[(key, g['id'])]
 
     # #/ghazals/others/N (the old More Poets collection) now lives under its poet
     legacy = {}
@@ -152,7 +286,16 @@ def main():
         f.write('\n')
     total = sum(len(v) for v in out.values())
     withm = sum(1 for v in out.values() for g in v if g['meters'])
+    unsettled = [(k, g['id'], g.get('url')) for k, v in out.items() for g in v if not g['meters']]
     print(f"{total} ghazals, {withm} with a bahr, {len(dropped)} duplicates dropped, {os.path.getsize(OUT)/1e6:.2f} MB -> {OUT}")
+    if unsettled:
+        print(f"\n⚠️  WARNING: {len(unsettled)} ghazal(s) have unsettled meters:")
+        for k, gid, url in unsettled[:10]:
+            print(f"   poet: {k} id: #{gid} url: {url}")
+        if len(unsettled) > 10:
+            print(f"   ... and {len(unsettled) - 10} more")
+    else:
+        print("  ✓ All ghazals have settled meters (100% metered).")
     for p in poets:
         print(f"  {p['key']:8} {p['count']}")
 

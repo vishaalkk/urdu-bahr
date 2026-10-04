@@ -61,7 +61,15 @@ function chipsHTML(syl,feet,li,roCtx){
   const overrides = cs!=='ro' ? [] : roCtx ? romanOverridesFor(syl,roCtx.r,roCtx.lineObj) : (li!=null && typeof chipRomanOverrides==='function') ? chipRomanOverrides(syl,li) : [];
   const gp=graftPos(syl);
   if(!feet||!feet.length) return syl.map((s,i)=>chipHTML(s,i,li,overrides[i],gp[i])).join('');
-  return feet.map((F,fi)=>F?`${F.cae?'<span class="caeu">//</span>':''}<span class="fgrp" data-f="${fi}"><span class="fname" onclick="pbFromFoot(event,this)" title="Play from this foot">${(()=>{const fm=cs==='ur'?(F.ur||''):(cs==='hi'?(typeof urduToDevanagari==='function'?urduToDevanagari(F.ur):''):''); return fm ? fm : '';   /* script-only foot name; the Roman name is spelled out under the syllables */})()}</span><span class="fchips">${F.idx.map(i=>chipHTML(syl[i],i,li,overrides[i],gp[i])).join('')}</span></span>`:'').join('');
+  return feet.map((F,fi)=>{
+    if (!F) return '';
+    const hasCaeAfter = !!(feet[fi+1] && feet[fi+1].cae);
+    const caeBadge = F.cae ? '<span class="caeu" title="Caesura (mid-line pause)"><span class="caeu-badge">//</span></span>' : '';
+    const fgrpCls = hasCaeAfter ? 'fgrp has-cae-after' : 'fgrp';
+    const fm = cs==='ur'?(F.ur||''):(cs==='hi'?(typeof urduToDevanagari==='function'?urduToDevanagari(F.ur):''):'');
+    const fname = fm ? fm : '';   /* script-only foot name; the Roman name is spelled out under the syllables */
+    return `${caeBadge}<span class="${fgrpCls}" data-f="${fi}"><span class="fname" onclick="pbFromFoot(event,this)" title="Play from this foot">${fname}</span><span class="fchips">${F.idx.map(i=>chipHTML(syl[i],i,li,overrides[i],gp[i])).join('')}</span></span>`;
+  }).join('');
 }
 /* Wrap each whitespace-separated word of a display string in <span class="word" data-w="i">
    for word-level playback highlight (pbWordsMatching). Leaves the whitespace itself outside

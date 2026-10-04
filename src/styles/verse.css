@@ -60,7 +60,9 @@
 /* a divider after every foot except the last, on the trailing side in both directions
    (was: removed after foot 1 and left a stray line at the row's end) */
 .fgrp { border-left: 0; border-right: 0; border-inline-end: 1px solid var(--line); }
-.fgrp:last-child { border-inline-end: 0; }
+.fgrp:last-child,
+.fgrp.has-cae-after,
+.fgrp:has(+ .caeu) { border-inline-end: 0; }
 
 .fgrp.litf {
   background: color-mix(in srgb, var(--mark-l) 7%, transparent);
@@ -104,11 +106,40 @@
 }
 
 .caeu {
-  font-family: var(--mono);
-  color: var(--gold);
-  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  align-self: stretch;
   padding: 0 4px;
+  color: var(--gold);
+  font-family: var(--mono);
+  font-size: 13px;
   font-weight: 600;
+  user-select: none;
+  z-index: 1;
+}
+.caeu::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  background: var(--line);
+  z-index: 1;
+}
+.caeu-badge {
+  position: relative;
+  z-index: 2;
+  background: var(--bg);
+  padding: 1px 3px;
+  line-height: 1;
+  border-radius: 3px;
+}
+:is(.card, .misra-card, .cbox-scan, .couplet-card) .caeu-badge {
+  background: var(--bg3);
 }
 
 /* Syllable mark: plain text, weight shown by underline colour/weight */
@@ -422,9 +453,9 @@
 .pair-bahr-pill::after {
   content: attr(data-tip);
   position: absolute;
-  left: 50%;
-  top: calc(100% + 8px);
-  transform: translateX(-50%) translateY(-2px);
+  left: 0;
+  top: calc(100% + 6px);
+  transform: translateY(-2px);
   z-index: 60;
   width: max-content;
   max-width: 320px;
@@ -446,7 +477,7 @@
 .pair-bahr-pill:hover::after, .pair-bahr-pill:focus::after, .pair-bahr-pill:focus-within::after {
   opacity: 1;
   visibility: visible;
-  transform: translateX(-50%) translateY(0);
+  transform: translateY(0);
 }
 .pair-bahr-pill.sm {
   font-size: 11px;
@@ -524,8 +555,14 @@
 .ss-more { color: var(--gold); margin-top: var(--sp-1); }
 
 /* Urdu syllables: room under the letters so nuqtas/descenders clear the weight underline;
-   extra padding on the right to cover the ascending kashish of kāf/gāf (کو، کا، etc.) */
-.chip:not(.roman):not(.deva) { line-height: 2.1; padding-bottom: 9px; padding-right: 10px; padding-left: 6px; }
+   padding-top and extra padding-right to cover the ascending kashish of kāf/gāf (کو، کا، کہ، کے، etc.) */
+.chip:not(.roman):not(.deva) {
+  line-height: 2.1;
+  padding-top: 5px;
+  padding-bottom: 9px;
+  padding-right: 12px;
+  padding-left: 7px;
+}
 
 /* Grafting: a gold tie over the syllables whose words were joined across the space */
 .cw { padding-top: 9px; }
@@ -555,12 +592,24 @@
 .couplet-card .couplet-acts { gap: var(--sp-4); }
 .couplet-card .cbox-verse .vline-lg[lang], .misra-card .cbox-verse .misra-text { text-align: center; direction: inherit; }
 .couplet-card .cbox-verse .vline-lg[lang="ur"], .misra-card .cbox-verse .misra-text:not(.ltr):not(.deva) {
-  font-family: var(--urdu); font-size: 24px; line-height: 2; direction: rtl;
+  font-family: var(--urdu); font-size: 32px; line-height: 2.2; direction: rtl;
 }
 .couplet-card .cbox-verse .vline-lg[lang="ur-Latn"], .misra-card .cbox-verse .misra-text.ltr {
-  font-family: var(--mono); font-size: 16px; line-height: 1.9; direction: ltr;
+  font-family: var(--mono); font-size: 19px; line-height: 1.8; direction: ltr;
 }
-.couplet-card .cbox-verse .vline-lg[lang="hi"], .misra-card .cbox-verse .misra-text.deva { font-size: 18px; line-height: 1.9; }
+.couplet-card .cbox-verse .vline-lg[lang="hi"], .misra-card .cbox-verse .misra-text.deva { font-size: 22px; line-height: 1.9; }
+
+@media (max-width: 767px) {
+  .couplet-card .cbox-verse .vline-lg[lang="ur"], .misra-card .cbox-verse .misra-text:not(.ltr):not(.deva) {
+    font-size: 25px; line-height: 2.0;
+  }
+  .couplet-card .cbox-verse .vline-lg[lang="ur-Latn"], .misra-card .cbox-verse .misra-text.ltr {
+    font-size: 16px; line-height: 1.8;
+  }
+  .couplet-card .cbox-verse .vline-lg[lang="hi"], .misra-card .cbox-verse .misra-text.deva {
+    font-size: 18px; line-height: 1.8;
+  }
+}
 .scan-notes { font-family: var(--sans); font-size: 13px; line-height: 1.6; color: var(--faint); text-align: left; margin: var(--sp-3) 0 0; }
 .couplet-scan-box > div > .verdict, .cbox-scan > .verdict { margin: 0; }
 
@@ -570,7 +619,13 @@
 .cbox-scan .fgrp, .couplet-scan-box .fgrp, .corpus-chips .fgrp { padding: 0 calc(12px * var(--fit)); }
 .cbox-scan .fchips, .couplet-scan-box .fchips, .corpus-chips .fchips { gap: calc(7px * var(--fit)); }
 .cbox-scan .chip:not(.roman):not(.deva), .couplet-scan-box .chip:not(.roman):not(.deva), .corpus-chips .chip:not(.roman):not(.deva) {
-  font-size: calc(27px * var(--fit)); padding-left: calc(6px * var(--fit)); padding-right: calc(6px * var(--fit)); padding-bottom: calc(12px * var(--fit)); }
+  font-size: calc(27px * var(--fit));
+  line-height: 2.1;
+  padding-top: calc(8px * var(--fit));
+  padding-right: calc(14px * var(--fit));
+  padding-bottom: calc(10px * var(--fit));
+  padding-left: calc(8px * var(--fit));
+}
 .cbox-scan .chip.roman, .couplet-scan-box .chip.roman, .corpus-chips .chip.roman { font-size: calc(18px * var(--fit)); padding-left: calc(5px * var(--fit)); padding-right: calc(5px * var(--fit)); }
 .cbox-scan .chip.deva, .couplet-scan-box .chip.deva, .corpus-chips .chip.deva { font-size: calc(20px * var(--fit)); padding-left: calc(5px * var(--fit)); padding-right: calc(5px * var(--fit)); }
 .cbox-scan .fname, .couplet-scan-box .fname, .corpus-chips .fname { font-size: calc(16px * var(--fit)); }

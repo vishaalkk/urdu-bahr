@@ -315,7 +315,10 @@ const METER_TECH_NAMES = {
   34: "mużāriʻ musamman axrab makfūf aslam",
   35: "mużāriʻ musamman axrab makfūf",
   36: "ramal musamman mashkūl",
-  37: "kāmil musamman sālim"
+  37: "kāmil musamman sālim",
+  38: "mutaqārib musamman sālim muzāʻaf",
+  39: "mutadārik musamman sālim",
+  40: "mutaqārib murabbaʻ muzāʻaf maqbūz aslam"
 };
 
 function meterTechName(m){
@@ -457,7 +460,8 @@ function runScan(){
       lastScan.near=bestG; }
     lastScan.forced = common && common.c/lines.length<=5 ? common.fits : null;
   }
-  lastScan.anchor = lines.map((l,li)=>(lastScan.forced && lastScan.forced[li]) || base[li].fits[0] || null);
+  const okFit = f => f && f.c <= 5.0 ? f : null;
+  lastScan.anchor = lines.map((l,li)=>(lastScan.forced && lastScan.forced[li]) || okFit(base[li].fits[0]) || null);
   lastScan.disp = lastScan.anchor.map((a,li)=>anchoredFit(li,a));
   if(lines.length>1){
     if(lastScan.forced){
@@ -608,7 +612,7 @@ function stackInner(lines,results,common,tot){
     ${fam?`<div class="row"><button class="btn sm" onclick="go('bahr');document.getElementById('fam-${fam.id}').scrollIntoView()">More ghazals in this bahr ›</button></div>`:''}`;
 }
 function lineHTML(r,li,forced,lineObj){
-  const f=forced!==undefined ? forced : (r.fits&&r.fits[0]);   /* null: doesn't scan in its bahr */
+  const f=forced!==undefined ? forced : (r.fits && r.fits[0] && r.fits[0].c <= 5.0 ? r.fits[0] : null);   /* null: doesn't scan in its bahr */
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
   const isRtl = (cs === 'ur');
   const lObj = lineObj || (lastScan && lastScan.lineObjs && lastScan.lineObjs[li]) || (lastScan && lastScan.lines && lastScan.lines[li]);
@@ -747,7 +751,7 @@ function playOriginal(li, btn) {
 }
 function resetEdits(li) { delete ovr[li]; if (selWord && selWord[0] === li) selWord = null; runScan(); }
 function misraScan(r,li,forced){
-  const f=forced!==undefined ? forced : (r.fits&&r.fits[0]);
+  const f=forced!==undefined ? forced : (r.fits && r.fits[0] && r.fits[0].c <= 5.0 ? r.fits[0] : null);
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
   const isRtl = (cs === 'ur');
   let h='';
@@ -787,9 +791,9 @@ function coupletCard(li1,li2,r1,f1,lineObj1,r2,f2,lineObj2,label,opts){
       const e2 = patEnding(f2.meter.raw || f2.meter.pattern);
       const tip = `Misra 1 uses Meter #${m1} (${e1}), Misra 2 uses Meter #${m2} (${e2}). In Classical Urdu prosody, these alternating cadences form an accepted paired meter (Handbook \u00a76.1).`;
       pairBadge = `<span class="pair-bahr-pill sm" tabindex="0" data-tip="${tip}">Paired · #${m1} &amp; #${m2}</span>`;
-    } else if(isPairPoem){
+    } else if(isPairPoem && opts && opts.group && opts.group.length > 1 && m1 !== opts.group[0]){
       const e1 = patEnding(f1.meter.raw || f1.meter.pattern);
-      const tip = `Both misras in this couplet use Meter #${m1} (${e1}) within this paired bahr poem.`;
+      const tip = `Both misras in this couplet use Meter #${m1} (${e1}), the secondary cadence in this paired bahr.`;
       pairBadge = `<span class="pair-bahr-pill sm faint-pair" tabindex="0" data-tip="${tip}">Meter #${m1}</span>`;
     }
   }

@@ -17,7 +17,10 @@ const METERS_RAW = [
  [28,"- = = / - = = / - = = / - = ="],[29,"- = = / - = = / - = = / - ="],[30,"- = - / = = / - = - / = = / - = - / = = / - = - / = ="],
  [31,"- = - / = = / - = - / = = / - = - / = ="],[32,"- = - = / - = - = / - = - = / - = - ="],[33,"- = - = / - - = = / - = - = / = ="],
  [34,"- = - = / - - = = / - = - = / - - ="],[35,"- = - = / - - = = / - = - = / - - = ="],[36,"- - = - / = - = = // - - = - / = - = ="],
- [37,"- - = - = / - - = - = / - - = - = / - - = - ="]
+ [37,"- - = - = / - - = - = / - - = - = / - - = - ="],
+ [38,"- = = / - = = / - = = / - = = // - = = / - = = / - = = / - = ="],
+ [39,"= - = / = - = / = - = / = - ="],
+ [40,"- = - / = = // - = - / = ="]
 ];
 const RUBAI_RAW = [
  ["R1","= = - / - = = - / - = = - / - ="],["R2","= = - / - = = - / - = = = / ="],["R3","= = - / - = - = / - = = = / ="],
@@ -25,7 +28,7 @@ const RUBAI_RAW = [
  ["R7","= = - / - = = = / = = = / ="],["R8","= = - / - = = = / = = - / - ="],["R9","= = = / = = = / = = - / - ="],
  ["R10","= = = / = = = / = = = / ="],["R11","= = = / = = - / - = = = / ="],["R12","= = = / = = - / - = = - / - ="]
 ];
-const CAESURA_OK = new Set([2,4,7,20,21,22,25,36]);   /* meters allowing an extra short before the break */
+const CAESURA_OK = new Set([2,4,7,20,21,22,25,36,38,40]);   /* meters allowing an extra short before the break */
 
 function parseRaw(raw){
   const toks=[]; raw.trim().split(/\s+/).forEach(p=>{
@@ -382,6 +385,54 @@ function applySuffix(opts,type){
   return out;
 }
 
+function partitionLexLetters(letters, ws){
+  const n = letters.length, m = ws.length;
+  if(m <= 1) return [letters];
+  if(n === m) return letters.map(ch => [ch]);
+  const g = letters.findIndex((ch, i) => i < n - 1 && ch === letters[i + 1] && typ(ch) === 'C');
+  if(g >= 0){
+    let bestJ = -1, bestScore = -Infinity;
+    for(let j = 1; j < m; j++){
+      const leftL = g + 1, rightL = n - (g + 1);
+      const leftS = j, rightS = m - j;
+      if(leftL >= leftS && rightL >= rightS){
+        let score = 0, remL = leftL;
+        for(let k = 0; k < leftS - 1; k++) remL -= (ws[k] === 's' ? 1 : 2);
+        if(remL >= (ws[leftS - 1] === 's' ? 1 : 2)) score += 10;
+        let remR = rightL;
+        for(let k = leftS + 1; k < m; k++) remR -= (ws[k] === 's' ? 1 : 2);
+        if(remR >= (ws[leftS] === 's' ? 1 : 2)) score += 10;
+        if(score > bestScore){ bestScore = score; bestJ = j; }
+      }
+    }
+    if(bestJ > 0){
+      const leftParts = partitionLexLetters(letters.slice(0, g + 1), ws.slice(0, bestJ));
+      const rightParts = partitionLexLetters(letters.slice(g + 1), ws.slice(bestJ));
+      return leftParts.concat(rightParts);
+    }
+  }
+  const want = ws.map(w => w === 's' ? 1 : 2);
+  let totalWant = want.reduce((a, b) => a + b, 0);
+  let counts = want.slice(), diff = n - totalWant;
+  if(diff > 0){
+    for(let i = m - 1; i >= 0 && diff > 0; i--){
+      if(ws[i] !== 's'){ counts[i]++; diff--; }
+    }
+    while(diff > 0){ counts[m - 1]++; diff--; }
+  } else if(diff < 0){
+    for(let i = 0; i < m && diff < 0; i++){
+      if(counts[i] > 1){ counts[i]--; diff++; }
+    }
+  }
+  const res = [];
+  let cur = 0;
+  for(let i = 0; i < m; i++){
+    res.push(letters.slice(cur, cur + counts[i]));
+    cur += counts[i];
+  }
+  return res;
+}
+
 function scanWord(raw,forceSuffix){
   raw = (raw || '').normalize('NFC');
   const nw=normalize(raw);
@@ -390,9 +441,9 @@ function scanWord(raw,forceSuffix){
   const lx=LEX[nw.key];
   if(lx && !suffix){
     opts=lx.map(o=>({syl:[{k:'LEX',t:nw.letters.slice(),w:o.w.length===1?o.w[0]:null,lexw:o.w}],c:o.c,n:o.n||''}))
-      .map(o=>{ if(o.syl[0].lexw.length>1){ /* split letters roughly for display */
-        const ws=o.syl[0].lexw, letters=nw.letters, per=Math.max(1,Math.floor(letters.length/ws.length));
-        o.syl=ws.map((w,j)=>({k:'LEX',t:letters.slice(j*per, j===ws.length-1?letters.length:(j+1)*per),w,xs:0}));
+      .map(o=>{ if(o.syl[0].lexw.length>1){ /* split letters for display, splitting geminate consonants across syllables */
+        const ws=o.syl[0].lexw, parts=partitionLexLetters(nw.letters, ws);
+        o.syl=ws.map((w,j)=>({k:'LEX',t:parts[j]||[],w,xs:0}));
       } else { o.syl[0].w=o.syl[0].lexw[0]; o.syl[0].xs=0; }
       return o; });
   } else {
@@ -620,7 +671,7 @@ function matchMeter(units,n,m){
     const r=f(0,0);
     if(r && (!best||r.c<best.c)) best={c:r.c+v.extra,path:r.path,seq};
   });
-  if(best){ best.prior = m.kind==='rubai'?0.6:(GHALIB_USED.has(m.id)?0:0.4); best.c+=best.prior; }
+  if(best){ best.prior = m.kind==='rubai'?0.6:(GHALIB_USED.has(m.id)?0:(m.id>37?2.0:0.4)); best.c+=best.prior; }
   return best;
 }
 /* ---------- Mir's "Hindi" meter (handbook 6.2) ----------

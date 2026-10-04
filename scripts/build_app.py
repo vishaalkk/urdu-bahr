@@ -54,7 +54,7 @@ MIR_EXT_PREVIEW = [{
     'id': g['id'],
     'meters': g['meters'],
     'url': g.get('url', ''),
-    'source_id': g.get('source_id', ''),   # her number for the ghazal (our Mir id is sequential)
+    'source_id': g.get('source_id') or '',   # her number for the ghazal (our Mir id is sequential)
     'label': g['meter_label'],
     'n': g['lines_count'],
     'lines': [{'ascii': l['ascii'], 'ur': l['ur'], 'hi': l['hi'], 'ro': l['ro']} for l in g['lines']],
@@ -92,7 +92,11 @@ def _split_hyphens(tokens):
     return out
 _word_pair_freq = Counter()
 for _g in EXERCISES + GHALIB_EXT + MIR_EXT + IQBAL + OTHERS_WORDS:
-    for _l in _g['lines']:
+    if _g.get('source') == 'rekhta_only':
+        continue
+    for _li, _l in enumerate(_g['lines']):
+        if _g.get('fran_lines') is not None and _li not in _g['fran_lines']:
+            continue
         _uw, _aw = _l['ur'].split(), _l['ascii'].split()
         if len(_uw) != len(_aw):
             _aw = _split_hyphens(_aw)
@@ -141,7 +145,11 @@ with open('data/roman_fallback.json', 'r', encoding='utf-8') as f:
     ROMAN_FALLBACK = json.load(f)
 _ki_next = {}
 for _g in EXERCISES + GHALIB_EXT + MIR_EXT + IQBAL + OTHERS_WORDS:
-    for _l in _g['lines']:
+    if _g.get('source') == 'rekhta_only':
+        continue
+    for _li, _l in enumerate(_g['lines']):
+        if _g.get('fran_lines') is not None and _li not in _g['fran_lines']:
+            continue
         _t = [re.sub(r'-(e|ye)$', '', x) for x in _l['ascii'].split()]
         for _i in range(len(_t) - 1):
             if _t[_i] in ('kih', 'kii'):

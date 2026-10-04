@@ -5,7 +5,7 @@ const ARUZ_TERMS = {
   mujtas:['mujtas̱','مجتث'], munsarih:['munsariḥ','منسرح'], 'mutadārik':['mutadārik','متدارک'],
   'mutaqārib':['mutaqārib','متقارب'], 'muzāriʻ':['muẓāriʿ','مضارع'], 'sarīʻ':['sarīʿ','سریع'],
   'xafīf':['ḳhafīf','خفیف'],
-  musamman:['mus̱amman','مثمن'], musaddas:['musaddas','مسدس'],
+  musamman:['mus̱amman','مثمن'], musaddas:['musaddas','مسدس'], 'murabbaʻ':['murabbaʿ','مربع'],
   'sālim':['sālim','سالم'], axrab:['aḳhrab','اخرب'], axram:['aḳhram','اخرم'], ashtar:['ashtar','اشتر'],
   'maqbūz':['maqbūẓ','مقبوض'], 'mahzūf':['maḥẕūf','محذوف'], 'makfūf':['makfūf','مکفوف'],
   'maxbūn':['maḳhbūn','مخبون'], 'maqtūʻ':['maqt̤ūʿ','مقطوع'], 'matvī':['mat̤vī','مطوی'],
@@ -85,13 +85,23 @@ function meterLabelInfo(mOrId) {
     items.forEach(e => { if (Array.isArray(e.meters) && e.meters.some(x => String(x) === idStr)) count++; });
   });
 
-  // 3. Verse resolution priority: (1) FAMS, (2) EXERCISES_DATA, (3) GHALIB_EXT_DATA, (4) MIR_EXT_DATA
+  // 3. Verse resolution priority: (0) CANONICAL_SIGNATURE_VERSES, (1) FAMS, (2) EXERCISES_DATA, (3) GHALIB_EXT_DATA, (4) MIR_EXT_DATA
   let verse = null;
-  const fam = (typeof famOfMeter !== 'undefined') ? famOfMeter[idNum || idStr] : null;
-  if (fam && fam.gz && fam.gz[0]) {
+  const sigMap = (typeof CANONICAL_SIGNATURE_VERSES !== 'undefined' ? CANONICAL_SIGNATURE_VERSES : (typeof window !== 'undefined' ? window.CANONICAL_SIGNATURE_VERSES : null));
+  if (sigMap) {
+    const sigMatch = sigMap[idNum] || sigMap[idStr];
+    if (sigMatch) {
+      let chosen = sigMatch;
+      if (chosen.alt && Math.random() < 0.5) chosen = chosen.alt;
+      verse = { ur: chosen.ur || '', hi: chosen.hi || '', ro: chosen.ro || '', ascii: chosen.ascii || chosen.ro || '', poet: chosen.p || '', ref: chosen.ref || '' };
+    }
+  }
+
+  const fam = !verse ? ((typeof famOfMeter !== 'undefined') ? famOfMeter[idNum || idStr] : null) : null;
+  if (!verse && fam && fam.gz && fam.gz[0]) {
     const g = fam.gz[0];
     verse = { ur: g.ur || '', hi: g.hi || '', ro: g.ro || '', ascii: g.ascii || '', poet: g.p || '' };
-  } else if (typeof FAMS !== 'undefined' && Array.isArray(FAMS)) {
+  } else if (!verse && typeof FAMS !== 'undefined' && Array.isArray(FAMS)) {
     const fMatch = FAMS.find(f => Array.isArray(f.meters) && f.meters.some(x => String(x) === idStr));
     if (fMatch && fMatch.gz && fMatch.gz[0]) {
       const g = fMatch.gz[0];
@@ -120,6 +130,19 @@ function meterLabelInfo(mOrId) {
     if (mirMatch && mirMatch.lines && mirMatch.lines[0]) {
       const l = mirMatch.lines[0];
       verse = { ur: l.ur || '', hi: l.hi || '', ro: l.ro || '', ascii: l.ascii || '', poet: 'Mir' };
+    }
+  }
+
+  if (!verse && typeof poetCollections === 'function') {
+    for (const [pKey, items] of poetCollections()) {
+      const match = items.find(e => Array.isArray(e.meters) ? e.meters.some(x => String(x) === idStr) : String(e.meter || e.m) === idStr);
+      if (match && match.lines && match.lines[0]) {
+        const l = match.lines[0];
+        const pMeta = (typeof POETS_DATA !== 'undefined' && POETS_DATA.poets) ? POETS_DATA.poets.find(p => p.key === pKey) : null;
+        const pName = pMeta ? pMeta.name : (match.poet || pKey);
+        verse = { ur: l.ur || '', hi: l.hi || '', ro: l.ro || '', ascii: l.ascii || '', poet: pName, ref: `${pName} ${match.id}` };
+        break;
+      }
     }
   }
 

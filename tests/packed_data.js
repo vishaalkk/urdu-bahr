@@ -38,7 +38,7 @@ if (app && app.ghazals) {
       ['id', 'url', 'n', 'verified'].forEach(f => { if (x[f] !== g[f]) { bad++; check(false, `${k} #${g.id}: ${f} differs`); } });
       if (JSON.stringify(x.meters) !== JSON.stringify(g.meters)) { bad++; check(false, `${k} #${g.id}: meters differ`); }
       check(!ids.has(g.id), `${k}: duplicate id ${g.id}`); ids.add(g.id);
-      check(!g.url || /^https:\/\/www\.rekhta\.org\/ghazals\//.test(g.url), `${k} #${g.id}: odd link ${g.url}`);
+      check(!g.url || /^https:\/\/(www\.)?(rekhta\.org\/ghazals\/|urdushahkar\.org\/|sufinama\.org\/)/.test(g.url), `${k} #${g.id}: odd link ${g.url}`);
       check(g.n === g.lines.length && g.n % 2 === 0, `${k} #${g.id}: ${g.lines.length} lines (n=${g.n})`);
       g.lines.forEach((l, li) => {
         lines++;
@@ -51,7 +51,7 @@ if (app && app.ghazals) {
     });
   });
   check(bad === 0, bad + ' field(s) differ between the built app and data/poets_extended.json');
-  check(lines > 19000, 'only ' + lines + ' lines');
+  check(lines > 17000, 'only ' + lines + ' lines');
   console.log(`  poets: ${lines} lines in ${keys.length} poets, identical to data/poets_extended.json`);
 }
 

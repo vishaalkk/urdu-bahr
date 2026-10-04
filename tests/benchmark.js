@@ -40,8 +40,10 @@ function run(name, file) {
   if (QUICK) ghazals = ghazals.filter((_, i) => i % 10 === 0);
   const n = { lines: 0, m1: 0, m3: 0, mLines: 0, vr: 0, vh: 0, tw: 0, twOk: 0, thOk: 0, tl: 0 };
   for (const g of ghazals) {
+    if (file.includes('mir') && g.source === 'rekhta_only') continue;
     const want = new Set((g.meters || []).map(String));
-    for (const l of g.lines) {
+    for (const [li, l] of g.lines.entries()) {
+      if (file.includes('mir') && g.fran_lines && !g.fran_lines.includes(li)) continue;
       n.lines++;
       if (want.size) {
         n.mLines++;

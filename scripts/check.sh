@@ -6,6 +6,7 @@ echo "── build";                 uv run python scripts/build_app.py
 echo "── runtime + sandbox";     uv run python test_runtime.py
 echo "── corpus scan";           node tests/corpus_scan.js
 echo "── packed data (poets, Ghalib, Mir ≡ source)"; node tests/packed_data.js
+echo "── reader benchmark headers"; node tests/reader_benchmark_headers.js
 echo "── Fran benchmark";        node tests/benchmark.js      # Ghalib + Mir: no score may fall below tests/benchmark_baseline.json
 echo "── chip transliteration";  node tests/chip_translit_consistency.js
 echo "── practice logic";        node tests/practice_logic.js

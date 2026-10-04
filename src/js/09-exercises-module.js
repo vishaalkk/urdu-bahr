@@ -88,11 +88,14 @@ function collectionData(col) {
   return Array.isArray(d) ? d : [];
 }
 window.collectionData = collectionData;
-/* a poet ghazal's number as a link to its page on Rekhta (new tab), "12 ↗"; plain "#12" for the few without a link */
+/* a poet ghazal's number as a link to its page on Rekhta/Urdushahkar (new tab), "12 ↗"; plain "#12" for the few without a link */
 function rekhtaLinkHTML(item, opts) {
   const label = (opts && opts.bare) ? String(item.id) : `${item.poet} ${item.id}`;
+  const isShahkar = item.url && item.url.includes('urdushahkar.org');
+  const isSufinama = item.url && item.url.includes('sufinama.org');
+  const srcTitle = isSufinama ? 'This poem on Sufinama' : isShahkar ? 'This ghazal on Urdushahkar' : 'This ghazal on Rekhta';
   return item.url
-    ? `<a class="fran-link" href="${escapeHtml(item.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="This ghazal on Rekhta">${label}<span class="ext" aria-hidden="true">↗</span></a>`
+    ? `<a class="fran-link" href="${escapeHtml(item.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="${srcTitle}">${label}<span class="ext" aria-hidden="true">↗</span></a>`
     : escapeHtml(label);
 }
 window.rekhtaLinkHTML = rekhtaLinkHTML;
@@ -104,16 +107,37 @@ function buildGhazalSearchIndex() {
   cols.forEach(([col, corpus]) => {
     const poetNames = POET_NAMES[col] || null;
     corpus.forEach(item => {
-      const l1 = (item.lines && item.lines[0]) || null;
       const fields = poetNames ? poetNames.slice() : [item.poet || ''];
       fields.push(String(item.id));
-      if (l1) fields.push(l1.ur || '', l1.hi || '', l1.ro || '', l1.ascii || '');
+      if (item.lines && item.lines.length) {
+        item.lines.forEach(l => {
+          if (l.ur) fields.push(l.ur);
+          if (l.hi) fields.push(l.hi);
+          if (l.ro) fields.push(l.ro);
+          if (l.ascii) fields.push(l.ascii);
+        });
+      }
       idx.push({ col, id: String(item.id), hay: searchNorm(fields.filter(Boolean).join(' ')) });
     });
   });
   GHAZAL_SEARCH_INDEX = idx;
 }
 window.buildGhazalSearchIndex = buildGhazalSearchIndex;
+
+function findMatchingLine(item, terms) {
+  if (!item || !item.lines || !item.lines.length) return null;
+  if (!terms || !terms.length) return item.lines[0];
+  for (let i = 0; i < item.lines.length; i++) {
+    const l = item.lines[i];
+    const text = [l.ur, l.hi, l.ro, l.ascii].filter(Boolean).join(' ');
+    const norm = searchNorm(text);
+    if (terms.some(t => norm.indexOf(t) !== -1)) {
+      return l;
+    }
+  }
+  return item.lines[0];
+}
+window.findMatchingLine = findMatchingLine;
 
 /* -> { handbook: Set<id>, ghalib: Set<id>, mir: Set<id>, others: Set<id> } or null for an empty query.
    All query words must appear (substring) in a row's haystack — good enough for
@@ -180,21 +204,155 @@ const EXTENDED_METER_BENCHMARKS = {
   }
 };
 
+/* Canonical signature verses for each bahr across the entire system.
+   Curated to iconic, widely sung, celebrated verses. */
+const CANONICAL_SIGNATURE_VERSES = {
+  3: {
+    p: 'Nazeer',
+    ur: 'محفل میں ہم تھے اس طرف وہ شوخ چنچل اس طرف',
+    ro: 'mahfil meñ ham the is taraf vo shoḳh chanchal us taraf',
+    hi: 'महफ़िल में हम थे इस तरफ़ वो शोख़ चंचल इस तरफ़',
+    ref: 'Nazeer · Bahr-e-Rajaz'
+  },
+  4: {
+    p: 'Dagh',
+    ur: 'عجب اپنا حال ہوتا جو وصال یار ہوتا',
+    ro: 'ʿajab apnā ḥāl hotā jo viṣāl-e yār hotā',
+    hi: 'अजब अपना हाल होता जो विसाल-ए यार होता',
+    ref: 'Dagh · sung by Mehdi Hassan, Ghulam Ali'
+  },
+  5: {
+    p: 'Faraz',
+    ur: 'رنجش ہی سہی دل ہی دکھانے کے لیے آ',
+    ro: 'ranjish hī sahī dil hī dukhāne ke liye ā',
+    hi: 'रंजिश ही सही दिल ही दुखाने के लिए आ',
+    ref: 'Faraz · sung by Mehdi Hassan',
+    alt: {
+      p: 'Ghalib',
+      ur: 'مدت ہوئی ہے یار کو مہماں کیے ہوئے',
+      ro: 'muddat huī hai yaar ko mehmāñ kiye hue',
+      hi: 'मुद्दत हुई है यार को मेहमाँ किए हुए',
+      ref: 'Ghalib 233'
+    }
+  },
+  7: {
+    p: 'Faiz',
+    ur: 'کب ٹھہرے گا درد اے دل کب رات بسر ہوگی',
+    ro: 'kab ṭhahregā dard ai dil kab raat basar hogī',
+    hi: 'कब ठहरेगा दर्द ऐ दिल कब रात बसर होगी',
+    ref: 'Faiz · sung by Tina Sani, Nayyara Noor'
+  },
+  10: {
+    p: 'Ghalib',
+    ur: 'نقش فریادی ہے کس کی شوخی تحریر کا',
+    ro: 'naqsh faryādī hai kis kī shoḳhī-e taḥrīr kā',
+    hi: 'नक़्श फ़रियादी है किस की शोख़ी-ए तहरीर का',
+    ref: 'Ghalib 1 · Divan-e Ghalib opening'
+  },
+  22: {
+    p: 'Nazeer',
+    ur: 'جام نہ رکھ ساقیا شب ہے پڑی اور بھی',
+    ro: 'jām nah rakh sāqiyā shab hai paṛī aur bhī',
+    hi: 'जाम न रख साक़िया शब है पड़ी और भी',
+    ref: 'Nazeer · Saqi-nama'
+  },
+  27: {
+    p: 'Hafeez Hoshiarpuri',
+    ur: 'محبت کرنے والے کم نہ ہوں گے',
+    ro: 'muḥabbat karne vāle کم nah hoñge'.replace('کم', 'kam'),
+    hi: 'मोहब्बत करने वाले कम न होंगे',
+    ref: 'Hafeez Hoshiarpuri · sung by Mehdi Hassan, Iqbal Bano, Ghulam Ali'
+  },
+  28: {
+    p: 'Iqbal',
+    ur: 'ترے عشق کی انتہا چاہتا ہوں',
+    ro: 'tire ʿishq kī intihā chāhtā huuñ',
+    hi: 'तिरे इश्क़ की इंतहा चाहता हूँ',
+    ref: 'Iqbal · sung by Nusrat Fateh Ali Khan'
+  },
+  29: {
+    p: 'Mir',
+    ur: 'فقیرانہ آئے صدا کر چلے',
+    ro: 'faqīrānah āʾe ṣadā kar chale',
+    hi: 'फ़क़ीराना आए सदा कर चले',
+    ref: 'Mir 161 · sung by Mehdi Hassan, Begum Akhtar, Ghulam Ali'
+  },
+  31: {
+    p: 'Parveen Shakir',
+    ur: 'عکس خوشبو ہوں بکھرنے سے نہ روکے کوئی',
+    ro: 'aks-e-ḳhushbū huuñ bikharne se nah roke koʾī',
+    hi: 'अक्स-ए-ख़ुशबू हूँ बिखरने से न रोके कोई',
+    ref: 'Parveen Shakir 1'
+  },
+  32: {
+    p: 'Parveen Shakir',
+    ur: 'سبھی گناہ دھل گئے سزا ہی اور ہو گئی',
+    ro: 'sabhī gunāh dhul ga.e sazā hī aur ho ga.ī',
+    hi: 'सभी गुनाह धुल गए सज़ा ही और हो गई',
+    ref: 'Parveen Shakir 65'
+  },
+  35: {
+    p: 'Ghalib',
+    ur: 'عجب نشاط سے جلاد کے چلے ہیں ہم آگے',
+    ro: 'ʿajab nashāt̤ se jallād ke chale haiñ ham āge',
+    hi: 'अजब नशात से जल्लाद के चले हैं हम आगे',
+    ref: 'Ghalib 176'
+  },
+  40: {
+    p: 'Amir Khusrau',
+    ur: 'زحال مسکیں مکن تغافل دورائے نیناں بنائے بتیاں',
+    ro: 'ze-hāl-e-miskīñ ma-kun taġhāful durāye naināñ banāye bātyāñ',
+    hi: 'ज़े-हाल-ए-मिस्कीं मकुन तग़ाफ़ुल दुराए नैनाँ बनाए बतियाँ',
+    ref: 'Amir Khusrau · sung by Ghulam Ali, Lata Mangeshkar, Sabri Brothers'
+  }
+};
+window.CANONICAL_SIGNATURE_VERSES = CANONICAL_SIGNATURE_VERSES;
+
 function meterFamousLine(mId, item) {
   if (!mId) return null;
   const numId = Number(mId);
-  const fam = (typeof famOfMeter !== 'undefined') ? (famOfMeter[numId] || famOfMeter[String(mId)]) : null;
+  const idStr = String(mId);
+  const fam = (typeof famOfMeter !== 'undefined') ? (famOfMeter[numId] || famOfMeter[idStr]) : null;
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
 
   const curCol = (typeof activeCollection !== 'undefined') ? activeCollection : '';
   const curPoet = (item && item.poet) || (curCol && typeof COL_NAMES !== 'undefined' && COL_NAMES[curCol]) || '';
   const poetKey = curPoet.toLowerCase();
 
+  function lineText(entry) {
+    if (!entry) return '';
+    if (typeof getLineDisplay === 'function') return getLineDisplay(entry, cs);
+    return entry[cs] || entry.ur || entry.ro || entry.ascii || '';
+  }
+
+  // 0. Canonical Benchmark Override (Curated Iconic Verses)
+  const canEntry = CANONICAL_SIGNATURE_VERSES[numId] || CANONICAL_SIGNATURE_VERSES[idStr];
+  if (canEntry) {
+    let chosen = canEntry;
+    const isSamePoet = poetKey && canEntry.p.toLowerCase().includes(poetKey);
+    if (numId === 5) {
+      // User directive: "5 use both randomly" (Faraz / Ghalib)
+      if (poetKey === 'faraz' || curCol === 'faraz') {
+        chosen = canEntry.alt; // Ghalib
+      } else if (poetKey === 'ghalib' || curCol === 'ghalib') {
+        chosen = canEntry; // Faraz
+      } else {
+        chosen = (Math.random() < 0.5) ? canEntry : canEntry.alt;
+      }
+    } else if (isSamePoet) {
+      chosen = null; // Fall through to cross-poet search or signature verse
+    }
+    if (chosen) {
+      const text = lineText(chosen);
+      if (text) return { text, poet: chosen.p || '', ref: chosen.ref || '' };
+    }
+  }
+
   // 1. Check extended modern poet benchmark
   const pMap = (poetKey && EXTENDED_METER_BENCHMARKS[poetKey]) || (curCol && EXTENDED_METER_BENCHMARKS[curCol]);
   if (pMap && pMap[numId]) {
     const pEntry = pMap[numId];
-    const text = (typeof getLineDisplay === 'function') ? getLineDisplay(pEntry, cs) : (pEntry[cs] || pEntry.ur || '');
+    const text = lineText(pEntry);
     if (text) return { text, poet: pEntry.p || '', ref: pEntry.ref || '' };
   }
 
@@ -203,54 +361,119 @@ function meterFamousLine(mId, item) {
     if (poetKey) {
       const match = fam.gz.find(x => x.p && x.p.toLowerCase().includes(poetKey));
       if (match) {
-        const text = (typeof getLineDisplay === 'function') ? getLineDisplay(match, cs) : (match[cs] || match.ur || '');
+        const text = lineText(match);
         return text ? { text, poet: match.p || '', ref: match.ref || '' } : null;
       }
     }
   }
 
-  // 3. Balanced Cross-Poet Mix-and-Match:
+  // 3. Balanced Cross-Poet Mix-and-Match in core families:
   if (fam && fam.gz && fam.gz.length) {
     let chosen = null;
-    // Meter 14/15: if reading Ghalib, use Ghalib (Dil-e nadan). Otherwise, Mir's immortal "Hasti apni hubab ki si hai" (fam.gz[4])
     if ((numId === 14 || numId === 15) && fam.gz[4]) {
       chosen = (poetKey === 'ghalib' || curCol === 'ghalib') ? fam.gz[0] : fam.gz[4];
-    }
-    // Meter 18/19: if reading Ghalib, Atish's "Hasrat-e jalvah-e didar" (fam.gz[1]) so Ghalib doesn't cite Ghalib!
-    else if ((numId === 18 || numId === 19) && fam.gz[1]) {
+    } else if ((numId === 18 || numId === 19) && fam.gz[1]) {
       chosen = (poetKey === 'ghalib' || curCol === 'ghalib') ? fam.gz[1] : fam.gz[0];
-    }
-    // Meter 33/34: if reading Ghalib, Atish's "Yih aarzu thii" (fam.gz[2]) so Ghalib doesn't cite Ghalib! Otherwise Faiz or Ghalib
-    else if ((numId === 33 || numId === 34)) {
+    } else if ((numId === 33 || numId === 34)) {
       if (poetKey === 'ghalib' || curCol === 'ghalib') {
         chosen = fam.gz[2] || fam.gz[0];
       } else if (EXTENDED_METER_BENCHMARKS.faiz && EXTENDED_METER_BENCHMARKS.faiz[33]) {
         const fz = EXTENDED_METER_BENCHMARKS.faiz[33];
-        const text = (typeof getLineDisplay === 'function') ? getLineDisplay(fz, cs) : (fz[cs] || fz.ur || '');
+        const text = lineText(fz);
         return { text, poet: fz.p, ref: fz.ref };
       }
-    }
-    // Meter 5: if reading Ghalib, Zauq's "Laii hayat aae qaza" (fam.gz[1]) so Ghalib doesn't cite Ghalib!
-    else if (numId === 5 && fam.gz[1]) {
+    } else if (numId === 5 && fam.gz[1]) {
       chosen = (poetKey === 'ghalib' || curCol === 'ghalib') ? fam.gz[1] : fam.gz[0];
-    }
-    // Meter 10: if reading Ghalib, Jur'at's "Baal suljhaanaa" (fam.gz[2]) so Ghalib doesn't cite Ghalib!
-    else if (numId === 10 && fam.gz[2]) {
+    } else if (numId === 10 && fam.gz[2]) {
       chosen = (poetKey === 'ghalib' || curCol === 'ghalib') ? fam.gz[2] : fam.gz[0];
-    }
-    // Meter 11: Mir Dard's "Tuhmaten chand" (fam.gz[1])
-    else if (numId === 11 && fam.gz[1]) {
+    } else if (numId === 11 && fam.gz[1]) {
       chosen = fam.gz[1];
-    }
-    // Meter 26: if reading Ghalib, Vali's "Kiyaa mujh ishq ne" (fam.gz[1])
-    else if (numId === 26 && fam.gz[1]) {
+    } else if (numId === 26 && fam.gz[1]) {
       chosen = (poetKey === 'ghalib' || curCol === 'ghalib') ? fam.gz[1] : fam.gz[0];
     }
 
+    if (!chosen && poetKey) {
+      chosen = fam.gz.find(x => x.p && !x.p.toLowerCase().includes(poetKey));
+    }
     if (!chosen) chosen = fam.gz[0];
     if (chosen) {
-      const text = (typeof getLineDisplay === 'function') ? getLineDisplay(chosen, cs) : (chosen[cs] || chosen.ur || '');
-      return text ? { text, poet: chosen.p || '', ref: chosen.ref || '' } : null;
+      const text = lineText(chosen);
+      if (text) return { text, poet: chosen.p || '', ref: chosen.ref || '' };
+    }
+  }
+
+  // 4. Dynamic Corpus Search: Find another poet who used this meter
+  // (preferring an alternative poet so "Same bahr as <Other Poet>'s" is shown)
+  let altVerse = null;
+  let selfVerse = null;
+
+  function checkList(list, pName, pKey) {
+    if (!list || !Array.isArray(list)) return;
+    for (let i = 0; i < list.length; i++) {
+      const g = list[i];
+      const gMeters = g.meters || (g.m != null ? [g.m] : (g.meter != null ? [g.meter] : []));
+      const match = Array.isArray(gMeters) ? gMeters.some(x => String(x) === idStr) : String(gMeters) === idStr;
+      if (match && g.lines && g.lines[0]) {
+        const txt = lineText(g.lines[0]);
+        if (txt) {
+          const isCurr = poetKey && (pKey === poetKey || pName.toLowerCase().includes(poetKey));
+          const entry = { text: txt, poet: pName, ref: `${pName} ${g.id || ''}`.trim() };
+          if (!isCurr && !altVerse) {
+            altVerse = entry;
+            return;
+          } else if (isCurr && !selfVerse) {
+            selfVerse = entry;
+          }
+        }
+      }
+    }
+  }
+
+  if (typeof GHALIB_EXT_DATA !== 'undefined') checkList(GHALIB_EXT_DATA, 'Ghalib', 'ghalib');
+  if (!altVerse && typeof MIR_EXT_DATA !== 'undefined') checkList(MIR_EXT_DATA, 'Mir', 'mir');
+  if (!altVerse && typeof poetCollections === 'function') {
+    for (const [pKey, items] of poetCollections()) {
+      const pMeta = (typeof POETS_DATA !== 'undefined' && POETS_DATA.poets) ? POETS_DATA.poets.find(p => p.key === pKey) : null;
+      const pName = pMeta ? pMeta.name : pKey;
+      checkList(items, pName, pKey.toLowerCase());
+      if (altVerse) break;
+    }
+  }
+
+  if (altVerse) return altVerse;
+
+  // 5. Fallback for meters outside the core 10 families from meterLabelInfo:
+  if (typeof meterLabelInfo === 'function') {
+    const info = meterLabelInfo(mId);
+    if (info && info.verse) {
+      const v = info.verse;
+      const text = lineText(v);
+      if (text) {
+        return {
+          text,
+          poet: v.poet || '',
+          ref: v.ref || (v.poet ? `${v.poet}` : '')
+        };
+      }
+    }
+  }
+
+  if (selfVerse) return selfVerse;
+
+  // 6. ULTIMATE SAFETY NET:
+  // If this poem is the first or only poem in this bahr across the entire corpus,
+  // use the poem's own opening misra. The reader will display it as:
+  // "Signature verse for this bahr: <Misra>"
+  // so the top card is NEVER empty or missing.
+  if (item && item.lines && item.lines[0]) {
+    const text = lineText(item.lines[0]);
+    if (text) {
+      const pName = item.poet || (curCol && typeof COL_NAMES !== 'undefined' && COL_NAMES[curCol]) || '';
+      return {
+        text,
+        poet: pName,
+        ref: `${pName} ${item.id || 1}`.trim()
+      };
     }
   }
 
@@ -295,7 +518,17 @@ function patEnding(raw){
 }
 
 function renderGhazalReaderHeader(mId, item) {
-  if (!mId) return '';
+  if (!mId) {
+    return `
+    <div class="reader-header-comp reader-benchmark-card reader-header-unsettled">
+      <div class="row reader-header-top-row">
+        <span class="mono reader-header-mnum dim">Unsettled</span>
+        <span class="reader-header-intro dim"> · Scansion consensus pending</span>
+      </div>
+      <div class="reader-header-tech faint tiny">This poem's meter has not been settled yet. Tap "Edit in Scan ›" below to analyze it.</div>
+    </div>
+  `;
+  }
   const info = (typeof meterLabelInfo === 'function') ? meterLabelInfo(mId) : null;
   if (!info) return '';
   const pairGroup = (item && item.meters && item.meters.length > 1)
@@ -366,7 +599,7 @@ function renderGhazalReaderHeader(mId, item) {
 
   let introHtml = '';
   if (famous) {
-    const introLabel = isSelf ? 'Signature verse for this bahr:' : `Same bahr as ${poetPossessive(famous.poet)}:`;
+    const introLabel = isSelf ? 'Signature verse for this bahr:' : (famous.poet ? `Same bahr as ${poetPossessive(famous.poet)}:` : 'Signature verse for this bahr:');
     introHtml = `<span class="reader-header-intro dim"> · ${escapeHtml(introLabel)}</span>`;
   }
 
@@ -582,7 +815,20 @@ function onGhazalSearch() {
     const q = ($('ghazalSearchInput') && $('ghazalSearchInput').value.trim()) || '';
     if (!q) {
       searchCollectionFilter = 'all';
-      if ($('ghazalCollectionCount') && typeof collectionData === 'function') $('ghazalCollectionCount').textContent = collectionData(activeCollection).length + ' ghazals';
+      const col = (typeof activeCollection !== 'undefined') ? activeCollection : 'handbook';
+      const count = collectionData(col).length;
+      const countText = count.toLocaleString() + ' ghazals';
+      const descs = {
+        'handbook': 'The handbook\'s exercise ghazals, with Frances Pritchett\'s notes. <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/10_ex_01_06.html" target="_blank" rel="noopener">Her exercises<span class="ext">↗</span></a> · <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/11_exnotes.html" target="_blank" rel="noopener">answers &amp; notes<span class="ext">↗</span></a>',
+        'ghalib': "Ghalib's divan, scanned and meter-checked by the engine.",
+        'mir': "Mir Taqi Mir, scanned and meter-checked by the engine.",
+      };
+      const descText = descs[col] || (isPoetCol(col) ? 'Rekhta corpus' : '');
+      if ($('colDesc')) {
+        $('colDesc').innerHTML = `<span id="ghazalCollectionCount" class="ghazal-collection-count">${countText}</span>${descText ? ' · <span id="colDescText">' + descText + '</span>' : ''}`;
+      } else if ($('ghazalCollectionCount')) {
+        $('ghazalCollectionCount').textContent = countText;
+      }
     }
     renderGhazalsList();
     // shareable: the address bar carries the search
@@ -630,11 +876,16 @@ function switchCollection(col) {
     'ghalib': "Ghalib's divan, scanned and meter-checked by the engine.",
     'mir': "Mir Taqi Mir, scanned and meter-checked by the engine.",
   };
-  // a poet page needs no note: each number links to the ghazal on Rekhta, and how the bahr is found is on the About page
-  if ($('colDesc')) $('colDesc').innerHTML = descs[col] || '';   // descriptions may carry links (trusted, static)
+  const count = collectionData(col).length;
+  const countText = count.toLocaleString() + ' ghazals';
+  const descText = descs[col] || (isPoetCol(col) ? 'Rekhta corpus' : '');
 
-  if ($('ghazalEyebrow')) $('ghazalEyebrow').textContent = '';   // the collection switch already says which one; shown only for search results
-  if ($('ghazalCollectionCount')) $('ghazalCollectionCount').textContent = collectionData(col).length + ' ghazals';
+  if ($('colDesc')) {
+    $('colDesc').innerHTML = `<span id="ghazalCollectionCount" class="ghazal-collection-count">${countText}</span>${descText ? ' · <span id="colDescText">' + descText + '</span>' : ''}`;
+  } else if ($('ghazalCollectionCount')) {
+    $('ghazalCollectionCount').textContent = countText;
+  }
+  if ($('ghazalEyebrow')) $('ghazalEyebrow').textContent = '';
 
   const cHandbook = $('handbookExContainer');
   const cGhalib = $('ghalibContainer');
@@ -834,10 +1085,16 @@ function renderUniversalSearchResults(q) {
     });
   }
 
+  const nq = searchNorm(q);
+  const terms = nq.split(' ').filter(Boolean);
+
   if ($('ghazalEyebrow')) $('ghazalEyebrow').textContent = '';
-  if ($('ghazalCollectionCount')) {
-    const scope = searchCollectionFilter !== 'all' ? 'in ' + colNames[searchCollectionFilter] : 'across all collections';
-    $('ghazalCollectionCount').textContent = `${rows.length} match${rows.length === 1 ? '' : 'es'} ${scope}`;
+  const scope = searchCollectionFilter !== 'all' ? 'in ' + colNames[searchCollectionFilter] : 'across all collections';
+  const countText = `${rows.length} match${rows.length === 1 ? '' : 'es'} ${scope}`;
+  if ($('colDesc')) {
+    $('colDesc').innerHTML = `<span id="ghazalCollectionCount" class="ghazal-collection-count">${countText}</span>${q ? ' · <span id="colDescText" class="faint">for &ldquo;' + escapeHtml(q) + '&rdquo;</span>' : ''}`;
+  } else if ($('ghazalCollectionCount')) {
+    $('ghazalCollectionCount').textContent = countText;
   }
 
   if (!rows.length) {
@@ -849,12 +1106,21 @@ function renderUniversalSearchResults(q) {
   const groups = buildMeterGroups(rows, r => mListOf(r.item)[0], r => r.item.id);
   const { html, shownRows, totalRows } = renderGroupedRows(groups, ghazalShownCount, (r, i, arrLen) => {
     const { col, item } = r;
-    const l1 = item.lines && item.lines[0];
-    const disp1 = l1 ? ((typeof getLineDisplay === 'function') ? getLineDisplay(l1, cs) : (l1[cs] || l1.ur)) : '';
+    const matchedLine = findMatchingLine(item, terms) || (item.lines && item.lines[0]);
+    const disp1 = matchedLine ? ((typeof getLineDisplay === 'function') ? getLineDisplay(matchedLine, cs) : (matchedLine[cs] || matchedLine.ur)) : '';
     const who = (col === 'handbook' || isPoetCol(col)) ? (item.poet || colNames[col]) : colNames[col];
     const isHb = (col === 'handbook');
-    const metaHtml = isHb
-      ? `<div class="vmeta"><span class="search-result-col">Handbook</span><span>·</span><span>${escapeHtml(who)}</span></div>`
+    const mId = mListOf(item)[0];
+    const metaParts = [];
+    if (who) metaParts.push(escapeHtml(who));
+    if (isHb) metaParts.push('Handbook');
+    if (mId != null && typeof meterBenchmarkFor === 'function') {
+      const bm = meterBenchmarkFor(mId);
+      if (bm && bm.p) metaParts.push(`Bahr ${mId} (${escapeHtml(bm.p)})`);
+      else if (mId != null) metaParts.push(`Bahr ${mId}`);
+    }
+    const metaHtml = metaParts.length
+      ? `<div class="vmeta">${metaParts.map(p => `<span>${p}</span>`).join('<span>·</span>')}</div>`
       : '';
     return `
       <div class="vrow" role="link" tabindex="0" onclick="navigate('/ghazals/${col}/${item.id}')">
@@ -1104,9 +1370,9 @@ function openGhazalReader(col, id) {
         const e2 = (typeof patEnding === 'function') ? patEnding(f2.meter.raw || f2.meter.pattern) : '';
         const tip = `Misra 1 uses Meter #${f1.meter.id} (${e1}), Misra 2 uses Meter #${f2.meter.id} (${e2}). In Classical Urdu prosody, these alternating cadences form an accepted paired meter (Handbook \u00a76.1).`;
         pairBadge = ` <span class="pair-bahr-pill sm" tabindex="0" data-tip="${tip}">Paired · #${f1.meter.id} &amp; #${f2.meter.id}</span>`;
-      } else if (f1) {
+      } else if (f1 && readerMeters.length > 1 && f1.meter.id !== readerMeters[0]) {
         const e1 = (typeof patEnding === 'function') ? patEnding(f1.meter.raw || f1.meter.pattern) : '';
-        const tip = `Both misras in this couplet use Meter #${f1.meter.id} (${e1}).`;
+        const tip = `Both misras in this couplet use Meter #${f1.meter.id} (${e1}), the secondary cadence in this paired bahr.`;
         pairBadge = ` <span class="pair-bahr-pill sm faint-pair" tabindex="0" data-tip="${tip}">Meter #${f1.meter.id}</span>`;
       }
     }
