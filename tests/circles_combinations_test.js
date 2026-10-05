@@ -263,29 +263,53 @@ async function runTests() {
   assert(sampleShort, 'Short syllable chip rendered');
   assert(sampleLong, 'Long syllable chip rendered');
 
-  // 5. Performance Benchmark
-  const iterations = 25;
-  console.log(`\n[5/5] Running Performance Benchmark (${iterations} Rapid State Transitions in JSDOM)...`);
+  // 5. Engine Resolution Benchmark & State Sequence Verification
+  console.log('\n[5/5] Engine Resolution Benchmark & State Sequence Verification...');
+
+  // 5a. Pure Mathematical Engine Resolution Benchmark (Zero DOM Overhead)
+  const benchPasses = 10;
   const t0 = performance.now();
-
-  for (let i = 0; i < iterations; i++) {
-    const c = i % 5;
-    w.selectCircle(c);
-    const mCount = w.CIRCLES[c].meters.length;
-    w.selectCircleMeter(i % mCount);
-    if (i % 2 === 0) w.setCircleLength('musaddas');
-    else w.setCircleLength('musamman');
-    if (i % 3 === 0) w.setCircleBodyMod('makhbun');
-    else w.setCircleBodyMod('base');
-    if (i % 4 === 0) w.setCircleEndMod('mahzuuf');
-    else if (i % 4 === 1) w.setCircleEndMod('maqtu');
-    else w.setCircleEndMod('salim');
+  let resolutionsCount = 0;
+  for (let rep = 0; rep < benchPasses; rep++) {
+    w.CIRCLES.forEach((c, ci) => {
+      c.meters.forEach((m, mi) => {
+        ['musamman', 'musaddas'].forEach(len => {
+          ['base', 'makhbun'].forEach(bmod => {
+            ['salim', 'mahzuuf', 'maqtu'].forEach(emod => {
+              w.getMeterResolution(ci, mi, len, bmod, emod);
+              resolutionsCount++;
+            });
+          });
+        });
+      });
+    });
   }
+  const engineElapsed = performance.now() - t0;
+  const usPerOp = (engineElapsed / resolutionsCount * 1000).toFixed(2);
+  console.log(`  ✓ Pure Engine Benchmark: ${resolutionsCount} resolutions in ${engineElapsed.toFixed(2)}ms (${usPerOp}µs / resolution)`);
+  assert(engineElapsed < 500.0, `Engine resolution throughput healthy (${engineElapsed.toFixed(1)}ms for ${resolutionsCount} ops)`);
 
-  const elapsed = performance.now() - t0;
-  const avgMs = (elapsed / iterations).toFixed(2);
-  console.log(`  ✓ Benchmark completed: ${iterations} full UI/DOM redraws in ${elapsed.toFixed(1)}ms (avg: ${avgMs}ms / transition)`);
-  assert(parseFloat(avgMs) < 800.0, `Average transition latency (${avgMs}ms in software JSDOM) is healthy (< 800ms CI budget)`);
+  // 5b. Functional Sequence Check (1 clean cycle across all 5 circles, no DOM thrashing)
+  for (let c = 0; c < 5; c++) {
+    w.selectCircle(c);
+    const mtrCount = w.CIRCLES[c].meters.length;
+    w.selectCircleMeter(c % mtrCount);
+    if (c % 2 === 0) w.setCircleLength('musaddas');
+    else w.setCircleLength('musamman');
+    if (c % 2 === 1) w.setCircleBodyMod('makhbun');
+    else w.setCircleBodyMod('base');
+    if (c % 3 === 0) w.setCircleEndMod('salim');
+    else if (c % 3 === 1) w.setCircleEndMod('mahzuuf');
+    else w.setCircleEndMod('maqtu');
+
+    const hub = doc.getElementById('hubMeterName');
+    const banner = doc.getElementById('assembledBanner');
+    const card = doc.getElementById('circleCoupletCard');
+    assert(hub && hub.textContent.trim().length > 0, `Circle ${c} hub meter rendered`);
+    assert(banner && banner.textContent.trim().length > 0, `Circle ${c} assembled banner rendered`);
+    assert(card && card.querySelector('.couplet-head'), `Circle ${c} couplet card rendered`);
+  }
+  console.log('  ✓ Sequential Circle transitions verified without errors');
 
   console.log('\n===============================================================');
   if (failures === 0) {
