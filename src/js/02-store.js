@@ -169,7 +169,7 @@ function handleRoute(targetHash) {
   } else if (root === 'meter') {
     let sub = parts[1] || subTabMemory.meter || 'feet';
     if (sub === 'learn') sub = 'buhur';   // old links and saved state: Learn became Buḥūr
-    if (!['feet', 'buhur', 'drill', 'lookup'].includes(sub)) sub = 'feet';
+    if (!['feet', 'circles', 'buhur', 'drill', 'lookup'].includes(sub)) sub = 'feet';
     if (parts[1] !== sub) setHashQuiet('/meter/' + sub + (raw && raw.indexOf('?') !== -1 ? raw.slice(raw.indexOf('?')) : ''));
     subTabMemory.meter = sub;
     store.set('subTab:meter', sub);
@@ -254,6 +254,7 @@ function showWeightSubtab(sub) {
 function showMeterSubtab(sub, params) {
   const tabs = {
     feet: { btn: 'meterSubFeet', panel: 'meterPanelFeet' },
+    circles: { btn: 'meterSubCircles', panel: 'meterPanelCircles' },
     buhur: { btn: 'meterSubBuhur', panel: 'meterPanelBuhur' },
     drill: { btn: 'meterSubDrill', panel: 'meterPanelDrill' },
     lookup: { btn: 'meterSubLookup', panel: 'meterPanelLookup' }
@@ -271,6 +272,8 @@ function showMeterSubtab(sub, params) {
   if (sub === 'feet') {
     if (typeof renderFeetLesson === 'function') renderFeetLesson();
     if (typeof renderFeetCatalog === 'function') renderFeetCatalog();
+  } else if (sub === 'circles') {
+    if (typeof renderCircles === 'function') renderCircles();
   } else if (sub === 'buhur') {
     if (typeof renderEarFams === 'function') renderEarFams();
     if (typeof renderEar === 'function') renderEar();

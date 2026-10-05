@@ -6,7 +6,8 @@
     "src/styles/pages.css",
     "src/styles/drill.css",
     "src/styles/home.css",
-    "src/styles/practice.css"
+    "src/styles/practice.css",
+    "src/styles/circles.css"
   ],
   "body": [
     "src/body/header.html",
@@ -15,6 +16,7 @@
     "src/body/weight-drill.html",
     "src/body/weight-lookup.html",
     "src/body/meter.html",
+    "src/body/meter-circles.html",
     "src/body/meter-drill.html",
     "src/body/meter-lookup.html",
     "src/body/scan.html",
@@ -43,6 +45,7 @@
     "src/js/15-audio.js",
     "src/js/16-data-families-verified.js",
     "src/js/17-ear.js",
+    "src/js/17c-circles.js",
     "src/js/18-tap.js",
     "src/js/18b-meter-label.js",
     "src/js/19-scan.js",

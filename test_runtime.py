@@ -137,7 +137,10 @@ def run_tests():
         textContent: '',
         innerHTML: '',
         value: '',
-        style: {}
+        style: {},
+        setAttribute: () => {},
+        removeAttribute: () => {},
+        getAttribute: () => null
       };
     }
 

@@ -44,5 +44,6 @@ data/mir_enriched.json
 
 # Local mockups & reference docs
 studio_mockup.html
+bahr_circles_mockup.html
 *.pdf
 

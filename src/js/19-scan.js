@@ -245,7 +245,13 @@ let ovr={}, lastScan=null, selWord=null, scanRolls={};
 function verdictOf(c){ return c<=2.5?['ok','Scans']:c<=5?['warn','Scans, with stretches']:['no','Strained — probably not']; }
 /* colour a raw pattern string (= long, - short, x shortenable long, / foot break) */
 function patGlyphs(raw){
-  return String(raw).split('').map(ch=>ch==='='?'<span class="pg l">=</span>':ch==='-'?'<span class="pg s">-</span>':ch==='x'?'<span class="pg x">x</span>':ch==='/'?'<span class="pg sep">/</span>':ch).join('');
+  return String(raw).split('').map(ch =>
+    ch === '=' ? '<span class="pg l">=</span>' :
+    (ch === '-' || ch === '–' || ch === '—') ? '<span class="pg s">–</span>' :
+    (ch === 'x' || ch === 'X' || ch === '×') ? '<span class="pg x">x</span>' :
+    ch === '/' ? '<span class="pg sep">/</span>' :
+    ch
+  ).join('');
 }
 /* Legend entries. `rule` = engine-lab/rules.json id (cited as a Handbook section in the tooltip); `app: true` = this app's
    own notation or convention, not the handbook's. */

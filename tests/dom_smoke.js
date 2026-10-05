@@ -26,7 +26,7 @@ const text = el => el.textContent.replace(/\s+/g, ' ').trim();
 
 const ROUTES = [
   ['#/weight', 'weightPanelLearn', 500], ['#/weight/drill', 'weightPanelDrill', 60], ['#/weight/lookup', 'weightPanelLookup', 500],
-  ['#/meter', 'meterPanelFeet', 500], ['#/meter/buhur', 'meterPanelBuhur', 500], ['#/meter/drill', 'meterPanelDrill', 60], ['#/meter/lookup', 'meterPanelLookup', 500],
+  ['#/meter', 'meterPanelFeet', 500], ['#/meter/circles', 'meterPanelCircles', 500], ['#/meter/buhur', 'meterPanelBuhur', 500], ['#/meter/drill', 'meterPanelDrill', 60], ['#/meter/lookup', 'meterPanelLookup', 500],
   ['#/scan', 'scan-section', 100], ['#/ghazals', 'ghazals-section', 500]
 ];
 

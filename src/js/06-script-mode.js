@@ -39,6 +39,7 @@ function setScriptMode(mode) {
   if(typeof renderDictionary === 'function') renderDictionary();
   if(typeof renderFams === 'function') renderFams();
   if(typeof renderFeetCatalog === 'function') renderFeetCatalog();
+  if(typeof renderCircles === 'function') renderCircles();
   if(typeof renderLearnExamples === 'function') renderLearnExamples();
   if(typeof runStudioScan === 'function') runStudioScan();
   if(typeof runScan === 'function' && $('scanIn') && $('scanIn').value) runScan();

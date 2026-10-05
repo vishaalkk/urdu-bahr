@@ -16,6 +16,7 @@ echo "── learn render";          node tests/learn_render.js 2>&1 | grep -v "
 echo "── handbook examples";     node tests/handbook_examples.js | tail -3
 echo "── handbook resilience";   node tests/handbook_resilience.js | tail -1
 echo "── DOM smoke (jsdom)";     node tests/dom_smoke.js
+echo "── Circles combinations & benchmark"; node tests/circles_combinations_test.js
 echo "── Match Bahr drill";      node tests/match_drill.js
 echo "── engine part 6";         node tests/engine_part6.js | tail -1
 echo "── near fit contract";     node tests/near_fit.js
