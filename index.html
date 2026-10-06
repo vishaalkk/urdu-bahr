@@ -3266,6 +3266,9 @@ html[data-script="ro"] .pr-line, html[data-script="hi"] .pr-line { font-family: 
   text-align: center;
   gap: var(--sp-2);
   min-height: 94px; /* Stabilizes height */
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .assembled-eyebrow,
@@ -3315,6 +3318,13 @@ html[data-script="ro"] .pr-line, html[data-script="hi"] .pr-line { font-family: 
   flex-direction: column;
   align-items: center;
   gap: 4px;
+  width: fit-content;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
 }
 
 .assembled-pattern-line {
@@ -3323,6 +3333,8 @@ html[data-script="ro"] .pr-line, html[data-script="hi"] .pr-line { font-family: 
   font-family: var(--mono-pat);
   font-size: 15px;
   font-weight: 700;
+  min-width: max-content;
+  text-align: center;
 }
 .assembled-pattern-line .pg.l {
   color: var(--mark-l);
@@ -3585,7 +3597,7 @@ html[data-script="ur"] .couplet-attribution {
 }
 
 /* Whole verse misra lines & optical couplet typesetting */
-.couplet-card .cbox-verse {
+#circleCoupletCard .cbox-verse {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -3595,36 +3607,33 @@ html[data-script="ur"] .couplet-attribution {
   width: 100%;
 }
 
-.couplet-card .cbox-verse .vline-lg {
+#circleCoupletCard .cbox-verse .vline-lg {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  width: fit-content;
-  max-width: 92%;
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto;
 }
 
-.cbox-verse .misra-line {
+#circleCoupletCard .cbox-verse .misra-line {
   margin: 0;
-  padding: 3px 12px;
+  padding: 2px 4px;
   text-align: center;
   direction: inherit;
   display: block;
   width: auto;
   white-space: normal;
   word-break: keep-all;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
 }
 
 #circleVerseUrdu.vline-lg {
-  direction: rtl;
-}
-
-#circleVerseUrdu .misra-line {
-  font-family: var(--urdu);
-  font-size: 31px;
-  line-height: 2.2;
   direction: rtl;
 }
 
@@ -3632,21 +3641,7 @@ html[data-script="ur"] .couplet-attribution {
   direction: ltr;
 }
 
-#circleVerseHindi .misra-line {
-  font-family: var(--deva);
-  font-size: 21px;
-  line-height: 1.9;
-  direction: ltr;
-}
-
 #circleVerseRoman.vline-lg {
-  direction: ltr;
-}
-
-#circleVerseRoman .misra-line {
-  font-family: var(--mono);
-  font-size: 16.5px;
-  line-height: 1.85;
   direction: ltr;
   color: var(--fg);
 }
@@ -3733,6 +3728,52 @@ html[data-script="ur"] .couplet-attribution {
   color: var(--faint);
 }
 
+/* =========================================================================
+   Mobile Responsiveness for Metric Circles
+   ========================================================================= */
+@media (max-width: 600px) {
+  .assembled-banner {
+    padding: var(--sp-3) var(--sp-2);
+  }
+  .assembled-title,
+  .assembled-ur-name {
+    font-size: 22px;
+  }
+  .assembled-name-en,
+  .assembled-ro-name {
+    font-size: 16px;
+  }
+  .assembled-formula-box,
+  .assembled-pattern-strip {
+    padding: 8px 10px;
+    width: 100%;
+  }
+  .assembled-pattern-line {
+    font-size: clamp(11px, 3.2vw, 13.5px);
+    letter-spacing: clamp(0.01em, 0.6vw, 0.05em);
+  }
+  .assembled-summary {
+    font-size: 12px;
+    padding: 0 4px;
+  }
+  .couplet-card {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  #circleScanBox {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+  #circleSylRow {
+    max-width: 100%;
+  }
+}
 </style>
 
 </head>
@@ -11208,9 +11249,14 @@ window.bestGhazalLinkForMeter = bestGhazalLinkForMeter;
                 ro2: 'zi furoogh-e talʿat-e kheshtan shab-e banda roz-e digar kunad',
                 hi2: 'ज़े फ़रोग़-ए-तलअत-ए-ख़्वेशतन शब-ए-बंदा रोज़-ए-दिगर कुनद',
                 poet: 'Shams Qais Razi',
+                genre: 'Al-Muʿjam (Classical Persian)',
+                url: 'https://ganjoor.net',
+                source: 'Al-Muʿjam ↗',
                 syls: [
                   { ro: 'a', m: 's' }, { ro: 'gar', m: 'l' }, { ro: 'ān', m: 's' }, { ro: 'ni', m: 's' }, { ro: 'gā', m: 'l' },
-                  { ro: 're', m: 's' }, { ro: 'sa', m: 'l' }, { ro: 'man', m: 's' }, { ro: 'ba', m: 's' }, { ro: 'ram', m: 'l' }
+                  { ro: 're', m: 's' }, { ro: 'sa', m: 'l' }, { ro: 'man', m: 's' }, { ro: 'ba', m: 's' }, { ro: 'ram', m: 'l' },
+                  { ro: 'ba', m: 's' }, { ro: 'vi', m: 'l' }, { ro: 's̱ā', m: 's' }, { ro: 'qe', m: 's' }, { ro: 'ban', m: 'l' },
+                  { ro: 'da', m: 's' }, { ro: 'gu', m: 'l' }, { ro: 'zar', m: 's' }, { ro: 'ku', m: 's' }, { ro: 'nad', m: 'l' }
                 ]
               },
               'musamman_salim': {
@@ -11221,8 +11267,14 @@ window.bestGhazalLinkForMeter = bestGhazalLinkForMeter;
                 ro2: 'zi furoogh-e talʿat-e kheshtan shab-e banda roz-e digar kunad',
                 hi2: 'ज़े फ़रोग़-ए-तलअत-ए-ख़्वेशतन शब-ए-बंदा रोज़-ए-दिगर कुनद',
                 poet: 'Shams Qais Razi',
+                genre: 'Al-Muʿjam (Classical Persian)',
+                url: 'https://ganjoor.net',
+                source: 'Al-Muʿjam ↗',
                 syls: [
-                  { ro: 'a', m: 's' }, { ro: 'gar', m: 'l' }, { ro: 'ān', m: 's' }, { ro: 'ni', m: 's' }, { ro: 'gā', m: 'l' }
+                  { ro: 'a', m: 's' }, { ro: 'gar', m: 'l' }, { ro: 'ān', m: 's' }, { ro: 'ni', m: 's' }, { ro: 'gā', m: 'l' },
+                  { ro: 're', m: 's' }, { ro: 'sa', m: 'l' }, { ro: 'man', m: 's' }, { ro: 'ba', m: 's' }, { ro: 'ram', m: 'l' },
+                  { ro: 'ba', m: 's' }, { ro: 'vi', m: 'l' }, { ro: 's̱ā', m: 's' }, { ro: 'qe', m: 's' }, { ro: 'ban', m: 'l' },
+                  { ro: 'da', m: 's' }, { ro: 'gu', m: 'l' }, { ro: 'zar', m: 's' }, { ro: 'ku', m: 's' }, { ro: 'nad', m: 'l' }
                 ]
               },
               'musaddas_mahzuuf': {
@@ -11233,8 +11285,14 @@ window.bestGhazalLinkForMeter = bestGhazalLinkForMeter;
                 ro2: 'zi furoogh-e talʿat-e kheshtan shab-e banda roz-e digar kunad',
                 hi2: 'ज़े फ़रोग़-ए-तलअत-ए-ख़्वेशतन शब-ए-बंदा रोज़-ए-दिगर कुनद',
                 poet: 'Shams Qais Razi',
+                genre: 'Al-Muʿjam (Classical Persian)',
+                url: 'https://ganjoor.net',
+                source: 'Al-Muʿjam ↗',
                 syls: [
-                  { ro: 'a', m: 's' }, { ro: 'gar', m: 'l' }, { ro: 'ān', m: 's' }, { ro: 'ni', m: 's' }, { ro: 'gā', m: 'l' }
+                  { ro: 'a', m: 's' }, { ro: 'gar', m: 'l' }, { ro: 'ān', m: 's' }, { ro: 'ni', m: 's' }, { ro: 'gā', m: 'l' },
+                  { ro: 're', m: 's' }, { ro: 'sa', m: 'l' }, { ro: 'man', m: 's' }, { ro: 'ba', m: 's' }, { ro: 'ram', m: 'l' },
+                  { ro: 'ba', m: 's' }, { ro: 'vi', m: 'l' }, { ro: 's̱ā', m: 's' }, { ro: 'qe', m: 's' }, { ro: 'ban', m: 'l' },
+                  { ro: 'da', m: 's' }, { ro: 'gu', m: 'l' }, { ro: 'zar', m: 's' }, { ro: 'ku', m: 's' }, { ro: 'nad', m: 'l' }
                 ]
               },
               'musamman_mahzuuf': {
@@ -11245,8 +11303,14 @@ window.bestGhazalLinkForMeter = bestGhazalLinkForMeter;
                 ro2: 'zi furoogh-e talʿat-e kheshtan shab-e banda roz-e digar kunad',
                 hi2: 'ज़े फ़रोग़-ए-तलअत-ए-ख़्वेशतन शब-ए-बंदा रोज़-ए-दिगर कुनद',
                 poet: 'Shams Qais Razi',
+                genre: 'Al-Muʿjam (Classical Persian)',
+                url: 'https://ganjoor.net',
+                source: 'Al-Muʿjam ↗',
                 syls: [
-                  { ro: 'a', m: 's' }, { ro: 'gar', m: 'l' }, { ro: 'ān', m: 's' }, { ro: 'ni', m: 's' }, { ro: 'gā', m: 'l' }
+                  { ro: 'a', m: 's' }, { ro: 'gar', m: 'l' }, { ro: 'ān', m: 's' }, { ro: 'ni', m: 's' }, { ro: 'gā', m: 'l' },
+                  { ro: 're', m: 's' }, { ro: 'sa', m: 'l' }, { ro: 'man', m: 's' }, { ro: 'ba', m: 's' }, { ro: 'ram', m: 'l' },
+                  { ro: 'ba', m: 's' }, { ro: 'vi', m: 'l' }, { ro: 's̱ā', m: 's' }, { ro: 'qe', m: 's' }, { ro: 'ban', m: 'l' },
+                  { ro: 'da', m: 's' }, { ro: 'gu', m: 'l' }, { ro: 'zar', m: 's' }, { ro: 'ku', m: 's' }, { ro: 'nad', m: 'l' }
                 ]
               }
             }
@@ -12671,7 +12735,7 @@ const METER_GENRE_NOTABLES = {
 
 function renderMisraPair(l1, l2) {
   if (!l1 && !l2) return '';
-  if (!l2) return l1 || '';
+  if (!l2) return `<div class="misra-line">${l1 || ''}</div>`;
   return `<div class="misra-line">${l1}</div><div class="misra-line">${l2}</div>`;
 }
 
@@ -12788,6 +12852,13 @@ function updateCircleVerseSection(mtr, res) {
       }
       if (sylRow) sylRow.innerHTML = scansionHtml;
       if (vScanBox) vScanBox.style.display = scansionHtml ? '' : 'none';
+      if (typeof fitChipRows === 'function') {
+        if (typeof requestAnimationFrame === 'function') {
+          requestAnimationFrame(() => fitChipRows(document.getElementById('circleCoupletCard')));
+        } else {
+          fitChipRows(document.getElementById('circleCoupletCard'));
+        }
+      }
     } else {
       if (vVerseBox) vVerseBox.style.display = 'none';
       if (vScanBox) vScanBox.style.display = 'none';
@@ -12897,6 +12968,13 @@ function updateCircleVerseSection(mtr, res) {
           // remaining syllables ignored if verse exceeds line feet count
         }
       sylRow.innerHTML = html;
+      if (typeof fitChipRows === 'function') {
+        if (typeof requestAnimationFrame === 'function') {
+          requestAnimationFrame(() => fitChipRows(document.getElementById('circleCoupletCard')));
+        } else {
+          fitChipRows(document.getElementById('circleCoupletCard'));
+        }
+      }
     } else {
       sylRow.innerHTML = '';
     }

@@ -1039,9 +1039,14 @@
                 ro2: 'zi furoogh-e talʿat-e kheshtan shab-e banda roz-e digar kunad',
                 hi2: 'ज़े फ़रोग़-ए-तलअत-ए-ख़्वेशतन शब-ए-बंदा रोज़-ए-दिगर कुनद',
                 poet: 'Shams Qais Razi',
+                genre: 'Al-Muʿjam (Classical Persian)',
+                url: 'https://ganjoor.net',
+                source: 'Al-Muʿjam ↗',
                 syls: [
                   { ro: 'a', m: 's' }, { ro: 'gar', m: 'l' }, { ro: 'ān', m: 's' }, { ro: 'ni', m: 's' }, { ro: 'gā', m: 'l' },
-                  { ro: 're', m: 's' }, { ro: 'sa', m: 'l' }, { ro: 'man', m: 's' }, { ro: 'ba', m: 's' }, { ro: 'ram', m: 'l' }
+                  { ro: 're', m: 's' }, { ro: 'sa', m: 'l' }, { ro: 'man', m: 's' }, { ro: 'ba', m: 's' }, { ro: 'ram', m: 'l' },
+                  { ro: 'ba', m: 's' }, { ro: 'vi', m: 'l' }, { ro: 's̱ā', m: 's' }, { ro: 'qe', m: 's' }, { ro: 'ban', m: 'l' },
+                  { ro: 'da', m: 's' }, { ro: 'gu', m: 'l' }, { ro: 'zar', m: 's' }, { ro: 'ku', m: 's' }, { ro: 'nad', m: 'l' }
                 ]
               },
               'musamman_salim': {
@@ -1052,8 +1057,14 @@
                 ro2: 'zi furoogh-e talʿat-e kheshtan shab-e banda roz-e digar kunad',
                 hi2: 'ज़े फ़रोग़-ए-तलअत-ए-ख़्वेशतन शब-ए-बंदा रोज़-ए-दिगर कुनद',
                 poet: 'Shams Qais Razi',
+                genre: 'Al-Muʿjam (Classical Persian)',
+                url: 'https://ganjoor.net',
+                source: 'Al-Muʿjam ↗',
                 syls: [
-                  { ro: 'a', m: 's' }, { ro: 'gar', m: 'l' }, { ro: 'ān', m: 's' }, { ro: 'ni', m: 's' }, { ro: 'gā', m: 'l' }
+                  { ro: 'a', m: 's' }, { ro: 'gar', m: 'l' }, { ro: 'ān', m: 's' }, { ro: 'ni', m: 's' }, { ro: 'gā', m: 'l' },
+                  { ro: 're', m: 's' }, { ro: 'sa', m: 'l' }, { ro: 'man', m: 's' }, { ro: 'ba', m: 's' }, { ro: 'ram', m: 'l' },
+                  { ro: 'ba', m: 's' }, { ro: 'vi', m: 'l' }, { ro: 's̱ā', m: 's' }, { ro: 'qe', m: 's' }, { ro: 'ban', m: 'l' },
+                  { ro: 'da', m: 's' }, { ro: 'gu', m: 'l' }, { ro: 'zar', m: 's' }, { ro: 'ku', m: 's' }, { ro: 'nad', m: 'l' }
                 ]
               },
               'musaddas_mahzuuf': {
@@ -1064,8 +1075,14 @@
                 ro2: 'zi furoogh-e talʿat-e kheshtan shab-e banda roz-e digar kunad',
                 hi2: 'ज़े फ़रोग़-ए-तलअत-ए-ख़्वेशतन शब-ए-बंदा रोज़-ए-दिगर कुनद',
                 poet: 'Shams Qais Razi',
+                genre: 'Al-Muʿjam (Classical Persian)',
+                url: 'https://ganjoor.net',
+                source: 'Al-Muʿjam ↗',
                 syls: [
-                  { ro: 'a', m: 's' }, { ro: 'gar', m: 'l' }, { ro: 'ān', m: 's' }, { ro: 'ni', m: 's' }, { ro: 'gā', m: 'l' }
+                  { ro: 'a', m: 's' }, { ro: 'gar', m: 'l' }, { ro: 'ān', m: 's' }, { ro: 'ni', m: 's' }, { ro: 'gā', m: 'l' },
+                  { ro: 're', m: 's' }, { ro: 'sa', m: 'l' }, { ro: 'man', m: 's' }, { ro: 'ba', m: 's' }, { ro: 'ram', m: 'l' },
+                  { ro: 'ba', m: 's' }, { ro: 'vi', m: 'l' }, { ro: 's̱ā', m: 's' }, { ro: 'qe', m: 's' }, { ro: 'ban', m: 'l' },
+                  { ro: 'da', m: 's' }, { ro: 'gu', m: 'l' }, { ro: 'zar', m: 's' }, { ro: 'ku', m: 's' }, { ro: 'nad', m: 'l' }
                 ]
               },
               'musamman_mahzuuf': {
@@ -1076,8 +1093,14 @@
                 ro2: 'zi furoogh-e talʿat-e kheshtan shab-e banda roz-e digar kunad',
                 hi2: 'ज़े फ़रोग़-ए-तलअत-ए-ख़्वेशतन शब-ए-बंदा रोज़-ए-दिगर कुनद',
                 poet: 'Shams Qais Razi',
+                genre: 'Al-Muʿjam (Classical Persian)',
+                url: 'https://ganjoor.net',
+                source: 'Al-Muʿjam ↗',
                 syls: [
-                  { ro: 'a', m: 's' }, { ro: 'gar', m: 'l' }, { ro: 'ān', m: 's' }, { ro: 'ni', m: 's' }, { ro: 'gā', m: 'l' }
+                  { ro: 'a', m: 's' }, { ro: 'gar', m: 'l' }, { ro: 'ān', m: 's' }, { ro: 'ni', m: 's' }, { ro: 'gā', m: 'l' },
+                  { ro: 're', m: 's' }, { ro: 'sa', m: 'l' }, { ro: 'man', m: 's' }, { ro: 'ba', m: 's' }, { ro: 'ram', m: 'l' },
+                  { ro: 'ba', m: 's' }, { ro: 'vi', m: 'l' }, { ro: 's̱ā', m: 's' }, { ro: 'qe', m: 's' }, { ro: 'ban', m: 'l' },
+                  { ro: 'da', m: 's' }, { ro: 'gu', m: 'l' }, { ro: 'zar', m: 's' }, { ro: 'ku', m: 's' }, { ro: 'nad', m: 'l' }
                 ]
               }
             }
@@ -2502,7 +2525,7 @@ const METER_GENRE_NOTABLES = {
 
 function renderMisraPair(l1, l2) {
   if (!l1 && !l2) return '';
-  if (!l2) return l1 || '';
+  if (!l2) return `<div class="misra-line">${l1 || ''}</div>`;
   return `<div class="misra-line">${l1}</div><div class="misra-line">${l2}</div>`;
 }
 
@@ -2619,6 +2642,13 @@ function updateCircleVerseSection(mtr, res) {
       }
       if (sylRow) sylRow.innerHTML = scansionHtml;
       if (vScanBox) vScanBox.style.display = scansionHtml ? '' : 'none';
+      if (typeof fitChipRows === 'function') {
+        if (typeof requestAnimationFrame === 'function') {
+          requestAnimationFrame(() => fitChipRows(document.getElementById('circleCoupletCard')));
+        } else {
+          fitChipRows(document.getElementById('circleCoupletCard'));
+        }
+      }
     } else {
       if (vVerseBox) vVerseBox.style.display = 'none';
       if (vScanBox) vScanBox.style.display = 'none';
@@ -2728,6 +2758,13 @@ function updateCircleVerseSection(mtr, res) {
           // remaining syllables ignored if verse exceeds line feet count
         }
       sylRow.innerHTML = html;
+      if (typeof fitChipRows === 'function') {
+        if (typeof requestAnimationFrame === 'function') {
+          requestAnimationFrame(() => fitChipRows(document.getElementById('circleCoupletCard')));
+        } else {
+          fitChipRows(document.getElementById('circleCoupletCard'));
+        }
+      }
     } else {
       sylRow.innerHTML = '';
     }

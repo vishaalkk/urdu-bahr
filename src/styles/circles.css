@@ -512,6 +512,9 @@
   text-align: center;
   gap: var(--sp-2);
   min-height: 94px; /* Stabilizes height */
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .assembled-eyebrow,
@@ -561,6 +564,13 @@
   flex-direction: column;
   align-items: center;
   gap: 4px;
+  width: fit-content;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
 }
 
 .assembled-pattern-line {
@@ -569,6 +579,8 @@
   font-family: var(--mono-pat);
   font-size: 15px;
   font-weight: 700;
+  min-width: max-content;
+  text-align: center;
 }
 .assembled-pattern-line .pg.l {
   color: var(--mark-l);
@@ -831,7 +843,7 @@ html[data-script="ur"] .couplet-attribution {
 }
 
 /* Whole verse misra lines & optical couplet typesetting */
-.couplet-card .cbox-verse {
+#circleCoupletCard .cbox-verse {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -841,36 +853,33 @@ html[data-script="ur"] .couplet-attribution {
   width: 100%;
 }
 
-.couplet-card .cbox-verse .vline-lg {
+#circleCoupletCard .cbox-verse .vline-lg {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  width: fit-content;
-  max-width: 92%;
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto;
 }
 
-.cbox-verse .misra-line {
+#circleCoupletCard .cbox-verse .misra-line {
   margin: 0;
-  padding: 3px 12px;
+  padding: 2px 4px;
   text-align: center;
   direction: inherit;
   display: block;
   width: auto;
   white-space: normal;
   word-break: keep-all;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
 }
 
 #circleVerseUrdu.vline-lg {
-  direction: rtl;
-}
-
-#circleVerseUrdu .misra-line {
-  font-family: var(--urdu);
-  font-size: 31px;
-  line-height: 2.2;
   direction: rtl;
 }
 
@@ -878,21 +887,7 @@ html[data-script="ur"] .couplet-attribution {
   direction: ltr;
 }
 
-#circleVerseHindi .misra-line {
-  font-family: var(--deva);
-  font-size: 21px;
-  line-height: 1.9;
-  direction: ltr;
-}
-
 #circleVerseRoman.vline-lg {
-  direction: ltr;
-}
-
-#circleVerseRoman .misra-line {
-  font-family: var(--mono);
-  font-size: 16.5px;
-  line-height: 1.85;
   direction: ltr;
   color: var(--fg);
 }
@@ -979,3 +974,49 @@ html[data-script="ur"] .couplet-attribution {
   color: var(--faint);
 }
 
+/* =========================================================================
+   Mobile Responsiveness for Metric Circles
+   ========================================================================= */
+@media (max-width: 600px) {
+  .assembled-banner {
+    padding: var(--sp-3) var(--sp-2);
+  }
+  .assembled-title,
+  .assembled-ur-name {
+    font-size: 22px;
+  }
+  .assembled-name-en,
+  .assembled-ro-name {
+    font-size: 16px;
+  }
+  .assembled-formula-box,
+  .assembled-pattern-strip {
+    padding: 8px 10px;
+    width: 100%;
+  }
+  .assembled-pattern-line {
+    font-size: clamp(11px, 3.2vw, 13.5px);
+    letter-spacing: clamp(0.01em, 0.6vw, 0.05em);
+  }
+  .assembled-summary {
+    font-size: 12px;
+    padding: 0 4px;
+  }
+  .couplet-card {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  #circleScanBox {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+  #circleSylRow {
+    max-width: 100%;
+  }
+}
