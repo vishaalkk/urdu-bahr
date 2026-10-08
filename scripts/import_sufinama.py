@@ -39,7 +39,40 @@ POET_METADATA = {
     'bu_ali': {'name': 'Bu Ali', 'full': 'Bu Ali Shah Qalandar', 'ur': 'بو علی شاہ قلندر', 'hi': 'बू علی शाह क़لंदर'},
     'khusrau_persian': {'name': 'Amir Khusrau', 'full': 'Hazrat Amir Khusrau (Persian)', 'ur': 'امیر خسرو (فارسی)', 'hi': 'अमीर ख़ुसरो (फ़ारसी)'},
     'khusrau_urdu': {'name': 'Amir Khusrau', 'full': 'Hazrat Amir Khusrau', 'ur': 'امیر خسرو', 'hi': 'अमीर ख़ुसरो'},
+    # Sufinama's top 100 Persian qawwali (2026-10-08): category fa_<poet key in build_poets.py>
+    'fa_hafiz': {'name': 'Hafiz', 'full': 'Hafiz Shirazi'},
+    'fa_rumi': {'name': 'Rumi', 'full': 'Maulana Jalaluddin Rumi'},
+    'fa_saadi': {'name': 'Saadi', 'full': 'Saadi Shirazi'},
+    'fa_iraqi': {'name': 'Iraqi', 'full': 'Fakhruddin Iraqi'},
+    'fa_hasan_sijzi': {'name': 'Hasan Sijzi', 'full': 'Amir Hasan Ala Sijzi'},
+    'fa_ahmad_jam': {'name': 'Ahmad Jam', 'full': 'Shaikh Ahmad Jam'},
+    'fa_nizamuddin': {'name': 'Nizamuddin Auliya', 'full': 'Hazrat Nizamuddin Auliya'},
+    'fa_sabir': {'name': 'Sabir Kaliyari', 'full': 'Alauddin Ali Ahmad Sabir'},
+    'fa_jilani': {'name': 'Abdul Qadir Jilani', 'full': 'Shaikh Abdul Qadir Jilani'},
+    'fa_lal_shahbaz': {'name': 'Lal Shahbaz Qalandar', 'full': 'Lal Shahbaz Qalandar'},
+    'fa_bahlol': {'name': 'Bahlol Dana', 'full': 'Bahlol Dana'},
+    'fa_ghalib_farsi': {'name': 'Ghalib (Persian)', 'full': 'Mirza Ghalib'},
+    'fa_qateel_mirza': {'name': 'Mirza Qateel', 'full': 'Mirza Muhammad Hasan Qateel'},
+    'fa_shah_niyaz': {'name': 'Shah Niyaz', 'full': 'Shah Niyaz Ahmad Barelvi'},
+    'fa_anonymous_fa': {'name': 'Anonymous', 'full': 'Unknown (qawwali tradition)'},
+    'fa_jigar': {'name': 'Jigar', 'full': 'Jigar Moradabadi'},
+    'fa_ashrafi': {'name': 'Ashrafi', 'full': 'Hakeem Nazr Ashraf Ashrafi'},
+    'fa_shams_mashriqi': {'name': 'Shams Mashriqi', 'full': 'Shams Mashriqi'},
+    'fa_saudagar': {'name': 'Shah Siddique Saudagar', 'full': 'Shah Siddique Saudagar'},
+    'fa_muneer': {'name': 'Muneer', 'full': 'Muneer (qawwali tradition)'},
 }
+# Kalaam in Persian; a ghazal's lines are tagged `lang` by scripts/scan_sufinama.js (girah lines may be Urdu)
+PERSIAN_CATEGORIES = {'jami', 'bu_ali', 'khusrau_persian'}
+is_persian = lambda c: c in PERSIAN_CATEGORIES or c.startswith('fa_')
+
+
+def crawled_meta(category):
+    """a poet found by scripts/crawl_sufinama_persian.py: its name as Sufinama gives it"""
+    path = os.path.join(DATA_DIR, 'sufinama_poets.json')
+    names = json.load(open(path, encoding='utf-8')) if os.path.exists(path) else {}
+    key = category[3:] if category.startswith('fa_') else category
+    name = (names.get(key) or {}).get('name') or key.replace('_', ' ').title()
+    return {'name': name, 'full': name}
 
 
 def fetch_url(url, retries=3):
@@ -88,10 +121,11 @@ def process_poem(category, url):
             'ro': ro_lines[i] if i < len(ro_lines) else ''
         })
 
-    meta = POET_METADATA.get(category, {'name': category, 'full': category, 'ur': category, 'hi': category})
+    meta = POET_METADATA.get(category) or crawled_meta(category)
 
     return {
         'category': category,
+        'lang': 'fa' if is_persian(category) else 'ur',
         'poet': meta['name'],
         'poet_full': meta['full'],
         'url': url,

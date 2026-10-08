@@ -15,6 +15,12 @@
   <textarea id="scanIn" rows="3" class="scan-input" placeholder="Paste a misra, a sher, or a whole ghazal" oninput="onScanComposerInput()"></textarea>
   <textarea id="studioInput" class="hidden" aria-hidden="true"></textarea>
 
+  <div class="row scan-lang" role="group" aria-label="Language of the verse">
+    <span class="tiny muted scan-lang-label">Language</span>
+    <span id="scanLangButtons" class="scan-lang-buttons"></span>
+    <span id="scanLangDetected" class="tiny faint"></span>
+  </div>
+
   <div class="row scan-actions">
     <button class="btn gold" onclick="runScan()">Scan ▸</button>
     <button class="play sm hidden" id="btnPlayCouplet" onclick="scanPlayAll(null,this)" aria-label="Play all lines" data-label="Play all lines">▶︎</button>

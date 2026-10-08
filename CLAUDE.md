@@ -46,13 +46,17 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   `data/poets_scanned/` → `build_poets.py`. The scrape and scan folders are gitignored. Rekhta lines are scanned with the izafat,
   tashdid and pen-name hints their Roman gives (`rekhtaScanText` / `lineScanText`, `src/js/05-translit-helpers.js`). Poet data does NOT
   feed `WORD_ASCII_MAP`, `ROMAN_CASUAL_MAP` or the known-verse index: Rekhta's Roman must not override Pritchett's.
+- **Persian** (plan and status: `docs/PERSIAN_PLAN.md`): Sufinama kalaam `scripts/import_sufinama.py` → `node scripts/scan_sufinama.js`
+  (Persian-aware: line `lang`, no `H` on Persian lines) → `build_poets.py` (ghazal `lang`, `xl`, Ganjoor `gj`/`fa`). Gold:
+  `scripts/match_ganjoor.py` → `tests/data/persian_gold.json`; `tests/benchmark_fa.js` gates it. Ganjoor meters:
+  `scripts/build_fa_meters.py` → `data/persian_meters.json` (the circles' Persian status; key rule mirrored in `faMeterKey`).
 - **Collocations**: `data/collocations.json` (`scripts/build_collocations.py`) holds neighbour rules for typed Roman
   (`collocSpelling` in `05-translit-helpers.js`). Judge changes with `scripts/colloc_benchmark.py` and `scripts/casual_roman_eval.js`
   (typed Roman → right Urdu word, table mined without the test poets). `tests/benchmark.js` `typed.*` goes the other way (Urdu → Roman)
   and cannot see them.
 - Navigating away stops playback (`pbCancel`). Last route is stored under `lastRoute`.
 - Persistence is `store` / `localStorage`: script, theme, settings (voice, tempo, foot gap, drum, ASCII), `lastRoute`,
-  per-tab last sub-tab, `stats`.
+  per-tab last sub-tab, `stats`, `poetLang` (Poets picker language).
 
 ## Gotchas
 

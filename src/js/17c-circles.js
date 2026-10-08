@@ -31,6 +31,21 @@
             footRo: 'mafāʿīlun',
             desc: 'Starting Beat 1',
             verses: {
+              'musamman_makhbun': {
+                ur: 'گواہی کیسے ٹوٹتی معاملہ خدا کا تھا',
+                ro: 'gavāhī kaise ṭūṭtī muʿāmla ḳhudā kā thā',
+                hi: 'गवाही कैसे टूटती मुआमला ख़ुदा का था',
+                ur2: 'مرا اور اس کا رابطہ تو ہاتھ اور دعا کا تھا',
+                ro2: 'mirā aur us kā rābta to haath aur duʿā kā thā',
+                hi2: 'मिरा और उस का राब्ता तो हाथ और दुआ का था',
+                poet: 'Parveen Shakir',
+                syls: [
+                  { ro: 'ga', m: 's' }, { ro: 'vā', m: 'l' }, { ro: 'hi', m: 's' }, { ro: 'kai', m: 'l' },
+                  { ro: 'se', m: 's' }, { ro: 'ṭū', m: 'l' }, { ro: 'ṭ', m: 's' }, { ro: 'tī', m: 'l' },
+                  { ro: 'mu', m: 's' }, { ro: 'ʿā', m: 'l' }, { ro: 'ma', m: 's' }, { ro: 'la', m: 'l' },
+                  { ro: 'khu', m: 's' }, { ro: 'dā', m: 'l' }, { ro: 'kā', m: 's' }, { ro: 'thā', m: 'l' }
+                ]
+              },
               'musamman_salim': {
                 ur: 'ہزاروں خواہشیں ایسی کہ ہر خواہش پہ دم نکلے',
                 ro: 'hazāroñ khvāhisheñ aisī kih har khvāhish pih dam nikle',
@@ -251,22 +266,7 @@
             footRo: 'fāʿilātun',
             desc: 'Starting Beat 4',
             verses: {
-              'musamman_salim': {
-                ur: 'سب کہاں کچھ لالہ و گل میں نمایاں ہو گئیں',
-                ro: 'sab kahāñ kuchh lālah-o-gul meñ numāyāñ ho gaʾīñ',
-                hi: 'सब कहाँ कुछ लाला-ओ-गुल में नुमायाँ हो गईं',
-                ur2: 'خاک میں کیا صورتیں ہوں گی کہ پنہاں ہو گئیں',
-                ro2: 'khāk meñ kyā sūrateñ hoñgī kih pinhāñ ho gaʾīñ',
-                hi2: 'ख़ाक में क्या सूरतें होंगी कि पिन्हाँ हो गईं',
-                poet: 'Ghalib',
-                syls: [
-                  { ro: 'sab', m: 'l' }, { ro: 'ka', m: 's' }, { ro: 'hāñ', m: 'l' }, { ro: 'kuchh', m: 'l' },
-                  { ro: 'lā', m: 'l' }, { ro: 'la', m: 's' }, { ro: 'ho', m: 'l' }, { ro: 'gul', m: 'l' },
-                  { ro: 'meñ', m: 'l' }, { ro: 'nu', m: 's' }, { ro: 'mā', m: 'l' }, { ro: 'yāñ', m: 'l' },
-                  { ro: 'ho', m: 'l' }, { ro: 'ga', m: 's' }, { ro: 'īñ', m: 'l' }
-                ]
-              },
-              'musaddas_salim': {
+              'musaddas_mahzuuf': {
                 ur: 'کوئی دن گر زندگانی اور ہے',
                 ro: 'koʾī din gar zindagānī aur hai',
                 hi: 'कोई दिन गर ज़िंदगानी और है',
@@ -397,23 +397,6 @@
                   { ro: 'ā', m: 's' }, { ro: 'yā', m: 'l' }
                 ]
               },
-              'musaddas_mahzuuf': {
-                ur: 'بشنو این نی چون شکایت می‌کند',
-                ro: 'bishnao īn nai chūn shikāyat mīkunad',
-                hi: 'बिश्रौ ईं नै चूँ शिकायत मी-कुनद',
-                ur2: 'از جدایی‌ها حکایت می‌کند',
-                ro2: 'az judāʾī-hā ḥikāyat mī-kunad',
-                hi2: 'अज़ जुदाई-हा हिकायत मी-कुनद',
-                poet: 'Rumi',
-                genre: 'Masnavi (Persian)',
-                url: 'https://ganjoor.net/moulavi/masnavi/daftar1/sh1',
-                source: 'Ganjoor ↗',
-                syls: [
-                  { ro: 'bish', m: 'l' }, { ro: 'na', m: 's' }, { ro: 'vīn', m: 'l' }, { ro: 'nai', m: 'l' },
-                  { ro: 'chūn', m: 'l' }, { ro: 'shi', m: 's' }, { ro: 'kā', m: 'l' }, { ro: 'yat', m: 'l' },
-                  { ro: 'mī', m: 'l' }, { ro: 'ku', m: 's' }, { ro: 'nad', m: 'l' }
-                ]
-              },
               'musaddas_maqtu': {
                 ur: 'پھر مجھے دیدۂ تر یاد آیا',
                 ro: 'phir mujhe dīdah-e tar yād āyā',
@@ -426,6 +409,87 @@
                   { ro: 'phir', m: 'l' }, { ro: 'mu', m: 's' }, { ro: 'jhe', m: 'l' }, { ro: 'dī', m: 'l' },
                   { ro: 'da', m: 's' }, { ro: 'he', m: 's' }, { ro: 'tar', m: 'l' }, { ro: 'yā', m: 'l' },
                   { ro: 'd-ā', m: 'l' }, { ro: 'yā', m: 'l' }
+                ]
+              }
+            },
+            /* Persian couplets: shown beside the Urdu one, or alone where the form is Persian only */
+            versesFa: {
+              'musamman_salim': {
+                ur: 'ہر کہ چیزے دوست دارد جان و دل بر وے گمارد',
+                ro: 'har ki chīze dost dārad jān-o-dil bar vai gumārad',
+                hi: 'हर कि चीज़े दोस्त दारद जान-ओ-दिल बर वै गुमारद',
+                ur2: 'ہر کہ محرابش تو باشی سر ز خلوت بر نیارد',
+                ro2: 'har ki mehrābash tu bāshī sar ze ḳhalvat bar-nayārad',
+                hi2: 'हर कि मेहराबश तु बाशी सर ज़े ख़ल्वत बर-नयारद',
+                fa: 'هر که چیزی دوست دارد جان و دل بر وی گمارد',
+                fa2: 'هر که محرابش تو باشی سر ز خلوت برنیارد',
+                poet: 'Saadi',
+                genre: 'Ghazal (Persian)',
+                url: 'https://ganjoor.net/saadi/divan/ghazals/sh166',
+                source: 'Ganjoor ↗',
+                syls: [
+                  { ro: 'har', m: 'l' }, { ro: 'ki', m: 's' }, { ro: 'chī', m: 'l' }, { ro: 'ze', m: 'l' },
+                  { ro: 'dos', m: 'l' }, { ro: 't', m: 's' }, { ro: 'dā', m: 'l' }, { ro: 'rad', m: 'l' },
+                  { ro: 'jā', m: 'l' }, { ro: 'no', m: 's' }, { ro: 'dil', m: 'l' }, { ro: 'bar', m: 'l' },
+                  { ro: 'vai', m: 'l' }, { ro: 'gu', m: 's' }, { ro: 'mā', m: 'l' }, { ro: 'rad', m: 'l' }
+                ]
+              },
+              'musaddas_salim': {
+                ur: 'اے چو چشمِ سوزنِ عیسیٰ دہانت',
+                ro: 'ai chu chashm-e sozan-e ʿīsā dahānat',
+                hi: 'ऐ चु चश्म-ए-सोज़न-ए-ईसा दहानत',
+                ur2: 'ہست گوئی رشتۂ مریم میانت',
+                ro2: 'hast goʾī rishta-e maryam miyānat',
+                hi2: 'हस्त गोई रिश्ता-ए-मरयम मियानत',
+                fa: 'ای چو چشم سوزن عیسی دهانت',
+                fa2: 'هست گویی رشتهٔ مریم میانت',
+                poet: 'Attar',
+                genre: 'Ghazal (Persian)',
+                url: 'https://ganjoor.net/attar/divana/ghazal-attar/sh142',
+                source: 'Ganjoor ↗',
+                syls: [
+                  { ro: 'ai', m: 'l' }, { ro: 'chu', m: 's' }, { ro: 'chash', m: 'l' }, { ro: 'me', m: 'l' },
+                  { ro: 'so', m: 'l' }, { ro: 'za', m: 's' }, { ro: 'ne', m: 'l' }, { ro: 'ʿī', m: 'l' },
+                  { ro: 'sā', m: 'l' }, { ro: 'da', m: 's' }, { ro: 'hā', m: 'l' }, { ro: 'nat', m: 'l' }
+                ]
+              },
+              'musamman_makhbun_salim': {
+                ur: 'منِ بے مایہ کہ باشم کہ خریدارِ تو باشم',
+                ro: 'man-e be-māya ki bāsham ki ḳharīdār-e tu bāsham',
+                hi: 'मन-ए-बे-माया कि बाशम कि ख़रीदार-ए-तु बाशम',
+                ur2: 'حیف باشد کہ تو یارِ من و من یارِ تو باشم',
+                ro2: 'haif bāshad ki tu yār-e man-o man yār-e tu bāsham',
+                hi2: 'हैफ़ बाशद कि तु यार-ए-मन-ओ-मन यार-ए-तु बाशम',
+                fa: 'منِ بی‌مایه که باشم که خریدار تو باشم',
+                fa2: 'حیف باشد که تو یار من و من یار تو باشم',
+                poet: 'Saadi',
+                genre: 'Ghazal (Persian)',
+                url: 'https://ganjoor.net/saadi/divan/ghazals/sh402',
+                source: 'Ganjoor ↗',
+                syls: [
+                  { ro: 'ma', m: 's' }, { ro: 'ne', m: 's' }, { ro: 'bī', m: 'l' }, { ro: 'mā', m: 'l' },
+                  { ro: 'ya', m: 's' }, { ro: 'ki', m: 's' }, { ro: 'bā', m: 'l' }, { ro: 'sham', m: 'l' },
+                  { ro: 'ki', m: 's' }, { ro: 'kha', m: 's' }, { ro: 'rī', m: 'l' }, { ro: 'dā', m: 'l' },
+                  { ro: 're', m: 's' }, { ro: 'tu', m: 's' }, { ro: 'bā', m: 'l' }, { ro: 'sham', m: 'l' }
+                ]
+              },
+              'musaddas_mahzuuf': {
+                ur: 'بشنو ایں نے چوں شکایت می کند',
+                fa: 'بشنو این نی چون شکایت می‌کند',
+                fa2: 'از جدایی‌ها حکایت می‌کند',
+                ro: 'bishnao īn nai chūn shikāyat mīkunad',
+                hi: 'बिश्नौ ईं नै चूँ शिकायत मी-कुनद',
+                ur2: 'از جدائی ہا حکایت می کند',
+                ro2: 'az judāʾī-hā ḥikāyat mī-kunad',
+                hi2: 'अज़ जुदाई-हा हिकायत मी-कुनद',
+                poet: 'Rumi',
+                genre: 'Masnavi (Persian)',
+                url: 'https://ganjoor.net/moulavi/masnavi/daftar1/sh1',
+                source: 'Ganjoor ↗',
+                syls: [
+                  { ro: 'bish', m: 'l' }, { ro: 'na', m: 's' }, { ro: 'vīn', m: 'l' }, { ro: 'nai', m: 'l' },
+                  { ro: 'chūn', m: 'l' }, { ro: 'shi', m: 's' }, { ro: 'kā', m: 'l' }, { ro: 'yat', m: 'l' },
+                  { ro: 'mī', m: 'l' }, { ro: 'ku', m: 's' }, { ro: 'nad', m: 'l' }
                 ]
               }
             }
@@ -603,6 +667,21 @@
             footRo: 'mafāʿilun fāʿilātun',
             desc: 'Starting Beat 9',
             verses: {
+              'musamman_makhbun_salim': {
+                ur: 'تم اپنے شکوے کی باتیں نہ کھود کھود کے پوچھو',
+                ro: 'tum apne shikve kī bāteñ nah khod khod ke pūchho',
+                hi: 'तुम अपने शिकवे की बातें न खोद खोद के पूछो',
+                ur2: 'حذر کرو مرے دل سے کہ اس میں آگ دبی ہے',
+                ro2: 'ḥażar karo mire dil se kih us meñ āg dabī hai',
+                hi2: 'हज़र करो मिरे दिल से कि उस में आग दबी है',
+                poet: 'Ghalib',
+                syls: [
+                  { ro: 'tu', m: 's' }, { ro: 'map', m: 'l' }, { ro: 'ne', m: 's' }, { ro: 'shik', m: 'l' },
+                  { ro: 've', m: 's' }, { ro: 'ki', m: 's' }, { ro: 'bā', m: 'l' }, { ro: 'teñ', m: 'l' },
+                  { ro: 'na', m: 's' }, { ro: 'kho', m: 'l' }, { ro: 'd', m: 's' }, { ro: 'kho', m: 'l' },
+                  { ro: 'd', m: 's' }, { ro: 'ke', m: 's' }, { ro: 'pū', m: 'l' }, { ro: 'chho', m: 'l' }
+                ]
+              },
               'musamman_makhbun_maqtu': {
                 ur: 'یہ آرزو تھی تجھے گل کے رو بہ رو کرتے',
                 ro: 'ye aarzū thī tujhe gul ke rū-ba-rū karte',
@@ -864,6 +943,7 @@
             startIdx: 1,
             baseFoot: '= – =',
             trimmedFoot: '= =',
+            makhbunFoot: '– – =',
             footUr: 'فاعلن',
             footRo: 'fāʿilun',
             desc: 'Starting Beat 2',
@@ -1368,6 +1448,8 @@ function canonicalPoetName(poetRaw) {
   if (/Hatim/i.test(p)) return 'Hatim';
   if (/Nasim|Naseem/i.test(p)) return 'Daya Shankar Nasim';
   if (/Mohsin/i.test(p)) return 'Mohsin Kakorvi';
+  if (/Parveen/i.test(p)) return 'Parveen';
+  if (/Attar|ʿAṭṭār/i.test(p)) return 'Attar';
   return p;
 }
 
@@ -1399,7 +1481,9 @@ const POET_TRANSLATIONS = {
   'Hatim': { ur: 'حاتم', hi: 'हातिम' },
   'Daya Shankar Nasim': { ur: 'دیا شنکر نسیم', hi: 'दया शंकर नसीम' },
   'Mohsin Kakorvi': { ur: 'محسن کاکوروی', hi: 'मोहसिन काकोरवी' },
-  'Nezami': { ur: 'نظامی', hi: 'निज़ामी' }
+  'Nezami': { ur: 'نظامی', hi: 'निज़ामी' },
+  'Parveen': { ur: 'پروین شاکر', hi: 'परवीन शाकिर' },
+  'Attar': { ur: 'عطار', hi: 'अत्तार' }
 };
 
 function localizedPoetName(verseObj, poetCanonical) {
@@ -1773,6 +1857,7 @@ function getMeterResolution(mtr, length, bodyMod, endMod) {
   const id = mtr.id;
   const isMusamman = (length === 'musamman');
   const isMakhbun = (bodyMod === 'makhbun');
+  const endEn = { salim: 'Sālim', mahzuuf: 'Maḥzūf', maqtu: 'Maqṭūʿ' }[endMod] || endMod;
 
   // 1. Hazaj
   if (id === 'hazaj') {
@@ -1782,9 +1867,12 @@ function getMeterResolution(mtr, length, bodyMod, endMod) {
     if (!isMusamman && !isMakhbun && (endMod === 'mahzuuf' || endMod === 'maqtu')) {
       return { isCanonical: true, meterNum: 27, handbookNum: 19, nameEn: 'Hazaj Musaddas Maḥzūf', nameUr: 'بحرِ ہزج مسدس محذوف' };
     }
+    if (isMusamman && isMakhbun && endMod === 'salim') {
+      return { isCanonical: true, meterNum: 32, handbookNum: null, nameEn: 'Hazaj Mus̱amman Maqbūz', nameUr: 'بحرِ ہزج مثمن مقبوض' };
+    }
     return {
       isCanonical: false,
-      nameEn: `Hazaj ${isMusamman ? 'Mus̱amman' : 'Musaddas'} ${isMakhbun ? 'Makhbūn ' : ''}${endMod}`,
+      nameEn: `Hazaj ${isMusamman ? 'Mus̱amman' : 'Musaddas'} ${isMakhbun ? 'Makhbūn ' : ''}${endEn}`,
       nameUr: `بحرِ ہزج ${isMusamman ? 'مثمن' : 'مسدس'} ${isMakhbun ? 'مخبون ' : ''}${endMod === 'salim' ? 'سالم' : (endMod === 'mahzuuf' ? 'محذوف' : 'مقطوع')}`,
       theoreticalReason: 'In classical Urdu literature, Baḥr-e-Hazaj is standardly composed in Mus̱amman Sālim (Meter #26) or Musaddas Maḥzūf (Meter #27).',
       canonical: mtr.canonical
@@ -1801,7 +1889,7 @@ function getMeterResolution(mtr, length, bodyMod, endMod) {
     }
     return {
       isCanonical: false,
-      nameEn: `Rajaz ${isMusamman ? 'Mus̱amman' : 'Musaddas'} ${endMod}`,
+      nameEn: `Rajaz ${isMusamman ? 'Mus̱amman' : 'Musaddas'} ${endEn}`,
       nameUr: `بحرِ رجز ${isMusamman ? 'مثمن' : 'مسدس'}`,
       theoreticalReason: 'Rajaz is standardly composed as an 8-foot (Mus̱amman) meter in classical Urdu poetry.',
       canonical: mtr.canonical
@@ -1830,17 +1918,19 @@ function getMeterResolution(mtr, length, bodyMod, endMod) {
         nameUr: isMaqtu ? 'بحرِ رمل مسدس مخبون مقطوع' : 'بحرِ رمل مسدس مخبون محذوف'
       };
     }
-    if (isMusamman && !isMakhbun && endMod === 'salim') {
-      return { isCanonical: true, meterNum: 10, handbookNum: null, nameEn: 'Ramal Mus̱amman Sālim', nameUr: 'بحرِ رمل مثمن سالم' };
+    if (isMusamman && !isMakhbun && endMod === 'mahzuuf') {
+      return { isCanonical: true, meterNum: 10, handbookNum: null, nameEn: 'Ramal Mus̱amman Maḥzūf', nameUr: 'بحرِ رمل مثمن محذوف' };
     }
-    if (!isMusamman && !isMakhbun && endMod === 'salim') {
-      return { isCanonical: true, meterNum: 11, handbookNum: null, nameEn: 'Ramal Musaddas Sālim', nameUr: 'بحرِ رمل مسدس سالم' };
+    if (!isMusamman && !isMakhbun && endMod === 'mahzuuf') {
+      return { isCanonical: true, meterNum: 11, handbookNum: null, nameEn: 'Ramal Musaddas Maḥzūf', nameUr: 'بحرِ رمل مسدس محذوف' };
     }
     return {
       isCanonical: false,
-      nameEn: `Ramal ${isMusamman ? 'Mus̱amman' : 'Musaddas'} ${isMakhbun ? 'Makhbūn ' : ''}${endMod}`,
+      nameEn: `Ramal ${isMusamman ? 'Mus̱amman' : 'Musaddas'} ${isMakhbun ? 'Makhbūn ' : ''}${endEn}`,
       nameUr: `بحرِ رمل ${isMusamman ? 'مثمن' : 'مسدس'}`,
-      theoreticalReason: 'In Urdu, Ramal with Khabn (syllable softening) requires a truncated final foot (Maḥzūf or Maqṭū‘, Meters #16–#19).',
+      theoreticalReason: isMakhbun
+        ? 'In Urdu, Ramal with Khabn (syllable softening) requires a truncated final foot (Maḥzūf or Maqṭū‘, Meters #16–#19).'
+        : 'In Urdu, intact Ramal always ends in the truncated fāʿilun (Maḥzūf, Meters #10 and #11); the full fāʿilātun ending is not used.',
       canonical: mtr.canonical
     };
   }
@@ -1864,7 +1954,7 @@ function getMeterResolution(mtr, length, bodyMod, endMod) {
     }
     return {
       isCanonical: false,
-      nameEn: `Khafīf Musaddas ${endMod}`,
+      nameEn: `Khafīf Musaddas ${endEn}`,
       nameUr: `بحرِ خفیف مسدس`,
       theoreticalReason: 'Khafīf in Urdu requires the Makhbūn softening on the middle foot (mustafʿilun → mafāʿilun) and a truncated ending.',
       canonical: mtr.canonical
@@ -1878,7 +1968,7 @@ function getMeterResolution(mtr, length, bodyMod, endMod) {
     }
     return {
       isCanonical: false,
-      nameEn: `Muḍāriʿ ${isMusamman ? 'Mus̱amman' : 'Musaddas'} ${endMod}`,
+      nameEn: `Muḍāriʿ ${isMusamman ? 'Mus̱amman' : 'Musaddas'} ${endEn}`,
       nameUr: `بحرِ مضارع ${isMusamman ? 'مثمن' : 'مسدس'}`,
       theoreticalReason: 'The intact circle parent of Muḍāriʿ (Sālim) was considered too heavy for lyrical verse; Urdu poets exclusively compose in the modified Akhrab/Makfūf form (Meter #5).',
       canonical: mtr.canonical
@@ -1887,6 +1977,9 @@ function getMeterResolution(mtr, length, bodyMod, endMod) {
 
   // 6. Mujtathth
   if (id === 'mujtathth') {
+    if (isMusamman && isMakhbun && endMod === 'salim') {
+      return { isCanonical: true, meterNum: 35, handbookNum: null, nameEn: 'Mujtathth Mus̱amman Makhbūn', nameUr: 'بحرِ مجتث مثمن مخبون' };
+    }
     if (isMusamman && isMakhbun && (endMod === 'maqtu' || endMod === 'mahzuuf')) {
       const isMaqtu = (endMod === 'maqtu');
       return {
@@ -1900,7 +1993,7 @@ function getMeterResolution(mtr, length, bodyMod, endMod) {
     if (!isMusamman) {
       return {
         isCanonical: false,
-        nameEn: `Mujtathth Musaddas ${endMod}`,
+        nameEn: `Mujtathth Musaddas ${endEn}`,
         nameUr: `بحرِ مجتث مسدس`,
         theoreticalReason: 'In classical Urdu literature, Baḥr-e-Mujtathth is composed strictly as an 8-foot (Mus̱amman) meter (Meters #33 and #34). The 6-foot Musaddas form is an al-Khalīl circle permutation.',
         canonical: mtr.canonical
@@ -1908,7 +2001,7 @@ function getMeterResolution(mtr, length, bodyMod, endMod) {
     }
     return {
       isCanonical: false,
-      nameEn: `Mujtathth ${isMusamman ? 'Mus̱amman' : 'Musaddas'} ${endMod}`,
+      nameEn: `Mujtathth ${isMusamman ? 'Mus̱amman' : 'Musaddas'} ${endEn}`,
       nameUr: `بحرِ مجتث ${isMusamman ? 'مثمن' : 'مسدس'}`,
       theoreticalReason: 'In Urdu, Mujtathth is composed with internal Khabn and a shortened final foot (Meter #33 / #34).',
       canonical: mtr.canonical
@@ -1925,7 +2018,7 @@ function getMeterResolution(mtr, length, bodyMod, endMod) {
     }
     return {
       isCanonical: false,
-      nameEn: `Mutaqārib ${isMusamman ? 'Mus̱amman' : 'Musaddas'} ${endMod}`,
+      nameEn: `Mutaqārib ${isMusamman ? 'Mus̱amman' : 'Musaddas'} ${endEn}`,
       nameUr: `بحرِ متقارب ${isMusamman ? 'مثمن' : 'مسدس'}`,
       theoreticalReason: 'Mutaqārib in Urdu is the classic epic meter, standardly composed in Mus̱amman Maḥzūf (Meter #29).',
       canonical: mtr.canonical
@@ -1939,7 +2032,7 @@ function getMeterResolution(mtr, length, bodyMod, endMod) {
     }
     return {
       isCanonical: false,
-      nameEn: `Mutadārik ${isMusamman ? 'Mus̱amman' : 'Musaddas'} ${endMod}`,
+      nameEn: `Mutadārik ${isMusamman ? 'Mus̱amman' : 'Musaddas'} ${endEn}`,
       nameUr: `بحرِ متدارک ${isMusamman ? 'مثمن' : 'مسدس'}`,
       theoreticalReason: 'Mutadārik in Urdu is standardly composed in intact Mus̱amman Sālim (Meter #39).',
       canonical: mtr.canonical
@@ -1953,7 +2046,7 @@ function getMeterResolution(mtr, length, bodyMod, endMod) {
     }
     return {
       isCanonical: false,
-      nameEn: `Kāmil ${isMusamman ? 'Mus̱amman' : 'Musaddas'} ${endMod}`,
+      nameEn: `Kāmil ${isMusamman ? 'Mus̱amman' : 'Musaddas'} ${endEn}`,
       nameUr: `بحرِ کامل ${isMusamman ? 'مثمن' : 'مسدس'}`,
       theoreticalReason: 'Kāmil in classical Urdu poetry is standardly composed in Mus̱amman Sālim (Meter #37).',
       canonical: mtr.canonical
@@ -1963,7 +2056,7 @@ function getMeterResolution(mtr, length, bodyMod, endMod) {
   // Classical Arabic meters (Wāfir, Ṭawīl, Basīṭ)
   return {
     isCanonical: false,
-    nameEn: `${mtr.name} ${isMusamman ? 'Mus̱amman' : 'Musaddas'} ${endMod}`,
+    nameEn: `${mtr.name} ${isMusamman ? 'Mus̱amman' : 'Musaddas'} ${endEn}`,
     nameUr: `بحرِ ${mtr.nameUr} ${isMusamman ? 'مثمن' : 'مسدس'}`,
     theoreticalReason: `${mtr.name} is a classical Arabic meter from al-Khalīl’s 8th-century system. It is preserved on the circle for metrical completeness, but is not part of the standard Urdu poetic canon.`,
     canonical: mtr.canonical
@@ -2000,9 +2093,17 @@ function snapToCanonicalMeter() {
 window.snapToCanonicalMeter = snapToCanonicalMeter;
 
 /* Synchronizes button highlight states and provides contextual badges */
+/* Khabn drops a foot's second quiescent letter, so it only applies to feet that open with a light sabab
+   (fāʿilun, fāʿilātun, mustafʿilun). Hazaj's knob is qabḍ (mafāʿīlun → mafāʿilun); kāmil and mutaqārib have neither. */
+function makhbunApplies(mtr) {
+  return !!mtr && mtr.id !== 'kamil' && mtr.id !== 'mutaqarib';
+}
+window.makhbunApplies = makhbunApplies;
+
 function syncControlButtons() {
   const circ = CIRCLES[curCircleIdx];
   const mtr = circ.meters[curMeterIdx] || circ.meters[0];
+  if (curBodyMod === 'makhbun' && !makhbunApplies(mtr)) curBodyMod = 'base';
 
   // 1. Length Buttons
   const lenHost = document.getElementById('circleLengthButtons');
@@ -2042,10 +2143,15 @@ function syncControlButtons() {
       } else if (mtr.id === 'ramal') {
         btns[0].innerHTML = 'Base Foot · Intact <span class="btn-sub-badge">Canon #10/#11</span>';
         btns[1].innerHTML = 'Makhbūn · Softened <span class="btn-sub-badge green">Canon #18/#16</span>';
+      } else if (mtr.id === 'hazaj') {
+        btns[0].innerHTML = 'Base Foot · Intact';
+        btns[1].innerHTML = 'Maqbūz · Softened <span class="btn-sub-badge green">Canon #32</span>';
       } else {
         btns[0].innerHTML = 'Base Foot · Intact';
         btns[1].innerHTML = 'Makhbūn · Softened';
       }
+      btns[1].disabled = !makhbunApplies(mtr);
+      btns[1].title = makhbunApplies(mtr) ? '' : `${mtr.name} has no softened (makhbūn) form`;
     }
   }
 
@@ -2062,6 +2168,79 @@ function syncControlButtons() {
 window.syncControlButtons = syncControlButtons;
 
 /* Builds the exact foot groups with Arabic/Urdu names and syllable mnemonics */
+/* =========================================================================
+   PERSIAN ATTESTATION (Ganjoor's meter list, data/persian_meters.json via scripts/build_fa_meters.py)
+   A wheel setting is looked up by its weight pattern. faMeterKey must stay identical to `key` in
+   build_fa_meters.py: free last syllable; final faʿilun ≡ faʿlun; a makhbūn line may open with fāʿilātun.
+   ========================================================================= */
+const PERSIAN_METERS = /*@@PERSIAN_METERS@@*/;
+const FA_ATTESTED_MIN = 200;   // Ganjoor verses for a setting to count as a Persian meter (below: "rare in Persian")
+
+function faMeterKey(p) {
+  if (!p) return p;
+  p = p.slice(0, -1) + '=';
+  if (p.endsWith('--=')) p = p.slice(0, -3) + '==';
+  if (/^=-==(--==|-=-=)/.test(p)) p = '-' + p.slice(1);
+  return p;
+}
+window.faMeterKey = faMeterKey;
+
+let _faByKey = null;
+function persianMetersFor(pattern) {
+  if (!_faByKey) {
+    _faByKey = new Map();
+    (Array.isArray(PERSIAN_METERS) ? PERSIAN_METERS : []).forEach(m => {
+      if (!_faByKey.has(m.key)) _faByKey.set(m.key, []);
+      _faByKey.get(m.key).push(m);
+    });
+  }
+  return _faByKey.get(faMeterKey(pattern)) || [];
+}
+
+/* the current knob setting as a plain weight string ('=' long, '-' short) */
+function circlePatternString(mtr) {
+  return buildCircleLineFeet(mtr, curLength === 'musamman' ? 4 : 3).map(f => f.pat).join('').replace(/\s/g, '').replace(/–/g, '-');
+}
+
+function persianAttestation(mtr) {
+  const meters = persianMetersFor(circlePatternString(mtr));
+  const verses = meters.reduce((t, m) => t + m.verses, 0);
+  const top = meters[0] || null;
+  return {
+    verses,
+    meters,
+    status: verses >= FA_ATTESTED_MIN ? 'persian' : (verses > 0 ? 'rare' : 'none'),
+    name: top ? top.name : '',
+    url: top ? 'https://ganjoor.net/simi/?v=' + encodeURIComponent(top.rhythm) : ''
+  };
+}
+window.persianAttestation = persianAttestation;
+
+/* the Persian couplet for this exact setting (never borrowed from another ending or body) */
+function persianVerseFor(mtr) {
+  const v = mtr && mtr.versesFa;
+  if (!v) return null;
+  const keys = curBodyMod === 'makhbun'
+    ? [`${curLength}_makhbun_${curEndMod}`].concat(curEndMod === 'salim' ? [`${curLength}_makhbun`] : [])
+    : [`${curLength}_${curEndMod}`];
+  for (const k of keys) if (v[k]) return v[k];
+  return null;
+}
+
+const faNum = n => Number(n).toLocaleString('en-US');
+
+/* The two final-foot zihāfs, on a foot written as '= – = =' (long =, short –):
+   ḥadhf drops the closing long syllable (fāʿilātun → fāʿilun, mafāʿīlun → faʿūlun);
+   qaṭʿ turns a closing short-long into one long (fāʿilun → faʿlun, mustafʿilun → mafʿūlun, mutafāʿilun → mutafāʿil). */
+function hadhfFoot(pat) {
+  const t = pat.split(' ');
+  return (t.length >= 3 && t[t.length - 1] === '=') ? t.slice(0, -1).join(' ') : pat;
+}
+function qatFoot(pat) {
+  const t = pat.split(' ');
+  return (t.length >= 2 && t[t.length - 2] === '–' && t[t.length - 1] === '=') ? t.slice(0, -2).concat('=').join(' ') : hadhfFoot(pat);
+}
+
 function buildCircleLineFeet(mtr, feetCount) {
   const isMusamman = (feetCount === 4);
   const isMakhbun = (curBodyMod === 'makhbun');
@@ -2073,6 +2252,9 @@ function buildCircleLineFeet(mtr, feetCount) {
       const isLast = (i === feetCount - 1);
       if (isLast && isMaqtuOrMahzuuf) {
         out.push({ pat: '– = =', ur: 'فعولن', fs: ['fa', 'ʿū', 'lun'] });
+      } else if (isMakhbun) {
+        /* the softened knob on hazaj is qabḍ: mafāʿīlun → mafāʿilun (Meter #32, hazaj musamman maqbūz) */
+        out.push({ pat: '– = – =', ur: 'مفاعلن', fs: ['ma', 'fā', 'ʿi', 'lun'] });
       } else {
         out.push({ pat: '– = = =', ur: 'مفاعیلن', fs: ['ma', 'fā', 'ʿī', 'lun'] });
       }
@@ -2084,8 +2266,10 @@ function buildCircleLineFeet(mtr, feetCount) {
     const out = [];
     for (let i = 0; i < feetCount; i++) {
       const isLast = (i === feetCount - 1);
-      if (isLast && (curEndMod === 'mahzuuf' || curEndMod === 'maqtu')) {
-        out.push({ pat: '– – = =', ur: 'متفاعلن', fs: ['mu', 'ta', 'fā', 'ʿil'] });
+      if (isLast && curEndMod === 'mahzuuf') {
+        out.push({ pat: '– – =', ur: 'متفا', fs: ['mu', 'ta', 'fā'] });
+      } else if (isLast && curEndMod === 'maqtu') {
+        out.push({ pat: '– – = =', ur: 'متفاعل', fs: ['mu', 'ta', 'fā', 'ʿil'] });
       } else {
         out.push({ pat: '– – = – =', ur: 'متفاعلن', fs: ['mu', 'ta', 'fā', 'ʿi', 'lun'] });
       }
@@ -2101,6 +2285,8 @@ function buildCircleLineFeet(mtr, feetCount) {
         out.push({ pat: '= =', ur: 'فعلن', fs: ['faʿ', 'lūn'] });
       } else if (isLast && curEndMod === 'maqtu') {
         out.push({ pat: '= –', ur: 'فعل', fs: ['fa', 'ʿal'] });
+      } else if (isMakhbun) {
+        out.push({ pat: '– – =', ur: 'فعلن', fs: ['fa', 'ʿi', 'lun'] });
       } else {
         out.push({ pat: '= – =', ur: 'فاعلن', fs: ['fā', 'ʿi', 'lun'] });
       }
@@ -2113,9 +2299,9 @@ function buildCircleLineFeet(mtr, feetCount) {
   if (mtr.id === 'khafif') {
     if (!isMusamman) { // 3 feet (Musaddas - Standard in Urdu)
       if (isMakhbun) {
-        const endPat = (curEndMod === 'mahzuuf') ? '– – =' : '= =';
-        const endUr = (curEndMod === 'mahzuuf') ? 'فعلن' : 'فعلن';
-        const endFs = (curEndMod === 'mahzuuf') ? ['fa', 'ʿi', 'lun'] : ['faʿ', 'lūn'];
+        const endPat = (curEndMod === 'mahzuuf') ? '– – =' : (curEndMod === 'maqtu' ? '= =' : '– – = =');
+        const endUr = (curEndMod === 'salim') ? 'فعلاتن' : 'فعلن';
+        const endFs = (curEndMod === 'mahzuuf') ? ['fa', 'ʿi', 'lun'] : (curEndMod === 'maqtu' ? ['faʿ', 'lūn'] : ['fa', 'ʿi', 'lā', 'tun']);
         return [
           { pat: '= – = =', ur: 'فاعلاتن', fs: ['fā', 'ʿi', 'lā', 'tun'] },
           { pat: '– = – =', ur: 'مفاعلن', fs: ['ma', 'fā', 'ʿi', 'lun'] },
@@ -2127,17 +2313,19 @@ function buildCircleLineFeet(mtr, feetCount) {
         const endFs = (curEndMod === 'mahzuuf') ? ['fā', 'ʿi', 'lun'] : (curEndMod === 'maqtu' ? ['faʿ', 'lūn'] : ['fā', 'ʿi', 'lā', 'tun']);
         return [
           { pat: '= – = =', ur: 'فاعلاتن', fs: ['fā', 'ʿi', 'lā', 'tun'] },
-          { pat: '– = = =', ur: 'مستفعلن', fs: ['mus', 'taf', 'ʿi', 'lun'] },
+          { pat: '= = – =', ur: 'مستفعلن', fs: ['mus', 'taf', 'ʿi', 'lun'] },
           { pat: endPat, ur: endUr, fs: endFs }
         ];
       }
     } else { // 4 feet (Mus̱amman - Theoretical)
-      const endPat = (curEndMod === 'mahzuuf') ? '– = =' : (curEndMod === 'maqtu' ? '= =' : '– = = =');
+      const endPat = (curEndMod === 'mahzuuf') ? hadhfFoot('= = – =') : (curEndMod === 'maqtu' ? qatFoot('= = – =') : '= = – =');
+      const endUr = (curEndMod === 'mahzuuf') ? 'مستفعل' : (curEndMod === 'maqtu' ? 'مفعولن' : 'مستفعلن');
+      const endFs = (curEndMod === 'mahzuuf') ? ['mus', 'taf', 'ʿil'] : (curEndMod === 'maqtu' ? ['maf', 'ʿū', 'lun'] : ['mus', 'taf', 'ʿi', 'lun']);
       return [
         { pat: '= – = =', ur: 'فاعلاتن', fs: ['fā', 'ʿi', 'lā', 'tun'] },
-        { pat: '– = = =', ur: 'مستفعلن', fs: ['mus', 'taf', 'ʿi', 'lun'] },
+        { pat: '= = – =', ur: 'مستفعلن', fs: ['mus', 'taf', 'ʿi', 'lun'] },
         { pat: '= – = =', ur: 'فاعلاتن', fs: ['fā', 'ʿi', 'lā', 'tun'] },
-        { pat: endPat, ur: 'مستفعلن', fs: ['mus', 'taf', 'ʿi', 'lun'] }
+        { pat: endPat, ur: endUr, fs: endFs }
       ];
     }
   }
@@ -2145,9 +2333,9 @@ function buildCircleLineFeet(mtr, feetCount) {
   if (mtr.id === 'mujtathth') {
     if (isMusamman) { // 4 feet
       if (isMakhbun) {
-        const endPat = (curEndMod === 'mahzuuf') ? '– – =' : '= =';
-        const endUr = 'فعلن';
-        const endFs = (curEndMod === 'mahzuuf') ? ['fa', 'ʿi', 'lun'] : ['faʿ', 'lūn'];
+        const endPat = (curEndMod === 'mahzuuf') ? '– – =' : (curEndMod === 'maqtu' ? '= =' : '– – = =');
+        const endUr = (curEndMod === 'salim') ? 'فعلاتن' : 'فعلن';
+        const endFs = (curEndMod === 'mahzuuf') ? ['fa', 'ʿi', 'lun'] : (curEndMod === 'maqtu' ? ['faʿ', 'lūn'] : ['fa', 'ʿi', 'lā', 'tun']);
         return [
           { pat: '– = – =', ur: 'مفاعلن', fs: ['ma', 'fā', 'ʿi', 'lun'] },
           { pat: '– – = =', ur: 'فعلاتن', fs: ['fa', 'ʿi', 'lā', 'tun'] },
@@ -2164,7 +2352,9 @@ function buildCircleLineFeet(mtr, feetCount) {
         { pat: '= = –', ur: 'مفعول', fs: ['maf', 'ʿū', 'lu'] },
         { pat: '= – = –', ur: 'فاعلات', fs: ['fā', 'ʿi', 'lā', 'tu'] },
         { pat: '– = = –', ur: 'مفاعیل', fs: ['ma', 'fā', 'ʿī', 'lu'] },
-        { pat: '= – =', ur: 'فاعلن', fs: ['fā', 'ʿi', 'lun'] }
+        curEndMod === 'salim'
+          ? { pat: '= – = =', ur: 'فاعلاتن', fs: ['fā', 'ʿi', 'lā', 'tun'] }
+          : { pat: '= – =', ur: 'فاعلن', fs: ['fā', 'ʿi', 'lun'] }
       ];
     }
   }
@@ -2192,11 +2382,11 @@ function buildCircleLineFeet(mtr, feetCount) {
       }
       return out;
     } else {
-      // Meters #10 and #11: Ramal Sālim (catalectic final foot fāʿilun in Urdu literature)
+      // Mahzūf ends in fāʿilun (Meters #10 and #11, the Masnavi meter); Sālim keeps fāʿilātun throughout (Persian only)
       const out = [];
       for (let i = 0; i < feetCount; i++) {
         const isLast = (i === feetCount - 1);
-        if (isLast && (curEndMod === 'salim' || curEndMod === 'mahzuuf')) {
+        if (isLast && curEndMod === 'mahzuuf') {
           out.push({ pat: '= – =', ur: 'فاعلن', fs: ['fā', 'ʿi', 'lun'] });
         } else if (isLast && curEndMod === 'maqtu') {
           out.push({ pat: '= =', ur: 'فعلن', fs: ['faʿ', 'lūn'] });
@@ -2213,11 +2403,14 @@ function buildCircleLineFeet(mtr, feetCount) {
     if (isMusamman && isMakhbun) {
       // Meter #25: Rajaz Mus̱amman Matvī Makhbūn
       // Pattern: = - - = / - = - = // = - - = / - = - =
+      const last = curEndMod === 'maqtu' ? { pat: '– = =', ur: 'فعولن', fs: ['fa', 'ʿū', 'lun'] }
+        : curEndMod === 'mahzuuf' ? { pat: '– = –', ur: 'فعول', fs: ['fa', 'ʿū', 'lu'] }
+        : { pat: '– = – =', ur: 'مفاعلن', fs: ['ma', 'fā', 'ʿi', 'lun'] };
       return [
         { pat: '= – – =', ur: 'مفتعلن', fs: ['muf', 'ta', 'ʿi', 'lun'] },
         { pat: '– = – =', ur: 'مفاعلن', fs: ['ma', 'fā', 'ʿi', 'lun'] },
         { pat: '= – – =', ur: 'مفتعلن', fs: ['muf', 'ta', 'ʿi', 'lun'] },
-        { pat: '– = – =', ur: 'مفاعلن', fs: ['ma', 'fā', 'ʿi', 'lun'] }
+        last
       ];
     }
     const out = [];
@@ -2225,6 +2418,8 @@ function buildCircleLineFeet(mtr, feetCount) {
       const isLast = (i === feetCount - 1);
       if (isLast && curEndMod === 'maqtu') {
         out.push({ pat: '= = =', ur: 'مفعولن', fs: ['maf', 'ʿū', 'lun'] });
+      } else if (isLast && curEndMod === 'mahzuuf') {
+        out.push({ pat: '= = –', ur: 'مفعول', fs: ['maf', 'ʿū', 'lu'] });
       } else {
         out.push({ pat: '= = – =', ur: 'مستفعلن', fs: ['mus', 'taf', 'ʿi', 'lun'] });
       }
@@ -2273,12 +2468,12 @@ function buildCircleLineFeet(mtr, feetCount) {
     }
 
     if (isLast && curEndMod === 'mahzuuf') {
-      pat = isMakhbun ? (mtr.makhbunEnding || pat) : (trimmedFeet[j] || pat);
+      pat = isMakhbun ? (mtr.makhbunEnding || hadhfFoot(pat)) : ((trimmedFeet[j] && trimmedFeet[j] !== baseFeet[j]) ? trimmedFeet[j] : hadhfFoot(pat));
       urName = isMakhbun ? 'فعلن' : (mtr.id === 'ramal' ? 'فاعلن' : (mtr.id === 'mutaqarib' ? 'فعل' : 'فعولن'));
       roName = isMakhbun ? 'faʿilun' : (mtr.id === 'ramal' ? 'fāʿilun' : 'faʿūlun');
       intact = false;
     } else if (isLast && curEndMod === 'maqtu') {
-      pat = mtr.maqtuFoot || '= =';
+      pat = mtr.maqtuFoot || qatFoot(pat);
       urName = 'فعلن';
       roName = 'faʿlūn';
       intact = false;
@@ -2333,10 +2528,16 @@ function updateCircleAssembledBanner() {
   const bodyExplanation = isMakhbun ? ' + softened internal beat (Makhbūn)' : '';
 
   let statusTagHtml = '';
+  const fa = persianAttestation(mtr);
   if (res.isCanonical) {
-    statusTagHtml = `<div class="meter-status-tag tag-canonical"><span class="status-dot green"></span><span>Canonical Urdu Meter &middot; <strong>Meter #${res.meterNum}</strong>${res.handbookNum ? ' (Handbook #' + res.handbookNum + ')' : ''}</span></div>`;
+    const faNote = fa.verses ? ` &middot; Persian: ${faNum(fa.verses)} verses` : '';
+    statusTagHtml = `<div class="meter-status-tag tag-canonical"><span class="status-dot green"></span><span>Canonical Urdu Meter &middot; <strong>Meter #${res.meterNum}</strong>${res.handbookNum ? ' (Handbook #' + res.handbookNum + ')' : ''}${faNote}</span></div>`;
+  } else if (fa.status === 'persian') {
+    statusTagHtml = `<div class="meter-status-tag tag-persian"><span class="status-dot ink"></span><span>Persian Meter &middot; <strong>${faNum(fa.verses)} verses</strong> on Ganjoor &middot; Not composed in Urdu</span></div>`;
+  } else if (fa.status === 'rare') {
+    statusTagHtml = `<div class="meter-status-tag tag-theoretical"><span class="status-dot amber"></span><span>Rare in Persian (${faNum(fa.verses)} verses on Ganjoor) &middot; Not composed in Urdu</span></div>`;
   } else {
-    statusTagHtml = `<div class="meter-status-tag tag-theoretical"><span class="status-dot amber"></span><span>Theoretical Circle Prototype (al-Khalīl) &middot; Not composed in Urdu</span></div>`;
+    statusTagHtml = `<div class="meter-status-tag tag-theoretical"><span class="status-dot amber"></span><span>Theoretical Circle Prototype (al-Khalīl) &middot; Not composed in Urdu or Persian</span></div>`;
   }
 
   banner.innerHTML = `
@@ -2473,6 +2674,14 @@ function getCircleVerseLinks(verseObj, mtr, res) {
     meterNum = 39;
     appGhazal = '#/ghazals/faiz/3';
     ghazalLabel = 'Faiz #3';
+  } else if (ur.includes('تم اپنے شکوے کی باتیں')) {
+    meterNum = 35;
+    appGhazal = '#/ghazals/ghalib/142';
+    ghazalLabel = 'Ghalib #142';
+  } else if (ur.includes('گواہی کیسے ٹوٹتی')) {
+    meterNum = 32;
+    appGhazal = '#/ghazals/parveen/28';
+    ghazalLabel = 'Parveen #28';
   } else if (ur.includes('نہ تھا کچھ تو خدا تھا')) {
     meterNum = 26;
     appGhazal = '#/ghazals/ghalib/32';
@@ -2516,8 +2725,10 @@ const METER_GENRE_NOTABLES = {
   9: [
     { type: 'Masnavi', typeUr: 'مثنوی', typeHi: 'मसनवी', title: 'Gulzār-e-Nasīm', titleUr: 'گلزارِ نسیم', titleHi: 'गुलज़ार-ए-नसीम', poet: 'Daya Shankar Nasim', poetUr: 'دیا شنکر نسیم', poetHi: 'दया शंकर नसीम', url: 'https://www.rekhta.org/masnavii/gulzaar-e-nasiim-pandit-daya-shankar-naseem-lakhnavi-masnavii?lang=ur', site: 'Rekhta ↗' }
   ],
+  11: [
+    { type: 'Masnavi', typeUr: 'مثنوی', typeHi: 'मसनवी', title: 'Mas̱navī-ye Maʿnavī', titleUr: 'مثنوی معنوی', titleHi: 'मसनवी-ए-मा\'नवी', poet: 'Rumi', poetUr: 'مولانا رومی', poetHi: 'मौलाना रूमी', url: 'https://ganjoor.net/moulavi/masnavi/daftar1/sh1', site: 'Ganjoor ↗' }
+  ],
   1: [
-    { type: 'Masnavi', typeUr: 'مثنوی', typeHi: 'मसनवी', title: 'Mas̱navī-ye Maʿnavī', titleUr: 'مثنوی معنوی', titleHi: 'मसनवी-ए-मा\'नवी', poet: 'Rumi', poetUr: 'مولانا رومی', poetHi: 'मौलाना रूमी', url: 'https://ganjoor.net/moulavi/masnavi/daftar1/sh1', site: 'Ganjoor ↗' },
     { type: 'Qasida', typeUr: 'قصیدہ', typeHi: 'क़सीदा', title: 'Hāñ mah-e nau suneñ', titleUr: 'ہاں مہِ نو سنیں', titleHi: 'हाँ मह-ए-नौ सुनें', poet: 'Ghalib', poetUr: 'غالب', poetHi: 'ग़ालिब', url: 'https://www.rekhta.org/poets/mirza-ghalib/qasiida', site: 'Rekhta ↗' }
   ]
 };
@@ -2527,6 +2738,26 @@ function renderMisraPair(l1, l2) {
   if (!l1 && !l2) return '';
   if (!l2) return `<div class="misra-line">${l1 || ''}</div>`;
   return `<div class="misra-line">${l1}</div><div class="misra-line">${l2}</div>`;
+}
+
+/* A Persian couplet in the same meter, under the Urdu one (canonical settings only). */
+function renderCirclePersianCouplet(mtr) {
+  const host = document.getElementById('circlePersianCouplet');
+  if (!host) return;
+  const v = mtr ? persianVerseFor(mtr) : null;
+  if (!v) { host.innerHTML = ''; host.hidden = true; return; }
+  const fa = persianAttestation(mtr);
+  const poet = localizedPoetName(v, canonicalPoetName(v.poet || ''));
+  host.innerHTML = `
+    <div class="fa-couplet-head">
+      <span class="fa-couplet-label">In Persian${fa.verses ? ` &middot; <a class="fran-link" href="${fa.url}" target="_blank" rel="noopener">${faNum(fa.verses)} verses on Ganjoor ↗</a>` : ''}</span>
+      ${v.url ? `<a class="fran-link" href="${v.url}" target="_blank" rel="noopener">${v.source || 'Ganjoor ↗'}</a>` : ''}
+    </div>
+    <div class="fa-couplet-line fa-ur" lang="fa">${renderMisraPair(v.fa || v.ur, v.fa2 || v.ur2)}</div>
+    <div class="fa-couplet-line fa-hi" lang="hi">${renderMisraPair(v.hi, v.hi2)}</div>
+    <div class="fa-couplet-line fa-ro" lang="fa-Latn">${renderMisraPair(v.ro, v.ro2)}</div>
+    ${poet ? `<div class="couplet-attribution"><span class="vpoet">&mdash; ${poet}</span></div>` : ''}`;
+  host.hidden = false;
 }
 
 function updateCircleVerseSection(mtr, res) {
@@ -2548,20 +2779,24 @@ function updateCircleVerseSection(mtr, res) {
       otherGenresHost.innerHTML = '';
       otherGenresHost.style.display = 'none';
     }
+    renderCirclePersianCouplet(null);
 
     // Check if an authentic classical demonstration exists for this EXACT prototype (e.g. Muztar Khairabadi for Tawil, Hatef for Kamil, Rumi for Ramal Masnavi, Shams Qais for Basit/Wafir)
-    let verseObj = null;
-    if (mtr.canonical && mtr.canonical.isArabicOnly && mtr.verses) {
+    const fa = persianAttestation(mtr);
+    let verseObj = fa.status === 'persian' ? persianVerseFor(mtr) : null;
+    if (verseObj) {
+      /* a Persian couplet in this exact meter: shown as the meter's example, not as a prototype */
+    } else if (mtr.canonical && mtr.canonical.isArabicOnly && mtr.verses) {
       verseObj = mtr.verses[`${curLength}_${curEndMod}`] || mtr.verses[`${curLength}_salim`];
-    } else if (mtr.id === 'ramal' && curLength === 'musaddas' && curEndMod === 'mahzuuf' && curBodyMod === 'base') {
-      verseObj = mtr.verses && mtr.verses['musaddas_mahzuuf']; // Rumi's Masnavi
     } else if (mtr.id === 'kamil' && curLength === 'musaddas' && curEndMod === 'salim') {
       verseObj = mtr.verses && mtr.verses['musaddas_salim']; // Hatef Isfahani
     }
 
     // Render header for Theoretical / Classical Prototype Card
     if (headLeft) {
-      const genre = (verseObj && verseObj.genre) ? `${verseObj.genre} &rsaquo; Prototype` : 'Theoretical Prototype';
+      const genre = (fa.status === 'persian')
+        ? ((verseObj && verseObj.genre) || 'Persian Meter')
+        : ((verseObj && verseObj.genre) ? `${verseObj.genre} &rsaquo; Prototype` : 'Theoretical Prototype');
       headLeft.innerHTML = `<span class="vnum">${genre}</span>`;
     }
     if (headRight) {
@@ -2599,18 +2834,24 @@ function updateCircleVerseSection(mtr, res) {
       }
     }
 
+    const urduReason = res.theoreticalReason || 'This configuration represents al-Khalīl’s abstract circular permutation. In classical Urdu poetry, this bahr was not composed in this form; Urdu poets composed exclusively in the canonical form.';
+    const faReason = fa.status === 'persian'
+      ? ` Persian poets did use it: Ganjoor files <a class="fran-link" href="${fa.url}" target="_blank" rel="noopener">${faNum(fa.verses)} verses ↗</a> of classical Persian poetry in this meter${fa.name ? ` (<span lang="fa">${fa.name}</span>)` : ''}.`
+      : fa.status === 'rare'
+        ? ` In Persian it is rare: Ganjoor files <a class="fran-link" href="${fa.url}" target="_blank" rel="noopener">${faNum(fa.verses)} verses ↗</a> in it.`
+        : ' It has no verses in Ganjoor’s Persian corpus either.';
     const theoBoxHtml = `
-      <div class="theoretical-box">
-        <div class="theo-badge">Theoretical Circle Prototype</div>
+      <div class="theoretical-box${fa.status === 'persian' ? ' is-persian' : ''}">
+        <div class="theo-badge">${fa.status === 'persian' ? 'Persian Meter' : 'Theoretical Circle Prototype'}</div>
         <div class="theo-title">${res.nameEn}</div>
-        <p class="theo-desc">${res.theoreticalReason || 'This configuration represents al-Khalīl’s abstract circular permutation. In classical Urdu poetry, this bahr was not composed in this form; Urdu poets composed exclusively in the canonical form.'}</p>
+        <p class="theo-desc">${urduReason}${faReason}</p>
         ${jumpBtnHtml}
       </div>
     `;
 
     if (verseObj && verseObj.ur) {
       if (vVerseBox) vVerseBox.style.display = '';
-      if (vUr) vUr.innerHTML = renderMisraPair(verseObj.ur, verseObj.ur2);
+      if (vUr) vUr.innerHTML = renderMisraPair(verseObj.fa || verseObj.ur, verseObj.fa2 || verseObj.ur2);
       if (vHi) vHi.innerHTML = renderMisraPair(verseObj.hi, verseObj.hi2);
       if (vRo) vRo.innerHTML = renderMisraPair(verseObj.ro, verseObj.ro2);
       if (vAttribution) {
@@ -2769,6 +3010,8 @@ function updateCircleVerseSection(mtr, res) {
       sylRow.innerHTML = '';
     }
   }
+
+  renderCirclePersianCouplet(mtr);
 
   // Populate Notable Forms in Other Genres (Masnavi, Qasida, Epics)
   if (otherGenresHost) {

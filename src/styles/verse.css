@@ -592,22 +592,22 @@
 .couplet-card .couplet-acts { gap: var(--sp-4); }
 .couplet-card .cbox-verse .vline-lg[lang], .misra-card .cbox-verse .misra-text { text-align: center; direction: inherit; }
 .couplet-card .cbox-verse .vline-lg[lang="ur"], .misra-card .cbox-verse .misra-text:not(.ltr):not(.deva) {
-  font-family: var(--urdu); font-size: 32px; line-height: 2.2; direction: rtl;
+  font-family: var(--urdu); font-size: 40px; line-height: 2.1; direction: rtl;
 }
 .couplet-card .cbox-verse .vline-lg[lang="ur-Latn"], .misra-card .cbox-verse .misra-text.ltr {
-  font-family: var(--mono); font-size: 19px; line-height: 1.8; direction: ltr;
+  font-family: var(--mono); font-size: 20px; line-height: 1.8; direction: ltr;
 }
-.couplet-card .cbox-verse .vline-lg[lang="hi"], .misra-card .cbox-verse .misra-text.deva { font-size: 22px; line-height: 1.9; }
+.couplet-card .cbox-verse .vline-lg[lang="hi"], .misra-card .cbox-verse .misra-text.deva { font-size: 26px; line-height: 1.9; }
 
 @media (max-width: 767px) {
   .couplet-card .cbox-verse .vline-lg[lang="ur"], .misra-card .cbox-verse .misra-text:not(.ltr):not(.deva) {
-    font-size: 25px; line-height: 2.0;
+    font-size: 30px; line-height: 2.0;
   }
   .couplet-card .cbox-verse .vline-lg[lang="ur-Latn"], .misra-card .cbox-verse .misra-text.ltr {
     font-size: 16px; line-height: 1.8;
   }
   .couplet-card .cbox-verse .vline-lg[lang="hi"], .misra-card .cbox-verse .misra-text.deva {
-    font-size: 18px; line-height: 1.8;
+    font-size: 20px; line-height: 1.8;
   }
 }
 .scan-notes { font-family: var(--sans); font-size: 13px; line-height: 1.6; color: var(--faint); text-align: left; margin: var(--sp-3) 0 0; }

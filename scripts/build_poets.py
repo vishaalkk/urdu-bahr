@@ -18,6 +18,7 @@ import glob
 import json
 import os
 import re
+import unicodedata
 
 DATA = os.path.join(os.path.dirname(__file__), '..', 'data')
 OUT = os.path.join(DATA, 'poets_extended.json')
@@ -93,7 +94,36 @@ POETS = {
     'jami':           ('Jami', 'Nur al-Din Abd al-Rahman Jami', 'جامی', 'जामी', ['Maulana Jami', 'Abdur Rahman Jami', 'Nur al-Din Abd al-Rahman']),
     'bu_ali':         ('Bu Ali', 'Bu Ali Shah Qalandar', 'بو علی', 'बू علی', ['Sharafuddin Bu Ali Qalandar', 'Bu Ali Qalandar', 'Bu Ali Shah']),
     'khusrau':        ('Khusrau', 'Amir Khusrau', 'خسرو', 'ख़ुसरो', ['Hazrat Amir Khusrau', 'Amir Khusro', "Ab'ul Hasan Yamin al-Din Khusrow", 'Amir Khusrow']),
+    # Persian kalaam: Sufinama's top 100 Persian qawwali (category fa_<key> in data/sufinama_manifest.json)
+    'hafiz':          ('Hafiz', 'Hafiz Shirazi', 'حافظ', 'हाफ़िज़', ['Hafez', 'Khwaja Hafiz Shirazi']),
+    'rumi':           ('Rumi', 'Maulana Jalaluddin Rumi', 'رومی', 'रूमी', ['Maulana Rumi', 'Jalaluddin Rumi', 'Molana']),
+    'saadi':          ('Saadi', 'Saadi Shirazi', 'سعدی', 'सादी', ["Sa'di", 'Sheikh Saadi']),
+    'iraqi':          ('Iraqi', 'Fakhruddin Iraqi', 'عراقی', 'इराक़ी', ['Fakhruddin Iraqi', 'Fakhr al-Din Iraqi']),
+    'hasan_sijzi':    ('Hasan Sijzi', 'Amir Hasan Ala Sijzi', 'حسن سجزی', 'हसन सिज्ज़ी', ['Amir Hasan Sijzi', 'Hasan Dehlavi']),
+    'ahmad_jam':      ('Ahmad Jam', 'Shaikh Ahmad Jam', 'احمد جام', 'अहमद जाम', ['Ahmad-e Jam', 'Zhinda Pil']),
+    'nizamuddin':     ('Nizamuddin', 'Hazrat Nizamuddin Auliya', 'نظام الدین', 'निज़ामुद्दीन', ['Nizamuddin Auliya']),
+    'sabir':          ('Sabir', 'Alauddin Ali Ahmad Sabir Kaliyari', 'صابر', 'साबिर', ['Sabir Kaliyari', 'Sabir Pak']),
+    'jilani':         ('Jilani', 'Shaikh Abdul Qadir Jilani', 'جیلانی', 'जीलानी', ['Abdul Qadir Jilani', 'Ghaus-e-Azam']),
+    'lal_shahbaz':    ('Lal Shahbaz', 'Lal Shahbaz Qalandar', 'لعل شہباز', 'लाल शहबाज़', ['Lal Shahbaz Qalandar', 'Shahbaz Qalandar']),
+    'bahlol':         ('Bahlol', 'Bahlol Dana', 'بہلول', 'बहलोल', ['Bahlol Dana', 'Bahlul']),
+    'ghalib_farsi':   ('Ghalib (Persian)', 'Mirza Ghalib, Persian', 'غالب (فارسی)', 'ग़ालिब (फ़ारसी)', []),
+    'qateel_mirza':   ('Mirza Qateel', 'Mirza Muhammad Hasan Qateel', 'مرزا قتیل', 'मिर्ज़ा क़तील', []),
+    'anonymous_fa':   ('Anonymous', 'Traditional (qawwali)', 'نامعلوم', 'अज्ञात', []),
+    'ashrafi':        ('Ashrafi', 'Hakeem Nazr Ashraf Ashrafi', 'اشرفی', 'अशरफ़ी', []),
+    'shams_mashriqi': ('Shams Mashriqi', 'Shams Mashriqi', 'شمس مشرقی', 'शम्स मशरिक़ी', []),
+    'saudagar':       ('Saudagar', 'Shah Siddique Saudagar', 'سوداگر', 'सौदागर', ['Shah Siddique Saudagar']),
+    'muneer':         ('Muneer', 'Muneer (qawwali tradition)', 'منیر', 'मुनीर', []),
 }
+# Poets the Persian crawl found (scripts/crawl_sufinama_persian.py writes data/sufinama_poets.json, with their names as Sufinama
+# gives them in Urdu and Devanagari): each gets a collection unless it is already listed above.
+_crawled = os.path.join(DATA, 'sufinama_poets.json')
+if os.path.exists(_crawled):
+    for _k, _v in json.load(open(_crawled, encoding='utf-8')).items():
+        if _k not in POETS:
+            _ur = (_v.get('ur_title') or '').split(' - ')[0].strip() or _v['name']
+            _hi = (_v.get('hi_title') or '').split(' - ')[0].strip() or _v['name']
+            POETS[_k] = (_v['name'], _v['name'], _ur, _hi, [])
+
 # name = the pen name (tabs, list rows, search tags, sort order); full = the whole name (the Poets picker, the collection note)
 KEY_OF = {alias.lower(): k for k, v in POETS.items() for alias in v[4]}
 KEY_OF.update({v[0].lower(): k for k, v in POETS.items()})
@@ -138,7 +168,20 @@ ARABIC = re.compile(r'[\u0600-\u06ff]')   # some Rekhta pages carry Urdu script 
 ARABIC_TO_URDU = str.maketrans({'ي': 'ی', 'ى': 'ی', 'ك': 'ک'})
 
 
+FA_FOLD = str.maketrans({'ہ': 'ه', 'ۂ': 'ه', 'ۀ': 'ه', 'ة': 'ه', 'ھ': 'ه', 'ے': 'ی', 'ي': 'ی', 'ى': 'ی', 'ئ': 'ی',
+                         'ك': 'ک', 'أ': 'ا', 'إ': 'ا', 'آ': 'ا', 'ٱ': 'ا', 'ؤ': 'و'})
+
+
+def fa_fold(s):
+    """letters only, Urdu and Persian letter forms folded (as scripts/match_ganjoor.py)"""
+    return re.sub(r'[^\u0621-\u06d3]', '', s.translate(FA_FOLD))
+
+
+PRESENTATION = re.compile('[\ufb50-\ufdff\ufe70-\ufeff]')   # Arabic presentation forms (one Sufinama page): fold to letters
+
+
 def urdu(s):
+    s = PRESENTATION.sub(lambda m: unicodedata.normalize('NFKC', m.group(0)), s)
     return s.translate(ARABIC_TO_URDU)
 
 
@@ -222,6 +265,11 @@ def main():
 
     # 2c. Sufinama
     sufinama_file = os.path.join(DATA, 'sufinama_scanned.json')
+    # Ganjoor matches (scripts/match_ganjoor.py): Ganjoor's link and its Iranian-orthography lines, kept only where the match is
+    # sure (three or more lines) — two-line matches are often anthologies quoting the poem
+    gold_file = os.path.join(os.path.dirname(__file__), '..', 'tests', 'data', 'persian_gold.json')
+    ganjoor = {g['url']: g for g in (load(gold_file) if os.path.exists(gold_file) else [])
+               if g.get('ganjoor') and g['ganjoor']['hits'] >= 3}
     category_to_key = {
         'ameer_meenai': 'ameer_meenai',
         'zaheen': 'zaheen',
@@ -233,7 +281,8 @@ def main():
     }
     if os.path.exists(sufinama_file):
         for g in load(sufinama_file):
-            key = category_to_key.get(g.get('category')) or KEY_OF.get(g['poet'].lower())
+            cat = g.get('category') or ''
+            key = category_to_key.get(cat) or (cat[3:] if cat.startswith('fa_') else None) or KEY_OF.get(g['poet'].lower())
             if not key or key not in out:
                 continue
             ck = couplet_key(g['lines'])
@@ -249,6 +298,24 @@ def main():
                 'lines': [{'ur': urdu(l['ur']), 'hi': '' if ARABIC.search(l['hi']) else l['hi'], 'ro': l['ro']} for l in g['lines']],
                 '_ck': ck
             }
+            # language: `lang` for a Persian ghazal; `xl` lists its lines in the other language (an Urdu girah in a Persian
+            # qawwali). Kept off the lines so the packer still packs them.
+            lang = g.get('lang', 'ur')
+            if lang != 'ur':
+                entry['lang'] = lang
+            xl = [i for i, l in enumerate(g['lines']) if l.get('lang', lang) != lang]
+            if xl:
+                entry['xl'] = xl
+            if g.get('rf'):
+                entry['rf'] = g['rf']   # lines whose Roman scan_sufinama.js repaired (data/sufinama_repairs.json)
+            gj = ganjoor.get(g['url'])
+            if gj:
+                entry['gj'] = gj['ganjoor']['url']
+                # only lines that are our line in Iranian spelling: a sung variant (other words) keeps our text, so the
+                # Roman, the Devanagari and the scan never disagree with what is shown
+                fa = [f if f and fa_fold(f) == fa_fold(l['ur']) else '' for f, l in zip(gj.get('fa') or [], g['lines'])]
+                if any(fa):
+                    entry['fa'] = fa
             out[key].append(entry)
 
     # 3. ids: keep any id a previous build gave; new ghazals get max+1, in a stable (URL) order
@@ -270,6 +337,16 @@ def main():
             if (key, g['id']) in MANUAL_METERS:
                 g['meters'] = MANUAL_METERS[(key, g['id'])]
 
+    # Roman lines corrected by hand (data/roman_fixes.json): applied only while the source still reads `from`
+    fixes_file = os.path.join(DATA, 'roman_fixes.json')
+    for fx in (load(fixes_file) if os.path.exists(fixes_file) else []):
+        g = next((g for g in out.get(fx['poet'], []) if g['id'] == fx['id']), None)
+        line = g['lines'][fx['line']] if g and fx['line'] < len(g['lines']) else None
+        if line and line.get('ro') == fx['from']:
+            line['ro'] = fx['to']
+        elif not (line and line.get('ro') == fx['to']):
+            print(f"⚠️  roman fix not applied ({fx['poet']} #{fx['id']} line {fx['line'] + 1}): the source changed")
+
     # #/ghazals/others/N (the old More Poets collection) now lives under its poet
     legacy = {}
     for old_id, key, ck in legacy_src:
@@ -279,7 +356,8 @@ def main():
         for g in gs:
             del g['_ck']
 
-    poets = [{'key': k, 'name': v[0], 'full': v[1], 'ur': v[2], 'hi': v[3], 'aliases': v[4], 'count': len(out[k])}
+    poets = [{'key': k, 'name': v[0], 'full': v[1], 'ur': v[2], 'hi': v[3], 'aliases': v[4], 'count': len(out[k]),
+              'langs': sorted({g.get('lang', 'ur') for g in out[k]})}
              for k, v in sorted(POETS.items(), key=lambda kv: kv[1][0].lower()) if out[k]]
     with open(OUT, 'w', encoding='utf-8') as f:
         json.dump({'poets': poets, 'ghazals': {k: v for k, v in out.items() if v}, 'legacy': legacy}, f, ensure_ascii=False, separators=(',', ':'))

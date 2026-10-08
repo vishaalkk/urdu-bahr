@@ -703,6 +703,16 @@
   background: #f59e0b;
 }
 
+/* Persian meter: attested on Ganjoor though not composed in Urdu (ink, not a colour signal) */
+.meter-status-tag.tag-persian {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line2);
+}
+.meter-status-tag .status-dot.ink {
+  background: var(--gold);
+}
+
 /* Subtle contextual hint badge on buttons */
 .btn-sub-badge {
   display: inline-block;
@@ -908,6 +918,46 @@ html[data-script="ur"] .couplet-attribution {
 .couplet-head-right .fran-link:hover {
   color: var(--gold);
 }
+
+/* Persian couplet in the same meter, under the Urdu one */
+.circle-fa-couplet {
+  border-top: 1px solid var(--line);
+  margin-top: var(--sp-4);
+  padding-top: var(--sp-3);
+  text-align: center;
+}
+.circle-fa-couplet[hidden] { display: none; }
+.fa-couplet-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-2);
+}
+.fa-couplet-label {
+  font-family: var(--sans);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.fa-couplet-label .fran-link { text-transform: none; letter-spacing: 0; }
+.fa-couplet-line .misra-line { display: block; margin: 0; padding: 2px 4px; }
+.fa-couplet-line.fa-ur { font-family: var(--urdu); font-size: 20px; line-height: 2.1; direction: rtl; }
+.fa-couplet-line.fa-hi { font-family: var(--deva); font-size: 18px; line-height: 1.8; }
+.fa-couplet-line.fa-ro { font-family: var(--mono-ro); font-size: var(--fs-sm); line-height: 1.8; color: var(--dim); }
+html[data-script="ur"] .fa-couplet-line.fa-hi,
+html[data-script="ur"] .fa-couplet-line.fa-ro,
+html[data-script="hi"] .fa-couplet-line.fa-ur,
+html[data-script="hi"] .fa-couplet-line.fa-ro,
+html[data-script="ro"] .fa-couplet-line.fa-ur,
+html[data-script="ro"] .fa-couplet-line.fa-hi,
+html[data-script="ascii"] .fa-couplet-line.fa-ur,
+html[data-script="ascii"] .fa-couplet-line.fa-hi { display: none; }
+.theoretical-box.is-persian { border-style: solid; }
+.theoretical-box.is-persian .theo-badge { color: var(--ink); background: transparent; border: 1px solid var(--line2); }
+.theo-desc .fran-link { color: var(--gold); }
 
 /* Other genres strip: Masnavi, Qasida, Persian Epics (Ganjoor / Rekhta) */
 .meter-other-genres {

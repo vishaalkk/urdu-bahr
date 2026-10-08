@@ -641,6 +641,8 @@ main, .wrap { max-width: 760px; }
 /* Poets ▾: a flat fold-out under the collection tabs. A filter line, then one hairline row per poet (name, count).
    No surface, no shadow: the page head is not a menu. Script text keeps sentence case and no tracking. */
 .poet-picker { margin: calc(-1 * var(--sp-3)) 0 var(--sp-4); padding: 0 0 var(--sp-3); border-bottom: 1px solid var(--line); }
+.poet-picker-langs { display: flex; gap: var(--sp-2); margin-top: var(--sp-2); }
+.poet-opt-lang { font-family: var(--sans); font-size: 11px; letter-spacing: 0.06em; margin-left: var(--sp-2); }
 .poet-picker-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); column-gap: var(--sp-5); margin-top: var(--sp-2); }
 .poet-opt { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-3); min-height: 38px; padding: 6px 0; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: none; color: var(--dim); font-family: var(--serif); font-size: var(--fs-base); text-align: start; text-transform: none; letter-spacing: 0; }
 .poet-opt:hover, .poet-opt:focus-visible { color: var(--ink); }
@@ -1337,3 +1339,9 @@ html[data-script="ro"] .syl-tab, html[data-script="hi"] .syl-tab { font-family: 
 .ghazal-search-input:focus, .dict-search-input:focus, .poet-picker-filter:focus, .feet-search:focus,
 .ghazal-search-input:focus-visible, .dict-search-input:focus-visible, .poet-picker-filter:focus-visible, .feet-search:focus-visible { outline: none !important; box-shadow: none; border-bottom-color: var(--gold); }
 @media (max-width: 767px) { .ghazal-search-input { max-width: none; margin-left: 0; width: 100%; } }
+
+/* Scan: language of the verse (Auto / Urdu / Fārsī) and the Persian-meter note */
+.scan-lang { gap: var(--sp-2); align-items: center; flex-wrap: wrap; margin-top: var(--sp-2); }
+.scan-lang-buttons { display: inline-flex; gap: var(--sp-2); }
+.scan-fa-note { border-top: 1px solid var(--line); margin-top: var(--sp-4); padding-top: var(--sp-3); }
+.scan-fa-note ul { margin: var(--sp-2) 0 0; padding-left: var(--sp-5); font-size: var(--fs-sm); line-height: 1.8; }

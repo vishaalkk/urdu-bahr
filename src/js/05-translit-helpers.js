@@ -290,8 +290,120 @@ function rkAddTashdid(uw, rw) {   // uw: one Urdu word, rw: its Roman; returns u
     return uw;   // not a clean letter-for-letter match: leave it
 }
 
+/* The pen-name sign is not a letter. Allāh is spelled several ways (اللّٰہ الّلہ, with an honorific sign: اللہؐ) and joined
+   with a stray ZWNJ (رسول‌ اللہ); the engine reads plain اللہ (handbook 3.4 waṣl). Other words keep their honorific sign:
+   the engine already reads محمدؐ as the poets do. */
+function rkPlain(ur) {
+    return ur.replace(/[\ufb50-\ufdff\ufe70-\ufeff]/g, c => c.normalize('NFKC')).replace(/ؔ/g, '').replace(/\u200c(?=\s)|(?<=\s)\u200c/g, '')
+        .replace(/(?:الل[ّٰ]+ہ|الّلہ|اللہ)[\u0610-\u061a]*/g, 'اللہ');   // only the two-lām spellings: الٰہ (ilāh) is another word
+}
+
+/* ---- Persian (Fārsī) input for the Scan tab ----
+   faScanText: a line in Persian spelling, written the way the engine reads verse. Iranian letters → the engine's (ه → ہ,
+   ي → ی, ك → ک, هٔ / ۀ → ۂ for the iẓāfat), the half-space joiner (نمی‌دانم) → a space, and a nūn after a long vowel at a word's end
+   → ں: Persian prosody does not count it (این chūn → ایں, جان → جاں), exactly as Urdu verse spelling marks it.
+   detectScanLang: 'fa' when the text uses Iranian letters or reads as Persian (است، نیست، می‌، را …), else 'ur'. */
+const FA_WORDS = new Set('است نیست هست را از چه چو چون کجا ای بود باشد شد کرد کند گشت آمد دارم دارد نمی می همه هیچ ما شما او ایشان این آن'.split(' '));
+const UR_WORDS = new Set('ہے ہیں میں کا کی کے سے نے کو تھا تھی تھے نہیں کیا ہو ہوا کوئی کچھ یہ وہ اب بھی ہی'.split(' '));
+function faScanText(s) {
+  return String(s || '').normalize('NFC')
+    .replace(/[\ufb50-\ufdff\ufe70-\ufeff]/g, c => c.normalize('NFKC'))
+    .replace(/\u200c/g, ' ').replace(/ي|ى/g, 'ی').replace(/ك/g, 'ک')
+    .replace(/هٔ|ۀ/g, 'ۂ').replace(/ه/g, 'ہ')
+    .replace(/([اوی])ن(?=$|[\s،۔؟!])/g, '$1ں')
+    .replace(/[ \t]+/g, ' ').trim();
+}
+function detectScanLang(text) {
+  const t = String(text || '');
+  if (/[\u200cيكۀ]|هٔ|ه(?=$|[\s،۔])/.test(t)) return 'fa';
+  let f = 0, u = 0;
+  t.split(/[\s،۔؟!]+/).forEach(w => { const k = w.replace(/ہ/g, 'ه').replace(/ے/g, 'ی'); if (FA_WORDS.has(k) || FA_WORDS.has(w)) f++; if (UR_WORDS.has(w)) u++; });
+  return f >= 2 && f > u ? 'fa' : 'ur';
+}
+window.faScanText = faScanText;
+window.detectScanLang = detectScanLang;
+
+/* ---- Persian words in Roman and Devanagari (Sufinama's spellings, data/fa_lexicon.json) ----
+   faKey must stay identical to scripts/lib_fa_lexicon.js. A word not in the list is tried as a known stem with Persian
+   prefixes (mī-, namī-, be-, ba-, na-) and endings (-hā, -ān, -am, -ī, -ash …); failing that, the caller falls back. */
+let faLex = (typeof FA_LEXICON !== 'undefined' && FA_LEXICON) || {};
+function setFaLexicon(lex) { faLex = lex || {}; }   // tests/benchmark_fa.js scores a list built without its test poets
+function faKey(w) {
+  return String(w || '').normalize('NFC')
+    .replace(/[\ufb50-\ufdff\ufe70-\ufeff]/g, c => c.normalize('NFKC'))
+    .replace(/[\u064B-\u065F\u0670\u0640\u200c\u200d\u0610-\u061a\u0654]/g, '')
+    .replace(/[يى]/g, 'ی').replace(/ك/g, 'ک').replace(/[هۂۀة]/g, 'ہ').replace(/ں/g, 'ن')
+    .replace(/[^\u0621-\u06d3]/g, '');
+}
+const FA_PREFIX = [['نمی', 'namī-', 'नमी-'], ['می', 'mī-', 'मी-'], ['بی', 'be-', 'बे-'], ['ب', 'ba-', 'ब-'], ['ن', 'na-', 'न-']];
+const FA_SUFFIX = [['ہا', '-hā', '-हा'], ['ہای', '-hā-e', '-हा-ए'], ['ان', 'ān', 'ान'], ['یم', 'īm', 'ीम'], ['ید', 'īd', 'ीद'],
+  ['ند', 'and', 'न्द'], ['ست', 'st', 'स्त'], ['ام', 'am', 'म'], ['م', 'am', 'म'], ['ش', 'ash', 'श'], ['ت', 'at', 'त'], ['ی', 'ī', 'ी']];
+/* exact spelling first; then the other final yeh (Iranian ی for Urdu ے, and back) */
+function faLookup(k) {
+  const e = faLex[k] || (/ی$/.test(k) && faLex[k.slice(0, -1) + 'ے']) || (/ے$/.test(k) && faLex[k.slice(0, -1) + 'ی']);
+  return e ? { ro: e[0], hi: e[1] || '' } : null;
+}
+function faWordScripts(w) {
+  const k = faKey(w);
+  if (!k) return null;
+  let hit = faLookup(k);
+  if (hit) return hit;
+  const withSuffix = stem => {
+    for (const [u, r, h] of FA_SUFFIX) {
+      if (stem.length > u.length + 1 && stem.endsWith(u)) {
+        const s = faLookup(stem.slice(0, -u.length));
+        if (s && s.ro) return { ro: s.ro + r, hi: s.hi ? s.hi + h : '' };
+      }
+    }
+    return null;
+  };
+  if ((hit = withSuffix(k))) return hit;
+  for (const [u, r, h] of FA_PREFIX) {
+    if (k.length > u.length + 1 && k.startsWith(u)) {
+      const rest = k.slice(u.length), s = faLookup(rest) || withSuffix(rest);
+      if (s && s.ro) return { ro: r + s.ro, hi: s.hi ? h + s.hi : '' };
+    }
+  }
+  return null;
+}
+/* a Fārsī line in Roman and Devanagari, word by word: the Persian list first, then the Urdu word map, then the letter map.
+   A written iẓāfat (zer, ۂ, or ئے on a word) shows as -e. */
+function faLineScripts(line) {
+  const hi = [], ro = [];
+  let known = 0, n = 0;
+  const one = w => {
+    n++;
+    const fa = faWordScripts(w);
+    let r = fa && fa.ro, h = fa && fa.hi;
+    if (fa) known++;
+    if (!r || !h) {
+      const u = (typeof urduWordsToScripts === 'function') ? urduWordsToScripts(w) : null;
+      r = r || (u && u.ro) || (typeof urduToRoman === 'function' ? urduToRoman(w) : w);
+      h = h || (u && u.hi) || (typeof urduToDevanagari === 'function' ? urduToDevanagari(w) : w);
+    }
+    /* a written iẓāfat: zer or ۂ always; ئے only when the word's own Roman does not already end in it (جائے jā.e) */
+    if ((/[\u0650]$|ۂ$/.test(w) || (/ئے$/.test(w) && !/e$/.test(r))) && !/-e$/.test(r)) { r += '-e'; h += '-ए'; }
+    return [r, h];
+  };
+  const words = String(line || '').split(/\s+/).filter(Boolean);
+  for (let i = 0; i < words.length; i++) {
+    const parts = words[i].split('\u200c').filter(Boolean).map(one);   // صاحب‌دلان: two words, one compound
+    let r = parts.map(p => p[0]).join('-'), h = parts.map(p => p[1]).join('-');
+    /* Sufinama joins these particles to the next word: ba-qatl, za-dastam, be-niyāz */
+    /* … and an iẓāfat to the word it joins: qatl-e-man */
+    if ((/^(ba|bi|be|za|ze)$/.test(r) || /-e$/.test(r)) && i + 1 < words.length) { ro.push(r + '-'); hi.push(h + '-'); continue; }
+    ro.push(r); hi.push(h);
+  }
+  return { ro: ro.join(' ').replace(/- /g, '-'), hi: hi.join(' ').replace(/- /g, '-'), known, words: n };
+}
+window.faKey = faKey;
+window.faWordScripts = faWordScripts;
+window.faLineScripts = faLineScripts;
+window.setFaLexicon = setFaLexicon;
+
 function rekhtaScanText(ur, ro) {
-    const plain = ur.replace(/ؔ/g, '');
+    const plain = rkPlain(ur);
+    const honorific = ur.replace(/ؔ/g, '').split(/\s+/).filter(Boolean).map(w => /[\u0610-\u061a]/.test(w));   // محمدؐ: the engine's own reading, no tashdīd
     if (!ro || RK_NON_LATIN.test(ro)) return plain;
     const uw = plain.split(/\s+/).filter(Boolean);
     const parts = [];
@@ -300,12 +412,78 @@ function rekhtaScanText(ur, ro) {
             if (i > 0 && /^(e|ye)$/i.test(p) && parts.length) parts[parts.length - 1].iz = true;
             else if (p) parts.push({ ro: p, iz: false });
         }));
-    if (parts.length !== uw.length) return plain;
-    return uw.map((w, i) => {
-        w = rkAddTashdid(w, parts[i].ro);
-        if (!parts[i].iz || /[ِٔ]$/.test(w) || /ے$/.test(w)) return w;
-        return /[ہۂ]$/.test(w) ? w.replace(/[ہۂ]$/, 'ۂ') : w + 'ِ';
+    const izafa = w => /[ِٔ]$/.test(w) || /ے$/.test(w) ? w : (/[ہۂ]$/.test(w) ? w.replace(/[ہۂ]$/, 'ۂ') : w + 'ِ');
+    if (parts.length === uw.length) {
+        return uw.map((w, i) => {
+            if (!honorific[i]) w = rkAddTashdid(w, parts[i].ro);
+            return parts[i].iz ? izafa(w) : w;
+        }).join(' ');
+    }
+    /* The Roman splits or joins words differently (Sufinama: ba-ḳhudā / بخدا, rasūlallāh / رسول اللہ): pair them up by
+       consonant skeleton, letting one word stand for two or three, and keep the iẓāfat hints. Unsure → as written. */
+    const groups = rkAlignWords(uw, parts.map(p => p.ro));
+    if (!groups) return plain;
+    return groups.map(([u0, u1, p0, p1]) => {
+        const ws = uw.slice(u0, u1);   // iẓāfat only: a doubled Roman letter here is too often not a written tashdīd
+        if (parts[p1 - 1].iz && !RK_NO_IZAFAT.has(ws[ws.length - 1])) ws[ws.length - 1] = izafa(ws[ws.length - 1]);
+        return ws.join(' ');
     }).join(' ');
+}
+
+/* particles never take an iẓāfat: when the Roman drops one (… ārzū-e lab / آرزوئے بہ لب) the hint is not theirs */
+const RK_NO_IZAFAT = new Set(['بہ', 'کہ', 'نہ', 'چہ', 'کی', 'کے', 'کا', 'و', 'ز', 'از', 'در', 'بر', 'تا', 'یا', 'سے', 'میں', 'پہ', 'ہے']);
+
+/* Consonant skeletons for pairing Urdu words with Roman words: letters that the two scripts write alike, with و ی ہ ح ع
+   and vowels left out (they are vowels as often as consonants) and doubles merged (tashdīd is unwritten). */
+const RK_SKEL_UR = { 'ب': 'b', 'پ': 'p', 'ت': 't', 'ط': 't', 'ٹ': 't', 'ث': 's', 'س': 's', 'ص': 's', 'ج': 'j', 'چ': 'c',
+    'خ': 'x', 'د': 'd', 'ڈ': 'd', 'ذ': 'z', 'ز': 'z', 'ض': 'z', 'ظ': 'z', 'ژ': 'z', 'ر': 'r', 'ڑ': 'r', 'ش': 'S', 'غ': 'g',
+    'ف': 'f', 'ق': 'q', 'ک': 'k', 'ك': 'k', 'گ': 'g', 'ل': 'l', 'م': 'm', 'ن': 'n', 'ں': 'n' };
+const RK_SKEL_UR_FULL = Object.assign({ 'ہ': 'h', 'ح': 'h', 'ھ': 'h', 'ی': 'y', 'ے': 'y', 'ئ': 'y', 'و': 'v' }, RK_SKEL_UR);
+function rkSkelUr(w, full) { return [...w].map(c => (full ? RK_SKEL_UR_FULL : RK_SKEL_UR)[c] || '').join('').replace(/(.)\1+/g, '$1'); }
+function rkSkelRo(w, full) {
+    const s = w.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/kh/g, 'x').replace(/gh/g, 'g').replace(/sh/g, 'S').replace(/ch/g, 'c').replace(/zh/g, 'z')
+        .replace(/[^a-zS]/g, '').replace(/w/g, 'v').replace(/ī|ii/g, 'y');
+    return (full ? s.replace(/[aeiou]/g, '') : s.replace(/[aeiouyvh]/g, '')).replace(/(.)\1+/g, '$1');
+}
+function rkSim(a, b) {
+    if (!a && !b) return 1;
+    const d = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+    for (let j = 1; j <= b.length; j++) d[0][j] = j;
+    for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++)
+        d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    return 1 - d[a.length][b.length] / Math.max(a.length, b.length);
+}
+/* -> [[u0, u1, p0, p1], …] covering both lists (Urdu words u0..u1-1 ↔ Roman parts p0..p1-1), or null when unsure */
+function rkAlignWords(uw, ro) {
+    const U = uw.length, P = ro.length, NEG = -1e9;
+    if (!U || !P || Math.abs(U - P) > Math.max(2, Math.round(U / 3))) return null;
+    const us = uw.map(w => rkSkelUr(w)), ps = ro.map(w => rkSkelRo(w));
+    const usF = uw.map(w => rkSkelUr(w, true)), psF = ro.map(w => rkSkelRo(w, true));   // with h y v: breaks ties
+    const best = Array.from({ length: U + 1 }, () => new Array(P + 1).fill(NEG)), from = Array.from({ length: U + 1 }, () => new Array(P + 1));
+    best[0][0] = 0;
+    const STEPS = [[1, 1], [1, 2], [2, 1], [1, 3], [3, 1]];
+    for (let i = 0; i <= U; i++) for (let j = 0; j <= P; j++) {
+        if (best[i][j] === NEG) continue;
+        for (const [du, dp] of STEPS) {
+            if (i + du > U || j + dp > P) continue;
+            const dd = x => x.replace(/(.)\1+/g, '$1');   // b + bk → bk: a joined word's doubles merge too
+            const sim = rkSim(dd(us.slice(i, i + du).join('')), dd(ps.slice(j, j + dp).join('')));
+            const tie = 0.01 * rkSim(dd(usF.slice(i, i + du).join('')), dd(psF.slice(j, j + dp).join('')));
+            const sc = best[i][j] + sim + tie - (du === 1 && dp === 1 ? 0 : 0.15);
+            if (sc > best[i + du][j + dp]) { best[i + du][j + dp] = sc; from[i + du][j + dp] = [i, j, sim]; }
+        }
+    }
+    if (best[U][P] === NEG) return null;
+    const out = [];
+    let i = U, j = P, low = 1, total = 0;
+    while (i > 0 || j > 0) {
+        const [pi, pj, sim] = from[i][j];
+        out.unshift([pi, i, pj, j]);
+        low = Math.min(low, sim); total += sim;
+        i = pi; j = pj;
+    }
+    return (total / out.length >= 0.7 && low >= 0.34) ? out : null;
 }
 
 /* The text to scan for a ghazal line: a Rekhta line (marked `rk` when the poet data loads) is scanned with the izafat, tashdid and
@@ -406,7 +584,7 @@ function getLineDisplay(lineObj, script) {
   if(script === 'ascii') return (lineObj.ascii || lineObj.ro || lineObj.ur || '') + (isNovelUr ? approxBadge : '');
   if(script === 'hi') return (lineObj.hi || urduToDevanagari(lineObj.ur) || lineObj.ascii || '') + (isNovelUr || (!lineObj.hi && lineObj.ur) ? approxBadge : '');
   if(script === 'ro') return (lineObj.ro || urduToRoman(lineObj.ur) || lineObj.ascii || '') + (isNovelUr || (!lineObj.ro && lineObj.ur) ? approxBadge : '');
-  return lineObj.ur || lineObj.ascii || '';
+  return lineObj.fa || lineObj.ur || lineObj.ascii || '';   // fa: the same Persian line in Iranian spelling (scripts/build_poets.py)
 }
 window.getLineDisplay = getLineDisplay;
 

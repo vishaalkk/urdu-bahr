@@ -8,6 +8,8 @@ echo "── corpus scan";           node tests/corpus_scan.js
 echo "── packed data (poets, Ghalib, Mir ≡ source)"; node tests/packed_data.js
 echo "── reader benchmark headers"; node tests/reader_benchmark_headers.js
 echo "── Fran benchmark";        node tests/benchmark.js      # Ghalib + Mir: no score may fall below tests/benchmark_baseline.json
+echo "── Persian helpers";       node tests/persian_helpers.js 2>&1 | grep -v "^parser"; test "${PIPESTATUS[0]}" -eq 0
+echo "── Persian benchmark";     node tests/benchmark_fa.js 2>&1 | grep -v "^parser"; test "${PIPESTATUS[0]}" -eq 0   # Persian kalaam vs Ganjoor: tests/benchmark_fa_baseline.json
 echo "── chip transliteration";  node tests/chip_translit_consistency.js
 echo "── practice logic";        node tests/practice_logic.js
 echo "── learn examples";        node tests/learn_examples.js

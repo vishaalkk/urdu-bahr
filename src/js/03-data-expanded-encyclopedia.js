@@ -45,6 +45,7 @@ const POET_KEYS = new Set(POET_LIST.map(p => p.key));
 POET_LIST.forEach(p => (POETS_DATA.ghazals[p.key] || []).forEach(g => {
   g.poet = p.name; g.col = p.key;
   if (!g.verified) g.lines.forEach(l => { l.rk = 1; });   // Rekhta line: scans with its Roman's hints (lineScanText)
+  if (g.fa) g.lines.forEach((l, i) => { if (g.fa[i]) l.fa = g.fa[i]; });   // Persian line in Iranian spelling (Ganjoor): shown in Urdu script mode
 }));
 function isPoetCol(col) { return POET_KEYS.has(col); }
 function poetItems(key) { return POETS_DATA.ghazals[key] || []; }
@@ -57,5 +58,7 @@ const ROMAN_CASUAL_MAP = /*@@ROMAN_CASUAL_MAP@@*/;
 const KI_NEXT = /*@@KI_NEXT@@*/;
 const ROMAN_FALLBACK = /*@@ROMAN_FALLBACK@@*/;
 const COLLOCATIONS = /*@@COLLOCATIONS@@*/;
+/* Persian words (scripts/build_fa_lexicon.js): {key: [Roman, Devanagari, times seen]}, for Fārsī lines only (faWordScripts) */
+const FA_LEXICON = /*@@FA_LEXICON@@*/;
 window.METER_MAP_DATA = METER_MAP_DATA;
 

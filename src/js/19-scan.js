@@ -233,6 +233,8 @@ const SAMPLES=[
  ['Ghalib 20',"یہ نہ تھی ہماری قسمت کہ وصالِ یار ہوتا\nاگر اور جیتے رہتے یہی انتظار ہوتا"],
  ['Mir 7',"الٹی ہو گئیں سب تدبیریں کچھ نہ دوا نے کام کیا\nدیکھا اس بیماریٔ دل نے آخر کام تمام کیا"],
  ['a broken line',"دلِ ناداں تجھے بہت ہوا کیا ہے"],
+ ['Hafiz (Fārsī)',"دل می‌رود ز دستم صاحب‌دلان خدا را\nدردا که راز پنهان خواهد شد آشکارا"],
+ ['Rumi (Fārsī)',"بشنو این نی چون شکایت می‌کند\nاز جدایی‌ها حکایت می‌کند"],
 ];
 if ($('samples')) $('samples').innerHTML=SAMPLES.map((s,i)=>`<button class="chipbtn" onclick="loadSample(${i})">${s[0]}</button>`).join('');
 if ($('exSel')) $('exSel').innerHTML='<option value="">Pritchett\'s exercise ghazals (1–24)…</option>'+EXERCISES.map((e,i)=>`<option value="${i}">${e.g}. ${e.poet}</option>`).join('');
@@ -416,6 +418,62 @@ function lineScripts(rawL, opts){
 }
 /* set when Scan was opened on a whole ghazal ("ghalib/21"): the address then stays #/scan?g=ghalib/21 until the text is changed */
 var scanGhazalRef;   // no initialiser: the router can set it before this file's top level runs
+/* Language of the verse: Auto (detectScanLang), Urdu, or Fārsī. Fārsī lines are written the way the engine reads verse
+   (faScanText: Iranian letters, the uncounted nūn after a long vowel) and never take Mir's Hindi meter, which is Urdu only. */
+let scanLang = (typeof store !== 'undefined' && store.get) ? store.get('scanLang', 'auto') : 'auto';
+function renderScanLangButtons(detected) {
+  const host = $('scanLangButtons');
+  if (host) host.innerHTML = [['auto', 'Auto'], ['ur', 'Urdu'], ['fa', 'Fārsī']].map(([k, label]) =>
+    `<button type="button" class="btn sm${scanLang === k ? ' on' : ''}" aria-pressed="${scanLang === k}" onclick="setScanLang('${k}')">${label}</button>`).join('');
+  const d = $('scanLangDetected');
+  if (d) d.textContent = (scanLang === 'auto' && detected) ? `read as ${detected === 'fa' ? 'Fārsī' : 'Urdu'}` : '';
+}
+function setScanLang(lang) {
+  scanLang = lang;
+  if (typeof store !== 'undefined' && store.set) store.set('scanLang', lang);
+  renderScanLangButtons();
+  if ($('scanIn') && $('scanIn').value.trim()) runScan();
+}
+window.setScanLang = setScanLang;
+window.renderScanLangButtons = renderScanLangButtons;
+
+/* Persian meters Urdu does not use (Ganjoor's list, data/persian_meters.json): tried only for a Fārsī line that no standard
+   meter fits well, and reported under the results. Built from the engine's exported pieces; the engine is unchanged. */
+let _faOnlyMeters = null;
+function faOnlyMeters() {
+  if (_faOnlyMeters) return _faOnlyMeters;
+  const list = (typeof PERSIAN_METERS !== 'undefined' && Array.isArray(PERSIAN_METERS)) ? PERSIAN_METERS : [];
+  const meter = p => { const seq = [...p].map(c => c === '=' ? 'l' : 's'); return { id: 'F', seq, cae: -1, kind: 'regular', cheatFinal: true, cheatCae: false, vars: [{ seq, extra: 0 }, { seq: seq.concat(['c']), extra: 0 }] }; };
+  _faOnlyMeters = list.filter(m => !m.urdu.length && m.verses >= 300).map(m => {
+    const pats = [m.pattern].concat(/^--==/.test(m.pattern) ? ['=' + m.pattern.slice(1)] : []);   // a makhbūn line may open with fāʿilātun
+    return { m, meters: pats.map(meter) };
+  });
+  return _faOnlyMeters;
+}
+function faOnlyFit(line) {
+  let best = null;
+  try {
+    const words = Scan.tokenize(line), units = Scan.buildUnits(words);
+    faOnlyMeters().forEach(({ m, meters }) => meters.forEach(mt => {
+      const r = Scan.matchMeter(units, words.length, mt);
+      if (r && (!best || r.c < best.c)) best = { m, c: r.c };
+    }));
+  } catch (e) { return null; }
+  return best;
+}
+function faOnlyNoteHTML(lines, results) {
+  const rows = [];
+  lines.forEach((l, i) => {
+    const top = results[i].fits[0];
+    if (top && top.c <= 2) return;
+    const f = faOnlyFit(l);
+    if (!f || f.c > 3 || (top && top.c <= f.c)) return;
+    const url = 'https://ganjoor.net/simi/?v=' + encodeURIComponent(f.m.rhythm);
+    rows.push(`<li>Line ${i + 1}: <span lang="fa" class="urdu fam-inline">${escapeHtml(f.m.rhythm.split('(')[0].trim())}</span>${f.m.name ? ` (<span lang="fa">${escapeHtml(f.m.name)}</span>)` : ''} · cost ${f.c.toFixed(1)} · <a class="fran-link" href="${url}" target="_blank" rel="noopener">${f.m.verses.toLocaleString('en-US')} verses on Ganjoor<span class="ext" aria-hidden="true">↗</span></a></li>`);
+  });
+  return rows.length ? `<div class="scan-fa-note"><div class="tiny muted">A Persian meter Urdu does not use fits better:</div><ul>${rows.join('')}</ul></div>` : '';
+}
+
 function runScan(){
   const rawLines=$('scanIn').value.split('\n').map(s=>s.trim()).filter(Boolean);
   const sameGhazal = !!scanGhazalRef && typeof ghazalScanText==='function' && ghazalScanText(scanGhazalRef)===rawLines.join('\n');
@@ -430,12 +488,20 @@ function runScan(){
 
   const lines = [];
   const lineObjs = [];
+  const lang = scanLang === 'auto' ? (typeof detectScanLang === 'function' ? detectScanLang(rawLines.join(' ')) : 'ur') : scanLang;
+  renderScanLangButtons(lang);
   rawLines.forEach(rawL => {
-    const lineObj = lineScripts(rawL);
+    let lineObj = lineScripts(rawL);
     const urduL = ((lineObj && lineObj.ur) || rawL).normalize('NFC');
-    lines.push(urduL);
+    lines.push(lang === 'fa' && typeof faScanText === 'function' ? faScanText(urduL) : urduL);
+    /* a Fārsī line typed in Persian script: Roman and Devanagari from the Persian word list, not the Urdu letter map */
+    if (lang === 'fa' && lineObj && lineObj.isApprox && typeof faLineScripts === 'function') {
+      const fa = faLineScripts(urduL);
+      lineObj = Object.assign({}, lineObj, { ro: fa.ro, hi: fa.hi, isApprox: fa.known < fa.words });
+    }
     lineObjs.push(lineObj);
   });
+  const scanL = (l, o) => { const r = Scan.scanLine(l, o); if (lang === 'fa') r.fits = r.fits.filter(f => f.meter.id !== 'H'); return r; };
 
   if($('studioInput') && $('studioInput').value !== $('scanIn').value) {
     $('studioInput').value = $('scanIn').value;
@@ -448,16 +514,16 @@ function runScan(){
 
   /* The bahr is decided on the text as written; a learner's edits are then judged only
      against that original bahr, even when the edited line happens to fit another one. */
-  const base=lines.map(l=>Scan.scanLine(l));
-  const results=lines.map((l,i)=>hasEdits(i)?Scan.scanLine(l,ovr[i]):base[i]);
-  lastScan={lines,rawLines,lineObjs,results,base};
+  const base=lines.map(l=>scanL(l));
+  const results=lines.map((l,i)=>hasEdits(i)?scanL(l,ovr[i]):base[i]);
+  lastScan={lines,rawLines,lineObjs,results,base,lang};
   let h='';
   /* stacking / multi-line harmony */
   let common=null;
   if(lines.length>1){
     const PAIRS=SCAN_PAIRS;
     const inPair=new Set(PAIRS.flat());
-    const groups=Scan.METERS.map(m=>m.id).filter(id=>!inPair.has(id)).map(id=>[id]).concat(PAIRS).concat([['H']]);
+    const groups=Scan.METERS.map(m=>m.id).filter(id=>!inPair.has(id)).map(id=>[id]).concat(PAIRS).concat(lang==='fa'?[]:[['H']]);
     const tot=groups.map(g=>{let c=0,fits=[]; for(const r of base){const f=r.fits.filter(x=>g.includes(x.meter.id)).sort((a,b)=>a.c-b.c)[0]; if(!f){return null;} c+=f.c; fits.push(f);} return {id:g[0],group:g,c,fits};}).filter(Boolean).sort((a,b)=>a.c-b.c);
     common=tot[0]||null;
     if(!common){
@@ -539,6 +605,7 @@ function runScan(){
     h+=legendHTML('legend-sticky');
     results.forEach((r,li)=>{ h+=lineHTML(r,li,lastScan.disp[li],lineObjs[0]); });
   }
+  if (lang === 'fa') h += faOnlyNoteHTML(lines, results);
   $('scanOut').innerHTML=h;
   scanRolls = {};
 }
@@ -1062,5 +1129,4 @@ function renderLineScan(text, container, lineObjIn, meterId) {
   return h;
 }
 window.renderLineScan = renderLineScan;
-
-
+renderScanLangButtons();

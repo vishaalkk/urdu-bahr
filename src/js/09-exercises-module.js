@@ -755,7 +755,12 @@ function getGhazalNavLabel(col, item) {
 
 function updateCollectionCounts() {
   const col = (typeof activeCollection !== 'undefined') ? activeCollection : 'handbook';
-  if ($('ghazalCollectionCount')) $('ghazalCollectionCount').textContent = collectionData(col).length + ' ghazals';
+  const host = $('ghazalCollectionCount');
+  if (host) {
+    const all = collectionData(col), shown = all.filter(g => poetLangMatch(col, g));
+    if (shown.length === all.length) host.textContent = all.length + ' ghazals';
+    else host.innerHTML = `${shown.length} ${poetLangFilter === 'fa' ? 'Fārsī' : 'Urdu'} of ${all.length} ghazals · <button type="button" class="btn link" onclick="setPoetLang('all')">show all</button>`;
+  }
   renderPoetPickerButton();
 }
 
@@ -914,16 +919,38 @@ function renderPoetPickerButton() {
   b.textContent = (cur ? cur.name : 'Poets') + (open ? ' ▴' : ' ▾');
   if (typeof b.setAttribute === 'function') b.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
+/* Language filter (All / Urdu / Fārsī): a poet who wrote in both (Khusrau, Jigar, Shah Niyaz) is one poet and shows under both */
+const POET_LANGS = [['all', 'All'], ['ur', 'Urdu'], ['fa', 'Fārsī']];
+let poetLangFilter = (typeof store !== 'undefined' && store.get) ? store.get('poetLang', 'all') : 'all';
+const poetLangs = p => p.langs || ['ur'];
+/* a ghazal of a two-language poet (Jigar, Khusrau, Shah Niyaz) passes the language filter only in its own language */
+function poetLangMatch(col, g) {
+  if (poetLangFilter === 'all' || !isPoetCol(col)) return true;
+  const meta = poetMeta(col);
+  if (!meta || poetLangs(meta).length < 2) return true;
+  return (g.lang || 'ur') === poetLangFilter;
+}
+function setPoetLang(lang) {
+  poetLangFilter = lang;
+  if (typeof store !== 'undefined' && store.set) store.set('poetLang', lang);
+  renderPoetPickerList();
+  if (typeof activeCollection !== 'undefined' && isPoetCol(activeCollection)) { ghazalShownCount = 30; renderGhazalsList(); }
+}
 function renderPoetPickerList() {
-  const host = $('poetPickerList'), f = $('poetPickerFilter');
+  const host = $('poetPickerList'), f = $('poetPickerFilter'), langs = $('poetPickerLangs');
   if (!host) return;
+  if (langs) langs.innerHTML = POET_LANGS.map(([k, label]) =>
+    `<button type="button" class="btn sm${poetLangFilter === k ? ' on' : ''}" aria-pressed="${poetLangFilter === k}" onclick="setPoetLang('${k}')">${label}</button>`).join('');
   const q = searchNorm((f && f.value) || '');
   /* full names, in Roman whatever the script, in pen-name order (how poets are looked up); the filter matches any form of the name */
-  const rows = POET_LIST.filter(p => !q || searchNorm([p.name, p.full, p.ur, p.hi].concat(p.aliases || []).join(' ')).includes(q));
+  const rows = POET_LIST.filter(p => (poetLangFilter === 'all' || poetLangs(p).includes(poetLangFilter)) &&
+    (!q || searchNorm([p.name, p.full, p.ur, p.hi].concat(p.aliases || []).join(' ')).includes(q)));
   host.innerHTML = rows.length ? rows.map(p => {
-    return `<button type="button" class="poet-opt${p.key === activeCollection ? ' on' : ''}" data-poet="${p.key}" onclick="pickPoet('${p.key}')"><span class="poet-opt-name">${escapeHtml(p.full || p.name)}</span><span class="poet-opt-count faint">${p.count}</span></button>`;
+    const fa = poetLangs(p).includes('fa') ? `<span class="poet-opt-lang faint">${poetLangs(p).includes('ur') ? 'Urdu · Fārsī' : 'Fārsī'}</span>` : '';
+    return `<button type="button" class="poet-opt${p.key === activeCollection ? ' on' : ''}" data-poet="${p.key}" onclick="pickPoet('${p.key}')"><span class="poet-opt-name">${escapeHtml(p.full || p.name)}${fa}</span><span class="poet-opt-count faint">${p.count}</span></button>`;
   }).join('') : '<div class="poet-opt-none faint small">No poet matches.</div>';
 }
+window.setPoetLang = setPoetLang;
 function togglePoetPicker(force) {
   const box = $('poetPicker');
   if (!box) return;
@@ -1017,6 +1044,7 @@ function getFilteredGhazals(col) {
         if (!mList.includes(selFilter)) return false;
       }
       if (searchIds && !searchIds[col].has(String(g.id))) return false;
+      if (!poetLangMatch(col, g)) return false;
       return true;
     });
   }
@@ -1223,6 +1251,7 @@ function renderCorpusList(col) {
         <span class="vnum">${isPoetCol(col) ? rekhtaLinkHTML(g, { bare: true }) : (franLinkHTML(col, g, { bare: true }) || escapeHtml('#' + g.id))}</span>
         <div class="vtext">
           <div class="vline" ${langDir}>${disp1}</div>
+          ${g.lang === 'fa' && isPoetCol(col) && poetLangs(poetMeta(col) || {}).length > 1 ? '<div class="vmeta"><span>Fārsī</span></div>' : ''}
         </div>
         <div class="vact">
           <span class="chevron">›</span>
@@ -1306,7 +1335,8 @@ function openGhazalReader(col, id) {
     if (col === 'handbook') {
       titleEl.textContent = item.poet || 'Handbook';
     } else if (isPoetCol(col)) {
-      titleEl.innerHTML = rekhtaLinkHTML(item);
+      /* Persian kalaam found on Ganjoor (scripts/match_ganjoor.py): its page there too, for the authentic text and attribution */
+      titleEl.innerHTML = rekhtaLinkHTML(item) + (item.gj ? ` · <a class="fran-link" href="${escapeHtml(item.gj)}" target="_blank" rel="noopener" title="This poem on Ganjoor">Ganjoor<span class="ext" aria-hidden="true">↗</span></a>` : '');
     } else {
       titleEl.innerHTML = franLinkHTML(col, item) || escapeHtml(getGhazalNavLabel(col, item));
     }

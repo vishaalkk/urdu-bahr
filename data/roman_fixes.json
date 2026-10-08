@@ -1,0 +1,10 @@
+[
+  {"poet": "muneer", "id": 1, "line": 0,
+   "from": "āmada qatl-e-man aañ shoḳh sitam-gāre",
+   "to": "āmada ba-qatl-e-man aañ shoḳh sitam-gāre",
+   "why": "Sufinama's Roman drops بہ; its Urdu (آمدہ بہ قتل) and Devanagari (आमदः ब-क़त्ल) have it"},
+  {"poet": "sauda", "id": 2, "line": 5,
+   "from": "yak ḥarf-e ārzū-e lab nā-rasīdah hūñ",
+   "to": "yak ḥarf-e ārzū-e ba-lab nā-rasīdah hūñ",
+   "why": "the Roman drops بہ; the Urdu (آرزوئے بہ لب) and Devanagari (ब-लब) have it"}
+]

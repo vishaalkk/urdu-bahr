@@ -13,6 +13,14 @@ with open('data/exercises_verified.json', 'r', encoding='utf-8') as f:
 with open('data/meters.json', 'r', encoding='utf-8') as f:
     METERS_DATA = json.load(f)
 
+# Persian word list from Sufinama (scripts/build_fa_lexicon.js): Roman and Devanagari for Fārsī lines. Never feeds the Urdu maps.
+with open('data/fa_lexicon.json', 'r', encoding='utf-8') as f:
+    FA_LEXICON = json.load(f)
+
+# Persian meters from Ganjoor (scripts/build_fa_meters.py): the circles mark settings Persian poets used.
+with open('data/persian_meters.json', 'r', encoding='utf-8') as f:
+    PERSIAN_METERS = json.load(f)
+
 with open('data/glossary.json', 'r', encoding='utf-8') as f:
     GLOSSARY = json.load(f)
 
@@ -345,6 +353,8 @@ substitutions = {
     'HANDBOOK_DATA': '[]',
     'EXERCISES_DATA': json.dumps(EXERCISES, ensure_ascii=False),
     'METERS_DATA': json.dumps(METERS_DATA, ensure_ascii=False),
+    'PERSIAN_METERS': json.dumps(PERSIAN_METERS, ensure_ascii=False, separators=(',', ':')),
+    'FA_LEXICON': json.dumps(FA_LEXICON, ensure_ascii=False, separators=(',', ':')),
     'GLOSSARY_DATA': json.dumps(GLOSSARY, ensure_ascii=False),
     'BIBLIOGRAPHY_DATA': json.dumps(BIBLIOGRAPHY, ensure_ascii=False),
     'METER_MAP_DATA': json.dumps(meter_map_data, ensure_ascii=False),

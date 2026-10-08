@@ -16,6 +16,7 @@ const path = require('path');
 const { performance } = require('perf_hooks');
 
 const HTML = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+const METERS_JSON = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'meters.json'), 'utf8')).standard;
 
 const vc = new VirtualConsole();
 const IGNORE = /Not implemented|scrollTo/;
@@ -84,10 +85,33 @@ async function runTests() {
           endMods.forEach(eMod => {
             totalCombinations++;
             const res = w.getMeterResolution(mtr, len, bMod, eMod);
+            /* the three endings of a setting are three different feet, except where the tradition has no third ending */
+            if (eMod === 'salim') {
+              const build = e => w.eval(`curBodyMod=${JSON.stringify(bMod)}; curEndMod='${e}';
+                buildCircleLineFeet(CIRCLES[${cIdx}].meters[${mIdx}], ${len === 'musamman' ? 4 : 3}).map(f => f.pat).join('')`);
+              const [sa, mh, mq] = ['salim', 'mahzuuf', 'maqtu'].map(build);
+              const sameOk = ['hazaj', 'mudari'].includes(mtr.id) || (mtr.canonical && mtr.canonical.isArabicOnly);
+              assert(sa !== mh && sa !== mq, `${mtr.name} ${len}/${bMod}: sālim builds the same feet as a shortened ending (${sa})`);
+              if (!sameOk) assert(mh !== mq, `${mtr.name} ${len}/${bMod}: mahzūf and maqṭūʿ build the same feet (${mh})`);
+            }
+            /* an intact (base + sālim) setting of a one-foot meter is that foot repeated: nothing truncated */
+            if (bMod === 'base' && eMod === 'salim' && mtr.baseFoot && !mtr.baseFoot.includes('/') && !(mtr.canonical && mtr.canonical.isArabicOnly)) {
+              const n = len === 'musamman' ? 4 : 3;
+              const intact = w.eval(`curBodyMod='base'; curEndMod='salim';
+                buildCircleLineFeet(CIRCLES[${cIdx}].meters[${mIdx}], ${n}).map(f => f.pat).join(' ')`);
+              assert(intact === Array(n).fill(mtr.baseFoot).join(' '), `${mtr.name} ${len} base/sālim should repeat ${mtr.baseFoot}, built ${intact}`);
+            }
             assert(res && typeof res === 'object', `Resolution object returned for ${circ.nameEn} > ${mtr.name} (${len}/${bMod}/${eMod})`);
 
             if (res.isCanonical) {
               canonicalCombinations++;
+              /* the feet the wheel builds must BE the meter it names (catches e.g. a sālim knob building mahzūf feet) */
+              const built = w.eval(`curBodyMod=${JSON.stringify(bMod)}; curEndMod=${JSON.stringify(eMod)};
+                buildCircleLineFeet(CIRCLES[${cIdx}].meters[${mIdx}], ${len === 'musamman' ? 4 : 3}).map(f => f.pat).join('')`)
+                .replace(/\s/g, '').replace(/–/g, '-');
+              const meterDef = METERS_JSON.find(m => m.id === res.meterNum);
+              const rx = meterDef && new RegExp('^' + meterDef.pattern.replace(/[\s/]/g, '').replace(/=\*/g, '[=-]') + '$');
+              assert(rx && rx.test(built), `${mtr.name} ${len}/${bMod}/${eMod} builds ${built}, which is not Meter #${res.meterNum} (${meterDef && meterDef.pattern})`);
               assert(Number.isInteger(res.meterNum) && res.meterNum >= 1 && res.meterNum <= 39,
                 `Canonical meter #${res.meterNum} must be between 1 and 39 in ${mtr.name}`);
               assert(typeof res.nameEn === 'string' && !res.nameEn.includes('undefined'),
@@ -120,7 +144,7 @@ async function runTests() {
                 `ghazalLabel valid: "${links.ghazalLabel}"`);
 
               // Verify poet is short canonical name
-              const validPoets = ['Ghalib', 'Mir', 'Iqbal', 'Faiz', 'Atish', 'Dagh', 'Hasrat', 'Zauq', 'Dard', 'Momin'];
+              const validPoets = ['Ghalib', 'Mir', 'Iqbal', 'Faiz', 'Atish', 'Dagh', 'Hasrat', 'Zauq', 'Dard', 'Momin', 'Parveen'];
               assert(validPoets.includes(links.poet), `Canonical poet attribution "${links.poet}" must match site conventions`);
 
               // Verify in-app ghazal exists in loaded datasets
@@ -160,6 +184,47 @@ async function runTests() {
   console.log(`    - ${canonicalCombinations} Canonical Urdu configurations (all verified in in-app corpus)`);
   console.log(`    - ${theoreticalCombinations} Theoretical al-Khalīl circle prototypes`);
   console.log(`    - ${verifiedGhazals.size} Distinct authentic ghazals verified in corpus`);
+
+  // 2b. Persian attestation (Ganjoor's meter list)
+  console.log('\n[2b] Persian attestation (Ganjoor meters)...');
+  const FA = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'persian_meters.json'), 'utf8'));
+  FA.forEach(m => assert(w.faMeterKey(m.pattern) === m.key, `faMeterKey(${m.pattern}) = ${w.faMeterKey(m.pattern)} must equal build_fa_meters.py key ${m.key} (Ganjoor #${m.gid})`));
+  const faAt = (ci, mi, len, body, end) => w.eval(`curLength='${len}'; curBodyMod='${body}'; curEndMod='${end}';
+    JSON.stringify(persianAttestation(CIRCLES[${ci}].meters[${mi}]))`);
+  const idx = id => { for (let ci = 0; ci < w.CIRCLES.length; ci++) { const mi = w.CIRCLES[ci].meters.findIndex(m => m.id === id); if (mi >= 0) return [ci, mi]; } };
+  const FA_EXPECT = [   // [meter, length, body, end, status, at least N verses]
+    ['ramal', 'musamman', 'base', 'salim', 'persian', 2000],      // fāʿilātun ×4 (Ganjoor #26)
+    ['ramal', 'musaddas', 'base', 'salim', 'persian', 300],       // fāʿilātun ×3 (#55)
+    ['ramal', 'musamman', 'makhbun', 'salim', 'persian', 2700],   // faʿilātun ×4 (#25)
+    ['ramal', 'musaddas', 'base', 'mahzuuf', 'persian', 150000],  // the Masnavi meter (#6), also Urdu #11
+    ['mutaqarib', 'musamman', 'base', 'mahzuuf', 'persian', 180000], // Shāhnāma meter (#23), also Urdu #29
+    ['hazaj', 'musaddas', 'base', 'salim', 'rare', 1],
+    ['khafif', 'musamman', 'base', 'salim', 'none', 0]
+  ];
+  FA_EXPECT.forEach(([id, len, body, end, status, min]) => {
+    const [ci, mi] = idx(id);
+    const r = JSON.parse(faAt(ci, mi, len, body, end));
+    assert(r.status === status && r.verses >= min, `${id} ${len}/${body}/${end}: expected ${status} (≥${min}), got ${r.status} (${r.verses})`);
+  });
+  /* every Persian couplet must fit the exact setting it is shown for, scanned by the real engine */
+  const Scan = w.Scan;
+  w.CIRCLES.forEach((circ, ci) => circ.meters.forEach((mtr, mi) => Object.entries(mtr.versesFa || {}).forEach(([k, v]) => {
+    const parts = k.split('_');
+    const len = parts[0], body = parts.includes('makhbun') ? 'makhbun' : 'base';
+    const end = ['salim', 'mahzuuf', 'maqtu'].find(e => parts.includes(e)) || 'salim';
+    const pat = w.eval(`curLength='${len}'; curBodyMod='${body}'; curEndMod='${end}'; circlePatternString(CIRCLES[${ci}].meters[${mi}])`);
+    const variants = [pat].concat(/^=-==(--==|-=-=)/.test(pat) ? ['-' + pat.slice(1)] : []).concat(/^--==/.test(pat) ? ['=' + pat.slice(1)] : []);
+    [v.ur, v.ur2].forEach(line => {
+      const words = Scan.tokenize(line.normalize('NFC'));
+      const units = Scan.buildUnits(words);
+      const best = Math.min(...variants.map(p => {
+        const seq = [...p].map(c => c === '=' ? 'l' : 's');
+        const r = Scan.matchMeter(units, words.length, { id: 'F', seq, cae: -1, kind: 'regular', cheatFinal: true, cheatCae: false, vars: [{ seq, extra: 0 }, { seq: seq.concat(['c']), extra: 0 }] });
+        return r ? r.c : Infinity;
+      }));
+      assert(best <= 3, `Persian couplet for ${mtr.name} ${k} fits ${pat} (cost ${best}): ${line}`);
+    });
+  })));
 
   // 3. DOM Rendering & UI Sanity Checks
   console.log('\n[3/5] Testing Interactive DOM Rendering & State Switches...');
