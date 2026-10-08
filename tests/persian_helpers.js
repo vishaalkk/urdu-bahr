@@ -47,6 +47,23 @@ const line = ctx.faLineScripts('دل می‌رود ز دستم صاحب‌دلا
 check(line.ro === 'dil mī-ravad za-dastam sāhib-dilāñ ḳhudā rā', `faLineScripts Hafiz: ${line.ro}`);
 check(ctx.faLineScripts('آمدہ بہ قتلِ من').ro === 'āmada ba-qatl-e-man', `faLineScripts joins ba- and the iẓāfat: ${ctx.faLineScripts('آمدہ بہ قتلِ من').ro}`);
 
+/* 3b. Persian prosody and Arabic formulae */
+check(ctx.faProsodyText('سوئے شہر عشق راہے دیگر است') === 'سوئے شہر عشق راہے دیگرست', 'ast after a consonant joins the word (dīgarast)');
+check(ctx.faProsodyText('دلم ما است') === 'دلم ما است', 'ast after a vowel stays a word');
+check(ctx.faLineScripts('الا یا ایها الساقی ادر کأسا و ناولها').ro === 'alā yā ayyuha-s-sāqī adir ka.san va nāvilhā', 'Arabic: Hafiz\'s opening');
+check(/yā rasūlallāh$/.test(ctx.faLineScripts('تنم فرسودہ جاں پارہ ز ہجراں یا رسول اللہ').ro), 'Arabic: yā rasūlallāh');
+check(ctx.faWordScripts('کردہ') && ctx.faWordScripts('کردہ').ro === 'karda', 'participle: known stem + -a');
+
+/* 3c. the Persian engine (node: as scripts/build_app.py assembles it) and mustazād */
+const FA = require('../scripts/lib_fa_scan').loadFaEngine();
+const { mustazadFit } = require('../scripts/lib_scan');
+check(FA.Scan.METERS.length > Scan.METERS.length && FA.Scan.METERS.some(m => m.id === 'F25'), 'ScanFa has the Persian-only meters');
+check(Scan.METERS.every(m => !String(m.id).startsWith('F')), 'the Urdu engine has none of them');
+const saadi = (FA.Scan.scanLine('ہر کہ چیزے دوست دارد جان و دل بر وے گمارد').fits || [])[0];
+check(saadi && saadi.meter.id === 'F26' && saadi.c <= 1, `Saadi 166 scans in F26 (ramal musamman sālim) on ScanFa: ${saadi && saadi.meter.id}`);
+const mz = mustazadFit(FA.Scan, FA.ctx.rekhtaScanText('ہر لحظہ بہ شکلے بت عیار بر آمد دل برد و نہاں شد', "har-lahza ba-shakle but-e-'ayyār bar aamad dil burd-o-nihāñ shud"));
+check(mz && mz.meter.id === 8 && mz.split === 8, 'mustazād: hazaj #8 + its first-and-last-foot tail');
+
 /* 4. Roman repair */
 const fix = L.repairLine({ ur: 'آمدہ بہ قتل من آں شوخ ستم گارے', hi: 'आमदः ब-क़त्ल-ए-मन आँ शोख़ सितम-गारे', ro: 'āmada qatl-e-man aañ shoḳh sitam-gāre' }, {});
 check(fix && fix.ro === 'āmada ba-qatl-e-man aañ shoḳh sitam-gāre', 'repair restores a dropped particle');
@@ -71,9 +88,19 @@ setTimeout(() => {
   check(/Fārsī/.test(d.getElementById('scanLangDetected').textContent), 'Scan: Hafiz detected as Fārsī');
   check(/Meter #4/.test(d.getElementById('scanOut').textContent), 'Scan: Hafiz couplet in Meter #4');
   check(!/Hindi meter/.test(d.getElementById('scanOut').textContent), 'Scan: no Hindi meter on a Persian line');
+  check(typeof w.ScanFa === 'object' && w.ScanFa.METERS.length > w.Scan.METERS.length, 'the page has the Persian engine (window.ScanFa)');
   d.getElementById('scanIn').value = 'هر که چیزی دوست دارد جان و دل بر وی گمارد';
   w.runScan();
-  check(d.querySelector('.scan-fa-note') && /رمل مثمن سالم/.test(d.querySelector('.scan-fa-note').textContent), 'Scan: a Persian-only meter is reported (ramal musamman sālim)');
+  check(/Persian meter \(Ganjoor #26\)/.test(d.getElementById('scanOut').textContent) && /رمل مثمن سالم/.test(d.getElementById('scanOut').textContent),
+    'Scan: a Persian-only meter scans and is labelled (Ganjoor #26, ramal musamman sālim)');
+  const pm = w.persianMeterMeta('F26');
+  check(pm && pm.gid === 26 && /ganjoor\.net\/simi/.test(pm.url), 'persianMeterMeta gives the Ganjoor entry');
+  const hafizLine = w.eval("poetItems('hafiz').find(g => g.lang === 'fa').lines[0]");
+  check(hafizLine && hafizLine.lang === 'fa', 'Persian lines are tagged fa at load');
+  const rr = w.scanCorpusLine(hafizLine);
+  check(rr.__fa === 1 && w.engineOf(rr) === w.ScanFa && !rr.fits.some(f => f.meter.id === 'H'), 'a Persian corpus line scans on ScanFa, never in the Hindi meter');
+  const ghalibLine = w.eval('GHALIB_EXT_DATA[0].lines[0]');
+  check(w.engineOf(w.scanCorpusLine(ghalibLine)) === w.Scan, 'an Urdu corpus line stays on the Urdu engine');
   d.getElementById('scanIn').value = 'ہزاروں خواہشیں ایسی کہ ہر خواہش پہ دم نکلے';
   w.runScan();
   check(/Urdu/.test(d.getElementById('scanLangDetected').textContent), 'Scan: Ghalib detected as Urdu');

@@ -20,12 +20,15 @@ const ghazals = JSON.parse(fs.readFileSync(SRC, 'utf8')).map(g => Object.assign(
     lines: g.lines.map(l => Object.assign({}, l, { ur: fold(l.ur) }))
 }));
 const eng = loadEngine();
+/* Persian kalaam is scanned on the Persian engine (ScanFa: Persian readings and meters), as the app scans it */
+const engFa = legacy ? eng : require('./lib_fa_scan').loadFaEngine();
+const engineFor = g => (!legacy && L.PERSIAN(g)) ? engFa : eng;
 
 /* Roman repair (Persian kalaam only): Sufinama's Roman is fixed where its own Urdu and Devanagari agree against it, a dropped
    particle (āmada qatl → āmada ba-qatl) or a word the Devanagari and the Persian word list (built from the OTHER ghazals) both
    spell differently. A repair is kept only if the line scans at least as well in the ghazal's meter. Report:
    data/sufinama_repairs.json; repaired lines are listed per ghazal as `rf`. */
-const repairs = [];
+const repairs = [], unproven = [];
 if (!legacy) {
     const persian = ghazals.filter(L.PERSIAN);
     const all = L.mine(persian);
@@ -39,10 +42,10 @@ if (!legacy) {
             if (Object.keys(ro).length) others[k] = { ro, hi: e.hi, by: {} };
         });
         const lexOthers = L.finalizeWithShare(others);
-        const first = scanGhazal(g, gi, eng, { assignAlways: true, lang: true });
+        const first = scanGhazal(g, gi, engFa, { assignAlways: true, lang: true });
         const fam = new Set(first.meters.map(String).flatMap(m => [m, ...(PAIRED.get(m) || [])]));
         const ownCost = (ur, ro) => {
-            try { const f = (eng.Scan.scanLine(eng.ctx.rekhtaScanText(ur, ro)).fits || []).filter(x => fam.has(String(x.meter.id))); return f.length ? Math.min(...f.map(x => x.c)) : Infinity; }
+            try { const f = (engFa.Scan.scanLine(engFa.ctx.rekhtaScanText(ur, ro)).fits || []).filter(x => fam.has(String(x.meter.id))); return f.length ? Math.min(...f.map(x => x.c)) : Infinity; }
             catch (e) { return Infinity; }
         };
         g.lines.forEach((l, li) => {
@@ -50,19 +53,25 @@ if (!legacy) {
             const fix = L.repairLine(l, lexOthers);
             if (!fix || fix.ro === l.ro) return;
             const before = ownCost(l.ur, l.ro), after = ownCost(l.ur, fix.ro);
-            if (after > before) return;
+            /* the repaired line must actually fit the ghazal's meter (cost ≤ 5) and no worse than before; a line that fits
+               neither way proves nothing, so its repair waits for a person (data/sufinama_repairs_review.json) */
+            if (!(after <= 5) || after > before) {
+                if (!(after <= 5)) unproven.push({ url: g.url, line: li, from: l.ro, to: fix.ro, why: fix.why });
+                return;
+            }
             repairs.push({ url: g.url, line: li, from: l.ro, to: fix.ro, why: fix.why, cost: [before, after] });
             l.ro = fix.ro;
             (g.rf = g.rf || []).push(li);
         });
     });
     fs.writeFileSync(path.join(root, 'data/sufinama_repairs.json'), JSON.stringify(repairs, null, 1));
+    fs.writeFileSync(path.join(root, 'data/sufinama_repairs_review.json'), JSON.stringify(unproven, null, 1));
 }
 
 const scanned = ghazals.map((g, i) => {
-    const s = scanGhazal(g, i, eng, legacy ? { assignAlways: true } : { assignAlways: true, lang: true });
+    const s = scanGhazal(g, i, engineFor(g), legacy ? { assignAlways: true } : { assignAlways: true, lang: true });
     return legacy ? Object.assign(s, { category: g.category }) : Object.assign({ category: g.category, lang: g.lang }, g.rf ? { rf: g.rf } : {}, s);
 });
 fs.writeFileSync(out ? out.slice(6) : OUT, JSON.stringify(scanned, null, 2));
 const n = scanned.reduce((t, g) => t + g.lines.length, 0);
-console.log(`${scanned.length} ghazals, ${n} lines -> ${out ? out.slice(6) : OUT}${legacy ? '' : `; ${repairs.length} Roman repairs (data/sufinama_repairs.json)`}`);
+console.log(`${scanned.length} ghazals, ${n} lines -> ${out ? out.slice(6) : OUT}${legacy ? '' : `; ${repairs.length} Roman repairs (data/sufinama_repairs.json), ${unproven.length} left for review (data/sufinama_repairs_review.json)`}`);

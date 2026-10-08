@@ -45,7 +45,10 @@ const POET_KEYS = new Set(POET_LIST.map(p => p.key));
 POET_LIST.forEach(p => (POETS_DATA.ghazals[p.key] || []).forEach(g => {
   g.poet = p.name; g.col = p.key;
   if (!g.verified) g.lines.forEach(l => { l.rk = 1; });   // Rekhta line: scans with its Roman's hints (lineScanText)
-  if (g.fa) g.lines.forEach((l, i) => { if (g.fa[i]) l.fa = g.fa[i]; });   // Persian line in Iranian spelling (Ganjoor): shown in Urdu script mode
+  if (g.fa) g.lines.forEach((l, i) => { if (g.fa[i]) l.fa = g.fa[i]; });
+  /* each line's language: the ghazal's, except its xl lines (an Urdu girah in Persian kalaam, a Persian misra in Khusrau's Hindavi) */
+  if (g.lang || g.xl) { const xl = new Set(g.xl || []), other = g.lang === 'fa' ? 'ur' : 'fa';
+    g.lines.forEach((l, i) => { const lang = xl.has(i) ? other : (g.lang || 'ur'); if (lang === 'fa') l.lang = 'fa'; }); }   // Persian line in Iranian spelling (Ganjoor): shown in Urdu script mode
 }));
 function isPoetCol(col) { return POET_KEYS.has(col); }
 function poetItems(key) { return POETS_DATA.ghazals[key] || []; }

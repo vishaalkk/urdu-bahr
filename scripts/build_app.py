@@ -406,6 +406,28 @@ script1_files = [f for f in js_files_in_manifest if '00-pue-parser' in f or '01b
 script2_files = [f for f in js_files_in_manifest if f not in script1_files]
 
 script1_content = build_js_chunk(script1_files)
+
+# The Persian scansion engine (window.ScanFa): a second copy of the engine block from src/js/01-engine.js, which itself stays
+# untouched, with data/fa_scan.json spliced in (Persian readings the engine lacks, Ganjoor's Persian-only meters). It scans
+# Persian lines only; the Urdu engine (window.Scan) and everything measured on it are unchanged.
+def persian_engine():
+    src = read_source('src/js/01-engine.js')
+    start = src.index("(function(root){\n'use strict';\n\n/* ---------- meters")
+    end = src.index('})(this);', start) + len('})(this);')
+    block = src[start:end]
+    with open('data/fa_scan.json', 'r', encoding='utf-8') as f:
+        fa = json.load(f)
+    lex = '\n'.join(f'lex({json.dumps(k, ensure_ascii=False)},{json.dumps(v, separators=(",", ":"))});' for k, v in fa['lex'].items())
+    marker = '/* ---------- syllabify a letter string'
+    assert marker in block and "\n];\nconst RUBAI_RAW" in block and 'root.Scan=API' in block, 'engine markers moved: update build_app.py'
+    block = block.replace(marker, lex + '\n' + marker, 1)
+    rows = ','.join(json.dumps(r, ensure_ascii=False) for r in fa['meters'])
+    block = block.replace("\n];\nconst RUBAI_RAW", ",\n " + rows + "\n];\nconst RUBAI_RAW", 1)
+    block = block.replace('root.Scan=API', 'root.ScanFa=API', 1)
+    # no module path here: in the page `module` is undefined, so the copy always lands on window.ScanFa
+    return '\n/* ===== Persian engine (ScanFa): src/js/01-engine.js + data/fa_scan.json, assembled by scripts/build_app.py ===== */\n' + block
+
+script1_content += persian_engine()
 script2_content = build_js_chunk(script2_files)
 
 # The original HTML had this structure:

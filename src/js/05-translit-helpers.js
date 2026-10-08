@@ -311,8 +311,16 @@ function faScanText(s) {
     .replace(/\u200c/g, ' ').replace(/ي|ى/g, 'ی').replace(/ك/g, 'ک')
     .replace(/هٔ|ۀ/g, 'ۂ').replace(/ه/g, 'ہ')
     .replace(/([اوی])ن(?=$|[\s،۔؟!])/g, '$1ں')
-    .replace(/[ \t]+/g, ' ').trim();
+    .replace(/[ \t]+/g, ' ').trim()
+    .replace(/^.*$/, faProsodyText);
 }
+/* Persian prosody spelled out for the engine (Persian lines only): after a consonant, ast loses its alif and joins the word
+   (دیگر است → دیگرست dī-ga-rast, as Persian often writes it); after a vowel it stays a word of its own. */
+function faProsodyText(s) {
+  return String(s || '').replace(/(^|\s)(\S*[^\sاوی‌ہۂۓ])\s+است(?=$|[\s،۔؟!])/g, '$1$2ست');
+}
+window.faProsodyText = faProsodyText;
+
 function detectScanLang(text) {
   const t = String(text || '');
   if (/[\u200cيكۀ]|هٔ|ه(?=$|[\s،۔])/.test(t)) return 'fa';
@@ -336,7 +344,9 @@ function faKey(w) {
     .replace(/[^\u0621-\u06d3]/g, '');
 }
 const FA_PREFIX = [['نمی', 'namī-', 'नमी-'], ['می', 'mī-', 'मी-'], ['بی', 'be-', 'बे-'], ['ب', 'ba-', 'ब-'], ['ن', 'na-', 'न-']];
-const FA_SUFFIX = [['ہا', '-hā', '-हा'], ['ہای', '-hā-e', '-हा-ए'], ['ان', 'ān', 'ान'], ['یم', 'īm', 'ीम'], ['ید', 'īd', 'ीद'],
+/* ئے after a vowel is the iẓāfat / yā of a known word (روئے rū, faLineScripts adds the -e); a silent h after a known stem is the
+   participle's -a (کردہ karda, شدہ shuda) */
+const FA_SUFFIX = [['ئے', '', ''], ['ہا', '-hā', '-हा'], ['ہای', '-hā-e', '-हा-ए'], ['ان', 'ān', 'ान'], ['یم', 'īm', 'ीम'], ['ید', 'īd', 'ीद'], ['ہ', 'a', 'ः'],
   ['ند', 'and', 'न्द'], ['ست', 'st', 'स्त'], ['ام', 'am', 'म'], ['م', 'am', 'म'], ['ش', 'ash', 'श'], ['ت', 'at', 'त'], ['ی', 'ī', 'ी']];
 /* exact spelling first; then the other final yeh (Iranian ی for Urdu ے, and back) */
 function faLookup(k) {
@@ -366,6 +376,44 @@ function faWordScripts(w) {
   }
   return null;
 }
+/* Arabic inside Persian kalaam: formulae that follow Arabic rules (al- assimilated, case endings) no Persian word list gives.
+   Matched as whole phrases (faKey per word), longest first, before the word-by-word lookup. [Urdu-script, Roman, Devanagari] */
+const FA_ARABIC = [
+  ['الا یا ایہا الساقی', 'alā yā ayyuha-s-sāqī', 'अला या अय्युहस्साक़ी'],
+  ['ادر کاسا و ناولہا', 'adir ka.san va nāvilhā', 'अदिर कासन व नाविलहा'],
+  ['صلی اللہ علیہ وسلم', 'sallallāhu ʿalaihi va sallam', 'सल्लल्लाहु अलैहि व सल्लम'],
+  ['لا الہ الا اللہ', 'lā ilāha illallāh', 'ला इलाह इल्लल्लाह'],
+  ['سبحان الذی اسری', 'subhānallazī asrā', 'सुब्हानल्लज़ी असरा'],
+  ['الصلوۃ والسلام علیک', 'as-salātu vas-salāmu ʿalaik', 'अस्सलातु वस्सलामु अलैक'],
+  ['رحمۃ للعالمین', 'rahmatul-lil-ʿālamīn', 'रहमतुल-लिल-आलमीन'],
+  ['یا رسول اللہ', 'yā rasūlallāh', 'या रसूलल्लाह'],
+  ['یا حبیب اللہ', 'yā habīballāh', 'या हबीबल्लाह'],
+  ['علی ولی اللہ', 'ʿalī valiyullāh', 'अली वलीयुल्लाह'],
+  ['ان شاء اللہ', 'inshā-allāh', 'इंशा-अल्लाह'],
+  ['ما شاء اللہ', 'mā-shā-allāh', 'मा-शा-अल्लाह'],
+  ['بسم اللہ', 'bismillāh', 'बिस्मिल्लाह'],
+  ['سبحان اللہ', 'subhānallāh', 'सुब्हानल्लाह'],
+  ['الحمد للہ', 'alhamdulillāh', 'अल्हम्दुलिल्लाह'],
+  ['اللہ اکبر', 'allāhu akbar', 'अल्लाहु अकबर'],
+  ['انا الحق', 'anal-haq', 'अनल-हक़'],
+  ['ہو الحق', 'huval-haq', 'हुवल-हक़'],
+  ['خیر البشر', 'ḳhair-ul-bashar', 'ख़ैर-उल-बशर'],
+  ['ذوالجلال', 'zul-jalāl', 'ज़ुल-जलाल'],
+  ['والضحی', 'vaz-zuhā', 'वज़्ज़ुहा'],
+  ['واللیل', 'val-lail', 'वल-लैल'],
+  ['رسول اللہ', 'rasūlallāh', 'रसूलल्लाह']
+];
+let _faArabic = null;
+function faArabicAt(words, i) {
+  if (!_faArabic) _faArabic = FA_ARABIC.map(([u, r, h]) => ({ keys: u.split(' ').map(faKey), ro: r, hi: h })).sort((a, b) => b.keys.length - a.keys.length);
+  for (const p of _faArabic) {
+    if (i + p.keys.length > words.length) continue;
+    const f = k => k.replace(/ٰ/g, '').replace(/[أإ]/g, 'ا');   // Arabic spellings: dagger alif, hamza on alif (کأسا)
+    if (p.keys.every((k, j) => f(faKey(words[i + j])) === f(k))) return p;
+  }
+  return null;
+}
+
 /* a Fārsī line in Roman and Devanagari, word by word: the Persian list first, then the Urdu word map, then the letter map.
    A written iẓāfat (zer, ۂ, or ئے on a word) shows as -e. */
 function faLineScripts(line) {
@@ -387,6 +435,8 @@ function faLineScripts(line) {
   };
   const words = String(line || '').split(/\s+/).filter(Boolean);
   for (let i = 0; i < words.length; i++) {
+    const ar = faArabicAt(words, i);
+    if (ar) { ro.push(ar.ro); hi.push(ar.hi); n += ar.keys.length; known += ar.keys.length; i += ar.keys.length - 1; continue; }
     const parts = words[i].split('\u200c').filter(Boolean).map(one);   // صاحب‌دلان: two words, one compound
     let r = parts.map(p => p[0]).join('-'), h = parts.map(p => p[1]).join('-');
     /* Sufinama joins these particles to the next word: ba-qatl, za-dastam, be-niyāz */
@@ -495,6 +545,20 @@ function lineScanText(lineObj) {
   return lineObj._sc;
 }
 window.lineScanText = lineScanText;
+
+/* Which engine scans a corpus line: Persian lines (l.lang, set at load from the ghazal's lang/xl) on the Persian engine ScanFa,
+   with Persian readings and meters and never the Hindi meter; everything else on the Urdu engine. engineOf(result) gives back
+   the engine that made a result, for explain / diagnose. */
+function engineForLine(l) { return (l && l.lang === 'fa' && typeof ScanFa !== 'undefined') ? ScanFa : Scan; }
+function scanCorpusLine(l) {
+  const eng = engineForLine(l), r = eng.scanLine(l && l.lang === 'fa' ? faProsodyText(lineScanText(l)) : lineScanText(l));
+  if (l && l.lang === 'fa') { r.fits = r.fits.filter(f => f.meter.id !== 'H'); r.__fa = 1; }
+  return r;
+}
+function engineOf(r) { return (r && r.__fa && typeof ScanFa !== 'undefined') ? ScanFa : Scan; }
+window.engineForLine = engineForLine;
+window.scanCorpusLine = scanCorpusLine;
+window.engineOf = engineOf;
 
 function urduToDevanagari(str) {
   if(!str) return '';

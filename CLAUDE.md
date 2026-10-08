@@ -50,6 +50,9 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   (Persian-aware: line `lang`, no `H` on Persian lines) → `build_poets.py` (ghazal `lang`, `xl`, Ganjoor `gj`/`fa`). Gold:
   `scripts/match_ganjoor.py` → `tests/data/persian_gold.json`; `tests/benchmark_fa.js` gates it. Ganjoor meters:
   `scripts/build_fa_meters.py` → `data/persian_meters.json` (the circles' Persian status; key rule mirrored in `faMeterKey`).
+  Persian engine `window.ScanFa`: `build_app.py` splices `data/fa_scan.json` (`scripts/build_fa_scan.js`) into a second copy of the
+  engine block; Persian lines (`l.lang === 'fa'`) scan on it via `scanCorpusLine` / `engineOf`. Persian-only meter ids are `F<Ganjoor id>`.
+  Persian word list `data/fa_lexicon.json` (`scripts/build_fa_lexicon.js`) for Fārsī Roman/Devanagari only.
 - **Collocations**: `data/collocations.json` (`scripts/build_collocations.py`) holds neighbour rules for typed Roman
   (`collocSpelling` in `05-translit-helpers.js`). Judge changes with `scripts/colloc_benchmark.py` and `scripts/casual_roman_eval.js`
   (typed Roman → right Urdu word, table mined without the test poets). `tests/benchmark.js` `typed.*` goes the other way (Urdu → Roman)

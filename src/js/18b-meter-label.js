@@ -39,6 +39,20 @@ window.aruzName = aruzName;
    Any even-numbered long may be two shorts instead (rarely the 8th); see the note in Look up. */
 const HINDI_PATTERN = '= = / = = / = = / = = // = = / = = / = = / =';
 
+/* A Persian meter Urdu does not use (id 'F' + Ganjoor id; the Persian engine ScanFa scans them): its Ganjoor entry, with a
+   readable name — the Persian name where Ganjoor gives one, else its afāʿīl. */
+function persianMeterMeta(id) {
+  const m = /^F(\d+)$/.exec(String(id || ''));
+  if (!m || typeof PERSIAN_METERS === 'undefined') return null;
+  const e = PERSIAN_METERS.find(x => x.gid === +m[1]);
+  if (!e) return null;
+  const afail = e.rhythm.split('(')[0].trim();
+  return { gid: e.gid, verses: e.verses, afail, nameFa: e.name || afail,
+    url: 'https://ganjoor.net/simi/?v=' + encodeURIComponent(e.rhythm),
+    label: `Persian meter (Ganjoor #${e.gid})` };
+}
+window.persianMeterMeta = persianMeterMeta;
+
 function meterLabelInfo(mOrId) {
   if (!mOrId) return null;
   const rawId = (typeof mOrId === 'object' && mOrId !== null) ? mOrId.id : mOrId;
@@ -47,9 +61,13 @@ function meterLabelInfo(mOrId) {
 
   // 1. Meter object & pattern
   let mObj = (typeof Scan !== 'undefined' && Scan.METERS) ? Scan.METERS.find(m => String(m.id) === idStr) : null;
+  if (!mObj && typeof ScanFa !== 'undefined' && ScanFa.METERS) mObj = ScanFa.METERS.find(m => String(m.id) === idStr);
   let pattern = mObj ? (mObj.raw || mObj.pattern || '') : '';
   let name = '';
-  if (idStr === 'H') {
+  const pm = persianMeterMeta(idStr);
+  if (pm) {
+    name = `${pm.label}: ${pm.nameFa}`;
+  } else if (idStr === 'H') {
     name = "Mir's Hindi meter";
     if (!pattern || pattern === 'Hindi') pattern = HINDI_PATTERN;   // the scanner's synthetic 'H' fit carries no pattern of its own
   } else if (typeof METERS_DATA !== 'undefined' && METERS_DATA.standard) {
@@ -146,7 +164,7 @@ function meterLabelInfo(mOrId) {
     }
   }
 
-  const number = (idStr.startsWith('R') || idStr.startsWith('r')) ? ('rubāʿī ' + idStr.slice(1)) : (idStr === 'H' ? 'Hindi' : ('#' + idStr));
+  const number = pm ? ('Persian #' + pm.gid) : (idStr.startsWith('R') || idStr.startsWith('r')) ? ('rubāʿī ' + idStr.slice(1)) : (idStr === 'H' ? 'Hindi' : ('#' + idStr));
 
   return {
     id: idStr,

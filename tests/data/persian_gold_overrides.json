@@ -1,6 +1,15 @@
 {
   "https://sufinama.org/persian-kalam/az-dair-e-mugaan-aayam-be-gardish-e-sahbaa-mast-allama-iqbal-persian-kalam-2": {
-    "meter": [7],
+    "meter": [
+      7
+    ],
     "why": "Ganjoor files this ghazal inside Pas che bayad kard, section 22 (a masnavi in ramal musaddas mahzuf), and gives the section's meter. The ghazal itself is hazaj musamman akhrab (maf'ulu mafa'ilun x2): its lines scan as #7 at cost 0 to 0.8."
+  },
+  "https://sufinama.org/persian-kalam/har-chand-tu-shaah-o-maa-gadaaem-jami-persian-kalam-9": {
+    "meter": [
+      9,
+      1
+    ],
+    "why": "Ganjoor (Jami, ghazal 633) files it as maf'ulu mafa'ilun mafa'ilun (F31). Every line ends in an overlong syllable (gada-im, darem, mahrum), which Ganjoor counts as two syllables and Urdu 'aruz as one long plus an uncounted final short; on that count the lines are maf'ulu mafa'ilun fa'ulun (#9, paired with #1) and 7 of 8 scan there at cost 0 to 2, against F31 failing most."
   }
 }

@@ -1391,8 +1391,8 @@ function openGhazalReader(col, id) {
 
     let pairBadge = '';
     if (isPairGh && typeof Scan !== 'undefined' && typeof lineScanText === 'function') {
-      const r1 = Scan.scanLine(lineScanText(l1));
-      const r2 = Scan.scanLine(lineScanText(l2));
+      const r1 = scanCorpusLine(l1);
+      const r2 = scanCorpusLine(l2);
       const f1 = (r1 && r1.fits) ? (r1.fits.find(f => readerMeters.includes(f.meter.id)) || r1.fits[0]) : null;
       const f2 = (r2 && r2.fits) ? (r2.fits.find(f => readerMeters.includes(f.meter.id)) || r2.fits[0]) : null;
       if (f1 && f2 && f1.meter.id !== f2.meter.id) {
@@ -1589,11 +1589,11 @@ function playReaderCoupletByIndex(c, start, btn) {
     const meters = mListOf(curReaderItem).map(String);
     const out = [];
     [1, 2].forEach(k => {
-      const r = Scan.scanLine(lineScanText(lines[2 * c + k - 1]));
+      const r = scanCorpusLine(lines[2 * c + k - 1]);
       const f = meters.length
         ? r.fits.filter(x => meters.includes(String(x.meter.id))).sort((a, b) => a.c - b.c)[0]
         : r.fits[0];
-      if (f) out.push(Object.assign({ e: Scan.explain(r, f) }, pbNodes($(`misraScan_${c}_${k}`))));
+      if (f) out.push(Object.assign({ e: engineOf(r).explain(r, f) }, pbNodes($(`misraScan_${c}_${k}`))));
     });
     return out;
   }, start);

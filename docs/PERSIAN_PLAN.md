@@ -456,3 +456,44 @@ za-rahmat-kun-nazar-bar-haal-e-zaaram-yaa-rasuulallaah-jami-persian-kalam-22
     same way.
   - The new spelling must resemble the old, and the line must scan at least as well in its meter.
   - 27 repairs, listed in `data/sufinama_repairs.json`; repaired lines are marked `rf` in the shipped data.
+
+## Round 4 (2026-10-08): the Persian engine, mustazād, Arabic
+
+- **ScanFa, the Persian engine.** `scripts/build_app.py` assembles a second copy of the engine from the unchanged
+  `src/js/01-engine.js`, with `data/fa_scan.json` spliced in (`scripts/build_fa_scan.js`, `scripts/lib_fa_scan.js`). It is
+  exposed as `window.ScanFa`; the Urdu engine and its benchmark are untouched. It adds:
+  - **433 Persian readings**, add-only. A word gets a reading taken from Sufinama's Roman only when none of the engine's
+    own readings match. Re-ranking the engine's readings was tried first and made things worse (held-out own-meter fit
+    69.5 → 66.6%), because the engine's flexible readings are what meter needs.
+  - **10 Persian-only meters** from Ganjoor (300 or more verses; id `F<Ganjoor id>`). The rubāʿī meter is left to R1–R12.
+- **Where ScanFa is used.**
+  - The Scan tab in Fārsī mode. A Persian-only meter is now a real fit, labelled "Persian meter (Ganjoor #N)", where
+    before it was only a note.
+  - Reader and Look-up lines tagged `lang: fa`, via `scanCorpusLine` / `engineOf`.
+  - `scripts/scan_sufinama.js` and `tests/benchmark_fa.js`.
+- **Persian prosody.** `faProsodyText` joins *ast* to a consonant-final word (*dīgarast*).
+- **Mustazād.** `lib_scan.mustazadFit`: a line that does not scan is split before a 2–6 word tail; the head must fit a
+  meter and the tail must be that meter's first plus last foot. 76 lines in 17 ghazals; 5 ghazals that had no meter now
+  settle on #8.
+- **Ghazal-level rules for Persian kalaam.**
+  - The rubāʿī meters vote as one family.
+  - On equal coverage an Urdu meter beats a Persian-only one: F55, F31 and F25 are #11, #9 and #19 plus one final long,
+    which is where overlong endings blur them.
+- **Every ghazal has a meter** (1,435 of 1,435). Rumi's *khushk tāre* is settled by hand: #11, blocked only by the
+  line-final overlong *pōst*.
+- **Gold.** 52 judged, 52 right. Jami 633 has an override: Ganjoor's F31 counts the overlong line endings as two
+  syllables.
+- **Roman repair is stricter.** A repaired line must fit the meter (cost ≤ 5) and no worse than before. 21 repairs were
+  applied; 6 that could not be checked are listed in `data/sufinama_repairs_review.json` for a person, not applied.
+- **Arabic formulae** (`FA_ARABIC`): 23 phrases (alā yā ayyuha-s-sāqī, yā rasūlallāh, anal-haq …), matched whole
+  before word lookup.
+- **Word-building.** Added ئے after a vowel and the participle -a (*karda*). Held-out transliteration is now 83.8%.
+- **Benchmarks.**
+  - Core: own-meter fit at cost ≤ 2 70.8 → 74.8%; any meter at cost ≤ 2 76.0 → 79.7%.
+  - All Persian: own-meter fit at cost ≤ 2 67.9 → 70.9%.
+  - Floors raised.
+
+**Still open:**
+- The engine does not drop a line-final *-st* cluster after a long vowel (Persian overlong). That needs a deliberate
+  engine rule.
+- Mustazād lines in the reader still scan their whole line, not head plus tail.

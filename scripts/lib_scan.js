@@ -10,7 +10,9 @@ const PAIRED = new Map(METERS.map(m => [String(m.id), m.paired.map(String)]));
 const COST_MAX = 5.0;           // a line "scans" when its best fit costs no more than this
 const CONFIDENT_SHARE = 0.7;    // a ghazal gets a meter only if its meter family fits at least this share of its lines
 
-function loadEngine(extraLex = '') {   // extraLex: lex(...) lines to try out, spliced in before the syllabifier
+/* extraLex: lex(...) lines to try out, spliced in before the syllabifier; extraMeters: [[id, raw], ...] rows appended to
+   METERS_RAW (the Persian engine ScanFa: scripts/lib_fa_scan.js faEngineParts) */
+function loadEngine(extraLex = '', extraMeters = null) {
     const html = fs.readFileSync(process.env.URDU_BAHR_HTML || path.join(root, 'index.html'), 'utf8');   // env override: score against another build
     const a = html.indexOf("(function(root){\n'use strict';\n\n/* ---------- meters");
     const e = html.indexOf('})(this);', a) + '})(this);'.length;
@@ -19,6 +21,10 @@ function loadEngine(extraLex = '') {   // extraLex: lex(...) lines to try out, s
     if (extraLex) {
         const at = src.indexOf('/* ---------- syllabify a letter string');
         src = src.slice(0, at) + extraLex + '\n' + src.slice(at);
+    }
+    if (extraMeters && extraMeters.length) {
+        const end = src.indexOf('\n];\nconst RUBAI_RAW');
+        src = src.slice(0, end) + ',\n ' + extraMeters.map(r => JSON.stringify(r)).join(',') + src.slice(end);
     }
     /* the app's engine also reads the learned iẓāfat / o hypotheses (src/js/01b-hypothesis-costs.js) from its global */
     const hyp = html.match(/var HYP_COSTS = \{[^\n]*\};?/);
@@ -84,6 +90,30 @@ function lineLang(ro, fallback = 'ur') {
     return (f >= 2 && f > u) ? 'fa' : 'ur';
 }
 
+/* Mustazād: a line of a meter plus an added phrase made of the meter's first and last feet (hazaj #8 + mafʿūlu faʿūlun:
+   "har lahza ba-shakle but-e-'ayyār bar āmad / dil burd-o-nihāñ shud"). Tried only on a line that does not scan: split
+   before a 2–6 word tail; the head must fit a meter at cost ≤ 2 and the tail exactly that meter's first + last foot.
+   -> {meter, c (head + tail), split (words in the head)} or null */
+function mustazadFit(Scan, text) {
+    const words = text.split(/\s+/).filter(Boolean);
+    let best = null;
+    for (let t = 2; t <= Math.min(6, words.length - 3); t++) {
+        const head = words.slice(0, -t).join(' '), tail = words.slice(-t);
+        let fits;
+        try { fits = (Scan.scanLine(head).fits || []).filter(f => f.meter.id !== 'H' && f.c <= 2 && f.meter.raw); } catch (e) { continue; }
+        for (const f of fits) {
+            const feet = f.meter.raw.split(/\s*\/\/?\s*/).filter(Boolean);
+            if (feet.length < 3) continue;
+            const seq = (feet[0] + ' ' + feet[feet.length - 1]).trim().split(/\s+/).map(c => c === '=' ? 'l' : c === '-' ? 's' : 'x');
+            const m = { id: 'tail', seq, cae: -1, kind: 'regular', cheatFinal: true, cheatCae: false, vars: [{ seq, extra: 0 }, { seq: seq.concat(['c']), extra: 0 }] };
+            let r;
+            try { const tw = Scan.tokenize(tail.join(' ')); r = Scan.matchMeter(Scan.buildUnits(tw), tw.length, m); } catch (e) { r = null; }
+            if (r && r.c <= 2 && (!best || f.c + r.c < best.c)) best = { meter: f.meter, c: f.c + r.c, split: words.length - t };
+        }
+    }
+    return best;
+}
+
 /* opts.assignAlways: give the ghazal its best meter family even below CONFIDENT_SHARE (the Sufinama collections were
    built this way; `scan_pass_rate` still says how sure it is). */
 function scanGhazal(g, idx, { Scan, ctx }, opts = {}) {
@@ -96,9 +126,15 @@ function scanGhazal(g, idx, { Scan, ctx }, opts = {}) {
     const lineLangs = (g.lines || []).map(l => opts.lang ? lineLang(l.ro, gLang) : gLang);
     const lines = (g.lines || []).map((l, li) => {
         let fits;
-        try { fits = Scan.scanLine(ctx.rekhtaScanText(l.ur, l.ro)).fits || []; }
+        const text = (opts.lang && lineLangs[li] === 'fa' && ctx.faProsodyText) ? ctx.faProsodyText(ctx.rekhtaScanText(l.ur, l.ro)) : ctx.rekhtaScanText(l.ur, l.ro);
+        try { fits = Scan.scanLine(text).fits || []; }
         catch (e) { fits = []; console.warn(`scanGhazal: the engine cannot read line ${li + 1} of ${g.url || g.id}: ${e.message}`); }
         if (opts.lang && lineLangs[li] === 'fa') fits = fits.filter(f => f.meter.id !== 'H');
+        let mustazad = null;
+        if (opts.lang && gLang === 'fa' && !(fits[0] && fits[0].c <= COST_MAX)) {   // Persian kalaam only
+            mustazad = mustazadFit(Scan, text);
+            if (mustazad) fits = [{ meter: mustazad.meter, c: mustazad.c }];
+        }
         /* an Urdu girah inside Persian kalaam may be in another meter; a macaronic Urdu/Hindavi ghazal (Khusrau's
            Zehāl-e miskīn) alternates languages in one meter, so there every line votes */
         const voting = !opts.lang || gLang !== 'fa' || lineLangs[li] === gLang;
@@ -116,15 +152,18 @@ function scanGhazal(g, idx, { Scan, ctx }, opts = {}) {
             meter_id: top ? top.meter.id : null,
             cost: top ? Number(top.c.toFixed(2)) : null,
             scanned
-        });
+        }, mustazad ? { mustazad: mustazad.split } : {});
     });
     const nVoting = fitCost.length;
     /* A ghazal has one bahr. Paired meters (meters.json `paired`, e.g. 14/15 = maqtūʿ vs mahzūf ending) are one
        bahr, so they count as one family. The ghazal's meter is the family that FITS the most lines (every fit, not
        just each line's single cheapest one, which flips between overlapping meters); ties go to more top-fit votes,
        then lower mean cost. `meters` lists the family members that fit at least one line. */
-    const familyOf = k => new Set([k, ...(PAIRED.get(k) || [])]);
     const seenIds = new Set(fitCost.flatMap(m => [...m.keys()]));
+    /* Persian kalaam: a rubāʿī mixes the rubāʿī patterns, so R1–R12 are one family */
+    const faG = opts.lang && gLang === 'fa';
+    const rubai = [...seenIds].filter(k => /^R\d+$/.test(k));
+    const familyOf = k => (faG && /^R\d+$/.test(k)) ? new Set(rubai) : new Set([k, ...(PAIRED.get(k) || [])]);
     const cands = [...seenIds].map(k => {
         const fam = familyOf(k);
         let cover = 0, costSum = 0;
@@ -133,7 +172,9 @@ function scanGhazal(g, idx, { Scan, ctx }, opts = {}) {
         return { key: members.join('+'), members, cover, mean: cover ? costSum / cover : Infinity, top: members.reduce((t, x) => t + (votes.get(x) || 0), 0) };
     });
     const uniq = [...new Map(cands.map(c => [c.key, c])).values()]
-        .sort((x, y) => y.cover - x.cover || y.top - x.top || x.mean - y.mean);
+        /* on equal cover an Urdu meter beats a Persian-only one (F…), which is often the same rhythm with the final overlong
+           syllable counted as two (F55 = #11 + one long, F31 = #9 + one long) */
+        .sort((x, y) => y.cover - x.cover || (faG ? (x.key.startsWith('F') - y.key.startsWith('F')) : 0) || y.top - x.top || x.mean - y.mean);
     const best = uniq[0] || { members: [], cover: 0, top: 0 };
     const share = nVoting ? best.cover / nVoting : 0;
     const topShare = nVoting ? Math.max(0, ...uniq.map(c => c.top)) / nVoting : 0;
@@ -156,4 +197,4 @@ function scanGhazal(g, idx, { Scan, ctx }, opts = {}) {
     };
 }
 
-module.exports = { root, loadEngine, scanGhazal, normalizeAscii, hintedUrdu, addTashdid, lineLang, PAIRED };
+module.exports = { root, loadEngine, scanGhazal, normalizeAscii, hintedUrdu, addTashdid, lineLang, PAIRED, mustazadFit };

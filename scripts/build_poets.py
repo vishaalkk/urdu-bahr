@@ -149,6 +149,9 @@ MANUAL_METERS = {
     ('siraj', 35): [10],
     ('siraj', 71): [18, 19],
     ('siraj', 81): [38],
+    # Rumi, khushk tāre khushk chobe khushk post: every syllable lines up with ramal musaddas maḥẕūf (#11) except the line-final
+    # overlong pōst, whose -st the engine will not drop at the end of a line as classical prosody does
+    ('rumi', 16): [11],
 }
 
 MARKS = re.compile(r'[ً-ٰٟـ‌‍ّؔٔ]')

@@ -331,6 +331,8 @@ const METER_TECH_NAMES = {
 
 function meterTechName(m){
   if(!m || m.id==='H') return '';
+  const pm = (typeof persianMeterMeta === 'function') ? persianMeterMeta(m.id) : null;
+  if (pm) return pm.nameFa;
   const raw = (typeof METERS_DATA !== 'undefined' && METERS_DATA.standard) ? ((METERS_DATA.standard.find(x => x.id === m.id) || {}).name || '') : (METER_TECH_NAMES[m.id] || '');
   return aruzName(raw).ro;
 }
@@ -338,7 +340,8 @@ function meterLabel(m, opts){
   if(!m) return '';
   if(m.id==='H') return "Mir's Hindi meter";
   const showTech = !opts || opts.tech !== false;
-  const numStr = m.kind==='rubai' ? ('rubāʿī ' + (''+m.id).replace(/^R/i,'')) : ('Meter #' + m.id);
+  const pm = (typeof persianMeterMeta === 'function') ? persianMeterMeta(m.id) : null;
+  const numStr = pm ? pm.label : m.kind==='rubai' ? ('rubāʿī ' + (''+m.id).replace(/^R/i,'')) : ('Meter #' + m.id);
   const tech = showTech ? meterTechName(m) : '';
   const f = (typeof famOfMeter !== 'undefined') ? famOfMeter[m.id] : null;
 
@@ -418,6 +421,9 @@ function lineScripts(rawL, opts){
 }
 /* set when Scan was opened on a whole ghazal ("ghalib/21"): the address then stays #/scan?g=ghalib/21 until the text is changed */
 var scanGhazalRef;   // no initialiser: the router can set it before this file's top level runs
+/* the engine the Scan tab is working with: the Persian one (ScanFa) for a Fārsī scan, else the Urdu one */
+function SE() { return (typeof lastScan !== 'undefined' && lastScan && lastScan.lang === 'fa' && typeof ScanFa !== 'undefined') ? ScanFa : Scan; }
+
 /* Language of the verse: Auto (detectScanLang), Urdu, or Fārsī. Fārsī lines are written the way the engine reads verse
    (faScanText: Iranian letters, the uncounted nūn after a long vowel) and never take Mir's Hindi meter, which is Urdu only. */
 let scanLang = (typeof store !== 'undefined' && store.get) ? store.get('scanLang', 'auto') : 'auto';
@@ -501,7 +507,8 @@ function runScan(){
     }
     lineObjs.push(lineObj);
   });
-  const scanL = (l, o) => { const r = Scan.scanLine(l, o); if (lang === 'fa') r.fits = r.fits.filter(f => f.meter.id !== 'H'); return r; };
+  const eng = (lang === 'fa' && typeof ScanFa !== 'undefined') ? ScanFa : Scan;   // Fārsī: the Persian engine (Persian readings and meters)
+  const scanL = (l, o) => { const r = eng.scanLine(l, o); if (lang === 'fa') { r.fits = r.fits.filter(f => f.meter.id !== 'H'); r.__fa = 1; } return r; };
 
   if($('studioInput') && $('studioInput').value !== $('scanIn').value) {
     $('studioInput').value = $('scanIn').value;
@@ -523,7 +530,7 @@ function runScan(){
   if(lines.length>1){
     const PAIRS=SCAN_PAIRS;
     const inPair=new Set(PAIRS.flat());
-    const groups=Scan.METERS.map(m=>m.id).filter(id=>!inPair.has(id)).map(id=>[id]).concat(PAIRS).concat(lang==='fa'?[]:[['H']]);
+    const groups=SE().METERS.map(m=>m.id).filter(id=>!inPair.has(id)).map(id=>[id]).concat(PAIRS).concat(lang==='fa'?[]:[['H']]);
     const tot=groups.map(g=>{let c=0,fits=[]; for(const r of base){const f=r.fits.filter(x=>g.includes(x.meter.id)).sort((a,b)=>a.c-b.c)[0]; if(!f){return null;} c+=f.c; fits.push(f);} return {id:g[0],group:g,c,fits};}).filter(Boolean).sort((a,b)=>a.c-b.c);
     common=tot[0]||null;
     if(!common){
@@ -547,7 +554,8 @@ function runScan(){
       h+='<div class="card">';
       /* summary: verdict · meter number / name / pattern / reference verse · more link */
       { const _tech = meterTechName(_m);
-        const _num = _m.id==='H' ? '' : (_m.kind==='rubai' ? ('Rubāʿī ' + (''+_m.id).replace(/^R/i,'')) : (_isPair ? ('Meter #' + common.group.join(' / #')) : ('Meter #' + _m.id)));
+        const _pm = (typeof persianMeterMeta === 'function') ? persianMeterMeta(_m.id) : null;
+        const _num = _m.id==='H' ? '' : _pm ? _pm.label : (_m.kind==='rubai' ? ('Rubāʿī ' + (''+_m.id).replace(/^R/i,'')) : (_isPair ? ('Meter #' + common.group.join(' / #')) : ('Meter #' + _m.id)));
         const _pairTip = _isPair ? `Classic paired meters (#${common.group.join(' & #')}): In Classical Urdu prosody, these variation endings can be freely alternated within the same poem without breaking meter. (Handbook \u00a76.1)` : '';
         const _pairPill = _isPair ? `<span class="pair-bahr-pill" tabindex="0" data-tip="${_pairTip}">Paired Bahr</span>` : '';
         h+=`<div class="scan-summary">`;
@@ -559,8 +567,8 @@ function runScan(){
         let _pairKeyNote = '';
         if(_isPair && common.group && common.group.length === 2){
           const _g = common.group;
-          const _m1 = Scan.METERS.find(x => x.id === _g[0]);
-          const _m2 = Scan.METERS.find(x => x.id === _g[1]);
+          const _m1 = SE().METERS.find(x => x.id === _g[0]);
+          const _m2 = SE().METERS.find(x => x.id === _g[1]);
           const _r1 = _m1 ? (_m1.raw || _m1.pattern) : '';
           const _r2 = _m2 ? (_m2.raw || _m2.pattern) : '';
           if(_r1 && _r2){
@@ -605,7 +613,7 @@ function runScan(){
     h+=legendHTML('legend-sticky');
     results.forEach((r,li)=>{ h+=lineHTML(r,li,lastScan.disp[li],lineObjs[0]); });
   }
-  if (lang === 'fa') h += faOnlyNoteHTML(lines, results);
+  if (lang === 'fa' && typeof ScanFa === 'undefined') h += faOnlyNoteHTML(lines, results);
   $('scanOut').innerHTML=h;
   scanRolls = {};
 }
@@ -619,7 +627,7 @@ function stackHTML(lines,results,common,tot){
   }
   const members=[...new Set(common.fits.map(f=>f.meter))].sort((a,b)=>b.seq?(b.seq.length-(a.seq?a.seq.length:0)):0);
   const m=members[0], per=common.c/lines.length, [vc,vt]=verdictOf(per), fam=famOfMeter[m.id];
-  const exps=common.fits.map((f,li)=>Scan.explain(results[li],f)), rows=exps.map(e=>e.syl);
+  const exps=common.fits.map((f,li)=>SE().explain(results[li],f)), rows=exps.map(e=>e.syl);
   const cell=(s,k,r)=>`<td class="${s.resolved} ${s.native==='x'?'flex':''} ${r&&r[k+1]&&r[k+1].foot!==s.foot?'fend':''}">${s.text}</td>`;
   let head='', body='';
   if(m.id!=='H'){
@@ -635,7 +643,7 @@ function stackHTML(lines,results,common,tot){
         tds+= r[j]?cell(r[j],j,r):'<td></td>'; j++; }
       return `<tr><td class="num">${li+1}</td>${tds}</tr>`; }).join('');
     /* feet header from the fullest member */
-    const fs=Scan.patternFeet(m.raw); let fh='<tr><td class="num"></td>';
+    const fs=SE().patternFeet(m.raw); let fh='<tr><td class="num"></td>';
     fs.forEach((f,fi)=>{ let span=f.toks.length; if(m.cheatCae && fs[fi+1] && fs[fi+1].caeBefore) span++; if(fi===fs.length-1 && m.cheatFinal) span++;
       fh+=`<td class="fh" colspan="${span}">${f.ur}<br><i>${f.ro.join('·')}</i></td>`; });
     head=fh+'</tr>'+head;
@@ -654,7 +662,7 @@ function stackHTML(lines,results,common,tot){
 function stackInner(lines,results,common,tot){
   const members=[...new Set(common.fits.map(f=>f.meter))].sort((a,b)=>b.seq?(b.seq.length-(a.seq?a.seq.length:0)):0);
   const m=members[0], per=common.c/lines.length, [vc,vt]=verdictOf(per), fam=famOfMeter[m.id];
-  const exps=common.fits.map((f,li)=>Scan.explain(results[li],f)), rows=exps.map(e=>e.syl);
+  const exps=common.fits.map((f,li)=>SE().explain(results[li],f)), rows=exps.map(e=>e.syl);
   const cell=(s,k,r)=>`<td class="${s.resolved} ${s.native==='x'?'flex':''} ${r&&r[k+1]&&r[k+1].foot!==s.foot?'fend':''}">${s.text}</td>`;
   let head='', body='';
   if(m.id!=='H'){
@@ -668,7 +676,7 @@ function stackInner(lines,results,common,tot){
         if(short && u===split){ tds+= r[j]?cell(r[j],j,r).replace('<td ','<td colspan="2" '):'<td colspan="2"></td>'; j++; u++; continue; }
         tds+= r[j]?cell(r[j],j,r):'<td></td>'; j++; }
       return `<tr><td class="num">${li+1}</td>${tds}</tr>`; }).join('');
-    const fs=Scan.patternFeet(m.raw); let fh='<tr><td class="num"></td>';
+    const fs=SE().patternFeet(m.raw); let fh='<tr><td class="num"></td>';
     fs.forEach((f,fi)=>{ let span=f.toks.length; if(m.cheatCae && fs[fi+1] && fs[fi+1].caeBefore) span++; if(fi===fs.length-1 && m.cheatFinal) span++;
       fh+=`<td class="fh" colspan="${span}">${f.ur}<br><i>${f.ro.join('·')}</i></td>`; });
     head=fh+'</tr>'+head;
@@ -703,7 +711,7 @@ function lineHTML(r,li,forced,lineObj){
     h+='</div>';
     return h;
   }
-  const e=Scan.explain(r,f), [vc,vt]=verdictOf(f.c), fam=famOfMeter[f.meter.id];
+  const e=SE().explain(r,f), [vc,vt]=verdictOf(f.c), fam=famOfMeter[f.meter.id];
   const famDisp = fam ? famLabel(fam) : null;
   const famTxt = famDisp ? ((typeof getLineDisplay === 'function') ? getLineDisplay(famDisp, cs) : famDisp.ur) : '';
   const _lineUr = typeof lObj==='string' ? lObj : (lObj && lObj.ur) || '';
@@ -749,18 +757,18 @@ function benchmarkFit(li){
   const p = li%2===0 ? (li+1<R.length ? li+1 : null) : li-1;
   const pf = p!=null && lastScan.anchor && lastScan.anchor[p];
   if(pf) return pf;
-  const g = lastScan.near && lastScan.near.g, m = g && Scan.METERS.find(x=>x.id===g[0]);
+  const g = lastScan.near && lastScan.near.g, m = g && SE().METERS.find(x=>x.id===g[0]);
   return m ? {meter:m} : null;
 }
 /* syllables of line li as displayed (and played): the anchored fit's scansion, or the diagnosis */
 function lineExplain(li){
   const r=lastScan.results[li], f=lastScan.disp ? lastScan.disp[li] : (r.fits&&r.fits[0]);
-  return f ? Scan.explain(r,f) : explainUnscanned(r,li,benchmarkFit(li));
+  return f ? SE().explain(r,f) : explainUnscanned(r,li,benchmarkFit(li));
 }
 /* the original (unedited) line's scansion, for the A/B comparison */
 function originalExplain(li){
   const a=lastScan.anchor && lastScan.anchor[li];
-  return a ? Scan.explain(lastScan.base[li],a) : null;
+  return a ? SE().explain(lastScan.base[li],a) : null;
 }
 /* a line that no longer scans: aligned against the target bahr so clashing, extra and
    missing syllables are pinpointed; without a target (or in Mir's Hindi meter, which is
@@ -769,14 +777,14 @@ function explainUnscanned(r, li, targetFit) {
   if (!r || !r.words) return { syl: [], feet: [], notes: [] };
   const m = targetFit && targetFit.meter;
   if (m && m.vars) {
-    const d = Scan.diagnose(r, m);
+    const d = SE().diagnose(r, m);
     if (d) return Object.assign(d, { targetFit, diff: d.extraCount - d.missingCount });
   }
   const out = [];
   r.words.forEach((w, wi) => {
     const u = r.units && r.units[wi] && r.units[wi][0];
     const opt = u && u.opts[0]; if (!opt) return;
-    const texts = Scan.alignTexts([w.raw], opt.syl);
+    const texts = SE().alignTexts([w.raw], opt.syl);
     opt.syl.forEach((sy, k) => out.push({ text: texts[k] || '·', native: sy.w, resolved: sy.w === 'x' ? 'l' : sy.w, word: wi, wordTo: wi, last: k === opt.syl.length - 1, oi: opt._oi, k, forced: !!sy.forced }));
   });
   const feet = [];
@@ -836,7 +844,7 @@ function misraScan(r,li,forced){
     h+=renderUnscannedDiagnostic(e, cs, isRtl, li);
     return h;
   }
-  const e=Scan.explain(r,f);
+  const e=SE().explain(r,f);
   h+=editCompareHTML(li, isRtl);
   h+=`<div class="chips ${isRtl?'':'ltr'}" id="sc${li}">${chipsHTML(e.syl,e.feet,li)}</div>`;
   if(hasEdits(li)) h+=`<p class="tiny muted mt-note">Your edit still scans in the original bahr: the flexibility rules absorb it.</p>`;
@@ -918,7 +926,7 @@ function playScan(li,start,btn){ if(!lastScan||!lastScan.results[li]) return;
 function pickWord(li,wi){ selWord=(selWord&&selWord[0]===li&&selWord[1]===wi)?null:[li,wi]; runScan(); }
 /* tap a syllable chip: open its word's panel focused on that syllable (tap again to close) */
 function pickSyl(li,wi,si){ selWord=(selWord&&selWord[0]===li&&selWord[1]===wi&&selWord[2]===si)?null:[li,wi,si]; runScan(); }
-/* the per-syllable part of the word panel: long / short, each judged by Scan.sylRule */
+/* the per-syllable part of the word panel: long / short, each judged by SE().sylRule */
 function sylRulesHTML(li,wi,allOpts,key){
   const ex=lineExplain(li), mine=ex.syl.map((s,i)=>Object.assign({i},s)).filter(s=>s.word<=wi && wi<=s.wordTo);
   if(!mine.length) return '';
@@ -933,7 +941,7 @@ function sylRulesHTML(li,wi,allOpts,key){
   }
   const op=allOpts[focus.oi];
   if(!op || !op.syl[focus.k]){ h+='</div>'; return h; }
-  const rule=Scan.sylRule(op,focus.k,key), native=op.syl[focus.k].w;
+  const rule=SE().sylRule(op,focus.k,key), native=op.syl[focus.k].w;
   const cur=focus.resolved==='c'||focus.resolved==='s'?'s':'l';
   const o=(ovr[li]&&ovr[li][wi])||{}, forcedHere=o.opt===focus.oi && o.force && o.force[focus.k];
   const btn=(w,label)=>{ const r=rule[w], on=cur===w, dis=r.v==='no' && !on;
@@ -955,8 +963,8 @@ function unforceSyl(li,wi,k){ const o=ens(li,wi); if(o.force) delete o.force[k];
 function wordPanel(r,li,wi){
   const w=r.words[wi]; const o=(ovr[li]&&ovr[li][wi])||{};
   const isTash = (o.tashdid !== undefined) ? !!o.tashdid : /[\u0651\uFE7C]/.test(w.raw);
-  const rawWord = (typeof Scan.applyTashdid === 'function') ? Scan.applyTashdid(w.raw, isTash) : w.raw;
-  const allOpts=Scan.scanWord(rawWord,(o.suffix!==undefined?o.suffix:w.suffix)||null).opts;   /* same list buildUnits pins from */
+  const rawWord = (typeof SE().applyTashdid === 'function') ? SE().applyTashdid(w.raw, isTash) : w.raw;
+  const allOpts=SE().scanWord(rawWord,(o.suffix!==undefined?o.suffix:w.suffix)||null).opts;   /* same list buildUnits pins from */
   const wStr=op=>op.syl.map(s=>s.w==='l'?'=':s.w==='s'?'–':'x').join(' ');
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
   const isRtl = (cs === 'ur');
@@ -1031,7 +1039,7 @@ function wordPanel(r,li,wi){
   ]);
   const lk = typeof lexKey === 'function' ? lexKey(w.raw) : w.raw.replace(/[\u064B-\u065F\u0670\u0640]/g,'');
   const allowIz = isIz || !NON_GRAM_MODS.has(lk);
-  const allowTash = isTash || (!NON_GRAM_MODS.has(lk) && Scan.applyTashdid(w.raw, true) !== w.raw);
+  const allowTash = isTash || (!NON_GRAM_MODS.has(lk) && SE().applyTashdid(w.raw, true) !== w.raw);
 
   h+=`<div class="word-card-actions">`;
   if (allowIz) {
@@ -1085,7 +1093,8 @@ function renderLineScan(text, container, lineObjIn, meterId) {
   const nk = (typeof normVerseKey === 'function') ? normVerseKey(rawL) : '';
   let lineObj = (lineObjIn && lineObjIn.ur) ? lineObjIn : ((typeof KNOWN_VERSES !== 'undefined' && KNOWN_VERSES[nk]) ? KNOWN_VERSES[nk] : null);
   let urduL = lineObj ? lineObj.ur : rawL;
-  const r = Scan.scanLine(lineObj && typeof lineScanText === 'function' ? lineScanText(lineObj) : urduL);   // Rekhta lines: with their Roman's hints
+  /* Rekhta lines: with their Roman's hints; a Persian line on the Persian engine (scanCorpusLine) */
+  const r = (lineObj && typeof scanCorpusLine === 'function') ? scanCorpusLine(lineObj) : Scan.scanLine(urduL);
   let f;
   if (Array.isArray(meterId)) {
     // The line belongs to a ghazal locked to one (or a paired pair) of these
@@ -1106,7 +1115,7 @@ function renderLineScan(text, container, lineObjIn, meterId) {
   let h = '';
   if (!f) {
     h += `<div class="verdict no-meter">No meter fits every syllable.</div>`;
-    const nn = r.near && r.near[0], nd = nn && Scan.diagnose(r, nn.meter);
+    const nn = r.near && r.near[0], nd = nn && engineOf(r).diagnose(r, nn.meter);
     if (nd) {
       const pl = (n, w) => `${n} ${w}${n > 1 ? 's' : ''}`, bits = [];
       if (nn.clashes.length) bits.push(pl(nn.clashes.length, 'clashing syllable'));
@@ -1116,7 +1125,7 @@ function renderLineScan(text, container, lineObjIn, meterId) {
       h += `<div class="chips ${isRtl?'':'ltr'}">${chipsHTML(nd.syl, nd.feet, null, { r, lineObj: lineObj || { ur: urduL } })}</div>`;
     }
   } else {
-    const e = Scan.explain(r, f);
+    const e = engineOf(r).explain(r, f);
     const id = 'lineScan_' + Math.random().toString(36).slice(2, 8);
     h += `<div class="chips ${isRtl?'':'ltr'}" id="${id}">${chipsHTML(e.syl, e.feet, null, { r, lineObj: lineObj || { ur: urduL } })}</div>`;
     const notes = [...new Set(e.notes.map(n => `${n.word}: ${n.note}`))].filter(n => !/: $/.test(n));

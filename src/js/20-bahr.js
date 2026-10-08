@@ -270,9 +270,9 @@ function playLookupCouplet(mId, i, start, btn, pfx) {
     if (typeof Scan === 'undefined' || !Scan.scanLine) return null;
     const out = [];
     [c.l1, c.l2].forEach((l, k) => {
-      const r = Scan.scanLine(lineScanText(l)); if (!r || !r.fits || !r.fits.length) return;
+      const r = scanCorpusLine(l); if (!r || !r.fits || !r.fits.length) return;
       const f = r.fits.find(x => String(x.meter.id) === String(mId)) || r.fits[0];
-      const e = Scan.explain(r, f);
+      const e = engineOf(r).explain(r, f);
       const wordsHost = $(`${pfx}Words_${mId}_${i}_${k + 1}`);
       out.push(Object.assign({ e, words: (typeof pbWordsMatching === 'function') ? pbWordsMatching(wordsHost, e) : null },
         pbNodes($(`${pfx}Scan_${mId}_${i}_${k + 1}`))));

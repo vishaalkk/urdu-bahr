@@ -20,7 +20,9 @@ const UPDATE = process.argv.includes('--update');
 const BASE_FILE = path.join(__dirname, 'benchmark_fa_baseline.json');
 const TOL = 0.05;
 
-const { Scan, ctx } = loadEngine();
+const { Scan: ScanUr, ctx } = loadEngine();
+/* Persian lines are scored on the Persian engine (ScanFa), as the app scans them */
+const { Scan } = require('../scripts/lib_fa_scan').loadFaEngine();
 const poets = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/poets_extended.json'), 'utf8'));
 const gold = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/persian_gold.json'), 'utf8'))
   .filter(g => g.ganjoor && g.ganjoor.hits >= 3 && g.ganjoor.metre_id);
@@ -55,7 +57,8 @@ const wrong = [];
 for (const g of gold) {
   const m = faMeters.get(g.ganjoor.metre_id), shipped = byUrl.get(g.url);
   if (!shipped) continue;
-  const want = (OVERRIDE[g.url] ? OVERRIDE[g.url].meter : (m ? m.urdu : [])).map(String);
+  /* Ganjoor's meter as one of ours: an Urdu meter, or the Persian engine's F<Ganjoor id> */
+  const want = (OVERRIDE[g.url] ? OVERRIDE[g.url].meter : (m && m.urdu.length ? m.urdu : (Scan.METERS.some(x => x.id === 'F' + g.ganjoor.metre_id) ? ['F' + g.ganjoor.metre_id] : []))).map(String);
   if (!want.length) { persianOnly++; continue; }
   judged++;
   const got = (shipped.meters || []).map(String);
