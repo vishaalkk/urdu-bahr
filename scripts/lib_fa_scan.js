@@ -3,7 +3,7 @@
 // others stay available at a small cost. The result is a set of engine lex() lines, spliced into a SECOND copy of the engine
 // (ScanFa, scripts/build_app.py) that scans Persian only; the engine source and the Urdu engine are untouched.
 'use strict';
-const { splitWords, PERSIAN } = require('./lib_fa_lexicon');
+const { splitWords, PERSIAN, linePairs } = require('./lib_fa_lexicon');
 
 /* Roman (Sufinama spelling) → weights. Long vowel or closed syllable = l, open short = s; a consonant left over at the end of a
    syllable that already closed (jān, dast, dōst) is an extra short, as in Urdu ʿarūz (handbook 2.3, 4.2); a nasal ñ is not counted. */
@@ -61,12 +61,9 @@ function rankReadings(Scan, word, romanWs) {
 function buildScanLex(Scan, ghazals) {
     const votes = {};   // key -> {weights string: count}, word -> a sample spelling
     for (const g of ghazals.filter(PERSIAN)) for (const l of g.lines || []) {
-        if (!l.ur || !l.ro || /[؀-ۿऀ-ॿ]/.test(l.ro)) continue;
-        const u = l.ur.split(/\s+/).filter(Boolean), r = splitWords(l.ro);
-        if (u.length !== r.length) continue;
-        u.forEach((w, i) => {
+        linePairs(l).forEach(([w, r]) => {
             if (/[ِّ]/.test(w)) return;   // written iẓāfat / tashdīd: the engine reads those itself
-            const ws = romanWeights(r[i].w);
+            const ws = romanWeights(r.w);
             if (!ws) return;
             let key;
             try { key = Scan.scanWord(w).key; } catch (e) { return; }
@@ -77,12 +74,29 @@ function buildScanLex(Scan, ghazals) {
     }
     const lex = {};
     Object.entries(votes).forEach(([key, v]) => {
-        const [ws, n] = Object.entries(v.n).sort((a, b) => b[1] - a[1])[0];
         const total = Object.values(v.n).reduce((a, b) => a + b, 0);
-        if (n / total < 0.6) return;   // the poets disagree: leave the word to the engine
-        const ranked = rankReadings(Scan, v.word, ws.split(''));
+        /* every reading the poets give the word a fair share of (a word can scan two ways: barā-e / barāy-e); dropping the
+           word when they split lost good readings */
+        const shares = Object.entries(v.n).filter(([, n]) => n / total >= 0.3).map(([ws]) => ws.split(''));
+        let ranked = null;
+        for (const ws of shares) {
+            const r = rankReadings(Scan, v.word, ws);
+            if (!r) continue;
+            if (!ranked) ranked = r;
+            else if (!ranked.some(o => fits(ws, o.w))) ranked.push(r[r.length - 1]);
+        }
         if (ranked) lex[key] = ranked;
     });
+    /* ke (کہ) and be (بہ) may be long (persianlanguageonline ʿarūz part 1; Mahdavi Mazdeh 2019, rule 3): the engine knows them
+       short only. Short stays the default (cost 0), long costs 1 */
+    /* و (o, va) between words: short by default, long at a small cost (Mahdavi Mazdeh 2019 rule 3); the Urdu engine charges
+       2.5 for either, which suits Urdu (where it joins the word before) but not Persian (rūze vo gol) */
+    lex['و'] = [{ w: ['s'], c: 0 }, { w: ['l'], c: 0.5 }];
+    for (const p of ['کہ', 'بہ']) {
+        const opts = lex[p] || [{ w: ['s'], c: 0 }];
+        if (!opts.some(o => o.w.join('') === 'l')) opts.push({ w: ['l'], c: 1 });
+        lex[p] = opts;
+    }
     return lex;
 }
 
@@ -92,13 +106,33 @@ function lexLines(lex) {
 }
 
 /* Ganjoor's Persian meters that no Urdu meter covers (data/persian_meters.json, 300+ verses), as engine meter rows. Id 'F' +
-   Ganjoor id. A makhbūn line may open with fāʿilātun, so a leading – – = = opens with x (as Urdu meters 14-19 do). */
-function persianMeterRows(persianMeters, min = 300) {
-    return persianMeters.filter(m => !m.urdu.length && m.verses >= min).map(m => {
+   Ganjoor id. A makhbūn line may open with fāʿilātun, so a leading – – = = opens with x (as Urdu meters 14-19 do).
+   attested (Ganjoor ids): rarer meters kept all the same, because Ganjoor files a ghazal of ours under them (build_fa_scan.js:
+   the sure matches of tests/data/persian_gold.json; Rumi's "zahe ʿishq zahe ʿishq", hazaj makfūf, 175 verses). */
+function persianMeterRows(persianMeters, min = 300, attested = new Set()) {
+    return persianMeters.filter(m => !m.urdu.length && (m.verses >= min || attested.has(m.gid))).map(m => {
         let p = [...m.pattern].map(c => c === '=' ? '=' : '-');
         if (m.pattern.startsWith('--==')) p[0] = 'x';
         return ['F' + m.gid, p.join(' ')];
     });
+}
+
+/* Contraction (Mahdavi Mazdeh 2019, ch. 4.7: LL → H, the metron HLLH or LLHH sung as HHH; Rumi's rajaz often does it): for
+   each meter with a muftaʿilun (= - - =) or faʿilātun (- - = =) foot, one extra row per such foot sung as three longs, under
+   the meter's own id (so labels and votes are unchanged). Never the last foot: a line's ending stays strict. ScanFa only. */
+function contractionRows(rows) {
+    const out = [];
+    for (const [id, raw] of rows) {
+        const parts = raw.split(/\s+(\/\/?)\s+/);   // feet and their separators, in order
+        const feet = parts.filter((_, i) => i % 2 === 0);
+        feet.forEach((f, k) => {
+            if (k === feet.length - 1 || !/^(= - - =|- - = =)$/.test(f)) return;
+            const p = parts.slice();
+            p[2 * k] = '= = =';
+            out.push([id, p.join(' ')]);
+        });
+    }
+    return out;
 }
 
 /* the Persian engine (ScanFa) for node: the app's engine with data/fa_scan.json spliced in, as scripts/build_app.py builds it */
@@ -109,4 +143,4 @@ function loadFaEngine() {
     return loadEngine(lexLines(fa.lex), fa.meters);
 }
 
-module.exports = { romanWeights, rankReadings, buildScanLex, lexLines, persianMeterRows, loadFaEngine };
+module.exports = { romanWeights, rankReadings, buildScanLex, lexLines, persianMeterRows, contractionRows, loadFaEngine };

@@ -48,7 +48,8 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   feed `WORD_ASCII_MAP`, `ROMAN_CASUAL_MAP` or the known-verse index: Rekhta's Roman must not override Pritchett's.
 - **Persian** (plan and status: `docs/PERSIAN_PLAN.md`): Sufinama kalaam `scripts/import_sufinama.py` → `node scripts/scan_sufinama.js`
   (Persian-aware: line `lang`, no `H` on Persian lines) → `build_poets.py` (ghazal `lang`, `xl`, Ganjoor `gj`/`fa`). Gold:
-  `scripts/match_ganjoor.py` → `tests/data/persian_gold.json`; `tests/benchmark_fa.js` gates it. Ganjoor meters:
+  `scripts/match_ganjoor.py` → `tests/data/persian_gold.json`; `tests/benchmark_fa.js` gates it (`npm test` runs it `--quick`;
+  the full ~14-minute run, with the Ganjoor line check, is `npm run bench:fa`: run it before changing the Persian engine or data). Ganjoor meters:
   `scripts/build_fa_meters.py` → `data/persian_meters.json` (the circles' Persian status; key rule mirrored in `faMeterKey`).
   Persian engine `window.ScanFa`: `build_app.py` splices `data/fa_scan.json` (`scripts/build_fa_scan.js`) into a second copy of the
   engine block; Persian lines (`l.lang === 'fa'`) scan on it via `scanCorpusLine` / `engineOf`. Persian-only meter ids are `F<Ganjoor id>`.

@@ -11,5 +11,11 @@
       1
     ],
     "why": "Ganjoor (Jami, ghazal 633) files it as maf'ulu mafa'ilun mafa'ilun (F31). Every line ends in an overlong syllable (gada-im, darem, mahrum), which Ganjoor counts as two syllables and Urdu 'aruz as one long plus an uncounted final short; on that count the lines are maf'ulu mafa'ilun fa'ulun (#9, paired with #1) and 7 of 8 scan there at cost 0 to 2, against F31 failing most."
+  },
+  "https://sufinama.org/persian-sufi-poetry/rumi-persian-sufi-poetry-140": {
+    "meter": [
+      10
+    ],
+    "why": "Ganjoor (Shams, ghazal 2086) reads 'man kuja budam 'ajab bi tu in chandin zaman', fa'ilatun fa'ilun x2 (F33). Sufinama's text has one more syllable in each line ('be-tu darin chandin zaman'), which makes it ramal musamman mahzuf (#10): all 14 of its lines scan there."
   }
 }

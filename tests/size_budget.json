@@ -1,0 +1,5 @@
+{
+  "raw": 8000000,
+  "gzip": 3000000,
+  "note": "2026-10-08: 6.27 MB / 2.20 MB gzip after the Persian work. Raised to 7.0 / 2.5 MB (144 Sufinama kalaam), then to 8.0 / 3.0 MB at 7.36 / 2.51 MB with Rumi's and Hafiz's Persian Sufi Poetry: the engine is learning from them. Planned: trim poets back once the Persian engine is resilient."
+}

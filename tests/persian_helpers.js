@@ -20,9 +20,18 @@ check(ctx.detectScanLang('کوئی امید بر نہیں آتی') === 'ur', 'an
 check(ctx.faScanText('بشنو این نی چون شکایت می‌کند') === 'بشنو ایں نی چوں شکایت می کند', 'faScanText: nūn after a long vowel → ں, joiner → space');
 check(ctx.faScanText('خانهٔ دل') === 'خانۂ دل', 'faScanText: هٔ → ۂ (iẓāfat)');
 check(ctx.faScanText('من') === 'من', 'faScanText: nūn after a short vowel stays');
+check(ctx.faScanText('دِلْ') === 'دِل', 'faScanText: sukūn is dropped (fully voweled text)');
+check(ctx.faScanText('در آن حرم') === 'در آں حرم', 'faScanText: آن → آں like the other long vowels');
+check(ctx.faLiaisonVariants('کہ عشق آساں نمود')[0] === 'کہ عشقاساں نمود', 'liaison: a consonant joins a following آ, which keeps its long ā (ʿeshq-āsān)');
+check(ctx.faLiaisonVariants('ہم از ایں') .includes('ہمز ایں'), 'liaison: ا before a consonant is a short vowel and goes (ham az → ha-maz)');
+check(ctx.faLiaisonVariants('دلِ ما را').length === 0 && ctx.faLiaisonVariants('تو اگر').length === 0, 'liaison: none after a vowel or a written iẓāfat');
+check(ctx.faLiaisonVariants('کہ از دست').includes('کز دست') && ctx.faLiaisonVariants('کہ ایں دل').includes('کیں دل'), 'contraction: ke + az → kaz, ke + īn → kīn');
+check(ctx.faLiaisonVariants('مردہ است عیسی').includes('مردست عیسی') && ctx.faLiaisonVariants('دانا است').includes('داناست'), 'contraction: ast after a vowel loses its alif (murdast, dānāst)');
+check(ctx.faScanText('با دورباش\u200cِ زیر') === 'با دورباشِ زیر', 'faScanText: a zer written after a ZWNJ joins the letter before it');
 const fits = l => (Scan.scanLine(l).fits || []).filter(f => f.meter.id !== 'H');
 check(fits(ctx.faScanText('بشنو این نی چون شکایت می‌کند'))[0].meter.id === 11, 'Rumi (Iranian spelling) scans as Meter #11');
 check(String(fits(ctx.faScanText('دل می‌رود ز دستم صاحب‌دلان خدا را'))[0].meter.id) === '4', 'Hafiz (Iranian spelling) scans as Meter #4 (as Ganjoor)');
+check(fits(ctx.faScanText('من که باشم در آن حرم که صبا')).some(f => ['14', '15'].includes(String(f.meter.id)) && f.c <= 2), 'Hafiz sh56 (dar ān ḥaram) fits khafīf');
 check(ctx.rkPlain('یا رسول‌ اللہؐ') === 'یا رسول اللہ', 'rkPlain: honorific and stray joiner around Allah');
 check(ctx.rkPlain('لا الٰہ') === 'لا الٰہ', 'rkPlain: ilāh is not Allah');
 check(ctx.rkPlain('محمدؐ') === 'محمدؐ', 'rkPlain: other words keep their honorific sign');
@@ -50,6 +59,10 @@ check(ctx.faLineScripts('آمدہ بہ قتلِ من').ro === 'āmada ba-qatl-e-
 /* 3b. Persian prosody and Arabic formulae */
 check(ctx.faProsodyText('سوئے شہر عشق راہے دیگر است') === 'سوئے شہر عشق راہے دیگرست', 'ast after a consonant joins the word (dīgarast)');
 check(ctx.faProsodyText('دلم ما است') === 'دلم ما است', 'ast after a vowel stays a word');
+check(ctx.faProsodyText('خشک تارے خشک چوبے خشک پوست') === 'خشک تارے خشک چوبے خشک پوس', 'line-final overlong pōst: its t is not counted');
+check(ctx.faProsodyText('بر سر کوئے دوست') === 'بر سر کوئے دوس' && ctx.faProsodyText('دوست بر سر') === 'دوس بر سر', 'overlong dōst: its t is not counted at the line end, nor before a consonant');
+check(ctx.faProsodyText('دوست اگر') === 'دوست اگر', 'overlong dōst before a vowel keeps its t (it starts the next syllable)');
+check(ctx.faProsodyText('جلوۂ دلدار دیدم') === 'جلوۂ دلدار دیدم', 'dīdam (dī-dam) is not an overlong ending: untouched');
 check(ctx.faLineScripts('الا یا ایها الساقی ادر کأسا و ناولها').ro === 'alā yā ayyuha-s-sāqī adir ka.san va nāvilhā', 'Arabic: Hafiz\'s opening');
 check(/yā rasūlallāh$/.test(ctx.faLineScripts('تنم فرسودہ جاں پارہ ز ہجراں یا رسول اللہ').ro), 'Arabic: yā rasūlallāh');
 check(ctx.faWordScripts('کردہ') && ctx.faWordScripts('کردہ').ro === 'karda', 'participle: known stem + -a');
@@ -63,6 +76,47 @@ const saadi = (FA.Scan.scanLine('ہر کہ چیزے دوست دارد جان و 
 check(saadi && saadi.meter.id === 'F26' && saadi.c <= 1, `Saadi 166 scans in F26 (ramal musamman sālim) on ScanFa: ${saadi && saadi.meter.id}`);
 const mz = mustazadFit(FA.Scan, FA.ctx.rekhtaScanText('ہر لحظہ بہ شکلے بت عیار بر آمد دل برد و نہاں شد', "har-lahza ba-shakle but-e-'ayyār bar aamad dil burd-o-nihāñ shud"));
 check(mz && mz.meter.id === 8 && mz.split === 8, 'mustazād: hazaj #8 + its first-and-last-foot tail');
+/* the app's mustazād scan (faMustazadScan): one fit under the meter's own id, running through head and tail, so explain() gives
+   the whole line with a caesura before the tail */
+const mzText = FA.ctx.faProsodyText(FA.ctx.rekhtaScanText('ہر لحظہ بہ شکلے بت عیار بر آمد دل برد و نہاں شد', "har-lahza ba-shakle but-e-'ayyār bar aamad dil burd-o-nihāñ shud"));
+const mzr = FA.ctx.faMustazadScan(FA.Scan, mzText, [8]), mzf = mzr.fits[0];
+const mze = mzf && FA.Scan.explain(mzr, mzf);
+check(mzf && mzf.meter.id === 8 && mzf.c <= 2 && mzf.mustazad === 8, 'faMustazadScan: the line as #8 + tail, under id 8');
+check(mze && mze.syl.filter(s => !s.cheat).length === 14 + 6 && mze.feet.filter(Boolean).some(F => F.cae) && mze.syl[mze.syl.length - 1].wordTo === mzr.words.length - 1,
+  'faMustazadScan: explain() covers head and tail, the tail after a caesura');
+check(!FA.ctx.faScanFits(FA.Scan, mzText, { target: new Set(['8']) }).some(f => String(f.meter.id) === '8' && f.c <= 2)
+  && FA.ctx.faScanFits(FA.Scan, mzText, { target: new Set(['8']), mustazad: ['8'] }).some(f => String(f.meter.id) === '8' && f.c <= 2),
+  'faScanFits opts.mustazad: the mustazād line fits #8 only as meter + tail');
+const bayt = FA.ctx.faProsodyText(FA.ctx.rekhtaScanText('بیا بیا دلدار من دلدار من در آ در آ در کار من در کار من', 'bayā bayā dil-dār-e-man dil-dār-e-man dar-ā dar-ā dar kār-e-man dar kār-e-man'));
+check(FA.ctx.faMustazadScan(FA.Scan, bayt, [3]).fits.length === 0, 'mustazād: a sālim meter run on (a bayt of rajaz musaddas on one line) is not meter + tail');
+/* sung refrains: the line without the repeats, counted only where it fits the ghazal's meter */
+const jami = FA.ctx.faProsodyText(FA.ctx.rekhtaScanText('گل از رخت آموختہ نازک بدنی را بدنی را بدنی را', 'gul az ruḳhat āmoḳhta nāzuk badanī rā badanī rā badanī rā'));
+check(FA.ctx.faRefrainVariants(jami).includes('گل از رخت آموختہ نازک بدنی را'), 'refrain: the repeats of the last words go');
+check(FA.ctx.faRefrainVariants('زہے عشق زہے عشق کہ ما راست خدایا').length === 0, 'refrain: a repeat inside the line is not a refrain');
+const rf = FA.ctx.faScanFits(FA.Scan, jami, { target: new Set(['8']), refrain: true }).find(f => String(f.meter.id) === '8' && f.c <= 2);
+check(rf && /نازک بدنی را$/.test(rf.refrain) && !/بدنی را بدنی/.test(rf.refrain), 'refrain: Jami\'s line fits #8 without its sung repeats (with liaison: ruḳha-tāmoḳhta)');
+check(!FA.ctx.faScanFits(FA.Scan, jami, { refrain: true }).some(f => f.refrain), 'refrain: never without a target meter');
+
+/* 3d. drift: data/fa_scan.json is keyed by the engine's own spelling rules; if the engine's normalisation changes, every
+   Persian reading must still be found (else ScanFa silently loses them). Same for the Persian-only meters. */
+const FA_DATA = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data/fa_scan.json'), 'utf8'));
+const lexKeys = Object.keys(FA_DATA.lex);
+const stale = lexKeys.filter(k => { try { const w = FA.Scan.scanWord(k); return w.key !== k || w.opts.length !== FA_DATA.lex[k].length; } catch (e) { return true; } });
+check(lexKeys.length > 300 && stale.length === 0, `fa_scan.json: ${stale.length} of ${lexKeys.length} Persian readings no longer reach the engine (${stale.slice(0, 5).join(' ')})`);
+check(FA_DATA.meters.every(([id]) => FA.Scan.METERS.some(m => m.id === id)), 'every Persian-only meter is in ScanFa');
+
+/* golden couplets, each checked against Ganjoor's meter (as written there, Iranian spelling): the Persian path end to end
+   (faScanText → faProsodyText → ScanFa with liaison). Hafiz is given his iẓāfat marks (Ganjoor's text has them). */
+const faFit = (line, ids) => FA.ctx.faScanFits(FA.Scan, FA.ctx.faProsodyText(FA.ctx.faScanText(line)))
+  .some(f => ids.includes(String(f.meter.id)) && f.c <= 2);
+check(faFit('اگر آن ترکِ شیرازی به دست آرد دلِ ما را', ['26']), 'golden: Hafiz 3, hazaj musamman sālim (#26), with its iẓāfat');
+check(faFit('ماییم و می و مطرب و این کنج خراب', ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9', 'R10', 'R11', 'R12'])
+  && faFit('جان و دل و جام و جامه پر درد شراب', ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9', 'R10', 'R11', 'R12']), 'golden: Khayyam, both lines a rubāʿī');
+check(faFit('هر کسی را نتوان گفت که صاحب نظر است', ['18', '19']), 'golden: Saadi, ramal makhbūn maḥẕūf');
+check(faFit('داد ز خویش چاشنی جان ستم چشیده را', ['25']), 'golden: Rumi, Shams 46, rajaz matwī makhbūn (#25)');
+check(faFit('من که باشم در آن حرم که صبا', ['14', '15']), 'golden: Hafiz 56, khafīf (liaison dar ān → da-rān)');
+check(FA.ctx.faScanFits(FA.Scan, FA.ctx.faProsodyText(FA.ctx.faScanText('دوست دارم من نگار نازنین خویش را')), { guessIzafat: true })
+  .some(f => String(f.meter.id) === '10' && f.c <= 2), 'guessed iẓāfat: nigār-e nāzanīn-e (the ں of nāzanīn back to ن before it), ramal maḥẕūf');
 
 /* 4. Roman repair */
 const fix = L.repairLine({ ur: 'آمدہ بہ قتل من آں شوخ ستم گارے', hi: 'आमदः ब-क़त्ल-ए-मन आँ शोख़ सितम-गारे', ro: 'āmada qatl-e-man aañ shoḳh sitam-gāre' }, {});
@@ -101,6 +155,23 @@ setTimeout(() => {
   check(rr.__fa === 1 && w.engineOf(rr) === w.ScanFa && !rr.fits.some(f => f.meter.id === 'H'), 'a Persian corpus line scans on ScanFa, never in the Hindi meter');
   const ghalibLine = w.eval('GHALIB_EXT_DATA[0].lines[0]');
   check(w.engineOf(w.scanCorpusLine(ghalibLine)) === w.Scan, 'an Urdu corpus line stays on the Urdu engine');
+  /* a mustazād ghazal (Shah Niyaz: "ai dost ba-bīñ dar hama sū … / bā-ʿain nigāhe"): the reader scans each line as meter + tail
+     and shows the tail after a caesura */
+  const mzG = w.eval("poetItems('shah_niyaz').find(g => /^ai dost ba-bīñ dar hama sū/.test(g.lines[0].ro || ''))");
+  const mzR = mzG && w.scanCorpusLine(mzG.lines[0], mzG.meters);
+  check(mzG && mzR.fits.some(f => f.mustazad && mzG.meters.map(String).includes(String(f.meter.id)) && f.c <= 2), 'reader: a mustazād line fits its meter as meter + tail');
+  const notMz = w.eval("poetItems('hafiz').find(g => g.lang === 'fa' && g.meters.length)");
+  check(notMz && !w.faMustazadGhazal(w.ScanFa, notMz.lines.filter(l => l.lang === 'fa').map(l => w.faProsodyText(w.lineScanText(l))), notMz.meters), 'an ordinary Persian ghazal is no mustazād');
+  if (mzG) {
+    const box = d.createElement('div');
+    w.renderLineScan(mzG.lines[0].ur, box, mzG.lines[0], mzG.meters);
+    check(/caeu/.test(box.innerHTML) && /Mustazād/.test(box.textContent) && !/No meter fits/.test(box.textContent), 'reader: the mustazād tail is scanned after a //, with a note');
+  }
+  /* a sung refrain (Jami: "… badanī rā badanī rā badanī rā") is left out of the reader's scan */
+  const jamiG = w.eval("poetItems('jami').find(g => /badanī rā badanī rā/.test(g.lines[0].ro || ''))");
+  const jamiR = jamiG && w.scanCorpusLine(jamiG.lines[0], jamiG.meters);
+  check(jamiR && jamiR.refrain === 4 && jamiR.fits.some(f => jamiG.meters.map(String).includes(String(f.meter.id))), 'reader: Jami\'s refrain line fits its meter without the repeats');
+  check(jamiG && !w.scanCorpusLine(jamiG.lines[4], jamiG.meters).refrain, 'reader: a line with no repeat scans whole');
   d.getElementById('scanIn').value = 'ہزاروں خواہشیں ایسی کہ ہر خواہش پہ دم نکلے';
   w.runScan();
   check(/Urdu/.test(d.getElementById('scanLangDetected').textContent), 'Scan: Ghalib detected as Urdu');

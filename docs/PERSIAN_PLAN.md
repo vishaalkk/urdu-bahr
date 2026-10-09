@@ -497,3 +497,65 @@ za-rahmat-kun-nazar-bar-haal-e-zaaram-yaa-rasuulallaah-jami-persian-kalam-22
 - The engine does not drop a line-final *-st* cluster after a long vowel (Persian overlong). That needs a deliberate
   engine rule.
 - Mustazād lines in the reader still scan their whole line, not head plus tail.
+
+## Round 5 (2026-10-08/09): resilience, more kalaam, Persian prosody rules
+
+- **Corpus.** The crawler also reads the Persian-kalaam pages of 16 poets (`POET_PAGES`) and the Persian Sufi Poetry
+  sections of Rumi and Hafiz (`POET_SECTIONS`, paged under every sort order). 1,836 ghazals in all, every one metered.
+  Lines whose "Urdu" page Sufinama serves in Devanagari are dropped at import (34 Rumi pieces had no Urdu text at all).
+  Mir's Persian is its own collection (`mir_farsi`), apart from Pritchett's Mir.
+- **Guards.** The crawler stops if a collection or poet page shrinks; `build_poets.py` refuses to change a shipped meter
+  without `--accept-meter-changes`; the page has a size budget (`tests/size_budget.json`, now 8 MB / 3 MB, to come back
+  down when the corpus is trimmed).
+- **Learning from Sufinama, more carefully.**
+  - A word pair teaches only if its Urdu and Roman consonants agree (`linePairs`): Sufinama sometimes gives a line another
+    line's Roman (فرخ had been learned as "har").
+  - A doubled Roman letter is a tashdīd on one-to-one word pairs (*farruḳh* → فرّخ).
+  - When the poets' Roman splits on a word, every reading with ≥ 30% share is kept (dropping the word lost برائے, وادی …).
+- **Persian verbs.** `scripts/lib_fa_verbs.js`: about 2,000 forms (prefix be-/na-/ma- + present or past stem + ending) for
+  ~60 classical verbs, in the word list (Roman and Devanagari) and as readings; a verb's reading costs 0 even where the
+  engine has it only at a cost (رود *ravad* "goes", not *rūd* "river").
+- **Persian prosody** (Persian lines only; the Urdu engine and Ghalib/Mir are unchanged). Sources: Mahdavi Mazdeh 2019,
+  Shams-i Qays via the hamza-elision notes, persianlanguageonline's ʿarūz series.
+  - *ke*, *be* and *o / va* short or long; آن reads like آں; sukūn dropped; a zer after a ZWNJ joins its letter.
+  - Overlong long vowel + two consonants is long + short mid-line too (*dūst*, *navāḳht*), not only at the line end.
+  - Liaison (grafting) at no cost (`faLiaisonVariants`, `faScanFits`): the Urdu engine grafts at 1.2, Persian grafts
+    freely (*ke ʿish-qā-sān*, *da-rān*). Contractions too: *ke az* → *kaz*, *ke īn* → *kīn*, *murda ast* → *murdast*.
+  - Contraction of a foot (`contractionRows`): a *muftaʿilun* or *faʿilātun* foot sung as three longs (not the last foot),
+    as extra rows under the meter's own id.
+  - Guessed iẓāfat for text with no Roman (`faScanFits(…, { guessIzafat })`): one or two, at a small cost each, never on a
+    particle, the last word, or before و.
+- **Tests.** `tests/persian_helpers.js` (75 checks) has golden couplets checked against Ganjoor: Hafiz 3 and 56, Khayyam,
+  Saadi, Rumi 46, Saadi's *dūst dāram*. `tests/data/ganjoor_testset.json` is now 240 well-known ghazals (those Sufinama
+  lists as sung, then the most recited on Ganjoor), with Ganjoor's vowel marks; Arabic ghazals are left out.
+- **Results** (`tests/benchmark_fa.js`):
+
+  | | before round 5 | now |
+  |---|---|---|
+  | core own-meter fit ≤ 2 | 74.8% | 76.7% |
+  | all Persian own-meter fit ≤ 2 | 70.9% | 72.2% |
+  | Ganjoor ghazal meter | 97.5% | 98.3% |
+  | Ganjoor lines fit (with Ganjoor's marks) | 39.6% (no marks) | 65.8% |
+  | Ganjoor lines fit (marks stripped) | — | 63.0% |
+
+  Fran's Ghalib/Mir benchmark is identical throughout.
+- **Looked at and left:** Gemini's research notes (Mazdeh, Iranica, VaznYab, dictionary). Their rules are in; their
+  "missing meters" were already F-meters; the VaznYab corpus has wrong expected meters (Hafiz's *alā yā ayyuha-s-sāqī*
+  is *hazaj*, not #5), so it is not a test set. The chaiandconversation dictionary uses modern Tehrani Roman.
+
+- **Fixes for the worst ghazals** (2026-10-09): mustazād lines scanned as meter + tail everywhere a line is scanned
+  (`faMustazadScan`, `faMustazadGhazal`; the reader marks the tail), sung refrains left out of a line's scan when that is what
+  makes it fit (`faRefrainVariants`; shown as a note), and two more Ganjoor meters (F29 hazaj makfūf maḥẕūf, F108 muftaʿilun
+  faʿ ×4). Ghazals with under half their lines fitting: 38 → 30. Four shipped meters changed, each now as Ganjoor or a hand
+  scan (rumi 8, 186, 205 → Ganjoor's; rumi 82 → 25); five that contraction would have moved wrongly are pinned in
+  `MANUAL_METERS`.
+- **Benchmark split.** `npm test` runs `tests/benchmark_fa.js --quick` (core set, gold, transliteration, Ganjoor meters;
+  ~1.5 min). The full run, with all.* and the Ganjoor line check, is `npm run bench:fa` (~14 min): run it before changing the
+  Persian engine or its data.
+- **Floors re-recorded where the set changed** (not regressions): gold.meter 100 → 98.67 (judged on 225 ghazals, was 52;
+  misses: Rumi's *tabīb-e dard* and two Hafiz Persian Sufi Poetry pieces) and translit.word 83.81 → 83.73 (28.7k held-out
+  words, was 7.5k).
+
+**Still open:**
+- Three gold misses: ship Ganjoor's meter for sure matches (the engine's own pick still scored)?
+- The Scan tab does not yet use the guessed iẓāfat. Refrains like Rumi's *bayā bayā* (a whole couplet per line) still miss.

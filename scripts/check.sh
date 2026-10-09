@@ -3,13 +3,14 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 echo "── build";                 uv run python scripts/build_app.py
+echo "── size budget";          node tests/size_budget.js
 echo "── runtime + sandbox";     uv run python test_runtime.py
 echo "── corpus scan";           node tests/corpus_scan.js
 echo "── packed data (poets, Ghalib, Mir ≡ source)"; node tests/packed_data.js
 echo "── reader benchmark headers"; node tests/reader_benchmark_headers.js
 echo "── Fran benchmark";        node tests/benchmark.js      # Ghalib + Mir: no score may fall below tests/benchmark_baseline.json
 echo "── Persian helpers";       node tests/persian_helpers.js 2>&1 | grep -v "^parser"; test "${PIPESTATUS[0]}" -eq 0
-echo "── Persian benchmark";     node tests/benchmark_fa.js 2>&1 | grep -v "^parser"; test "${PIPESTATUS[0]}" -eq 0   # Persian kalaam vs Ganjoor: tests/benchmark_fa_baseline.json
+echo "── Persian benchmark";     node tests/benchmark_fa.js --quick 2>&1 | grep -v "^parser"; test "${PIPESTATUS[0]}" -eq 0   # core set + gold + Ganjoor meters (quick); the full run is `npm run bench:fa`
 echo "── chip transliteration";  node tests/chip_translit_consistency.js
 echo "── practice logic";        node tests/practice_logic.js
 echo "── learn examples";        node tests/learn_examples.js

@@ -1093,8 +1093,10 @@ function renderLineScan(text, container, lineObjIn, meterId) {
   const nk = (typeof normVerseKey === 'function') ? normVerseKey(rawL) : '';
   let lineObj = (lineObjIn && lineObjIn.ur) ? lineObjIn : ((typeof KNOWN_VERSES !== 'undefined' && KNOWN_VERSES[nk]) ? KNOWN_VERSES[nk] : null);
   let urduL = lineObj ? lineObj.ur : rawL;
-  /* Rekhta lines: with their Roman's hints; a Persian line on the Persian engine (scanCorpusLine) */
-  const r = (lineObj && typeof scanCorpusLine === 'function') ? scanCorpusLine(lineObj) : Scan.scanLine(urduL);
+  /* Rekhta lines: with their Roman's hints; a Persian line on the Persian engine (scanCorpusLine), which is told the ghazal's
+     meters so a sung refrain can be left out */
+  const ownIds = Array.isArray(meterId) ? meterId : (meterId != null ? [meterId] : null);
+  const r = (lineObj && typeof scanCorpusLine === 'function') ? scanCorpusLine(lineObj, ownIds) : Scan.scanLine(urduL);
   let f;
   if (Array.isArray(meterId)) {
     // The line belongs to a ghazal locked to one (or a paired pair) of these
@@ -1129,6 +1131,8 @@ function renderLineScan(text, container, lineObjIn, meterId) {
     const id = 'lineScan_' + Math.random().toString(36).slice(2, 8);
     h += `<div class="chips ${isRtl?'':'ltr'}" id="${id}">${chipsHTML(e.syl, e.feet, null, { r, lineObj: lineObj || { ur: urduL } })}</div>`;
     const notes = [...new Set(e.notes.map(n => `${n.word}: ${n.note}`))].filter(n => !/: $/.test(n));
+    if (f.mustazad) notes.push('Mustazād: after the // comes the added phrase, the meter’s first and last feet');
+    if (r.refrain) notes.push(`Refrain: the last ${r.refrain} words repeat as sung and are left out of the scan`);
     if (notes.length) {
       h += `<p class="scan-notes">${notes.join(' · ')}</p>`;
     }

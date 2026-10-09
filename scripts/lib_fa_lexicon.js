@@ -26,17 +26,46 @@ function splitWords(s) {
 
 const PERSIAN = g => g.lang === 'fa' || /^fa_|^(jami|bu_ali|khusrau_persian)$/.test(g.category || '');
 
+/* Consonant skeletons, to check that an Urdu word and the Roman word paired with it are the same word (mirrors rkSkelUr /
+   rkSkelRo in src/js/05-translit-helpers.js): letters both scripts write alike, vowels and و ی ہ ح ع left out, doubles merged */
+const SKEL_UR = { 'ب': 'b', 'پ': 'p', 'ت': 't', 'ط': 't', 'ٹ': 't', 'ث': 's', 'س': 's', 'ص': 's', 'ج': 'j', 'چ': 'c', 'خ': 'x',
+    'د': 'd', 'ڈ': 'd', 'ذ': 'z', 'ز': 'z', 'ض': 'z', 'ظ': 'z', 'ژ': 'z', 'ر': 'r', 'ڑ': 'r', 'ش': 'S', 'غ': 'g', 'ف': 'f',
+    'ق': 'q', 'ک': 'k', 'ك': 'k', 'گ': 'g', 'ل': 'l', 'م': 'm', 'ن': 'n', 'ں': 'n' };
+const skelUr = w => [...w].map(c => SKEL_UR[c] || '').join('').replace(/(.)\1+/g, '$1');
+const skelRo = w => w.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/kh/g, 'x').replace(/gh/g, 'g').replace(/sh/g, 'S').replace(/ch/g, 'c').replace(/zh/g, 'z')
+    .replace(/[^a-zS]/g, '').replace(/[aeiouyvwh]/g, '').replace(/(.)\1+/g, '$1');
+function sim(a, b) {
+    if (!a && !b) return 1;
+    const d = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+    for (let j = 1; j <= b.length; j++) d[0][j] = j;
+    for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++)
+        d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    return 1 - d[a.length][b.length] / Math.max(a.length, b.length);
+}
+const sameWord = (u, r) => sim(skelUr(u), skelRo(r)) >= 0.5;
+
+/* a line's Urdu words paired with its Roman words, when both split into the same number of words AND they are the same
+   words: Sufinama sometimes gives a line the Roman of another (فرخ came out as "har"). A line where under 70% of the pairs
+   agree is left out; within a line, a pair that disagrees is. -> [[urdu word, {w, iz}, index]] */
+function linePairs(l) {
+    if (!l.ur || !l.ro || /[؀-ۿऀ-ॿ]/.test(l.ro)) return [];
+    const u = l.ur.split(/\s+/).filter(Boolean), r = splitWords(l.ro);
+    if (u.length !== r.length) return [];
+    const ok = u.map((w, i) => sameWord(w, r[i].w));
+    if (ok.filter(Boolean).length < 0.7 * u.length) return [];
+    return u.map((w, i) => [w, r[i], i]).filter((_, i) => ok[i]);
+}
+
 /* word pairs from the lines whose Urdu, Roman (and Devanagari, when it lines up too) split into the same number of words:
    the reliable part. -> [{key, ro, hi}] */
 function pairsOf(ghazal) {
     const out = [];
     for (const l of ghazal.lines || []) {
-        if (!l.ur || !l.ro || /[؀-ۿऀ-ॿ]/.test(l.ro)) continue;
-        const u = l.ur.split(/\s+/).filter(Boolean), r = splitWords(l.ro), h = splitWords(l.hi);
-        if (u.length !== r.length) continue;
-        u.forEach((w, i) => {
+        const h = splitWords(l.hi), n = (l.ur || '').split(/\s+/).filter(Boolean).length;
+        linePairs(l).forEach(([w, r, i]) => {
             const key = faKey(w);
-            if (key) out.push({ key, ro: r[i].w, hi: h.length === u.length ? h[i].w : '' });
+            if (key) out.push({ key, ro: r.w, hi: h.length === n ? h[i].w : '' });
         });
     }
     return out;
@@ -72,7 +101,17 @@ function romanNorm(s) {
         .replace(/(.)\1+/g, '$1');
 }
 
-module.exports = { faKey, splitWords, pairsOf, mine, finalize, romanNorm, PERSIAN };
+/* the generated verb forms (scripts/lib_fa_verbs.js) for words Sufinama never showed, seen 0 times */
+function withVerbs(lex) {
+    const V = require('./lib_fa_verbs');
+    for (const [u, r] of V.verbForms()) {
+        const k = faKey(u);
+        if (k && !lex[k]) lex[k] = [r, V.toDevanagari(r), 0];
+    }
+    return lex;
+}
+
+module.exports = { withVerbs, linePairs, sameWord, faKey, splitWords, pairsOf, mine, finalize, romanNorm, PERSIAN };
 
 /* ---- Roman repair (scripts/scan_sufinama.js) ----
    A coarse sound skeleton that Roman and Devanagari spellings of one word share: consonants by sound class, long vowels

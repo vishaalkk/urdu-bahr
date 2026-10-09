@@ -1336,7 +1336,9 @@ function openGhazalReader(col, id) {
       titleEl.textContent = item.poet || 'Handbook';
     } else if (isPoetCol(col)) {
       /* Persian kalaam found on Ganjoor (scripts/match_ganjoor.py): its page there too, for the authentic text and attribution */
-      titleEl.innerHTML = rekhtaLinkHTML(item) + (item.gj ? ` · <a class="fran-link" href="${escapeHtml(item.gj)}" target="_blank" rel="noopener" title="This poem on Ganjoor">Ganjoor<span class="ext" aria-hidden="true">↗</span></a>` : '');
+      titleEl.innerHTML = rekhtaLinkHTML(item) + (item.gj ? ` · <a class="fran-link" href="${escapeHtml(item.gj)}" target="_blank" rel="noopener" title="This poem on Ganjoor">Ganjoor<span class="ext" aria-hidden="true">↗</span></a>` : '')
+        /* Ganjoor credits it to someone else: qawwali attributions are often traditional, so show both */
+        + (item.gjPoet ? ` <span class="faint small gj-poet">(there: <span lang="fa">${escapeHtml(item.gjPoet)}</span>)</span>` : '');
     } else {
       titleEl.innerHTML = franLinkHTML(col, item) || escapeHtml(getGhazalNavLabel(col, item));
     }
@@ -1589,7 +1591,7 @@ function playReaderCoupletByIndex(c, start, btn) {
     const meters = mListOf(curReaderItem).map(String);
     const out = [];
     [1, 2].forEach(k => {
-      const r = scanCorpusLine(lines[2 * c + k - 1]);
+      const r = scanCorpusLine(lines[2 * c + k - 1], meters);
       const f = meters.length
         ? r.fits.filter(x => meters.includes(String(x.meter.id))).sort((a, b) => a.c - b.c)[0]
         : r.fits[0];

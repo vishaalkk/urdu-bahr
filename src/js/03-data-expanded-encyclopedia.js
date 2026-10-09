@@ -49,6 +49,8 @@ POET_LIST.forEach(p => (POETS_DATA.ghazals[p.key] || []).forEach(g => {
   /* each line's language: the ghazal's, except its xl lines (an Urdu girah in Persian kalaam, a Persian misra in Khusrau's Hindavi) */
   if (g.lang || g.xl) { const xl = new Set(g.xl || []), other = g.lang === 'fa' ? 'ur' : 'fa';
     g.lines.forEach((l, i) => { const lang = xl.has(i) ? other : (g.lang || 'ur'); if (lang === 'fa') l.lang = 'fa'; }); }   // Persian line in Iranian spelling (Ganjoor): shown in Urdu script mode
+  /* a Persian line knows its ghazal (not enumerable, so never copied or serialised): scanCorpusLine asks whether it is a mustazād */
+  if (g.lang === 'fa') g.lines.forEach(l => { if (l.lang === 'fa') Object.defineProperty(l, 'faG', { value: g, configurable: true }); });
 }));
 function isPoetCol(col) { return POET_KEYS.has(col); }
 function poetItems(key) { return POETS_DATA.ghazals[key] || []; }

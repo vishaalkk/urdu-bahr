@@ -322,9 +322,10 @@ const ROUTES = [
       if (names.length !== w.eval('POET_LIST').length || names.length < 10) return 'picker lists ' + names.length + ' poets';
       d.getElementById('poetPickerFilter').value = 'jau'; w.renderPoetPickerList();
       const f = [...d.querySelectorAll('#poetPickerList .poet-opt')].map(b => b.dataset.poet);
-      if (f.join() !== 'jaun') return 'filter "jau" gives ' + f.join();
+      if (!f.includes('jaun') || f.length > 3) return 'filter "jau" gives ' + f.join();   // Jaun, and any other "jau…" poet (Fidai Jaunpuri)
       d.getElementById('poetPickerFilter').value = 'جون'; w.renderPoetPickerList();
-      if ([...d.querySelectorAll('#poetPickerList .poet-opt')].map(b => b.dataset.poet).join() !== 'jaun') return 'Urdu name does not filter';
+      const fu = [...d.querySelectorAll('#poetPickerList .poet-opt')].map(b => b.dataset.poet);
+      if (!fu.includes('jaun') || fu.length > 3) return 'Urdu name does not filter: ' + fu.join();
       w.togglePoetPicker(false);
       return box.classList.contains('hidden') ? true : 'picker did not close';
     }, 'Poets ▾ opens a list of every poet, filters by Roman or Urdu name, and closes');

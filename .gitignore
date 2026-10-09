@@ -47,3 +47,5 @@ studio_mockup.html
 bahr_circles_mockup.html
 *.pdf
 
+# Ganjoor API responses cached by scripts/build_fa_testset.py: local only
+data/ganjoor_cache/

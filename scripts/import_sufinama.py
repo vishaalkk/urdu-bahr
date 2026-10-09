@@ -66,6 +66,9 @@ PERSIAN_CATEGORIES = {'jami', 'bu_ali', 'khusrau_persian'}
 is_persian = lambda c: c in PERSIAN_CATEGORIES or c.startswith('fa_')
 
 
+URDU_SCRIPT = re.compile(r'[\u0600-\u06FF]')
+
+
 def crawled_meta(category):
     """a poet found by scripts/crawl_sufinama_persian.py: its name as Sufinama gives it"""
     path = os.path.join(DATA_DIR, 'sufinama_poets.json')
@@ -184,6 +187,17 @@ def main():
         for url in urls:
             if url in existing:
                 final_list.append(existing[url])
+
+    # Sufinama sometimes serves Devanagari on the Urdu page (a whole kalaam, or its last lines): those lines have no Urdu text
+    # to scan or show, so they are dropped, and a kalaam left with none is dropped with a note.
+    kept = []
+    for g in final_list:
+        lines = [l for l in g['lines'] if URDU_SCRIPT.search(l.get('ur', ''))]
+        if len(lines) < len(g['lines']):
+            print(f"  {len(g['lines']) - len(lines)} line(s) with no Urdu text dropped: {g['url']}")
+        if lines:
+            kept.append(dict(g, lines=lines, lines_count=len(lines)))
+    final_list = kept
 
     with open(OUT_PATH, 'w', encoding='utf-8') as f:
         json.dump(final_list, f, indent=2, ensure_ascii=False)

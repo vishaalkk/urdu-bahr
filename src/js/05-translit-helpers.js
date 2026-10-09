@@ -308,18 +308,198 @@ const UR_WORDS = new Set('ہے ہیں میں کا کی کے سے نے کو تھ�
 function faScanText(s) {
   return String(s || '').normalize('NFC')
     .replace(/[\ufb50-\ufdff\ufe70-\ufeff]/g, c => c.normalize('NFKC'))
+    .replace(/\u200c(?=[\u064B-\u0655])/g, '')   // an editor's zer after a ZWNJ (دورباش‌ِ) belongs to the letter before it
+    .replace(/\u0652/g, '')   // sukūn (fully voweled text): the engine reads a bare consonant as closing the syllable anyway
     .replace(/\u200c/g, ' ').replace(/ي|ى/g, 'ی').replace(/ك/g, 'ک')
     .replace(/هٔ|ۀ/g, 'ۂ').replace(/ه/g, 'ہ')
-    .replace(/([اوی])ن(?=$|[\s،۔؟!])/g, '$1ں')
+    .replace(/([آاوی])ن(?=$|[\s،۔؟!])/g, '$1ں')   // آن is آں in Urdu spelling, like جان → جاں
     .replace(/[ \t]+/g, ' ').trim()
     .replace(/^.*$/, faProsodyText);
 }
 /* Persian prosody spelled out for the engine (Persian lines only): after a consonant, ast loses its alif and joins the word
    (دیگر است → دیگرست dī-ga-rast, as Persian often writes it); after a vowel it stays a word of its own. */
 function faProsodyText(s) {
-  return String(s || '').replace(/(^|\s)(\S*[^\sاوی‌ہۂۓ])\s+است(?=$|[\s،۔؟!])/g, '$1$2ست');
+  return String(s || '').replace(/(^|\s)(\S*[^\sاوی‌ہۂۓ])\s+است(?=$|[\s،۔؟!])/g, '$1$2ست')
+    /* the line's last word ending in a long vowel + s/sh/kh/f + t (dōst, nīst, dāsht, sākht, yāft) is one long syllable at the
+       end of a line; the engine lets only ONE final consonant go uncounted, so the t is dropped here. Only these clusters:
+       Urdu script hides short vowels, so دیدم (dī-dam) looks like an overlong ending and must not be touched. */
+    .replace(/([^\s])([اوی])([سشخف])ت(?=[\s،۔؟!]*$)/, '$1$2$3')   // a word-initial alif is a short a (ast, hast): not touched
+    /* mid-line the same word is long + short, never more (Mahdavi Mazdeh 2019: a syllable holds at most three morae, the
+       second coda consonant is extrametrical): navāḳht yār → navāḳh yār, dōst ke → dōs ke. Not before a vowel-initial word,
+       where the t starts the next syllable (dōst-ast) */
+    .replace(/([^\s])([اوی])([سشخف])ت(?=\s+[^\sاآ])/g, '$1$2$3');
 }
 window.faProsodyText = faProsodyText;
+
+/* Persian liaison (vasl), optional and decided by the meter: a word ending in a consonant joins a following word that opens
+   with alif (ke ʿeshq-āsān, bar ān → ba-rān, ham az → ha-maz). آ keeps its long ā; ا before a consonant is a short vowel and
+   goes. -> the line's variants: each join alone, and all of them together. */
+function faLiaisonVariants(text) {
+  const W = String(text || '').split(' ');
+  const at = [];
+  for (let i = 0; i < W.length - 1; i++) if (/^[اآ]/.test(W[i + 1]) && W[i].length > 1 && !/[اوی‌ہۂۓِ]$/.test(W[i])) at.push(i);
+  const join = idx => {
+    const v = W.slice();
+    for (const i of idx.slice().reverse()) { v[i] = v[i] + v[i + 1].replace(/^آ/, 'ا').replace(/^ا(?=[^ا])/, m => W[i + 1][0] === 'آ' ? m : ''); v.splice(i + 1, 1); }
+    return v.join(' ');
+  };
+  const out = at.map(i => join([i]));
+  if (at.length > 1) out.push(join(at));
+  /* contractions (Shams-i Qays; Mahdavi Mazdeh 2019), also optional: ke / che before a vowel lose their e (که از → کز kaz,
+     که این → کیں kīn, که او → کو kū), and ast after a vowel loses its alif (مردہ است → مردست murdast, دانا است → داناست) */
+  for (let i = 0; i < W.length - 1; i++) {
+    const v = W.slice();
+    if (/^(کہ|چہ)$/.test(W[i]) && /^[اآ]/.test(W[i + 1])) v[i] = W[i].slice(0, -1) + W[i + 1].replace(/^آ/, 'ا').replace(/^ا(?=[^ا])/, m => W[i + 1][0] === 'آ' ? m : '');
+    else if (W[i + 1] === 'است' && /[اوی]$|[^\s]ہ$/.test(W[i]) && W[i].length > 1) v[i] = W[i].replace(/ہ$/, '') + 'ست';
+    else continue;
+    v.splice(i + 1, 1);
+    out.push(v.join(' '));
+  }
+  return out;
+}
+/* every fit of a Persian line, as written or with liaison, the cheaper per meter; a fit found only through liaison carries
+   `liaison` (its text), since its syllables belong to the joined line, not to the words as written */
+function faScanFits(S, text, opts) {
+  const best = new Map();
+  /* liaison changes the words, so its fit only lends its cost to a fit of the line as written (or carries `liaison`); a guessed
+     iẓāfat keeps the words, so its fit (syllables and all) stands, marked `izafat` with the text it scanned */
+  const add = (fits, how, t, extra) => (fits || []).forEach(f => {
+    const k = String(f.meter.id), had = best.get(k), c = f.c + extra;
+    if (had && c >= had.c - 1e-9) return;
+    if (how === 'liaison') best.set(k, had ? Object.assign({}, had, { c }) : Object.assign({}, f, { c, liaison: t }));
+    else if (how === 'izafat') best.set(k, Object.assign({}, f, { c, izafat: t }));
+    else if (how === 'refrain') best.set(k, Object.assign({}, f, { c, refrain: t }));
+    else best.set(k, f);
+  });
+  /* opts.target (a Set of meter ids): only whether those fit matters (a ghazal's known meter), so stop at the first fit */
+  const target = opts && opts.target;
+  const done = () => !!target && [...target].some(id => { const f = best.get(String(id)); return f && f.c <= 2; });
+  /* opts.mustazad (meter ids): a mustazād ghazal's line, also scanned as meter + tail (faMustazadScan) */
+  const mz = opts && opts.mustazad;
+  const scan = (t, how, extra) => {
+    if (done()) return;
+    try { add(S.scanLine(t).fits, how, t, extra); if (mz) add(faMustazadScan(S, t, mz).fits, how, t, extra); } catch (e) { /* a variant the engine cannot read */ }
+  };
+  scan(text, null, 0);
+  for (const v of faLiaisonVariants(text)) scan(v, 'liaison', 0);
+  /* opts.guessIzafat (true, or 1 for one guess at most): text with no Roman to say where the iẓāfat goes (pasted Iranian text, Ganjoor's plain text). One or two
+     guessed iẓāfats, each at a small cost so the line as written wins when it fits. Never on a particle, a word already
+     marked, the line's last word, or a word before و (Persian never strands an iẓāfat before va / o). */
+  if (opts && opts.guessIzafat) {
+    const W = String(text || '').split(' ');
+    const can = W.map((w, i) => i < W.length - 1 && !RK_NO_IZAFAT.has(w) && !/[ِٔ]$|ۂ$|ے$/.test(w) && W[i + 1] !== 'و' && w.length > 1);
+    const iz = w => /[ہ]$/.test(w) ? w.replace(/ہ$/, 'ۂ') : w.replace(/ں$/, 'ن') + 'ِ';   // nāzanī-ne: before an iẓāfat the n is a full consonant
+    const at = W.map((_, i) => i).filter(i => can[i]);
+    const mark = idx => W.map((w, i) => idx.includes(i) ? iz(w) : w).join(' ');
+    for (const i of at) scan(mark([i]), 'izafat', 0.5);
+    const fitsNow = () => target ? done() : [...best.values()].some(f => f.c <= 2);
+    if (opts.guessIzafat !== 1 && !fitsNow()) for (let a = 0; a < at.length; a++) for (let b = a + 1; b < at.length; b++) scan(mark([at[a], at[b]]), 'izafat', 1);   // two, only when nothing fits yet
+  }
+  /* opts.refrain (with a target): a line that still misses its meter may carry a sung refrain (faRefrainVariants); the shortened
+     line counts only where it fits a target meter at ≤ 2, and its fit carries `refrain` (the text it scanned) */
+  if (opts && opts.refrain && target && !done()) {
+    const want = new Set([...target].map(String));
+    const keep = (fits, t) => add((fits || []).filter(f => want.has(String(f.meter.id)) && f.c <= 2), 'refrain', t, 0);
+    for (const v of faRefrainVariants(text)) for (const t of [v].concat(faLiaisonVariants(v))) {
+      if (done()) break;
+      try { keep(S.scanLine(t).fits, t); if (mz) keep(faMustazadScan(S, t, mz).fits, t); } catch (e) { /* unreadable variant */ }
+    }
+  }
+  return [...best.values()].sort((a, b) => a.c - b.c);
+}
+window.faLiaisonVariants = faLiaisonVariants;
+window.faScanFits = faScanFits;
+
+/* Mustazād (Persian): each line of a meter followed by an added phrase made of the meter's first and last feet (hazaj #8 +
+   mafʿūlu faʿūlun: "har lahza ba-shakle but-e-'ayyār bar āmad / dil burd-o-nihāñ shud"). The head (all but the last 2–6
+   words) fits a meter at cost ≤ 2, the tail exactly that meter's first + last foot (≤ 2), and no grafted word crosses the
+   split. -> a scanLine-like result {words, units, fits}: per meter its cheapest split, as ONE fit under the meter's own id whose
+   pattern runs on through the tail after a caesura, so explain() and the chips give the whole line (fit.mustazad = words in the
+   head). ids (meter ids): only those meters (a mustazād ghazal's own); none: every meter. Two shapes are no mustazād and are
+   left out unless opts.loose (the ghazal meter vote, scripts/lib_scan.js, keeps them as it always had): a tail that repeats
+   the words before it (a sung repeat), and a meter whose first + last foot are just its last two feet (a sālim meter running
+   on: Rumi's "biyā biyā dildār-e man dildār-e man / darā darā dar kār-e man dar kār-e man" is a bayt of rajaz musaddas). */
+const FA_MZ_PARTS = new WeakMap();   // meter row -> {tail, meter, runOn} or null
+function faMustazadParts(S, m) {
+  if (FA_MZ_PARTS.has(m)) return FA_MZ_PARTS.get(m);
+  const feet = String(m.raw || '').split(/\s*\/\/?\s*/).filter(Boolean);
+  let P = null;
+  if (feet.length >= 3 && m.vars && m.toks) {
+    const tailRaw = feet[0] + ' / ' + feet[feet.length - 1], toks = S.parseRaw(tailRaw), seq = toks.filter(t => t !== '|' && t !== '//');
+    const tailVars = [{ seq, extra: 0 }, { seq: seq.concat(['c']), extra: 0 }];   // the tail ends the line: its last short may go unscanned
+    P = {
+      runOn: (feet[0] + feet[feet.length - 1]).replace(/\s/g, '') === (feet[feet.length - 2] + feet[feet.length - 1]).replace(/\s/g, ''),
+      tail: { id: m.id, kind: m.kind, seq, vars: tailVars },
+      meter: Object.assign({}, m, { raw: m.raw + ' // ' + tailRaw, toks: m.toks.concat(['//'], toks), seq: m.seq.concat(seq), cae: m.seq.length, mustazad: true,
+        vars: m.vars.flatMap(h => tailVars.map(t => ({ seq: h.seq.concat(t.seq), extra: h.extra + t.extra }))) })
+    };
+  }
+  FA_MZ_PARTS.set(m, P);
+  return P;
+}
+function faMustazadScan(S, text, ids, opts) {
+  const loose = !!(opts && opts.loose);
+  const words = S.tokenize(String(text || '')), n = words.length, res = { words, units: [], fits: [] };
+  if (n < 5) return res;
+  const units = res.units = S.buildUnits(words);
+  const want = ids ? new Set([...ids].map(String)) : null;
+  const rows = S.METERS.filter(m => (!want || want.has(String(m.id))) && faMustazadParts(S, m) && (loose || !faMustazadParts(S, m).runOn));
+  const same = (a, b, k) => { for (let j = 0; j < k; j++) if (words[a + j].raw !== words[b + j].raw) return false; return true; };
+  const best = new Map();
+  for (let t = 2; t <= Math.min(6, n - 3); t++) {
+    const s = n - t;
+    if (!loose && s >= t && same(s - t, s, t)) continue;
+    const head = units.slice(0, s).map(us => us.filter(u => u.to < s));
+    const tail = units.slice(s).map(us => us.map(u => Object.assign({}, u, { from: u.from - s, to: u.to - s, at: u })));
+    for (const m of rows) {
+      const h = S.matchMeter(head, s, m);
+      if (!h || h.c > 2) continue;
+      const P = faMustazadParts(S, m), r = S.matchMeter(tail, t, P.tail);
+      if (!r || r.c - r.prior > 2) continue;
+      const c = h.c + r.c - r.prior, k = String(m.id), had = best.get(k);   // the meter's prior counts once
+      if (had && had.c <= c) continue;
+      best.set(k, { meter: P.meter, c, seq: h.seq.concat(r.seq), mustazad: s,
+        path: h.path.concat(r.path.map(st => Object.assign({}, st, { u: st.u.at, pos: st.pos + h.seq.length }))) });
+    }
+  }
+  res.fits = [...best.values()].sort((a, b) => a.c - b.c);
+  return res;
+}
+/* Is a Persian ghazal a mustazād? When at least half of its Persian lines miss its meter as a whole (ScanFa, cost ≤ 2) and
+   scan as meter + tail (faMustazadScan, strict). texts: those lines as the engine reads them (faProsodyText); ids: the
+   ghazal's meters. One rule for scripts/lib_scan.js (scanGhazal), tests/benchmark_fa.js and the reader (scanCorpusLine). */
+const FA_MUSTAZAD_SHARE = 0.5;
+function faMustazadGhazal(S, texts, ids) {
+  if (!ids || !ids.length || !texts.length) return false;
+  const want = new Set([...ids].map(String)), need = FA_MUSTAZAD_SHARE * texts.length;
+  let yes = 0, left = texts.length;
+  for (const t of texts) {
+    if (yes >= need || yes + left < need) break;
+    left--;
+    try { if (!S.scanLine(t).fits.some(f => want.has(String(f.meter.id)) && f.c <= 2) && faMustazadScan(S, t, want).fits.length) yes++; }
+    catch (e) { /* a line the engine cannot read */ }
+  }
+  return yes >= need;
+}
+window.faMustazadScan = faMustazadScan;
+window.faMustazadGhazal = faMustazadGhazal;
+
+/* Sung refrains written into a Persian line (Jami: "gul az ruḳhat āmoḳhta nāzuk badanī rā badanī rā badanī rā"): the line
+   without the repeats of its last 1–4 words, and its first half when the second half repeats it. Only tried where the line as
+   written misses its ghazal's meter, and kept only where the shortened line fits it (faScanFits opts.refrain, scanCorpusLine):
+   Rumi repeats words inside the meter too ("zahe ʿishq zahe ʿishq", "āyina-am man āyina-am man"). */
+function faRefrainVariants(text) {
+  const W = String(text || '').split(' ').filter(Boolean), n = W.length, out = [];
+  const eq = (a, b, k) => W.slice(a, a + k).join(' ') === W.slice(b, b + k).join(' ');
+  for (let k = 1; k <= 4; k++) {
+    let cut = n;
+    while (cut - 2 * k >= 0 && eq(cut - 2 * k, cut - k, k)) cut -= k;
+    if (cut < n && cut >= 3) out.push(W.slice(0, cut).join(' '));
+  }
+  if (n >= 6 && n % 2 === 0 && eq(0, n / 2, n / 2)) out.push(W.slice(0, n / 2).join(' '));
+  return [...new Set(out)];
+}
+window.faRefrainVariants = faRefrainVariants;
 
 function detectScanLang(text) {
   const t = String(text || '');
@@ -474,7 +654,10 @@ function rekhtaScanText(ur, ro) {
     const groups = rkAlignWords(uw, parts.map(p => p.ro));
     if (!groups) return plain;
     return groups.map(([u0, u1, p0, p1]) => {
-        const ws = uw.slice(u0, u1);   // iẓāfat only: a doubled Roman letter here is too often not a written tashdīd
+        const ws = uw.slice(u0, u1);
+        /* a doubled Roman letter is a tashdīd only where one word pairs with one word (farruḳh / فرخ); across a split or a
+           join it is too often not one */
+        if (u1 - u0 === 1 && p1 - p0 === 1 && !honorific[u0]) ws[0] = rkAddTashdid(ws[0], parts[p0].ro);
         if (parts[p1 - 1].iz && !RK_NO_IZAFAT.has(ws[ws.length - 1])) ws[ws.length - 1] = izafa(ws[ws.length - 1]);
         return ws.join(' ');
     }).join(' ');
@@ -550,9 +733,36 @@ window.lineScanText = lineScanText;
    with Persian readings and meters and never the Hindi meter; everything else on the Urdu engine. engineOf(result) gives back
    the engine that made a result, for explain / diagnose. */
 function engineForLine(l) { return (l && l.lang === 'fa' && typeof ScanFa !== 'undefined') ? ScanFa : Scan; }
-function scanCorpusLine(l) {
-  const eng = engineForLine(l), r = eng.scanLine(l && l.lang === 'fa' ? faProsodyText(lineScanText(l)) : lineScanText(l));
-  if (l && l.lang === 'fa') { r.fits = r.fits.filter(f => f.meter.id !== 'H'); r.__fa = 1; }
+/* Whether the ghazal of a Persian corpus line (l.faG, set at load) is a mustazād: faMustazadGhazal, worked out once per ghazal,
+   the first time one of its lines misses its meter. -> its meters, or null */
+const FA_MUSTAZAD_OF = new WeakMap();
+function lineMustazadIds(l) {
+  const g = l && l.faG;
+  if (!g || !g.meters || !g.meters.length || engineForLine(l) === Scan) return null;
+  if (!FA_MUSTAZAD_OF.has(g)) FA_MUSTAZAD_OF.set(g, faMustazadGhazal(ScanFa, g.lines.filter(x => x.lang === 'fa').map(x => faProsodyText(lineScanText(x))), g.meters));
+  return FA_MUSTAZAD_OF.get(g) ? g.meters : null;
+}
+/* ids (optional): the meters to judge the line by, by default its ghazal's. A Persian line that misses them as a whole (no fit at
+   cost ≤ 2) is, in a mustazād ghazal, also scanned as meter + tail (faMustazadScan: one fit running through the whole line,
+   `mustazad` set). One that still misses is scanned without a sung refrain (faRefrainVariants) when that gives it a fit in its
+   meter, cheaper than any it has as written (and ≤ 5, a line that scans): the result then covers the words before the refrain,
+   and r.refrain is the number of words left out. */
+function scanCorpusLine(l, ids) {
+  const eng = engineForLine(l), fa = !!(l && l.lang === 'fa');
+  const scan = t => { const r = eng.scanLine(t); if (fa) { r.fits = r.fits.filter(f => f.meter.id !== 'H'); r.__fa = 1; } return r; };
+  const text = fa ? faProsodyText(lineScanText(l)) : lineScanText(l), r = scan(text);
+  const own = (ids && ids.length) ? ids : (fa && l.faG && l.faG.meters) || [];
+  if (!fa || !own.length) return r;
+  const want = new Set(own.map(String)), cost = x => Math.min(Infinity, ...x.fits.filter(f => want.has(String(f.meter.id))).map(f => f.c));
+  if (cost(r) <= 2) return r;
+  const mz = lineMustazadIds(l);
+  const withTail = (x, t) => { if (mz) x.fits = x.fits.concat(faMustazadScan(eng, t, mz).fits).sort((a, b) => a.c - b.c); return x; };
+  if (cost(withTail(r, text)) <= 2) return r;
+  const n = text.split(' ').filter(Boolean).length;
+  for (const v of faRefrainVariants(text)) {
+    const r2 = withTail(scan(v), v), c = cost(r2);
+    if (c <= 5 && c < cost(r)) return Object.assign(r2, { refrain: n - v.split(' ').length });
+  }
   return r;
 }
 function engineOf(r) { return (r && r.__fa && typeof ScanFa !== 'undefined') ? ScanFa : Scan; }

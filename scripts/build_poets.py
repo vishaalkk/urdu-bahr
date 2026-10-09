@@ -3,6 +3,7 @@
 
     node scripts/scan_poets.js            # data/poets/*.json -> data/poets_scanned/*.json (meter per ghazal, via the engine)
     uv run python scripts/build_poets.py  # -> data/poets_extended.json, injected into index.html by build_app.py
+                                          #    (refuses to change a shipped ghazal's meter without --accept-meter-changes)
 
 Inputs: the Rekhta ghazals (data/poets_scanned/*_scanned.json, data/faiz_scanned.json) and the six hand-checked
 "More Poets" ghazals (data/others_extended.json: Faiz, Dagh x2, Jigar, Firaq, Hasrat), which keep their verified Roman.
@@ -18,6 +19,7 @@ import glob
 import json
 import os
 import re
+import sys
 import unicodedata
 
 DATA = os.path.join(os.path.dirname(__file__), '..', 'data')
@@ -131,6 +133,14 @@ KEY_OF.update({v[1].lower(): k for k, v in POETS.items()})
 
 # Manually settled meters (Dakhini dialect, Hindi matraic geets, Rekhta unvocalized verses)
 MANUAL_METERS = {
+    # yā rasūl-allāh ḥabīb-e ḳhāliq-e yaktā tuī: fāʿilātun ×3 + fāʿilun (scanned by hand); Sufinama gives only Urdu script
+    ('anonymous_fa', 28): [10],
+    # Persian contraction rows (2026-10-09) made these drift; kept as settled: Ganjoor (rumi 49: munsariḥ) or a hand scan
+    ('rumi', 49): [22],
+    ('hafiz', 74): [18, 19],          # hāsil-e kār-gah-e kaun-o makān: faʿilātun ×3 + faʿlun
+    ('anonymous_fa', 11): [4],        # hastam sag-e janābat: mafʿūlu fāʿilātun ×2
+    ('fariduddin_attar', 1): [9],     # gar jumla tuī: mafʿūlu mafāʿilun faʿūlun
+    ('rumi', 19): [14, 15],           # mālik-ul-mulk lā sharīk lahū
     ('atish', 83): [18],
     ('faraz', 7): [5],
     ('faraz', 13): ['H'],
@@ -149,9 +159,6 @@ MANUAL_METERS = {
     ('siraj', 35): [10],
     ('siraj', 71): [18, 19],
     ('siraj', 81): [38],
-    # Rumi, khushk tāre khushk chobe khushk post: every syllable lines up with ramal musaddas maḥẕūf (#11) except the line-final
-    # overlong pōst, whose -st the engine will not drop at the end of a line as classical prosody does
-    ('rumi', 16): [11],
 }
 
 MARKS = re.compile(r'[ً-ٰٟـ‌‍ّؔٔ]')
@@ -170,6 +177,10 @@ def couplet_key(lines):
 ARABIC = re.compile(r'[\u0600-\u06ff]')   # some Rekhta pages carry Urdu script in the Devanagari column: blank it, the app converts from the Urdu
 ARABIC_TO_URDU = str.maketrans({'ي': 'ی', 'ى': 'ی', 'ك': 'ک'})
 
+
+# how Ganjoor names our poets, where it differs from our Urdu name (for the attribution check)
+GANJOOR_NAMES = {'rumi': ['مولانا', 'مولوی'], 'khusrau': ['امیرخسرو'], 'iqbal': ['اقبال'], 'jami': ['جامی'], 'hafiz': ['حافظ'],
+                 'saadi': ['سعدی'], 'iraqi': ['عراقی'], 'jilani': ['عبدالقادر'], 'bedil': ['بیدل'], 'ghalib_farsi': ['غالب']}
 
 FA_FOLD = str.maketrans({'ہ': 'ه', 'ۂ': 'ه', 'ۀ': 'ه', 'ة': 'ه', 'ھ': 'ه', 'ے': 'ی', 'ي': 'ی', 'ى': 'ی', 'ئ': 'ی',
                          'ك': 'ک', 'أ': 'ا', 'إ': 'ا', 'آ': 'ا', 'ٱ': 'ا', 'ؤ': 'و'})
@@ -208,6 +219,7 @@ def rekhta_ghazals():
 def main():
     previous = {}   # key -> {url: id, couplet: id}
     next_id = {}
+    old = None
     if os.path.exists(OUT):
         old = load(OUT)
         for key, gs in old['ghazals'].items():
@@ -314,6 +326,11 @@ def main():
             gj = ganjoor.get(g['url'])
             if gj:
                 entry['gj'] = gj['ganjoor']['url']
+                # Ganjoor names a different poet: say so in the reader (qawwali attributions are often traditional)
+                gp = fa_fold(gj['ganjoor'].get('poet') or '')
+                ours = [fa_fold(x) for x in [POETS[key][2]] + GANJOOR_NAMES.get(key, [])]
+                if gp and not any(o and (o in gp or gp in o) for o in ours):
+                    entry['gjPoet'] = gj['ganjoor']['poet']
                 # only lines that are our line in Iranian spelling: a sung variant (other words) keeps our text, so the
                 # Roman, the Devanagari and the scan never disagree with what is shown
                 fa = [f if f and fa_fold(f) == fa_fold(l['ur']) else '' for f, l in zip(gj.get('fa') or [], g['lines'])]
@@ -362,6 +379,23 @@ def main():
     poets = [{'key': k, 'name': v[0], 'full': v[1], 'ur': v[2], 'hi': v[3], 'aliases': v[4], 'count': len(out[k]),
               'langs': sorted({g.get('lang', 'ur') for g in out[k]})}
              for k, v in sorted(POETS.items(), key=lambda kv: kv[1][0].lower()) if out[k]]
+    # A rebuild must not quietly change what is shipped: a ghazal that disappears, or whose meter changes, stops the build
+    # until the change is looked at and accepted (--accept-meter-changes). New ghazals are fine.
+    if old is not None and '--accept-meter-changes' not in sys.argv:
+        changes = []
+        for key, gs in old['ghazals'].items():
+            now = {g['id']: g for g in out.get(key, [])}
+            for g in gs:
+                n = now.get(g['id'])
+                if n is None:
+                    changes.append(f"  {key} #{g['id']}: gone ({g.get('url', '')})")
+                elif [str(m) for m in n['meters']] != [str(m) for m in g['meters']]:
+                    changes.append(f"  {key} #{g['id']}: meter {g['meters']} -> {n['meters']}")
+        if changes:
+            print(f"✗ {len(changes)} shipped ghazal(s) would change; nothing written. Review, then rerun with --accept-meter-changes:")
+            print('\n'.join(changes[:60]) + (f'\n  … and {len(changes) - 60} more' if len(changes) > 60 else ''))
+            sys.exit(1)
+
     with open(OUT, 'w', encoding='utf-8') as f:
         json.dump({'poets': poets, 'ghazals': {k: v for k, v in out.items() if v}, 'legacy': legacy}, f, ensure_ascii=False, separators=(',', ':'))
         f.write('\n')
