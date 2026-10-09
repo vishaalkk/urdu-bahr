@@ -305,16 +305,42 @@ function rkPlain(ur) {
    detectScanLang: 'fa' when the text uses Iranian letters or reads as Persian (است، نیست، می‌، را …), else 'ur'. */
 const FA_WORDS = new Set('است نیست هست را از چه چو چون کجا ای بود باشد شد کرد کند گشت آمد دارم دارد نمی می همه هیچ ما شما او ایشان این آن'.split(' '));
 const UR_WORDS = new Set('ہے ہیں میں کا کی کے سے نے کو تھا تھی تھے نہیں کیا ہو ہوا کوئی کچھ یہ وہ اب بھی ہی'.split(' '));
-function faScanText(s) {
-  return String(s || '').normalize('NFC')
+/* Iranian spelling the Urdu-script engine misreads, fixed while the ZWNJ still shows what is one word:
+   - ast written onto a word with a ZWNJ is contracted (مشکل‌ست mush-ki-last, سوخته‌ست sūḳh-tast: the ه goes);
+   - final -وی after a consonant is ū + y (روی rūy, موی, هایاهوی), written وئ, which the engine reads as rū + a short y,
+     not ravī; the -avī adjectives (قوی, معنوی) and the verbs ravī / shavī (می‌روی, نشوی, bare شوی) keep their spelling;
+   - آ inside a word opens a compound's second word (دلآویز), split off so liaison may join it (di-lā-vez);
+   - so does the alif of a verb stem after the preverbs bar-, dar-, farā-, furū- (برافشانیم ba-raf-shā-nīm, دراندازیم
+     da-ran-dā-zīm), which the engine would otherwise read as a long ā;
+   - final -ای after ā is the iẓāfat (or yā) -ye, as Urdu writes it ائے (سودای saudā-ye, دعای, برای);
+   - کاین is ke + īn, one syllable (کیں kīn); توی is tu-yī ("you are"), not ū + y.
+   Punctuation goes first: the engine would read ، or ؟ as a letter (دل، as two syllables). */
+const FA_PREVERB = /(^|[\s\u200c])(بر|در|فرا|فرو)(?=(افشان|انداز|انداخت|افروز|افروخت|افکن|افگن|افت|اوفت|انگیز|انگیخت|افراز|افراشت|اندیش|ایست))/g;
+const FA_AVI = /^(قوی|معنوی|علوی|نبوی|دنیوی|اخروی|لغوی|مولوی|ثانوی|پهلوی|نحوی|دعوی|تقوی|فتوی|سلوی|عیسوی|موسوی|اموی|بدوی|خسروی|کسروی)$/;
+function faIranianSpelling(s) {
+  return s.replace(/[،؛؟!?.:«»"“”()…]+/g, ' ').replace(/ه\u200cا?ست(?=$|[\s،.!؟])/g, 'ست')
+    .replace(/([^\sاوی\u200c])\u200cا?ست(?=$|[\s،.!؟])/g, '$1ست')
+    .replace(/(^|[\s\u200c])([^\s\u200c]*[^\s\u200cا]وی)(?=$|[\s\u200c،.!؟])/g, (m, a, w, at, str) => {
+      const verb = /^[نب]?(رو|شو)ی$/.test(w) && (w !== 'روی' || /می\u200c?$|می $/.test(str.slice(0, at + a.length)));
+      if (w === 'توی') return a + 'توئی';
+      return a + (verb || FA_AVI.test(w) ? w : w.slice(0, -1) + 'ئ');
+    })
+    .replace(/(^|[\s\u200c])([^\s\u200c]+ا)ی(?=$|[\s\u200c])/g, '$1$2ئے')
+    .replace(/(^|[\s\u200c])کاین(?=$|[\s\u200c])/g, '$1کیں')
+    .replace(/([^\s\u200c])آ/g, '$1 آ')
+    .replace(FA_PREVERB, '$1$2 ');
+}
+function faScanText(s) { return faProsodyText(faScanSpelling(s)); }
+/* the spelling half of faScanText, word by word (no line-end prosody): for word lists (data/fa_scan.json verbs) */
+function faScanSpelling(s) {
+  return faIranianSpelling(String(s || '').normalize('NFC')
     .replace(/[\ufb50-\ufdff\ufe70-\ufeff]/g, c => c.normalize('NFKC'))
     .replace(/\u200c(?=[\u064B-\u0655])/g, '')   // an editor's zer after a ZWNJ (دورباش‌ِ) belongs to the letter before it
-    .replace(/\u0652/g, '')   // sukūn (fully voweled text): the engine reads a bare consonant as closing the syllable anyway
+    .replace(/\u0652/g, ''))   // sukūn (fully voweled text): the engine reads a bare consonant as closing the syllable anyway
     .replace(/\u200c/g, ' ').replace(/ي|ى/g, 'ی').replace(/ك/g, 'ک')
     .replace(/هٔ|ۀ/g, 'ۂ').replace(/ه/g, 'ہ')
     .replace(/([آاوی])ن(?=$|[\s،۔؟!])/g, '$1ں')   // آن is آں in Urdu spelling, like جان → جاں
-    .replace(/[ \t]+/g, ' ').trim()
-    .replace(/^.*$/, faProsodyText);
+    .replace(/[ \t]+/g, ' ').trim();
 }
 /* Persian prosody spelled out for the engine (Persian lines only): after a consonant, ast loses its alif and joins the word
    (دیگر است → دیگرست dī-ga-rast, as Persian often writes it); after a vowel it stays a word of its own. */
@@ -324,6 +350,11 @@ function faProsodyText(s) {
        end of a line; the engine lets only ONE final consonant go uncounted, so the t is dropped here. Only these clusters:
        Urdu script hides short vowels, so دیدم (dī-dam) looks like an overlong ending and must not be touched. */
     .replace(/([^\s])([اوی])([سشخف])ت(?=[\s،۔؟!]*$)/, '$1$2$3')   // a word-initial alif is a short a (ast, hast): not touched
+    /* and so is any long ā / ī + one consonant there (andāzīm, jahān, yār): the last syllable of a hemistich counts long, whatever
+       it holds. Not after و, which may be the consonant v (shavad, ravad), nor ی after ا or و, the consonant y (bar-ā-yad,
+       ḥikā-yat, gū-yad): those end in a short vowel + consonant */
+    .replace(/([^\s])ا([^\sاویںہۂئ])(?=[\s،۔؟!]*$)/, '$1ا')
+    .replace(/([^\sاو])ی([^\sاویںہۂئ])(?=[\s،۔؟!]*$)/, '$1ی')
     /* mid-line the same word is long + short, never more (Mahdavi Mazdeh 2019: a syllable holds at most three morae, the
        second coda consonant is extrametrical): navāḳht yār → navāḳh yār, dōst ke → dōs ke. Not before a vowel-initial word,
        where the t starts the next syllable (dōst-ast) */
@@ -337,10 +368,15 @@ window.faProsodyText = faProsodyText;
 function faLiaisonVariants(text) {
   const W = String(text || '').split(' ');
   const at = [];
-  for (let i = 0; i < W.length - 1; i++) if (/^[اآ]/.test(W[i + 1]) && W[i].length > 1 && !/[اوی‌ہۂۓِ]$/.test(W[i])) at.push(i);
+  /* the conjunction و after a consonant takes that consonant (afshānīm-o → af-shā-nī-mo, dil-o jān): written as the word
+     less its last letter + that letter with و, which the engine reads as one short syllable (its own join costs 1.2) */
+  for (let i = 0; i < W.length - 1; i++) if ((/^[اآ]/.test(W[i + 1]) || W[i + 1] === 'و') && W[i].length > 1 && !/[اوی‌ہۂۓِ]$/.test(W[i])) at.push(i);
   const join = idx => {
     const v = W.slice();
-    for (const i of idx.slice().reverse()) { v[i] = v[i] + v[i + 1].replace(/^آ/, 'ا').replace(/^ا(?=[^ا])/, m => W[i + 1][0] === 'آ' ? m : ''); v.splice(i + 1, 1); }
+    for (const i of idx.slice().reverse()) {
+      if (W[i + 1] === 'و') { v[i] = W[i].slice(0, -1); v[i + 1] = W[i].slice(-1) + 'و'; continue; }
+      v[i] = v[i] + v[i + 1].replace(/^آ/, 'ا').replace(/^ا(?=[^ا])/, m => W[i + 1][0] === 'آ' ? m : ''); v.splice(i + 1, 1);
+    }
     return v.join(' ');
   };
   const out = at.map(i => join([i]));
@@ -359,6 +395,24 @@ function faLiaisonVariants(text) {
 }
 /* every fit of a Persian line, as written or with liaison, the cheaper per meter; a fit found only through liaison carries
    `liaison` (its text), since its syllables belong to the joined line, not to the words as written */
+/* Where Persian grammar lets an iẓāfat go (the archived Jahanshiri grammar, "Genitive case" and "Noun phrase"; UT Austin
+   Persian Online Resources, "Ezafe"): it joins a noun or adjective to what modifies it, so
+   - never on a preposition, conjunction, particle, demonstrative (īn, ān), quantifier that takes none (har, hīch, chand),
+     pronoun, number, the copula, a verb, a word already marked, a word ending in the yā of unity (ے), or the line's last word;
+   - never before و, را, a preposition or conjunction, the copula or a verb (the word before closes its phrase).
+   Verbs: the forms scripts/lib_fa_verbs.js generates (FA_VERBS, data/fa_scan.json), and any word after می / نمی. -> word indexes */
+const FA_IZ_NO_HEAD = new Set(('از بہ ب در بر با بی بے تا چو چوں کہ ک کی گر اگر و را ای اے یا نہ نی مگر چہ چنیں چناں ہر ہیچ چند ' +
+  'ایں آں ہمیں ہماں من تو او ما شما ایشاں وی یک دو سہ است ست نیست ہست بود شد می نمی ہمی ز کز وز زاں زیں بدیں بداں دریں دراں ' +
+  'ازیں ازاں نیز ہم باز ہنوز اگرچہ ولی لیک لیکن پس جز بجز کجا چگونہ کو آیا').split(' '));
+const FA_IZ_NO_NEXT = new Set(('از بہ ب در بر با بی بے تا چو چوں کہ ک کی گر اگر و را ای اے یا مگر است ست نیست ہست بود شد می نمی ' +
+  'ہمی ز کز وز نیز ہم باز ہنوز اگرچہ ولی لیک لیکن پس جز بجز زاں زیں بدیں بداں دریں دراں ازیں ازاں ہر').split(' '));
+const FA_VERB_SET = new Set((typeof FA_VERBS !== 'undefined' && FA_VERBS) || []);
+function faIzafatSlots(W) {
+  const verb = i => FA_VERB_SET.has(W[i]) || FA_VERB_SET.has(W[i].replace(/یی/g, 'ئی')) || (i > 0 && /^(می|نمی|ہمی)$/.test(W[i - 1]));   // جوییم = جوئیم
+  return W.map((_, i) => i).filter(i => i < W.length - 1 && W[i].length > 1 && !FA_IZ_NO_HEAD.has(W[i]) && !verb(i) &&
+    !/[ِٔ]$|ۂ$|ے$/.test(W[i]) && !FA_IZ_NO_NEXT.has(W[i + 1]) && !verb(i + 1));
+}
+window.faIzafatSlots = faIzafatSlots;
 function faScanFits(S, text, opts) {
   const best = new Map();
   /* liaison changes the words, so its fit only lends its cost to a fit of the line as written (or carries `liaison`); a guessed
@@ -382,18 +436,17 @@ function faScanFits(S, text, opts) {
   };
   scan(text, null, 0);
   for (const v of faLiaisonVariants(text)) scan(v, 'liaison', 0);
-  /* opts.guessIzafat (true, or 1 for one guess at most): text with no Roman to say where the iẓāfat goes (pasted Iranian text, Ganjoor's plain text). One or two
-     guessed iẓāfats, each at a small cost so the line as written wins when it fits. Never on a particle, a word already
-     marked, the line's last word, or a word before و (Persian never strands an iẓāfat before va / o). */
+  /* opts.guessIzafat (true for up to three, or a number): text with no Roman to say where the iẓāfat goes (pasted Iranian text,
+     Ganjoor's plain text). Only where Persian grammar allows one (faIzafatSlots), each at a small cost so the line as written wins
+     when it fits; fewest first. */
   if (opts && opts.guessIzafat) {
     const W = String(text || '').split(' ');
-    const can = W.map((w, i) => i < W.length - 1 && !RK_NO_IZAFAT.has(w) && !/[ِٔ]$|ۂ$|ے$/.test(w) && W[i + 1] !== 'و' && w.length > 1);
+    const at = faIzafatSlots(W), most = opts.guessIzafat === true ? 3 : opts.guessIzafat;
     const iz = w => /[ہ]$/.test(w) ? w.replace(/ہ$/, 'ۂ') : w.replace(/ں$/, 'ن') + 'ِ';   // nāzanī-ne: before an iẓāfat the n is a full consonant
-    const at = W.map((_, i) => i).filter(i => can[i]);
-    const mark = idx => W.map((w, i) => idx.includes(i) ? iz(w) : w).join(' ');
-    for (const i of at) scan(mark([i]), 'izafat', 0.5);
-    const fitsNow = () => target ? done() : [...best.values()].some(f => f.c <= 2);
-    if (opts.guessIzafat !== 1 && !fitsNow()) for (let a = 0; a < at.length; a++) for (let b = a + 1; b < at.length; b++) scan(mark([at[a], at[b]]), 'izafat', 1);   // two, only when nothing fits yet
+    let sets = [[]];
+    for (const i of at) sets = sets.concat(sets.filter(x => x.length < most).map(x => x.concat(i)));
+    sets = sets.slice(1).sort((a, b) => a.length - b.length);
+    for (const idx of sets) scan(W.map((w, i) => idx.includes(i) ? iz(w) : w).join(' '), 'izafat', 0.3 * idx.length);
   }
   /* opts.refrain (with a target): a line that still misses its meter may carry a sung refrain (faRefrainVariants); the shortened
      line counts only where it fits a target meter at ≤ 2, and its fit carries `refrain` (the text it scanned) */
@@ -509,6 +562,7 @@ function detectScanLang(text) {
   return f >= 2 && f > u ? 'fa' : 'ur';
 }
 window.faScanText = faScanText;
+window.faScanSpelling = faScanSpelling;
 window.detectScanLang = detectScanLang;
 
 /* ---- Persian words in Roman and Devanagari (Sufinama's spellings, data/fa_lexicon.json) ----

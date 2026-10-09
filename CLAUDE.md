@@ -54,6 +54,8 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   Persian engine `window.ScanFa`: `build_app.py` splices `data/fa_scan.json` (`scripts/build_fa_scan.js`) into a second copy of the
   engine block; Persian lines (`l.lang === 'fa'`) scan on it via `scanCorpusLine` / `engineOf`. Persian-only meter ids are `F<Ganjoor id>`.
   Persian word list `data/fa_lexicon.json` (`scripts/build_fa_lexicon.js`) for Fārsī Roman/Devanagari only.
+  Steingass's dictionary (`scripts/import_steingass.py` → `data/fa_steingass.tsv`) adds classical readings to ScanFa, add-only.
+  `scripts/compare_sufinama_ganjoor.py` lists where Sufinama's words differ from Ganjoor's (a review file; nothing is applied).
 - **Collocations**: `data/collocations.json` (`scripts/build_collocations.py`) holds neighbour rules for typed Roman
   (`collocSpelling` in `05-translit-helpers.js`). Judge changes with `scripts/colloc_benchmark.py` and `scripts/casual_roman_eval.js`
   (typed Roman → right Urdu word, table mined without the test poets). `tests/benchmark.js` `typed.*` goes the other way (Urdu → Roman)

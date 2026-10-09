@@ -65,5 +65,7 @@ const ROMAN_FALLBACK = /*@@ROMAN_FALLBACK@@*/;
 const COLLOCATIONS = /*@@COLLOCATIONS@@*/;
 /* Persian words (scripts/build_fa_lexicon.js): {key: [Roman, Devanagari, times seen]}, for Fārsī lines only (faWordScripts) */
 const FA_LEXICON = /*@@FA_LEXICON@@*/;
+/* Persian verb forms (scripts/lib_fa_verbs.js via data/fa_scan.json): where an iẓāfat cannot go (faIzafatSlots) */
+const FA_VERBS = /*@@FA_VERBS@@*/;
 window.METER_MAP_DATA = METER_MAP_DATA;
 

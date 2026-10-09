@@ -49,3 +49,6 @@ bahr_circles_mockup.html
 
 # Ganjoor API responses cached by scripts/build_fa_testset.py: local only
 data/ganjoor_cache/
+data/steingass_cache/
+# review file from scripts/compare_sufinama_ganjoor.py: local only
+data/sufinama_ganjoor_diff.json

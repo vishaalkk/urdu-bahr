@@ -111,11 +111,11 @@ let gRight = 0, gJudged = 0, gLines = 0, gOwn = 0, gOwnPlain = 0;
 const gMiss = {};
 // Ganjoor's editors mark iẓāfat and many short vowels (محبتِ, سراپردهٔ); text pasted from elsewhere usually has none
 const unmarked = l => l.replace(/[\u064B-\u0655]/g, '').replace(/ۀ/g, 'ه');
-/* with liaison and at most one guessed iẓāfat (the Scan tab may try two; one keeps this run short and the score plain),
+/* with liaison and the iẓāfats Persian grammar allows (up to three; faIzafatSlots),
    stopping as soon as the ghazal's own meter fits */
 const fitsOwn = (line, fam) => {
   const text = FAE.ctx.faProsodyText(FAE.ctx.faScanText(line));
-  try { return FAE.ctx.faScanFits(FAE.Scan, text, { guessIzafat: 1, target: fam }).some(f => fam.has(String(f.meter.id)) && f.c <= 2); }
+  try { return FAE.ctx.faScanFits(FAE.Scan, text, { guessIzafat: true, target: fam }).some(f => fam.has(String(f.meter.id)) && f.c <= 2); }
   catch (e) { return false; }
 };
 testset.forEach((t, i) => {

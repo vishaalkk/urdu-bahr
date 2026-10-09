@@ -559,3 +559,66 @@ za-rahmat-kun-nazar-bar-haal-e-zaaram-yaa-rasuulallaah-jami-persian-kalam-22
 **Still open:**
 - Three gold misses: ship Ganjoor's meter for sure matches (the engine's own pick still scored)?
 - The Scan tab does not yet use the guessed iẓāfat. Refrains like Rumi's *bayā bayā* (a whole couplet per line) still miss.
+
+## Round 6 (2026-10-09): Iranian spelling, Steingass, Sufinama against Ganjoor
+
+- **Iranian spelling** (`faIranianSpelling` in `faScanText`, Persian text only). The worst Ganjoor ghazals failed on
+  spelling conventions, not on missing words: Saadi 22 scanned 1/10 lines, Saadi 73 0/10. Five rules, measured one by one
+  on the 2,400 Ganjoor lines:
+  - *ast* written onto a word with a ZWNJ contracts (مشکل‌ست *mush-ki-last*, سوخته‌ست *sūḳh-tast*): +35 lines, none lost;
+  - final -وی after a consonant is ū + y (روی *rūy*, موی, هایاهوی), except the verbs *ravī / shavī* and the -avī
+    adjectives: +91 lines (the 11 it first broke were all *ravī / shavī*, now excluded);
+  - آ inside a word opens a compound's second word (دلآویز *di-lā-vez*, by liaison): +36;
+  - a preverb before an alif-initial verb stem (برافشانیم *ba-raf-shā-nīm*, دراندازیم): small.
+  Saadi 22 → 9/10, Saadi 73 → 6/10, Hafiz 233 → 6/10.
+- **Steingass** (1892, public domain; Theodore Beers's scrape of the DSAL edition, MIT): `scripts/import_steingass.py` →
+  `data/fa_steingass.tsv` (50k single-word headwords with classical Roman). `scripts/lib_fa_steingass.js` adds, add-only like
+  the verb forms, the reading of each headword the engine lacks (3.2k words; 46k already agree). Small but consistent gains.
+  The PersianG2P/Tihu dictionary was looked at and left: modern Tehrani pronunciation, ~30% coverage of the test words.
+- **ScanFa lexicon packed** in `build_app.py`: words with the same readings share one `lex()` call, readings written as
+  `lx;ssx@2.6`. The page went from 8.04 MB (over budget with Steingass) to 7.41 MB.
+- **Sufinama against Ganjoor** (`scripts/compare_sufinama_ganjoor.py`, review file `data/sufinama_ganjoor_diff.json`):
+  of 3,530 Sufinama lines, 1,110 identical to Ganjoor's, 995 differ only in spelling, 7 have a letter typo (ہدیں / بدین,
+  its Roman *badīñ* right), 706 have a different word, 712 have no Ganjoor match. Measured: Sufinama's typos never change
+  the meter, and putting Ganjoor's words in place of Sufinama's makes lines scan worse (382 → 339 of 482): Sufinama
+  carries the sung text with a Roman that matches it, Ganjoor often a different reading. So it stays a review list; nothing is
+  replaced automatically.
+
+  | | before round 6 | now |
+  |---|---|---|
+  | Ganjoor lines fit (with marks) | 65.4% | 73.0% |
+  | Ganjoor lines fit (marks stripped) | 62.7% | 70.7% |
+  | Ganjoor ghazal meter | 98.3% | 99.6% |
+  | all Persian lines at cost 0 | 43.0% | 46.7% |
+  | all Persian own-meter fit ≤ 2 | 72.95% | 73.4% |
+
+**Still open:** Hafiz 374 and Rumi 636 (2/10): words the engine reads as one long vowel too many, the voweled و of
+*buvad*; the Scan tab's iẓāfat guess; refrain-per-couplet lines; the three gold misses.
+
+## Round 7 (2026-10-09): grammar iẓāfat, and what the failing lines had in common
+
+- **Tagging the failing lines** (Ganjoor, plain text) found more spelling the engine misread, now in `faIranianSpelling` /
+  `faProsodyText` / `faLiaisonVariants`:
+  - punctuation was read as a letter (دل، as two syllables): dropped first;
+  - -ای after ā is the iẓāfat -ye (سودای *saudā-ye*, برای), written ائے; کاین is *kīn*; توی is *tu-yī*;
+  - و after a consonant takes it, free (*afshānīm-o* → *af-shā-nī-mo*, *dil-o jān*; the engine's own join costs 1.2);
+  - a line-final long ā / ī + one consonant is one long syllable (*andāzīm*), but not ی after ا / و, which is the consonant
+    *y* (*bar-ā-yad*, *ḥikā-yat*, *gū-yad*), nor after و (*shavad*).
+  Hafiz 374 (*biyā tā gul bar-afshānīm*), 2/10 lines, now fits.
+- **Grammar iẓāfat** (`faIzafatSlots`), replacing the blind single guess: an iẓāfat only where Persian grammar allows one
+  (the archived Jahanshiri grammar, "Genitive case" and "Noun phrase"; UT Austin Persian Online Resources, "Ezafe"): never
+  on a preposition, conjunction, particle, demonstrative, *har / hīch / chand*, pronoun, the copula, a verb, or the last word;
+  never before و, را, a preposition, the copula or a verb. Verbs are the 1,944 forms of `scripts/lib_fa_verbs.js`
+  (`data/fa_scan.json` `verbs`, injected as `FA_VERBS`) and any word after می. Up to three per line, 0.3 each. Measured
+  before building it: blind single guess 72.1% own fit with 4.1% false fits on a wrong meter; grammar, up to three, 74.8%
+  with 2.8%.
+- `faScanSpelling` is the spelling half of `faScanText` (no line-end prosody), for word lists: Steingass and the verb forms
+  were being trimmed as if each word ended a line.
+
+  | | start of round 6 | now |
+  |---|---|---|
+  | Ganjoor lines fit (with marks) | 65.4% | 80.7% |
+  | Ganjoor lines fit (marks stripped, as pasted) | 62.7% | 80.2% |
+  | Ganjoor ghazal meter | 98.3% | 99.6% |
+
+  Sufinama's own lines (Roman-guided) and the gold meters are unchanged by round 7.

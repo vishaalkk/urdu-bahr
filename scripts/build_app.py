@@ -16,6 +16,9 @@ with open('data/meters.json', 'r', encoding='utf-8') as f:
 # Persian word list from Sufinama (scripts/build_fa_lexicon.js): Roman and Devanagari for Fārsī lines. Never feeds the Urdu maps.
 with open('data/fa_lexicon.json', 'r', encoding='utf-8') as f:
     FA_LEXICON = json.load(f)
+# Persian verb forms (data/fa_scan.json `verbs`, scripts/lib_fa_verbs.js): where the iẓāfat guess cannot go
+with open('data/fa_scan.json', 'r', encoding='utf-8') as f:
+    FA_VERBS = json.load(f).get('verbs', [])
 
 # Persian meters from Ganjoor (scripts/build_fa_meters.py): the circles mark settings Persian poets used.
 with open('data/persian_meters.json', 'r', encoding='utf-8') as f:
@@ -355,6 +358,7 @@ substitutions = {
     'METERS_DATA': json.dumps(METERS_DATA, ensure_ascii=False),
     'PERSIAN_METERS': json.dumps(PERSIAN_METERS, ensure_ascii=False, separators=(',', ':')),
     'FA_LEXICON': json.dumps(FA_LEXICON, ensure_ascii=False, separators=(',', ':')),
+    'FA_VERBS': json.dumps(FA_VERBS, ensure_ascii=False, separators=(',', ':')),
     'GLOSSARY_DATA': json.dumps(GLOSSARY, ensure_ascii=False),
     'BIBLIOGRAPHY_DATA': json.dumps(BIBLIOGRAPHY, ensure_ascii=False),
     'METER_MAP_DATA': json.dumps(meter_map_data, ensure_ascii=False),
@@ -417,7 +421,16 @@ def persian_engine():
     block = src[start:end]
     with open('data/fa_scan.json', 'r', encoding='utf-8') as f:
         fa = json.load(f)
-    lex = '\n'.join(f'lex({json.dumps(k, ensure_ascii=False)},{json.dumps(v, separators=(",", ":"))});' for k, v in fa['lex'].items())
+    # compact: words with the same readings share one lex() call (it takes a space-separated list), and a reading is written
+    # as its weights plus @cost when not 0 (lx, ssx@2.6); a small loop in the copy expands them
+    groups = {}
+    for k, v in fa['lex'].items():
+        assert ' ' not in k, f'lex key with a space: {k}'
+        code = ';'.join(''.join(o['w']) + (f"@{o['c']:g}" if o['c'] else '') for o in v)
+        groups.setdefault(code, []).append(k)
+    table = '\n'.join(code + '\t' + ' '.join(ws) for code, ws in groups.items())
+    lex = ('(function(){' + json.dumps(table, ensure_ascii=False) + ".split('\\n').forEach(r=>{const t=r.split('\\t');"
+           "lex(t[1],t[0].split(';').map(o=>{const p=o.split('@');return {w:p[0].split(''),c:+(p[1]||0)};}));});})();")
     marker = '/* ---------- syllabify a letter string'
     assert marker in block and "\n];\nconst RUBAI_RAW" in block and 'root.Scan=API' in block, 'engine markers moved: update build_app.py'
     block = block.replace(marker, lex + '\n' + marker, 1)
