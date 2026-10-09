@@ -2,7 +2,7 @@
   "metadata": {
     "title": "Attributions & Scholarly Citations",
     "description": "Primary academic and computational sources powering the Urdu Meter Handbook and Interactive Studio.",
-    "entries_count": 3
+    "entries_count": 11
   },
   "entries": [
     {
@@ -46,6 +46,104 @@
       "publisher_or_affiliation": "Department of Linguistics, Languages, and Cultures, Michigan State University; Columbia University South Asian Digital Humanities",
       "canonical_url": "https://www.columbia.edu/itc/mealac/pritchett/00ghalib/script/ghalib.js",
       "summary": "Developer of the underlying finite-state transition graph and abstract syntax tree parser ('ghalib.js', 'urdu_parser_data.js', 'devanagari_parser_data.js', 'diacritics_parser_data.js') originally installed in October 2002 on Columbia's 'A Desertful of Roses'. In this application, Sean Pue's algorithm powers our multi-script engine, enabling instantaneous switching across Urdu Nastaliq, Devanagari, Roman with academic diacritics, and ASCII."
+    },
+    {
+      "id": "pritchett_desertful",
+      "tag": "Corpus: Ghalib & Mir",
+      "authors": [
+        "Frances W. Pritchett"
+      ],
+      "title": "A Desertful of Roses (Ghalib) and A Garden of Kashmir (Mir)",
+      "year": "2002–present",
+      "publisher_or_affiliation": "Columbia University",
+      "canonical_url": "https://franpritchett.com/00ghalib/",
+      "summary": "Pritchett's complete Urdu divans of Ghalib and Mir, each verse with its meter, Urdu, Devanagari and Roman. They are the app's Ghalib and Mir collections and the standard the scanner and transliteration are held to: no change may make them scan or read worse."
+    },
+    {
+      "id": "rekhta",
+      "tag": "Corpus: Urdu Poets",
+      "authors": [
+        "Rekhta Foundation"
+      ],
+      "title": "Rekhta",
+      "year": "2013–present",
+      "publisher_or_affiliation": "Rekhta Foundation, Noida",
+      "canonical_url": "https://www.rekhta.org",
+      "summary": "The Urdu poets beyond Ghalib and Mir (Faiz, Jaun Elia and others): Urdu, Devanagari and Roman as Rekhta gives them, each ghazal linked to its Rekhta page. Rekhta names no bahr; the engine reads it from the lines, with the iẓāfat, doubled letters and pen names Rekhta's Roman shows."
+    },
+    {
+      "id": "urdushahkar",
+      "tag": "Corpus: Urdu Poets",
+      "authors": [
+        "Urdushahkar"
+      ],
+      "title": "Urdushahkar",
+      "year": "",
+      "publisher_or_affiliation": "urdushahkar.org",
+      "canonical_url": "https://urdushahkar.org",
+      "summary": "Further Urdu ghazals for the Poets list, linked to their source pages and metered by the engine in the same way."
+    },
+    {
+      "id": "sufinama",
+      "tag": "Corpus: Persian Kalām",
+      "authors": [
+        "Rekhta Foundation"
+      ],
+      "title": "Sufinama",
+      "year": "",
+      "publisher_or_affiliation": "Rekhta Foundation",
+      "canonical_url": "https://sufinama.org",
+      "summary": "The Persian (Fārsī) ghazals of Hafiz, Rumi, Saadi, ʿIrāqī, Khusrau, Bedil and other Sufi poets, in Urdu script with Sufinama's Roman. The Roman's short vowels and iẓāfat teach the Persian engine (ScanFa) how each word scans."
+    },
+    {
+      "id": "ganjoor",
+      "tag": "Persian Text & Meters",
+      "authors": [
+        "Ganjoor"
+      ],
+      "title": "Ganjoor (گنجور)",
+      "urdu_title": "گنجور",
+      "year": "",
+      "publisher_or_affiliation": "ganjoor.net",
+      "canonical_url": "https://ganjoor.net",
+      "summary": "The reference text of classical Persian poetry, with each poem's meter. Ganjoor's meters fill in the Persian meters of the circles and the Persian-only meters (ids F…); its texts check every Sufinama ghazal's meter and words, and an independent test set of 240 well-known ghazals of Hafiz, Saadi, Rumi and Jami measures how well the Persian scanner reads text it has never seen. Persian ghazals link to their Ganjoor page."
+    },
+    {
+      "id": "mahdavi_mazdeh_2019",
+      "tag": "Persian Prosody",
+      "authors": [
+        "Mohsen Mahdavi Mazdeh"
+      ],
+      "title": "The Rhythmic Structure of Persian Poetic Meters",
+      "year": "2019",
+      "publisher_or_affiliation": "PhD dissertation, Department of Linguistics, University of Arizona",
+      "canonical_url": "https://repository.arizona.edu/handle/10150/634353",
+      "summary": "The Persian prosody rules the Persian scanner follows where they differ from Urdu: ke, be and the conjunction o may scan long; a syllable holds at most three morae (an overlong syllable is long + short); and two shorts may be sung as one long (muftaʿilun as three longs), as Rumi often does."
+    },
+    {
+      "id": "steingass_1892",
+      "tag": "Persian Pronunciation",
+      "authors": [
+        "Francis Joseph Steingass"
+      ],
+      "title": "A Comprehensive Persian-English Dictionary",
+      "year": "1892",
+      "publisher_or_affiliation": "Routledge & K. Paul, London; digital edition: Digital Dictionaries of South Asia (University of Chicago); scraped by Theodore S. Beers (steingass-scraper, MIT)",
+      "canonical_url": "https://dsal.uchicago.edu/dictionaries/steingass/",
+      "related_project": "<a class=\"fran-link\" href=\"https://github.com/theodore-s-beers/steingass-scraper\" target=\"_blank\" rel=\"noopener\">steingass-scraper<span class=\"ext\">↗</span></a> (Theodore S. Beers)",
+      "summary": "Every headword with its classical pronunciation, short vowels and all. The Persian engine takes from it the syllable weights of some 3,000 words that neither the engine nor Sufinama's Roman reads right."
+    },
+    {
+      "id": "jahanshiri_grammar",
+      "tag": "Persian Grammar",
+      "authors": [
+        "Ali Jahanshiri"
+      ],
+      "title": "Persian Grammar and Morphology",
+      "year": "",
+      "publisher_or_affiliation": "jahanshiri.ir (archived copy, Internet Archive)",
+      "canonical_url": "https://web.archive.org/web/20231002155022/https://www.jahanshiri.ir/fa/en/toc-grammar",
+      "summary": "Reference for where Persian grammar allows an unwritten iẓāfat (not after prepositions, pronouns or verbs, not before a verb or preposition), which the Persian scanner uses to guess the iẓāfat that plain pasted text leaves out."
     }
   ]
 }

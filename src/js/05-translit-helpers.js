@@ -307,8 +307,8 @@ const FA_WORDS = new Set('است نیست هست را از چه چو چون کج
 const UR_WORDS = new Set('ہے ہیں میں کا کی کے سے نے کو تھا تھی تھے نہیں کیا ہو ہوا کوئی کچھ یہ وہ اب بھی ہی'.split(' '));
 /* Iranian spelling the Urdu-script engine misreads, fixed while the ZWNJ still shows what is one word:
    - ast written onto a word with a ZWNJ is contracted (مشکل‌ست mush-ki-last, سوخته‌ست sūḳh-tast: the ه goes);
-   - final -وی after a consonant is ū + y (روی rūy, موی, هایاهوی), written وئ, which the engine reads as rū + a short y,
-     not ravī; the -avī adjectives (قوی, معنوی) and the verbs ravī / shavī (می‌روی, نشوی, bare شوی) keep their spelling;
+   - final -وی after a consonant is ū + y (روی rūy, موی, هایاهوی), written وئے as Urdu writes it, which the engine reads
+     as rū, rūy or rū-yi (به رویی), not ravī; the -avī adjectives (قوی, معنوی) and the verbs ravī / shavī (می‌روی, نشوی, bare شوی) keep their spelling;
    - آ inside a word opens a compound's second word (دلآویز), split off so liaison may join it (di-lā-vez);
    - so does the alif of a verb stem after the preverbs bar-, dar-, farā-, furū- (برافشانیم ba-raf-shā-nīm, دراندازیم
      da-ran-dā-zīm), which the engine would otherwise read as a long ā;
@@ -323,7 +323,7 @@ function faIranianSpelling(s) {
     .replace(/(^|[\s\u200c])([^\s\u200c]*[^\s\u200cا]وی)(?=$|[\s\u200c،.!؟])/g, (m, a, w, at, str) => {
       const verb = /^[نب]?(رو|شو)ی$/.test(w) && (w !== 'روی' || /می\u200c?$|می $/.test(str.slice(0, at + a.length)));
       if (w === 'توی') return a + 'توئی';
-      return a + (verb || FA_AVI.test(w) ? w : w.slice(0, -1) + 'ئ');
+      return a + (verb || FA_AVI.test(w) ? w : w.slice(0, -1) + 'ئے');
     })
     .replace(/(^|[\s\u200c])([^\s\u200c]+ا)ی(?=$|[\s\u200c])/g, '$1$2ئے')
     .replace(/(^|[\s\u200c])کاین(?=$|[\s\u200c])/g, '$1کیں')
@@ -336,25 +336,28 @@ function faScanSpelling(s) {
   return faIranianSpelling(String(s || '').normalize('NFC')
     .replace(/[\ufb50-\ufdff\ufe70-\ufeff]/g, c => c.normalize('NFKC'))
     .replace(/\u200c(?=[\u064B-\u0655])/g, '')   // an editor's zer after a ZWNJ (دورباش‌ِ) belongs to the letter before it
-    .replace(/\u0652/g, ''))   // sukūn (fully voweled text): the engine reads a bare consonant as closing the syllable anyway
+    .replace(/\u0652|\u0640/g, ''))   // sukūn (fully voweled text): the engine reads a bare consonant as closing the syllable anyway
     .replace(/\u200c/g, ' ').replace(/ي|ى/g, 'ی').replace(/ك/g, 'ک')
     .replace(/هٔ|ۀ/g, 'ۂ').replace(/ه/g, 'ہ')
+    .replace(/ہ یِ(?=$|\s)/g, 'ۂ')   // دیده‌یِ: the iẓāfat after a silent h, as Urdu writes it (dīda-e)
+    .replace(/([آاو])یِ(?=$|\s)/g, '$1ئِ')   // رویِ, جایِ: -ye after a long vowel, Urdu روئے (rū-e)
+    .replace(/([آاو])یی(?=$|\s)/g, '$1ئی')   // تویی, جایی: ī after a long vowel, Urdu توئی
     .replace(/([آاوی])ن(?=$|[\s،۔؟!])/g, '$1ں')   // آن is آں in Urdu spelling, like جان → جاں
     .replace(/[ \t]+/g, ' ').trim();
 }
 /* Persian prosody spelled out for the engine (Persian lines only): after a consonant, ast loses its alif and joins the word
    (دیگر است → دیگرست dī-ga-rast, as Persian often writes it); after a vowel it stays a word of its own. */
 function faProsodyText(s) {
-  return String(s || '').replace(/(^|\s)(\S*[^\sاوی‌ہۂۓ])\s+است(?=$|[\s،۔؟!])/g, '$1$2ست')
+  return String(s || '').replace(/(^|\s)(\S*[^\sاوی‌ہۂۓ])\s+است(?=$|[\s،۔؟!])/g, (m, a, w) => a + w.replace(/ں$/, 'ن') + 'ست')   // jā-nast: the n starts a syllable
     /* the line's last word ending in a long vowel + s/sh/kh/f + t (dōst, nīst, dāsht, sākht, yāft) is one long syllable at the
        end of a line; the engine lets only ONE final consonant go uncounted, so the t is dropped here. Only these clusters:
        Urdu script hides short vowels, so دیدم (dī-dam) looks like an overlong ending and must not be touched. */
     .replace(/([^\s])([اوی])([سشخف])ت(?=[\s،۔؟!]*$)/, '$1$2$3')   // a word-initial alif is a short a (ast, hast): not touched
     /* and so is any long ā / ī + one consonant there (andāzīm, jahān, yār): the last syllable of a hemistich counts long, whatever
        it holds. Not after و, which may be the consonant v (shavad, ravad), nor ی after ا or و, the consonant y (bar-ā-yad,
-       ḥikā-yat, gū-yad): those end in a short vowel + consonant */
+       ḥikā-yat, gū-yad, ā-yad): those end in a short vowel + consonant */
     .replace(/([^\s])ا([^\sاویںہۂئ])(?=[\s،۔؟!]*$)/, '$1ا')
-    .replace(/([^\sاو])ی([^\sاویںہۂئ])(?=[\s،۔؟!]*$)/, '$1ی')
+    .replace(/([^\sاوآ])ی([^\sاویںہۂئ])(?=[\s،۔؟!]*$)/, '$1ی')
     /* mid-line the same word is long + short, never more (Mahdavi Mazdeh 2019: a syllable holds at most three morae, the
        second coda consonant is extrametrical): navāḳht yār → navāḳh yār, dōst ke → dōs ke. Not before a vowel-initial word,
        where the t starts the next syllable (dōst-ast) */
@@ -399,12 +402,12 @@ function faLiaisonVariants(text) {
    Persian Online Resources, "Ezafe"): it joins a noun or adjective to what modifies it, so
    - never on a preposition, conjunction, particle, demonstrative (īn, ān), quantifier that takes none (har, hīch, chand),
      pronoun, number, the copula, a verb, a word already marked, a word ending in the yā of unity (ے), or the line's last word;
-   - never before و, را, a preposition or conjunction, the copula or a verb (the word before closes its phrase).
+   - never before و, را, a preposition or conjunction (bī- is a prefix: suḳhanān-e bī-ḥasīb), the copula or a verb (the word before closes its phrase).
    Verbs: the forms scripts/lib_fa_verbs.js generates (FA_VERBS, data/fa_scan.json), and any word after می / نمی. -> word indexes */
 const FA_IZ_NO_HEAD = new Set(('از بہ ب در بر با بی بے تا چو چوں کہ ک کی گر اگر و را ای اے یا نہ نی مگر چہ چنیں چناں ہر ہیچ چند ' +
   'ایں آں ہمیں ہماں من تو او ما شما ایشاں وی یک دو سہ است ست نیست ہست بود شد می نمی ہمی ز کز وز زاں زیں بدیں بداں دریں دراں ' +
   'ازیں ازاں نیز ہم باز ہنوز اگرچہ ولی لیک لیکن پس جز بجز کجا چگونہ کو آیا').split(' '));
-const FA_IZ_NO_NEXT = new Set(('از بہ ب در بر با بی بے تا چو چوں کہ ک کی گر اگر و را ای اے یا مگر است ست نیست ہست بود شد می نمی ' +
+const FA_IZ_NO_NEXT = new Set(('از بہ ب در بر با تا چو چوں کہ ک کی گر اگر و را ای اے یا مگر است ست نیست ہست بود شد می نمی ' +
   'ہمی ز کز وز نیز ہم باز ہنوز اگرچہ ولی لیک لیکن پس جز بجز زاں زیں بدیں بداں دریں دراں ازیں ازاں ہر').split(' '));
 const FA_VERB_SET = new Set((typeof FA_VERBS !== 'undefined' && FA_VERBS) || []);
 function faIzafatSlots(W) {

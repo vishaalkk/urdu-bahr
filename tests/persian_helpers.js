@@ -31,7 +31,7 @@ check(ctx.faScanText('با دورباش\u200cِ زیر بود') === 'با دور
 /* Iranian spelling (faIranianSpelling) */
 check(ctx.faScanText('دیدار خوبان مشکل\u200cست') === 'دیدار خوباں مشکلست', 'faScanText: ast joined by a ZWNJ contracts onto a consonant');
 check(ctx.faScanText('دردی سوخته\u200cست') === 'دردی سوختست', 'faScanText: ast after ه takes its place (sūḳh-tast)');
-check(ctx.faScanText('ندیدم روی را') === 'ندیدم روئ را', 'faScanText: final -وی is ū + y (rūy)');
+check(ctx.faScanText('ندیدم روی را') === 'ندیدم روئے را', 'faScanText: final -وی is ū + y (rūy)');
 check(ctx.faScanText('خوش می\u200cروی') === 'خوش می روی' && ctx.faScanText('بیخود شوی') === 'بیخود شوی' && ctx.faScanText('قوی') === 'قوی',
   'faScanText: the verbs ravī / shavī and -avī adjectives keep their -وی');
 check(ctx.faScanText('دلآویزی') === 'دل آویزی', 'faScanText: آ inside a word opens the compound\'s second word (for liaison)');
@@ -41,10 +41,17 @@ check(ctx.faScanText('ای دل، بیا؟') === 'ای دل بیا', 'faScanText
 check(ctx.faScanText('سودای تو برای') === 'سودائے تو برائے', 'faScanText: -ای after ā is the iẓāfat / yā (saudā-ye)');
 check(ctx.faScanText('ساغر اندازیم') === 'ساغر اندازی' && ctx.faScanText('چه شود') === 'چہ شود',
   'faProsodyText: a line-final long vowel + consonant scans as one long syllable (not after و: shavad)');
+check(ctx.faScanText('یا جان ز تن برآید') === 'یا جاں ز تن بر آید', 'faProsodyText: line-final آید keeps its d (ā-yad: ی after آ is the consonant y)');
+check(ctx.faScanText('رویِ تو جایِ من') === 'روئِ تو جائِ من' && ctx.faScanText('دیده\u200cیِ جان') === 'دیدۂ جاں',
+  'faScanText: a written iẓāfat -ye after a long vowel → ئِ (rū-e), after a silent h → ۂ (dīda-e)');
+check(ctx.faScanText('کل تویی ناطق') === 'کل توئی ناطق', 'faScanText: ī after a long vowel → ئی (tu-ī)');
+check(ctx.faScanText('بوستان است') === 'بوستانست', 'faProsodyText: ast after ān keeps the n (bū-stā-nast)');
+check(ctx.faScanText('کـاین') === 'کیں', 'faScanText: tatweel is dropped');
 check(ctx.faLiaisonVariants('افشانیم و می').includes('افشانی مو می'), 'faLiaisonVariants: و takes the consonant before it (af-shā-nī-mo)');
 {
   const slots = l => { const W = ctx.faScanText(l).split(' '); return ctx.faIzafatSlots(W).map(i => W[i]).join(' '); };
   check(slots('ساقی فرخ رخ من جام چو گلنار بده') === 'ساقی فرخ رخ', 'faIzafatSlots: sāqī-e farruḳh-ruḳh-e man (not on چو, a verb, or the last word)');
+  check(slots('متوجه است با ما سخنان بی\u200cحسیبت').includes('سخناں'), 'faIzafatSlots: an iẓāfat before a bī- adjective (suḳhanān-e bī-ḥasīb)');
   check(slots('بیا تا گل برافشانیم و می در ساغر اندازیم') === '', 'faIzafatSlots: none before a verb, و, a preposition, or on a particle');
   check(slots('ما ملامت را به جان جوییم در بازار عشق') === 'بازار', 'faIzafatSlots: bāzār-e ʿishq; none before را or a verb (جوییم)');
 }

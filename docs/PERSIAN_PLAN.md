@@ -622,3 +622,30 @@ za-rahmat-kun-nazar-bar-haal-e-zaaram-yaa-rasuulallaah-jami-persian-kalam-22
   | Ganjoor ghazal meter | 98.3% | 99.6% |
 
   Sufinama's own lines (Roman-guided) and the gold meters are unchanged by round 7.
+
+## Round 8 (2026-10-09): the remaining Ganjoor misses, by cause
+
+The 465 Ganjoor lines that still missed (marks kept) were diagnosed with the engine's `diagnose` against Ganjoor's meter and,
+for each, the costed readings of its cheapest own-meter fit. Two thirds had **no clashing syllable at all**: the meter fit,
+but readings it needed cost more than 2. By cost, the causes were the written iẓāfat after a long vowel, words whose right
+reading the engine ranks low, word-grafting (liaison inside the engine, 1.2 per join; engine work, not touched) and a
+line-end bug. Fixed (text prep in `src/js/05-translit-helpers.js`, readings in `scripts/lib_fa_scan.js`):
+- Ganjoor's **-ye after a long vowel**, رویِ / جایِ / خدایِ, cost 4 each (the engine read یِ as a consonant + iẓāfat): now
+  ئِ, as Urdu writes روئے; یِ after a silent h (دیده‌یِ) → ۂ; final ییِ / یی after a long vowel (تویی *tu-ī*) → ئی.
+- Final **-ūy** (روی, موی) is written وئے (was وئ), so *rū-yi* (به رویی) reads too.
+- **Line end**: آید lost its d (the ی-after-a-vowel guard missed آ).
+- **ast after ān**: بوستان است → بوستانست (*bū-stā-nast*; the n was being read as the uncounted nasal).
+- Tatweel (کـاین) is dropped; **bī-** adjectives may take an iẓāfat before them (*suḳhanān-e bī-ḥasīb*).
+- **Promoted readings**: where Sufinama's Roman gives a word one reading most of the time (3+ votes, half or more) and the
+  engine has it only at cost ≥ 2 (سرو *sarv*, عیار *ʿayyār*, عشاق, شوی *shavī*), that reading's cost drops to the
+  engine's best (at most 0.5). Majority only: a lex entry loses the engine's line-end licence for a final consonant, so
+  بود (*būd* 108 votes, *buvad* 87) promoted to a tie flipped Hafiz 207 (radīf *ḥāṣil būd*) to the wrong meter. Driven by
+  Sufinama only, never by the Ganjoor misses, so the Ganjoor set stays an independent test.
+
+  | | round 7 | now |
+  |---|---|---|
+  | Ganjoor lines fit (with marks) | 80.6% | 85.2% |
+  | Ganjoor lines fit (marks stripped) | 80.2% | 83.2% |
+
+  Left, by size: word-grafting (*man az*, *dar īn*, *bāz āmadam*, 1.2 each: an engine cost), *buvad* (needs a lex entry that
+  keeps the line-end licence, i.e. engine work), Arabic lines, and ~128 lines with no own-meter fit at all (text variants).

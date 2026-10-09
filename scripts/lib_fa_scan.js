@@ -43,17 +43,22 @@ function romanWeights(word) {
 const fits = (want, have) => want.length === have.length && want.every((w, i) => have[i] === 'x' || have[i] === w);
 
 /* engine readings of a word ranked by the Roman: -> lex option list [{w, c}] or null when the engine already prefers it */
-function rankReadings(Scan, word, romanWs) {
+function rankReadings(Scan, word, romanWs, promote) {
     let opts;
     try { opts = Scan.scanWord(word).opts; } catch (e) { return null; }
     if (!opts || !opts.length) return null;
     const list = opts.map(o => ({ w: o.syl.map(s => s.w), c: o.c }));
     const best = Math.min(...list.map(o => o.c));
     /* the engine's readings stay exactly as they are (their flexibility is what meter needs); a Persian reading is only ADDED
-       when none of them matches the Roman at all, at the cost of the engine's best */
-    if (list.some(o => fits(romanWs, o.w))) return null;
-    const out = list.map(o => ({ w: o.w, c: +o.c.toFixed(2) }));
-    out.push({ w: romanWs, c: +best.toFixed(2) });
+       when none of them matches the Roman at all, at the cost of the engine's best. `promote` (Sufinama's Roman gives the word
+       this reading most of the time): where the engine has it only at a cost of 2 or more (سرو sarv, عیار ʿayyār), that
+       reading's cost drops to the engine's best (at most 0.5, for a word whose every reading costs 2: شوی shavī). Only the
+       majority reading: a lex entry costs the word the engine's line-end licence (a final consonant left uncounted), so بود,
+       būd more often than buvad, keeps the engine's own reading (its radīf ḥāṣil būd scans only that way) */
+    const have = list.filter(o => fits(romanWs, o.w));
+    if (have.length && !(promote && Math.min(...have.map(o => o.c)) >= 2)) return null;
+    const out = list.map(o => ({ w: o.w, c: +(have.includes(o) ? Math.min(o.c, best, 0.5) : o.c).toFixed(2) }));
+    if (!have.length) out.push({ w: romanWs, c: +best.toFixed(2) });
     return out;
 }
 
@@ -80,7 +85,7 @@ function buildScanLex(Scan, ghazals) {
         const shares = Object.entries(v.n).filter(([, n]) => n / total >= 0.3).map(([ws]) => ws.split(''));
         let ranked = null;
         for (const ws of shares) {
-            const r = rankReadings(Scan, v.word, ws);
+            const r = rankReadings(Scan, v.word, ws, total >= 3 && v.n[ws.join('')] / total >= 0.5);
             if (!r) continue;
             if (!ranked) ranked = r;
             else if (!ranked.some(o => fits(ws, o.w))) ranked.push(r[r.length - 1]);

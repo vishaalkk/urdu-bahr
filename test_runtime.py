@@ -338,14 +338,17 @@ def run_tests():
     print(f"\n[TEST 6] Bibliography & Script Switcher Verification:")
     with open('data/bibliography.json', 'r', encoding='utf-8') as f:
         bib = json.load(f)
-    assert len(bib['entries']) == 3, f"Expected exactly 3 entries, got {len(bib['entries'])}"
-    print(f"  Total bibliography entries: {len(bib['entries'])} (Frances Pritchett, Sean Pue & UrduPoetry)")
+    assert bib['metadata']['entries_count'] == len(bib['entries']), "entries_count out of date"
+    print(f"  Total bibliography entries: {len(bib['entries'])}")
 
     entry_ids = [e['id'] for e in bib['entries']]
     assert 'pritchett_khaliq_1987' in entry_ids, "Missing Frances Pritchett attribution"
     assert 'pue_ast_transliteration' in entry_ids, "Missing Sean Pue AST graph attribution"
     assert 'urdupoetry_art5_bahr' in entry_ids, "Missing UrduPoetry bahr-reference attribution"
-    print("  ✓ Frances Pritchett's website and Sean Pue's AST engine exclusively and prominently credited.")
+    for src in ('pritchett_desertful', 'rekhta', 'urdushahkar', 'sufinama', 'ganjoor', 'steingass_1892'):
+        assert src in entry_ids, f"Missing {src} attribution (a source the poems or the Persian engine use)"
+    assert len(entry_ids) == len(set(entry_ids)), "duplicate bibliography id"
+    print("  ✓ The handbook, the script engine and every corpus and dictionary used are credited.")
 
     # Check presence of script switcher buttons in compiled HTML
     assert 'id="btnScriptUrdu"' in h_index, "Missing btnScriptUrdu in header"

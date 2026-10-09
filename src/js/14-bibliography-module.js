@@ -11,7 +11,7 @@ function renderBibliography() {
       <div class="bib-entry" id="bib-${e.id}">
         <div class="bib-entry-head">
           <div>
-            <span class="bib-year mono">${e.year}</span>
+            ${e.year ? `<span class="bib-year mono">${e.year}</span>` : ''}
             <span class="bib-tag">${tag}</span>
             <h3 class="bib-title">${e.title}</h3>
             ${e.urdu_title ? `<div class="bib-urdu-title">${e.urdu_title}</div>` : ''}
