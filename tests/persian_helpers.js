@@ -47,6 +47,8 @@ check(ctx.faScanText('رویِ تو جایِ من') === 'روئِ تو جائِ 
 check(ctx.faScanText('کل تویی ناطق') === 'کل توئی ناطق', 'faScanText: ī after a long vowel → ئی (tu-ī)');
 check(ctx.faScanText('بوستان است') === 'بوستانست', 'faProsodyText: ast after ān keeps the n (bū-stā-nast)');
 check(ctx.faScanText('کـاین') === 'کیں', 'faScanText: tatweel is dropped');
+check(ctx.lineScanText({ ur: 'ڈر نالہہائے زار سے میرے خدا کو مان' }) === 'ڈر نالہ ہائے زار سے میرے خدا کو مان' && ctx.urPluralHa('کہہ دو') === 'کہہ دو',
+  'lineScanText: the Persian plural -hā after a silent h scans as its own word (Ghalib 112.7 nā-la-hā-e); kahh is left alone');
 check(ctx.faLiaisonVariants('افشانیم و می').includes('افشانی مو می'), 'faLiaisonVariants: و takes the consonant before it (af-shā-nī-mo)');
 {
   const slots = l => { const W = ctx.faScanText(l).split(' '); return ctx.faIzafatSlots(W).map(i => W[i]).join(' '); };

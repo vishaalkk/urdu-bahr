@@ -8460,10 +8460,14 @@ function rkAlignWords(uw, ro) {
 
 /* The text to scan for a ghazal line: a Rekhta line (marked `rk` when the poet data loads) is scanned with the izafat, tashdid and
    pen-name hints its Roman gives; every other line scans as written. Cached on the line. */
+/* The Persian plural -hā on a word ending in a silent h is a word of its own for the scanner: Pue's parser writes Pritchett's
+   naalah'haa-e as نالہہائے, which the engine reads nā-lah-hā-e (= = = -), where the verse says nā-la-hā-e (= - = -), as
+   Urdu prints it (نالہ ہائے). Scan text only: the stored and displayed Urdu is left as it is. */
+function urPluralHa(s) { return String(s || '').replace(/ہہا(?=$|[\s،۔؟!]|ئے|ے|ں|ی)/g, 'ہ ہا'); }
+window.urPluralHa = urPluralHa;
 function lineScanText(lineObj) {
   if (!lineObj) return '';
-  if (!lineObj.rk || !lineObj.ro) return lineObj.ur || '';
-  if (lineObj._sc === undefined) lineObj._sc = rekhtaScanText(lineObj.ur || '', lineObj.ro);
+  if (lineObj._sc === undefined) lineObj._sc = urPluralHa(!lineObj.rk || !lineObj.ro ? lineObj.ur || '' : rekhtaScanText(lineObj.ur || '', lineObj.ro));
   return lineObj._sc;
 }
 window.lineScanText = lineScanText;
