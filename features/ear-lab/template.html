@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23FAF8F3'/%3E%3Ctext x='32' y='43' text-anchor='middle' font-size='30' fill='%230A4687' font-family='Noto Nastaliq Urdu%2C Jameel Noori Nastaleeq%2C Geeza Pro%2C Noto Naskh Arabic%2C serif'%3E%D8%A8%D8%AD%D8%B1%3C/text%3E%3C/svg%3E">
+  <title>Rhythm Lab · baḥr</title>
+
+  <!-- Production stylesheets and the app's bundled fonts (no network requests). Serve from the repo root: localhost:8000/features/ear-lab/rhythm_mockup.html -->
+  <link rel="stylesheet" href="../../src/styles/base.css">
+  <link rel="stylesheet" href="../../src/styles/verse.css">
+  <link rel="stylesheet" href="../../src/styles/pages.css">
+  <link rel="stylesheet" href="../../src/styles/drill.css">
+
+  <style>
+    @font-face { font-family: 'Source Serif 4'; font-style: normal; font-weight: 400; src: url('../../src/fonts/SourceSerif4-Regular.woff2') format('woff2'); }
+    @font-face { font-family: 'Source Serif 4'; font-style: italic; font-weight: 400; src: url('../../src/fonts/SourceSerif4-Italic.woff2') format('woff2'); }
+    @font-face { font-family: 'Source Serif 4'; font-style: normal; font-weight: 600; src: url('../../src/fonts/SourceSerif4-SemiBold.woff2') format('woff2'); }
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; src: url('../../src/fonts/Inter-Regular.woff2') format('woff2'); }
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; src: url('../../src/fonts/Inter-Medium.woff2') format('woff2'); }
+    @font-face { font-family: 'Source Code Pro'; font-style: normal; font-weight: 400; src: url('../../src/fonts/SourceCodePro-Regular.woff2') format('woff2'); }
+    @font-face { font-family: 'Noto Sans Mono'; font-style: normal; font-weight: 400; src: url('../../src/fonts/NotoSansMono-Regular.woff2') format('woff2'); }
+
+    body { background: var(--bg); }
+    .rhythm-root { max-width: var(--reading-max); margin: 0 auto; padding-bottom: var(--sp-8); }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .hidden { display: none !important; }
+    .mb3 { margin-bottom: var(--sp-3); }
+    .mb4 { margin-bottom: var(--sp-4); }
+    .mt3 { margin-top: var(--sp-3); }
+    .m0 { margin: 0; }
+    .page-head.top { margin-top: var(--sp-4); }
+    .hdr-badge { margin: 0; font-size: 11px; letter-spacing: 0.1em; color: var(--gold); }
+    .eyebrow.lbl { font-size: 11px; margin: 0; }
+    .eyebrow.accent { color: var(--gold); font-size: 11px; }
+    .row-chips { display: flex; gap: var(--sp-2); align-items: center; flex-wrap: wrap; }
+    .stage-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-3); flex-wrap: wrap; margin-bottom: 8px; }
+    .ab-row { display: flex; gap: var(--sp-3); align-items: center; flex-wrap: wrap; margin-top: var(--sp-4); }
+    .toggles { display: flex; gap: var(--sp-2); align-items: center; flex-wrap: wrap; }
+
+    /* Sound modes: flat tags (hairline; selected = ink border + 6% tint), no panels or shadows */
+    .mode-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: var(--sp-3); margin: var(--sp-4) 0; }
+    .mode-card { border: 1px solid var(--line2); border-radius: 4px; padding: var(--sp-3) var(--sp-4); background: transparent; cursor: pointer;
+      transition: border-color 140ms ease-out, background-color 140ms ease-out; text-align: left; }
+    .mode-card:hover { border-color: var(--ink); }
+    .mode-card.selected { border-color: var(--ink); background: color-mix(in srgb, var(--ink) 6%, transparent); }
+    .mode-title { font-family: var(--sans); font-size: 13px; font-weight: 500; color: var(--ink); display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+    .mode-desc { font-size: 12.5px; color: var(--dim); line-height: 1.45; margin: 0; }
+    .badge-tag { font-family: var(--sans); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+
+    /* Verse stage: whitespace and hairlines, no box */
+    .verse-stage { border-top: 1px solid var(--line); padding: var(--sp-4) 0 var(--sp-2); margin: var(--sp-4) 0; }
+    .verse-stage .urdu-line { font-family: var(--urdu); font-size: 28px; line-height: 2.1; direction: rtl; text-align: right; margin-bottom: var(--sp-2); color: var(--ink); }
+    .verse-stage .translit-line { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--dim); margin-bottom: var(--sp-3); }
+    .verse-stage .deva-line { font-family: var(--deva); font-size: 18px; color: var(--ink); margin-bottom: var(--sp-3); }
+    .tf-verse { margin: var(--sp-2) 0 4px; font-size: 24px; font-weight: 400; font-family: var(--urdu); line-height: 2; direction: rtl; }
+    .tf-verse.ltr { font-family: var(--serif); font-style: italic; font-size: 20px; direction: ltr; }
+    .tf-verse.deva { font-family: var(--deva); font-style: normal; font-size: 20px; direction: ltr; }
+
+    /* Live syllable strip, grouped by feet; the afāʿīl syllable under each chip */
+    .live-strip { display: flex; flex-wrap: wrap; gap: 12px 6px; align-items: flex-start; margin: var(--sp-4) 0 var(--sp-3); padding-top: var(--sp-3); border-top: 1px solid var(--line); }
+    .live-strip.rtl { direction: rtl; }
+    .foot-box { display: inline-flex; flex-direction: column; align-items: center; padding: 0 10px; border-inline-end: 1px solid var(--line2); }
+    .foot-box:last-child { border-inline-end: 0; }
+    .foot-box.active-foot .foot-name-lbl { color: var(--ink); }
+    .foot-name-lbl { font-family: var(--serif); font-style: italic; font-size: 13px; color: var(--dim); margin-bottom: 6px; }
+    .syl-cluster { display: flex; gap: 5px; }
+    .syl-col { display: inline-flex; flex-direction: column; align-items: center; }
+    .afl { font-family: var(--mono); font-size: 10.5px; color: var(--faint); line-height: 1.4; direction: ltr; }
+    .afl.on { color: var(--ink); font-weight: 500; }
+    .syl-chip { font-family: var(--urdu); font-size: 20px; line-height: 1.6; padding: 2px 7px; border-radius: 4px 4px 0 0;
+      background: color-mix(in srgb, var(--ink) 4%, transparent); border-bottom: 3px solid transparent; color: var(--ink);
+      transition: background 80ms ease-out, transform 80ms ease-out; user-select: none; }
+    .syl-chip.roman-chip { font-family: var(--mono); font-size: 14px; line-height: 1.5; }
+    .syl-chip.w-l { border-bottom-color: var(--mark-l); border-bottom-width: 4px; }
+    .syl-chip.w-s { border-bottom-color: var(--mark-s); border-bottom-style: dotted; }
+    .syl-chip.w-c { border-bottom-color: var(--ghost); border-bottom-style: dashed; color: var(--ghost); }
+    .syl-chip.lit { background: color-mix(in srgb, var(--mark-l) 30%, transparent); transform: translateY(-3px); }
+    .syl-chip.lit.w-s { background: color-mix(in srgb, var(--mark-s) 26%, transparent); }
+    .syl-chip.flip { background: color-mix(in srgb, var(--no) 16%, transparent); border-bottom-color: var(--no); }
+    @media (prefers-reduced-motion: reduce) { .syl-chip.lit { transform: none; } }
+
+    .player-controls { display: flex; align-items: center; gap: var(--sp-4); flex-wrap: wrap; margin: var(--sp-3) 0; padding: var(--sp-3) 0; border-top: 1px solid var(--line); }
+    .play-btn-main { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--ink); background: var(--ink); color: var(--bg); font-size: 16px; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; transition: background-color 120ms ease-out; }
+    .play-btn-main:hover { background: var(--gold); border-color: var(--gold); }
+    .slider-group { display: flex; align-items: center; gap: var(--sp-2); font-size: 12px; color: var(--dim); }
+    .slider-group input[type="range"] { width: 110px; accent-color: var(--ink); }
+    .bpm-v { min-width: 4.5em; }
+
+    .toggle-chip { font-family: var(--sans); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 10px; border: 1px solid var(--line2);
+      border-radius: 4px; background: transparent; color: var(--faint); cursor: pointer; transition: border-color 120ms ease-out, color 120ms ease-out; }
+    .toggle-chip:hover { border-color: var(--ink); color: var(--ink); }
+    .toggle-chip.active { background: color-mix(in srgb, var(--ink) 6%, transparent); border-color: var(--ink); color: var(--ink); font-weight: 500; }
+    .toggle-chip.verse-chip { text-transform: none; letter-spacing: 0; font-size: 13px; }
+
+    .limp-options-row { display: flex; gap: var(--sp-3); margin: var(--sp-4) 0; flex-wrap: wrap; }
+    .limp-options-row.rtl { direction: rtl; }
+    .clickable-word { font-family: var(--urdu); font-size: 24px; padding: 4px 14px; border: 1px solid var(--line2); border-radius: 4px; background: transparent; cursor: pointer;
+      transition: border-color 140ms ease-out, background-color 140ms ease-out; color: var(--ink); }
+    .clickable-word.roman { font-family: var(--serif); font-size: 18px; font-style: italic; }
+    .clickable-word:hover { border-color: var(--ink); }
+    .clickable-word.playing { border-color: var(--ink); background: color-mix(in srgb, var(--ink) 6%, transparent); }
+    .clickable-word.selected-limp { border-color: var(--no); color: var(--no); }
+    .clickable-word.correct-limp { border-color: var(--ok); color: var(--ok); }
+    .limp-feedback { margin-top: var(--sp-4); padding-top: var(--sp-3); border-top: 1px solid var(--line); }
+    .verdict { font-family: var(--sans); font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+    .mark-ok { color: var(--ok); }
+    .mark-no { color: var(--no); }
+    .limp-score { font-family: var(--sans); font-size: 12px; color: var(--faint); }
+
+    .tap-stage { display: flex; flex-direction: column; align-items: center; gap: var(--sp-4); margin: var(--sp-5) 0; }
+    .tap-pad { width: 240px; height: 120px; border: 1px dashed var(--line2); border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      cursor: pointer; background: transparent; transition: background-color 80ms ease-out, border-color 80ms ease-out; user-select: none; -webkit-user-select: none; touch-action: manipulation; color: var(--ink); }
+    .tap-pad:hover { border-color: var(--ink); }
+    .tap-pad.active { background: color-mix(in srgb, var(--ink) 8%, transparent); border-color: var(--ink); }
+    .tap-wrap { width: 100%; max-width: 420px; }
+    .tap-head { display: flex; justify-content: space-between; font-size: 11px; color: var(--faint); margin-bottom: 4px; font-family: var(--sans); letter-spacing: 0.06em; }
+    .tap-bars { width: 100%; height: 76px; display: block; border-bottom: 1px solid var(--line2); }
+    .tap-bars .want { fill: none; stroke: var(--line2); stroke-dasharray: 3 2; }
+    .tap-bars .got { fill: var(--mark-l); }
+    .tap-bars .got.s { fill: var(--mark-s); }
+    .tap-bars .got.off { fill: var(--no); }
+    .tap-read { font-family: var(--mono-pat); font-size: 13px; text-align: center; color: var(--dim); min-height: 1.4em; }
+
+    /* couplet: the answering line under the first */
+    .second-line { border-top: 1px dashed var(--line); margin-top: var(--sp-2); padding-top: var(--sp-2); }
+    .second-line .live-strip { border-top: 0; padding-top: 0; margin-top: var(--sp-2); }
+    .syl-chip.hook { box-shadow: inset 0 -1px 0 var(--gold); }
+    .hook-note { font-family: var(--sans); font-size: 12px; color: var(--faint); }
+    /* tarannum options and the round/raga status */
+    .tar-row { display: flex; gap: var(--sp-2); align-items: center; flex-wrap: wrap; margin: 0 0 var(--sp-2); }
+    .tar-row .eyebrow.lbl { margin-inline-end: var(--sp-1); }
+    .tar-status { font-family: var(--sans); font-size: 13px; color: var(--dim); min-height: 1.5em; }
+    .tar-status b { color: var(--ink); font-weight: 500; }
+    .raga-mood { font-family: var(--serif); font-style: italic; font-size: 13px; color: var(--faint); }
+
+    /* Notes: hairline and serif text; no tinted panel */
+    .callout-box { border-inline-start: 2px solid var(--line2); padding: var(--sp-1) var(--sp-4); margin: var(--sp-5) 0; font-family: var(--serif); font-size: 14.5px; color: var(--dim); }
+    .callout-box strong { color: var(--ink); font-weight: 500; }
+  </style>
+</head>
+<body>
+
+  <header id="siteHeader">
+    <div class="mark" aria-label="baḥr">ba<span class="mark-dot-h">h</span>r<span class="mark-ur">بحر</span></div>
+    <nav class="desktop-nav" aria-label="Main Navigation">
+      <a href="../../index.html#/weight">Weight</a>
+      <a href="../../index.html#/meter">Meter</a>
+      <a href="../../index.html#/scan">Scan</a>
+      <a href="../../index.html#/ghazals">Ghazals</a>
+    </nav>
+    <div class="hdr-tools">
+      <span class="eyebrow hdr-badge">RHYTHM LAB MOCKUP</span>
+      <div class="script-switch">
+        <button class="scriptbtn on" id="btn-ur" type="button">اردو</button>
+        <button class="scriptbtn" id="btn-hi" type="button">हिन्दी</button>
+        <button class="scriptbtn" id="btn-ro" type="button">Roman</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap rhythm-root">
+    <div class="page-head top">
+      <div class="eyebrow">Ear &amp; Rhythm Training Lab</div>
+      <h1 class="page-title">Embedding Meter (Wazn) in the Internal Ear</h1>
+      <p class="lede dim">A prototype for hearing a bahr: compare ways of sounding the same verse, catch the word that limps (<i>kasr-e vazn</i>), and keep an anchor verse's rhythm in your hands.</p>
+    </div>
+
+    <div class="subtabs seg" role="tablist">
+      <button class="seg-btn on" id="tab-btn-groove" data-tab="groove" type="button">1. The Living Groove</button>
+      <button class="seg-btn" id="tab-btn-limp" data-tab="limp" type="button">2. Spot the Limp</button>
+      <button class="seg-btn" id="tab-btn-anchor" data-tab="anchor" type="button">3. Tuning Fork &amp; Tap Along</button>
+    </div>
+
+    <!-- ================= TAB 1: THE LIVING GROOVE ================= -->
+    <section class="panel active" id="panel-groove">
+      <p class="dim small mb3">Hear the same verse four ways. The difference to listen for: with a drone and a soft pulse under it, a long syllable is heard holding through two beats instead of a tap followed by silence.</p>
+
+      <div class="row-chips" id="verse-chips">
+        <span class="eyebrow lbl">Select verse:</span>
+      </div>
+
+      <div class="mode-grid">
+        <div class="mode-card" id="mode-baseline" data-mode="baseline" role="button" tabindex="0">
+          <div class="mode-title"><span>A. Today's Baseline</span><span class="badge-tag">Current</span></div>
+          <p class="mode-desc">Exactly what the app plays now: synthesized tabla, one stroke per syllable, a rest and a thump between every foot.</p>
+        </div>
+        <div class="mode-card selected" id="mode-groove" data-mode="groove" role="button" tabindex="0">
+          <div class="mode-title"><span>B. Drone + Sub-pulse</span><span class="badge-tag">Grounded</span></div>
+          <p class="mode-desc">The app's recorded tabla over a plucked tanpura drone tuned to it; a soft tick on every beat, so a long is felt spanning two.</p>
+        </div>
+        <div class="mode-card" id="mode-tarannum" data-mode="tarannum" role="button" tabindex="0">
+          <div class="mode-title"><span>C. Tarannum Arc</span><span class="badge-tag">Melodic</span></div>
+          <p class="mode-desc">The couplet played in a raga on bansuri, sarangi, sitar or voice, over harmonium: the first line opens and rests on Pa, the second answers home to Sa, the rhyme gets the same little phrase every time, and each round ornaments the long syllables a new way.</p>
+        </div>
+        <div class="mode-card" id="mode-afail" data-mode="afail" role="button" tabindex="0">
+          <div class="mode-title"><span>D. Say the Afāʿīl</span><span class="badge-tag">Mnemonic</span></div>
+          <p class="mode-desc">A recorded voice says <i>da</i> for short and <i>dum</i> for long while the foot names light up under the chips: chant <i>fā-ʿi-lā-tun</i> with it.</p>
+        </div>
+      </div>
+
+      <div class="verse-stage">
+        <div class="stage-head">
+          <span class="eyebrow accent" id="meter-badge-name"></span>
+          <span class="mono faint tiny" id="meter-formula-text"></span>
+        </div>
+        <div class="urdu-line" id="stage-urdu-text"></div>
+        <div class="translit-line" id="stage-translit-text"></div>
+        <div class="deva-line hidden" id="stage-deva-text"></div>
+
+        <div class="live-strip" id="stage-strip"></div>
+        <div class="second-line hidden" id="stage-second">
+          <div class="urdu-line" id="stage-urdu-text2"></div>
+          <div class="translit-line" id="stage-translit-text2"></div>
+          <div class="deva-line hidden" id="stage-deva-text2"></div>
+          <div class="live-strip" id="stage-strip2"></div>
+          <p class="hook-note" id="hook-note"></p>
+        </div>
+
+        <div class="player-controls">
+          <button class="play-btn-main" id="btn-master-play" type="button" aria-label="Play verse">▶︎</button>
+          <div class="slider-group">
+            <span>Tempo:</span>
+            <input type="range" id="bpm-slider" min="100" max="260" step="10" value="190">
+            <span class="mono bpm-v" id="bpm-val">190 bpm</span>
+          </div>
+          <div class="toggles">
+            <button class="toggle-chip active" id="toggle-drone" data-opt="drone" type="button">Tanpura Drone</button>
+            <button class="toggle-chip active" id="toggle-subpulse" data-opt="subpulse" type="button">Sub-Grid Pulse</button>
+            <button class="toggle-chip" id="toggle-footgap" data-opt="footgap" type="button">Foot Breath</button>
+            <button class="toggle-chip active" id="toggle-loop" data-opt="loop" type="button">Loop</button>
+            <button class="toggle-chip active" id="toggle-couplet" data-opt="couplet" type="button">Couplet</button>
+          </div>
+        </div>
+        <div id="tarannum-opts" class="hidden">
+          <div class="tar-row" id="raga-chips"></div>
+          <div class="tar-row" id="inst-chips"></div>
+          <div class="tar-row">
+            <span class="eyebrow lbl">With:</span>
+            <button class="toggle-chip active" id="toggle-harmonium" data-opt="harmonium" type="button">Harmonium</button>
+            <button class="toggle-chip active" id="toggle-ornaments" data-opt="ornaments" type="button">Ornaments</button>
+            <button class="toggle-chip active" id="toggle-vowels" data-opt="vowels" type="button">Sing the vowels</button>
+          </div>
+          <p class="raga-mood" id="raga-mood"></p>
+        </div>
+        <p class="tar-status" id="tar-status" aria-live="polite"></p>
+      </div>
+
+      <div class="callout-box">
+        <strong>Why this cures the robotic feel:</strong>
+        a long syllable (=) is twice a short (–). Played into dead silence, it is a tap and an empty wait. With a drone and a one-beat tick underneath, the ear hears the long note hold through two ticks: that is the groove. Foot Breath is off by default because reciters do not pause between feet; the only breath is at a caesura.
+      </div>
+    </section>
+
+    <!-- ================= TAB 2: SPOT THE LIMP ================= -->
+    <section class="panel" id="panel-limp">
+      <p class="dim small mb3">Poets do not scan by arithmetic; they hear the <i>kasr-e vazn</i>, the limp. Each line below is a real line by Ghalib or Mir. In the stumbling version one syllable of one word has the wrong weight. Listen and pick the word.</p>
+
+      <div class="verse-stage">
+        <div class="stage-head mb3">
+          <span class="eyebrow lbl" id="limp-head"></span>
+          <span class="faint tiny">Listen for the stumbling foot</span>
+        </div>
+        <div class="translit-line" id="limp-line"></div>
+        <p class="dim small mb3">Listen to the line. Click the word that is out of rhythm:</p>
+        <div class="limp-options-row" id="limp-words-container"></div>
+
+        <div class="ab-row">
+          <button class="btn gold" id="btn-play-limp" type="button">▶︎ Hear Stumbling Line</button>
+          <button class="btn ghost" id="btn-play-clean" type="button">▷ Hear Correct Reading</button>
+        </div>
+
+        <div class="limp-feedback hidden" id="limp-feedback">
+          <div class="verdict" id="limp-verdict-title"></div>
+          <p class="dim small m0" id="limp-explanation"></p>
+          <div class="live-strip" id="limp-strip"></div>
+          <div class="mt3"><button class="btn sm" id="btn-next-limp" type="button">Next Stumbling Verse ▸</button></div>
+        </div>
+        <p class="limp-score" id="limp-score"></p>
+      </div>
+
+      <div class="callout-box">
+        <strong>How the limp is made:</strong>
+        one syllable whose weight is fixed (not a flexible <i>vuh</i>, <i>kih</i> or <i>to</i>, which may go either way) is made long when it should be short, or short when it should be long, and the scanner confirms that no bahr accepts the result. So the stumble is real, and it sits in one word.
+      </div>
+    </section>
+
+    <!-- ================= TAB 3: TUNING FORK & TAP ALONG ================= -->
+    <section class="panel" id="panel-anchor">
+      <p class="dim small mb3">Every bahr family has an anchor verse that works as a tuning fork: poets keep it running in their head to check whether a new line is in rhythm.</p>
+
+      <div class="row-chips mb4" id="fork-chips"></div>
+
+      <div class="verse-stage">
+        <div class="stage-head">
+          <span class="eyebrow accent" id="tf-family-name"></span>
+          <span class="faint tiny" id="tf-mnemonic-bol"></span>
+        </div>
+        <h3 class="tf-verse" id="tf-verse-title"></h3>
+        <p class="dim small mb3" id="tf-verse-meta"></p>
+
+        <div class="tap-stage">
+          <button class="tap-pad" id="interactive-tap-pad" type="button" aria-label="Tap along to the rhythm">
+            <span class="eyebrow lbl">TAP PAD</span>
+            <span class="small dim" id="tap-instruction">Tap or press space on each syllable</span>
+          </button>
+          <div class="tap-wrap">
+            <div class="tap-head"><span>YOUR TAPS AGAINST THE METER</span><span id="tap-stats-label">0 taps</span></div>
+            <svg class="tap-bars" id="tap-bars-viz" viewBox="0 0 400 76" preserveAspectRatio="none" aria-hidden="true"></svg>
+            <p class="tap-read" id="tap-read"></p>
+          </div>
+          <div class="ab-row">
+            <button class="btn sm gold" id="btn-loop-anchor" type="button">▶︎ Loop Anchor Rhythm</button>
+            <button class="btn sm ghost" id="btn-clear-taps" type="button">Clear Taps</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout-box">
+        <strong>Hands first, then ears:</strong>
+        tap a long syllable as one beat and a short as half, steady, as Pritchett advises, and say the afāʿīl with it. While the anchor loops, each round of taps is scored: dashed outlines are what the meter wants, filled bars are what you tapped, red where you made a long short or a short long. With the loop off, tap the line from memory and see how your rhythm reads.
+      </div>
+    </section>
+  </div>
+
+<script>
+'use strict';
+/* ===== Data from the app's scanner (gen_g.js): syllables, weights, feet, afāʿīl, provable limps ===== */
+const VERSES = /*@@VERSES@@*/;
+const TUNING_FORKS = /*@@FORKS@@*/;
+const LIMP_POOL = /*@@LIMPS@@*/;
+const VOICEPACK = /*@@VOICEPACK@@*/;
+const TABLAPACK = /*@@TABLAPACK@@*/;
+const $ = id => document.getElementById(id);
+
+/* ==============================================================
+   AUDIO ENGINE (Web Audio; recordings are the app's own takes)
+   ============================================================== */
+const AudioEngine = {
+  ctx: null, out: null, room: null, noise: null, glottal: null, rec: null, sa: 155.6,
+  drone: { on: false, next: 0, i: 0, bus: null, timer: null },
+  ensure() {
+    if (!this.ctx) {
+      const C = window.AudioContext || window.webkitAudioContext; if (!C) return false;
+      const c = this.ctx = new C();
+      const comp = c.createDynamicsCompressor(); comp.threshold.value = -18; comp.knee.value = 12; comp.ratio.value = 4;
+      const mk = c.createGain(); mk.gain.value = 1.4; this.out = c.createGain(); this.out.gain.value = 0.9;
+      this.out.connect(comp); comp.connect(mk); mk.connect(c.destination);
+      const nb = c.createBuffer(1, c.sampleRate, c.sampleRate), d = nb.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; this.noise = nb;
+      try {
+        const rl = Math.floor(c.sampleRate * 1.3), ir = c.createBuffer(2, rl, c.sampleRate);
+        for (let ch = 0; ch < 2; ch++) { const x = ir.getChannelData(ch); for (let i = 0; i < rl; i++) x[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / rl, 3.4); }
+        const cv = c.createConvolver(); cv.buffer = ir; const wet = c.createGain(); wet.gain.value = 0.28;
+        this.room = c.createGain(); this.room.connect(this.out); this.room.connect(cv); cv.connect(wet); wet.connect(this.out);
+      } catch (e) { this.room = this.out; }
+      try { const N = 48, re = new Float32Array(N), im = new Float32Array(N); for (let k = 1; k < N; k++) im[k] = Math.pow(k, -1.25) * (k % 2 ? 1 : 0.85);
+        this.glottal = c.createPeriodicWave(re, im, { disableNormalization: false }); } catch (e) { this.glottal = null; }
+      this.loadPacks();
+    }
+    if (this.ctx.state !== 'running') { try { const p = this.ctx.resume(); if (p && p.catch) p.catch(() => {}); } catch (e) {} }
+    return true;
+  },
+  loadPacks() {
+    if (this.recP) return this.recP;
+    const dec = o => { const bin = atob(o.b64), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+      return new Promise(res => { try { const p = this.ctx.decodeAudioData(u.buffer, b => res({ buf: b, off: o.off, dur: o.dur }), () => res(null)); if (p && p.then) p.catch(() => res(null)); } catch (e) { res(null); } }); };
+    this.recP = Promise.all([VOICEPACK.da, VOICEPACK.dum, TABLAPACK.da, TABLAPACK.dum].map(l => Promise.all(l.map(dec)))).then(([da, dum, tda, tdum]) => {
+      this.rec = { voice: { da: da.filter(Boolean), dum: dum.filter(Boolean), last: {} }, tabla: { da: tda.filter(Boolean), dum: tdum.filter(Boolean), last: {} } };
+      const f0 = this.rec.tabla.dum[0] && pitchOf(this.rec.tabla.dum[0]);
+      if (f0) { let sa = f0; while (sa > 180) sa /= 2; while (sa < 110) sa *= 2; this.sa = sa; }   /* drone and hum sit on the tabla's own pitch */
+    });
+    return this.recP;
+  },
+  burst(t, freq, q, vol, dur, dest) {
+    const c = this.ctx, n = c.createBufferSource(); n.buffer = this.noise;
+    const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = freq; f.Q.value = q;
+    const g = c.createGain(); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0005, t + dur);
+    n.connect(f); f.connect(g); g.connect(dest || this.out); n.start(t); n.stop(t + dur + 0.01);
+  },
+  /* A. the app's synthesized tabla and foot thump, unchanged */
+  synthTabla(t, dur, isLong, vol) {
+    const c = this.ctx, f = isLong ? 311 : 370, decay = isLong ? Math.min(0.7, dur * 1.1) : Math.min(0.2, dur * 0.9);
+    [1, 2, 3, 4.15].forEach((h, i) => { const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = f * h;
+      const g = c.createGain(); const d = decay / (1 + i * 0.7); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.55 * vol / (i + 1), t + 0.004);
+      g.gain.exponentialRampToValueAtTime(0.0006, t + d); o.connect(g); g.connect(this.out); o.start(t); o.stop(t + d + 0.05); });
+    this.burst(t, isLong ? 2400 : 4200, 1.2, 0.35 * vol, 0.015);
+    if (isLong) { const o = c.createOscillator(); o.type = 'sine'; o.frequency.setValueAtTime(72, t); o.frequency.linearRampToValueAtTime(104, t + Math.min(0.45, dur));
+      const g = c.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(1.1 * vol, t + 0.006); g.gain.exponentialRampToValueAtTime(0.0006, t + Math.min(0.9, dur * 1.4));
+      o.connect(g); g.connect(this.out); o.start(t); o.stop(t + 1); }
+  },
+  footThump(t, vol) {
+    const c = this.ctx, o = c.createOscillator(), g = c.createGain(); o.type = 'sine';
+    o.frequency.setValueAtTime(95, t); o.frequency.exponentialRampToValueAtTime(58, t + 0.18);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.5 * vol, t + 0.006); g.gain.exponentialRampToValueAtTime(0.0005, t + 0.3);
+    o.connect(g); g.connect(this.out); o.start(t); o.stop(t + 0.32);
+  },
+  /* B/D. a recorded take (tabla stroke or spoken da/dum), its attack placed exactly on the beat */
+  rec1(kind, t, dur, isLong, vol, human) {
+    const R = this.rec && this.rec[kind]; if (!R || !R.da.length || !R.dum.length) return this.synthTabla(t, dur, isLong, vol);
+    const pool = isLong ? R.dum : R.da, key = isLong ? 'l' : 's';
+    let bi = 0, bs = 1e9; pool.forEach((k, j) => { const sc = Math.abs((k.dur - k.off) - dur * 0.95) + (j === R.last[key] ? 0.2 : 0); if (sc < bs) { bs = sc; bi = j; } });
+    R.last[key] = bi; const k = pool[bi], c = this.ctx;
+    const rate = human ? 1 + (Math.random() - 0.5) * 0.02 : 1, v = vol * (human ? 0.93 + Math.random() * 0.1 : 1);
+    const src = c.createBufferSource(); src.buffer = k.buf; src.playbackRate.value = rate;
+    const g = c.createGain(), start = Math.max(c.currentTime, t - k.off / rate);
+    const hold = Math.min(k.dur / rate, k.off / rate + dur * (kind === 'voice' ? 0.95 : 1.6)), fo = Math.min(0.06, hold / 3);
+    g.gain.setValueAtTime(v, start); g.gain.setValueAtTime(v, start + hold - fo); g.gain.linearRampToValueAtTime(0, start + hold);
+    src.connect(g); g.connect(kind === 'voice' ? this.room : this.out); src.start(start); src.stop(start + hold + 0.02);
+  },
+  /* the one-beat heartbeat: a soft shaker tick */
+  tickSubPulse(t, vol) { this.burst(t, 7200, 1.1, vol, 0.03); this.burst(t, 3800, 2.5, vol * 0.35, 0.02); },
+  /* tanpura-like drone: a slow cycle of plucked strings (Pa, Sa, Sa, low Sa) on the tabla's Sa */
+  startDrone() {
+    const D = this.drone; if (D.on || !this.ensure()) return; const c = this.ctx; D.on = true; D.i = 0; D.next = c.currentTime + 0.05;
+    D.bus = c.createGain(); D.bus.gain.setValueAtTime(0, c.currentTime); D.bus.gain.linearRampToValueAtTime(1, c.currentTime + 0.8); D.bus.connect(this.room);
+    const tick = () => { while (D.next < c.currentTime + 0.5) { const sa = this.sa, notes = [sa * 0.75, sa, sa, sa / 2]; this.pluck(D.next, notes[D.i % 4], D.bus); D.next += 1.05; D.i++; } };
+    tick(); D.timer = setInterval(tick, 120);
+  },
+  stopDrone() {
+    const D = this.drone; if (!D.on) return; D.on = false; clearInterval(D.timer); const c = this.ctx, b = D.bus;
+    b.gain.cancelScheduledValues(c.currentTime); b.gain.setValueAtTime(b.gain.value, c.currentTime); b.gain.linearRampToValueAtTime(0, c.currentTime + 0.6);
+    setTimeout(() => { try { b.disconnect(); } catch (e) {} }, 900);
+  },
+  pluck(t, f, dest) {
+    const c = this.ctx, g = c.createGain(), lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.Q.value = 0.7;
+    lp.frequency.setValueAtTime(2600, t); lp.frequency.exponentialRampToValueAtTime(700, t + 2.5);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.035, t + 0.04); g.gain.exponentialRampToValueAtTime(0.0004, t + 4.2);
+    [1, 1.0035].forEach(d => { const o = c.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f * d; o.connect(lp); o.start(t); o.stop(t + 4.3); });
+    lp.connect(g); g.connect(dest);
+  },
+  /* ---------- C. Tarannum sounds. Shared: a slow random wobble (real players and singers are never dead steady) ---------- */
+  wobble(param, t0, stop, depth, rate) {
+    const c = this.ctx, n = c.createBufferSource(); n.buffer = this.noise; n.loop = true; n.loopStart = Math.random() * 0.5;
+    const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = rate || 6; lp.Q.value = 0.5;
+    const g = c.createGain(); g.gain.value = depth * 60;   /* lowpassed noise is ~1/60 of full scale */
+    n.connect(lp); lp.connect(g); g.connect(param); n.start(t0); n.stop(stop);
+  },
+  /* one continuous tone per line, the pitch following the raga points: used by voice, bansuri and sarangi */
+  legato(t0, events, pts, mult, o, env, opt) {
+    const first = t0 + events[0].at, F = s => hz(s) * mult;
+    o.frequency.setValueAtTime(F(pts[0][0].s - 0.6), first);
+    events.forEach((e, i) => {
+      const t = t0 + e.at, prev = events[i - 1], gap = !prev || (e.at - (prev.at + prev.dur)) > 0.01, P = pts[i], last = P[P.length - 1].s;
+      /* a scoop: a fresh note starts a little under pitch and settles (not inside an ornament) */
+      if (P.length === 1 && (!prev || pts[i - 1][pts[i - 1].length - 1].s !== last)) { o.frequency.setTargetAtTime(F(last - 0.35), t, 0.006); o.frequency.setTargetAtTime(F(last), t + 0.02, P[0].tc > 0.05 ? P[0].tc : 0.035); }
+      else P.forEach(q => o.frequency.setTargetAtTime(F(q.s), t + q.dt, q.tc));
+      const pk = opt.pk * e.vol * (0.94 + Math.random() * 0.1);
+      if (gap) { env.gain.setValueAtTime(0, Math.max(first, t - 0.01)); env.gain.linearRampToValueAtTime(pk, t + opt.attack); }
+      else { env.gain.setTargetAtTime(pk * opt.dip, t - 0.02, 0.012); env.gain.setTargetAtTime(pk, t + 0.02, opt.attack / 2); }
+      if (e.isLong && e.dur > 0.3) env.gain.setTargetAtTime(pk * opt.swell, t + e.dur * 0.3, e.dur * 0.3);   /* held notes swell */
+      if (opt.vib) {   /* vibrato: its own speed each note, arriving late on held notes */
+        opt.vib.lfo.frequency.setValueAtTime(opt.vib.rate * (0.9 + Math.random() * 0.2), t);
+        opt.vib.g.gain.setValueAtTime(0, t);
+        if (e.isLong) opt.vib.g.gain.setTargetAtTime(F(last) * opt.vib.depth * (0.8 + Math.random() * 0.4), t + e.dur * opt.vib.delay, 0.08);
+      }
+      if (opt.onNote) opt.onNote(e, i, t, gap);
+      const next = events[i + 1], end = t + e.dur;
+      if (!next || (next.at - (e.at + e.dur)) > 0.01) { env.gain.setTargetAtTime(0, end - 0.05, opt.release); }
+    });
+    const lastE = events[events.length - 1];
+    return t0 + lastE.at + lastE.dur + 0.6;
+  },
+  /* the singing voice: glottal source, a faint double, five formants, the syllable's vowel and its consonant */
+  voice(t0, events, pts, vol, sylRo) {
+    if (!events.length) return;
+    const c = this.ctx, first = t0 + events[0].at, stop = t0 + events[events.length - 1].at + events[events.length - 1].dur + 0.7;
+    const mk = () => { const o = c.createOscillator(); if (this.glottal) o.setPeriodicWave(this.glottal); else o.type = 'sawtooth'; return o; };
+    const o = mk(), o2 = mk(), d2 = c.createDelay(0.05); d2.delayTime.value = 0.018; o2.detune.value = 7;
+    const src = c.createGain(), g2 = c.createGain(); g2.gain.value = 0.32; o.connect(src); o2.connect(g2); g2.connect(d2); d2.connect(src);
+    const env = c.createGain(); env.gain.setValueAtTime(0, t0);
+    const shim = c.createGain(); shim.gain.value = 1; this.wobble(shim.gain, first, stop, 0.05, 9);           /* shimmer: tiny loudness flutter */
+    const forms = [[700, 7, 1], [1150, 9, 0.5], [2500, 13, 0.2], [3300, 14, 0.12], [3900, 16, 0.06]].map(([f, q, gn]) => {
+      const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = f; bp.Q.value = q; const g = c.createGain(); g.gain.value = gn; src.connect(bp); bp.connect(g); g.connect(shim); return bp; });
+    shim.connect(env); env.connect(this.room);
+    const lfo = c.createOscillator(), lg = c.createGain(); lfo.connect(lg); lg.connect(o.frequency); lg.connect(o2.frequency);
+    const dummy = { frequency: { setValueAtTime: (v, t) => o2.frequency.setValueAtTime(v, t), setTargetAtTime: (v, t, k) => o2.frequency.setTargetAtTime(v, t, k) } };
+    this.wobble(o.frequency, first, stop, hz(0) * 0.004, 6); this.wobble(o2.frequency, first, stop, hz(0) * 0.005, 5);   /* jitter and drift */
+    const end = this.legato(t0, events, pts, 1, o, env, { pk: 2.4 * vol, attack: 0.06, dip: 0.5, swell: 1.12, release: 0.05,
+      vib: { lfo, g: lg, rate: 5.4, depth: 0.014, delay: 0.35 },
+      onNote: (e, i, t, gap) => {
+        const v = vowelOf(sylRo[e.i]); forms[0].frequency.setTargetAtTime(v[0], t + 0.03, 0.025); forms[1].frequency.setTargetAtTime(v[1], t + 0.03, 0.03);
+        this.consonant(onsetOf(sylRo[e.i]), t, vol, env, forms, 2.4 * vol * e.vol);
+      } });
+    this.legato(t0, events, pts, 1, dummy, c.createGain(), { pk: 0, attack: 0.06, dip: 1, swell: 1, release: 0.05 });   /* the double follows the same pitch */
+    o.start(first); o2.start(first); lfo.start(first); o.stop(end); o2.stop(end); lfo.stop(end);
+  },
+  /* a consonant at a syllable's start, from its Roman spelling: a closure and burst, a hiss, or a nasal hum */
+  consonant(k, t, vol, env, forms, pk) {
+    if (!k) return;
+    const r = this.room;
+    if (k.type === 'stop') { env.gain.setTargetAtTime(pk * 0.12, t - 0.035, 0.008); env.gain.setTargetAtTime(pk, t + 0.012, 0.02);
+      this.burst(t, k.f, 1.4, 0.35 * vol, k.asp ? 0.06 : 0.025, r); }
+    else if (k.type === 'fric') { this.burst(t - 0.04, k.f, k.q || 1, 0.3 * vol, 0.07, r); env.gain.setTargetAtTime(pk * 0.35, t - 0.05, 0.01); env.gain.setTargetAtTime(pk, t + 0.01, 0.02); }
+    else if (k.type === 'nasal') { forms[0].frequency.setTargetAtTime(260, t - 0.04, 0.008); forms[1].frequency.setTargetAtTime(k.f, t - 0.04, 0.008); env.gain.setTargetAtTime(pk * 0.55, t - 0.04, 0.01); env.gain.setTargetAtTime(pk, t + 0.03, 0.02); }
+    else if (k.type === 'glide') { forms[1].frequency.setTargetAtTime(k.f, t - 0.03, 0.01); }
+  },
+  /* bansuri: a near-pure tone with a little breath, a soft chiff on each fresh note, flute vibrato */
+  flute(t0, events, pts, vol) {
+    if (!events.length) return;
+    const c = this.ctx, first = t0 + events[0].at, stop = t0 + events[events.length - 1].at + events[events.length - 1].dur + 0.7;
+    const o = c.createOscillator(); try { const re = new Float32Array([0, 0, 0, 0, 0]), im = new Float32Array([0, 1, 0.14, 0.05, 0.02]); o.setPeriodicWave(c.createPeriodicWave(re, im)); } catch (e) { o.type = 'sine'; }
+    const env = c.createGain(); env.gain.setValueAtTime(0, t0);
+    const br = c.createBufferSource(); br.buffer = this.noise; br.loop = true; const bf = c.createBiquadFilter(); bf.type = 'bandpass'; bf.frequency.value = 2400; bf.Q.value = 0.8;
+    const bg = c.createGain(); bg.gain.value = 0.08; br.connect(bf); bf.connect(bg); bg.connect(env);   /* breath rides on the tone's envelope */
+    const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3800; o.connect(lp); lp.connect(env); env.connect(this.room);
+    const trem = c.createGain(); trem.gain.value = 1; env.disconnect(); env.connect(trem); trem.connect(this.room); this.wobble(trem.gain, first, stop, 0.04, 7);
+    const lfo = c.createOscillator(), lg = c.createGain(); lfo.connect(lg); lg.connect(o.frequency);
+    this.wobble(o.frequency, first, stop, hz(0) * 2 * 0.003, 5);
+    const end = this.legato(t0, events, pts, 2, o, env, { pk: 0.55 * vol, attack: 0.07, dip: 0.55, swell: 1.1, release: 0.08,
+      vib: { lfo, g: lg, rate: 5.0, depth: 0.007, delay: 0.4 },
+      onNote: (e, i, t, gap) => this.burst(t, gap ? 2800 : 1800, 1, (gap ? 0.12 : 0.05) * vol, gap ? 0.05 : 0.025, this.room) });   /* chiff, or a soft tongue */
+    o.start(first); br.start(first); lfo.start(first); o.stop(end); br.stop(end); lfo.stop(end);
+  },
+  /* sarangi-like bowed string: bright saw through a wooden body, slow bow attack, wide vibrato, bow hiss, a sympathetic double */
+  bowed(t0, events, pts, vol) {
+    if (!events.length) return;
+    const c = this.ctx, first = t0 + events[0].at, stop = t0 + events[events.length - 1].at + events[events.length - 1].dur + 0.8;
+    const o = c.createOscillator(), o2 = c.createOscillator(); o.type = 'sawtooth'; o2.type = 'sawtooth'; o2.detune.value = -5;
+    const mix = c.createGain(), g2 = c.createGain(); g2.gain.value = 0.35; o.connect(mix); o2.connect(g2); g2.connect(mix);
+    let node = mix;
+    [[420, 2, 7], [1050, 3, 5], [2400, 2.5, 4]].forEach(([f, q, db]) => { const pf = c.createBiquadFilter(); pf.type = 'peaking'; pf.frequency.value = f; pf.Q.value = q; pf.gain.value = db; node.connect(pf); node = pf; });
+    const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3200; node.connect(lp);
+    const env = c.createGain(); env.gain.setValueAtTime(0, t0); lp.connect(env); env.connect(this.room);
+    const br = c.createBufferSource(); br.buffer = this.noise; br.loop = true; const bf = c.createBiquadFilter(); bf.type = 'bandpass'; bf.frequency.value = 3500; bf.Q.value = 1;
+    const bg = c.createGain(); bg.gain.value = 0.05; br.connect(bf); bf.connect(bg); bg.connect(env);
+    const lfo = c.createOscillator(), lg = c.createGain(); lfo.connect(lg); lg.connect(o.frequency); lg.connect(o2.frequency);
+    this.wobble(o.frequency, first, stop, hz(0) * 2 * 0.004, 4);
+    const dummy = { frequency: { setValueAtTime: (v, t) => o2.frequency.setValueAtTime(v, t), setTargetAtTime: (v, t, k) => o2.frequency.setTargetAtTime(v, t, k) } };
+    const end = this.legato(t0, events, pts, 2, o, env, { pk: 0.16 * vol, attack: 0.1, dip: 0.6, swell: 1.18, release: 0.12, vib: { lfo, g: lg, rate: 5.6, depth: 0.016, delay: 0.25 } });
+    this.legato(t0, events, pts, 2, dummy, c.createGain(), { pk: 0, attack: 0.1, dip: 1, swell: 1, release: 0.1 });
+    o.start(first); o2.start(first); br.start(first); lfo.start(first); o.stop(end); o2.stop(end); br.stop(end); lfo.stop(end);
+  },
+  /* sitar: a plucked string (Karplus-Strong, buzzed for the jawari); glides are bends of the same plucked note; a chikari strum on foot starts */
+  ksCache: {},
+  ks(freq) {
+    const key = Math.round(freq * 4); if (this.ksCache[key]) return this.ksCache[key];
+    const c = this.ctx, sr = c.sampleRate, len = Math.floor(sr * 2.4), b = c.createBuffer(1, len, sr), y = b.getChannelData(0), N = Math.max(2, Math.round(sr / freq));
+    for (let i = 0; i < N; i++) y[i] = (Math.random() * 2 - 1) * (1 - i / N * 0.3);
+    for (let i = N; i < len; i++) y[i] = 0.4985 * (y[i - N] + y[i - N - 1 < 0 ? 0 : i - N - 1]) ;
+    let peak = 0; for (let i = 0; i < len; i++) { y[i] = Math.tanh(2.2 * y[i]) + 0.15 * (y[i] - (y[i - 1] || 0)); peak = Math.max(peak, Math.abs(y[i])); }   /* jawari buzz + brightness */
+    for (let i = 0; i < len; i++) y[i] /= (peak || 1);
+    return (this.ksCache[key] = b);
+  },
+  sitar(t0, events, pts, vol, feetStart) {
+    const c = this.ctx;
+    events.forEach((e, i) => {
+      const t = t0 + e.at, P = pts[i], base = hz(P[P.length - 1].s), src = c.createBufferSource(); src.buffer = this.ks(base);
+      const prev = i > 0 ? pts[i - 1][pts[i - 1].length - 1].s : null, meend = P.length === 1 && P[0].tc > 0.05 && prev != null;
+      if (meend) { src.playbackRate.setValueAtTime(hz(prev) / base, t); src.playbackRate.setTargetAtTime(1, t + 0.04, 0.09); }   /* meend: pull the string from the last note */
+      else { src.playbackRate.setValueAtTime(hz(P[0].s) / base, t); P.forEach(q => src.playbackRate.setTargetAtTime(hz(q.s) / base, t + q.dt, q.tc)); }
+      const g = c.createGain(), v = 0.5 * vol * e.vol * (0.9 + Math.random() * 0.15), ring = Math.max(e.dur + 0.15, e.isLong ? 1.4 : 0.6);
+      g.gain.setValueAtTime(v, t); g.gain.setTargetAtTime(0, t + ring, 0.15);
+      const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.setValueAtTime(5200, t); lp.frequency.exponentialRampToValueAtTime(1800, t + 0.6);
+      src.connect(lp); lp.connect(g); g.connect(this.room); src.start(t); src.stop(t + ring + 0.8);
+      this.burst(t, 2600, 1.2, 0.1 * vol, 0.012, this.room);   /* the mizrab's click */
+      if (feetStart && e.fs && i > 0) { const ch = c.createBufferSource(); ch.buffer = this.ks(hz(12)); const cg = c.createGain(); cg.gain.setValueAtTime(0.09 * vol, t + 0.004); cg.gain.setTargetAtTime(0, t + 0.3, 0.12);
+        ch.connect(cg); cg.connect(this.room); ch.start(t + 0.004); ch.stop(t + 1.2); }   /* chikari */
+    });
+  },
+  /* harmonium underneath: Sa and Pa reeds held through the line with a bellows swell, and the long notes of the tune shadowed softly (no glides: keys can't bend) */
+  harmonium(t0, events, pts, len, vol) {
+    const c = this.ctx, bus = c.createGain(); bus.gain.setValueAtTime(0, t0); bus.gain.linearRampToValueAtTime(vol, t0 + 0.25); bus.gain.setTargetAtTime(0, t0 + len - 0.25, 0.12);
+    const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1900; bus.connect(lp); lp.connect(this.room);
+    this.wobble(bus.gain, t0, t0 + len + 0.5, 0.04, 0.6);   /* bellows */
+    const reed = (f, a, b, gain) => [0, 4].forEach(dt => { const o = c.createOscillator(); o.type = dt ? 'square' : 'sawtooth'; o.frequency.value = f; o.detune.value = dt;
+      const g = c.createGain(); g.gain.setValueAtTime(0, a); g.gain.linearRampToValueAtTime(gain, a + 0.04); g.gain.setTargetAtTime(0, b, 0.06); o.connect(g); g.connect(bus); o.start(a); o.stop(b + 0.4); });
+    reed(hz(-12), t0, t0 + len, 0.05); reed(hz(-5), t0, t0 + len, 0.035);
+    events.forEach((e, i) => { if (!e.isLong) return; const s = pts[i][pts[i].length - 1].s; reed(hz(s), t0 + e.at, t0 + e.at + e.dur * 0.95, 0.035); });
+  }
+};
+function pitchOf(k) {
+  const b = k.buf, sr = b.sampleRate, x = b.getChannelData(0), start = Math.floor((k.off + 0.06) * sr), N = 4096;
+  if (start + N * 2 > x.length) return 0;
+  let best = 0, bestLag = 0;
+  for (let lag = Math.floor(sr / 500); lag <= Math.floor(sr / 80); lag++) { let s = 0; for (let i = 0; i < N; i++) s += x[start + i] * x[start + i + lag]; if (s > best) { best = s; bestLag = lag; } }
+  return bestLag ? sr / bestLag : 0;
+}
+/* ==============================================================
+   TARANNUM: raga melodies. Semitones from Sa; a raga may climb and fall on different notes (Khamaj: Ni up, komal ni down).
+   strong = notes a long syllable may rest on; the line shape: first misra opens and rests on Pa, the second answers to Sa.
+   ============================================================== */
+const RAGAS = {
+  yaman:    { name: 'Yaman',    up: [0, 2, 4, 6, 7, 9, 11], down: [0, 2, 4, 6, 7, 9, 11], strong: [0, 4, 7, 11], mood: 'evening; serene, the sharp Ma' },
+  khamaj:   { name: 'Khamaj',   up: [0, 4, 5, 7, 9, 11],    down: [0, 2, 4, 5, 7, 9, 10], strong: [0, 4, 7, 9],  mood: 'light and romantic; Ni climbs, komal ni falls' },
+  kafi:     { name: 'Kafi',     up: [0, 2, 3, 5, 7, 9, 10], down: [0, 2, 3, 5, 7, 9, 10], strong: [0, 3, 5, 7],  mood: 'folk-like longing; komal Ga and Ni' },
+  bhairavi: { name: 'Bhairavi', up: [0, 1, 3, 5, 7, 8, 10], down: [0, 1, 3, 5, 7, 8, 10], strong: [0, 3, 5, 7],  mood: 'tender, the classic close of a mehfil' }
+};
+const RAGA_KEYS = Object.keys(RAGAS);
+/* every note of a raga set across the singing range (low Pa to high Pa) */
+const ladder = set => { const L = []; for (let o = -12; o <= 12; o += 12) set.forEach(n => { const x = n + o; if (x >= -5 && x <= 19) L.push(x); }); return L.sort((a, b) => a - b); };
+function seeded(seed) { let x = seed >>> 0 || 1; return () => { x = (x * 1664525 + 1013904223) >>> 0; return x / 4294967296; }; }
+const hz = semi => AudioEngine.sa * Math.pow(2, semi / 12);
+/* one line's notes. role 'ula' | 'sani'; round 0 plain, 1 ornaments, 2 higher with turns, 3 a different shape; hook = first rhyme syllable */
+function tarannumLine(events, role, round, ragaKey, hook, seed) {
+  const R = RAGAS[ragaKey], up = ladder(R.up), down = ladder(R.down), rnd = seeded(seed), n = events.length;
+  const strong = new Set(); for (let o = -12; o <= 12; o += 12) R.strong.forEach(x => strong.add(x + o));
+  const lift = round % 4 === 2 ? 5 : 0;
+  const shape = x => {                                   /* target pitch along the line */
+    const inv = round % 4 === 3;
+    if (role === 'ula') return inv ? (x < 0.4 ? 2 - 5 * (x / 0.4) : -3 + 10 * ((x - 0.4) / 0.6))              /* dip low, then climb to Pa */
+                                   : (x < 0.65 ? 2 + (7 + lift) * (x / 0.65) : 9 + lift - (2 + lift) * ((x - 0.65) / 0.35));   /* rise, rest on Pa */
+    return inv ? (x < 0.5 ? 7 - 4 * x : 5 + 3 * Math.sin(2 * Math.PI * (x - 0.5)) - 5 * ((x - 0.5) / 0.5))    /* hover, a last lift, home */
+               : (x < 0.3 ? 7 + (4 + lift) * (x / 0.3) : (11 + lift) * (1 - (x - 0.3) / 0.7));                 /* peak early, descend to Sa */
+  };
+  const nearest = (L, t, only) => L.filter(x => !only || only.has(x)).reduce((a, b) => Math.abs(b - t) < Math.abs(a - t) ? b : a);
+  const stepFrom = (cur, dir) => { const L = dir > 0 ? up : down, i = L.indexOf(nearest(L, cur)); return L[Math.max(0, Math.min(L.length - 1, i + dir))]; };
+  const notes = []; let cur = nearest(up, shape(0));
+  const hookAt = hook >= 0 ? hook : n;
+  for (let i = 0; i < hookAt; i++) {
+    const e = events[i], t = shape(n > 1 ? i / (n - 1) : 0), dir = t >= cur ? 1 : -1, L = dir > 0 ? up : down;
+    let note;
+    if (e.isLong || e.fs) {                                   /* long or foot-start: rest on a raga's strong note near the shape */
+      note = nearest(L, t + (rnd() < 0.3 ? (rnd() < 0.5 ? -2 : 2) : 0), strong);
+    } else note = Math.abs(t - cur) < 1 ? stepFrom(cur, rnd() < 0.5 ? 1 : -1) : stepFrom(cur, dir);   /* short: a passing step */
+    if (notes.length >= 2 && notes[notes.length - 1] === note && notes[notes.length - 2] === note) note = stepFrom(note, dir);
+    notes.push(note); cur = note;
+  }
+  /* the rhyme hook: the same descending phrase every time, home to Sa (second line) or resting on Pa (first line) */
+  if (hookAt < n) {
+    const home = role === 'sani' ? 0 : 7, L = down, h = n - hookAt, i0 = L.indexOf(home);
+    for (let k = 0; k < h; k++) notes.push(L[Math.min(L.length - 1, i0 + (h - 1 - k))]);
+  } else notes[n - 1] = role === 'sani' ? 0 : 7;
+  /* pitch points per syllable: plain, or (round ≥ 1, long syllables, outside the hook) a glide, a grace note or a turn */
+  return events.map((e, i) => {
+    const f = notes[i], pts = [{ dt: 0, s: f, tc: 0.025 }];
+    const free = state.ornaments && round % 4 > 0 && e.isLong && i < hookAt && i > 0;
+    if (free) {
+      const r = rnd(), upN = stepFrom(f, 1), loN = stepFrom(f, -1);
+      if (round % 4 === 2 && e.dur > 0.42 && r < 0.55) pts.splice(0, 1, { dt: 0, s: upN, tc: 0.008 }, { dt: 0.06, s: f, tc: 0.008 }, { dt: 0.12, s: loN, tc: 0.008 }, { dt: 0.18, s: f, tc: 0.02 });   /* murki */
+      else if (r < 0.45) pts.splice(0, 1, { dt: 0, s: upN, tc: 0.008 }, { dt: 0.05, s: f, tc: 0.02 });   /* kan: a grace note from above */
+      else if (r < 0.8) pts[0].tc = 0.09;                                                                  /* meend: a slow glide into the note */
+    }
+    return pts;
+  });
+}
+/* the vowel of a syllable from its Roman spelling → formants (F1, F2) for the hum to sing; consonant-only → a hummed m */
+const VOWELS = { 'ā': [760, 1180], 'a': [680, 1240], 'ī': [290, 2250], 'i': [380, 2000], 'ū': [320, 800], 'u': [380, 950], 'e': [440, 1950], 'ai': [600, 1800], 'o': [450, 860], 'au': [600, 1000] };
+/* the consonant a syllable starts with, from its Roman spelling: stops close and burst (aspirates breathe longer),
+   fricatives hiss at their place, nasals hum through a closed mouth, glides bend the vowel in */
+function onsetOf(ro) {
+  const x = (ro || '').toLowerCase().normalize('NFC').replace(/^[ʿʾ'’-]+/, '');
+  const m = x.match(/^(chh|ḳh|kh|gh|ch|jh|th|dh|ṭh|ḍh|ph|bh|sh|zh|ġh|[kgṭḍtdpbjqmnñrlvyszfh])/); if (!m) return null;
+  const k = m[1], asp = k.length > 1 && k.endsWith('h') && !['sh', 'zh', 'ḳh', 'kh', 'ġh'].includes(k);
+  const STOP = { k: 1800, g: 1600, q: 1300, ṭ: 2600, ḍ: 2400, t: 3800, d: 3500, p: 900, b: 800, c: 3000, j: 2800 };
+  const base = k[0] === 'c' ? 'c' : k[0];
+  if (['sh', 'zh'].includes(k)) return { type: 'fric', f: 3200, q: 1.2 };
+  if (['ḳh', 'kh', 'ġh'].includes(k)) return { type: 'fric', f: 1500, q: 0.8 };
+  if (k === 's' || k === 'z') return { type: 'fric', f: 6500, q: 1.1 };
+  if (k === 'f') return { type: 'fric', f: 5000, q: 0.6 };
+  if (k === 'h') return { type: 'fric', f: 1200, q: 0.5 };
+  if (k === 'm') return { type: 'nasal', f: 1000 };
+  if (k === 'n' || k === 'ñ') return { type: 'nasal', f: 1600 };
+  if (k === 'y') return { type: 'glide', f: 2200 };
+  if (k === 'v') return { type: 'glide', f: 800 };
+  if (k === 'r' || k === 'l') return { type: 'glide', f: 1300 };
+  if (STOP[base]) return { type: 'stop', f: STOP[base], asp };
+  return null;
+}
+function vowelOf(ro) {
+  const x = (ro || '').toLowerCase().normalize('NFC');
+  const m = x.match(/au|ai|ā|ī|ū|[aiueo]/); return m ? VOWELS[m[0]] : [260, 1100];
+}
+/* iPhone: Web Audio follows the silent switch unless the audio session is 'playback' (copied from the app) */
+let iosSilentEl = null, iosSilentUrl = null;
+const IS_IOS = /iP(hone|ad|od)/.test(navigator.userAgent || '') || (/Macintosh/.test(navigator.userAgent || '') && navigator.maxTouchPoints > 1);
+function iosPlaybackSession() {
+  try { if (navigator.audioSession) { if (navigator.audioSession.type !== 'playback') navigator.audioSession.type = 'playback'; return; } } catch (e) {}
+  if (iosSilentEl || !IS_IOS || typeof Audio === 'undefined') return;
+  try {
+    const rate = 8000, n = rate / 2, buf = new ArrayBuffer(44 + n * 2), v = new DataView(buf);
+    const w = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+    w(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+    v.setUint32(24, rate, true); v.setUint32(28, rate * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, n * 2, true);
+    iosSilentUrl = URL.createObjectURL(new Blob([buf], { type: 'audio/wav' })); iosSilentEl = new Audio(iosSilentUrl);
+    iosSilentEl.loop = true; iosSilentEl.setAttribute('playsinline', ''); iosSilentEl.volume = 0.01;
+    const p = iosSilentEl.play(); if (p && p.catch) p.catch(() => { iosSilentEl = null; });
+  } catch (e) { iosSilentEl = null; }
+}
+function releaseSilentAudio() {
+  if (iosSilentEl) { try { iosSilentEl.pause(); iosSilentEl.removeAttribute('src'); iosSilentEl.load(); } catch (e) {} iosSilentEl = null; }
+  if (iosSilentUrl) { try { URL.revokeObjectURL(iosSilentUrl); } catch (e) {} iosSilentUrl = null; }
+  try { if (navigator.audioSession) navigator.audioSession.type = 'auto'; } catch (e) {}
+}
+['pointerdown', 'touchend', 'click', 'keydown'].forEach(ev => document.addEventListener(ev, () => { if (AudioEngine.ctx && AudioEngine.ctx.state !== 'running') AudioEngine.ensure(); }, { passive: true }));
+
+/* ==============================================================
+   PASSES + SCHEDULER (look-ahead on the audio clock; loops never drift)
+   ============================================================== */
+const footOf = v => { const F = []; v.feet.forEach((f, fi) => f.idx.forEach(i => { F[i] = fi; })); return F; };
+const seqOf = v => v.syl.map(s => s.w);
+const flipAt = (seq, i) => seq.map((w, j) => j === i ? (w === 'l' ? 's' : 'l') : w);
+/* one reading of a line. baseline = the app's play() timing at 150; otherwise continuous, a beat of breath at a caesura
+   (and between feet only if Foot Breath is on), then a fixed two-beat rest so every loop is the same length */
+function buildPass(v, seq, mode, bpm, footgap) {
+  const F = footOf(v), ev = []; let t = 0;
+  if (mode === 'baseline') {
+    const beat = 60 / 150;
+    seq.forEach((w, i) => {
+      const isLong = w === 'l'; let dur = (isLong ? 2 : 1) * beat, vol = w === 'c' ? 0.45 : 1;
+      const fs = i === 0 || F[i] !== F[i - 1], fe = i === seq.length - 1 || F[i + 1] !== F[i];
+      if (fs && i > 0) t += beat * (v.feet[F[i]].cae ? 0.6 : 0.5);
+      if (!fs && w !== 'c') vol *= 0.84;
+      if (fe && i < seq.length - 1) dur *= 1.07;
+      if (i === seq.length - 1 && seq.length > 4) dur *= 1.4;
+      ev.push({ at: t, dur, isLong, vol, i, foot: F[i], fs, thump: fs && w !== 'c' }); t += dur;
+    });
+    return { events: ev, len: t + 0.9, beat, ticks: [] };
+  }
+  const u = 60 / bpm, ticks = [];
+  seq.forEach((w, i) => {
+    const fs = i === 0 || F[i] !== F[i - 1];
+    if (fs && i > 0 && (v.feet[F[i]].cae || footgap)) t += u * (v.feet[F[i]].cae ? 1 : 0.5);
+    const isLong = w === 'l', dur = (isLong ? 2 : 1) * u;
+    ev.push({ at: t, dur, isLong, vol: w === 'c' ? 0.5 : (fs ? 1 : 0.82), i, foot: F[i], fs });
+    ticks.push(t); if (isLong) ticks.push(t + u);
+    t += dur;
+  });
+  if (mode === 'tarannum' && ev.length) { const last = ev[ev.length - 1], add = last.dur * 0.5; last.dur += add; t += add; }   /* a sung line lands long */
+  ticks.push(t); ticks.push(t + u);
+  return { events: ev, len: t + 2 * u, beat: u, ticks };
+}
+const P = { timer: null, timers: [], next: 0, k: 0, plan: null, id: 0, owner: null, rel: null };
+function stopAll() {
+  clearInterval(P.timer); P.timer = null; P.timers.forEach(clearTimeout); P.timers = []; P.plan = null; P.owner = null; P.id++;
+  if (AudioEngine.ctx) AudioEngine.stopDrone();
+  document.querySelectorAll('.lit, .active-foot, .afl.on, .clickable-word.playing').forEach(el => el.classList.remove('lit', 'active-foot', 'on', 'playing'));
+  $('btn-master-play').textContent = '▶︎'; $('btn-loop-anchor').textContent = '▶︎ Loop Anchor Rhythm';
+  clearTimeout(P.rel); P.rel = setTimeout(releaseSilentAudio, 800);
+}
+function later(at, fn) { P.timers.push(setTimeout(fn, Math.max(0, (at - AudioEngine.ctx.currentTime) * 1000))); }
+/* plan(k) → { v, seq, mode, bpm, drone, subpulse, footgap, human, strip, words, onPass } or null when done */
+function run(plan, owner, onEnd) {
+  stopAll(); clearTimeout(P.rel); if (!AudioEngine.ensure()) return; iosPlaybackSession();
+  (AudioEngine.rec ? Promise.resolve() : AudioEngine.loadPacks()).then(() => {
+    const id = ++P.id; P.plan = plan; P.owner = owner; P.k = 0; P.next = AudioEngine.ctx.currentTime + 0.15;
+    const tick = () => {
+      if (P.id !== id) return;
+      while (P.plan && P.next < AudioEngine.ctx.currentTime + 0.4) {
+        const spec = P.plan(P.k);
+        if (!spec) { const end = P.next; P.plan = null; later(end, () => { if (P.id === id) { stopAll(); if (onEnd) onEnd(); } }); break; }
+        if (P.k === 0 && spec.drone && spec.mode !== 'baseline') AudioEngine.startDrone();
+        const pass = buildPass(spec.v, spec.seq, spec.mode, spec.bpm, spec.footgap);
+        schedulePass(spec, pass, P.next); P.next += pass.len; P.k++;
+      }
+    };
+    tick(); P.timer = setInterval(tick, 40);
+  });
+}
+function schedulePass(spec, pass, T0) {
+  const E = AudioEngine;
+  if (spec.onPass) spec.onPass(T0, pass);
+  if (spec.mode === 'baseline') pass.events.forEach(e => { if (e.thump) E.footThump(T0 + e.at, 0.9); E.synthTabla(T0 + e.at, e.dur, e.isLong, e.vol); });
+  else {
+    if (spec.subpulse) pass.ticks.forEach((x, j) => E.tickSubPulse(T0 + x, 0.05));
+    if (spec.mode === 'groove') pass.events.forEach(e => E.rec1('tabla', T0 + e.at + (spec.human && !e.fs ? (Math.random() - 0.5) * 0.012 : 0), e.dur, e.isLong, e.vol, spec.human));
+    if (spec.mode === 'afail') pass.events.forEach(e => E.rec1('voice', T0 + e.at, e.dur, e.isLong, e.vol, spec.human));
+    if (spec.mode === 'tarannum') {
+      const pts = tarannumLine(pass.events, spec.role || 'sani', spec.round || 0, spec.raga || 'yaman', spec.hook == null ? -1 : spec.hook, spec.seed || 1);
+      const ro = spec.v.syl.map(x => state.vowels ? x.ro : 'ā');
+      if (state.inst === 'voice') E.voice(T0, pass.events, pts, 0.55, ro);
+      else if (state.inst === 'bansuri') E.flute(T0, pass.events, pts, 0.9);
+      else if (state.inst === 'sarangi') E.bowed(T0, pass.events, pts, 0.9);
+      else if (state.inst === 'sitar') E.sitar(T0, pass.events, pts, 0.9, true);
+      if (state.harmonium) E.harmonium(T0, pass.events, pts, pass.len, 0.7);
+    }
+  }
+  pass.events.forEach(e => {
+    later(T0 + e.at, () => light(spec, e, true));
+    later(T0 + e.at + e.dur * 0.94, () => light(spec, e, false));
+  });
+}
+function light(spec, e, on) {
+  if (spec.strip) {
+    const chip = spec.strip.querySelector('.syl-chip[data-i="' + e.i + '"]'); if (chip) chip.classList.toggle('lit', on);
+    const afl = spec.strip.querySelector('.afl[data-i="' + e.i + '"]'); if (afl) afl.classList.toggle('on', on);
+    if (on) { spec.strip.querySelectorAll('.foot-box').forEach(b => b.classList.toggle('active-foot', +b.dataset.f === e.foot)); }
+  }
+  if (spec.words) { const w = spec.words.querySelector('.clickable-word[data-w="' + spec.v.syl[e.i].word + '"]'); if (w) w.classList.toggle('playing', on); }
+}
+
+/* ==============================================================
+   STATE + RENDERING
+   ============================================================== */
+let currentScript = 'ur', currentVerseIdx = 0, currentMode = 'groove', bpm = 190;
+let optDrone = true, optSubpulse = true, optFootgap = false, optLoop = true;
+const state = { couplet: true, ornaments: true, vowels: true, harmonium: true, raga: 'yaman', inst: 'bansuri' };   /* inst: voice · bansuri · sarangi · sitar */
+const INSTS = { bansuri: 'Bansuri', sarangi: 'Sarangi', sitar: 'Sitar', voice: 'Voice' };   /* raga: a key of RAGAS, or 'rotate' */
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const sylText = s => currentScript === 'ur' ? s.ur : s.ro;
+const lineText = v => currentScript === 'hi' ? v.deva : currentScript === 'ro' ? v.translit : v.urdu;
+function stripHTML(v, seq, flip) {
+  return v.feet.map((f, fi) => `<div class="foot-box" data-f="${fi}"><div class="foot-name-lbl">${esc(f.name)}</div><div class="syl-cluster">` +
+    f.idx.map(i => { const s = v.syl[i], w = seq ? seq[i] : s.w;
+      return `<span class="syl-col"><span class="syl-chip w-${w}${currentScript === 'ur' ? '' : ' roman-chip'}${flip === i ? ' flip' : ''}" data-i="${i}">${esc(sylText(s))}</span><span class="afl" data-i="${i}">${esc(v.meterId === 'H' ? '' : s.fs)}</span></span>`; }).join('') +
+    `</div></div>`).join('');
+}
+function setStrip(el, v, seq, flip) { el.innerHTML = stripHTML(v, seq, flip); el.classList.toggle('rtl', currentScript === 'ur'); }
+
+function switchTab(tabId) {
+  stopAll();
+  document.querySelectorAll('.subtabs .seg-btn').forEach(b => b.classList.toggle('on', b.dataset.tab === tabId));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + tabId));
+}
+function setScript(scr) {
+  currentScript = scr;
+  ['ur', 'hi', 'ro'].forEach(s => $('btn-' + s).classList.toggle('on', s === scr));
+  renderVerseStage(); renderLimpChallenge(); selectTuningFork(currentTfIdx, true);
+}
+function setMode(mode) {
+  const was = !!P.plan && P.owner === 'groove'; currentMode = mode;
+  document.querySelectorAll('.mode-card').forEach(c => c.classList.toggle('selected', c.dataset.mode === mode));
+  renderVerseStage();
+  if (was) togglePlayback();
+}
+function loadVerse(idx) { stopAll(); currentVerseIdx = idx; renderVerseStage(); }
+function renderVerseStage() {
+  const v = VERSES[currentVerseIdx];
+  $('verse-chips').innerHTML = '<span class="eyebrow lbl">Select verse:</span>' + VERSES.map((x, i) => `<button class="toggle-chip verse-chip${i === currentVerseIdx ? ' active' : ''}" data-verse="${i}" type="button">${esc(x.label)}</button>`).join('');
+  $('meter-badge-name').textContent = (v.meterName || '').toUpperCase();
+  $('meter-formula-text').textContent = v.pattern;
+  $('stage-urdu-text').textContent = v.urdu; $('stage-translit-text').textContent = v.translit; $('stage-deva-text').textContent = v.deva;
+  $('stage-urdu-text').classList.toggle('hidden', currentScript !== 'ur');
+  $('stage-translit-text').classList.toggle('hidden', currentScript === 'hi');
+  $('stage-deva-text').classList.toggle('hidden', currentScript !== 'hi');
+  setStrip($('stage-strip'), v);
+  const two = state.couplet && !!v.second;
+  $('stage-second').classList.toggle('hidden', !two);
+  if (v.second) {
+    $('stage-urdu-text2').textContent = v.second.urdu; $('stage-translit-text2').textContent = v.second.translit; $('stage-deva-text2').textContent = v.second.deva;
+    $('stage-urdu-text2').classList.toggle('hidden', currentScript !== 'ur'); $('stage-translit-text2').classList.toggle('hidden', currentScript === 'hi'); $('stage-deva-text2').classList.toggle('hidden', currentScript !== 'hi');
+    setStrip($('stage-strip2'), v.second);
+    [[$('stage-strip'), v.hook[0]], [$('stage-strip2'), v.hook[1]]].forEach(([el, h]) => { if (h >= 0) el.querySelectorAll('.syl-chip').forEach(c => { if (+c.dataset.i >= h) c.classList.add('hook'); }); });
+    $('hook-note').textContent = (v.matla ? 'The matla: both lines rhyme. ' : '') + 'Underlined in gold: the rhyme' + (v.radif.length ? ` (qāfiya + radīf “${v.radif.join(' ')}”)` : ' (qāfiya)') + ', which the tarannum always sings with the same phrase.';
+  }
+  $('tarannum-opts').classList.toggle('hidden', currentMode !== 'tarannum');
+  $('raga-chips').innerHTML = '<span class="eyebrow lbl">Raga:</span>' + RAGA_KEYS.concat('rotate').map(k => `<button class="toggle-chip verse-chip${state.raga === k ? ' active' : ''}" data-raga="${k}" type="button">${k === 'rotate' ? 'Rotate all' : RAGAS[k].name}</button>`).join('');
+  $('raga-mood').textContent = state.raga === 'rotate' ? 'changes every four rounds' : RAGAS[state.raga].mood;
+  $('inst-chips').innerHTML = '<span class="eyebrow lbl">Played on:</span>' + Object.keys(INSTS).map(k => `<button class="toggle-chip verse-chip${state.inst === k ? ' active' : ''}" data-inst="${k}" type="button">${INSTS[k]}</button>`).join('');
+  $('toggle-vowels').classList.toggle('hidden', state.inst !== 'voice');
+}
+function updateBpm(val) { bpm = parseInt(val, 10); $('bpm-val').textContent = bpm + ' bpm'; }
+function toggleOption(opt) {
+  if (opt === 'drone') { optDrone = !optDrone; if (!optDrone) AudioEngine.stopDrone(); else if (P.plan && P.owner === 'groove' && currentMode !== 'baseline') AudioEngine.startDrone(); }
+  else if (opt === 'subpulse') optSubpulse = !optSubpulse;
+  else if (opt === 'footgap') optFootgap = !optFootgap;
+  else if (opt === 'loop') optLoop = !optLoop;
+  else if (opt in state) { state[opt] = !state[opt]; if (opt === 'couplet') { stopAll(); renderVerseStage(); } }
+  $('toggle-' + opt).classList.toggle('active', opt in state ? state[opt] : { drone: optDrone, subpulse: optSubpulse, footgap: optFootgap, loop: optLoop }[opt]);
+}
+
+/* ===== TAB 1 ===== */
+/* couplet on: passes alternate first line / second line; a round is one couplet (or one line). Tarannum varies by round:
+   0 plain · 1 ornaments · 2 higher, with turns · 3 a different shape; with Rotate, the raga changes every four rounds */
+const VARIATION = ['plain', 'ornaments on the long syllables', 'higher, with turns', 'a new shape'];
+function ragaFor(round) { return state.raga === 'rotate' ? RAGA_KEYS[Math.floor(round / 4) % RAGA_KEYS.length] : state.raga; }
+function togglePlayback() {
+  if (P.plan && P.owner === 'groove') { stopAll(); $('tar-status').textContent = ''; return; }
+  const v = VERSES[currentVerseIdx], two = state.couplet && !!v.second, per = two ? 2 : 1;
+  run(k => {
+    const round = Math.floor(k / per), li = k % per;
+    if (round > 0 && (!optLoop || currentMode === 'baseline')) return null;
+    if (currentMode === 'baseline' && k > 0 && !two) return null;
+    const line = li === 0 ? v : v.second, role = two ? (li === 0 ? 'ula' : 'sani') : 'sani', raga = ragaFor(round);
+    return { v: line, seq: seqOf(line), mode: currentMode, bpm, drone: optDrone, subpulse: optSubpulse, footgap: optFootgap, human: true,
+      strip: li === 0 ? $('stage-strip') : $('stage-strip2'), role, round, raga, hook: v.hook ? v.hook[li] : -1, seed: 1000 * round + 17 * li + currentVerseIdx + 1,
+      onPass: currentMode === 'tarannum' && li === 0 ? (T0) => later(T0, () => { $('tar-status').innerHTML = `Round ${round + 1} · <b>${RAGAS[raga].name}</b> · ${state.ornaments ? VARIATION[round % 4] : 'plain'}`; $('raga-mood').textContent = RAGAS[raga].mood; }) : null };
+  }, 'groove', () => { $('tar-status').textContent = ''; });
+  $('btn-master-play').textContent = '❚❚';
+}
+
+/* ===== TAB 2: SPOT THE LIMP — real lines, the fault played on the actual word ===== */
+let limp = null, limpRight = 0, limpTotal = 0;
+const pick = a => a[Math.floor(Math.random() * a.length)];
+function nextLimpChallenge() {
+  stopAll();
+  let line = pick(LIMP_POOL); if (limp && LIMP_POOL.length > 1) while (line === limp.v) line = pick(LIMP_POOL);
+  limp = { v: line, flip: pick(line.limpable), answered: false, picked: null };
+  renderLimpChallenge();
+}
+function wordsOf(v) { const W = []; v.syl.forEach((s, i) => { (W[s.word] = W[s.word] || []).push(i); }); return W.filter(Boolean); }
+function renderLimpChallenge() {
+  if (!limp) return;
+  const v = limp.v;
+  $('limp-head').textContent = `CHALLENGE · ${(v.meterName || '').split(' ')[0].toUpperCase()} · ${v.ref}`;
+  $('limp-line').textContent = currentScript === 'ur' ? v.translit : lineText(v);
+  const cont = $('limp-words-container'); cont.classList.toggle('rtl', currentScript === 'ur');
+  cont.innerHTML = wordsOf(v).map(idx => { const w = v.syl[idx[0]].word;
+    return `<button class="clickable-word${currentScript === 'ur' ? '' : ' roman'}" data-w="${w}" type="button">${esc(idx.map(i => sylText(v.syl[i])).join(''))}</button>`; }).join('');
+  $('limp-feedback').classList.toggle('hidden', !limp.answered);
+  if (limp.answered) markLimp();
+  $('limp-score').textContent = limpTotal ? `${limpRight} of ${limpTotal} this session` : '';
+}
+function markLimp() {
+  const target = limp.v.syl[limp.flip].word;
+  document.querySelectorAll('.clickable-word').forEach(b => { const w = +b.dataset.w; b.classList.remove('selected-limp', 'correct-limp');
+    if (w === target) b.classList.add('correct-limp'); else if (w === limp.picked) b.classList.add('selected-limp'); });
+}
+function selectLimpWord(w) {
+  if (!limp || limp.answered) return;
+  const v = limp.v, s = v.syl[limp.flip], target = s.word, ok = w === target, word = wordsOf(v).find(idx => v.syl[idx[0]].word === target).map(i => sylText(v.syl[i])).join('');
+  limp.answered = true; limp.picked = w; limpTotal++; if (ok) limpRight++;
+  const fi = v.feet.findIndex(f => f.idx.includes(limp.flip));
+  $('limp-verdict-title').innerHTML = ok ? '<span class="mark-ok">✓ Spot on. Your ear caught the kasr-e vazn.</span>' : '<span class="mark-no">✗ Not that word.</span>';
+  $('limp-explanation').innerHTML = `The stumble was in <b>${esc(word)}</b>: its syllable <b>${esc(sylText(s))}</b> is ${s.w === 'l' ? 'long (=)' : 'short (–)'} in foot ${fi + 1} (<i>${esc(v.feet[fi].name)}</i>), and the stumbling reading made it ${s.w === 'l' ? 'short' : 'long'}. Play both again and listen for where the line catches.`;
+  setStrip($('limp-strip'), v, flipAt(seqOf(v), limp.flip), limp.flip);
+  renderLimpChallenge();
+}
+function playLimpChallenge(hasError) {
+  if (!limp) return;
+  const v = limp.v, seq = hasError ? flipAt(seqOf(v), limp.flip) : seqOf(v);
+  run(k => k === 0 ? { v, seq, mode: 'groove', bpm, drone: true, subpulse: true, footgap: false, human: false, words: $('limp-words-container'),
+    strip: limp.answered ? $('limp-strip') : null } : null, 'limp');
+}
+
+/* ===== TAB 3: TUNING FORKS + TAP ALONG (taps scored against the meter) ===== */
+let currentTfIdx = 0, tapTimes = [], rounds = [];
+function selectTuningFork(idx, keep) {
+  if (!keep) stopAll();
+  currentTfIdx = idx; const tf = TUNING_FORKS[idx];
+  $('fork-chips').innerHTML = TUNING_FORKS.map((f, i) => `<button class="toggle-chip verse-chip${i === idx ? ' active' : ''}" data-fork="${i}" type="button">Bahr-e ${esc(f.fam)} (${esc(f.feel)})</button>`).join('');
+  $('tf-family-name').textContent = ('Bahr-e ' + tf.fam).toUpperCase();
+  $('tf-mnemonic-bol').textContent = tf.feet.map(f => f.idx.map(i => tf.syl[i].fs).join('-')).join(' · ');
+  const h = $('tf-verse-title'); h.textContent = lineText(tf);
+  h.classList.toggle('ltr', currentScript === 'ro'); h.classList.toggle('deva', currentScript === 'hi');
+  $('tf-verse-meta').innerHTML = `“${esc(tf.translit)}” (${esc(tf.ref)}) · Pattern: <code>${esc(tf.pattern)}</code>`;
+  if (!keep) resetTaps();
+}
+function toggleAnchorLoop() {
+  if (P.plan && P.owner === 'anchor') { stopAll(); finishRound(rounds[rounds.length - 1]); return; }
+  const tf = TUNING_FORKS[currentTfIdx]; resetTaps();
+  run(() => ({ v: tf, seq: seqOf(tf), mode: 'groove', bpm, drone: true, subpulse: true, footgap: false, human: false,
+    onPass: (T0, pass) => { const r = { due: pass.events.map(e => ({ t: T0 + e.at, isLong: e.isLong })), from: T0 - 0.2, to: T0 + pass.len - 0.2, taps: [] };
+      rounds.push(r); later(r.to, () => finishRound(r)); } }), 'anchor');
+  $('btn-loop-anchor').textContent = '❚❚ Stop Loop';
+}
+function recordTap() {
+  if (!AudioEngine.ensure()) return;
+  const c = AudioEngine.ctx, t = c.currentTime - (c.outputLatency || c.baseLatency || 0);
+  if (!(P.plan && P.owner === 'anchor')) AudioEngine.tickSubPulse(c.currentTime, 0.25);   /* while the loop plays, the tabla is your click */
+  const pad = $('interactive-tap-pad'); pad.classList.add('active'); setTimeout(() => pad.classList.remove('active'), 80);
+  tapTimes.push(t);
+  const r = rounds.find(x => t >= x.from && t < x.to); if (r) r.taps.push(t);
+  $('tap-stats-label').textContent = tapTimes.length + ' taps';
+  if (!(P.plan && P.owner === 'anchor')) drawFree();
+}
+/* while looping: each round is scored when the next begins; ±90 ms is on time */
+function finishRound(r) {
+  if (!r || r.done || !r.taps.length) return; r.done = true;
+  const used = new Set(), got = r.due.map(d => { let best = -1, bd = 1e9; r.taps.forEach((t, k) => { if (used.has(k)) return; const x = Math.abs(t - d.t); if (x < bd) { bd = x; best = k; } });
+    if (best >= 0 && bd <= 0.09) { used.add(best); return r.taps[best]; } return null; });
+  const tf = TUNING_FORKS[currentTfIdx], beat = 60 / bpm, bars = [];
+  r.due.forEach((d, i) => { const next = r.due[i + 1]; const want = (next ? next.t : d.t + (d.isLong ? 2 : 1) * beat) - d.t;
+    const a = got[i], b = next ? got[i + 1] : null; bars.push({ want, have: a != null && b != null ? b - a : null, isLong: d.isLong }); });
+  drawBars(bars, beat);
+  const hits = got.filter(x => x != null).length;
+  $('tap-read').textContent = `Round ${rounds.indexOf(r) + 1}: ${hits} of ${r.due.length} syllables on time` + (hits === r.due.length ? ' ✓' : '');
+}
+/* free tapping (loop off): read your taps as long/short and compare with the meter */
+function drawFree() {
+  const tf = TUNING_FORKS[currentTfIdx], n = tf.syl.length;
+  const ts = tapTimes.slice(-(n + 1)); if (ts.length < 3) { $('tap-read').textContent = ''; $('tap-bars-viz').innerHTML = ''; return; }
+  const gaps = ts.slice(1).map((t, i) => t - ts[i]), sorted = gaps.slice().sort((a, b) => a - b), unit = sorted[Math.floor(sorted.length * 0.25)];
+  const read = gaps.map(g => g > unit * 1.5 ? 'l' : 's'), want = seqOf(tf).slice(0, read.length);
+  drawBars(gaps.map((g, i) => ({ want: (want[i] === 'l' ? 2 : 1) * unit, have: g, isLong: want[i] === 'l' })), unit * 2);
+  const ok = read.filter((x, i) => x === want[i]).length;
+  $('tap-read').textContent = 'You: ' + read.map(x => x === 'l' ? '=' : '–').join(' ') + '   meter: ' + want.map(x => x === 'l' ? '=' : '–').join(' ') + `   (${ok}/${read.length})`;
+}
+function drawBars(bars, ref) {
+  const W = 400, H = 76, n = bars.length, bw = W / Math.max(n, 1), scale = (H - 6) / (ref * 1.35);
+  let h = '';
+  bars.forEach((b, i) => {
+    const x = i * bw + 2, w = bw - 4, wh = Math.min(H - 2, b.want * scale);
+    h += `<rect class="want" x="${x.toFixed(1)}" y="${(H - wh).toFixed(1)}" width="${w.toFixed(1)}" height="${wh.toFixed(1)}"/>`;
+    if (b.have != null) { const gh = Math.min(H - 2, b.have * scale), off = Math.abs(b.have - b.want) > b.want * 0.35;
+      h += `<rect class="got${b.isLong ? '' : ' s'}${off ? ' off' : ''}" x="${(x + w * 0.2).toFixed(1)}" y="${(H - gh).toFixed(1)}" width="${(w * 0.6).toFixed(1)}" height="${gh.toFixed(1)}"/>`; }
+  });
+  $('tap-bars-viz').innerHTML = h;
+}
+function resetTaps() { tapTimes = []; rounds = []; $('tap-bars-viz').innerHTML = ''; $('tap-read').textContent = ''; $('tap-stats-label').textContent = '0 taps'; }
+
+/* ===== WIRING ===== */
+document.addEventListener('click', e => {
+  const b = e.target.closest('button, .mode-card'); if (!b) return;
+  if (b.dataset.tab) switchTab(b.dataset.tab);
+  else if (b.dataset.mode) setMode(b.dataset.mode);
+  else if (b.dataset.verse != null) loadVerse(+b.dataset.verse);
+  else if (b.dataset.opt) toggleOption(b.dataset.opt);
+  else if (b.dataset.fork != null) selectTuningFork(+b.dataset.fork);
+  else if (b.dataset.raga) { state.raga = b.dataset.raga; renderVerseStage(); }
+  else if (b.dataset.inst) { state.inst = b.dataset.inst; renderVerseStage(); }
+  else if (b.dataset.w != null && b.closest('#limp-words-container')) selectLimpWord(+b.dataset.w);
+  else if (b.id === 'btn-ur' || b.id === 'btn-hi' || b.id === 'btn-ro') setScript(b.id.slice(4));
+  else if (b.id === 'btn-master-play') togglePlayback();
+  else if (b.id === 'btn-play-limp') playLimpChallenge(true);
+  else if (b.id === 'btn-play-clean') playLimpChallenge(false);
+  else if (b.id === 'btn-next-limp') nextLimpChallenge();
+  else if (b.id === 'btn-loop-anchor') toggleAnchorLoop();
+  else if (b.id === 'btn-clear-taps') resetTaps();
+});
+document.addEventListener('keydown', e => {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('mode-card')) { e.preventDefault(); setMode(e.target.dataset.mode); return; }
+  if (e.code === 'Space' && $('panel-anchor').classList.contains('active') && !e.target.closest('input')) { e.preventDefault(); recordTap(); }
+});
+$('interactive-tap-pad').addEventListener('pointerdown', e => { e.preventDefault(); recordTap(); });
+$('bpm-slider').addEventListener('input', e => updateBpm(e.target.value));
+
+renderVerseStage(); nextLimpChallenge(); selectTuningFork(0);
+</script>
+</body>
+</html>
