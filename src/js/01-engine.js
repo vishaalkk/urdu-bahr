@@ -265,8 +265,11 @@ lex('بالکل',[{w:['l','l'],c:0}]);
 lex('بالآخر',[{w:['l','l','l'],c:0}]);
 lex('بالارادہ',[{w:['l','s','l','x'],c:0}]);
 lex('تمہارا تمہاری تمہارے تمھارا تمھاری تمھارے',[{w:['s','l','x'],c:0}]);
-/* havas (- =), never hos: Pritchett's Roman has havas in every one of its 26 Ghalib/Mir lines (al-havas, havas-e) */
-lex('ہوس',[{w:['s','l'],c:0},{w:['l','s'],c:2}]);
+/* havas (- =), never hos: Pritchett's Roman has havas in every one of its 26 Ghalib/Mir lines (al-havas, havas-e [ha-va-se]) */
+lex('ہوس',[{w:['s','l'],c:0,iz:['s','s','x']},{w:['l','s'],c:2,iz:['l','x']}]);
+/* bul-havas (Mir writes bol-havas): بو + al-havas, = - = */
+lex('بوالہوس',[{w:['l','s','l'],c:0,iz:['l','s','s','x']}]);
+lex('بوالہوسوں',[{w:['l','s','s','l'],c:0}]);
 
 /* ---------- syllabify a letter string into candidate readings ---------- */
 function syllabify(L){
@@ -447,13 +450,17 @@ function scanWord(raw,forceSuffix){
   const nw=normalize(raw);
   const suffix=forceSuffix||nw.suffix;
   let opts;
-  const lx=LEX[nw.key];
-  if(lx && !suffix){
+  let lx=LEX[nw.key];
+  /* a word listed with its iẓāfat reading (iz: the weights with the -e, havas-e [ha-va-se]) keeps its lexicon reading
+     under a written iẓāfat; any other listed word is syllabified as usual then */
+  if(lx && suffix==='iz' && lx.some(o=>o.iz)) lx=lx.filter(o=>o.iz).map(o=>({w:o.iz,c:o.c,n:o.n,iz:true}));
+  if(lx && (!suffix || lx[0].iz===true)){
     opts=lx.map(o=>({syl:[{k:'LEX',t:nw.letters.slice(),w:o.w.length===1?o.w[0]:null,lexw:o.w}],c:o.c,n:o.n||''}))
       .map(o=>{ if(o.syl[0].lexw.length>1){ /* split letters for display, splitting geminate consonants across syllables */
         const ws=o.syl[0].lexw, parts=partitionLexLetters(nw.letters, ws);
         o.syl=ws.map((w,j)=>({k:'LEX',t:parts[j]||[],w,xs:0}));
       } else { o.syl[0].w=o.syl[0].lexw[0]; o.syl[0].xs=0; }
+      if(lx[0].iz===true) o.syl[o.syl.length-1].suf='iz';
       return o; });
   } else {
     opts=syllabifyNasal(nw.letters,nw.nasal);
