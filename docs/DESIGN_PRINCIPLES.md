@@ -87,7 +87,9 @@ practice keys) stay in sentence case with no tracking.
 ### 4.1 Navigation
 - **Desktop top nav:** sans 12px caps, tracked 0.16em, `--faint`; hover `--ink`; active `--ink` with a 1px
   ink underline.
-- **Mobile bottom nav:** 56px bar, 11px caps; active gets a 2px ink top-line.
+- **Mobile bottom nav:** 60px bar on `--bg2` with a `--line2` top hairline (chrome, so it never reads as a row
+  of the page above). Each tab is a 24×16 line glyph (stroke `currentColor`, 1.6) over 11px caps: scale (Weight),
+  metronome (Meter), pen on a line (Scan), rose (Ghazals). Active: `--ink`, weight 500, 6% ink tint, 2px ink top-line.
 - **Site title:** small tracked caps with the Urdu word beside it at 18px.
 
 ### 4.2 Sub-tabs and segmented controls (`.subtabs.seg`, `.seg-btn`)
