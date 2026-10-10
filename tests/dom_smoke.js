@@ -368,6 +368,15 @@ const ROUTES = [
       });
       return bad.length ? bad.join(' | ') : true;
     }, 'Poets feed Look up, the drills (All / Pick…), Practice, and the hand-checked ghazals scan in their declared bahr');
+    await check('#/home', (w, d) => {
+      w.openSettings();
+      const vis = id => d.getElementById(id) && !d.getElementById(id).classList.contains('hidden');
+      if (w.eval('settings.style') !== 'strokes' || !vis('stylePanelStrokes') || vis('stylePanelTarannum')) return 'default should be Strokes with only its options shown';
+      d.querySelector('#styleSeg [data-style="tarannum"]').click();
+      const ok = vis('stylePanelTarannum') && vis('stylePanelUnder') && !vis('stylePanelStrokes') && d.querySelectorAll('#tarInstSeg .seg-btn').length === 4 && d.getElementById('tarRaga').options.length === 11;
+      w.pickStyle('strokes');
+      return ok ? true : 'Tarannum panel did not show its instruments and ragas';
+    }, 'Settings › Sound: Strokes by default; choosing Tarannum shows only its options (4 instruments, 10 ragas + rotate)');
     await check('', (w) => w.location.hash === '#/home' ? true : 'landed on ' + w.location.hash, 'bare URL lands on Home');
     await check('#/home', (w, d) => { const s = d.getElementById('home-section'); return s && s.classList.contains('on') && /Weight/.test(s.textContent) && /Ghazals/.test(s.textContent) ? true : 'home section not rendered'; }, 'Home renders its content');
     // Round 3: inside the (single-collection) Mir list the group header carries the

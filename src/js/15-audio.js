@@ -220,6 +220,7 @@ function footThump(t,vol){ const c=A.ctx,o=c.createOscillator(),g=c.createGain()
   g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.5*vol,t+0.006); g.gain.exponentialRampToValueAtTime(0.0005,t+0.3);
   o.connect(g); g.connect(A.dest||A.out); o.start(t); o.stop(t+0.32); }
 function stopAll(){ A.timers.forEach(clearTimeout); A.timers=[]; clearTimeout(A.idleT); A.idleT=setTimeout(releaseSilentAudio,600);
+  if(typeof tarOnStop==='function') tarOnStop();   /* the drone lingers a moment so a couplet's next line picks it up */
   if(A.ctx && A.sess){ const g=A.sess, now=A.ctx.currentTime; try{ g.gain.cancelScheduledValues(now); g.gain.setValueAtTime(g.gain.value,now); g.gain.linearRampToValueAtTime(0,now+0.03); }catch(e){}
     setTimeout(()=>{ try{g.disconnect();}catch(e){} },80); A.sess=null; }
   if(typeof document!=='undefined' && typeof document.querySelectorAll==='function') document.querySelectorAll('.lit,.litf').forEach(n=>n.classList.remove('lit','litf')); }
@@ -230,7 +231,8 @@ function play(seq,opts){
   opts=opts||{}; if(!A.ensure())return 0;
   A.released=false; iosPlaybackSession();                        /* only while playing: starts in this tap, released after the last sound */
   if(!opts.pb && typeof pbDetach==='function') pbDetach(); /* something else is playing: couplet button goes back to ▶ */
-  if((settings.sound==='rec'||settings.sound==='tablarec') && !A.rec){ loadRec().then(()=>play(seq,opts)); return (seq.length*1.5*60/settings.bpm); }
+  if((settings.sound==='rec'||settings.sound==='tablarec'||(settings.style&&settings.style!=='strokes')) && !A.rec){ loadRec().then(()=>play(seq,opts)); return (seq.length*1.5*60/settings.bpm); }
+  if(settings.style && settings.style!=='strokes' && typeof playStyled==='function') return playStyled(seq,opts);   /* groove / tarannum: 15b-tarannum.js */
   stopAll();
   const sess=A.ctx.createGain(); sess.gain.value=1; sess.connect(settings.sound==='tablarec'?A.out:(A.voiceBus||A.out)); A.sess=sess; /* tabla samples carry their own room: skip reverb */ A.dest=sess;
   const beat=60/(opts.bpm||settings.bpm); let t=A.ctx.currentTime+0.16; const t0=t;
@@ -292,7 +294,11 @@ function pbRunLine(li, foot) {
   let s0 = p.feet.findIndex(f => f >= foot); if (s0 < 0) s0 = 0;
   const lit = L.nodes ? litter(L.nodes) : null;
   const wl = L.words ? pbWordLit(L.words) : null;
+  /* groove / tarannum also want: which line of the couplet, the rhyme, and each syllable's Roman (for the sung vowels) */
+  const hook = typeof tarHookFor === 'function' ? tarHookFor(PB.lines, li) : -1;
+  const ro = L.e && typeof translitText === 'function' ? L.e.syl.slice(s0).map(x => { try { return translitText(x.text, 'ro'); } catch (err) { return ''; } }) : null;
   play(p.seq.slice(s0), { pb: true, feet: p.feet.slice(s0), cae: p.cae.filter(c => c > foot),
+    line: li, lines: PB.lines.length, ro, hook: hook >= 0 ? hook - s0 : -1,
     onStep: (i, ms) => { const gi = i + s0; PB.pos = { line: li, foot: p.feet[gi] };
       if (lit) lit(gi, ms);
       if (wl && L.e && L.e.syl[gi]) wl(L.e.syl[gi].word, L.e.syl[gi].wordTo);
@@ -359,7 +365,9 @@ window.pbNodes = pbNodes; window.pbWords = pbWords; window.pbWordsMatching = pbW
 window.pbTogglePattern = pbTogglePattern;
 
 /* ms = how long the syllable sounds (long ~2 beats, short ~1): the light stays on for that long, so the eye can follow duration too. */
-function litter(nodes){ return (i,ms)=>{ nodes.forEach(n=>n.classList.remove('lit')); const n=nodes[i]; if(n){n.classList.add('lit'); setTimeout(()=>n.classList.remove('lit'), ms>0?Math.max(140,ms*0.92):240);} }; }
+function litter(nodes){ return (i,ms)=>{ nodes.forEach(n=>n.classList.remove('lit')); const n=nodes[i]; if(n){n.classList.add('lit');
+  const fs=n.parentElement&&typeof n.parentElement.querySelector==='function'?n.parentElement.querySelector('.fs'):null; if(fs) fs.classList.add('on');   /* the afāʿīl syllable under the chip lights with it */
+  setTimeout(()=>{ n.classList.remove('lit'); if(fs) fs.classList.remove('on'); }, ms>0?Math.max(140,ms*0.92):240);} }; }
 
 /* sound sheet */
 function openSound(){ renderSoundOpts(); if($('soundSheet')) $('soundSheet').classList.add('on'); }
@@ -380,6 +388,7 @@ function renderSoundOpts(){
   }
   if ($('bpm')) $('bpm').value=settings.bpm;
   if ($('bpmV')) $('bpmV').textContent=settings.bpm;
+  if (typeof renderStyleOpts==='function') renderStyleOpts();
 }
 function pickSound(id){
   if(id==='mine' && !(hasMine('dum')||hasMine('da'))){

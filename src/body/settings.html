@@ -18,22 +18,60 @@
 
     <div class="settings-group">
       <div class="settings-group-title">Sound</div>
-      <div class="settings-label settings-sublabel">Voice <span class="settings-hint">tap to hear</span></div>
-      <div id="soundOpts" role="radiogroup" aria-label="Voice"></div>
+      <div class="settings-label settings-sublabel">How lines are played <span class="settings-hint">tap to hear</span></div>
+      <div class="seg style-seg" id="styleSeg" role="radiogroup" aria-label="How lines are played">
+        <button type="button" class="seg-btn on" role="radio" aria-checked="true" data-style="strokes" onclick="pickStyle('strokes')">Strokes</button>
+        <button type="button" class="seg-btn" role="radio" aria-checked="false" data-style="groove" onclick="pickStyle('groove')">Groove</button>
+        <button type="button" class="seg-btn" role="radio" aria-checked="false" data-style="tarannum" onclick="pickStyle('tarannum')">Tarannum</button>
+      </div>
+      <p class="settings-hint style-desc" id="styleDesc"></p>
+
+      <!-- Strokes: today's player -->
+      <div class="style-panel" id="stylePanelStrokes">
+        <div class="settings-label settings-sublabel">Voice</div>
+        <div id="soundOpts" role="radiogroup" aria-label="Voice"></div>
+        <div class="settings-line">
+          <label class="settings-label" for="footGap">Pause between feet</label>
+          <input type="range" id="footGap" min="0" max="2" step="0.05" value="0.5" aria-label="Pause between feet, in beats">
+          <span class="mono settings-value" id="footGapV">0.50</span>
+        </div>
+        <label class="settings-check">
+          <input type="checkbox" id="footPulse" checked onchange="settings.footPulse=this.checked;store.set('settings',settings)"> Soft drum on each foot
+        </label>
+      </div>
+
+      <!-- Groove -->
+      <div class="style-panel hidden" id="stylePanelGroove">
+        <div class="settings-label settings-sublabel">Strokes</div>
+        <div id="grooveOpts" role="radiogroup" aria-label="Groove strokes"></div>
+      </div>
+
+      <!-- Tarannum -->
+      <div class="style-panel hidden" id="stylePanelTarannum">
+        <div class="settings-label settings-sublabel">Played on</div>
+        <div class="seg style-seg" id="tarInstSeg" role="radiogroup" aria-label="Instrument"></div>
+        <div class="settings-line">
+          <label class="settings-label" for="tarRaga">Raga</label>
+          <select id="tarRaga" onchange="setStyleOpt('tarRaga',this.value)" aria-label="Raga"></select>
+          <span></span>
+        </div>
+        <p class="settings-hint style-mood" id="tarRagaMood"></p>
+        <label class="settings-check"><input type="checkbox" id="tarHarm" onchange="setStyleOpt('tarHarm',this.checked)"> Harmonium underneath</label>
+        <label class="settings-check"><input type="checkbox" id="tarOrn" onchange="setStyleOpt('tarOrn',this.checked)"> Ornaments <span class="settings-hint">a new way each couplet: grace notes, glides, turns</span></label>
+        <label class="settings-check" id="tarVowelsRow"><input type="checkbox" id="tarVowels" onchange="setStyleOpt('tarVowels',this.checked)"> Sing the vowels of the words</label>
+      </div>
+
+      <!-- shared by groove and tarannum -->
+      <div class="style-panel hidden" id="stylePanelUnder">
+        <label class="settings-check"><input type="checkbox" id="styleDrone" onchange="setStyleOpt('drone',this.checked)"> Tanpura drone</label>
+        <label class="settings-check"><input type="checkbox" id="stylePulse" onchange="setStyleOpt('pulse',this.checked)"> Soft pulse on every beat</label>
+      </div>
 
       <div class="settings-line">
         <label class="settings-label" for="bpm">Tempo</label>
         <input type="range" id="bpm" min="60" max="220" step="5" value="150" aria-label="Tempo in beats per minute">
         <span class="mono settings-value" id="bpmV">150</span>
       </div>
-      <div class="settings-line">
-        <label class="settings-label" for="footGap">Pause between feet</label>
-        <input type="range" id="footGap" min="0" max="2" step="0.05" value="0.5" aria-label="Pause between feet, in beats">
-        <span class="mono settings-value" id="footGapV">0.50</span>
-      </div>
-      <label class="settings-check">
-        <input type="checkbox" id="footPulse" checked onchange="settings.footPulse=this.checked;store.set('settings',settings)"> Soft drum on each foot
-      </label>
     </div>
 
     <p class="settings-note">On iPhone, web audio follows the side mute switch — flip it off if you hear nothing.</p>

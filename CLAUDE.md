@@ -61,7 +61,8 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   (typed Roman → right Urdu word, table mined without the test poets). `tests/benchmark.js` `typed.*` goes the other way (Urdu → Roman)
   and cannot see them.
 - Navigating away stops playback (`pbCancel`). Last route is stored under `lastRoute`.
-- Persistence is `store` / `localStorage`: script, theme, settings (voice, tempo, foot gap, drum, ASCII), `lastRoute`,
+- Persistence is `store` / `localStorage`: script, theme, settings (voice, tempo, foot gap, drum, ASCII; playing style
+  strokes/groove/tarannum and its options, `src/js/15b-tarannum.js`), `lastRoute`,
   per-tab last sub-tab, `stats`, `poetLang` (Poets picker language).
 
 ## Gotchas

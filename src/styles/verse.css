@@ -709,6 +709,7 @@ html[data-script="hi"] .chips .fname { font-family: var(--deva); }
 .cbox-scan .cw .fs:hover, .couplet-scan-box .cw .fs:hover, .card .cw .fs:hover { color: var(--gold); background: color-mix(in srgb, var(--gold) 10%, transparent); }
 .fgrp.litf .cw .fs, .fgrp.resume-at .cw .fs { color: var(--gold); }
 .cw .fs.fs-extra { font-family: var(--sans); font-style: italic; color: var(--ghost); }
+.cw .fs.on { color: var(--ink); font-weight: 500; }   /* the afāʿīl syllable lights with its chip during playback */
 .chip.clash { border-bottom-color: var(--no) !important; border-bottom-style: dashed !important; }
 .chip.extra { border-color: var(--no); background: color-mix(in srgb, var(--no) 10%, transparent); }
 .unscanned-diag {

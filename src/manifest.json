@@ -43,6 +43,7 @@
     "src/js/13-studio-composer-module.js",
     "src/js/14-bibliography-module.js",
     "src/js/15-audio.js",
+    "src/js/15b-tarannum.js",
     "src/js/16-data-families-verified.js",
     "src/js/17-ear.js",
     "src/js/17c-circles.js",
