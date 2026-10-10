@@ -1,8 +1,8 @@
 {
   "ghalib": {
     "lines": 3658,
-    "meter.top1": 91.14,
-    "meter.top3": 95.43,
+    "meter.top1": 91.28,
+    "meter.top3": 95.54,
     "verbatim.roman": 99.21,
     "verbatim.hindi": 99.15,
     "typed.romanWord": 74.03,
@@ -11,8 +11,8 @@
   },
   "mir": {
     "lines": 3110,
-    "meter.top1": 94.18,
-    "meter.top3": 98.71,
+    "meter.top1": 94.24,
+    "meter.top3": 98.78,
     "verbatim.roman": 98.52,
     "verbatim.hindi": 98.52,
     "typed.romanWord": 77.22,

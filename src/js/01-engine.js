@@ -122,6 +122,9 @@ function lexKey(w){ return w.normalize('NFC').replace(/[\u064B-\u065F\u0670\u064
 /* word-level Urdu -> Pritchett-ASCII, built from every verified corpus line
    (see WORD_ASCII_MAP), so a typed line built from known ghazal vocabulary
    can go through the real Pue parser instead of the lossy character map. */
+/* khv words whose و IS said: خوشہ / خوشے ḳhosha, ḳhoshe 'ear of grain' (Mir 618.6 barq mat ḳhoshe kī; Rekhta ḳhosha), not the
+   silent-و ḳhvush 'happy' that shares its letters. Mined from Pritchett's, Rekhta's and Sufinama's Roman: the only ones there. */
+const KHV_SPOKEN=new Set(['خوشہ','خوشے']);
 function normalize(raw){
   let s=raw.normalize('NFC').replace(/[\u0640\u200C\u200D]/g,'');
   let suffix=null;
@@ -153,7 +156,7 @@ function normalize(raw){
       flags.push({i:out.length, kind: afterLong?'long':'short'});
     }
     /* irregular Persian khv: خوا / خوی → و silent (ḳhvāb = khāb) */
-    if(L[i]==='و' && i>0 && L[i-1]==='خ' && (L[i+1]==='ا'||L[i+1]==='ی'||L[i+1]==='ش'||L[i+1]==='د')){ continue; }
+    if(L[i]==='و' && i>0 && L[i-1]==='خ' && (L[i+1]==='ا'||L[i+1]==='ی'||L[i+1]==='ش'||L[i+1]==='د') && !KHV_SPOKEN.has(key)){ continue; }
     out.push(L[i]);
   }
   return {letters:out, key, suffix, raw, nasal:flags.slice(0,3)};
@@ -262,6 +265,8 @@ lex('بالکل',[{w:['l','l'],c:0}]);
 lex('بالآخر',[{w:['l','l','l'],c:0}]);
 lex('بالارادہ',[{w:['l','s','l','x'],c:0}]);
 lex('تمہارا تمہاری تمہارے تمھارا تمھاری تمھارے',[{w:['s','l','x'],c:0}]);
+/* havas (- =), never hos: Pritchett's Roman has havas in every one of its 26 Ghalib/Mir lines (al-havas, havas-e) */
+lex('ہوس',[{w:['s','l'],c:0},{w:['l','s'],c:2}]);
 
 /* ---------- syllabify a letter string into candidate readings ---------- */
 function syllabify(L){
@@ -549,7 +554,9 @@ function graftedOpts(chain){
   for(let k=1;k<chain.length;k++){
     const b=chain[k].letters; L=L.concat(b[0]==='AA'?['ا'].concat(b.slice(1)):b.slice(1));
   }
-  let opts=syllabify(L).map(o=>({syl:o.syl,c:o.c+1.2*(chain.length-1),n:'word-grafting'}));
+  /* 1.2 for the first join, 0.6 for each further word: 3.1 allows a chain of two, three or four words ("the change in the
+     pattern can be dramatic"), and a chain is one choice of the poet's, not several (ham aur aap [ha-mau-raa-p], Ghalib 150.3) */
+  let opts=syllabify(L).map(o=>({syl:o.syl,c:o.c+1.2+0.6*(chain.length-2),n:'word-grafting'}));
   /* aur heading a graft. The handbook's Glossary (data/glossary.json), aur: "(= -), (=); with word-grafting (- -)": once
      its r is carried onto the next word's alif (3.1: "the resulting long word is scanned normally"), its au may be short,
      the r opening the next syllable: tū aur ārāʾish → tū o-rā-rā-ʾi-sh (Ghalib 71.2), maiñ aur andeshah → maiñ o-ran-de-shah
@@ -784,6 +791,7 @@ function alignTexts(rawWords, syl){
     if(e && (e.l===ch || (e.l==='ا'&&ch==='AA') || (e.l==='AA'&&ch==='AA'))){ cur=e.si; texts[cur]+=ch0; p++; continue; }
     if(ch0==='\u0651' && e && exp[p-1] && e.l===exp[p-1].l){ const prevGlyph=[...texts[cur]].filter(c=>!/[\u064B-\u065F]/.test(c)).pop()||''; cur=e.si; texts[cur]+=prevGlyph+ch0; p++; continue; }
     if(ch0==='ۓ' && e && e.l==='ء'){ cur=e.si; texts[cur]+=ch0; p+=2; continue; }
+    if(ch0==='ؤ' && e && e.l==='ء' && exp[p+1] && exp[p+1].l==='و'){ cur=e.si; texts[cur]+=ch0; p+=2; continue; }   /* ؤ is ء + و (jā-ʾūñ: جا | ؤں) */
     texts[cur]+=ch0;
   }
   syl.forEach((sy,si)=>{ if(sy.k==='SUF') texts[si]= sy.suf==='o'?'و':'ـِ'; else if(sy.suf==='o') texts[si]+=' و'; });
