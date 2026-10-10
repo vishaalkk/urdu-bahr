@@ -9,6 +9,11 @@ const path = require('path');
 const HTML = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 const IGNORE = /Not implemented|scrollTo/;          // jsdom gaps, not app bugs
 let failures = 0;
+/* DOM_SHARD=i/N runs every Nth independent unit (a block, a route or a check), so
+   scripts/check.sh can split this file across cores; each unit loads its own page. */
+const [SHARD, SHARDS] = (process.env.DOM_SHARD || '0/1').split('/').map(Number);
+let unit = -1;
+const mine = () => ++unit % SHARDS === SHARD;
 const fail = msg => { failures++; console.log('  ✗ ' + msg); };
 const ok = msg => console.log('  ✓ ' + msg);
 
@@ -32,7 +37,7 @@ const ROUTES = [
 
 (async () => {
   console.log('Structure');
-  {
+  if (mine()) {
     const d = new JSDOM(HTML).window.document;       // parse only
     const sections = [...d.querySelectorAll('.wrap > section.tab-view, section.tab-view')];
     const nested = sections.filter(s => s.parentElement.closest('section'));
@@ -49,6 +54,7 @@ const ROUTES = [
 
   console.log('Every route, loaded directly (deep link)');
   for (const [hash, id, minChars] of ROUTES) {
+    if (!mine()) continue;
     const { dom, errors } = load(hash);
     await wait(1500);
     const w = dom.window, el = w.document.getElementById(id);
@@ -63,7 +69,7 @@ const ROUTES = [
   }
 
   console.log('Navigation between tabs');
-  {
+  if (mine()) {
     const { dom, errors } = load('#/weight');
     await wait(1500);
     const w = dom.window;
@@ -77,7 +83,7 @@ const ROUTES = [
   }
 
   console.log('Features');
-  {
+  if (mine()) {
     const { dom, errors } = load('#/meter');
     await wait(1500);
     const w = dom.window, d = w.document;
@@ -116,7 +122,7 @@ const ROUTES = [
   }
 
   console.log('Scan editing');
-  {
+  if (mine()) {
     /* two misras fit, the third doesn't: its chips are benchmarked against the shared bahr */
     const L = ['دلِ ناداں تجھے ہوا کیا ہے', 'آخر اس درد کی دوا کیا ہے', 'یہ بالکل غلط اور بے وزن جملہ ہے جو کسی بحر میں نہیں'];
     const { dom, errors } = load('#/scan?t=' + encodeURIComponent(L.join('\n')));
@@ -140,7 +146,7 @@ const ROUTES = [
   }
 
   console.log('Learner edits (validator + original bahr)');
-  {
+  if (mine()) {
     const L = ['دلِ ناداں تجھے ہوا کیا ہے', 'آخر اس درد کی دوا کیا ہے'];
     const { dom, errors } = load('#/scan?t=' + encodeURIComponent(L.join('\n')));
     await wait(1500);
@@ -163,7 +169,7 @@ const ROUTES = [
     if (errors.length) fail('script error in edit checks: ' + errors[0]);
     w.close();
   }
-  {
+  if (mine()) {
     /* Iqbal, sitāroñ se āge (Pritchett: - = = / - = = / - = = / - = =): Roman chips follow the syllables */
     const L = ['ستاروں سے آگے جہاں اور بھی ہیں', 'ابھی عشق کے امتحاں اور بھی ہیں'];
     const { dom, errors } = load('#/scan?t=' + encodeURIComponent(L.join('\n')));
@@ -181,7 +187,7 @@ const ROUTES = [
   }
 
   console.log('Legend and scripts');
-  {
+  if (mine()) {
     const { dom, errors } = load('#/ghazals/handbook'); await wait(1500);
     const w = dom.window, d = w.document;
     const lg = d.createElement('div'); lg.innerHTML = w.legendHTML('legend-sticky');
@@ -205,6 +211,7 @@ const ROUTES = [
   console.log('Shareable links');
   {
     const check = async (hash, test, label) => {
+      if (!mine()) return;
       const { dom, errors } = load(hash); await wait(1500);
       const w = dom.window;
       let res; try { res = await test(w, w.document); } catch (e) { res = 'threw ' + e.message; }
