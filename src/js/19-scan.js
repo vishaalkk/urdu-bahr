@@ -927,6 +927,13 @@ function pickWord(li,wi){ selWord=(selWord&&selWord[0]===li&&selWord[1]===wi)?nu
 /* tap a syllable chip: open its word's panel focused on that syllable (tap again to close) */
 function pickSyl(li,wi,si){ selWord=(selWord&&selWord[0]===li&&selWord[1]===wi&&selWord[2]===si)?null:[li,wi,si]; runScan(); }
 /* the per-syllable part of the word panel: long / short, each judged by SE().sylRule */
+/* the engine's note on the grafted reading a syllable belongs to, in the fit the line is shown with ('' when none) */
+function graftNote(li,syl){
+  const r=lastScan.results[li], f=lastScan.disp ? lastScan.disp[li] : (r && r.fits && r.fits[0]);
+  const st=f && f.path && f.path.find(p=>p.u && p.u.graft && p.u.from<=syl.word && syl.word<=p.u.to);
+  const o=st && st.u.opts[st.oi];
+  return (o && o.n) || '';
+}
 function sylRulesHTML(li,wi,allOpts,key){
   const ex=lineExplain(li), mine=ex.syl.map((s,i)=>Object.assign({i},s)).filter(s=>s.word<=wi && wi<=s.wordTo);
   if(!mine.length) return '';
@@ -937,7 +944,9 @@ function sylRulesHTML(li,wi,allOpts,key){
     h+=`<p class="syl-why">The bahr expects a ${focus.expected==='s'?'short':'long'} syllable here that the line doesn't have. Add a word, or pick a reading with more syllables.</p></div>`; return h;
   }
   if(focus.graft){
-    h+=`<p class="syl-why">This syllable belongs to a grafted run: the words are scanned as one (3.1). Choose <i>No grafting</i> below to weigh this word's syllables on their own.</p></div>`; return h;
+    h+=`<p class="syl-why">This syllable belongs to a grafted run: the words are scanned as one (3.1). Choose <i>No grafting</i> below to weigh this word's syllables on their own.</p>`;
+    if(/aur grafted/.test(graftNote(li,focus))) h+=`<p class="syl-why">Here <i>aur</i> heads the graft: its r opens the next word's syllable, and its <i>au</i> is read short. The handbook's Glossary gives <i>aur</i> as (= -) or (=), and "with word-grafting (- -)".</p>`;
+    return h+'</div>';
   }
   const op=allOpts[focus.oi];
   if(!op || !op.syl[focus.k]){ h+='</div>'; return h; }

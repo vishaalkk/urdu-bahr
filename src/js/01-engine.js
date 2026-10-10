@@ -288,9 +288,13 @@ function syllabify(L){
     if(n1==='A'||n1==='E'){ push('CV',2,'l',0); return; }
     if(n1==='AA'){ push('C',1,'s',0); return; }
     if(n1==='W'||n1==='Y'){
+      /* ی before a word-final و may open the syllable yo (1.3: o is a vowel as the SECOND letter of a syllable), so the letter
+         before it is short at no cost: the precative -iyo, aa))iyo [aa-))i-yo] (= - x), kahiyo, dekhiyo, and the plural -iyo;N
+         (ں is no letter, 1.2), za;xmiyo;N [za;x-mi-yo;N]. The ī + lone v reading (dev, Persian diiv) keeps its cost. */
+      const yo=(n1==='Y' && n2==='W' && i+3===n);
       const vAfter=(n2==='A'||n2==='E');
       push('CV',2,'l',vAfter?1:0);
-      push('C',1,'s',vAfter?0:(n2===undefined?4:2));
+      push('C',1,'s',(vAfter||yo)?0:(n2===undefined?4:2));
       return;
     }
     if(n1==='H'){
@@ -539,12 +543,21 @@ function graftable(a,b){
   const ta=typ(la); if(ta!=='C') return false;
   const fb=b.letters[0]; return fb==='ا'||fb==='AA';
 }
+const AUR_GRAFT_SHORT=0.5;   /* cost of aur's short au, on top of the graft's 1.2 (see below) */
 function graftedOpts(chain){
   let L=chain[0].letters.slice();
   for(let k=1;k<chain.length;k++){
     const b=chain[k].letters; L=L.concat(b[0]==='AA'?['ا'].concat(b.slice(1)):b.slice(1));
   }
   let opts=syllabify(L).map(o=>({syl:o.syl,c:o.c+1.2*(chain.length-1),n:'word-grafting'}));
+  /* aur heading a graft. The handbook's Glossary (data/glossary.json), aur: "(= -), (=); with word-grafting (- -)": once
+     its r is carried onto the next word's alif (3.1: "the resulting long word is scanned normally"), its au may be short,
+     the r opening the next syllable: tū aur ārāʾish → tū o-rā-rā-ʾi-sh (Ghalib 71.2), maiñ aur andeshah → maiñ o-ran-de-shah
+     (71.3). Only when aur is the FIRST word of the chain: grafted onto from the left, the handbook's own readings keep the
+     au long (ham aur [ha-mau-r], agar aur [a-ga-rau-r], udhar aur aap [u-dha-rau-raa-p], exercise notes). An extra reading,
+     so the long au stays free. */
+  if(chain[0].key==='اور') opts.slice().forEach(o=>{ const s0=o.syl[0];
+    if(s0 && s0.k==='AV' && s0.w==='l') opts.push({syl:[Object.assign({},s0,{w:'s'})].concat(o.syl.slice(1)),c:o.c+AUR_GRAFT_SHORT,n:'word-grafting; aur grafted as (- -), au short (Glossary)'}); });
   const lastSuf=chain[chain.length-1].suffix; if(lastSuf) opts=applySuffix(opts,lastSuf);
   return opts;
 }
