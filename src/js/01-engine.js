@@ -290,7 +290,8 @@ function syllabify(L){
     }
     /* consonant-type onset (C,H,W,Y) */
     if(n1===undefined){ const prev=acc[acc.length-1];
-      if(t==='Y'){ push('C',1,'s',4); return; }
+      /* after alif, a final ی is the consonant y, Persian -āy (نای nāy, پای pāy, خدای ḳhudāy): the vowel ī there is written ئی */
+      if(t==='Y'){ push('C',1,'s',L[i-1]==='ا'?0:4); return; }
       if(t==='W'){ push('C',1,'s',2.5); return; }        /* word-final و/ی are vowels, not lone consonants */
       push('C',1,'s',(!prev||prev.w==='l')?0:3); return; }
     if(n1==='A'||n1==='E'){ push('CV',2,'l',0); return; }
@@ -555,7 +556,7 @@ function graftable(a,b){
   const ta=typ(la); if(ta!=='C') return false;
   const fb=b.letters[0]; return fb==='ا'||fb==='AA';
 }
-const AUR_GRAFT_SHORT=0.5;   /* cost of aur's short au, on top of the graft's 1.2 (see below) */
+const AUR_GRAFT_SHORT=0;   /* cost of aur's short au, on top of the graft's 1.2 (see below); the Glossary gives it as a reading of aur, so none */
 function graftedOpts(chain){
   let L=chain[0].letters.slice();
   for(let k=1;k<chain.length;k++){
@@ -653,7 +654,9 @@ function alUnit(words,i){
   L.push('ل');
   const first=syllabify(L), rest=scanWord(restRaw).opts;
   const opts=[];
-  first.forEach(f=>rest.forEach(r=>opts.push({syl:f.syl.concat(r.syl),c:f.c+r.c+1.0,n:'al-construction (3.4)'})));
+  /* 0.5: the Arabic article's alif is never said (3.4), so the reading is all but certain once ال follows; the small cost only
+     covers a word that merely opens with ال (bū al-havas [bul-ha-vas], Ghalib 115.6) */
+  first.forEach(f=>rest.forEach(r=>opts.push({syl:f.syl.concat(r.syl),c:f.c+r.c+0.5,n:'al-construction (3.4)'})));
   if(!opts.length) return null;
   opts.sort((x,y)=>x.c-y.c);
   return {from:i,to,opts:opts.slice(0,8),graft:true};
