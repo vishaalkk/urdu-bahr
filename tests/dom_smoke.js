@@ -377,6 +377,35 @@ const ROUTES = [
       w.pickStyle('strokes');
       return ok ? true : 'Tarannum panel did not show its instruments and ragas';
     }, 'Settings › Sound: Strokes by default; choosing Tarannum shows only its options (4 instruments, 10 ragas + rotate)');
+    await check('#/ghazals/ghalib/1', (w, d) => {
+      const btn = d.querySelector('[data-pb="reader:0"]'); if (!btn) return 'no couplet ▶';
+      const g = w.collectionData('ghalib').find(x => String(x.id) === '1');
+      const ps = g.lines.slice(0, 2).map(l => { const r = w.Scan.scanLine(l.ur); return w.exSeq(w.Scan.explain(r, r.fits[0])); });
+      w.eval('settings.tabla = true');
+      const TAALS = w.eval('TAALS'), pick = w.tkFits(ps)[0].k, T = TAALS[pick];
+      const R = w.tkRibbon(btn.closest('.couplet-card'), btn, T, ps);
+      const rows = [...d.querySelectorAll('.tk-rib .tk-row-lbl')].map(x => x.firstChild.textContent).join(',');
+      const laid = w.tkLay(ps[0], T);
+      const tihaiIn = Object.values(TAALS).every(t => w.tkTihai(t).every(h => h.at < t.beats));
+      const verse = [{ e: { syl: new Array(8) } }, { e: { syl: new Array(8) } }];
+      const wants = w.tkWants(verse, 'reader:1:0') && !w.tkWants(verse, 'drill-cand:meter:0') && !w.tkWants([{ e: { syl: new Array(3) } }], 'reader:1:0');
+      w.tkRibbonRemove();
+      const bad = [];
+      if (pick !== 'rupak') bad.push('Ghalib 1 (ramal, 26 mātrās) should get Rupak, got ' + pick);
+      if (!/^Voice,Melody,Tabla,Tanpura,Harmonium/.test(rows)) bad.push('ribbon rows: ' + rows);
+      if (R.cells.length !== 7) bad.push('Rupak cells: ' + R.cells.length);
+      if (laid.cyc !== 4 || laid.pad !== 2) bad.push(`laid on Rupak: ${laid.cyc} cycles, ${laid.pad} held`);
+      if (!tihaiIn) bad.push('a tihai spills past its cycle');
+      if (!wants) bad.push('the theka should take verse couplets only');
+      if (d.querySelector('.tk-rib')) bad.push('ribbon not removed');
+      return bad.length ? bad.join(' | ') : true;
+    }, 'Tabla theka: Auto picks the taal, the ribbon lays out its layers and beats, the tihai lands on sam, drills keep the plain player');
+    await check('#/home', (w, d) => {
+      w.openSettings();
+      const ids = ['layerVoice', 'layerMelody', 'taalOn', 'styleDrone', 'ballOn'].filter(id => !d.getElementById(id));
+      const shapes = d.querySelectorAll('#ballShape .tk-chip').length, on = (d.querySelector('#ballShape .tk-chip.on') || {}).textContent;
+      return !ids.length && shapes === 7 && on === 'Nuqta' ? true : `missing ${ids.join(',')}; ${shapes} ball shapes, default ${on}`;
+    }, 'Settings: sound as layers (voice, melody, tabla, tanpura) and the bouncing ball (7 shapes, nuqta by default)');
     await check('', (w) => w.location.hash === '#/home' ? true : 'landed on ' + w.location.hash, 'bare URL lands on Home');
     await check('#/home', (w, d) => { const s = d.getElementById('home-section'); return s && s.classList.contains('on') && /Weight/.test(s.textContent) && /Ghazals/.test(s.textContent) ? true : 'home section not rendered'; }, 'Home renders its content');
     // Round 3: inside the (single-collection) Mir list the group header carries the

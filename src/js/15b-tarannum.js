@@ -31,8 +31,8 @@ const STYLE_DEFAULTS = { style: 'strokes', grooveSound: 'tablarec', drone: true,
 Object.keys(STYLE_DEFAULTS).forEach(k => { if (settings[k] == null) settings[k] = STYLE_DEFAULTS[k]; });
 
 const STYLES = [
-  { id: 'strokes', nm: 'Strokes', ds: 'One stroke per syllable, a short pause between feet: the meter laid out to study.' },
-  { id: 'groove', nm: 'Groove', ds: 'The line runs on over a drone and a soft pulse on every beat, so a long syllable is felt holding through two.' },
+  { id: 'strokes', nm: 'Syllables', ds: 'Each syllable sounded on its beat. With a pause between feet, the meter is laid out to study; without, the line runs on and a long syllable is felt holding through two.' },
+  { id: 'groove', nm: 'Syllables', ds: 'Each syllable sounded on its beat. With a pause between feet, the meter is laid out to study; without, the line runs on and a long syllable is felt holding through two.' },
   { id: 'tarannum', nm: 'Tarannum', ds: 'The couplet played in a raga: the first line opens, the second answers home; each play ornaments it anew.' }
 ];
 const GROOVE_SOUNDS = [
@@ -73,7 +73,7 @@ function tarTuneFromRec() {
 /* ---------- the drone: a slow cycle of plucked strings (Pa, Sa, Sa, low Sa), on its own bus ---------- */
 function tarDroneStart() {
   const D = TAR.drone; clearTimeout(D.stopT); if (D.on) return;
-  const c = A.ctx; D.on = true; D.i = 0; D.next = c.currentTime + 0.05;
+  const c = A.ctx; D.on = true; D.i = 0; D.next = D.t0 = c.currentTime + 0.05;   /* t0: the taal ribbon's tanpura lane follows the plucks */
   D.bus = c.createGain(); D.bus.gain.setValueAtTime(0, c.currentTime); D.bus.gain.linearRampToValueAtTime(1, c.currentTime + 0.8); D.bus.connect(A.voiceBus || A.out);
   const tick = () => { while (D.next < c.currentTime + 0.5) { const sa = TAR.sa; tarPluck(D.next, [sa * 0.75, sa, sa, sa / 2][D.i % 4], D.bus); D.next += 1.05; D.i++; } };
   tick(); D.timer = setInterval(tick, 120);
@@ -98,6 +98,8 @@ function tarPluck(t, f, dest) {
 function tarTick(t, vol) { burst(t, 7200, 1.1, vol, 0.03); burst(t, 3800, 2.5, vol * 0.35, 0.02); }
 /* a recorded take (tabla or da/dum voice), its attack exactly on the beat; human = a touch of looseness */
 function tarStroke(t, dur, isLong, vol, human) {
+  if (settings.sound === 'tone') return tone(t, dur, isLong, vol);      /* Syllables (Strokes + Groove share the voice) */
+  if (settings.sound === 'tabla') return tabla(t, dur, isLong, vol);
   if (settings.grooveSound === 'mine') return mineSound(t, dur, isLong, vol);
   const R = settings.grooveSound === 'rec' ? A.rec : A.recT; if (!R || !R.da || !R.da.length || !R.dum.length) return tabla(t, dur, isLong, vol);
   const pool = isLong ? R.dum : R.da, key = isLong ? 'l' : 's';
@@ -405,24 +407,32 @@ function playStyled(seq, opts) {
   if (settings.drone) tarDroneStart();
   if (settings.pulse) for (let k = 0; k * u < t - 1e-6; k++) tarTick(t0 + k * u, 0.05);
   const live = ev.filter(e => !e.rest);
-  if (sung && live.length) {
-    const lines = opts.lines || 1, role = lines > 1 ? (opts.line ? 'sani' : 'ula') : 'sani', round = Math.max(0, TAR.round);
-    const raga = settings.tarRaga === 'rotate' ? RAGA_KEYS[Math.floor(round / 4) % RAGA_KEYS.length] : settings.tarRaga;
-    const hook = opts.hook != null && opts.hook >= 0 ? live.findIndex(e => e.i >= opts.hook) : -1;
-    const pts = tarLine(live, role, round, raga, hook, 1000 * round + 17 * (opts.line || 0) + seq.length);
-    const ro = live.map(e => settings.tarVowels && opts.ro ? opts.ro[e.i] : 'ā');
-    const inst = settings.tarInst;
-    if (inst === 'voice') tarVoice(t0, live, pts, 0.55, ro);
-    else if (inst === 'sarangi') { if (TAR.sar) tarSarangi(t0, live, pts, 0.9, raga); else { tarSarangiLoad(); tarBowed(t0, live, pts, 0.9, raga); } }
-    else if (inst === 'sitar') tarSitar(t0, live, pts, 0.9);
-    else tarFlute(t0, live, pts, 0.9);
-    if (settings.tarHarm) tarHarmonium(t0, live, pts, len, 0.7);
-    TAR.last = { raga, round };
-  } else live.forEach(e => tarStroke(t0 + e.at + (!e.fs ? (Math.random() - 0.5) * 0.012 : 0), e.dur, e.isLong, e.vol, true));
+  if (sung && live.length) tarSingLine(t0, live, Object.assign({}, opts, { len, n: seq.length }));
+  else live.forEach(e => tarStroke(t0 + e.at + (!e.fs ? (Math.random() - 0.5) * 0.012 : 0), e.dur, e.isLong, e.vol, true));
   if (opts.onStep) ev.forEach(e => A.timers.push(setTimeout(() => opts.onStep(e.i, e.dur * 1000), (t0 + e.at - c.currentTime) * 1000)));
   if (opts.onEnd) A.timers.push(setTimeout(opts.onEnd, (t0 + len - c.currentTime) * 1000 + 60));
   clearTimeout(A.idleT); A.idleT = setTimeout(releaseSilentAudio, (t0 + len - c.currentTime) * 1000 + 1500);
   return len;
+}
+
+/* one line of melody on the chosen instrument (and harmonium), from t0. live: [{at, dur (seconds from t0), isLong, i (seq
+   index), fs, vol}]; opts: line, lines, hook (seq index of the rhyme), ro (Roman per seq index), len (seconds). Also played
+   by the tabla theka (15c-taal.js) with the taal's timing. Returns the pitch points (pts[j][0].s = semitones from Sa). */
+function tarSingLine(t0, live, opts) {
+  if (settings.tarInst === 'sarangi' && !TAR.sarP) tarSarangiLoad();
+  const lines = opts.lines || 1, role = lines > 1 ? (opts.line ? 'sani' : 'ula') : 'sani', round = Math.max(0, TAR.round);
+  const raga = settings.tarRaga === 'rotate' ? RAGA_KEYS[Math.floor(round / 4) % RAGA_KEYS.length] : settings.tarRaga;
+  const hook = opts.hook != null && opts.hook >= 0 ? live.findIndex(e => e.i >= opts.hook) : -1;
+  const pts = tarLine(live, role, round, raga, hook, 1000 * round + 17 * (opts.line || 0) + (opts.n || live.length));
+  const ro = live.map(e => settings.tarVowels && opts.ro ? opts.ro[e.i] : 'ā');
+  const inst = settings.tarInst;
+  if (inst === 'voice') tarVoice(t0, live, pts, 0.55, ro);
+  else if (inst === 'sarangi') { if (TAR.sar) tarSarangi(t0, live, pts, 0.9, raga); else { tarSarangiLoad(); tarBowed(t0, live, pts, 0.9, raga); } }
+  else if (inst === 'sitar') tarSitar(t0, live, pts, 0.9);
+  else tarFlute(t0, live, pts, 0.9);
+  if (settings.tarHarm) tarHarmonium(t0, live, pts, opts.len || 0, 0.7);
+  TAR.last = { raga, round };
+  return pts;
 }
 
 /* the rhyme of a couplet: the words both lines end on (radīf) plus the word before (qāfiya). Only a matla shows
@@ -438,7 +448,11 @@ function tarHookFor(lines, li) {
 
 /* ---------- Settings › Sound ---------- */
 function setStyleOpt(k, v) { pbForget(); settings[k] = v; store.set('settings', settings); renderStyleOpts(); }
-function pickStyle(id) { setStyleOpt('style', id); tarPreview(); }
+/* the three styles, as layers: Strokes = voice with a pause between feet, Groove = voice running on, Tarannum = melody */
+function pickStyle(id) {
+  settings.voiceOn = id !== 'tarannum'; settings.melodyOn = id === 'tarannum'; if (id !== 'tarannum') settings.gapOn = id === 'strokes';
+  setStyleOpt('style', id); if (typeof tkSaved === 'function') tkSaved(); tarPreview();
+}
 function pickGrooveSound(id) { setStyleOpt('grooveSound', id); tarPreview(); }
 function pickTarInst(id) { setStyleOpt('tarInst', id); tarPreview(); }
 /* a sample line (khafīf: = – = = / – = – = / = =) so a choice can be heard straight away */
@@ -452,11 +466,19 @@ function tarPreview() {
 }
 function renderStyleOpts() {
   if (typeof $ !== 'function') return;
-  const st = settings.style;
-  document.querySelectorAll && document.querySelectorAll('#styleSeg [data-style]').forEach(b => { const on = b.getAttribute('data-style') === st; b.classList.toggle('on', on); b.setAttribute('aria-checked', on); });
+  const st = settings.style, tabla = !!settings.tabla;
+  /* Syllables = Strokes (pause between feet) or Groove (the line runs on); the seg shows the two as one */
+  document.querySelectorAll && document.querySelectorAll('#styleSeg [data-style]').forEach(b => { const k = b.getAttribute('data-style'), on = k === 'strokes' ? st !== 'tarannum' : k === st;
+    b.classList.toggle('on', on); b.setAttribute('aria-checked', on); });
   const d = $('styleDesc'); if (d) d.textContent = (STYLES.find(s => s.id === st) || STYLES[0]).ds;
-  [['stylePanelStrokes', st === 'strokes'], ['stylePanelGroove', st === 'groove'], ['stylePanelTarannum', st === 'tarannum'], ['stylePanelUnder', st !== 'strokes']]
+  [['stylePanelStrokes', st !== 'tarannum'], ['stylePanelGroove', false], ['stylePanelTarannum', st === 'tarannum'], ['stylePanelUnder', true],
+   ['footGapLine', st === 'strokes' && !tabla], ['footPulseRow', st === 'strokes' && !tabla],
+   ['styleDroneRow', st !== 'strokes' || tabla], ['stylePulseRow', st !== 'strokes' && !tabla]]
     .forEach(([id, on]) => { const el = $(id); if (el) el.classList.toggle('hidden', !on); });
+  /* with the tabla on, the theka keeps time: no pause between feet, no pulse, and a tabla voice gives way to da · dum */
+  const gap = $('styleGap'); if (gap) { gap.checked = st === 'strokes' && !tabla; gap.disabled = tabla; }
+  const gr = $('styleGapRow'); if (gr) gr.classList.toggle('tk-off', tabla);
+  const rule = $('taalRule'); if (rule) rule.textContent = tabla ? 'With the tabla on, the theka keeps time: no pause between feet or pulse, and a tabla voice gives way to da · dum so two tablas never fight. While it plays, the ribbon under the couplet changes the taal and tempo.' : '';
   const g = $('grooveOpts');
   if (g) g.innerHTML = GROOVE_SOUNDS.map(s => { const on = s.id === settings.grooveSound;
     return `<button type="button" class="sopt ${on ? 'on' : ''}" role="radio" aria-checked="${on}" onclick="pickGrooveSound('${s.id}')"><span class="sopt-dot"></span><span class="nm">${s.nm}</span><span class="ds">${s.ds}</span></button>`; }).join('');
@@ -467,6 +489,7 @@ function renderStyleOpts() {
   const mood = $('tarRagaMood'); if (mood) mood.textContent = settings.tarRaga === 'rotate' ? 'a new raga every four couplets' : (RAGAS[settings.tarRaga] || RAGAS.yaman).mood;
   [['styleDrone', 'drone'], ['stylePulse', 'pulse'], ['tarHarm', 'tarHarm'], ['tarOrn', 'tarOrn'], ['tarVowels', 'tarVowels']].forEach(([id, k]) => { const el = $(id); if (el) el.checked = !!settings[k]; });
   const vr = $('tarVowelsRow'); if (vr) vr.classList.toggle('hidden', settings.tarInst !== 'voice');
+  if (typeof tkRenderSettings === 'function') tkRenderSettings();
 }
-window.playStyled = playStyled; window.tarOnStop = tarOnStop; window.tarHookFor = tarHookFor; window.renderStyleOpts = renderStyleOpts;
+window.playStyled = playStyled; window.tarSingLine = tarSingLine; window.tarOnStop = tarOnStop; window.tarHookFor = tarHookFor; window.renderStyleOpts = renderStyleOpts;
 window.pickStyle = pickStyle; window.pickGrooveSound = pickGrooveSound; window.pickTarInst = pickTarInst; window.setStyleOpt = setStyleOpt;

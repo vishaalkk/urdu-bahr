@@ -112,12 +112,37 @@ function fitChipRows(root){
     ch.classList.remove('fit-measure');
     if (tooWide) ch.classList.add('wrap-feet');
   });
+  fitVerseLines(root);
 }
-window.fitChipRows = fitChipRows;
+/* A couplet's verse lines (couplet and misra cards) shrink together, just enough that each stays on one line (--vfit,
+   0.62–1); below that floor they wrap. Both lines of a couplet keep one size. */
+function fitVerseLines(root) {
+  if (typeof document === 'undefined' || typeof document.querySelectorAll !== 'function') return;
+  const FLOOR = 0.62;
+  (root || document).querySelectorAll('.couplet-card .cbox-verse, .misra-card .cbox-verse').forEach(box => {
+    const lines = [...box.querySelectorAll('.vline-lg, .misra-text')];
+    const inner = el => { const cs = getComputedStyle(el); return el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight); };
+    const avail = box.clientWidth ? inner(box) : 0; if (avail <= 0 || !lines.length) return;   // hidden: fitted when shown (the card pads its children)
+    let fit = 1;
+    lines.forEach(l => { l.style.setProperty('--vfit', '1'); l.classList.add('vfit-measure'); });
+    lines.forEach(l => { const w = l.getBoundingClientRect().width; if (w > avail) fit = Math.min(fit, avail / w * 0.97); });
+    lines.forEach(l => { l.classList.remove('vfit-measure'); l.style.setProperty('--vfit', Math.max(FLOOR, fit).toFixed(3)); });
+  });
+  /* the reader's signature verse: scaled from whatever size its own rules give it */
+  (root || document).querySelectorAll('.reader-header-hero-verse').forEach(l => {
+    const pe = l.parentElement, cs = pe && getComputedStyle(pe), avail = pe && pe.clientWidth ? pe.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight) : 0; if (avail <= 0) return;
+    l.classList.remove('vfit-sized'); l.classList.add('vfit-measure');
+    const w = l.getBoundingClientRect().width, fs = parseFloat(getComputedStyle(l).fontSize) || 0;
+    l.classList.remove('vfit-measure');
+    if (w > avail && fs) { l.style.setProperty('--vfit-fs', (fs * Math.max(FLOOR, avail / w * 0.97)).toFixed(1) + 'px'); l.classList.add('vfit-sized'); }
+  });
+}
+window.fitChipRows = fitChipRows; window.fitVerseLines = fitVerseLines;
 if (typeof MutationObserver !== 'undefined' && typeof document !== 'undefined' && document.body && typeof requestAnimationFrame === 'function') {
   let fitQueued = false;
   const queueFit = () => { if (fitQueued) return; fitQueued = true; requestAnimationFrame(() => { fitQueued = false; fitChipRows(); }); };
-  new MutationObserver(ms => { if (ms.some(m => (m.type === 'attributes' && m.target.classList && m.target.classList.contains('couplet-scan-box')) || [...m.addedNodes].some(n => n.nodeType === 1 && (n.matches('.chips, .fgrp') || n.querySelector('.chips'))))) queueFit(); })
+  new MutationObserver(ms => { if (ms.some(m => (m.type === 'attributes' && m.target.classList && m.target.classList.contains('couplet-scan-box')) || [...m.addedNodes].some(n => n.nodeType === 1 && (n.matches('.chips, .fgrp, .cbox-verse, .reader-header-comp') || n.querySelector('.chips, .cbox-verse, .reader-header-hero-verse')))
+    || (m.type === 'childList' && m.target.nodeType === 1 && typeof m.target.closest === 'function' && m.target.closest('.cbox-verse, .reader-header-hero-verse')))) queueFit(); })
     .observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
   window.addEventListener('resize', queueFit);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(queueFit);

@@ -71,10 +71,13 @@ function releaseSilentAudio(){
   try{ if(A.ctx && A.ctx.state==='running'){ const p=A.ctx.suspend(); if(p&&p.catch)p.catch(()=>{}); } }catch(e){}   /* a running context alone keeps the widget; ensure() resumes it on the next play */
   try{ if(navigator.mediaSession){ navigator.mediaSession.playbackState='none'; navigator.mediaSession.metadata=null; } }catch(e){}
 }
-function releaseAudioSession(){ try{ if(typeof pbCancel==='function') pbCancel(); else stopAll(); }catch(e){} releaseSilentAudio(); }
+function releaseAudioSession(){ try{ if(typeof pbCancel==='function') pbCancel(); else stopAll(); }catch(e){}
+  try{ if(typeof tarDroneStop==='function') tarDroneStop(); }catch(e){}   /* now, not after stopAll's linger: a hidden page's timers may not run */
+  releaseSilentAudio(); }
 document.addEventListener('visibilitychange',()=>{
   if(document.visibilityState==='hidden') releaseAudioSession(); });
 if(typeof window.addEventListener==='function') window.addEventListener('pagehide',releaseAudioSession);
+document.addEventListener('freeze',releaseAudioSession);   /* a phone freezing a background tab */
 
 function burst(t,freq,q,vol,dur,dest){
   const c=A.ctx, n=c.createBufferSource(); n.buffer=A.noise;
@@ -136,8 +139,8 @@ function loadRec(){
   return A.recP;
 }
 /* choose the take whose sounding length best fits the slot, never the same take twice running */
-function recSound(t,dur,isLong,vol,pos,holdF){
-  const R=settings.sound==='tablarec'?A.recT:A.rec; if(!R||!R.da.length||!R.dum.length) return tabla(t,dur,isLong,vol);   /* recordings not ready: percussion, not the synth voice */
+function recSound(t,dur,isLong,vol,pos,holdF,kind){
+  const R=(kind||settings.sound)==='tablarec'?A.recT:A.rec; if(!R||!R.da.length||!R.dum.length) return tabla(t,dur,isLong,vol);   /* recordings not ready: percussion, not the synth voice */
   const pool=isLong?R.dum:R.da, key=isLong?'l':'s';
   let bi=0,bs=1e9; pool.forEach((k,j)=>{ const sc=Math.abs((k.dur-k.off)-dur*0.95)+(j===R.last[key]?0.2:0); if(sc<bs){bs=sc;bi=j;} });
   R.last[key]=bi; const k=pool[bi];
@@ -209,10 +212,10 @@ function tone(t,dur,isLong,vol){
   o.connect(g); g.connect(A.dest||A.out); o.start(t); o.stop(t+dur);
 }
 function tick(){ if(!A.ensure())return; const t=A.ctx.currentTime+0.005; burst(t,2600,2,0.5,0.03,A.out); }
-function syllableSound(t,dur,isLong,vol,pos,hold){
-  const s=settings.sound, d=dur*(hold||1);
+function syllableSound(t,dur,isLong,vol,pos,hold,kind){
+  const s=kind||settings.sound, d=dur*(hold||1);
   if(s==='tabla') tabla(t,d,isLong,vol); else if(s==='tone') tone(t,d,isLong,vol);
-  else if(s==='mine') mineSound(t,d,isLong,vol); else if(s==='rec'||s==='tablarec') recSound(t,d/0.95,isLong,vol,pos,hold); else voice(t,d,isLong,s,vol,pos);
+  else if(s==='mine') mineSound(t,d,isLong,vol); else if(s==='rec'||s==='tablarec') recSound(t,d/0.95,isLong,vol,pos,hold,s); else voice(t,d,isLong,s,vol,pos);
 }
 /* soft low drum on each foot's first syllable */
 function footThump(t,vol){ const c=A.ctx,o=c.createOscillator(),g=c.createGain(); o.type='sine';
@@ -221,6 +224,7 @@ function footThump(t,vol){ const c=A.ctx,o=c.createOscillator(),g=c.createGain()
   o.connect(g); g.connect(A.dest||A.out); o.start(t); o.stop(t+0.32); }
 function stopAll(){ A.timers.forEach(clearTimeout); A.timers=[]; clearTimeout(A.idleT); A.idleT=setTimeout(releaseSilentAudio,600);
   if(typeof tarOnStop==='function') tarOnStop();   /* the drone lingers a moment so a couplet's next line picks it up */
+  if(typeof tkOnStop==='function') tkOnStop();     /* the tabla theka (15c-taal.js) */
   if(A.ctx && A.sess){ const g=A.sess, now=A.ctx.currentTime; try{ g.gain.cancelScheduledValues(now); g.gain.setValueAtTime(g.gain.value,now); g.gain.linearRampToValueAtTime(0,now+0.03); }catch(e){}
     setTimeout(()=>{ try{g.disconnect();}catch(e){} },80); A.sess=null; }
   if(typeof document!=='undefined' && typeof document.querySelectorAll==='function') document.querySelectorAll('.lit,.litf').forEach(n=>n.classList.remove('lit','litf')); }
@@ -267,6 +271,7 @@ function pbSetBtn(btn, on) {
   btn.textContent = on ? '❚❚' : '▶︎';
   btn.classList.toggle('playing', on);
   btn.setAttribute('aria-label', on ? 'Stop' : (btn.getAttribute('data-label') || 'Play'));
+  if (!on && typeof tkStopUI === 'function') tkStopUI();   /* the ball and the taal ribbon go with it */
 }
 function pbClearMark() {
   if (typeof document !== 'undefined' && typeof document.querySelectorAll === 'function')
@@ -275,7 +280,7 @@ function pbClearMark() {
 function pbForget() { PB.resume = null; pbClearMark(); }
 /* another sound took over, or the view changed */
 function pbDetach() { if (PB.playing) pbSetBtn(PB.btn, false); PB.playing = false; PB.key = null; PB.btn = null; PB.lines = null; pbForget(); }
-function pbCancel() { pbDetach(); stopAll(); }
+function pbCancel() { pbDetach(); stopAll(); if (typeof tkRibbonRemove === 'function') tkRibbonRemove(); }   /* the view changed: the ribbon goes too */
 /* highlight the whole word a syllable belongs to (grafted words light together);
    words[] indexed to match e.syl[i].word/.wordTo, built by pbWordsMatching() */
 function pbWordLit(words) {
@@ -287,24 +292,33 @@ function pbWordLit(words) {
     for (let w = from; w <= to; w++) { if (words[w]) { words[w].classList.add('wlit'); cur.push(w); } }
   };
 }
+/* what one syllable of a couplet line does on screen as it sounds: chip, word, foot, resume point, the bouncing ball.
+   step(gi, ms); step.clear() takes the foot and word light off at the end of the line. Shared with the theka (15c-taal.js) */
+function pbStepFn(L, li, p) {
+  const lit = L.nodes ? litter(L.nodes) : null;
+  const wl = L.words ? pbWordLit(L.words) : null;
+  const btn = PB.btn;
+  const step = (gi, ms, len) => { PB.pos = { line: li, foot: p.feet[gi] };
+    if (lit) lit(gi, ms);
+    if (wl && L.e && L.e.syl[gi]) wl(L.e.syl[gi].word, L.e.syl[gi].wordTo);
+    if (L.groups) { L.groups.forEach(g => g.classList.remove('litf')); const g = L.groups[p.feet[gi]]; if (g) g.classList.add('litf'); }
+    if (typeof tkBallStep === 'function' && L.e) tkBallStep(btn, L.nodes, gi, ms, p.seq[gi], len); };
+  step.clear = () => { if (L.groups) L.groups.forEach(g => g.classList.remove('litf')); if (wl) wl(-1, -2); };
+  return step;
+}
 function pbRunLine(li, foot) {
   const L = PB.lines && PB.lines[li];
   if (!L) { pbFinish(); return; }
   const p = L.p || exSeq(L.e);            /* L.p: precomputed {seq,feet,cae} for pattern-only playback */
   let s0 = p.feet.findIndex(f => f >= foot); if (s0 < 0) s0 = 0;
-  const lit = L.nodes ? litter(L.nodes) : null;
-  const wl = L.words ? pbWordLit(L.words) : null;
+  const step = pbStepFn(L, li, p);
   /* groove / tarannum also want: which line of the couplet, the rhyme, and each syllable's Roman (for the sung vowels) */
   const hook = typeof tarHookFor === 'function' ? tarHookFor(PB.lines, li) : -1;
   const ro = L.e && typeof translitText === 'function' ? L.e.syl.slice(s0).map(x => { try { return translitText(x.text, 'ro'); } catch (err) { return ''; } }) : null;
   play(p.seq.slice(s0), { pb: true, feet: p.feet.slice(s0), cae: p.cae.filter(c => c > foot),
     line: li, lines: PB.lines.length, ro, hook: hook >= 0 ? hook - s0 : -1,
-    onStep: (i, ms) => { const gi = i + s0; PB.pos = { line: li, foot: p.feet[gi] };
-      if (lit) lit(gi, ms);
-      if (wl && L.e && L.e.syl[gi]) wl(L.e.syl[gi].word, L.e.syl[gi].wordTo);
-      if (L.groups) { L.groups.forEach(g => g.classList.remove('litf')); const g = L.groups[p.feet[gi]]; if (g) g.classList.add('litf'); } },
-    onEnd: () => { if (L.groups) L.groups.forEach(g => g.classList.remove('litf'));
-      if (wl) wl(-1, -2);
+    onStep: (i, ms) => step(i + s0, ms),
+    onEnd: () => { step.clear();
       if (li + 1 < PB.lines.length) playLater(() => pbRunLine(li + 1, 0), 350); else pbFinish(); } });
 }
 function pbFinish() { pbSetBtn(PB.btn, false); PB.playing = false; PB.key = null; PB.btn = null; PB.lines = null; PB.pos = null; pbForget(); }
@@ -323,6 +337,7 @@ function pbToggle(key, btn, getLines, start) {
   pbForget(); stopAll();
   PB.key = key; PB.btn = btn; PB.lines = lines; PB.playing = true; PB.pos = { line: st.line, foot: st.foot };
   pbSetBtn(btn, true);
+  if (typeof tkWants === 'function' && tkWants(lines, key)) { tkRun(lines, st); return; }   /* a couplet on the tabla theka: 15c-taal.js */
   pbRunLine(Math.min(st.line, lines.length - 1), st.foot || 0);
 }
 /* tap a foot name inside a couplet box: play from that foot */
@@ -396,7 +411,7 @@ function pickSound(id){
     const st=$('recStatus'); if(st) st.textContent='Record "dum" and "da" first (or choose two audio files).';
     return;
   }
-  pbForget(); settings.sound=id; store.set('settings',settings); renderSoundOpts();
+  pbForget(); settings.sound=id; if(['tablarec','rec','mine'].includes(id)) settings.grooveSound=id; store.set('settings',settings); renderSoundOpts();
   if($('soundName')) $('soundName').textContent=SOUNDS.find(s=>s.id===id).nm.replace(/ /g,'');
   play(['l','s','l','l','s','l']);
 }

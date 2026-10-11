@@ -52,3 +52,7 @@ data/ganjoor_cache/
 data/steingass_cache/
 # review file from scripts/compare_sufinama_ganjoor.py: local only
 data/sufinama_ganjoor_diff.json
+
+# Generated ear-lab mockups (features/ear-lab/README.md has the command)
+features/ear-lab/taal.html
+features/ear-lab/taal_view.html

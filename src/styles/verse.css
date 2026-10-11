@@ -592,22 +592,25 @@
 .couplet-card .couplet-acts { gap: var(--sp-4); }
 .couplet-card .cbox-verse .vline-lg[lang], .misra-card .cbox-verse .misra-text { text-align: center; direction: inherit; }
 .couplet-card .cbox-verse .vline-lg[lang="ur"], .misra-card .cbox-verse .misra-text:not(.ltr):not(.deva) {
-  font-family: var(--urdu); font-size: 40px; line-height: 2.1; direction: rtl;
+  font-family: var(--urdu); font-size: calc(40px * var(--vfit, 1)); line-height: 2.1; direction: rtl;
 }
 .couplet-card .cbox-verse .vline-lg[lang="ur-Latn"], .misra-card .cbox-verse .misra-text.ltr {
-  font-family: var(--mono); font-size: 20px; line-height: 1.8; direction: ltr;
+  font-family: var(--mono); font-size: calc(20px * var(--vfit, 1)); line-height: 1.8; direction: ltr;
 }
-.couplet-card .cbox-verse .vline-lg[lang="hi"], .misra-card .cbox-verse .misra-text.deva { font-size: 26px; line-height: 1.9; }
+.couplet-card .cbox-verse .vline-lg[lang="hi"], .misra-card .cbox-verse .misra-text.deva { font-size: calc(26px * var(--vfit, 1)); line-height: 1.9; }
+/* fitVerseLines(): measured on one line, at its natural width */
+.cbox-verse .vfit-measure, .reader-header-hero-verse.vfit-measure { white-space: nowrap; width: max-content; max-width: none; margin-inline: auto; }
+.reader-header-comp .reader-header-hero-verse.vfit-sized { font-size: var(--vfit-fs); }   /* over its script rule in pages.css */
 
 @media (max-width: 767px) {
   .couplet-card .cbox-verse .vline-lg[lang="ur"], .misra-card .cbox-verse .misra-text:not(.ltr):not(.deva) {
-    font-size: 30px; line-height: 2.0;
+    font-size: calc(30px * var(--vfit, 1)); line-height: 2.0;
   }
   .couplet-card .cbox-verse .vline-lg[lang="ur-Latn"], .misra-card .cbox-verse .misra-text.ltr {
-    font-size: 16px; line-height: 1.8;
+    font-size: calc(16px * var(--vfit, 1)); line-height: 1.8;
   }
   .couplet-card .cbox-verse .vline-lg[lang="hi"], .misra-card .cbox-verse .misra-text.deva {
-    font-size: 20px; line-height: 1.8;
+    font-size: calc(20px * var(--vfit, 1)); line-height: 1.8;
   }
 }
 .scan-notes { font-family: var(--sans); font-size: 13px; line-height: 1.6; color: var(--faint); text-align: left; margin: var(--sp-3) 0 0; }
@@ -771,3 +774,146 @@ html[data-script="hi"] .chips .fname { font-family: var(--deva); }
 
 /* Meter patterns and weight marks use Noto Sans Mono; Roman text keeps Source Code Pro (--mono) */
 .pg, .cae, .blk, .ss-pat, .ss-pat-key, .sc-w, .fstrip .blk { font-family: var(--mono-pat); }
+
+/* ============================================================
+   Tabla theka (15c-taal.js): the ribbon under a playing couplet, its lanes, and the bouncing ball
+   ============================================================ */
+.tk-host { position: relative; }
+.tk-rib { margin-top: var(--sp-4); border-top: 1px solid var(--line); padding-top: var(--sp-2); }
+.tk-rib-head { display: flex; align-items: center; gap: var(--sp-2) var(--sp-3); flex-wrap: wrap; min-height: 34px; }
+.tk-rib-taal { font: 500 11.5px/1 var(--sans); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); background: transparent;
+  border: 0; border-bottom: 1px solid var(--line2); border-radius: 0; padding: 6px 0; min-height: 0; cursor: pointer; }
+.tk-rib-taal:hover, .tk-rib-taal[aria-expanded="true"] { border-bottom-color: var(--ink); }
+.tk-rib-taal .auto, .tk-chip .auto { color: var(--gold); text-transform: none; letter-spacing: 0; font-weight: 400; margin-inline-start: 4px; font-size: 10.5px; }
+.tk-rib-count { flex: 1; min-width: 120px; font: 400 12px/1.3 var(--mono-pat); color: var(--faint); }
+.tk-rib-tempo { display: inline-flex; align-items: center; gap: 2px; font: 400 12px/1 var(--mono-pat); color: var(--dim); }
+.tk-rib-tempo button, .tk-rib-gear { font: 400 15px/1 var(--sans); width: 30px; height: 30px; min-height: 0; padding: 0; border: 1px solid transparent;
+  border-radius: 4px; background: transparent; color: var(--dim); cursor: pointer; }
+.tk-rib-tempo button:hover, .tk-rib-gear:hover { border-color: var(--line2); color: var(--ink); }
+.tk-rib-tempo .v { min-width: 34px; text-align: center; }
+.tk-rib-pop { margin: var(--sp-2) 0 0; padding: var(--sp-3) 0; border-top: 1px solid var(--line); }
+.tk-why { font: 400 14.5px/1.5 var(--serif); color: var(--dim); margin: var(--sp-2) 0 0; }
+.tk-why i { color: var(--ink); }
+.tk-chips, .tk-opts { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.tk-opts { margin: var(--sp-1) 0 var(--sp-2); }
+.tk-chip { font: 400 11.5px/1 var(--sans); letter-spacing: 0.06em; padding: 7px 10px; min-height: 0; border: 1px solid var(--line2); border-radius: 4px;
+  background: transparent; color: var(--dim); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.tk-chip:hover { border-color: var(--ink); color: var(--ink); }
+.tk-chip.on { border-color: var(--ink); color: var(--ink); background: color-mix(in srgb, var(--ink) 6%, transparent); font-weight: 500; }
+.tk-chip .n { font-family: var(--mono-pat); color: var(--faint); letter-spacing: 0; }
+.tk-chip svg { width: 14px; height: 14px; display: block; }
+.tk-lane { display: grid; grid-template-columns: 112px 1fr; align-items: center; gap: var(--sp-3); padding: 6px 0; border-top: 1px solid var(--line); }
+.tk-lane-lbl { font: 500 10.5px/1.25 var(--sans); letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); }
+.tk-lane-lbl i { display: block; font: italic 400 12px/1.3 var(--serif); letter-spacing: 0; text-transform: none; color: var(--dim); }
+.tk-lane-body { display: flex; align-items: center; gap: var(--sp-3); min-height: 24px; }
+.tk-tan { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; font: 400 11px/1 var(--mono-ro); color: var(--faint); min-width: 28px; }
+.tk-tan .str { width: 2px; height: 16px; background: var(--line2); border-radius: 1px; transition: background-color 120ms, transform 120ms; }
+.tk-tan.now { color: var(--ink); }
+.tk-tan.now .str { background: var(--gold); transform: scaleX(2.2); }
+.tk-harm { flex: 1; height: 6px; border-radius: 3px; background: var(--line); position: relative; overflow: hidden; }
+.tk-harm::after { content: ''; position: absolute; inset: 0; background: color-mix(in srgb, var(--gold) 45%, transparent); opacity: 0; transition: opacity 400ms; }
+.tk-harm.on::after { opacity: 1; }
+.tk-harm-n, .tk-mel-scale { font: 400 11px/1 var(--mono-ro); color: var(--faint); }
+.tk-mel-now { font: 400 17px/1 var(--mono-ro); color: var(--ink); min-width: 48px; }
+.tk-cyc { display: grid; direction: ltr; }
+.tk-cyc.rtl { direction: rtl; }   /* in Urdu, time runs right to left, as the verse and its scan do */
+.tk-cyc.b6 { grid-template-columns: repeat(6, 1fr); } .tk-cyc.b7 { grid-template-columns: repeat(7, 1fr); }
+.tk-cyc.b8 { grid-template-columns: repeat(8, 1fr); } .tk-cyc.b10 { grid-template-columns: repeat(10, 1fr); }
+.tk-cyc.b14 { grid-template-columns: repeat(14, 1fr); } .tk-cyc.b16 { grid-template-columns: repeat(16, 1fr); }
+.tk-bt { text-align: center; padding: 4px 0 6px; border-bottom: 1px solid var(--line); min-width: 0; transition: background-color 90ms linear; }
+.tk-bt.vs, .tk-bt:first-child { border-inline-start: 1px solid var(--line2); }
+.tk-bt .mk { font: 500 11px/1 var(--mono-pat); color: var(--ink); height: 14px; }
+.tk-bt .bol { font: 400 13px/1.3 var(--mono-ro); color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tk-bt.khali .bol { color: var(--faint); }
+.tk-bt.sam .bol { color: var(--ink); font-weight: 500; }
+.tk-bt.now { background: color-mix(in srgb, var(--mark-l) 22%, transparent); }
+.tk-bt.now .bol { color: var(--ink); }
+
+/* the ball: an svg shape in currentColor (colour by class, by weight per syllable); ghosts make the trail */
+.tk-ball, .tk-ghost { position: absolute; left: 0; top: 0; width: 20px; height: 20px; margin: -10px 0 0 -10px; pointer-events: none;
+  will-change: transform; z-index: 3; opacity: 0; color: var(--gold); }
+.tk-ball svg, .tk-ghost svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.tk-ball.on { opacity: 1; }
+.tk-ghost.on.g0 { opacity: .34; } .tk-ghost.on.g1 { opacity: .28; } .tk-ghost.on.g2 { opacity: .22; }
+.tk-ghost.on.g3 { opacity: .17; } .tk-ghost.on.g4 { opacity: .11; } .tk-ghost.on.g5 { opacity: .06; }
+.tk-ball.c-accent, .tk-ghost.c-accent, .tk-ripple.c-accent { color: var(--gold); }
+.tk-ball.c-ink, .tk-ghost.c-ink, .tk-ripple.c-ink { color: var(--ink); }
+.tk-ball.c-rose, .tk-ghost.c-rose, .tk-ripple.c-rose { color: var(--rose); }
+.tk-ball.c-long, .tk-ghost.c-long, .tk-ripple.c-long { color: var(--mark-l); }
+.c-weight.w-l { color: var(--mark-l); } .c-weight.w-s { color: var(--mark-s); } .c-weight.w-x { color: var(--mark-x); }
+.tk-ripple { position: absolute; left: 0; top: 0; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; border: 1.5px solid currentColor;
+  pointer-events: none; z-index: 2; animation: tk-rip 520ms ease-out forwards; }
+@keyframes tk-rip { from { transform: var(--at) scale(.3); opacity: .7; } to { transform: var(--at) scale(1.6); opacity: 0; } }
+
+/* Settings: the ball's preview and options, the tabla's sub-options */
+.tk-pv { position: relative; height: 74px; margin: var(--sp-2) 0 var(--sp-1); border-bottom: 1px solid var(--line); }
+.tk-pv-row { position: absolute; left: 0; right: 0; bottom: 8px; display: flex; gap: 10px; justify-content: center; }
+.tk-pv-row span { font: 400 13px/1 var(--mono-ro); color: var(--dim); padding: 6px 7px 5px; border-bottom: 3px solid var(--mark-l); background: color-mix(in srgb, var(--ink) 4%, transparent); }
+.tk-pv-row .tk-pv-s { border-color: var(--mark-s); border-bottom-style: dotted; }
+.tk-pv-row .tk-pv-x { border-color: var(--mark-x); border-bottom-style: dashed; }
+.tk-sw { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+.tk-sw.c-accent { background: var(--gold); } .tk-sw.c-ink { background: var(--ink); } .tk-sw.c-rose { background: var(--rose); } .tk-sw.c-long { background: var(--mark-l); }
+.tk-sw.c-weight { background: conic-gradient(var(--mark-l) 0 50%, var(--mark-s) 50% 80%, var(--mark-x) 80%); }
+.tk-sub { margin: var(--sp-2) 0 0 38px; }
+.tk-sub .settings-line { margin: var(--sp-2) 0; }
+.tk-off { opacity: .45; }
+.tk-rule { display: block; margin: var(--sp-2) 0 0; }
+.tk-rule:empty { display: none; }
+@media (max-width: 640px) {
+  .tk-bt .bol { font-size: 10.5px; }
+  .tk-cyc.b14 .tk-bt .bol, .tk-cyc.b16 .tk-bt .bol { font-size: 8.5px; }
+  .tk-rib-count { order: 3; flex-basis: 100%; }
+  .tk-lane { grid-template-columns: 84px 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { .tk-bt, .tk-tan .str, .tk-harm::after { transition: none; } .tk-ripple { animation: none; opacity: 0; } }
+
+/* the ribbon as a mixer: a row per layer, a dot to turn it on or off */
+.tk-rib-play { font: 400 13px/1 var(--sans); width: 32px; height: 32px; min-height: 0; padding: 0; border: 1px solid var(--line2); border-radius: 50%;
+  background: transparent; color: var(--ink); cursor: pointer; }
+.tk-rib-play:hover { border-color: var(--ink); }
+.tk-rows { margin-top: var(--sp-1); }
+.tk-row { display: grid; grid-template-columns: 22px 128px 1fr; align-items: center; gap: var(--sp-2); padding: 6px 0; border-top: 1px solid var(--line); }
+.tk-row.off .tk-row-lbl { color: var(--faint); }
+.tk-dot { width: 14px; height: 14px; min-height: 0; padding: 0; border-radius: 50%; border: 1.5px solid var(--faint); background: transparent; cursor: pointer; }
+.tk-dot.on { background: var(--gold); border-color: var(--gold); }
+.tk-dot:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.tk-row-lbl { font: 500 10.5px/1.25 var(--sans); letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); text-align: start;
+  background: transparent; border: 0; padding: 0; min-height: 0; }
+button.tk-row-lbl { cursor: pointer; }
+button.tk-row-lbl:hover i { color: var(--ink); }
+.tk-row-lbl i { display: block; font: italic 400 12px/1.3 var(--serif); letter-spacing: 0; text-transform: none; color: var(--dim); }
+.tk-row-body { display: flex; align-items: center; gap: var(--sp-3); min-height: 24px; min-width: 0; }
+.tk-row-body .tk-cyc { flex: 1; }
+.tk-row-off { font: 400 11px/1 var(--mono-pat); color: var(--faint); }
+.tk-syl { font: 400 16px/1 var(--mono-ro); color: var(--ink); }
+.tk-tick { width: 8px; height: 8px; border-radius: 50%; background: var(--line2); transition: background-color 60ms; }
+.tk-tick.on { background: var(--gold); }
+.tk-ragas { margin-top: var(--sp-2); }
+.tk-layer { font-weight: 500; }
+.tk-layers-note { display: block; margin: 0 0 var(--sp-2); }
+@media (max-width: 640px) { .tk-row { grid-template-columns: 22px 92px 1fr; } }
+
+/* the card's own `.couplet-card > *` padding would squeeze the ball to nothing */
+.tk-host > .tk-ball, .tk-host > .tk-ghost, .tk-host > .tk-ripple { padding: 0; }
+/* the line's syllables under the bols: a long syllable's bar runs across both its beats; a held one (filling the cycle) is dotted */
+.tk-bt .wt { height: 3px; margin: 3px 0 0; }
+.tk-bt .wt.l, .tk-bt .wt.l.cont { background: var(--mark-l); }
+.tk-bt .wt.s { background: var(--mark-s); margin-inline: 3px; }
+.tk-bt .wt.x, .tk-bt .wt.x.cont { background: var(--mark-x); }
+.tk-bt .wt.l:not(.cont), .tk-bt .wt.x:not(.cont) { margin-inline-start: 3px; }
+.tk-bt .wt.cont { margin-inline-end: 3px; }
+.tk-bt .wt.over { background: repeating-linear-gradient(90deg, var(--mark-l) 0 3px, transparent 3px 6px); margin-inline: 3px; }
+.tk-bt .wt.rest { background: var(--line2); margin-inline: 3px; }
+.tk-bt .sy { font: 400 14px/1.5 var(--mono-ro); color: var(--ink); min-height: 21px; white-space: nowrap; overflow: visible; }
+.tk-cyc.rtl .tk-bt .sy { font-family: var(--urdu); font-size: 16px; line-height: 1.6; }
+.tk-row-note { font: 400 11px/1 var(--mono-pat); color: var(--faint); }
+/* phones: the tabla row's beats take the whole width under its label, long taals wrap by section, and bols are never cut */
+@media (max-width: 640px) {
+  .tk-row:has(.tk-cyc) { grid-template-columns: 22px 1fr; row-gap: 4px; }
+  .tk-row:has(.tk-cyc) .tk-row-body { grid-column: 1 / -1; }
+  .tk-cyc.b14 { grid-template-columns: repeat(7, 1fr); }
+  .tk-cyc.b16 { grid-template-columns: repeat(8, 1fr); }
+  .tk-cyc.b14 .tk-bt .bol, .tk-cyc.b16 .tk-bt .bol, .tk-bt .bol { font-size: 11px; letter-spacing: -0.02em; overflow: visible; text-overflow: clip; }
+  .tk-bt .sy { font-size: 12.5px; }
+  .tk-cyc.rtl .tk-bt .sy { font-size: 15px; }
+}

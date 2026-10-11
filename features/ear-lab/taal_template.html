@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taal Lab</title>
+<style>
+:root {
+  --bg: #F6F2EA; --ink: #1F1B16; --dim: #5A5248; --faint: #8A8174; --line: #DDD5C7; --line2: #C9BFAE;
+  --gold: #8C6A1F; --tint: #EDE6D8; --hi: #F3E3B8;
+  --serif: 'Source Serif 4', Georgia, serif; --sans: -apple-system, 'Segoe UI', system-ui, sans-serif;
+  --mono: ui-monospace, 'SF Mono', Menlo, monospace; --urdu: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17140F; --ink: #ECE5D8; --dim: #B5AB9B; --faint: #857C6E; --line: #2E2922; --line2: #433C32;
+    --gold: #D4AE5A; --tint: #221E17; --hi: #3A3020;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17140F; --ink: #ECE5D8; --dim: #B5AB9B; --faint: #857C6E; --line: #2E2922; --line2: #433C32;
+  --gold: #D4AE5A; --tint: #221E17; --hi: #3A3020;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 860px; margin: 0 auto; padding: 32px 16px 80px; }
+.eyebrow { font: 500 11.5px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
+h1 { font: 400 34px/1.15 var(--serif); margin: 10px 0 8px; }
+h2 { font: 400 22px/1.2 var(--serif); margin: 44px 0 6px; padding-top: 18px; border-top: 1px solid var(--line); }
+.lede { font: 18px/1.55 var(--serif); color: var(--dim); margin: 0 0 8px; max-width: 64ch; }
+.dim { color: var(--dim); } .faint { color: var(--faint); } .small { font-size: 14px; } .mono { font-family: var(--mono); }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 14px 0; }
+.chip { font: 14px/1 var(--sans); padding: 8px 12px; border: 1px solid var(--line2); background: transparent; color: var(--ink);
+  border-radius: 999px; cursor: pointer; }
+.chip:hover { border-color: var(--gold); }
+.chip.on { border-color: var(--ink); background: var(--tint); }
+.chip .n { font-family: var(--mono); color: var(--faint); margin-left: 4px; }
+.play { font: 15px/1 var(--sans); padding: 9px 16px; border: 1px solid var(--gold); color: var(--gold); background: transparent;
+  border-radius: 6px; cursor: pointer; min-width: 84px; }
+.play.on { background: var(--gold); color: var(--bg); }
+label.opt { font-size: 14px; color: var(--dim); display: inline-flex; align-items: center; gap: 6px; }
+input[type=range] { accent-color: var(--gold); width: 140px; }
+.why { font: 15px/1.5 var(--serif); color: var(--dim); margin: 6px 0 0; }
+.why b { color: var(--ink); font-weight: 600; }
+/* cycle grid: one row per cycle; each cell is a mātrā (beat) */
+.grid { margin: 12px 0 4px; display: grid; gap: 6px; }
+.cyc { display: grid; gap: 0; border-left: 1px solid var(--line2); }
+.cyc.b6 { grid-template-columns: repeat(6, 1fr); } .cyc.b7 { grid-template-columns: repeat(7, 1fr); }
+.cyc.b8 { grid-template-columns: repeat(8, 1fr); } .cyc.b10 { grid-template-columns: repeat(10, 1fr); }
+.cyc.b14 { grid-template-columns: repeat(14, 1fr); } .cyc.b16 { grid-template-columns: repeat(16, 1fr); }
+.cell { padding: 4px 3px 6px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); min-width: 0; text-align: center; }
+.cell.vs { border-left: 1px solid var(--line2); }
+.cell .mk { font: 600 11px/1 var(--mono); color: var(--gold); height: 13px; }
+.cell .bol { font: 13px/1.3 var(--mono); color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cell .sy { font: 15px/1.3 var(--serif); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-height: 20px; }
+.cell .sy.hold { color: var(--faint); }
+.cell .sy.pad { color: var(--gold); }
+.cell.khali .bol { color: var(--faint); }
+.cell.now { background: var(--hi); }
+.cyc .lab { grid-column: 1 / -1; font: 12px/1 var(--mono); color: var(--faint); padding: 6px 4px 3px; border-right: 1px solid var(--line); }
+.couplet { padding: 18px 0 8px; border-top: 1px solid var(--line); }
+.couplet:first-of-type { border-top: 0; }
+.chead { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.chead .nm { font: 18px/1.3 var(--serif); }
+.chead .pat { font: 13px/1 var(--mono); color: var(--faint); }
+.ur { font: 22px/2 var(--urdu); direction: rtl; text-align: right; color: var(--ink); margin: 6px 0 0; }
+.ro { font: italic 16px/1.5 var(--serif); color: var(--dim); margin: 0; }
+.ctl { position: sticky; top: 0; z-index: 2; background: var(--bg); border-bottom: 1px solid var(--line); padding: 4px 0; }
+.credit { margin-top: 48px; font-size: 13px; color: var(--faint); border-top: 1px solid var(--line); padding-top: 14px; }
+.credit a { color: var(--dim); }
+.status { font: 13px/1.4 var(--mono); color: var(--faint); min-height: 18px; }
+@media (max-width: 640px) {
+  h1 { font-size: 28px; }
+  .cell .bol { font-size: 10px; } .cell .sy { font-size: 12px; } .cell .mk { font-size: 10px; }
+  .cyc.b14 .cell .sy, .cyc.b16 .cell .sy { font-size: 10px; }
+  .cyc.b14 .cell .bol, .cyc.b16 .cell .bol { font-size: 8.5px; }
+}
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">Ear lab · tabla</div>
+  <h1>Taal under the bahr</h1>
+  <p class="lede">Recorded tabla strokes, played as a theka. Each line is laid on the taal by its mātrās: a long syllable (=) takes
+    two beats, a short one (–) takes one. Where a line falls short of a full cycle, the last syllable is held, as singers do.</p>
+  <p class="status" id="status">Loading strokes…</p>
+
+  <div class="ctl">
+    <div class="row">
+      <label class="opt">Tempo <input type="range" id="tempo" min="120" max="320" step="5" value="200"> <span class="mono" id="tempoV"></span></label>
+      <label class="opt"><input type="checkbox" id="voiceOn" checked> da · dum voice</label>
+      <label class="opt"><input type="checkbox" id="fillsOn" checked> fills &amp; tihai</label>
+      <label class="opt"><input type="checkbox" id="cc0Only"> CC0 strokes only</label>
+    </div>
+  </div>
+
+  <h2>Hear a taal</h2>
+  <p class="dim small">× sam (the strong first beat) · 0 khali (the empty section: the left drum rests) · 2, 3 the other sections.</p>
+  <div class="row" id="taalChips"></div>
+  <div class="row"><button class="play" id="taalPlay">▶ Play</button><span class="faint small" id="taalDesc"></span></div>
+  <div class="grid" id="taalGrid"></div>
+
+  <h2>Under a line</h2>
+  <p class="dim small">Auto picks the taal that needs the least holding and lets the feet land on the taal's sections. Tap another
+    taal to compare; the number is how many beats get held.</p>
+  <div id="couplets"></div>
+
+  <p class="credit">Tabla strokes: Marius Miron, “tabla bols” (<a href="https://freesound.org/people/mmiron/packs/8162/" target="_blank" rel="noopener">Freesound</a>, CC0) and
+    Ajay Srinivasamurthy, “Tabla Strokes” (<a href="https://freesound.org/people/ajaysm/packs/10737/" target="_blank" rel="noopener">Freesound</a>,
+    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>). Lines scanned by the app's engine; da · dum voice from the app.</p>
+</main>
+<script>
+const COUPLETS = /*@@COUPLETS@@*/;
+const STROKES = /*@@STROKES@@*/;
+const VOICEPACK = /*@@VOICEPACK@@*/;
+/*@@ENGINE@@*/
+const $ = id => document.getElementById(id);
+const sync = () => { TL.bpm = +$('tempo').value; TL.voice = $('voiceOn').checked; TL.fills = $('fillsOn').checked; TL.cc0 = $('cc0Only').checked; $('tempoV').textContent = TL.bpm + ' bpm'; };
+['tempo', 'voiceOn', 'fillsOn', 'cc0Only'].forEach(id => { $(id).oninput = sync; $(id).onchange = sync; }); sync();
+TL.onReady = n => { $('status').textContent = n + ' recorded strokes ready.'; };
+const litCue = el => on => el.classList.toggle('now', on);
+
+/* ---------- drawing a cycle ---------- */
+function cycleEl(T, label, sy) {
+  const row = document.createElement('div'); row.className = 'cyc b' + T.beats;
+  if (label) { const l = document.createElement('div'); l.className = 'lab'; l.textContent = label; row.appendChild(l); }
+  const cells = T.bols.map((b, i) => {
+    const c = document.createElement('div'), sec = T.sec[i];
+    c.className = 'cell' + (T.starts.has(i) ? ' vs' : '') + (T.khali.includes(sec) ? ' khali' : '');
+    c.innerHTML = `<div class="mk">${T.starts.has(i) ? T.marks[sec] : ''}</div><div class="bol">${b === '-' ? '·' : b}</div>`;
+    if (sy) { const s = document.createElement('div'); const v = sy[i]; s.className = 'sy' + (v && v.cls ? ' ' + v.cls : ''); s.textContent = v ? v.text : ''; c.appendChild(s); }
+    row.appendChild(c); return c;
+  });
+  return { row, cells };
+}
+/* per beat of a laid line: the syllable that starts there, or a hold (gold where the taal asks for more than the meter) */
+function beatsOf(L) {
+  const out = [];
+  L.syl.forEach(s => { for (let k = 0; k < s.len; k++) out.push(k === 0 ? { text: s.ro } : { text: '—', cls: k >= s.m ? 'pad' : 'hold' }); });
+  return out;
+}
+
+/* ---------- 1. a taal on its own ---------- */
+let taalSel = 'keherwa';
+function drawTaal() {
+  const T = TAALS[taalSel], g = $('taalGrid'); g.innerHTML = '';
+  const { row, cells } = cycleEl(T); g.appendChild(row); g._cells = cells;
+  $('taalDesc').textContent = `${T.beats} beats · ${T.div.join(' + ')}`;
+  document.querySelectorAll('#taalChips .chip').forEach(c => c.classList.toggle('on', c.dataset.k === taalSel));
+}
+Object.entries(TAALS).forEach(([k, T]) => {
+  const b = document.createElement('button'); b.className = 'chip'; b.dataset.k = k;
+  b.innerHTML = `${T.name}<span class="n">${T.beats}</span>`;
+  b.onclick = () => { const was = TL.play && TL.play.kind === 'taal'; TL.stop(); taalSel = k; drawTaal(); if (was) $('taalPlay').click(); };
+  $('taalChips').appendChild(b);
+});
+$('taalPlay').onclick = () => {
+  if (TL.play && TL.play.kind === 'taal') { TL.stop(); return; }
+  const btn = $('taalPlay'); let n = 0;
+  TL.start(() => { const T = TAALS[taalSel]; n++;
+    return { len: T.beats, hits: cycleHits(T, { fill: TL.fills && n % 4 === 0 }), cues: $('taalGrid')._cells.map((el, i) => ({ at: i, len: 1, fn: litCue(el) })) }; },
+    () => { btn.classList.remove('on'); btn.textContent = '▶ Play'; }, { kind: 'taal' });
+  btn.classList.add('on'); btn.textContent = '■ Stop';
+};
+
+/* ---------- 2. under a line ---------- */
+function drawCouplet(c, box) {
+  const fits = fitTaals(c), sel = box._sel || fits[0].k, T = TAALS[sel];
+  box._sel = sel;
+  const laid = c.lines.map(l => layLine(l, T)), L0 = laid[0], best = fits[0];
+  box.querySelector('.why').innerHTML = `${L0.tot} mātrās a line → <b>${T.name}</b> (${T.beats}) × ${L0.cyc} = ${L0.len}` +
+    (L0.pad ? `: the last syllable held ${L0.pad} beat${L0.pad > 1 ? 's' : ''} more.` : ': exact.') +
+    (sel === best.k ? ' <span class="faint">(Auto)</span>' : '');
+  const chips = box.querySelector('.taals'); chips.innerHTML = '';
+  fits.forEach(f => {
+    const b = document.createElement('button'); b.className = 'chip' + (f.k === sel ? ' on' : '');
+    b.innerHTML = `${TAALS[f.k].name}<span class="n">${f.pad ? '+' + (Math.round(f.pad * 10) / 10) : '0'}</span>`;
+    b.onclick = () => { const was = TL.play && TL.play.box === box; TL.stop(); box._sel = f.k; drawCouplet(c, box); if (was) box.querySelector('.play').click(); };
+    chips.appendChild(b);
+  });
+  const g = box.querySelector('.grid'); g.innerHTML = ''; box._rows = [];
+  laid.forEach((L, li) => {
+    const bs = beatsOf(L); box._rows[li] = [];
+    for (let k = 0; k < L.cyc; k++) {
+      const { row, cells } = cycleEl(T, k === 0 ? `line ${li + 1}` : '', bs.slice(k * T.beats, (k + 1) * T.beats));
+      g.appendChild(row); box._rows[li][k] = cells;
+    }
+  });
+  box._laid = laid;
+}
+COUPLETS.forEach(c => {
+  const box = document.createElement('div'); box.className = 'couplet';
+  box.innerHTML = `<div class="chead"><span class="nm">${c.meterName}</span><span class="pat">${c.pattern}</span><span class="faint small">${c.ref}</span></div>
+    ${c.lines.map(l => `<p class="ur">${l.ur}</p><p class="ro">${l.ro}</p>`).join('')}
+    <p class="why"></p><div class="row taals"></div><div class="row"><button class="play">▶ Play couplet</button></div><div class="grid"></div>`;
+  $('couplets').appendChild(box);
+  drawCouplet(c, box);
+  const btn = box.querySelector('.play');
+  btn.onclick = () => {
+    if (TL.play && TL.play.box === box) { TL.stop(); return; }
+    const T = TAALS[box._sel];
+    const seq = coupletCycles(box._laid, T);
+    /* light each beat cell of the line cycles */
+    seq.forEach(cy => { if (cy.phase === 'line') box._rows[cy.li][cy.k].forEach((el, i) => cy.cues.push({ at: i, len: 1, fn: litCue(el) })); });
+    let i = 0;
+    TL.start(() => seq[i++] || null, () => { btn.classList.remove('on'); btn.textContent = '▶ Play couplet'; }, { box });
+    btn.classList.add('on'); btn.textContent = '■ Stop';
+  };
+});
+drawTaal();
+document.addEventListener('pointerdown', () => initAudio(), { once: true });
+$('status').textContent = Object.keys(STROKES).length + ' recorded strokes · tap anything to load the sound.';
+</script>
+</body>
+</html>

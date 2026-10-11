@@ -1595,7 +1595,7 @@ function playReaderCoupletByIndex(c, start, btn) {
       const f = meters.length
         ? r.fits.filter(x => meters.includes(String(x.meter.id))).sort((a, b) => a.c - b.c)[0]
         : r.fits[0];
-      if (f) out.push(Object.assign({ e: engineOf(r).explain(r, f) }, pbNodes($(`misraScan_${c}_${k}`))));
+      if (f) out.push(Object.assign({ e: engineOf(r).explain(r, f), m: String(f.meter.id) }, pbNodes($(`misraScan_${c}_${k}`))));   /* m: the tabla picks its taal by meter */
     });
     return out;
   }, start);

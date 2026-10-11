@@ -20,3 +20,14 @@ Rebuild after the app changes (`npm run build` first):
 `gen.js` loads the built `index.html` in jsdom and takes every syllable, weight, foot, afāʿīl label, couplet,
 rhyme and provable limp from the real scanner and corpus, plus the app's recorded tabla and da · dum takes.
 Mir's Hindi meter is left out of the limp drill: the matcher cannot prove a limp in it.
+
+## Taal mockups (tabla under the bahr)
+
+The tabla theka, its ribbon and the bouncing ball started here and are now in the app (`src/js/15c-taal.js`). The mockups
+stay for trying ideas: `taal.html` (each taal on its own, and eight couplets laid on a taal) and `taal_view.html` (the
+couplet in the app's look, the ribbon as a mixer, the ball's options). Both are generated, not committed:
+
+    node features/ear-lab/taal_gen.js . features/ear-lab/taal.html features/ear-lab/taal_view.html
+
+`taal_gen.js` scans the couplets with the built app (jsdom), inlines the strokes from `data/tabla/` (sources and licences in
+`data/tabla/SOURCES.md`) and the engine in `taal_engine.js`, into `taal_template.html` and `taal_view_template.html`.

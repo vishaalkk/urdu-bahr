@@ -349,7 +349,12 @@ for body_file in manifest['body']:
     body_parts[key] = read_source(body_file)
 
 # ─── 6. Build data substitution map ───────────────────────────────────────────
+# Tabla strokes for the theka (src/js/15c-taal.js), built by scripts/build_tabla_strokes.py from data/tabla/
+with open('data/tabla_strokes.json', 'r', encoding='utf-8') as f:
+    TABLA_STROKES = json.load(f)
+
 substitutions = {
+    'TABLA_STROKES': json.dumps(TABLA_STROKES, separators=(',', ':')),
     'PUE_PARSER': pue_parser_bundle,
     # The Handbook reader was removed from the site (links go to Pritchett's own pages);
     # data/handbook_verbatim.json stays in the repo as local reference material only.

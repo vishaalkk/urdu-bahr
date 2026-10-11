@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Taal Mockup</title>
+  <!-- Production stylesheets and the app's bundled fonts. Serve from the repo root: /features/ear-lab/taal_view.html -->
+  <link rel="stylesheet" href="../../src/styles/base.css">
+  <link rel="stylesheet" href="../../src/styles/verse.css">
+  <link rel="stylesheet" href="../../src/styles/pages.css">
+  <style>
+    @font-face { font-family: 'Source Serif 4'; font-style: normal; font-weight: 400; src: url('../../src/fonts/SourceSerif4-Regular.woff2') format('woff2'); }
+    @font-face { font-family: 'Source Serif 4'; font-style: italic; font-weight: 400; src: url('../../src/fonts/SourceSerif4-Italic.woff2') format('woff2'); }
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; src: url('../../src/fonts/Inter-Regular.woff2') format('woff2'); }
+    @font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; src: url('../../src/fonts/Inter-Medium.woff2') format('woff2'); }
+    @font-face { font-family: 'Source Code Pro'; font-style: normal; font-weight: 400; src: url('../../src/fonts/SourceCodePro-Regular.woff2') format('woff2'); }
+    @font-face { font-family: 'Noto Sans Mono'; font-style: normal; font-weight: 400; src: url('../../src/fonts/NotoSansMono-Regular.woff2') format('woff2'); }
+
+    body { background: var(--bg); }
+    .tv-root { max-width: var(--reading-max); margin: 0 auto; padding: 0 16px var(--sp-8); }
+    .hdr-badge { margin: 0; font-size: 11px; letter-spacing: 0.1em; color: var(--faint); }
+    .tv-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2) var(--sp-3); margin: var(--sp-3) 0; }
+    .tv-bar > .tv-bar { flex: 1 1 0; min-width: 0; margin: 0; }
+    .tv-lbl { font: 500 11px/1 var(--sans); letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); }
+    .tv-chip { font: 400 11.5px/1 var(--sans); letter-spacing: 0.06em; padding: 7px 10px; border: 1px solid var(--line2); border-radius: 4px;
+      background: transparent; color: var(--dim); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .tv-chip:hover { border-color: var(--ink); color: var(--ink); }
+    .tv-chip.on { border-color: var(--ink); color: var(--ink); background: color-mix(in srgb, var(--ink) 6%, transparent); font-weight: 500; }
+    .tv-chip .n { font-family: var(--mono-pat); color: var(--faint); letter-spacing: 0; }
+    .tv-chip .auto { font-size: 10px; color: var(--gold); }
+    .tv-chip svg { width: 14px; height: 14px; display: block; }
+
+    /* the couplet: verse, scan, ball */
+    .tv-stage { border-top: 1px solid var(--line); margin-top: var(--sp-4); padding-top: var(--sp-4); }
+    .tv-head { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; }
+    .tv-head .meta { flex: 1; min-width: 200px; }
+    .tv-meter { font: 400 var(--fs-xl)/1.3 var(--serif); color: var(--ink); margin: 0; }
+    .tv-pat { font: 400 13px/1.4 var(--mono-pat); color: var(--faint); margin: 2px 0 0; direction: ltr; }
+    .tv-line { position: relative; padding-top: 22px; margin-top: var(--sp-4); }
+    .tv-line + .tv-line { border-top: 1px solid var(--line); padding-top: 30px; }
+    .tv-verse { margin: 0 0 var(--sp-2); }
+    .tv-verse.ur { font: 400 var(--fs-urdu, 24px)/2.2 var(--urdu); direction: rtl; text-align: right; color: var(--ink); }
+    .tv-verse.hi { font: 400 20px/1.6 var(--deva); color: var(--ink); }
+    .tv-verse.ro { font: italic 400 19px/1.5 var(--serif); color: var(--ink); }
+
+    /* the ball: an svg shape in currentColor; colour classes; ghosts for the trail; a ripple where it lands */
+    .tv-ball, .tv-ghost { position: absolute; left: 0; top: 0; width: 20px; height: 20px; margin: -10px 0 0 -10px; pointer-events: none;
+      will-change: transform; z-index: 3; opacity: 0; color: var(--gold); }
+    .tv-ball svg, .tv-ghost svg { width: 100%; height: 100%; display: block; overflow: visible; }
+    .tv-ball.on { opacity: 1; }
+    .tv-ghost.on { opacity: var(--g, .3); }
+    .c-accent { color: var(--gold); } .c-ink { color: var(--ink); } .c-rose { color: var(--rose); } .c-long { color: var(--mark-l); }
+    .c-weight.w-l { color: var(--mark-l); } .c-weight.w-s { color: var(--mark-s); } .c-weight.w-x { color: var(--mark-x); }
+    .tv-ripple { position: absolute; left: 0; top: 0; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; border: 1.5px solid currentColor;
+      pointer-events: none; z-index: 2; animation: tv-rip 520ms ease-out forwards; }
+    @keyframes tv-rip { from { transform: var(--at) scale(.3); opacity: .7; } to { transform: var(--at) scale(1.6); opacity: 0; } }
+
+    /* sargam under a line (Tarannum): one note per syllable, under its chip */
+    .mel { position: relative; height: 46px; margin-top: 2px; }
+    .mel svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+    .mel path { fill: none; stroke: var(--line2); stroke-width: 1.2; }
+    .mel circle { fill: var(--bg); stroke: var(--faint); stroke-width: 1.2; }
+    .mel circle.rest { fill: var(--faint); }
+    .mel circle.now { fill: var(--gold); stroke: var(--gold); }
+    .mel text { font: 400 10.5px var(--mono-ro); fill: var(--faint); text-anchor: middle; }
+    .mel text.now { fill: var(--ink); }
+
+    /* the ribbon: lanes for what plays underneath, the taal, and the controls you need while it plays */
+    .rib { margin-top: var(--sp-4); border-top: 1px solid var(--line); padding-top: var(--sp-2); }
+    .rib-head { display: flex; align-items: center; gap: var(--sp-2) var(--sp-3); flex-wrap: wrap; min-height: 34px; }
+    .rib-taal { font: 500 11.5px/1 var(--sans); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); background: transparent;
+      border: 0; border-bottom: 1px solid var(--line2); padding: 6px 0; cursor: pointer; min-height: 0; }
+    .rib-taal:hover, .rib-taal[aria-expanded="true"] { border-bottom-color: var(--ink); }
+    .rib-taal .auto { color: var(--gold); text-transform: none; letter-spacing: 0; font-weight: 400; margin-inline-start: 4px; }
+    .rib-count { flex: 1; min-width: 120px; font: 400 12px/1.3 var(--mono-pat); color: var(--faint); }
+    .rib-count .next { color: var(--gold); }
+    .rib-tempo { display: inline-flex; align-items: center; gap: 2px; font: 400 12px/1 var(--mono-pat); color: var(--dim); }
+    .rib-tempo button, .rib-gear { font: 400 15px/1 var(--sans); width: 30px; height: 30px; border: 1px solid transparent; border-radius: 4px;
+      background: transparent; color: var(--dim); cursor: pointer; }
+    .rib-tempo button:hover, .rib-gear:hover { border-color: var(--line2); color: var(--ink); }
+    .rib-tempo .v { min-width: 34px; text-align: center; }
+    .rib-pop { margin: var(--sp-2) 0 0; padding: var(--sp-3) 0; border-top: 1px solid var(--line); }
+    .rib-pop .tv-bar { margin: 0; }
+    .rib-why { font: 400 14.5px/1.5 var(--serif); color: var(--dim); margin: var(--sp-2) 0 0; }
+    .rib-why b { color: var(--ink); font-weight: 400; font-style: italic; }
+    .lane { display: grid; grid-template-columns: 112px 1fr; align-items: center; gap: var(--sp-3); padding: 6px 0; border-top: 1px solid var(--line); }
+    .lane-lbl { font: 500 10.5px/1.25 var(--sans); letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); }
+    .lane-lbl i { display: block; font: italic 400 12px/1.3 var(--serif); letter-spacing: 0; text-transform: none; color: var(--dim); }
+    .lane-body { display: flex; align-items: center; gap: var(--sp-3); min-height: 24px; }
+    .tan { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; font: 400 11px/1 var(--mono-ro); color: var(--faint); min-width: 28px; }
+    .tan .str { width: 2px; height: 16px; background: var(--line2); border-radius: 1px; transition: background-color 120ms, transform 120ms; }
+    .tan.now { color: var(--ink); }
+    .tan.now .str { background: var(--gold); transform: scaleX(2.2); }
+    .harm { flex: 1; height: 6px; border-radius: 3px; background: var(--line); position: relative; overflow: hidden; }
+    .harm::after { content: ''; position: absolute; inset: 0; background: color-mix(in srgb, var(--gold) 45%, transparent); opacity: 0; transition: opacity 400ms; }
+    .harm.on::after { opacity: 1; }
+    .harm-n { font: 400 11px/1 var(--mono-ro); color: var(--faint); }
+    .mel-now { font: 400 18px/1 var(--serif); color: var(--ink); min-width: 48px; }
+    .mel-scale { font: 400 11px/1 var(--mono-ro); color: var(--faint); }
+    .cyc { display: grid; direction: ltr; margin-top: 2px; }
+    .cyc.rtl { direction: rtl; }   /* in Urdu, time runs right to left, as the verse and its scan do */
+    .cyc.b6 { grid-template-columns: repeat(6, 1fr); } .cyc.b7 { grid-template-columns: repeat(7, 1fr); }
+    .cyc.b8 { grid-template-columns: repeat(8, 1fr); } .cyc.b10 { grid-template-columns: repeat(10, 1fr); }
+    .cyc.b14 { grid-template-columns: repeat(14, 1fr); } .cyc.b16 { grid-template-columns: repeat(16, 1fr); }
+    .bt { text-align: center; padding: 4px 0 6px; border-bottom: 1px solid var(--line); min-width: 0; transition: background-color 90ms linear; }
+    .bt.vs, .bt:first-child { border-inline-start: 1px solid var(--line2); }
+    .bt .mk { font: 500 11px/1 var(--mono-pat); color: var(--ink); height: 14px; }
+    .bt .bol { font: 400 13px/1.3 var(--mono-ro); color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bt.khali .bol { color: var(--faint); }
+    .bt.sam .bol { color: var(--ink); font-weight: 500; }
+    .bt.now { background: color-mix(in srgb, var(--mark-l) 22%, transparent); }
+    .bt.now .bol { color: var(--ink); }
+    .tv-hide { display: none !important; }
+
+    /* settings sheet additions (the sheet itself is the app's) */
+    .settings-check input[type=checkbox] { min-height: 0; padding: 0; }   /* app bug: base.css gives every input min-height 32px */
+    .tv-note { font: 400 12px/1.45 var(--sans); color: var(--faint); margin: var(--sp-1) 0 0; }
+    .tv-sub { margin: var(--sp-2) 0 0 38px; }
+    .tv-sub .settings-line { margin: var(--sp-2) 0; }
+    .tv-opts { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin: var(--sp-1) 0 var(--sp-2); }
+    .tv-off { opacity: .45; }
+    .sw { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+    .sw.c-accent { background: var(--gold); } .sw.c-ink { background: var(--ink); } .sw.c-rose { background: var(--rose); } .sw.c-long { background: var(--mark-l); }
+    .sw.c-weight { background: conic-gradient(var(--mark-l) 0 50%, var(--mark-s) 50% 80%, var(--mark-x) 80%); }
+    .pv { position: relative; height: 74px; margin: var(--sp-2) 0 var(--sp-1); border-bottom: 1px solid var(--line); }
+    .pv-row { position: absolute; left: 0; right: 0; bottom: 8px; display: flex; gap: 10px; justify-content: center; }
+    .pv-row span { font: 400 13px/1 var(--mono-ro); color: var(--dim); padding: 6px 7px 5px; border-bottom: 3px solid var(--mark-l); background: color-mix(in srgb, var(--ink) 4%, transparent); }
+    .pv-row span.s { border-color: var(--mark-s); border-bottom-style: dotted; }
+    .pv-row span.x { border-color: var(--mark-x); border-bottom-style: dashed; }
+    .tv-foot { margin-top: var(--sp-7); border-top: 1px solid var(--line); padding-top: var(--sp-3); font: 400 12.5px/1.6 var(--sans); color: var(--faint); }
+    .tv-foot a { color: var(--dim); }
+    @media (max-width: 640px) {
+      .bt .bol { font-size: 10.5px; }
+      .cyc.b14 .bt .bol, .cyc.b16 .bt .bol { font-size: 8.5px; }
+      .rib-count { order: 3; flex-basis: 100%; }
+      .lane { grid-template-columns: 84px 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) { .bt, .tan .str, .harm::after { transition: none; } .tv-ripple { animation: none; opacity: 0; } }
+  </style>
+</head>
+<body>
+  <header id="siteHeader">
+    <div class="mark" aria-label="baḥr">ba<span class="mark-dot-h">h</span>r<span class="mark-ur">بحر</span></div>
+    <nav class="desktop-nav" aria-label="Main Navigation">
+      <a href="../../index.html#/weight">Weight</a><a href="../../index.html#/meter">Meter</a>
+      <a href="../../index.html#/scan">Scan</a><a href="../../index.html#/ghazals">Ghazals</a>
+    </nav>
+    <div class="hdr-tools">
+      <span class="eyebrow hdr-badge">TAAL MOCKUP</span>
+      <div class="script-switch" id="scriptSw">
+        <button class="scriptbtn on" data-s="ur" type="button">اردو</button>
+        <button class="scriptbtn" data-s="hi" type="button">हिन्दी</button>
+        <button class="scriptbtn" data-s="ro" type="button">Roman</button>
+      </div>
+      <button class="icon-btn" id="hdrGear" type="button" aria-label="Settings">⚙</button>
+    </div>
+  </header>
+
+  <div class="tv-root">
+    <div class="page-head">
+      <div class="eyebrow">Mockup · Tabla under the scan</div>
+      <h1 class="page-title">The bahr on a taal</h1>
+      <p class="lede dim">Press ▶. The ribbon under the couplet shows what is playing: a lane for each instrument that is on, and the taal,
+        with the few things you may want to change while it plays. The ball's shape and colour are in ⚙ › Appearance.</p>
+    </div>
+
+    <div class="tv-bar"><span class="tv-lbl">Couplet</span><span id="cpChips" class="tv-bar"></span></div>
+
+    <section class="tv-stage">
+      <div class="tv-head">
+        <button class="play" id="playBtn" aria-label="Play">▶︎</button>
+        <div class="meta"><p class="tv-meter" id="meterName"></p><p class="tv-pat" id="meterPat"></p></div>
+      </div>
+      <div id="legend"></div>
+      <div id="lines"></div>
+
+      <div id="ribbon" class="rib tv-hide" aria-label="What is playing">
+        <div class="rib-head">
+          <button class="rib-taal" id="ribTaal" type="button" aria-expanded="false" aria-controls="ribPop"></button>
+          <span class="rib-count" id="ribCount"></span>
+          <span class="rib-tempo"><button type="button" id="tDown" aria-label="Slower">−</button><span class="v" id="tVal"></span><button type="button" id="tUp" aria-label="Faster">+</button></span>
+          <button class="rib-gear" id="ribGear" type="button" aria-label="Sound settings">⚙</button>
+        </div>
+        <div class="rib-pop tv-hide" id="ribPop">
+          <div class="tv-bar" id="taalChips"></div>
+          <p class="rib-why" id="why"></p>
+        </div>
+        <div id="lanes"></div>
+        <div class="lane" id="taalLane"><span class="lane-lbl">Tabla<i id="taalLaneName"></i></span><div class="cyc" id="ribCyc"></div></div>
+      </div>
+    </section>
+
+    <p class="tv-foot">Mockup only, not in the app. Scan rows are the app's own (<code>chipRowHTML</code>). Sound here: the tabla and the
+      da · dum voice. The tanpura, harmonium and melody lanes move in time but are silent; in the app they are the Groove and Tarannum
+      instruments, and the sargam would be the notes Tarannum actually plays. Tabla: Marius Miron, “tabla bols”
+      (<a href="https://freesound.org/people/mmiron/packs/8162/" target="_blank" rel="noopener">Freesound</a>, CC0) and Ajay Srinivasamurthy,
+      “Tabla Strokes” (<a href="https://freesound.org/people/ajaysm/packs/10737/" target="_blank" rel="noopener">Freesound</a>, CC BY 4.0).</p>
+  </div>
+
+  <!-- Settings: Appearance (the ball) and Sound, merged: Syllables (Strokes + Groove) or Tarannum; underneath; ending; tempo -->
+  <div class="sheet" id="settingsSheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="in">
+      <div class="settings-head">
+        <h3 id="sheetTitle">Settings</h3>
+        <button class="icon-btn" id="sheetClose" type="button" aria-label="Close settings">✕</button>
+      </div>
+      <div class="settings-group">
+        <div class="settings-group-title">Appearance</div>
+        <div class="settings-label settings-sublabel">Bouncing ball</div>
+        <div class="pv" id="pv" aria-hidden="true"><div class="pv-row" id="pvRow"></div></div>
+        <div class="settings-label settings-sublabel">Shape</div>
+        <div class="tv-opts" id="shapeOpts" role="radiogroup" aria-label="Ball shape"></div>
+        <div class="settings-label settings-sublabel">Colour</div>
+        <div class="tv-opts" id="colorOpts" role="radiogroup" aria-label="Ball colour"></div>
+        <div class="settings-label settings-sublabel">Size</div>
+        <div class="tv-opts" id="sizeOpts" role="radiogroup" aria-label="Ball size"></div>
+        <label class="settings-check"><input type="checkbox" id="bTrail"> Trail <span class="settings-hint">a fading tail along the arc</span></label>
+        <label class="settings-check"><input type="checkbox" id="bSquash"> Squash on landing</label>
+        <label class="settings-check"><input type="checkbox" id="bRipple"> Ripple where it lands</label>
+        <label class="settings-check"><input type="checkbox" id="bHigh"> Long syllables jump higher</label>
+      </div>
+      <div class="settings-group">
+        <div class="settings-group-title">Sound</div>
+        <div class="settings-label settings-sublabel">How lines are played</div>
+        <div class="seg style-seg" id="lineSeg" role="radiogroup" aria-label="How lines are played">
+          <button type="button" class="seg-btn" role="radio" data-v="syllables">Syllables</button>
+          <button type="button" class="seg-btn" role="radio" data-v="tarannum">Tarannum</button>
+        </div>
+        <p class="settings-hint style-desc" id="lineDesc"></p>
+
+        <div class="style-panel" id="panelSyl">
+          <div class="settings-label settings-sublabel">Voice</div>
+          <div class="tv-opts" id="voiceChips" role="radiogroup" aria-label="Voice"></div>
+          <label class="settings-check" id="gapRow"><input type="checkbox" id="gapOn"> Pause between feet
+            <span class="settings-hint">the meter laid out to study; off, the line runs on</span></label>
+          <div class="settings-line tv-sub" id="gapLine">
+            <label class="settings-label" for="gap">Pause</label>
+            <input type="range" id="gap" min="0.25" max="2" step="0.05" value="0.5" aria-label="Pause between feet, in beats">
+            <span class="mono settings-value" id="gapV"></span>
+          </div>
+        </div>
+        <div class="style-panel tv-hide" id="panelTar">
+          <div class="settings-label settings-sublabel">Played on</div>
+          <div class="seg style-seg" id="instSeg"></div>
+          <div class="settings-line"><label class="settings-label" for="ragaSel">Raga</label><select id="ragaSel" aria-label="Raga"></select><span></span></div>
+          <label class="settings-check"><input type="checkbox" id="harmOn"> Harmonium underneath</label>
+        </div>
+
+        <div class="settings-label settings-sublabel">Underneath</div>
+        <label class="settings-check"><input type="checkbox" id="tablaOn"> Tabla theka
+          <span class="settings-hint">a taal under the line; the voice comes in on sam</span></label>
+        <div class="tv-sub" id="tablaSub">
+          <div class="settings-line"><label class="settings-label" for="taalSel">Taal</label><select id="taalSel" aria-label="Taal"></select><span></span></div>
+          <div class="settings-line"><label class="settings-label" for="endSel">Ending</label><select id="endSel" aria-label="Ending">
+            <option value="tihai">Tihai onto sam</option><option value="sam">Stop on sam</option><option value="loop">Loop the couplet</option></select><span></span></div>
+        </div>
+        <label class="settings-check"><input type="checkbox" id="droneOn"> Tanpura drone</label>
+        <label class="settings-check" id="pulseRow"><input type="checkbox" id="pulseOn"> Soft pulse on every beat</label>
+
+        <div class="settings-line">
+          <label class="settings-label" for="bpm">Tempo</label>
+          <input type="range" id="bpm" min="100" max="320" step="5" value="190" aria-label="Tempo in beats per minute">
+          <span class="mono settings-value" id="bpmV"></span>
+        </div>
+        <p class="tv-note" id="ruleNote"></p>
+      </div>
+    </div>
+  </div>
+<script>
+const COUPLETS = /*@@COUPLETS@@*/;
+const STROKES = /*@@STROKES@@*/;
+const VOICEPACK = /*@@VOICEPACK@@*/;
+const LEGEND = /*@@LEGEND@@*/;
+/*@@ENGINE@@*/
+const $ = id => document.getElementById(id);
+const REDUCED = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const SHORT = { '14': 'Khafīf', '15': 'Khafīf', '26': 'Hazaj', '10': 'Ramal', '18': 'Ramal makhbūn', '19': 'Ramal makhbūn',
+  '33': 'Mujtas', '34': 'Mujtas', '5': 'Muzāriʿ', '8': 'Hazaj akhrab', '28': 'Mutaqārib', 'H': 'Hindi (Mir)' };
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+
+/* the merged settings (the app would keep these in `settings`) */
+const S = { line: 'syllables', voice: 'rec', gapOn: false, gap: 0.5, tabla: true, taal: 'auto', ending: 'tihai', drone: true, pulse: true, bpm: 190,
+  inst: 'bansuri', raga: 'yaman', harm: true,
+  ball: { shape: 'dot', color: 'accent', size: 'm', trail: false, squash: true, ripple: false, high: true } };
+const VOICES = [{ id: 'rec', nm: 'da · dum' }, { id: 'tablarec', nm: 'recorded tabla' }, { id: 'tone', nm: 'tone' }, { id: 'mine', nm: 'your voice', off: true }];
+const INSTS = { bansuri: 'Bansuri', sarangi: 'Sarangi', sitar: 'Sitar', voice: 'Voice' };
+/* a few ragas, as the app has them (semitones from Sa; strong = where a long syllable may rest) */
+const RAGAS = {
+  yaman:    { name: 'Yaman', up: [0, 2, 4, 6, 7, 9, 11], strong: [0, 4, 7, 11] },
+  khamaj:   { name: 'Khamaj', up: [0, 4, 5, 7, 9, 11], strong: [0, 4, 7, 9] },
+  bhairavi: { name: 'Bhairavi', up: [0, 1, 3, 5, 7, 8, 10], strong: [0, 3, 5, 7] },
+  pahadi:   { name: 'Pahadi', up: [0, 2, 4, 7, 9], strong: [0, 4, 7, 9] }
+};
+const SARGAM = { 0: 'Sa', 1: 're', 2: 'Re', 3: 'ga', 4: 'Ga', 5: 'Ma', 6: 'Ma′', 7: 'Pa', 8: 'dha', 9: 'Dha', 10: 'ni', 11: 'Ni', 12: 'Ṡa' };
+const SHAPES = {
+  dot:      { nm: 'Dot', svg: '<circle r="5"/>' },
+  nuqta:    { nm: 'Nuqta', svg: '<path d="M-1.2,-6 L5,-1 L1.2,6 L-5,1Z"/>' },
+  ring:     { nm: 'Ring', svg: '<circle r="4.6" fill="none" stroke="currentColor" stroke-width="2"/>' },
+  drop:     { nm: 'Drop', svg: '<path d="M0,-7.5 C3.5,-3 5,0 5,2.2 A5,5 0 1 1 -5,2.2 C-5,0 -3.5,-3 0,-7.5Z"/>', turn: true },
+  petal:    { nm: 'Petal', svg: '<path d="M0,-7.5 C5,-4 5,3.5 0,7.5 C-5,3.5 -5,-4 0,-7.5Z"/>', turn: true },
+  sparkle:  { nm: 'Sparkle', svg: '<path d="M0,-7.5 L1.7,-1.7 L7.5,0 L1.7,1.7 L0,7.5 L-1.7,1.7 L-7.5,0 L-1.7,-1.7Z"/>', spin: true },
+  hilal:    { nm: 'Crescent', svg: '<path d="M2.5,-6.5 A6.6,6.6 0 1 0 2.5,6.5 A5,5 0 1 1 2.5,-6.5Z"/>' }
+};
+const COLORS = { accent: 'Blue', weight: 'By weight', long: 'Bright', ink: 'Ink', rose: 'Plum' };
+const SIZES = { s: ['Small', 0.75], m: ['Medium', 1], l: ['Large', 1.35], w: ['By weight', 1] };
+const st = { c: 0, script: 'ur', pending: null, ribShown: false };
+{ const q = new URLSearchParams(location.search);
+  if (+q.get('c') >= 0 && +q.get('c') < COUPLETS.length) st.c = +q.get('c');
+  if (['ur', 'hi', 'ro'].includes(q.get('s'))) st.script = q.get('s');
+  if (q.get('rib')) st.ribShown = true;
+  if (q.get('tar')) S.line = 'tarannum';
+  if (SHAPES[q.get('ball')]) S.ball.shape = q.get('ball');
+  st.openSheet = !!q.get('sheet'); st.openPop = !!q.get('pop'); }
+
+$('legend').innerHTML = LEGEND;
+const coup = () => COUPLETS[st.c];
+const taalKey = () => S.taal === 'auto' ? fitTaals(coup())[0].k : S.taal;
+
+/* ---------- page ---------- */
+COUPLETS.forEach((c, i) => {
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'tv-chip'; b.textContent = SHORT[c.meterId] || c.meterName;
+  b.onclick = () => { TL.stop(); st.c = i; render(); };
+  $('cpChips').appendChild(b);
+});
+document.querySelectorAll('#scriptSw .scriptbtn').forEach(b => b.onclick = () => { TL.stop(); st.script = b.dataset.s; render(); });
+
+let V = null;   /* on screen: per line its chip nodes, ball, melody; the ribbon's beat cells and lanes */
+function render() {
+  const c = coup();
+  document.querySelectorAll('#cpChips .tv-chip').forEach((b, i) => b.classList.toggle('on', i === st.c));
+  document.querySelectorAll('#scriptSw .scriptbtn').forEach(b => b.classList.toggle('on', b.dataset.s === st.script));
+  $('meterName').textContent = c.meterName + ' · ' + c.ref;
+  $('meterPat').textContent = c.pattern;
+  const box = $('lines'); box.innerHTML = '';
+  V = { lines: [], rib: [], T: null, lanes: {} };
+  c.lines.forEach((l, li) => {
+    const wrap = document.createElement('div'); wrap.className = 'tv-line';
+    wrap.innerHTML = `<p class="tv-verse ${st.script}">${esc(st.script === 'ur' ? l.ur : st.script === 'hi' ? l.hi : l.ro)}</p>`;
+    const cr = document.createElement('div'); cr.innerHTML = l.chips[st.script]; wrap.appendChild(cr);
+    const mel = document.createElement('div'); mel.className = 'mel' + (S.line === 'tarannum' ? '' : ' tv-hide'); wrap.appendChild(mel);
+    box.appendChild(wrap);
+    const rec = { wrap, cr, mel, l, nodes: [], ball: makeBall(wrap) };
+    V.lines.push(rec);
+    bindNodes(li, matras(l));
+  });
+  requestAnimationFrame(() => V.lines.forEach((r, li) => drawMelody(li)));
+  drawRibbon(TAALS[taalKey()]);
+}
+/* the chip node of each laid syllable (its first scanner syllable) */
+function bindNodes(li, laidSyl) { const r = V.lines[li]; r.nodes = laidSyl.map(s => r.cr.querySelector(`.chip[data-i="${s.i[0]}"]`)); r.syl = laidSyl; }
+
+/* ---------- the melody (Tarannum): a sargam contour, one note per syllable, drawn under the chips ----------
+   A stand-in for what Tarannum plays: the first line climbs from Sa and rests on Pa, the second answers home to Sa;
+   long syllables rest on the raga's strong notes. */
+function melodyNotes(li, n, longs) {
+  const R = RAGAS[S.raga], up = R.up.concat([12]), pos = s => up.indexOf(s) < 0 ? 0 : up.indexOf(s), paI = Math.max(1, pos(7));
+  return Array.from({ length: n }, (_, j) => {
+    const t = n > 1 ? j / (n - 1) : 1;
+    let idx = li % 2 === 0 ? paI * t + 1.6 * Math.sin(Math.PI * t) : paI * (1 - t) + 1.6 * Math.sin(Math.PI * t);
+    idx = Math.max(0, Math.min(up.length - 1, Math.round(idx)));
+    if (longs[j]) { let best = idx, d = 99; up.forEach((s, k) => { if (R.strong.includes(s % 12) && Math.abs(k - idx) < d) { d = Math.abs(k - idx); best = k; } }); idx = best; }
+    if (j === n - 1) idx = li % 2 === 0 ? paI : 0;
+    return up[idx];
+  });
+}
+function drawMelody(li) {
+  const r = V.lines[li]; if (S.line !== 'tarannum') { r.mel.classList.add('tv-hide'); return; }
+  r.mel.classList.remove('tv-hide');
+  const notes = melodyNotes(li, r.nodes.length, r.syl.map(s => s.long)), base = r.mel.getBoundingClientRect();
+  const pts = r.nodes.map((n, j) => { if (!n) return null; const b = n.getBoundingClientRect(); return [b.left - base.left + b.width / 2, 34 - notes[j] * 2.3, notes[j], r.syl[j].long]; });
+  let h = `<svg aria-label="Melody">`, d = '';
+  pts.forEach(p => { if (p) d += (d ? ' L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1); });
+  h += `<path d="${d}"/>`;
+  pts.forEach((p, j) => { if (!p) return; h += `<circle data-j="${j}" class="${p[3] ? 'rest' : ''}" cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${p[3] ? 3.6 : 2.6}"/>` +
+    `<text data-j="${j}" x="${p[0].toFixed(1)}" y="${(p[1] - 6).toFixed(1)}">${SARGAM[p[2]]}</text>`; });
+  r.mel.innerHTML = h + '</svg>';
+  r.notes = notes;
+}
+
+/* ---------- ribbon: lanes for what plays underneath, then the taal ---------- */
+function beatCell(T, i) {
+  const sec = T.sec[i], el = document.createElement('div');
+  el.className = 'bt' + (T.starts.has(i) ? ' vs' : '') + (T.khali.includes(sec) ? ' khali' : '') + (i === 0 && !T.khali.includes(0) ? ' sam' : '');
+  el.innerHTML = `<div class="mk">${T.starts.has(i) ? T.marks[sec] : ''}</div><div class="bol">${T.bols[i] === '-' ? '·' : T.bols[i]}</div>`;
+  return el;
+}
+function drawLanes() {
+  const L = $('lanes'); L.innerHTML = ''; V.lanes = {};
+  const lane = (lbl, sub, body) => { const d = document.createElement('div'); d.className = 'lane';
+    d.innerHTML = `<span class="lane-lbl">${lbl}<i>${sub}</i></span><div class="lane-body">${body}</div>`; L.appendChild(d); return d; };
+  if (S.line === 'tarannum') {
+    const R = RAGAS[S.raga];
+    const d = lane(INSTS[S.inst], 'raga ' + R.name, `<span class="mel-now">–</span><span class="mel-scale">${R.up.map(s => SARGAM[s]).join(' ')} ${SARGAM[12]}</span>`);
+    V.lanes.melNow = d.querySelector('.mel-now');
+    if (S.harm) { const h = lane('Harmonium', 'held under the line', '<div class="harm"></div><span class="harm-n">Sa · Pa</span>'); V.lanes.harm = h.querySelector('.harm'); }
+  }
+  if (S.drone) {   /* the tanpura's four strings, plucked in turn: Pa, Sa, Sa, low Sa */
+    const d = lane('Tanpura', 'drone, tuned to the tabla', ['Pa', 'Ṡa', 'Ṡa', 'Sa'].map(n => `<span class="tan"><span class="str"></span>${n}</span>`).join(''));
+    V.lanes.tan = [...d.querySelectorAll('.tan')];
+  }
+  if (!S.tabla && S.pulse) lane('Pulse', 'a soft tick each beat', '<span class="harm-n">·</span>');
+}
+function drawRibbon(T) {
+  V.T = T;
+  $('ribbon').classList.toggle('tv-hide', !st.ribShown);
+  $('taalLane').classList.toggle('tv-hide', !S.tabla);
+  $('ribTaal').classList.toggle('tv-hide', !S.tabla);
+  $('ribTaal').innerHTML = `${T.name} · ${T.beats}${S.taal === 'auto' ? '<span class="auto">auto</span>' : ''} ▾`;
+  $('taalLaneName').textContent = T.name;
+  const rc = $('ribCyc'); rc.className = 'cyc b' + T.beats + (st.script === 'ur' ? ' rtl' : ''); rc.innerHTML = '';
+  V.rib = T.bols.map((b, i) => { const el = beatCell(T, i); rc.appendChild(el); return el; });
+  $('tVal').textContent = S.bpm;
+  drawLanes();
+  /* the popover: Auto first, then every taal with the beats it holds per line */
+  const c = coup(), fits = fitTaals(c), tc = $('taalChips'); tc.innerHTML = '';
+  const chip = (key, label, n) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'tv-chip' + (S.taal === key ? ' on' : '');
+    b.innerHTML = label + (n != null ? `<span class="n">${n}</span>` : ''); b.onclick = () => pickTaal(key); tc.appendChild(b);
+  };
+  chip('auto', `Auto<span class="auto">${TAALS[fits[0].k].name}</span>`);
+  fits.forEach(f => chip(f.k, TAALS[f.k].name, f.pad ? '+' + Math.round(f.pad * 10) / 10 : '0'));
+  const L0 = layLine(c.lines[0], T);
+  $('why').innerHTML = `${L0.tot} mātrās a line → <b>${T.name}</b>, ${T.beats} beats (${T.div.join(' + ')}) × ${L0.cyc} = ${L0.len}` +
+    (L0.pad ? `; the last syllable is held ${L0.pad} beat${L0.pad > 1 ? 's' : ''} more, as a singer would.` : ': it fits exactly.') +
+    ' The number on each taal is the beats it holds per line.';
+}
+function pickTaal(key) {
+  S.taal = key; syncSheet();
+  if (TL.play) { st.pending = taalKey(); $('ribCount').innerHTML = `<span class="next">${TAALS[st.pending].name} from the next line</span>`; }
+  else drawRibbon(TAALS[taalKey()]);
+  togglePop(false);
+}
+function togglePop(open) {
+  const p = $('ribPop'), b = $('ribTaal'), on = open != null ? open : p.classList.contains('tv-hide');
+  p.classList.toggle('tv-hide', !on); b.setAttribute('aria-expanded', on);
+}
+$('ribTaal').onclick = () => togglePop();
+const setBpm = v => { S.bpm = Math.max(100, Math.min(320, v)); TL.bpm = S.bpm; $('tVal').textContent = S.bpm; syncSheet(); };
+$('tDown').onclick = () => setBpm(S.bpm - 10);
+$('tUp').onclick = () => setBpm(S.bpm + 10);
+
+/* ---------- the ball ---------- */
+const GHOSTS = 6;
+function makeBall(host) {
+  const mk = cls => { const d = document.createElement('div'); d.className = cls; host.appendChild(d); return d; };
+  const b = { el: mk('tv-ball'), ghosts: [], hist: [], x: 0, y: 0, rot: 0, sx: 1, sy: 1, scale: 1, host };
+  for (let i = 0; i < GHOSTS; i++) b.ghosts.push(mk('tv-ghost'));
+  styleBall(b);
+  return b;
+}
+function styleBall(b) {
+  const B = S.ball, shape = SHAPES[B.shape], cls = 'c-' + B.color;
+  [b.el, ...b.ghosts].forEach(e => {
+    e.innerHTML = `<svg viewBox="-10 -10 20 20" fill="currentColor">${shape.svg}</svg>`;
+    e.classList.remove(...Object.keys(COLORS).map(k => 'c-' + k)); e.classList.add(cls);
+  });
+  b.ghosts.forEach((g, i) => g.style.setProperty('--g', (0.34 * (1 - i / GHOSTS)).toFixed(2)));
+}
+function place(b) {
+  b.el.style.transform = `translate(${b.x.toFixed(1)}px, ${b.y.toFixed(1)}px) rotate(${b.rot.toFixed(1)}deg) scale(${(b.sx * b.scale).toFixed(3)}, ${(b.sy * b.scale).toFixed(3)})`;
+  if (S.ball.trail && !REDUCED) {
+    b.hist.unshift([b.x, b.y, b.rot]); b.hist.length = Math.min(b.hist.length, GHOSTS * 3);
+    b.ghosts.forEach((g, i) => { const h = b.hist[(i + 1) * 3 - 1] || b.hist[b.hist.length - 1];
+      g.style.transform = `translate(${h[0].toFixed(1)}px, ${h[1].toFixed(1)}px) rotate(${h[2].toFixed(1)}deg) scale(${(b.scale * (1 - i * 0.1)).toFixed(3)})`;
+      g.classList.toggle('on', b.el.classList.contains('on')); });
+  } else b.ghosts.forEach(g => g.classList.remove('on'));
+}
+function hop(b, to, secs, height) {
+  cancelAnimationFrame(b.anim);
+  const x0 = b.x, y0 = b.y, [x1, y1] = to, shape = SHAPES[S.ball.shape];
+  if (REDUCED || secs <= 0) { b.x = x1; b.y = y1; place(b); return; }
+  const t0 = performance.now(), T = secs * 1000;
+  const step = now => {
+    const p = Math.min(1, (now - t0) / T);
+    b.x = x0 + (x1 - x0) * p; b.y = y0 + (y1 - y0) * p - height * Math.sin(Math.PI * p);
+    if (shape.turn) { const vx = (x1 - x0), vy = (y1 - y0) - height * Math.PI * Math.cos(Math.PI * p); if (Math.abs(vx) + Math.abs(vy) > 0.5) b.rot = Math.atan2(vy, vx) * 180 / Math.PI + 90; }
+    if (shape.spin) b.rot += 4;
+    /* squash as it lands, stretch as it leaves */
+    const sq = S.ball.squash ? (p < 0.12 ? 1 - (0.12 - p) * 2.2 : p > 0.9 ? 1 - (p - 0.9) * 2.4 : 1) : 1;
+    b.sx = 2 - sq; b.sy = sq;
+    place(b);
+    if (p < 1) b.anim = requestAnimationFrame(step);
+  };
+  b.anim = requestAnimationFrame(step);
+}
+function landOn(b, node, isLong) {
+  const a = b.host.getBoundingClientRect(), n = node.getBoundingClientRect();
+  return [n.left - a.left + n.width / 2, n.top - a.top - 14 * (isLong && S.ball.size === 'w' ? 1.15 : 1)];
+}
+function weightOf(node) { return node.classList.contains('flex') ? 'x' : node.classList.contains('l') ? 'l' : 's'; }
+function ripple(b, x, y) {
+  if (!S.ball.ripple || REDUCED) return;
+  const r = document.createElement('div'); r.className = 'tv-ripple ' + [...b.el.classList].filter(c => c.startsWith('c-') || c.startsWith('w-')).join(' ');
+  r.style.setProperty('--at', `translate(${x.toFixed(1)}px, ${(y + 12).toFixed(1)}px)`);
+  b.host.appendChild(r); setTimeout(() => r.remove(), 560);
+}
+function setWeightLook(b, node, isLong) {
+  const w = weightOf(node);
+  [b.el, ...b.ghosts].forEach(e => { e.classList.remove('w-l', 'w-s', 'w-x'); e.classList.add('w-' + w); });
+  b.scale = S.ball.size === 'w' ? (isLong ? 1.25 : 0.8) : SIZES[S.ball.size][1];
+}
+function sylCue(li, j, s) {
+  return (on, secs) => {
+    const rec = V.lines[li], node = rec.nodes[j], next = rec.nodes[j + 1];
+    if (!node) return;
+    node.classList.toggle('lit', on);
+    const fs = node.parentElement && node.parentElement.querySelector('.fs'); if (fs) fs.classList.toggle('on', on);
+    /* the melody lane and the note under the chip */
+    if (rec.notes && S.line === 'tarannum') {
+      rec.mel.querySelectorAll(`[data-j="${j}"]`).forEach(e => e.classList.toggle('now', on));
+      if (on && V.lanes.melNow) V.lanes.melNow.textContent = SARGAM[rec.notes[j]];
+    }
+    if (!on) return;
+    const b = rec.ball;
+    V.lines.forEach(r => { r.ball.el.classList.toggle('on', r === rec); place(r.ball); });
+    setWeightLook(b, node, s.long);
+    const here = landOn(b, node, s.long); b.x = here[0]; b.y = here[1]; place(b); ripple(b, here[0], here[1]);
+    const hi = S.ball.high ? (s.len > 1 ? 28 : 14) : 18;
+    if (next) hop(b, landOn(b, next, false), secs * 0.98, hi);
+    else hop(b, here, secs * 0.6, 8);   /* the held last syllable: one small bounce in place */
+  };
+}
+
+/* ---------- the lanes in time: tanpura plucks every two beats, harmonium on while a line sounds ---------- */
+function laneTick() {
+  if (TL.play && TL.play.t0 != null && V.lanes.tan) {
+    const k = Math.floor((TL.now() - TL.play.t0) / (TL.beat() * 2));
+    V.lanes.tan.forEach((e, i) => e.classList.toggle('now', k >= 0 && k % 4 === i));
+  }
+  st.laneRaf = requestAnimationFrame(laneTick);
+}
+const harmCue = { at: 0, len: 0.01, fn: on => { if (on && V.lanes.harm) V.lanes.harm.classList.add('on'); } };
+
+/* ---------- playback: built cycle by cycle, so a taal or tempo change lands at the next line / cycle ---------- */
+function sylAudio(at, len, long) {
+  if (S.line === 'tarannum') return null;
+  if (S.voice === 'tablarec') return { at, fn: t => bol(long ? 'dha' : 'na', t, long ? 0.95 : 0.8) };
+  if (S.voice === 'tone') return { at, fn: (t, bl) => tone(t, len * bl * 0.9, long) };
+  return null;
+}
+/* without the tabla: the line on its own, a pause after each foot (if on), a soft tick on every beat (if on) */
+function bareLine(li) {
+  const l = coup().lines[li], m = matras(l), lastOfFoot = new Set(l.feet.slice(0, -1).map(f => Array.isArray(f.idx) ? f.idx[f.idx.length - 1] : -1));
+  const syl = []; let at = 0;
+  m.forEach(s => { syl.push(Object.assign({}, s, { at, len: s.m })); at += s.m; if (S.gapOn && s.i.some(i => lastOfFoot.has(i))) at += S.gap; });
+  return { syl, len: Math.ceil(at) + 1 };
+}
+function source() {
+  const c = coup(), n = c.lines.length;
+  let phase = 'lead', li = 0, k = 0, T = TAALS[taalKey()], laid = null;
+  const tabla = S.tabla, ribCues = () => V.rib.map((el, i) => ({ at: i, len: 1, fn: on => { if (V.rib[i]) V.rib[i].classList.toggle('now', on); } }));
+  const count = txt => ({ at: 0, len: 0.01, fn: on => { if (on && !st.pending) $('ribCount').innerHTML = txt; } });
+  const lineVoice = (s, at) => S.voice === 'rec' || S.line === 'tarannum' ? [{ at, dur: s.len, long: s.long || s.len > 1 }] : [];
+  const nextLine = () => { if (++li >= n) { if (S.ending === 'loop' && tabla) li = 0; else phase = 'tail'; } };
+  return () => {
+    if (phase === 'lead') {
+      phase = 'line';
+      if (!tabla) return { len: 1, hits: [], cues: [count('')] };
+      return { len: T.beats, hits: cycleHits(T), cues: ribCues().concat(count('theka · the voice comes in on sam')) };
+    }
+    if (phase === 'line') {
+      if (!tabla) {   /* the whole line as one stretch */
+        const L = bareLine(li); bindNodes(li, L.syl); const myLi = li;
+        const cyc = { len: L.len, hits: [], voice: [], audio: [], cues: [harmCue] };
+        L.syl.forEach((s, j) => { cyc.voice.push(...lineVoice(s, s.at)); const a = sylAudio(s.at, s.len, s.long); if (a) cyc.audio.push(a); cyc.cues.push({ at: s.at, len: s.len, fn: sylCue(myLi, j, s) }); });
+        if (S.pulse) for (let b = 0; b < L.len - 1; b++) cyc.hits.push({ at: b, bol: 'ke', vel: 0.28 });
+        if (++li >= n) phase = 'done';
+        return cyc;
+      }
+      let redraw = null;
+      if (k === 0) {   /* a new line: a waiting taal change starts here, on sam (the ribbon redraws as sam sounds) */
+        if (st.pending) { T = TAALS[st.pending]; redraw = T; }
+        laid = layLine(c.lines[li], T); bindNodes(li, laid.syl);
+      }
+      const myLi = li, lo = k * T.beats, inCyc = laid.syl.map((s, j) => [s, j]).filter(([s]) => s.at >= lo && s.at < lo + T.beats);
+      const cyc = { len: T.beats, hits: cycleHits(T), voice: [], audio: [], cues: [] };
+      if (redraw) cyc.cues.push({ at: 0, len: 0.01, fn: on => { if (on) { st.pending = null; drawRibbon(redraw); } } });
+      cyc.cues.push(...ribCues(), harmCue);
+      inCyc.forEach(([s, j]) => { cyc.voice.push(...lineVoice(s, s.at - lo)); const a = sylAudio(s.at - lo, s.len, s.long); if (a) cyc.audio.push(a);
+        cyc.cues.push({ at: s.at - lo, len: s.len, fn: sylCue(myLi, j, s) }); });
+      cyc.cues.push(count(`line ${myLi + 1} · cycle ${k + 1} of ${laid.cyc}` + (S.ending === 'loop' ? ' · looping' : '')));
+      if (++k >= laid.cyc) { k = 0; nextLine(); }
+      return cyc;
+    }
+    if (phase === 'tail') {   /* one closing cycle; the final dha on the next sam */
+      phase = 'sam';
+      const off = { at: 0, len: 0.01, fn: on => { if (on && V.lanes.harm) V.lanes.harm.classList.remove('on'); } };
+      if (S.ending === 'sam') { phase = 'done'; return { len: 2, hits: [{ at: 0, bol: 'dha', vel: 1 }], cues: [ribCues()[0], off, count('sam')] }; }
+      return { len: T.beats, hits: tihaiCycle(T), cues: ribCues().concat(off, count('tihai · onto sam')) };
+    }
+    if (phase === 'sam') { phase = 'done'; return { len: 2, hits: [{ at: 0, bol: 'dha', vel: 1 }], cues: [ribCues()[0], count('sam')] }; }
+    return null;
+  };
+}
+$('playBtn').onclick = () => {
+  const btn = $('playBtn');
+  if (TL.play) { TL.stop(); return; }
+  togglePop(false);
+  TL.bpm = S.bpm; TL.voice = true; TL.cc0 = false;
+  st.pending = null; st.ribShown = true; drawRibbon(TAALS[taalKey()]);
+  TL.start(source(), () => {
+    btn.classList.remove('on'); btn.textContent = '▶︎'; btn.setAttribute('aria-label', 'Play');
+    cancelAnimationFrame(st.laneRaf);
+    if (V) V.lines.forEach(r => { r.ball.el.classList.remove('on'); place(r.ball); cancelAnimationFrame(r.ball.anim); r.nodes.forEach(n => n && n.classList.remove('lit')); });
+    if (V && V.lanes.tan) V.lanes.tan.forEach(e => e.classList.remove('now'));
+    if (V && V.lanes.harm) V.lanes.harm.classList.remove('on');
+    if (st.pending) { drawRibbon(TAALS[st.pending]); st.pending = null; }
+    $('ribCount').textContent = '';
+  });
+  cancelAnimationFrame(st.laneRaf); st.laneRaf = requestAnimationFrame(laneTick);
+  btn.classList.add('on'); btn.textContent = '❚❚'; btn.setAttribute('aria-label', 'Stop');
+};
+
+/* ---------- the settings sheet ---------- */
+const sheetOpen = on => { $('settingsSheet').classList.toggle('on', on); if (on) startPreview(); else stopPreview(); };
+$('hdrGear').onclick = () => sheetOpen(true);
+$('ribGear').onclick = () => sheetOpen(true);
+$('sheetClose').onclick = () => sheetOpen(false);
+$('settingsSheet').onclick = e => { if (e.target === $('settingsSheet')) sheetOpen(false); };
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { if ($('settingsSheet').classList.contains('on')) sheetOpen(false); else TL.stop(); } });
+const optRow = (id, items, cur, pick, icon) => {
+  const box = $(id); box.innerHTML = '';
+  Object.entries(items).forEach(([k, v]) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'tv-chip' + (k === cur ? ' on' : ''); b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', k === cur);
+    b.innerHTML = (icon ? icon(k) : '') + (Array.isArray(v) ? v[0] : v.nm || v); b.onclick = () => pick(k); box.appendChild(b);
+  });
+};
+function drawBallOpts() {
+  const B = S.ball;
+  optRow('shapeOpts', SHAPES, B.shape, k => { B.shape = k; ballChanged(); }, k => `<svg viewBox="-10 -10 20 20" fill="currentColor">${SHAPES[k].svg}</svg>`);
+  optRow('colorOpts', COLORS, B.color, k => { B.color = k; ballChanged(); }, k => `<span class="sw c-${k}"></span>`);
+  optRow('sizeOpts', SIZES, B.size, k => { B.size = k; ballChanged(); });
+  $('bTrail').checked = B.trail; $('bSquash').checked = B.squash; $('bRipple').checked = B.ripple; $('bHigh').checked = B.high;
+}
+function ballChanged() { drawBallOpts(); if (V) V.lines.forEach(r => styleBall(r.ball)); if (PV.ball) styleBall(PV.ball); }
+$('bTrail').onchange = e => { S.ball.trail = e.target.checked; ballChanged(); };
+$('bSquash').onchange = e => { S.ball.squash = e.target.checked; };
+$('bRipple').onchange = e => { S.ball.ripple = e.target.checked; };
+$('bHigh').onchange = e => { S.ball.high = e.target.checked; };
+
+/* a live preview in the sheet: the ball keeps bouncing over a few syllables */
+const PV = { ball: null, timer: null };
+function startPreview() {
+  const row = $('pvRow'); row.innerHTML = '';
+  const syl = [['dil', 'l'], ['e', 's'], ['nā', 'l'], ['dāñ', 'l'], ['tu', 's'], ['jhe', 'x']];
+  const nodes = syl.map(([t, w]) => { const sp = document.createElement('span'); sp.textContent = t; sp.className = w + (w === 'x' ? ' flex' : ''); row.appendChild(sp); return sp; });
+  if (!PV.ball) PV.ball = makeBall($('pv'));
+  styleBall(PV.ball);
+  let j = 0;
+  const go = () => {
+    const b = PV.ball, node = nodes[j], next = nodes[(j + 1) % nodes.length], long = syl[j][1] === 'l', secs = (long ? 2 : 1) * 0.3;
+    b.el.classList.add('on'); setWeightLook(b, node, long);
+    const here = landOn(b, node, long); b.x = here[0]; b.y = here[1]; place(b); ripple(b, here[0], here[1]);
+    hop(b, landOn(b, next, false), secs * 0.98, S.ball.high ? (long ? 28 : 14) : 18);
+    j = (j + 1) % nodes.length; PV.timer = setTimeout(go, secs * 1000);
+  };
+  clearTimeout(PV.timer); go();
+}
+function stopPreview() { clearTimeout(PV.timer); if (PV.ball) cancelAnimationFrame(PV.ball.anim); }
+
+document.querySelectorAll('#lineSeg .seg-btn').forEach(b => b.onclick = () => { S.line = b.dataset.v; syncSheet(); soundChanged(); });
+VOICES.forEach(v => {
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'tv-chip'; b.dataset.v = v.id; b.textContent = v.nm;
+  if (v.off) { b.disabled = true; b.title = 'in the app'; b.classList.add('tv-off'); }
+  b.onclick = () => { S.voice = v.id; syncSheet(); };
+  $('voiceChips').appendChild(b);
+});
+$('instSeg').innerHTML = Object.entries(INSTS).map(([k, n]) => `<button type="button" class="seg-btn" data-v="${k}">${n}</button>`).join('');
+$('instSeg').querySelectorAll('.seg-btn').forEach(b => b.onclick = () => { S.inst = b.dataset.v; syncSheet(); soundChanged(); });
+$('ragaSel').innerHTML = Object.entries(RAGAS).map(([k, r]) => `<option value="${k}">${r.name}</option>`).join('');
+$('ragaSel').onchange = e => { S.raga = e.target.value; soundChanged(); };
+$('harmOn').onchange = e => { S.harm = e.target.checked; soundChanged(); };
+const sel = $('taalSel');
+sel.innerHTML = '<option value="auto">Auto</option>' + Object.entries(TAALS).map(([k, T]) => `<option value="${k}">${T.name} · ${T.beats}</option>`).join('');
+sel.onchange = () => pickTaal(sel.value);
+$('endSel').onchange = e => { S.ending = e.target.value; };
+$('gapOn').onchange = e => { S.gapOn = e.target.checked; syncSheet(); };
+$('gap').oninput = e => { S.gap = +e.target.value; syncSheet(); };
+$('tablaOn').onchange = e => { TL.stop(); S.tabla = e.target.checked; syncSheet(); render(); };
+$('droneOn').onchange = e => { S.drone = e.target.checked; soundChanged(); };
+$('pulseOn').onchange = e => { S.pulse = e.target.checked; soundChanged(); };
+$('bpm').oninput = e => setBpm(+e.target.value);
+function soundChanged() { if (!V) return; drawLanes(); V.lines.forEach((r, li) => drawMelody(li)); }
+function syncSheet() {
+  document.querySelectorAll('#lineSeg .seg-btn').forEach(b => { const on = b.dataset.v === S.line; b.classList.toggle('on', on); b.setAttribute('aria-checked', on); });
+  $('lineDesc').textContent = S.line === 'syllables'
+    ? 'Each syllable sounded on its beat. With a pause between feet it is the meter laid out to study; without, the line runs on.'
+    : 'The couplet played in a raga: the first line opens, the second answers home; each play ornaments it anew.';
+  $('panelSyl').classList.toggle('tv-hide', S.line !== 'syllables');
+  $('panelTar').classList.toggle('tv-hide', S.line !== 'tarannum');
+  $('instSeg').querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('on', b.dataset.v === S.inst));
+  $('ragaSel').value = S.raga; $('harmOn').checked = S.harm;
+  /* the rules that tie the layers together */
+  if (S.tabla && S.voice === 'tablarec') S.voice = 'rec';   /* two tablas would fight: the syllables take da · dum */
+  document.querySelectorAll('#voiceChips .tv-chip').forEach(b => {
+    b.classList.toggle('on', b.dataset.v === S.voice);
+    if (b.dataset.v === 'tablarec') { b.disabled = S.tabla; b.classList.toggle('tv-off', S.tabla); b.title = S.tabla ? 'the theka is already the tabla' : ''; }
+  });
+  $('gapOn').checked = S.gapOn && !S.tabla; $('gapOn').disabled = S.tabla;
+  $('gapRow').classList.toggle('tv-off', S.tabla);
+  $('gapLine').classList.toggle('tv-hide', !S.gapOn || S.tabla);
+  $('gap').value = S.gap; $('gapV').textContent = S.gap.toFixed(2);
+  $('tablaOn').checked = S.tabla; $('tablaSub').classList.toggle('tv-hide', !S.tabla);
+  $('taalSel').value = S.taal; $('endSel').value = S.ending;
+  $('droneOn').checked = S.drone;
+  $('pulseRow').classList.toggle('tv-hide', S.tabla); $('pulseOn').checked = S.pulse;
+  $('bpm').value = S.bpm; $('bpmV').textContent = S.bpm; $('tVal').textContent = S.bpm;
+  $('ruleNote').textContent = S.tabla
+    ? 'With the tabla on, the theka keeps time: no pauses between feet, no pulse, and the syllables are voiced (not struck) so two tablas never fight.'
+    : 'Turn on the tabla to hear the line on a taal.';
+}
+window.addEventListener('resize', () => { if (!TL.play) render(); });
+document.addEventListener('pointerdown', () => initAudio(), { once: true });
+syncSheet(); drawBallOpts(); render();
+if (st.openPop) togglePop(true);
+if (st.openSheet) sheetOpen(true);
+</script>
+</body>
+</html>

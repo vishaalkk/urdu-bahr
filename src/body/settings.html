@@ -14,40 +14,60 @@
       <label class="settings-check">
         <input type="checkbox" id="btnScriptAscii" onchange="toggleAsciiScript(this.checked)"> Show Pritchett ASCII script
       </label>
+      <label class="settings-check">
+        <input type="checkbox" id="ballOn" onchange="tkSetBall('on',this.checked)"> Bouncing ball <span class="settings-hint">rides the syllables as a couplet plays</span>
+      </label>
+      <div id="ballOpts">
+        <div class="tk-pv" id="ballPreview" aria-hidden="true"></div>
+        <div class="settings-label settings-sublabel">Shape</div>
+        <div class="tk-opts" id="ballShape" role="radiogroup" aria-label="Ball shape"></div>
+        <div class="settings-label settings-sublabel">Colour</div>
+        <div class="tk-opts" id="ballColor" role="radiogroup" aria-label="Ball colour"></div>
+        <div class="settings-label settings-sublabel">Size</div>
+        <div class="tk-opts" id="ballSize" role="radiogroup" aria-label="Ball size"></div>
+        <label class="settings-check"><input type="checkbox" id="ballSquash" onchange="tkSetBall('squash',this.checked)"> Squash on landing</label>
+        <label class="settings-check"><input type="checkbox" id="ballHigh" onchange="tkSetBall('high',this.checked)"> Long syllables jump higher</label>
+        <label class="settings-check"><input type="checkbox" id="ballTrail" onchange="tkSetBall('trail',this.checked)"> Trail <span class="settings-hint">a fading tail along the arc</span></label>
+        <label class="settings-check"><input type="checkbox" id="ballRipple" onchange="tkSetBall('ripple',this.checked)"> Ripple where it lands</label>
+      </div>
     </div>
 
     <div class="settings-group">
       <div class="settings-group-title">Sound</div>
-      <div class="settings-label settings-sublabel">How lines are played <span class="settings-hint">tap to hear</span></div>
-      <div class="seg style-seg" id="styleSeg" role="radiogroup" aria-label="How lines are played">
-        <button type="button" class="seg-btn on" role="radio" aria-checked="true" data-style="strokes" onclick="pickStyle('strokes')">Strokes</button>
-        <button type="button" class="seg-btn" role="radio" aria-checked="false" data-style="groove" onclick="pickStyle('groove')">Groove</button>
+      <p class="settings-hint tk-layers-note">Layers: turn on any mix. The ribbon under a playing couplet has the same switches.</p>
+      <!-- the three styles before layers; kept (hidden) for their handler: pickStyle() sets the layers -->
+      <div class="seg style-seg hidden" id="styleSeg" role="radiogroup" aria-label="How lines are played">
+        <button type="button" class="seg-btn on" role="radio" aria-checked="true" data-style="strokes" onclick="pickStyle(settings.style==='groove'?'groove':'strokes')">Syllables</button>
         <button type="button" class="seg-btn" role="radio" aria-checked="false" data-style="tarannum" onclick="pickStyle('tarannum')">Tarannum</button>
       </div>
-      <p class="settings-hint style-desc" id="styleDesc"></p>
+      <p class="settings-hint style-desc hidden" id="styleDesc"></p>
 
-      <!-- Strokes: today's player -->
-      <div class="style-panel" id="stylePanelStrokes">
-        <div class="settings-label settings-sublabel">Voice</div>
+      <!-- Voice: a sound per syllable. Pause between feet = the meter laid out to study -->
+      <label class="settings-check tk-layer"><input type="checkbox" id="layerVoice" onchange="tkSet('voiceOn',this.checked)"> Voice <span class="settings-hint">each syllable sounded on its beat</span></label>
+      <div class="style-panel tk-sub" id="stylePanelStrokes">
         <div id="soundOpts" role="radiogroup" aria-label="Voice"></div>
-        <div class="settings-line">
-          <label class="settings-label" for="footGap">Pause between feet</label>
+        <label class="settings-check" id="styleGapRow">
+          <input type="checkbox" id="styleGap" onchange="tkSet('gapOn',this.checked)"> Pause between feet <span class="settings-hint" id="styleGapHint">the meter laid out to study; off, the line runs on</span>
+        </label>
+        <div class="settings-line" id="footGapLine">
+          <label class="settings-label" for="footGap">Pause</label>
           <input type="range" id="footGap" min="0" max="2" step="0.05" value="0.5" aria-label="Pause between feet, in beats">
           <span class="mono settings-value" id="footGapV">0.50</span>
         </div>
-        <label class="settings-check">
+        <label class="settings-check" id="footPulseRow">
           <input type="checkbox" id="footPulse" checked onchange="settings.footPulse=this.checked;store.set('settings',settings)"> Soft drum on each foot
         </label>
       </div>
 
-      <!-- Groove -->
+      <!-- kept for its ids: the groove voice now follows the Syllables voice -->
       <div class="style-panel hidden" id="stylePanelGroove">
         <div class="settings-label settings-sublabel">Strokes</div>
         <div id="grooveOpts" role="radiogroup" aria-label="Groove strokes"></div>
       </div>
 
-      <!-- Tarannum -->
-      <div class="style-panel hidden" id="stylePanelTarannum">
+      <!-- Melody (Tarannum): the couplet in a raga -->
+      <label class="settings-check tk-layer"><input type="checkbox" id="layerMelody" onchange="tkSet('melodyOn',this.checked)"> Melody <span class="settings-hint">the couplet sung in a raga (tarannum); the first line opens, the second answers home</span></label>
+      <div class="style-panel tk-sub hidden" id="stylePanelTarannum">
         <div class="settings-label settings-sublabel">Played on</div>
         <div class="seg style-seg" id="tarInstSeg" role="radiogroup" aria-label="Instrument"></div>
         <div class="settings-line">
@@ -56,15 +76,31 @@
           <span></span>
         </div>
         <p class="settings-hint style-mood" id="tarRagaMood"></p>
-        <label class="settings-check"><input type="checkbox" id="tarHarm" onchange="setStyleOpt('tarHarm',this.checked)"> Harmonium underneath</label>
+        <label class="settings-check"><input type="checkbox" id="tarHarm" onchange="tkSet('tarHarm',this.checked)"> Harmonium underneath</label>
         <label class="settings-check"><input type="checkbox" id="tarOrn" onchange="setStyleOpt('tarOrn',this.checked)"> Ornaments <span class="settings-hint">a new way each couplet: grace notes, glides, turns</span></label>
         <label class="settings-check" id="tarVowelsRow"><input type="checkbox" id="tarVowels" onchange="setStyleOpt('tarVowels',this.checked)"> Sing the vowels of the words</label>
       </div>
 
-      <!-- shared by groove and tarannum -->
-      <div class="style-panel hidden" id="stylePanelUnder">
-        <label class="settings-check"><input type="checkbox" id="styleDrone" onchange="setStyleOpt('drone',this.checked)"> Tanpura drone</label>
-        <label class="settings-check"><input type="checkbox" id="stylePulse" onchange="setStyleOpt('pulse',this.checked)"> Soft pulse on every beat</label>
+      <!-- what plays under the line, in every style -->
+      <div class="style-panel" id="stylePanelUnder">
+        <label class="settings-check tk-layer"><input type="checkbox" id="taalOn" onchange="tkSet('tabla',this.checked)"> Tabla theka <span class="settings-hint">a couplet played over a taal; the voice comes in on sam</span></label>
+        <div class="tk-sub" id="taalSub">
+          <div class="settings-line">
+            <label class="settings-label" for="taalSel">Taal</label>
+            <select id="taalSel" onchange="tkPickTaal(this.value)" aria-label="Taal"></select>
+            <span></span>
+          </div>
+          <div class="settings-line">
+            <label class="settings-label" for="taalEnd">Ending</label>
+            <select id="taalEnd" onchange="tkSet('taalEnd',this.value)" aria-label="Ending">
+              <option value="tihai">Tihai onto sam</option><option value="sam">Stop on sam</option><option value="loop">Loop the couplet</option>
+            </select>
+            <span></span>
+          </div>
+        </div>
+        <label class="settings-check tk-layer" id="styleDroneRow"><input type="checkbox" id="styleDrone" onchange="tkSet('drone',this.checked)"> Tanpura drone</label>
+        <label class="settings-check tk-layer" id="stylePulseRow"><input type="checkbox" id="stylePulse" onchange="tkSet('pulse',this.checked)"> Soft pulse on every beat <span class="settings-hint">when there is no tabla</span></label>
+        <p class="settings-hint tk-rule" id="taalRule"></p>
       </div>
 
       <div class="settings-line">

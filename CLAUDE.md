@@ -60,9 +60,18 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   (`collocSpelling` in `05-translit-helpers.js`). Judge changes with `scripts/colloc_benchmark.py` and `scripts/casual_roman_eval.js`
   (typed Roman → right Urdu word, table mined without the test poets). `tests/benchmark.js` `typed.*` goes the other way (Urdu → Roman)
   and cannot see them.
+- **Sound layers and the tabla** (`src/js/15c-taal.js`): every couplet ▶ in the reader, Scan, Look up and the Home example
+  (`tkWants`: those `pbToggle` keys, lines of 6+ syllables) plays on one clock (`tkGo`) with the layers on or off: voice,
+  melody (Tarannum), tabla theka, tanpura, harmonium, pulse. Each layer has its own gain, so a ribbon dot acts at once; the
+  tabla changes the timing, so it restarts the couplet. With the tabla, lines are laid on the taal by mātrās (`tkLay`,
+  Auto = `tkFits`), a cycle of theka first, a one-cycle tihai onto sam after. The ribbon under the playing couplet is the
+  mixer (stays when paused); the bouncing ball (`settings.ball`) rides every couplet. Drills, Learn and pattern ▶ keep
+  `play()`. `settings.style` is kept in step with the layers (`tkLegacy`) for the players that still read it. Strokes:
+  `data/tabla/` → `scripts/build_tabla_strokes.py` → `data/tabla_strokes.json` (credited on About).
+- Couplet and signature-verse lines shrink to stay on one line (`fitVerseLines`, `--vfit`, floor 0.62), alongside `fitChipRows`.
 - Navigating away stops playback (`pbCancel`). Last route is stored under `lastRoute`.
-- Persistence is `store` / `localStorage`: script, theme, settings (voice, tempo, foot gap, drum, ASCII; playing style
-  strokes/groove/tarannum and its options, `src/js/15b-tarannum.js`), `lastRoute`,
+- Persistence is `store` / `localStorage`: script, theme, settings (voice, tempo, foot gap, drum, ASCII; the sound layers
+  `voiceOn`/`melodyOn`/`tabla`/`drone`/`pulse`, `gapOn`, `taal`, `taalEnd`, `ball`; Tarannum's options, `src/js/15b-tarannum.js`), `lastRoute`,
   per-tab last sub-tab, `stats`, `poetLang` (Poets picker language).
 
 ## Gotchas

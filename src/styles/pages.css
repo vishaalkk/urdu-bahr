@@ -1126,7 +1126,7 @@ a.hb-ref:hover { color: var(--ink); }
 /* settings checkboxes as small switches */
 .settings-check { cursor: pointer; flex-wrap: wrap; }
 .settings-check input[type=checkbox] {
-  appearance: none; -webkit-appearance: none; margin: 0; flex: none;
+  appearance: none; -webkit-appearance: none; margin: 0; flex: none; min-height: 0; padding: 0;   /* the input rule in base.css would make it a 32px square */
   width: 30px; height: 18px; border-radius: 9px; background: var(--raise);
   border: 1px solid var(--line2); position: relative; cursor: pointer; transition: background .15s;
 }
