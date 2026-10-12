@@ -21,6 +21,7 @@ quick_suites() {
   echo "── Persian helpers";       node tests/persian_helpers.js 2>&1 | quiet
   echo "── chip transliteration";  node tests/chip_translit_consistency.js
   echo "── practice logic";        node tests/practice_logic.js
+  echo "── transcribe logic";      node tests/transcribe_logic.js
   echo "── learn examples";        node tests/learn_examples.js
   echo "── learn alignment";       node tests/learn_alignment.js
   echo "── learn render";          node tests/learn_render.js 2>&1 | quiet

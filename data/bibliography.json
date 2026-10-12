@@ -2,7 +2,7 @@
   "metadata": {
     "title": "Attributions & Scholarly Citations",
     "description": "Primary academic and computational sources powering the Urdu Meter Handbook and Interactive Studio.",
-    "entries_count": 11
+    "entries_count": 12
   },
   "entries": [
     {
@@ -122,16 +122,29 @@
     },
     {
       "id": "steingass_1892",
-      "tag": "Persian Pronunciation",
+      "tag": "Persian Lexicography & Pronunciation",
       "authors": [
         "Francis Joseph Steingass"
       ],
       "title": "A Comprehensive Persian-English Dictionary",
       "year": "1892",
-      "publisher_or_affiliation": "Routledge & K. Paul, London; digital edition: Digital Dictionaries of South Asia (University of Chicago); scraped by Theodore S. Beers (steingass-scraper, MIT)",
+      "publisher_or_affiliation": "Routledge & K. Paul, London. Digital edition: Digital Dictionaries of South Asia (University of Chicago); scraped by Theodore S. Beers (steingass-scraper, MIT License). Worldwide Public Domain (author 1825–1903).",
       "canonical_url": "https://dsal.uchicago.edu/dictionaries/steingass/",
       "related_project": "<a class=\"fran-link\" href=\"https://github.com/theodore-s-beers/steingass-scraper\" target=\"_blank\" rel=\"noopener\">steingass-scraper<span class=\"ext\">↗</span></a> (Theodore S. Beers)",
-      "summary": "Every headword with its classical pronunciation, short vowels and all. The Persian engine takes from it the syllable weights of some 3,000 words that neither the engine nor Sufinama's Roman reads right."
+      "summary": "Every Persian and Arabic loanword headword with its classical vocalization, short vowels and all. Public domain worldwide (published 1892; author died 1903). The Persian scansion engine (ScanFa) draws syllable weights for thousands of classical poetic forms from Steingass."
+    },
+    {
+      "id": "platts_1884",
+      "tag": "Classical Urdu, Hindi & Persian Lexicography",
+      "authors": [
+        "John Thompson Platts"
+      ],
+      "title": "A Dictionary of Urdū, Classical Hindī, and English",
+      "urdu_title": "لغات اردو، کلاسک ہندی اور انگریزی",
+      "year": "1884",
+      "publisher_or_affiliation": "W. H. Allen & Co., London. Digital edition: Digital Dictionaries of South Asia (University of Chicago). Worldwide Public Domain (author 1830–1904).",
+      "canonical_url": "https://dsal.uchicago.edu/dictionaries/platts/",
+      "summary": "The monumental trilingual dictionary of classical Urdu, Hindi, Arabic, and Persian vocabulary (52,521 headwords), cited by Frances Pritchett as the definitive authority on syllable division, etymology, and classical pronunciation. Public domain worldwide (published 1884; author died 1904). Scraped and cached locally via scripts/import_platts.py, with verified entries distilled into the app's offline transliteration and scansion pipeline."
     },
     {
       "id": "jahanshiri_grammar",

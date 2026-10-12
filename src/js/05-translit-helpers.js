@@ -8,9 +8,9 @@ function normVerseKey(str) {
     .replace(/[يى]/g, 'ی')
     .replace(/ك/g, 'ک')
     .replace(/[هۀۂە]/g, 'ہ')
-    .replace(/[āá]/g, 'aa')
-    .replace(/[īí]/g, 'ii')
-    .replace(/[ūú]/g, 'uu')
+    .replace(/[āáâ]/g, 'aa')
+    .replace(/[īíî]/g, 'ii')
+    .replace(/[ūúû]/g, 'uu')
     .replace(/[ñṅ]/g, 'n')
     .replace(/[ṭ]/g, 't')
     .replace(/[ḍ]/g, 'd')
@@ -133,9 +133,17 @@ function devToAscii(str) {
    every known ghazal word, most frequent spelling wins; see scripts/build_app.py, whose _casual_key this mirrors). Words typed
    WITH Pritchett's marks are left to the letter rules, which read them exactly. */
 const CASUAL_ALIAS = { ye: 'yih', yeh: 'yih', yah: 'yih', vo: 'vuh', wo: 'vuh', woh: 'vuh', voh: 'vuh', na: 'nah', pe: 'pah',
-  keh: 'kih', hua: 'hu))aa', kya: 'kyaa', dava: 'davaa', nadan: 'naadaa;n', nadaan: 'naadaa;n', naadaan: 'naadaa;n', dile: 'dil-e', aaxir: 'aa;xir', kahi: 'kahii;N', nahin: 'nahii;N', nahi: 'nahii;N', mein: 'me;N', main: 'mai;N', hai: 'hai', hain: 'hai;N', hun: 'huu;N', hoon: 'huu;N' };
+  keh: 'kih', hua: 'hu))aa', kya: 'kyaa', dava: 'davaa', nadan: 'naadaa;n', nadaan: 'naadaa;n', naadaan: 'naadaa;n', dile: 'dil-e', aaxir: 'aa;xir', kahi: 'kahii;N', nahin: 'nahii;N', nahi: 'nahii;N', mein: 'me;N', main: 'mai;N', hai: 'hai', hain: 'hai;N', hun: 'huu;N', hoon: 'huu;N',
+  kubra: 'kubr;aa', kubraa: 'kubr;aa', sughra: '.su;Gr;aa', sughraa: '.su;Gr;aa', uzma: '((u:zm;aa', uzmaa: '((u:zm;aa',
+  musa: 'muus;aa', musaa: 'muus;aa', fatwa: 'fatv;aa', fatwaa: 'fatv;aa', taqwa: 'taqv;aa', taqwaa: 'taqv;aa',
+  adna: 'adn;aa', adnaa: 'adn;aa', yahya: 'ya;hy;aa', yahyaa: 'ya;hy;aa', mujtaba: 'mujtab;aa', mujtabaa: 'mujtab;aa',
+  murtaza: 'murta:z;aa', murtazaa: 'murta:z;aa',
+  hum: 'ham', humein: 'hame;N', humne: 'ham ne', unko: 'un ko', inko: 'in ko', usko: 'us ko', isko: 'is ko',
+  aake: 'aa ke', jaake: 'jaa ke', hoke: 'ho ke', karke: 'kar ke', gayi: 'ga))ii', gayee: 'ga))ii',
+  padi: 'pa;Rii', pada: 'pa;Raa', pade: 'pa;Re',
+  garchi: 'garchih', garche: 'garchih' };
 function casualKey(s, level) {   // level 0 strict (long vowels kept), 1 loose, 2 lax (also o~u, e~i): mirrors _casual_key in build_app.py
-  s = s.normalize('NFC').toLowerCase().replace(/ā/g, 'aa').replace(/ī/g, 'ii').replace(/ū/g, 'uu').normalize('NFD').replace(/[̀-ͯ]/g, '')
+  s = s.normalize('NFC').toLowerCase().replace(/[āáâ]/g, 'aa').replace(/[īíî]/g, 'ii').replace(/[ūúû]/g, 'uu').normalize('NFD').replace(/[̀-ͯ]/g, '')
     .replace(/;g/g, 'gh').replace(/;x/g, 'kh').replace(/[;.:()'’‘ʿʾ-]/g, '').replace(/oo/g, 'uu').replace(/w/g, 'v');
   if (level >= 1) s = s.replace(/aa/g, 'a').replace(/ii/g, 'i').replace(/uu/g, 'u');
   if (level >= 2) s = s.replace(/o/g, 'u').replace(/e/g, 'i');
@@ -176,6 +184,32 @@ function rekhtaFallback(plain) {
   if (typeof ROMAN_FALLBACK === 'undefined') return null;
   return ROMAN_FALLBACK[casualKey(plain, 1)] || null;
 }
+/* One typed piece (a word, or one side of a hyphen) → {s, tier}: the ASCII-scheme spelling and which list answered, in the order
+   tried. tier: conn (e / ye / o joining a compound), typed (already marked, or one letter: the letter rules read it exactly),
+   known (Pritchett's lists, a neighbour rule, an alias), poets (the Rekhta poets' list), loose (her laxest match), guess (no list:
+   the letter rules). casualRomanLine takes .s; the Transcribe view (src/js/24-transcribe.js) also shows .tier. */
+function casualPiece(piece, i, tokHasHyphen, prev, next) {
+  const plain = piece.toLowerCase().replace(/[āáâ]/g, 'ā').replace(/[īíî]/g, 'ī').replace(/[ūúû]/g, 'ū');
+  if (i > 0 && (plain === 'e' || plain === 'ye' || plain === 'o')) return { s: piece, tier: 'conn' };
+  if (plain.length < 2 || !/^[a-zāīū.]+$/.test(plain) || CASUAL_SPECIAL.test(piece)) return { s: rekhtaMarks(piece), tier: 'typed' };
+  if (!tokHasHyphen) {   // hyphenated compounds keep their own pieces
+    const c = collocSpelling(casualKey(plain, 1), prev, next);
+    if (c) return { s: c, tier: 'known' };
+  }
+  if (plain === 'ki') {   // کہ (that) or کی (of): the next word decides where the corpora know it (KI_NEXT); کی is the commoner reading
+    // overall (54% of Pritchett's, 69% of Rekhta's poets), so it is the default when the next word is unknown
+    const n = (typeof KI_NEXT !== 'undefined' && KI_NEXT[casualKey(next.split('-')[0], 1)]) || null;
+    return { s: n ? (n[1] > 2 * n[0] ? 'kii' : 'kih') : 'kii', tier: 'known' };
+  }
+  if (CASUAL_ALIAS[plain]) return { s: CASUAL_ALIAS[plain], tier: 'known' };
+  /* Pritchett's strict and loose matches, then the poets' verified word list, and only then her laxest match (o~u, e~i), which
+     otherwise hijacks khud as khod (کھود) */
+  let h;
+  if ((h = casualLookup(plain, 0, 1))) return { s: h, tier: 'known' };
+  if ((h = rekhtaFallback(plain))) return { s: h, tier: 'poets' };
+  if ((h = casualLookup(plain, 2, 2))) return { s: h, tier: 'loose' };
+  return { s: rekhtaMarks(piece), tier: 'guess' };
+}
 function casualRomanLine(line) {
   const toks = line.split(/(\s+)/), words = toks.filter(t => t && !/^\s+$/.test(t));
   let wi = 0;
@@ -183,24 +217,8 @@ function casualRomanLine(line) {
     if (!tok || /^\s+$/.test(tok)) return tok;
     const next = words[++wi] || '', prev = words[wi - 2] || '';
     tok = tok.replace(/^['’‘]+|['’‘]+$/g, '');   // a quoted takhallus: 'dāġh'
-    return tok.split('-').map((piece, i) => {
-      const plain = piece.toLowerCase();
-      if (i > 0 && (plain === 'e' || plain === 'ye' || plain === 'o')) return piece;
-      if (plain.length < 2 || !/^[a-zāīū.]+$/.test(plain) || CASUAL_SPECIAL.test(piece)) return rekhtaMarks(piece);
-      if (!tok.includes('-')) {   // hyphenated compounds keep their own pieces
-        const c = collocSpelling(casualKey(plain, 1), prev, next);
-        if (c) return c;
-      }
-      if (plain === 'ki') {   // کہ (that) or کی (of): the next word decides where the corpora know it (KI_NEXT); کی is the commoner reading
-        // overall (54% of Pritchett's, 69% of Rekhta's poets), so it is the default when the next word is unknown
-        const n = (typeof KI_NEXT !== 'undefined' && KI_NEXT[casualKey(next.split('-')[0], 1)]) || null;
-        return n ? (n[1] > 2 * n[0] ? 'kii' : 'kih') : 'kii';
-      }
-      if (CASUAL_ALIAS[plain]) return CASUAL_ALIAS[plain];
-      /* Pritchett's strict and loose matches, then the poets' verified word list, and only then her laxest match (o~u, e~i), which
-         otherwise hijacks khud as khod (کھود) */
-      return casualLookup(plain, 0, 1) || rekhtaFallback(plain) || casualLookup(plain, 2, 2) || rekhtaMarks(piece);
-    }).join('-');
+    const hyph = tok.includes('-');
+    return tok.split('-').map((piece, i) => casualPiece(piece, i, hyph, prev, next).s).join('-');
   }).join('');
   return out.replace(/(\S)\s+o\s+(\S)/g, '$1-o-$2');   // dard o gham -> dard-o-gham (the conjunction و)
 }
@@ -219,9 +237,9 @@ function romanToAscii(str) {
        .replace(/\bdava\b/g, 'davaa')
        .replace(/\baaxir\b/g, 'aa;xir')
        .replace(/\bnaadaan\b/g, 'naadaa;n')
-       .replace(/ā/g, 'aa')
-       .replace(/ī/g, 'ii')
-       .replace(/ū/g, 'uu')
+       .replace(/[āáâ]/g, 'aa')
+       .replace(/[īíî]/g, 'ii')
+       .replace(/[ūúû]/g, 'uu')
        .replace(/ñ/g, ';n')
        .replace(/ġh|ġ/g, ';g')
        .replace(/ḳh|ḳ/g, ';x')
@@ -315,7 +333,17 @@ const UR_WORDS = new Set('ہے ہیں میں کا کی کے سے نے کو تھ�
    - final -ای after ā is the iẓāfat (or yā) -ye, as Urdu writes it ائے (سودای saudā-ye, دعای, برای);
    - کاین is ke + īn, one syllable (کیں kīn); توی is tu-yī ("you are"), not ū + y.
    Punctuation goes first: the engine would read ، or ؟ as a letter (دل، as two syllables). */
-const FA_PREVERB = /(^|[\s\u200c])(بر|در|فرا|فرو)(?=(افشان|انداز|انداخت|افروز|افروخت|افکن|افگن|افت|اوفت|انگیز|انگیخت|افراز|افراشت|اندیش|ایست))/g;
+const FA_METER_RANK = {
+  29: 100, 27: 95, 11: 90, 10: 85, 33: 80, 34: 80,
+  5: 75, 14: 70, 15: 70, 18: 65, 19: 65, 26: 60,
+  8: 55, 1: 45, 9: 45, 24: 40, 4: 35, 28: 30, 16: 20, 17: 20
+};
+function getFaMeterPopularity(id) {
+  const s = String(id);
+  if (s.startsWith('R')) return 50;
+  return FA_METER_RANK[s] || 0;
+}
+const FA_PREVERB = /(^|[\s\u200c])(بر|در|فرا|فرو|باز|پیش)(?=(آمد|آید|آورد|افشان|انداز|انداخت|افروز|افروخت|افکن|افگن|افت|اوفت|انگیز|انگیخت|افراز|افراشت|اندیش|ایست|نگذر|نگرد|ندار|نرو|نبین|نشنو|نمان|نرس|نگوی|نخواه|گذر|گذشت|گشای|گشود|خورد|خوان|شنو|پذیر|گرد|گشت))/g;
 const FA_AVI = /^(قوی|معنوی|علوی|نبوی|دنیوی|اخروی|لغوی|مولوی|ثانوی|پهلوی|نحوی|دعوی|تقوی|فتوی|سلوی|عیسوی|موسوی|اموی|بدوی|خسروی|کسروی)$/;
 function faIranianSpelling(s) {
   return s.replace(/[،؛؟!?.:«»"“”()…]+/g, ' ').replace(/ه\u200cا?ست(?=$|[\s،.!؟])/g, 'ست')
@@ -327,7 +355,16 @@ function faIranianSpelling(s) {
     })
     .replace(/(^|[\s\u200c])([^\s\u200c]+ا)ی(?=$|[\s\u200c])/g, '$1$2ئے')
     .replace(/(^|[\s\u200c])کاین(?=$|[\s\u200c])/g, '$1کیں')
-    .replace(/([^\s\u200c])آ/g, '$1 آ')
+    .replace(/(^|[\s\u200c])کارام(?=$|[\s\u200c])/g, '$1کہ آرام')
+    .replace(/(^|[\s\u200c])(چونکه|چونکہ|چونک)(?=$|[\s\u200c])/g, '$1چوں کہ')
+    .replace(/(^|[\s\u200c])(زانکه|زانکہ|زانک)(?=$|[\s\u200c])/g, '$1از آں کہ')
+    .replace(/(^|[\s\u200c])یکدیگرند(?=$|[\s\u200c])/g, '$1یک دیگرند')
+    .replace(/(^|[\s\u200c])یکدیگر(?=$|[\s\u200c])/g, '$1یک دیگر')
+    .replace(/ذوال/g, 'ذو ال')
+    .replace(/([^\s\u200c])آ/g, (m, c, at, str) => {
+      const w = (str.slice(0, at + m.length).match(/\S+$/) || [''])[0];
+      return /^(مرآ|قرآ|مآ)/.test(w) ? m : c + ' آ';
+    })
     .replace(FA_PREVERB, '$1$2 ');
 }
 function faScanText(s) { return faProsodyText(faScanSpelling(s)); }
@@ -421,6 +458,7 @@ function faScanFits(S, text, opts) {
   /* liaison changes the words, so its fit only lends its cost to a fit of the line as written (or carries `liaison`); a guessed
      iẓāfat keeps the words, so its fit (syllables and all) stands, marked `izafat` with the text it scanned */
   const add = (fits, how, t, extra) => (fits || []).forEach(f => {
+    if (f.meter && f.meter.id === 'H') return;
     const k = String(f.meter.id), had = best.get(k), c = f.c + extra;
     if (had && c >= had.c - 1e-9) return;
     if (how === 'liaison') best.set(k, had ? Object.assign({}, had, { c }) : Object.assign({}, f, { c, liaison: t }));
@@ -461,7 +499,14 @@ function faScanFits(S, text, opts) {
       try { keep(S.scanLine(t).fits, t); if (mz) keep(faMustazadScan(S, t, mz).fits, t); } catch (e) { /* unreadable variant */ }
     }
   }
-  return [...best.values()].sort((a, b) => a.c - b.c);
+  const nonHindi = [...best.values()].filter(f => f.meter.id !== 'H');
+  return nonHindi.sort((a, b) => {
+    const diff = a.c - b.c;
+    if (Math.abs(diff) > 0.05) return diff;
+    const popA = getFaMeterPopularity(a.meter.id);
+    const popB = getFaMeterPopularity(b.meter.id);
+    return (popB - popA) || diff;
+  });
 }
 window.faLiaisonVariants = faLiaisonVariants;
 window.faScanFits = faScanFits;
@@ -557,10 +602,23 @@ function faRefrainVariants(text) {
 }
 window.faRefrainVariants = faRefrainVariants;
 
+const FA_RO_WORDS = new Set('kuja kujaa kujā kujast ast nest nist nīst hast ra rā az andar chu chun chūn chih bavad shud gasht kunad amad āmad raft did dīd guft shunid shunīd daram dāram darad dārad nami namī shuma shumā ishan īshān chunīn chunin chunān chunan biyo biya agar dast ba'.split(' '));
+const UR_RO_WORDS = new Set('hai hain huu huun huuñ tha thi the thii thaa ka kaa kā ki kii kī ke ko se ne kya kyaa kyā kyun kyuuñ nahi nahin nahīñ mat ye yeh voh woh vo ab kab jab tab bhi bhī hi hī to hua huaa huā hona hota hoti hote raha rahi rahe gaya gayi gaye chahiye apna apne apni mera meri mere tera teri tere hum ham kuch kuchh koi koī tujhe mujhe'.split(' '));
+
 function detectScanLang(text) {
   const t = String(text || '');
   if (/[\u200cيكۀ]|هٔ|ه(?=$|[\s،۔])/.test(t)) return 'fa';
   let f = 0, u = 0;
+  if (/[a-zA-Z]/.test(t)) {
+    const toks = t.toLowerCase().replace(/['’‘]/g, '').split(/[\s\-.,;:!?"“”«»–—…]+/g).filter(Boolean);
+    toks.forEach(w => {
+      if (FA_RO_WORDS.has(w)) f++;
+      if (UR_RO_WORDS.has(w)) u++;
+      if (/(?:at|am|ash)$/.test(w) && w.length >= 4) f += 0.5;
+      if (w === 'man' || w === 'tu' || w === 'tū') f += 0.5;
+    });
+    return f >= 1.5 && f > u ? 'fa' : 'ur';
+  }
   t.split(/[\s،۔؟!]+/).forEach(w => { const k = w.replace(/ہ/g, 'ه').replace(/ے/g, 'ی'); if (FA_WORDS.has(k) || FA_WORDS.has(w)) f++; if (UR_WORDS.has(w)) u++; });
   return f >= 2 && f > u ? 'fa' : 'ur';
 }
@@ -839,7 +897,8 @@ function urduToDevanagari(str) {
     [/دھ/g, 'ध'], [/ڈھ/g, 'ढ'], [/کھ/g, 'ख'], [/گھ/g, 'घ'], [/ڑھ/g, 'ढ़'],
     [/کیا/g, 'क्या'], [/کیوں/g, 'क्यों'], [/ہے/g, 'है'], [/ہیں/g, 'हैं'], [/تھے/g, 'थे'],
     [/تھی/g, 'थी'], [/تھا/g, 'था'], [/مجھ/g, 'मुझ'], [/تجھ/g, 'तुझ'], [/کچھ/g, 'कुछ'],
-    [/دلِ/g, 'दिल-ए'], [/ہوا/g, 'हुआ'], [/دوا/g, 'दवा'], [/ناداں/g, 'नादाँ'], [/تجھے/g, 'तुझे']
+    [/دلِ/g, 'दिल-ए'], [/ہوا/g, 'हुआ'], [/دوا/g, 'दवा'], [/ناداں/g, 'नादाँ'], [/تجھے/g, 'तुझे'],
+    [/[یى]ٰ/g, 'ा']
   ];
   let s = str;
   multiMap.sort((a, b) => b[0].source.length - a[0].source.length);
@@ -876,7 +935,8 @@ function urduToRoman(str) {
     [/دھ/g, 'dh'], [/ڈھ/g, 'ḍh'], [/کھ/g, 'kh'], [/گھ/g, 'gh'], [/ڑھ/g, 'ṛh'],
     [/کیا/g, 'kyā'], [/کیوں/g, 'kyūñ'], [/ہے/g, 'hai'], [/ہیں/g, 'haiñ'], [/تھے/g, 'the'],
     [/تھی/g, 'thī'], [/تھا/g, 'thā'], [/مجھ/g, 'mujh'], [/تجھ/g, 'tujh'], [/کچھ/g, 'kuchh'],
-    [/دلِ/g, 'dil-e'], [/ہوا/g, 'huʾā'], [/دوا/g, 'davā'], [/ناداں/g, 'nādāñ'], [/تجھے/g, 'tujhe']
+    [/دلِ/g, 'dil-e'], [/ہوا/g, 'huʾā'], [/دوا/g, 'davā'], [/ناداں/g, 'nādāñ'], [/تجھے/g, 'tujhe'],
+    [/[یى]ٰ/g, 'ā']
   ];
   let s = str;
   multiMap.sort((a, b) => b[0].source.length - a[0].source.length);

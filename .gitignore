@@ -50,8 +50,10 @@ bahr_circles_mockup.html
 # Ganjoor API responses cached by scripts/build_fa_testset.py: local only
 data/ganjoor_cache/
 data/steingass_cache/
+data/platts_cache/
 # review file from scripts/compare_sufinama_ganjoor.py: local only
 data/sufinama_ganjoor_diff.json
+data/dictionary_bundle.json
 
 # Generated ear-lab mockups (features/ear-lab/README.md has the command)
 features/ear-lab/taal.html

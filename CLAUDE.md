@@ -37,7 +37,7 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
 | `#/scan` | Scan (`?g=ghalib/21` scans a ghazal by reference) |
 | `#/ghazals/{collection}[/{id}]` | List and reader; collection = `handbook`, `ghalib`, `mir` or a poet key (`jaun`, `faiz`, …; the Poets ▾ picker). `#/ghazals/others[/N]` redirects. Query: `?meter=<id>&q=<text>` |
 | `#/guide`, `#/about` | How to use; sources and scanner accuracy |
-| `#/lab/tap`, `#/lab/practice` | Unlinked/experimental |
+| `#/lab/tap`, `#/lab/practice`, `#/lab/transcribe` | Unlinked/experimental (`?t=<text>` pre-fills the Transliterator) |
 | `#/handbook/chN` | Redirects to that chapter on Pritchett's site (no in-app reader) |
 
 - **Poets** (Rekhta): `data/poets_extended.json`, built by `scripts/build_poets.py`, is the shipped data (one collection per poet; ids
@@ -56,6 +56,12 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   Persian word list `data/fa_lexicon.json` (`scripts/build_fa_lexicon.js`) for Fārsī Roman/Devanagari only.
   Steingass's dictionary (`scripts/import_steingass.py` → `data/fa_steingass.tsv`) adds classical readings to ScanFa, add-only.
   `scripts/compare_sufinama_ganjoor.py` lists where Sufinama's words differ from Ganjoor's (a review file; nothing is applied).
+- **Transliterator** (`src/js/24-transcribe.js`, `#/lab/transcribe`): a whole text between Roman (casual or diacritics), Urdu script,
+  Fārsī script and Devanagari, in any direction, no scansion. Persian-script lines read the Persian list first; Fārsī output is
+  `trUrToFa` (Urdu letters in Persian orthography). It adds no reading of its own: words come from Scan's pipeline (`romanToAscii`, `asciiToScripts`),
+  and each word's tier (known / poets / loose / guess) is what `casualPiece` reports, the same chain `casualRomanLine` uses. Guessed
+  words are filled from `FA_LEXICON` (Persian list, `trFaRo` turns its dots into ʿ ʾ); the user's corrections are kept per spelling
+  (`store` key `trChoices`). Logic: `tests/transcribe_logic.js`.
 - **Collocations**: `data/collocations.json` (`scripts/build_collocations.py`) holds neighbour rules for typed Roman
   (`collocSpelling` in `05-translit-helpers.js`). Judge changes with `scripts/colloc_benchmark.py` and `scripts/casual_roman_eval.js`
   (typed Roman → right Urdu word, table mined without the test poets). `tests/benchmark.js` `typed.*` goes the other way (Urdu → Roman)

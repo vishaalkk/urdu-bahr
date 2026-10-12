@@ -125,7 +125,10 @@ function handleRoute(targetHash) {
     'about': 'about-section',
     'guide': 'guide-section',
     'how-to-use': 'guide-section',
-    'lab': (parts[1] === 'practice' ? 'practice-section' : 'tap-section')
+    'transcribe': 'transcribe-section',
+    'dictionary': 'dictionary-section',
+    'lexicon': 'dictionary-section',
+    'lab': (parts[1] === 'practice' ? 'practice-section' : parts[1] === 'transcribe' ? 'transcribe-section' : parts[1] === 'dictionary' ? 'dictionary-section' : 'tap-section')
   };
 
   // Hide all sections, show active
@@ -195,6 +198,12 @@ function handleRoute(targetHash) {
     const sub = parts[2] === 'match' ? 'match' : 'tap';
     if (typeof document !== 'undefined') document.title = 'Practice — Baḥr';
     showPracticeSub(sub, params);
+  } else if ((root === 'lab' && parts[1] === 'transcribe') || root === 'transcribe') {
+    if (typeof document !== 'undefined') document.title = 'Transliterator — Baḥr';
+    if (typeof mountTranscribe === 'function') mountTranscribe(params);
+  } else if ((root === 'lab' && parts[1] === 'dictionary') || root === 'dictionary' || root === 'lexicon') {
+    if (typeof document !== 'undefined') document.title = 'Dictionary — Baḥr';
+    if (typeof renderLexiconSection === 'function') renderLexiconSection();
   } else if (root === 'lab' && parts[1] === 'tap') {
     if (typeof document !== 'undefined') document.title = 'Tap Along — Baḥr';
     if (typeof echoNew === 'function') echoNew();

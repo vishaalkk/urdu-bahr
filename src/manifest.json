@@ -7,6 +7,7 @@
     "src/styles/drill.css",
     "src/styles/home.css",
     "src/styles/practice.css",
+    "src/styles/transcribe.css",
     "src/styles/circles.css"
   ],
   "body": [
@@ -25,6 +26,8 @@
     "src/body/guide.html",
     "src/body/tap.html",
     "src/body/practice.html",
+    "src/body/transcribe.html",
+    "src/body/dictionary.html",
     "src/body/footer.html",
     "src/body/nav.html",
     "src/body/settings.html"
@@ -55,6 +58,7 @@
     "src/js/20b-weight-corpus.js",
     "src/js/21-learn.js",
     "src/js/22-drill.js",
-    "src/js/23-practice.js"
+    "src/js/23-practice.js",
+    "src/js/24-transcribe.js"
   ]
 }

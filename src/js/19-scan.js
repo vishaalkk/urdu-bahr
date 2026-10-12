@@ -369,6 +369,12 @@ function urduWordsToScripts(line){
   }
   return {hi:hi.join(' '), ro:ro.join(' ')};
 }
+/* an ASCII-scheme string in the three scripts (Pue's parsers); '' for a script whose parser is missing or fails */
+function asciiToScripts(asc){
+  const out = { ur: '', hi: '', ro: '' };
+  [['ur', 'p_ur'], ['hi', 'p_hi'], ['ro', 'p_di']].forEach(([k, p]) => { try { if(window[p]) out[k] = window[p].parse(asc); } catch(e){} });
+  return out;
+}
 /* one typed line → {ur, hi, ro, ascii, isApprox}: a known corpus verse verbatim, else
    Pue's parsers on the word-map ASCII, else word by word. opts.skipKnown bypasses the
    verbatim lookup (tests/benchmark.js uses it to measure the fallbacks on Fran's lines). */
@@ -400,22 +406,14 @@ function lineScripts(rawL, opts){
     }
   } else if(/[\u0900-\u097F]/.test(rawL)) {
     const asc = (typeof devToAscii==='function') ? devToAscii(rawL) : rawL;
-    let ur = '';
-    try { if(window.p_ur) ur = window.p_ur.parse(asc); } catch(e){}
-    let ro = '';
-    try { if(window.p_di) ro = window.p_di.parse(asc); } catch(e){}
-    urduL = ur || rawL;
-    lineObj = { ur: urduL, hi: rawL, ro: ro || rawL, ascii: asc };
+    const t = asciiToScripts(asc);
+    urduL = t.ur || rawL;
+    lineObj = { ur: urduL, hi: rawL, ro: t.ro || rawL, ascii: asc };
   } else {
     const asc = (typeof romanToAscii==='function') ? romanToAscii(rawL) : rawL;
-    let ur = '';
-    try { if(window.p_ur) ur = window.p_ur.parse(asc); } catch(e){}
-    let hi = '';
-    try { if(window.p_hi) hi = window.p_hi.parse(asc); } catch(e){}
-    let ro = '';
-    try { if(window.p_di) ro = window.p_di.parse(asc); } catch(e){}
-    urduL = ur || rawL;
-    lineObj = { ur: urduL, hi: hi || rawL, ro: ro || rawL, ascii: asc };
+    const t = asciiToScripts(asc);
+    urduL = t.ur || rawL;
+    lineObj = { ur: urduL, hi: t.hi || rawL, ro: t.ro || rawL, ascii: asc };
   }
   return lineObj;
 }

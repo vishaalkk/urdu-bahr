@@ -56,18 +56,82 @@ for (const [typed, base, ur, n] of pairs) {
     e.words.set(norm(ur), w);
     byKey.set(k, e);
 }
+
+/* Platts (1884) scholarly Roman -> Pritchett ASCII conversion */
+function plattsToAscii(ro) {
+    if (!ro) return '';
+    let s = ro.trim().toLowerCase();
+    s = s.replace(/k[̱_]h[̱_]|ḵẖ|k͟h/g, ';x').replace(/g[̱_]h[̱_]|g̱ẖ|g͟h/g, ';g');
+    s = s.replace(/ḵ/g, ';x').replace(/ġ/g, ';g');
+    s = s.replace(/ćh/g, 'chh').replace(/ć/g, 'ch');
+    s = s.replace(/ś|ṣh/g, 'sh').replace(/ṣ/g, '.s');
+    s = s.replace(/ż|ẕ/g, ';z').replace(/ẓ/g, '.z');
+    s = s.replace(/z̤/g, ':z').replace(/t̤/g, ':t').replace(/ṭ/g, ';t').replace(/ḍ/g, ';d').replace(/ṛ/g, ';r');
+    s = s.replace(/ḥ/g, ';h').replace(/s̱|ṡ/g, ';s');
+    s = s.replace(/ā/g, 'aa').replace(/ī/g, 'ii').replace(/ū/g, 'uu');
+    s = s.replace(/[ñn̐ṅṉ]/g, ';n');
+    s = s.replace(/[ʻ‘ʿ]/g, '((').replace(/[ʼ’ʾ]/g, '))');
+    s = s.replace(/w/g, 'v');
+    return s;
+}
+
+const plattsFile = path.join(root, 'data/ur_platts.tsv');
+const plattsMap = new Map();
+if (fs.existsSync(plattsFile)) {
+    const lines = fs.readFileSync(plattsFile, 'utf8').split('\n').slice(1);
+    for (const l of lines) {
+        const parts = l.split('\t');
+        if (parts.length < 5) continue;
+        const [ur, hi, ro, origin] = parts;
+        if (!ur || !ro || ur.includes(' ') || ro.includes(' ') || ro.includes('-')) continue;
+        const k = key1(ro);
+        if (!k || k.length < 2) continue;
+        const asc = plattsToAscii(ro);
+        if (!asc) continue;
+        if (!plattsMap.has(k)) plattsMap.set(k, { ur: norm(ur), asc, origin });
+    }
+}
+
 const result = {};
-let tried = 0, kept = 0;
+let tried = 0, kept = 0, keptPlatts = 0;
 for (const [k, e] of byKey) {
-    if (e.total < 2) continue;
     const [ur, w] = [...e.words.entries()].sort((a, b) => b[1].n - a[1].n)[0];
-    tried++;
-    for (const cand of candidates(w.base)) {
-        run(`ROMAN_FALLBACK[${JSON.stringify(k)}] = ${JSON.stringify(cand)}`);
-        const got = norm((run(`lineScripts(${JSON.stringify(w.typed)}, { skipKnown: true })`) || {}).ur || '');
-        if (got === ur) { result[k] = cand; kept++; break; }
+    let matched = false;
+    if (e.total >= 2) {
+        tried++;
+        for (const cand of candidates(w.base)) {
+            run(`ROMAN_FALLBACK[${JSON.stringify(k)}] = ${JSON.stringify(cand)}`);
+            const got = norm((run(`lineScripts(${JSON.stringify(w.typed)}, { skipKnown: true })`) || {}).ur || '');
+            if (got === ur) { result[k] = cand; kept++; matched = true; break; }
+        }
+    }
+    if (!matched) {
+        const p = plattsMap.get(k);
+        if (p && p.ur === ur) {
+            run(`ROMAN_FALLBACK[${JSON.stringify(k)}] = ${JSON.stringify(p.asc)}`);
+            const got = norm((run(`lineScripts(${JSON.stringify(w.typed)}, { skipKnown: true })`) || {}).ur || '');
+            if (got === ur) { result[k] = p.asc; keptPlatts++; matched = true; }
+        }
     }
     run(`delete ROMAN_FALLBACK[${JSON.stringify(k)}]`);
 }
+
+// Add high-value classical Persian and Arabic words from Platts not already in result (budget-capped)
+let keptPlattsClassical = 0;
+for (const [k, p] of plattsMap) {
+    if (Object.keys(result).length >= 3600) break;
+    if (fran1[k] || result[k]) continue;
+    if (p.origin === 'P' || p.origin === 'A') {
+        run(`ROMAN_FALLBACK[${JSON.stringify(k)}] = ${JSON.stringify(p.asc)}`);
+        const got = norm((run(`lineScripts(${JSON.stringify(k)}, { skipKnown: true })`) || {}).ur || '');
+        if (got === p.ur) {
+            result[k] = p.asc;
+            keptPlattsClassical++;
+        }
+    }
+    run(`delete ROMAN_FALLBACK[${JSON.stringify(k)}]`);
+}
+
 fs.writeFileSync(out, JSON.stringify(result) + '\n');
-console.log(`${kept} verified of ${tried} gap words tried (${(100 * kept / tried).toFixed(0)}%) -> ${out}`);
+console.log(`${kept} base verified (${(100 * kept / tried).toFixed(0)}%), ${keptPlatts} rescued by Platts in Rekhta, ${keptPlattsClassical} classical Platts entries added (${Object.keys(result).length} total) -> ${out}`);
+

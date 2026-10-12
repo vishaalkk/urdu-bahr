@@ -56,10 +56,11 @@ jobs:
 
       - name: Stage public site
         run: |
-          mkdir -p _site
+          mkdir -p _site _site/data
           cp index.html .nojekyll og-image.png CNAME _site/
-          # Not published: src/ scripts/ data/ source_data/ docs/ tests/ —
-          # everything the app needs is compiled into index.html.
+          cp data/dictionary_bundle.json.gz _site/data/
+          # Not published: src/ scripts/ source_data/ docs/ tests/ —
+          # index.html holds the core application; data/ holds offline lazy assets.
 
       - name: Upload artifact
         if: github.event_name != 'pull_request'

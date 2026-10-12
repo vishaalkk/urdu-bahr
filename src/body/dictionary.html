@@ -1,0 +1,26 @@
+<section id="dictionary-section" class="tab-view" style="display:none">
+  <div class="card lookup-head-card">
+    <div class="tag-row" style="margin-bottom: var(--sp-2);">
+      <a href="#/home" class="btn link sm" style="padding-left:0;">&larr; Home</a>
+    </div>
+    <h2 class="section-title lookup-title">Classical Dictionary</h2>
+    <div class="dim small lookup-desc">
+      Platts (1884) &amp; Steingass (1892): 117,795 classical Urdu, Persian, Arabic, and Hindi headwords with English definitions, etymology, and 28,300+ poetic idioms.
+    </div>
+    <div class="row lookup-search-row">
+      <input type="text" id="lexSearchInput" aria-label="Search dictionary" class="dict-search-input" oninput="onLexiconSearch()" placeholder="Search in Urdu, Roman, Devanagari, or English…">
+    </div>
+    <div class="row lookup-tag-row" id="lexTagRow" style="display: flex; gap: var(--sp-2); margin-top: var(--sp-2); flex-wrap: wrap;">
+      <button type="button" class="tagbtn on" id="lexTagAll" onclick="filterLexiconOrigin('all')">All Origins</button>
+      <button type="button" class="tagbtn" id="lexTagP" onclick="filterLexiconOrigin('P')">Persian (P)</button>
+      <button type="button" class="tagbtn" id="lexTagA" onclick="filterLexiconOrigin('A')">Arabic (A)</button>
+      <button type="button" class="tagbtn" id="lexTagS" onclick="filterLexiconOrigin('S')">Sanskrit (S)</button>
+      <button type="button" class="tagbtn" id="lexTagH" onclick="filterLexiconOrigin('H')">Hindi (H)</button>
+    </div>
+  </div>
+  <div id="lexList" class="dict-list"></div>
+  <div class="go-deeper card small">
+    <span class="go-deeper-tag mono tiny">Bibliography</span>
+    <p class="go-deeper-links"><a href="#/about">John T. Platts (1884) &amp; Francis J. Steingass (1892) &rarr;</a></p>
+  </div>
+</section>

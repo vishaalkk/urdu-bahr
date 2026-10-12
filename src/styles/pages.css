@@ -1007,6 +1007,22 @@ a.hb-ref:hover { color: var(--ink); }
 .dict-mean { line-height: 1.5; font-family: var(--sans); }
 .dict-empty { padding: var(--sp-4) 0; text-align: center; font-family: var(--sans); }
 
+.dict-load-card { margin-top: var(--sp-4); text-align: center; padding: var(--sp-5) var(--sp-4); border: 1px dashed var(--line2); background: var(--bg2); border-radius: var(--rad, 8px); }
+.dict-lex-entry { display: flex; flex-direction: column; padding: var(--sp-3) 0; border-bottom: 1px solid var(--line); gap: var(--sp-1); }
+.dict-lex-entry:first-child { border-top: 1px solid var(--line); }
+.dict-lex-head { display: flex; align-items: baseline; gap: var(--sp-3); flex-wrap: wrap; }
+.dict-lex-badge { font-size: 11px; padding: 2px 6px; border-radius: 4px; font-family: var(--mono); font-weight: 600; text-transform: uppercase; }
+.dict-lex-badge.origin-P { background: rgba(59, 130, 246, 0.14); color: #2563eb; }
+.dict-lex-badge.origin-A { background: rgba(16, 185, 129, 0.14); color: #059669; }
+.dict-lex-badge.origin-S { background: rgba(245, 158, 11, 0.14); color: #d97706; }
+.dict-lex-badge.origin-H { background: rgba(139, 92, 246, 0.14); color: #7c3aed; }
+.dict-lex-badge.origin-default { background: var(--bg2); color: var(--dim); }
+.dict-lex-page { font-size: 11px; color: var(--faint); font-family: var(--mono); margin-left: auto; }
+.dict-lex-def { font-size: 14px; line-height: 1.5; color: var(--ink); font-family: var(--sans); }
+.dict-lex-phrases { margin-top: var(--sp-2); padding-left: var(--sp-3); border-left: 2px solid var(--line2); font-size: 13px; display: flex; flex-direction: column; gap: 4px; }
+.dict-lex-phr-item { color: var(--dim); }
+.dict-lex-phr-ro { font-weight: 500; color: var(--ink); font-family: var(--serif); font-style: italic; }
+
 /* ============================================================
    Meter page
    ============================================================ */

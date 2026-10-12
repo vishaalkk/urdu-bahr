@@ -1,0 +1,29 @@
+<!-- ===================== TRANSCRIBE (Route #/lab/transcribe) ===================== -->
+<section id="transcribe-section" class="tab-view" style="display:none;">
+  <div class="page-head">
+    <h1 class="page-title">Transliterator</h1>
+    <p class="lede dim small">Between Roman with diacritics, Urdu script, Fārsī script and Devanagari, in any direction. Paste a text in any of them, casual Roman included, and choose what to see. Words no list knows are underlined: tap one to choose another spelling.</p>
+  </div>
+
+  <textarea id="trIn" rows="6" class="scan-input tr-input-area" spellcheck="false" autocapitalize="off" placeholder="Paste text in Roman, Urdu, Fārsī or Hindi, one line to a line" oninput="trOnInput()"></textarea>
+
+  <div class="row tr-controls">
+    <div class="tr-script-switch" id="trScriptBtns" role="group" aria-label="Script to show"></div>
+    <div id="trActions" class="tr-actions hidden">
+      <button type="button" class="btn sm" onclick="trCopy()">Copy</button>
+      <button type="button" class="btn ghost sm" onclick="trClear()">Clear</button>
+      <span id="trStats" class="tiny faint"></span>
+      <span id="trMsg" class="tiny faint tr-msg" role="status" aria-live="polite"></span>
+    </div>
+  </div>
+
+  <div id="trEmpty" class="scan-samples">
+    <span class="tiny muted">Try:</span>
+    <button type="button" class="btn ghost sm" onclick="trSample()">a ghazal in casual Roman</button>
+  </div>
+
+  <p id="trLegend" class="tiny faint tr-legend hidden">Tap an underlined word to see other spellings.</p>
+
+  <div id="trOut" class="tr-out"></div>
+  <div id="trFixes"></div>
+</section>
