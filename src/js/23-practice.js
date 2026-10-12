@@ -237,7 +237,7 @@ function prReveal() {
     (famVerse ? '<p class="pr-bahr">Same rhythm as the famous verse <span class="pr-fam ' + (prScript() === 'ur' ? 'urdu' : '') + '">' + famVerse + '</span></p>' : '') +
     '<p class="pr-tech dim small">' + (info && info.name ? 'Technical name: <i>' + prEsc(info.name) + '</i>' : 'A classical rhythm') + '</p>' +
     (P.alt && P.alt.length ? '<p class="pr-flexnote dim small">Heads up: this line on its own also fits ' + P.alt.slice(0, 2).map(function (f) { var i = (typeof meterLabelInfo === 'function') ? meterLabelInfo(f.meter) : null; return prEsc(i && i.name ? i.name : 'meter ' + f.meter.id); }).join(' and ') + '. Because some syllables are flexible, a poet\'s other lines in the same ghazal are what settle the meter.</p>' : '') +
-    (nFlex ? '<p class="pr-flexnote dim small">' + nFlex + ' of ' + total + ' syllables are <b>flexible</b> (purple underline): the meter lets them be said long or short, so either tap was fine. Which one they take here is set by the rhythm of the whole line; the rest are fixed.</p>' : '') +
+    (nFlex ? '<p class="pr-flexnote dim small">' + nFlex + ' of ' + total + ' syllables are <b>flexible</b> (purple diamond ◆): the meter lets them be said long or short, so either tap was fine. Which one they take here is set by the rhythm of the whole line; the rest are fixed.</p>' : '') +
     '<div class="row"><button class="btn gold sm" onclick="prHearAll()">&#9654;&#xFE0E; Hear the whole line</button><button class="btn sm" onclick="prNew()">Next line &#9656;</button></div>';
   prSetHint('The foot names are revealed below.', 'ok');
 }

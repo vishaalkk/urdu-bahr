@@ -531,8 +531,21 @@ textarea {
   box-shadow: none !important;
 }
 .chip.flex {
-  background: color-mix(in srgb, var(--rose) 24%, transparent);
-  color: var(--ink);
+  position: relative;
+}
+/* Calligraphic Nuqta (Diamond ◆) micro-pip for flexible syllables */
+.chip.flex::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  inset-inline-end: 4px;
+  width: 4.5px;
+  height: 4.5px;
+  background: var(--rose);
+  transform: rotate(45deg);
+  box-shadow: 0 0 0 1px var(--bg2);
+  pointer-events: none;
+  z-index: 2;
 }
 .chip.flex.l {
   border-color: var(--mark-l);
@@ -543,6 +556,157 @@ textarea {
   border-color: var(--mark-s);
   border-bottom-style: dotted;
   border-bottom-width: 3px;
+}
+
+.chip:hover {
+  background: color-mix(in srgb, var(--ink) 8.5%, transparent);
+}
+.chip.flex:hover {
+  background: color-mix(in srgb, var(--rose) 10%, transparent);
+}
+
+/* Instant floating popover tooltip for syllable chips */
+.cw {
+  position: relative;
+}
+.syl-tip {
+  position: absolute;
+  bottom: calc(100% + 7px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 6px 11px;
+  border-radius: 7px;
+  font-family: var(--sans);
+  font-size: 11.5px;
+  line-height: 1.35;
+  white-space: normal;
+  width: max-content;
+  max-width: 220px;
+  text-align: center;
+  z-index: 120;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.28);
+  transition: opacity 0.14s ease, transform 0.14s ease;
+}
+/* Downward arrow beak pointing directly at the chip */
+.syl-tip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--ink);
+}
+.cw:hover .syl-tip,
+.cw:focus-within .syl-tip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.syl-tip-head {
+  display: block;
+  font-weight: 600;
+  font-size: 12px;
+  margin-bottom: 2px;
+  letter-spacing: 0.02em;
+}
+.syl-tip-head.is-flex {
+  color: #D8B4FE; /* bright readable lilac/purple */
+}
+.syl-tip-head.is-long {
+  color: #93C5FD; /* soft bright blue */
+}
+.syl-tip-head.is-short {
+  color: #FDBA74; /* soft bright orange */
+}
+.syl-tip-head.is-err {
+  color: #F87171; /* soft red */
+}
+.syl-tip-head.is-extra {
+  color: #CBD5E1; /* silver/grey */
+}
+.syl-tip-body {
+  display: block;
+  color: color-mix(in srgb, var(--bg) 92%, transparent);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+/* Edge Anchoring: Prevent tooltip from ever getting obscured on card edges */
+/* Start of line (Urdu: right edge; Roman/Devanagari: left edge) */
+.chips:not(.ltr) .fgrp:first-child .cw:first-child .syl-tip,
+.chips:not(.ltr) .fgrp:first-child .cw:nth-child(2) .syl-tip {
+  left: auto;
+  right: -8px;
+  transform: translateY(4px);
+}
+.chips:not(.ltr) .fgrp:first-child .cw:first-child:hover .syl-tip,
+.chips:not(.ltr) .fgrp:first-child .cw:nth-child(2):hover .syl-tip {
+  transform: translateY(0);
+}
+.chips:not(.ltr) .fgrp:first-child .cw:first-child .syl-tip::after,
+.chips:not(.ltr) .fgrp:first-child .cw:nth-child(2) .syl-tip::after {
+  left: auto;
+  right: 18px;
+  transform: none;
+}
+
+.chips.ltr .fgrp:first-child .cw:first-child .syl-tip,
+.chips.ltr .fgrp:first-child .cw:nth-child(2) .syl-tip {
+  left: -8px;
+  right: auto;
+  transform: translateY(4px);
+}
+.chips.ltr .fgrp:first-child .cw:first-child:hover .syl-tip,
+.chips.ltr .fgrp:first-child .cw:nth-child(2):hover .syl-tip {
+  transform: translateY(0);
+}
+.chips.ltr .fgrp:first-child .cw:first-child .syl-tip::after,
+.chips.ltr .fgrp:first-child .cw:nth-child(2) .syl-tip::after {
+  left: 18px;
+  right: auto;
+  transform: none;
+}
+
+/* End of line (Urdu: left edge; Roman/Devanagari: right edge) */
+.chips:not(.ltr) .fgrp:last-child .cw:last-child .syl-tip,
+.chips:not(.ltr) .fgrp:last-child .cw:nth-last-child(2) .syl-tip {
+  left: -8px;
+  right: auto;
+  transform: translateY(4px);
+}
+.chips:not(.ltr) .fgrp:last-child .cw:last-child:hover .syl-tip,
+.chips:not(.ltr) .fgrp:last-child .cw:nth-last-child(2):hover .syl-tip {
+  transform: translateY(0);
+}
+.chips:not(.ltr) .fgrp:last-child .cw:last-child .syl-tip::after,
+.chips:not(.ltr) .fgrp:last-child .cw:nth-last-child(2) .syl-tip::after {
+  left: 18px;
+  right: auto;
+  transform: none;
+}
+
+.chips.ltr .fgrp:last-child .cw:last-child .syl-tip,
+.chips.ltr .fgrp:last-child .cw:nth-last-child(2) .syl-tip {
+  left: auto;
+  right: -8px;
+  transform: translateY(4px);
+}
+.chips.ltr .fgrp:last-child .cw:last-child:hover .syl-tip,
+.chips.ltr .fgrp:last-child .cw:nth-last-child(2):hover .syl-tip {
+  transform: translateY(0);
+}
+.chips.ltr .fgrp:last-child .cw:last-child .syl-tip::after,
+.chips.ltr .fgrp:last-child .cw:nth-last-child(2) .syl-tip::after {
+  left: auto;
+  right: 18px;
+  transform: none;
 }
 
 .chip.wend { margin-inline-end: 8px; }
@@ -744,13 +908,14 @@ textarea {
   margin: 0 0 var(--sp-5);
   padding: 0;
   text-align: center;
-  overflow: hidden;
+  overflow: visible;
 }
 .couplet-card > *, .misra-card > * { padding-left: var(--sp-5); padding-right: var(--sp-5); }
 .couplet-card .couplet-head, .misra-card .card-head {
   display: flex; justify-content: space-between; align-items: center;
   padding-top: var(--sp-2); padding-bottom: var(--sp-2);
   margin: 0; border-bottom: 1px solid var(--line);
+  border-radius: 9px 9px 0 0;
 }
 .couplet-head-left { display: inline-flex; align-items: center; gap: 8px; }
 .cbox-verse { padding-top: var(--sp-5); padding-bottom: var(--sp-5); }
@@ -878,6 +1043,16 @@ textarea {
 .fstrip .alt-fn {
   color: var(--faint);
   font-size: 11.5px;
+}
+.sw-diamond {
+  display: inline-block;
+  width: 6.5px;
+  height: 6.5px;
+  background: var(--rose);
+  transform: rotate(45deg);
+  vertical-align: middle;
+  margin-inline-end: 5px;
+  margin-inline-start: 2px;
 }
 .sw-flex-tile {
   display: inline-flex;
@@ -13148,6 +13323,52 @@ function feetStrip(raw){ return '<div class="fstrip">'+Scan.patternFeet(raw).map
 function strip(tokens){ return tokens.map(t=>t==='|'?'<span class="ft"></span>':t==='//'?'<span class="cae">//</span>':`<span class="blk ${t}">${t==='l'?'=':t==='s'?'–':t==='x'?'x':'·'}</span>`).join(''); }
 function sylls(tokens){ return tokens.filter(t=>t==='l'||t==='s'||t==='x'||t==='c'); }
 function famLabel(f){ return f.gz[0]; }
+function sylTipHTML(s){
+  let headCls = 'is-long', headText = '(=) Fixed Long', bodyText = 'Two letters or long vowel; always scans long';
+  if (s.missing) {
+    headCls = 'is-err';
+    headText = '(·) Missing Syllable';
+    bodyText = `${s.expected === 's' ? 'Short (–)' : 'Long (=)'} expected by the bahr here`;
+  } else if (s.clash) {
+    headCls = 'is-err';
+    headText = '(✗) Wrong Weight';
+    bodyText = `The bahr requires ${s.expected === 'l' ? 'long (=)' : 'short (–)'} here`;
+  } else if (s.extra) {
+    headCls = 'is-extra';
+    headText = '(+) Extra Syllable';
+    bodyText = 'The bahr has no room for this syllable';
+  } else if (s.native === 'x') {
+    headCls = 'is-flex';
+    const isLong = (s.resolved !== 's' && s.resolved !== 'c');
+    headText = isLong ? '(=) Flexible (x) ➔ Long' : '(–) Flexible (x) ➔ Short';
+    const t = s.text || '';
+    const lastChar = t.slice(-1);
+    if (s.suf === 'iz' || s.k === 'SUF') {
+      bodyText = `An iẓāfat is flexible; meter locks it to ${isLong ? 'long' : 'short'}`;
+    } else if (s.last && lastChar === 'ا') {
+      bodyText = `Word-final 'ā' is flexible; meter locks it to ${isLong ? 'long' : 'short'}`;
+    } else if (s.last && (lastChar === 'ے' || lastChar === 'ئے')) {
+      bodyText = `Word-final 'e' is flexible; meter locks it to ${isLong ? 'long' : 'short'}`;
+    } else if (s.last && lastChar === 'ی') {
+      bodyText = `Word-final 'ī' is flexible; meter locks it to ${isLong ? 'long' : 'short'}`;
+    } else if (s.last && (lastChar === 'ہ' || lastChar === 'ۂ')) {
+      bodyText = `Word-final 'h' is flexible; meter locks it to ${isLong ? 'long' : 'short'}`;
+    } else if (s.last && lastChar === 'و') {
+      bodyText = `Word-final 'o' is flexible; meter locks it to ${isLong ? 'long' : 'short'}`;
+    } else {
+      bodyText = `Flexible word; meter locks it to ${isLong ? 'long' : 'short'}`;
+    }
+  } else if (s.resolved === 's' || s.resolved === 'c') {
+    headCls = 'is-short';
+    headText = '(–) Fixed Short';
+    bodyText = 'One short vowel letter; always scans short';
+  } else {
+    headCls = 'is-long';
+    headText = '(=) Fixed Long';
+    bodyText = 'Two letters or long vowel; always scans long';
+  }
+  return `<span class="syl-tip"><span class="syl-tip-head ${headCls}">${headText}</span><span class="syl-tip-body">${bodyText}</span></span>`;
+}
 function chipHTML(s,i,li,override,gpos){
   const cls=[s.missing?'missing':(s.resolved==='c'?'c':s.resolved), s.native==='x'?'flex':'', s.last?'wend':'', s.clash?'clash':'', s.extra?'extra':'', s.forced?'forced':''].join(' ');
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
@@ -13164,7 +13385,8 @@ function chipHTML(s,i,li,override,gpos){
     : s.clash ? `Wrong weight for the bahr: it needs ${s.expected==='l'?'long (=)':'short (–)'} here`
     : s.extra ? 'Extra syllable: the bahr has no room for it'
     : (s.fsyl==='+'?'Extra syllable the meter doesn\'t count':'Play from this foot');
-  return `<span class="${cwCls}"${click}><span class="chip ${cls} ${scriptCls}" data-i="${i}">${txt}</span><span class="fs${s.fsyl==='+'?' fs-extra':''}" onclick="pbFromFoot(event,this)" title="${tip}">${s.fsyl==='+'?'extra':(s.fsyl||'')}</span></span>`;
+  const tipHtml = sylTipHTML(s);
+  return `<span class="${cwCls}"${click}><span class="chip ${cls} ${scriptCls}" data-i="${i}">${txt}</span><span class="fs${s.fsyl==='+'?' fs-extra':''}" onclick="pbFromFoot(event,this)" title="${tip}">${s.fsyl==='+'?'extra':(s.fsyl||'')}</span>${tipHtml}</span>`;
 }
 /* position of each syllable inside a grafted run (words joined across the space): g-start / g-mid / g-end */
 function graftPos(syl){
@@ -17496,8 +17718,8 @@ function patGlyphs(raw){
 const LEGEND_ITEMS = [
   { rule: 'S1.5-weight', tip: "A long syllable: two letters. Shown as a solid underline or =. Sung 'dum' in this app.", body: `<i class="sw c-l"></i><span class="lg-or">/</span><span class="pg l">=</span> long <span class="lg-note">(dum)</span>` },
   { rule: 'S1.5-weight', tip: "A short syllable: one letter. Shown as a dotted underline or \u2013. Sung 'da' in this app.", body: `<i class="sw c-s"></i><span class="lg-or">/</span><span class="pg s">\u2013</span> short <span class="lg-note">(da)</span>` },
-  { rule: 'F2.1-listed-monosyllable', tip: "A word or syllable that can be read long or short in Urdu (کو، سے، ہے…, and word-final vowels). The word itself can flex, but once the line's meter is established, its position locks it into either long or short.", body: `<span class="sw-flex-tile">کو</span> flexible` },
-  { rule: 'M6.1-anceps', sec: '7', tip: "In an abstract meter pattern, x marks an 'anceps' slot where the meter formula itself permits either a long or a short syllable without penalty (such as the opening position of meters 14–19).", body: `<span class="pg x">x</span> long or short`, app: true },
+  { rule: 'F2.1-listed-monosyllable', tip: "A word or syllable that can be read long or short in Urdu (کو، سے، ہے…, and word-final vowels). Marked with a purple corner diamond (◆); the meter's rhythm locks it into long or short.", body: `<span class="sw-diamond"></span>flexible` },
+  { rule: 'M6.1-anceps', sec: '7', tip: "In an abstract meter formula, x marks an 'anceps' slot where the formula itself permits either a long or a short syllable without penalty (such as the opening position of meters 14–19).", body: `<span class="pg x">x</span> anceps slot`, app: true },
   { rule: 'M6.1-cheat-final', tip: "One extra short syllable the meter doesn't count: allowed at the end of a line and, in some meters, just before the mid-line break. Pritchett calls it a 'cheat' syllable.", body: `<span class="sw-extra-tile"></span> extra` },
   { rule: 'M6.1-cheat-caesura', tip: "The break in the middle of the line, between its two hemistich halves. Where a meter has one, the pattern shows //. In some meters one extra short syllable may sit just before it.", body: `<span class="cae">//</span> caesura` },
   { rule: 'F3.1-graft', tip: "Words joined across the space and read as one, e.g. \u0101\u1e33hir is \u2192 \u0101\u00b7\u1e33hi\u00b7ris.", body: `<i class="sw c-g"></i>grafted` }
@@ -20448,7 +20670,7 @@ function prReveal() {
     (famVerse ? '<p class="pr-bahr">Same rhythm as the famous verse <span class="pr-fam ' + (prScript() === 'ur' ? 'urdu' : '') + '">' + famVerse + '</span></p>' : '') +
     '<p class="pr-tech dim small">' + (info && info.name ? 'Technical name: <i>' + prEsc(info.name) + '</i>' : 'A classical rhythm') + '</p>' +
     (P.alt && P.alt.length ? '<p class="pr-flexnote dim small">Heads up: this line on its own also fits ' + P.alt.slice(0, 2).map(function (f) { var i = (typeof meterLabelInfo === 'function') ? meterLabelInfo(f.meter) : null; return prEsc(i && i.name ? i.name : 'meter ' + f.meter.id); }).join(' and ') + '. Because some syllables are flexible, a poet\'s other lines in the same ghazal are what settle the meter.</p>' : '') +
-    (nFlex ? '<p class="pr-flexnote dim small">' + nFlex + ' of ' + total + ' syllables are <b>flexible</b> (purple underline): the meter lets them be said long or short, so either tap was fine. Which one they take here is set by the rhythm of the whole line; the rest are fixed.</p>' : '') +
+    (nFlex ? '<p class="pr-flexnote dim small">' + nFlex + ' of ' + total + ' syllables are <b>flexible</b> (purple diamond ◆): the meter lets them be said long or short, so either tap was fine. Which one they take here is set by the rhythm of the whole line; the rest are fixed.</p>' : '') +
     '<div class="row"><button class="btn gold sm" onclick="prHearAll()">&#9654;&#xFE0E; Hear the whole line</button><button class="btn sm" onclick="prNew()">Next line &#9656;</button></div>';
   prSetHint('The foot names are revealed below.', 'ok');
 }

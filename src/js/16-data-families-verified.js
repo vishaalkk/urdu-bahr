@@ -14,6 +14,52 @@ function feetStrip(raw){ return '<div class="fstrip">'+Scan.patternFeet(raw).map
 function strip(tokens){ return tokens.map(t=>t==='|'?'<span class="ft"></span>':t==='//'?'<span class="cae">//</span>':`<span class="blk ${t}">${t==='l'?'=':t==='s'?'–':t==='x'?'x':'·'}</span>`).join(''); }
 function sylls(tokens){ return tokens.filter(t=>t==='l'||t==='s'||t==='x'||t==='c'); }
 function famLabel(f){ return f.gz[0]; }
+function sylTipHTML(s){
+  let headCls = 'is-long', headText = '(=) Fixed Long', bodyText = 'Two letters or long vowel; always scans long';
+  if (s.missing) {
+    headCls = 'is-err';
+    headText = '(·) Missing Syllable';
+    bodyText = `${s.expected === 's' ? 'Short (–)' : 'Long (=)'} expected by the bahr here`;
+  } else if (s.clash) {
+    headCls = 'is-err';
+    headText = '(✗) Wrong Weight';
+    bodyText = `The bahr requires ${s.expected === 'l' ? 'long (=)' : 'short (–)'} here`;
+  } else if (s.extra) {
+    headCls = 'is-extra';
+    headText = '(+) Extra Syllable';
+    bodyText = 'The bahr has no room for this syllable';
+  } else if (s.native === 'x') {
+    headCls = 'is-flex';
+    const isLong = (s.resolved !== 's' && s.resolved !== 'c');
+    headText = isLong ? '(=) Flexible (x) ➔ Long' : '(–) Flexible (x) ➔ Short';
+    const t = s.text || '';
+    const lastChar = t.slice(-1);
+    if (s.suf === 'iz' || s.k === 'SUF') {
+      bodyText = `An iẓāfat is flexible; meter locks it to ${isLong ? 'long' : 'short'}`;
+    } else if (s.last && lastChar === 'ا') {
+      bodyText = `Word-final 'ā' is flexible; meter locks it to ${isLong ? 'long' : 'short'}`;
+    } else if (s.last && (lastChar === 'ے' || lastChar === 'ئے')) {
+      bodyText = `Word-final 'e' is flexible; meter locks it to ${isLong ? 'long' : 'short'}`;
+    } else if (s.last && lastChar === 'ی') {
+      bodyText = `Word-final 'ī' is flexible; meter locks it to ${isLong ? 'long' : 'short'}`;
+    } else if (s.last && (lastChar === 'ہ' || lastChar === 'ۂ')) {
+      bodyText = `Word-final 'h' is flexible; meter locks it to ${isLong ? 'long' : 'short'}`;
+    } else if (s.last && lastChar === 'و') {
+      bodyText = `Word-final 'o' is flexible; meter locks it to ${isLong ? 'long' : 'short'}`;
+    } else {
+      bodyText = `Flexible word; meter locks it to ${isLong ? 'long' : 'short'}`;
+    }
+  } else if (s.resolved === 's' || s.resolved === 'c') {
+    headCls = 'is-short';
+    headText = '(–) Fixed Short';
+    bodyText = 'One short vowel letter; always scans short';
+  } else {
+    headCls = 'is-long';
+    headText = '(=) Fixed Long';
+    bodyText = 'Two letters or long vowel; always scans long';
+  }
+  return `<span class="syl-tip"><span class="syl-tip-head ${headCls}">${headText}</span><span class="syl-tip-body">${bodyText}</span></span>`;
+}
 function chipHTML(s,i,li,override,gpos){
   const cls=[s.missing?'missing':(s.resolved==='c'?'c':s.resolved), s.native==='x'?'flex':'', s.last?'wend':'', s.clash?'clash':'', s.extra?'extra':'', s.forced?'forced':''].join(' ');
   const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
@@ -30,7 +76,8 @@ function chipHTML(s,i,li,override,gpos){
     : s.clash ? `Wrong weight for the bahr: it needs ${s.expected==='l'?'long (=)':'short (–)'} here`
     : s.extra ? 'Extra syllable: the bahr has no room for it'
     : (s.fsyl==='+'?'Extra syllable the meter doesn\'t count':'Play from this foot');
-  return `<span class="${cwCls}"${click}><span class="chip ${cls} ${scriptCls}" data-i="${i}">${txt}</span><span class="fs${s.fsyl==='+'?' fs-extra':''}" onclick="pbFromFoot(event,this)" title="${tip}">${s.fsyl==='+'?'extra':(s.fsyl||'')}</span></span>`;
+  const tipHtml = sylTipHTML(s);
+  return `<span class="${cwCls}"${click}><span class="chip ${cls} ${scriptCls}" data-i="${i}">${txt}</span><span class="fs${s.fsyl==='+'?' fs-extra':''}" onclick="pbFromFoot(event,this)" title="${tip}">${s.fsyl==='+'?'extra':(s.fsyl||'')}</span>${tipHtml}</span>`;
 }
 /* position of each syllable inside a grafted run (words joined across the space): g-start / g-mid / g-end */
 function graftPos(syl){

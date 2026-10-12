@@ -169,8 +169,21 @@
   box-shadow: none !important;
 }
 .chip.flex {
-  background: color-mix(in srgb, var(--rose) 24%, transparent);
-  color: var(--ink);
+  position: relative;
+}
+/* Calligraphic Nuqta (Diamond ◆) micro-pip for flexible syllables */
+.chip.flex::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  inset-inline-end: 4px;
+  width: 4.5px;
+  height: 4.5px;
+  background: var(--rose);
+  transform: rotate(45deg);
+  box-shadow: 0 0 0 1px var(--bg2);
+  pointer-events: none;
+  z-index: 2;
 }
 .chip.flex.l {
   border-color: var(--mark-l);
@@ -181,6 +194,157 @@
   border-color: var(--mark-s);
   border-bottom-style: dotted;
   border-bottom-width: 3px;
+}
+
+.chip:hover {
+  background: color-mix(in srgb, var(--ink) 8.5%, transparent);
+}
+.chip.flex:hover {
+  background: color-mix(in srgb, var(--rose) 10%, transparent);
+}
+
+/* Instant floating popover tooltip for syllable chips */
+.cw {
+  position: relative;
+}
+.syl-tip {
+  position: absolute;
+  bottom: calc(100% + 7px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 6px 11px;
+  border-radius: 7px;
+  font-family: var(--sans);
+  font-size: 11.5px;
+  line-height: 1.35;
+  white-space: normal;
+  width: max-content;
+  max-width: 220px;
+  text-align: center;
+  z-index: 120;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.28);
+  transition: opacity 0.14s ease, transform 0.14s ease;
+}
+/* Downward arrow beak pointing directly at the chip */
+.syl-tip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--ink);
+}
+.cw:hover .syl-tip,
+.cw:focus-within .syl-tip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.syl-tip-head {
+  display: block;
+  font-weight: 600;
+  font-size: 12px;
+  margin-bottom: 2px;
+  letter-spacing: 0.02em;
+}
+.syl-tip-head.is-flex {
+  color: #D8B4FE; /* bright readable lilac/purple */
+}
+.syl-tip-head.is-long {
+  color: #93C5FD; /* soft bright blue */
+}
+.syl-tip-head.is-short {
+  color: #FDBA74; /* soft bright orange */
+}
+.syl-tip-head.is-err {
+  color: #F87171; /* soft red */
+}
+.syl-tip-head.is-extra {
+  color: #CBD5E1; /* silver/grey */
+}
+.syl-tip-body {
+  display: block;
+  color: color-mix(in srgb, var(--bg) 92%, transparent);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+/* Edge Anchoring: Prevent tooltip from ever getting obscured on card edges */
+/* Start of line (Urdu: right edge; Roman/Devanagari: left edge) */
+.chips:not(.ltr) .fgrp:first-child .cw:first-child .syl-tip,
+.chips:not(.ltr) .fgrp:first-child .cw:nth-child(2) .syl-tip {
+  left: auto;
+  right: -8px;
+  transform: translateY(4px);
+}
+.chips:not(.ltr) .fgrp:first-child .cw:first-child:hover .syl-tip,
+.chips:not(.ltr) .fgrp:first-child .cw:nth-child(2):hover .syl-tip {
+  transform: translateY(0);
+}
+.chips:not(.ltr) .fgrp:first-child .cw:first-child .syl-tip::after,
+.chips:not(.ltr) .fgrp:first-child .cw:nth-child(2) .syl-tip::after {
+  left: auto;
+  right: 18px;
+  transform: none;
+}
+
+.chips.ltr .fgrp:first-child .cw:first-child .syl-tip,
+.chips.ltr .fgrp:first-child .cw:nth-child(2) .syl-tip {
+  left: -8px;
+  right: auto;
+  transform: translateY(4px);
+}
+.chips.ltr .fgrp:first-child .cw:first-child:hover .syl-tip,
+.chips.ltr .fgrp:first-child .cw:nth-child(2):hover .syl-tip {
+  transform: translateY(0);
+}
+.chips.ltr .fgrp:first-child .cw:first-child .syl-tip::after,
+.chips.ltr .fgrp:first-child .cw:nth-child(2) .syl-tip::after {
+  left: 18px;
+  right: auto;
+  transform: none;
+}
+
+/* End of line (Urdu: left edge; Roman/Devanagari: right edge) */
+.chips:not(.ltr) .fgrp:last-child .cw:last-child .syl-tip,
+.chips:not(.ltr) .fgrp:last-child .cw:nth-last-child(2) .syl-tip {
+  left: -8px;
+  right: auto;
+  transform: translateY(4px);
+}
+.chips:not(.ltr) .fgrp:last-child .cw:last-child:hover .syl-tip,
+.chips:not(.ltr) .fgrp:last-child .cw:nth-last-child(2):hover .syl-tip {
+  transform: translateY(0);
+}
+.chips:not(.ltr) .fgrp:last-child .cw:last-child .syl-tip::after,
+.chips:not(.ltr) .fgrp:last-child .cw:nth-last-child(2) .syl-tip::after {
+  left: 18px;
+  right: auto;
+  transform: none;
+}
+
+.chips.ltr .fgrp:last-child .cw:last-child .syl-tip,
+.chips.ltr .fgrp:last-child .cw:nth-last-child(2) .syl-tip {
+  left: auto;
+  right: -8px;
+  transform: translateY(4px);
+}
+.chips.ltr .fgrp:last-child .cw:last-child:hover .syl-tip,
+.chips.ltr .fgrp:last-child .cw:nth-last-child(2):hover .syl-tip {
+  transform: translateY(0);
+}
+.chips.ltr .fgrp:last-child .cw:last-child .syl-tip::after,
+.chips.ltr .fgrp:last-child .cw:nth-last-child(2) .syl-tip::after {
+  left: auto;
+  right: 18px;
+  transform: none;
 }
 
 .chip.wend { margin-inline-end: 8px; }
@@ -382,13 +546,14 @@
   margin: 0 0 var(--sp-5);
   padding: 0;
   text-align: center;
-  overflow: hidden;
+  overflow: visible;
 }
 .couplet-card > *, .misra-card > * { padding-left: var(--sp-5); padding-right: var(--sp-5); }
 .couplet-card .couplet-head, .misra-card .card-head {
   display: flex; justify-content: space-between; align-items: center;
   padding-top: var(--sp-2); padding-bottom: var(--sp-2);
   margin: 0; border-bottom: 1px solid var(--line);
+  border-radius: 9px 9px 0 0;
 }
 .couplet-head-left { display: inline-flex; align-items: center; gap: 8px; }
 .cbox-verse { padding-top: var(--sp-5); padding-bottom: var(--sp-5); }
@@ -516,6 +681,16 @@
 .fstrip .alt-fn {
   color: var(--faint);
   font-size: 11.5px;
+}
+.sw-diamond {
+  display: inline-block;
+  width: 6.5px;
+  height: 6.5px;
+  background: var(--rose);
+  transform: rotate(45deg);
+  vertical-align: middle;
+  margin-inline-end: 5px;
+  margin-inline-start: 2px;
 }
 .sw-flex-tile {
   display: inline-flex;

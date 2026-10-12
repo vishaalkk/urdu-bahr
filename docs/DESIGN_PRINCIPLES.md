@@ -181,7 +181,7 @@ Decisions carried over from the earlier rounds; they apply across all tabs.
   one-line reason and Next, session score only. Questions come from confident scans only (strain ≤ 2.5).
 - **Heading scale:** `.page-title` serif 32px, `.section-title` serif 22px, `.eyebrow` sans caps. Use the
   classes; no inline styles for anything visual.
-- **Weight marks are underlines**, 2–3px, not filled chips: long blue, short orange, flexible purple, cheat
+- **Weight marks are underlines**, 2–3px, not filled chips: long blue, short orange, flexible marked with a subtle purple corner diamond nuqta (◆), cheat
   dashed grey. Long blocks (`.blk`) stay twice the width of short ones. Each verse syllable shows its foot
   syllable beneath it, and each foot group shows its foot name (italic serif).
 - **Playback highlight** (see §6) works across wrapped rows. Rows shrink via `--fit` to a 0.7 floor, then wrap
