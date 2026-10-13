@@ -1011,6 +1011,10 @@ a.hb-ref:hover { color: var(--ink); }
 .dict-lex-entry { display: flex; flex-direction: column; padding: var(--sp-3) 0; border-bottom: 1px solid var(--line); gap: var(--sp-1); }
 .dict-lex-entry:first-child { border-top: 1px solid var(--line); }
 .dict-lex-head { display: flex; align-items: baseline; gap: var(--sp-3); flex-wrap: wrap; }
+.dict-load-title { margin: 0 0 var(--sp-2); }
+.dict-load-note { max-width: 540px; margin: 0 auto var(--sp-3); line-height: 1.5; }
+.dict-load-error { color: var(--no); margin-bottom: var(--sp-2); }
+.dict-lex-ro { font-size: 13px; }
 .dict-lex-badge { font-size: 11px; padding: 2px 6px; border-radius: 4px; font-family: var(--mono); font-weight: 600; text-transform: uppercase; }
 .dict-lex-badge.origin-P { background: rgba(59, 130, 246, 0.14); color: #2563eb; }
 .dict-lex-badge.origin-A { background: rgba(16, 185, 129, 0.14); color: #059669; }

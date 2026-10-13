@@ -54,14 +54,30 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   Persian engine `window.ScanFa`: `build_app.py` splices `data/fa_scan.json` (`scripts/build_fa_scan.js`) into a second copy of the
   engine block; Persian lines (`l.lang === 'fa'`) scan on it via `scanCorpusLine` / `engineOf`. Persian-only meter ids are `F<Ganjoor id>`.
   Persian word list `data/fa_lexicon.json` (`scripts/build_fa_lexicon.js`) for Fārsī Roman/Devanagari only.
-  Steingass's dictionary (`scripts/import_steingass.py` → `data/fa_steingass.tsv`) adds classical readings to ScanFa, add-only.
+  Steingass and Platts live in ONE place, `data/dictionary_bundle.json.gz` (`scripts/import_steingass.py`, `scripts/import_platts.py`
+  download the sources; `scripts/build_dictionary_bundle.py` builds it): the Transcribe drawer reads it (IndexedDB), ScanFa's build
+  takes Steingass's classical readings from it (`lib_fa_steingass.js`, add-only), the typed-Roman fallback takes Platts from it.
   `scripts/compare_sufinama_ganjoor.py` lists where Sufinama's words differ from Ganjoor's (a review file; nothing is applied).
 - **Transliterator** (`src/js/24-transcribe.js`, `#/lab/transcribe`): a whole text between Roman (casual or diacritics), Urdu script,
   Fārsī script and Devanagari, in any direction, no scansion. Persian-script lines read the Persian list first; Fārsī output is
   `trUrToFa` (Urdu letters in Persian orthography). It adds no reading of its own: words come from Scan's pipeline (`romanToAscii`, `asciiToScripts`),
-  and each word's tier (known / poets / loose / guess) is what `casualPiece` reports, the same chain `casualRomanLine` uses. Guessed
+  and each word's tier (known / poets / persian / loose / derived / guess) is what `casualPiece` reports (Transcribe adds form: a dictionary word's
+  regular form, once the dictionary has loaded; the dictionary's IndexedDB copy is kept while it matches `DICT_BUNDLE_HASH`, stamped by the build), the same chain `casualRomanLine` uses. Guessed
   words are filled from `FA_LEXICON` (Persian list, `trFaRo` turns its dots into ʿ ʾ); the user's corrections are kept per spelling
   (`store` key `trChoices`). Logic: `tests/transcribe_logic.js`.
+  Analyzer (`12-dictionary-module.js`): one table of Urdu's regular inflection (`PARADIGMS`), read forward (a dictionary word's
+  forms: `dictEntryForms`, `knownForms`, `DICT_STORE.formsFor`) and backward (a form's dictionary words: `dictLemmas` in
+  `DICT_STORE.lookup`); same-spelling readings `readingsOf`, sound-alikes `soundsLike`. Line language: `detectScanLang` sums word
+  weights mined by `scripts/build_lang_words.js` → `data/lang_words.json`.
+  Gates (all in `npm test`; floors only rise, `--update`; a new benchmark's floor is what the code BEFORE the change scores): `tests/typed_roman_heldout.js` (typed Roman on held-out Rekhta poets → Urdu,
+  Roman, Devanagari, inflected words; `tests/typed_roman_baseline.json`), `tests/transcribe_golden.js` (what every hand-written exception
+  gives, `tests/data/transcribe_golden.json`, frozen by `scripts/build_transcribe_golden.js`; its `todo` lists known-wrong words) and
+  `tests/benchmark_dictionary.js` (drawer lookup on held-out words), `tests/benchmark_lemma.js` (gold form → dictionary word),
+  `tests/benchmark_transcribe.js` (Transcribe's own output on held-out poets, incl. underlining: caught / calm),
+  `tests/benchmark_readings.js` (Platts homographs offered), `tests/benchmark_lang.js` (line language); `tests/dictionary_cache.js`
+  (IndexedDB copy kept per fingerprint); `tests/derived_data.js` (roman_fallback / fa_scan / lang_words match their builders: rebuild
+  data with its script when its code changes). Shared: `tests/lib_page.js` (the built page in a vm), `tests/lib_bench.js` (folds, floors). Replace exceptions with general
+  rules checked against the dictionary; never add an alias without a golden row. One converter from dictionary Roman: `scholarRoToAscii`.
 - **Collocations**: `data/collocations.json` (`scripts/build_collocations.py`) holds neighbour rules for typed Roman
   (`collocSpelling` in `05-translit-helpers.js`). Judge changes with `scripts/colloc_benchmark.py` and `scripts/casual_roman_eval.js`
   (typed Roman → right Urdu word, table mined without the test poets). `tests/benchmark.js` `typed.*` goes the other way (Urdu → Roman)

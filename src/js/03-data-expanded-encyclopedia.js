@@ -59,7 +59,6 @@ function poetMeta(key) { return POET_LIST.find(p => p.key === key) || null; }
 function poetCollections() { return POET_LIST.map(p => [p.key, poetItems(p.key)]); }
 const URDUPOETRY_DATA = /*@@URDUPOETRY_DATA@@*/;
 const WORD_ASCII_MAP = /*@@WORD_ASCII_MAP@@*/;
-const ROMAN_CASUAL_MAP = /*@@ROMAN_CASUAL_MAP@@*/;
 const KI_NEXT = /*@@KI_NEXT@@*/;
 const ROMAN_FALLBACK = /*@@ROMAN_FALLBACK@@*/;
 const COLLOCATIONS = /*@@COLLOCATIONS@@*/;

@@ -369,12 +369,6 @@ function urduWordsToScripts(line){
   }
   return {hi:hi.join(' '), ro:ro.join(' ')};
 }
-/* an ASCII-scheme string in the three scripts (Pue's parsers); '' for a script whose parser is missing or fails */
-function asciiToScripts(asc){
-  const out = { ur: '', hi: '', ro: '' };
-  [['ur', 'p_ur'], ['hi', 'p_hi'], ['ro', 'p_di']].forEach(([k, p]) => { try { if(window[p]) out[k] = window[p].parse(asc); } catch(e){} });
-  return out;
-}
 /* one typed line → {ur, hi, ro, ascii, isApprox}: a known corpus verse verbatim, else
    Pue's parsers on the word-map ASCII, else word by word. opts.skipKnown bypasses the
    verbatim lookup (tests/benchmark.js uses it to measure the fallbacks on Fran's lines). */

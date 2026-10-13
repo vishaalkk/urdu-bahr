@@ -1,4 +1,4 @@
-// Steingass's pronunciations for the Persian engine (ScanFa). data/fa_steingass.tsv (scripts/import_steingass.py) gives each
+// Steingass's pronunciations for the Persian engine (ScanFa). The dictionary bundle (data/dictionary_bundle.json.gz) gives each
 // headword's classical Roman; it is turned into the Roman romanWeights reads, and where none of the engine's readings of the
 // word has those weights, the reading is added at the cost of the engine's best (rankReadings), as the verb forms are. Add-only:
 // a word Sufinama's Roman already taught (`known`) is left alone, and the engine's own readings stay.
@@ -32,12 +32,14 @@ const skelRo = r => r.replace(/q/g, '').toLowerCase().normalize('NFD').replace(/
 
 /* {engine key: options} for Steingass headwords the engine and `known` do not already read right */
 function steingassLex(Scan, ctx, known, romanWeights, rankReadings) {
-    const file = path.join(__dirname, '..', 'data', 'fa_steingass.tsv');
+    const file = path.join(__dirname, '..', 'data', 'dictionary_bundle.json.gz');   // the Steingass the Transcribe drawer reads
     if (!fs.existsSync(file)) return {};
-    const lex = {};
-    for (const line of fs.readFileSync(file, 'utf8').split('\n')) {
-        const [fa, ro] = line.split('\t');
-        if (!fa || !ro) continue;
+    const lex = {}, seen = new Set();
+    for (const e of JSON.parse(require('zlib').gunzipSync(fs.readFileSync(file)))) {
+        const fa = e.dict === 'Steingass' && e.ur, ro = e.ro;
+        // one word, one pronunciation: phrases, variants ("a, b") and notes in brackets are left out
+        if (!fa || !ro || /\s/.test(fa) || /[\s,;()=?+/]/.test(ro) || seen.has(fa + '\t' + ro)) continue;
+        seen.add(fa + '\t' + ro);
         const r = steingassRoman(ro);
         if (skelFa(fa) !== skelRo(r)) continue;
         const ws = romanWeights(r);

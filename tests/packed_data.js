@@ -1,7 +1,8 @@
 /* The verse collections ship packed (scripts/pack_verses.py: a word dictionary plus id lines) and the app unpacks them at load. This
    checks the whole route end to end: what the BUILT app holds must equal the source data, ghazal by ghazal and line by line, for
    the Rekhta poets (data/poets_extended.json), Ghalib (data/ghalib_extended.json) and Mir (data/mir_extended.json); and the poet
-   collection must be sound (poets listed, ids unique, every line has its scripts, Rekhta links well formed).
+   collection must be sound (poets listed, ids unique, every line has its scripts, Rekhta links well formed); and the typed-Roman
+   map rebuilt from frequencies at load must equal the build's.
    Run after `npm run build`: node tests/packed_data.js */
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const ROOT = path.join(__dirname, '..');
@@ -77,5 +78,14 @@ const FRAN = ['ur', 'hi', 'ro', 'ascii'];
   console.log(`  ${isMir ? 'mir' : 'ghalib'}: ${n} lines, identical to data/${file}`);
 });
 check((html.match(/"dict":\[/g) || []).length === 3, 'expected three packed dictionaries (poets, Ghalib, Mir) in the built page');
+/* ROMAN_CASUAL_MAP ships as frequencies and is rebuilt at load (buildCasualMap): it must equal the map the build computed, whose
+   digest the page carries (key order aside) */
+{
+  const m = vm.runInContext('ROMAN_CASUAL_MAP', ctx), want = vm.runInContext('ROMAN_CASUAL_DIGEST', ctx);
+  const canon = '[' + m.map(o => '{' + Object.keys(o).sort().map(k => JSON.stringify(k) + ':' + JSON.stringify(o[k])).join(',') + '}').join(',') + ']';
+  const got = require('crypto').createHash('sha1').update(canon, 'utf8').digest('hex');
+  check(got === want, `ROMAN_CASUAL_MAP rebuilt in the page differs from the build's (${got} ≠ ${want})`);
+  console.log(`  typed-Roman map: ${m.map(o => Object.keys(o).length).join(' / ')} keys, rebuilt from frequencies, identical to the build's`);
+}
 console.log(failures ? failures + ' failure(s)' : 'packed data OK');
 process.exit(failures ? 1 : 0);

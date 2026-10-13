@@ -2,11 +2,10 @@
 """
 scripts/build_dictionary_bundle.py
 
-Extracts Platts (1884) and Steingass (1892) entries into an offline dictionary bundle
-and classical compound phrase index.
+Extracts Platts (1884) and Steingass (1892) entries into an offline dictionary bundle (each entry carries its own
+compound phrases and idioms; scripts/build_roman_fallback.js reads Platts' headwords from it too).
 
 Outputs:
-  data/platts_phrases.json: List of attested multi-word compound phrases and idioms (for scansion/meter)
   data/dictionary_bundle.json: Full headword definitions, etymologies, and sub-phrases (for offline lookup)
   data/dictionary_bundle.json.gz: Gzipped bundle for fast static serving / IndexedDB hydration
 
@@ -24,7 +23,6 @@ import sys
 ROOT = os.path.join(os.path.dirname(__file__), '..')
 CACHE_DIR = os.path.join(ROOT, 'data', 'platts_cache')
 STEINGASS_DB = os.path.join(ROOT, 'data', 'steingass_cache', 'entries_slim.sqlite')
-OUT_PHRASES = os.path.join(ROOT, 'data', 'platts_phrases.json')
 OUT_BUNDLE = os.path.join(ROOT, 'data', 'dictionary_bundle.json')
 OUT_BUNDLE_GZ = os.path.join(ROOT, 'data', 'dictionary_bundle.json.gz')
 
@@ -116,7 +114,6 @@ def main():
         sys.exit(1)
 
     all_entries = {}
-    all_phrases = {}
 
     for path in html_files:
         base = os.path.basename(path)
@@ -128,18 +125,8 @@ def main():
             key = (ent['ur'], ent['ro'], ent.get('origin', ''), ent.get('def', '')[:40])
             if key not in all_entries:
                 all_entries[key] = ent
-            for phr in ent['phrases']:
-                pro = phr['ro'].strip()
-                if (' ' in pro or '-' in pro) and len(pro) >= 4:
-                    if pro not in all_phrases:
-                        all_phrases[pro] = {
-                            'head_ur': ent['ur'],
-                            'head_ro': ent['ro'],
-                            'def': phr['def']
-                        }
 
     print(f"Parsed {len(all_entries)} headword entries from Platts across {len(html_files)} pages.")
-    print(f"Found {len(all_phrases)} multi-word classical phrases and idioms.")
 
     # Load Steingass entries from SQLite if present
     steingass_count = 0
@@ -167,10 +154,6 @@ def main():
                 steingass_count += 1
         print(f"Added {steingass_count} Persian entries from Steingass.")
 
-    # Write platts_phrases.json (compact index of compounds)
-    with open(OUT_PHRASES, 'w', encoding='utf-8') as f:
-        json.dump(all_phrases, f, ensure_ascii=False, indent=2)
-    print(f"Wrote {len(all_phrases)} phrases to {os.path.relpath(OUT_PHRASES, ROOT)}")
 
     # Format dictionary bundle as a list for export
     # Substantive definitions precede cross-reference stubs

@@ -7,6 +7,8 @@
          poets   the Rekhta poets' verified list (ROMAN_FALLBACK)
          persian the Persian list (FA_LEXICON, Sufinama's spellings), tried for words the Urdu lists do not have
          loose   Pritchett's laxest match (o~u, e~i): often right, worth a look
+         derived built by an inflection rule (gaye, sunāʾeñ, dekhūñgā), not found in any list: worth a look
+         form    a regular form of a Platts word (uṭhāʾe, laṛkiyāñ, paṛhūñgā): what derived and guess become once the dictionary loads
          guess   no list knows it: the letter rules read it, short vowels are a guess
          typed   already carries marks (ʿ ā ḥ …) or is a single letter: read exactly as written
      - a tap on a word opens its alternatives; a choice is kept per spelling and applies everywhere that spelling occurs.
@@ -15,13 +17,12 @@
 var TR_LEAD = /^["“”‘’'«»\[{<—–…¿¡]+/;
 var TR_TRAIL = /[.,;:!?"“”‘’'«»\]}>—–…،۔؟؛]+$/;
 var TR_LETTER = /[a-zāīūñḍṭṛḥṣẓżḳġʿʾ]/i;
-var TR_SEVERITY = { guess: 4, loose: 3, persian: 2, you: 1 };
+var TR_SEVERITY = { guess: 4, loose: 3, derived: 3, persian: 2, form: 2, you: 1 };
 var TR_SCRIPTS = [['ro', 'Roman'], ['ur', 'اردو'], ['fa', 'فارسی'], ['hi', 'हिन्दी']];
 
 /* ---- script helpers ---- */
 
 /* ascii → {ro, hi, ur}: Scan's own helper (19-scan.js) */
-function trParse3(ascii) { return asciiToScripts(ascii); }
 
 /* Persian morphological decomposition and lexicon helpers (trUrToFa, trFaHits, tryFaDecompose)
    are defined in 05-translit-helpers.js so Scan and Transcribe share the exact same pipeline. */
@@ -132,7 +133,7 @@ function trScriptWords(raw, o) {
   return raw.split(/\s+/).filter(Boolean).map(function (tok) {
     var e = trSplitEdges(tok), w = { lead: e.lead, trail: e.trail, pieces: [], src: tok, plain: false };
     if (/[\u0900-\u097F]/.test(e.core)) {
-      var asc = (typeof devToAscii === 'function') ? devToAscii(e.core) : e.core, p = trParse3(asc);
+      var asc = (typeof devToAscii === 'function') ? devToAscii(e.core) : e.core, p = asciiToScripts(asc);
       w.pieces.push({ src: e.core, tier: 'typed', key: e.core, fixed: { ur: p.ur || e.core, ro: p.ro || e.core, hi: e.core }, locked: true });
     } else if (!e.core) {
       w.plain = true; w.plainText = '';
@@ -154,11 +155,11 @@ function trCands(piece, def, lang) {
   var out = [], seen = {}, fUr = function (s) { return (typeof dictFoldUr === 'function') ? dictFoldUr(s) : (s || ''); };
   function add(c) {
     if (!c || !c.ro) return;
+    if (c.ur) c.ur = c.ur.normalize('NFC');   // the parsers can give ا + ٓ for آ
     var normUr = fUr(c.ur);
-    var k = normUr + '|' + casualKey(c.ro, 0);
-    if (!seen[k] && !seen[c.ro]) {
+    var k = normUr + '|' + casualKey(c.ro, 0);   // one word once: two spellings of one sound (صدا ṣadā, سدا sadā) are two words
+    if (!seen[k]) {
       seen[k] = 1;
-      seen[c.ro] = 1;
       out.push(c);
     }
   }
@@ -170,7 +171,7 @@ function trCands(piece, def, lang) {
   }
   var plain = piece.src.toLowerCase().replace(/[āáâ]/g, 'ā').replace(/[īíî]/g, 'ī').replace(/[ūúû]/g, 'ū');
   function viaAscii(a, tag, isDefault) {
-    var p = trParse3(a);
+    var p = asciiToScripts(a);
     if (isFa && /[ñں]/.test(p.ur) && !/[ñ]/.test(plain)) {
       if (tag === 'list' || tag === 'loose') return; // suppress Urdu colloquialisms like māñ in Persian context
     }
@@ -215,6 +216,10 @@ function trCands(piece, def, lang) {
   if (urMorph && urMorph.ascii) {
     viaAscii(urMorph.ascii, 'standard', true);
   }
+  /* a dictionary word's regular forms (for a word the lists know, they underline it only when as close to what was typed: trRivals) */
+  if (!isFa && (piece.baseTier || piece.tier) !== 'typed' && typeof DICT_STORE !== 'undefined' && DICT_STORE.status === 'ready') {
+    DICT_STORE.formsFor(plain).slice(0, 4).forEach(function (f) { viaAscii(f.ascii, 'form'); });
+  }
   var fb = rekhtaFallback(plain);
   if (fb) viaAscii(fb, 'poets');
   if (/ya$/.test(plain)) {
@@ -246,104 +251,23 @@ function trCands(piece, def, lang) {
     add({ ro: 'ba', hi: 'ब', ur: isFa ? 'به' : 'بہ', fixed: { ur: isFa ? 'به' : 'بہ', ro: 'ba', hi: 'ब' }, tag: 'persian' });
   }
 
-  var HOMOPHONES = {
-    sada: [{ ur: 'صدا', ro: 'ṣadā' }, { ur: 'سدا', ro: 'sadā' }],
-    aam: [{ ur: 'عام', ro: 'ʿāmm' }, { ur: 'آم', ro: 'ām' }],
-    safar: [{ ur: 'سفر', ro: 'safar' }, { ur: 'صفر', ro: 'ṣifr' }],
-    arz: [{ ur: 'عرض', ro: 'ʿarẓ' }, { ur: 'ارض', ro: 'arz' }],
-    bahr: [{ ur: 'بحر', ro: 'baḥr' }, { ur: 'بہر', ro: 'bahr' }],
-    sawab: [{ ur: 'ثواب', ro: 'ṡavāb' }, { ur: 'صواب', ro: 'savāb' }],
-    malik: [{ ur: 'ملک', ro: 'malik' }, { ur: 'مالک', ro: 'mālik' }],
-    sur: [{ ur: 'سر', ro: 'sur' }, { ur: 'صور', ro: 'ṣūr' }],
-    ghat: [{ ur: 'گھٹ', ro: 'ghaṭ' }, { ur: 'گھاٹ', ro: 'ghāṭ' }, { ur: 'گھات', ro: 'ghāt' }],
-    ghaat: [{ ur: 'گھاٹ', ro: 'ghāṭ' }, { ur: 'گھات', ro: 'ghāt' }, { ur: 'گھٹ', ro: 'ghaṭ' }],
-    man: [{ ur: 'من', ro: 'man' }, { ur: 'مان', ro: 'mān' }, { ur: 'ماں', ro: 'māñ' }],
-    maan: [{ ur: 'مان', ro: 'mān' }, { ur: 'من', ro: 'man' }, { ur: 'ماں', ro: 'māñ' }],
-    main: [{ ur: 'میں', ro: 'maiñ' }, { ur: 'مین', ro: 'mīn' }],
-    mein: [{ ur: 'میں', ro: 'meñ' }, { ur: 'مین', ro: 'mīn' }],
-    meen: [{ ur: 'مین', ro: 'mīn' }, { ur: 'میں', ro: 'meñ' }],
-    gaye: [{ ur: 'گئے', ro: 'gaʾe' }, { ur: 'گیے', ro: 'gaye' }],
-    gaaye: [{ ur: 'گائے', ro: 'gāʾe' }, { ur: 'گئے', ro: 'gaʾe' }, { ur: 'گیے', ro: 'gaye' }],
-    aaye: [{ ur: 'آئے', ro: 'āʾe' }, { ur: 'آیے', ro: 'āye' }],
-    naye: [{ ur: 'نئے', ro: 'naʾe' }, { ur: 'نیے', ro: 'naye' }],
-    nayi: [{ ur: 'نئی', ro: 'naʾī' }, { ur: 'نیی', ro: 'nayī' }]
-  };
-  function _pair(p) {
-    var c1 = { ur: p[2], ro: p[3], hi: p[6] || '' }, c2 = { ur: p[4], ro: p[5], hi: p[7] || '' };
-    HOMOPHONES[p[0]] = [c1, c2]; HOMOPHONES[p[1]] = [c2, c1];
+  /* other readings, from the dictionary (src/js/12-dictionary-module.js): the same spelling read otherwise (readingsOf: Platts'
+     Devanagari tells بیچ bīch from bech, the stem of bećnā) and other spellings of the same sound (soundsLike: sada is صدا
+     ṣadā or سدا sadā). A reading may differ from what was typed in o~u, e~i, ai~e, au~o (میل mail / mel), not a~i (ہم is not him) */
+  if (typeof DICT_STORE !== 'undefined' && DICT_STORE.status === 'ready' && !(isFa && /^maa?n$/.test(plain))) {
+    var asFixed = function (r, tag) { var u = isFa ? trUrToFa(r.ur) : r.ur; add({ ro: r.ro, hi: r.hi, ur: u, fixed: { ur: u, ro: r.ro, hi: r.hi }, tag: tag }); };
+    /* a reading the typed word (or the reading given) could stand for: o~u and e~i, not a~i (ہم is ham, not him) */
+    var lax = function (r) { return casualKey(String(r).replace(/ai/g, 'e').replace(/au/g, 'o'), 2); }, want = [lax(plain), out.length ? lax(out[0].ro || '') : ''];
+    if (out.length) DICT_STORE.readingsOf(out[0].ur).filter(function (r) { return want.indexOf(lax(r.ro)) >= 0; }).slice(0, 3)
+      .forEach(function (r) { asFixed(r, 'reading'); });
+    DICT_STORE.soundsLike(plain).filter(function (r) { return !out.some(function (c) { return fUr(c.ur) === fUr(r.ur); }); }).slice(0, 3)
+      .forEach(function (r) { asFixed(r, 'lexicon'); });
   }
-  [['nazar','nazr','نظر','naz̤ar','نذر','nażr'],['khar','khwar','خار','ḳhār','خوار','ḳhvār'],['halal','hilal','حلال','ḥalāl','ہلال','hilāl'],
-   ['qaza','ghaza','قضا','qaẓā', 'غزا','ġhazā'],['jag','jaag','جگ','jag','جاگ','jāg'],['bal','baal','بل','bal','بال','bāl'],
-   ['chal','chaal','چل','chal','چال','chāl'],['jal','jaal','جل','jal','جال','jāl'],['kal','kaal','کل','kal','کال','kāl'],
-   ['pal','paal','پل','pal','پال','pāl'],['mar','maar','مر','mar','مار','mār'],['par','paar','پر','par','پار','pār'],
-   ['dal','daal','دل','dal','دال','dāl'],['tal','taal','تل','tal','تال','tāl'],['tan','taan','تن','tan','تان','tān'],
-   ['ban','baan','بن','ban','بان','bān'],['dhan','dhaan','دھن','dhan','دھان','dhān'],['nag','naag','نگ','nag','ناگ','nāg'],
-   ['kam','kaam','کم','kam','کام','kām'],['dam','daam','دم','dam','دام','dām'],['bech','bich','بیچ','bech','بیچ','bīch','बेच','बीच'],
-   ['mail','mel','میل','mail','میل','mel','मैल','मेल'],['sair','ser','سیر','sair','سیر','ser','सैर','सेर'],['bair','ber','بیر','bair','بیر','ber','बैर','बेर']
-  ].forEach(_pair);
-  HOMOPHONES.baich = HOMOPHONES.bech; HOMOPHONES.biich = HOMOPHONES.bich;
-  HOMOPHONES.durud = HOMOPHONES.duruud = HOMOPHONES.durood = HOMOPHONES.durūd = [{ ur: 'درود', ro: 'durūd' }, { ur: 'درود', ro: 'darūd' }];
-  HOMOPHONES.salam = HOMOPHONES.salaam = HOMOPHONES.salām = [{ ur: 'سلام', ro: 'salām' }, { ur: 'سالم', ro: 'sālim' }];
-  HOMOPHONES.buvad = HOMOPHONES.buad = HOMOPHONES.bood = [{ ur: 'بود', ro: 'buvad' }, { ur: 'بود', ro: 'būd' }];
-  if (HOMOPHONES[plain] && !(isFa && (plain === 'man' || plain === 'maan'))) {
-    HOMOPHONES[plain].forEach(function (h) {
-      var targetUr = isFa ? trUrToFa(h.ur) : h.ur;
-      var normUr = fUr(targetUr);
-      var already = out.some(function (c) {
-        return fUr(c.ur) === normUr && (c.ro === h.ro || casualKey(c.ro, 0) === casualKey(h.ro, 0));
-      });
-      if (!already) {
-        var k = normUr + '|' + casualKey(h.ro, 0);
-        seen[k] = 1;
-        seen[normUr] = 1;
-        seen[h.ro] = 1;
-        out.push({ ur: targetUr, ro: h.ro, hi: h.hi || '', fixed: { ur: targetUr, ro: h.ro, hi: h.hi || '' }, tag: 'homophone' });
-      }
-    });
-  } else if (typeof DICT_STORE !== 'undefined' && DICT_STORE.indexRo && !(isFa && (plain === 'man' || plain === 'maan'))) {
-    /* Scalable rule-based candidate discovery from DICT_STORE (125k words) */
-    var baseKey = casualKey(plain, 1);
-    var dKeys = [baseKey];
-    var sync = plain.replace(/([b-df-hj-np-tv-z])a([b-df-hj-np-tv-z])$/, '$1$2');
-    if (sync !== plain) dKeys.push(casualKey(sync, 1));
-    var epenth = plain.replace(/([b-df-hj-np-tv-z])([b-df-hj-np-tv-z])$/, '$1a$2');
-    if (epenth !== plain) dKeys.push(casualKey(epenth, 1));
-    if (plain.includes('k')) dKeys.push(casualKey(plain.replace(/k/g, 'q'), 1));
-    if (plain.includes('q')) dKeys.push(casualKey(plain.replace(/q/g, 'k'), 1));
-
-    var candsFromDict = [];
-    var seenDictUr = {};
-    dKeys.forEach(function (dk) {
-      if (!dk) return;
-      var hits = DICT_STORE.indexRo.get(dk);
-      if (!hits || !hits.length) return;
-      hits.forEach(function (h) {
-        if (!h.ur) return;
-        if (h.ur.length < 2 && plain.length >= 2) return;
-        if (h.origin === 'S' && hits.some(function (x) { return x.origin !== 'S' && (x.origin === 'A' || x.origin === 'P' || x.origin === 'H'); })) return;
-        var targetUr = isFa ? trUrToFa(h.ur) : h.ur;
-        var normUr = fUr(targetUr);
-        if (seenDictUr[normUr]) return;
-        seenDictUr[normUr] = 1;
-        var already = out.some(function (c) {
-          return fUr(c.ur) === normUr;
-        });
-        if (!already) {
-          candsFromDict.push({ ur: targetUr, ro: h.ro || plain, hi: '', fixed: { ur: targetUr, ro: h.ro || plain, hi: '' }, tag: 'lexicon' });
-        }
-      });
-    });
-    candsFromDict.slice(0, 3).forEach(function (c) {
-      var normUr = fUr(c.ur);
-      var k = normUr + '|' + casualKey(c.ro, 0);
-      if (!seen[k] && !seen[normUr] && !seen[c.ur]) {
-        seen[k] = 1;
-        seen[normUr] = 1;
-        seen[c.ur] = 1;
-        out.push(c);
-      }
-    });
-  }
+  /* classical near-pairs no rule derives (a different letter and vowel: safar سفر / ṣifr صفر): offered both ways */
+  TR_PAIRS.forEach(function (p) {
+    if (casualKey(p[0], 1) !== casualKey(plain, 1) && casualKey(p[1], 1) !== casualKey(plain, 1)) return;
+    [p[2], p[3]].forEach(function (c) { add({ ro: c[1], hi: '', ur: isFa ? trUrToFa(c[0]) : c[0], fixed: { ur: c[0], ro: c[1], hi: '' }, tag: 'pair' }); });
+  });
 
   /* Generalized phonetic confusions: g↔gh always (classical near-homophones); others when the piece is not an exact known match */
   var isKnown = piece && piece.tier === 'known';
@@ -402,7 +326,7 @@ function trCands(piece, def, lang) {
 function trBuild(text, opts) {
   opts = opts || {};
   var choices = opts.choices || {};
-  var stats = { words: 0, known: 0, poets: 0, persian: 0, loose: 0, guess: 0, you: 0 };
+  var stats = { words: 0, known: 0, poets: 0, persian: 0, form: 0, loose: 0, derived: 0, guess: 0, you: 0, check: 0 };
   var lines = String(text || '').replace(/\r/g, '').split('\n').map(function (rawLine) {
     var raw = rawLine.normalize('NFC').trim();
     if (!raw) return { src: '', blank: true, words: [], out: { ro: '', hi: '', ur: '', fa: '' } };
@@ -425,6 +349,22 @@ function trBuild(text, opts) {
           if (ch.t === 'f') p.fixed = { ur: ch.ur || '', ro: ch.ro, hi: ch.hi || '', decomp: ch.decomp || null };
           else { p.fixed = null; p.ascii = ch.a; }
           p.chosen = true; p.baseTier = p.tier; p.tier = 'you';
+          return;
+        }
+        /* a word no list knows, or that only the inflection regexes or the Persian splitter built: a regular form of a
+           dictionary word, when the dictionary has one (formsFor, src/js/12-dictionary-module.js) */
+        var forms = (!scripted && lineLang !== 'fa' && /^(guess|derived|persian)$/.test(p.tier) && !/-/.test(p.src) && typeof DICT_STORE !== 'undefined' && DICT_STORE.status === 'ready')
+          ? DICT_STORE.formsFor(p.src) : [];
+        /* a reading the lists or the Persian splitter gave stays unless the dictionary's is closer to what was typed; a tie goes to
+           the dictionary (its form is checked), except against a hand-listed inflection (OBL_NOUN_MAP: shamon is shāmoñ) */
+        if (forms.length && p.tier !== 'guess' && p.ascii && !forms.some(function (f) { return f.ascii === p.ascii; })) {
+          var own = p.def.fixed ? 0 : typedDistance(p.src, asciiToScripts(p.ascii).ro || '');
+          var listed = p.tier === 'derived' && (casualPiece(p.src, 0, false, '', '').urDec || {}).listed;
+          if (p.def.fixed || own < forms[0].dist || (listed && own <= forms[0].dist)) forms = [];
+        }
+        if (forms.length) {
+          p.ascii = forms[0].ascii; p.fixed = null; p.def = { ascii: p.ascii };
+          p.baseTier = p.tier; p.tier = 'form';
           return;
         }
         if (!scripted && !p.opaque) {
@@ -465,14 +405,15 @@ function trBuild(text, opts) {
       var cLang = (lineLang === 'fa' || (typeof TR !== 'undefined' && TR.script === 'fa')) ? 'fa' : 'ur';
       var hasChoice = w.reviewable && w.pieces.some(function (p) {
         if (!trReviewable(p)) return false;
-        var cands = trCands(p, p.def, cLang);
-        return cands.length > 1;
+        return trRivals(p, trCands(p, p.def, cLang)) > 0;
       });
       w.hasChoice = hasChoice;
-      w.needsCheck = hasChoice || w.tier === 'guess' || w.tier === 'loose';
+      w.needsCheck = hasChoice || w.tier === 'guess' || w.tier === 'loose' || w.tier === 'derived' ||
+        w.tier === 'form';   // a dictionary form is still a guess at which word: underlined (tests/benchmark_transcribe.js: caught)
       if (!w.plain) {
         stats.words++;
         if (stats[w.tier] != null) stats[w.tier]++;
+        if (w.needsCheck) stats.check++;   // the underlined words, whatever made them so
       }
     });
     var line = { src: raw, words: words };
@@ -487,10 +428,10 @@ function trBuild(text, opts) {
 function trWordOut(w) {
   if (w.plain) return { ro: w.plainText, hi: w.plainText, ur: w.plainText, fa: w.plainText };
   var ps = w.pieces, o;
-  if (!ps.some(function (p) { return p.fixed; })) { o = trParse3(ps.map(function (p) { return p.ascii; }).join('-')); o.fa = trUrToFa(o.ur); return o; }
+  if (!ps.some(function (p) { return p.fixed; })) { o = asciiToScripts(ps.map(function (p) { return p.ascii; }).join('-')); o.fa = trUrToFa(o.ur); return o; }
   var parts = ps.map(function (p) {
-    if (p.fixed) return { ro: p.fixed.ro, hi: p.fixed.hi || trParse3(romanToAscii(p.fixed.ro)).hi, ur: p.fixed.ur || trParse3(romanToAscii(p.fixed.ro)).ur, fa: p.fixed.fa || (p.fixed.decomp && p.fixed.decomp.fa) || trUrToFa(p.fixed.ur), conn: false };
-    var t = trParse3(p.ascii);
+    if (p.fixed) return { ro: p.fixed.ro, hi: p.fixed.hi || asciiToScripts(romanToAscii(p.fixed.ro)).hi, ur: p.fixed.ur || asciiToScripts(romanToAscii(p.fixed.ro)).ur, fa: p.fixed.fa || (p.fixed.decomp && p.fixed.decomp.fa) || trUrToFa(p.fixed.ur), conn: false };
+    var t = asciiToScripts(p.ascii);
     return { ro: t.ro || p.src, hi: t.hi || p.src, ur: t.ur || p.src, fa: trUrToFa(t.ur), conn: p.tier === 'conn', src: p.src.toLowerCase() };
   });
   var ur = '', fa = '';
@@ -547,10 +488,16 @@ function trSave(key, val) { try { if (typeof store !== 'undefined' && store.set)
 function trLoad(key, def) { try { if (typeof store !== 'undefined' && store.get) { var v = store.get(key, def); return v == null ? def : v; } } catch (e) {} return def; }
 
 var TR_TIER_NOTE = {
-  known: 'Pritchett’s word list', poets: 'the Rekhta poets’ list', persian: 'the Persian list', loose: 'a loose match: check it',
+  known: 'Pritchett’s word list', poets: 'the Rekhta poets’ list', persian: 'the Persian list', loose: 'a loose match: check it', derived: 'built by an inflection rule: check it', form: 'a regular form of a dictionary word',
   guess: 'no list knows it: read from the letters, short vowels are a guess', typed: 'as you typed it', you: 'your correction'
 };
-var TR_TAG_NOTE = { now: 'as read now', list: 'Pritchett’s list', loose: 'loose match', poets: 'Rekhta poets', persian: 'Persian list', letters: 'from the letters', homophone: 'classical pair' };
+/* classical near-pairs: [typed, typed, [Urdu, Roman], [Urdu, Roman]] (offered for either typed spelling) */
+var TR_PAIRS = [['sada', 'sadaa', ['صدا', 'ṣadā'], ['سدا', 'sadā']], ['safar', 'sifr', ['سفر', 'safar'], ['صفر', 'ṣifr']], ['halal', 'hilal', ['حلال', 'ḥalāl'], ['ہلال', 'hilāl']],
+  ['khar', 'khwar', ['خار', 'ḳhār'], ['خوار', 'ḳhvār']], ['qaza', 'ghaza', ['قضا', 'qaẓā'], ['غزا', 'ġhazā']],
+  ['salam', 'salām', ['سلام', 'salām'], ['سالم', 'sālim']], ['nazar', 'nazr', ['نظر', 'naz̤ar'], ['نذر', 'nażr']],
+  ['durud', 'durūd', ['درود', 'durūd'], ['درود', 'darūd']], ['buvad', 'buad', ['بود', 'buvad'], ['بود', 'būd']], ['bood', 'būd', ['بود', 'buvad'], ['بود', 'būd']],
+  ['main', 'meen', ['میں', 'maiñ'], ['مین', 'mīn']], ['mein', 'meen', ['میں', 'meñ'], ['مین', 'mīn']], ['gaye', 'gāye', ['گئے', 'gaʾe'], ['گیے', 'gaye']], ['naye', 'nayi', ['نئے', 'naʾe'], ['نیے', 'naye']], ['aaye', 'āye', ['آئے', 'āʾe'], ['آیے', 'āye']]];
+var TR_TAG_NOTE = { now: 'as read now', list: 'Pritchett’s list', loose: 'loose match', poets: 'Rekhta poets', persian: 'Persian list', letters: 'from the letters', reading: 'same spelling, another word', lexicon: 'dictionary', pair: 'classical pair', form: 'dictionary word’s form' };
 
 function trScriptAttrs(script) {
   return script === 'ur' ? 'class="tr-res tr-res-ur" lang="ur" dir="rtl"' : script === 'fa' ? 'class="tr-res tr-res-ur" lang="fa" dir="rtl"' : script === 'hi' ? 'class="tr-res tr-res-hi" lang="hi" dir="ltr"' : 'class="tr-res tr-res-ro" lang="ur-Latn" dir="ltr"';
@@ -599,7 +546,7 @@ function trEditHtml(w, script) {
   w.pieces.forEach(function (p, pi) {
     if (!trReviewable(p)) return;
     var cands = trCands(p, p.def, cLang);
-    var hasChoice = cands.length > 1 || p.tier === 'guess' || p.tier === 'loose' || p.chosen;
+    var hasChoice = trRivals(p, cands) > 0 || p.tier === 'guess' || p.tier === 'loose' || p.tier === 'derived' || p.chosen;
     rev.push({ p: p, pi: pi, cands: cands, hasChoice: hasChoice });
   });
   var hasAnyChoice = rev.some(function (r) { return r.hasChoice; });
@@ -634,6 +581,30 @@ function trEditHtml(w, script) {
     '<button type="button" class="btn ghost sm tr-close" aria-label="Close" onclick="trClose()">×</button></div>';
 }
 
+/* how many alternatives make a word worth a second look. For a word no list vouches for, any. For a word Pritchett's or the poets'
+   lists know: those from the lists and rules, and a dictionary word spelled otherwise only when it is as close to what was
+   typed as the list's reading (the list may have the wrong word); the same spelling's other readings are offered on a tap,
+   not underlined. Tuned on tests/benchmark_transcribe.js (caught: no silent errors; calm: no needless underlines). */
+function trRivals(p, cands) {
+  var alts = cands.filter(function (c) { return !c.isDefault; });
+  if (!/^(known|poets)$/.test(p.tier) || !cands.length || typeof typedDistance !== 'function') return alts.length;
+  var own = typedDistance(p.src, cands[0].ro || '');
+  return alts.filter(function (c) {
+    if (c.tag === 'reading') return false;
+    return !/^(lexicon|form)$/.test(c.tag) || typedDistance(p.src, c.ro || '') <= own;
+  }).length;
+}
+
+/* the entries for the first of several spellings of one word that the dictionary knows */
+function trLookupFirst(spellings) {
+  for (var i = 0; i < spellings.length; i++) {
+    if (!spellings[i]) continue;
+    var h = DICT_STORE.lookup(spellings[i]);
+    if (h.length) return h;
+  }
+  return [];
+}
+
 function trDictSectionHtml(w, activeP, script) {
   if (typeof DICT_STORE === 'undefined') return '';
   var src = w.src || '';
@@ -659,7 +630,7 @@ function trDictSectionHtml(w, activeP, script) {
     } else if (decomp.stem && decomp.sfx) {
       morphDesc = decomp.stem + (decomp.stemUr ? ' (' + decomp.stemUr + ')' : '') + ' + -' + decomp.sfx + ' (suffix)';
     }
-    morphBanner = '<div class="tr-dict-morph dim small" style="margin-bottom:var(--sp-2); padding:var(--sp-1) var(--sp-2); background:var(--bg-card); border-radius:var(--radius-sm); font-size:12px;">' +
+    morphBanner = '<div class="tr-dict-morph dim small">' +
       '<strong>Morphology:</strong> ' + escapeHtml(morphDesc) + '</div>';
   }
   if (DICT_STORE.status !== 'ready') {
@@ -671,13 +642,10 @@ function trDictSectionHtml(w, activeP, script) {
     return morphBanner;
   }
 
-  // Build candidate tabs
+  // Build candidate tabs. DICT_STORE.lookup already folds spellings and finds a form's dictionary word: what is left to try is
+  // which spelling of the word to ask with (typed, Urdu, Roman, a compound whole or unspaced)
   var tabs = [];
-  var wholeHits = [];
-  if (src && src.includes('-')) {
-    wholeHits = DICT_STORE.lookup(src);
-    if (!wholeHits.length) wholeHits = DICT_STORE.lookup(src.replace(/-/g, ''));
-  }
+  var wholeHits = src && src.includes('-') ? trLookupFirst([src, src.replace(/-/g, '')]) : [];
   if (!wholeHits.length && w.out && w.out.ur) {
     wholeHits = DICT_STORE.lookup(w.out.ur);
     if (w.out.ro && w.out.ro !== w.out.ur) {
@@ -686,17 +654,11 @@ function trDictSectionHtml(w, activeP, script) {
       });
     }
   }
-  if (!wholeHits.length && decomp && decomp.pfxUr && decomp.stemUr) {
-    wholeHits = DICT_STORE.lookup(decomp.pfxUr + ' ' + decomp.stemUr);
-    if (!wholeHits.length) wholeHits = DICT_STORE.lookup(decomp.pfxUr + decomp.stemUr);
+  if (!wholeHits.length && decomp && decomp.stem) {
+    wholeHits = trLookupFirst([decomp.pfxUr && decomp.stemUr && decomp.pfxUr + ' ' + decomp.stemUr, decomp.pfxUr && decomp.stemUr && decomp.pfxUr + decomp.stemUr,
+      decomp.pfx && decomp.pfx + '-' + decomp.stem, decomp.pfx && decomp.pfx + decomp.stem]);
   }
-  if (!wholeHits.length && decomp && decomp.pfx && decomp.stem) {
-    wholeHits = DICT_STORE.lookup(decomp.pfx + '-' + decomp.stem);
-    if (!wholeHits.length) wholeHits = DICT_STORE.lookup(decomp.pfx + decomp.stem);
-  }
-  if (!wholeHits.length && src && !src.includes('-')) {
-    wholeHits = DICT_STORE.lookup(src);
-  }
+  if (!wholeHits.length && src && !src.includes('-')) wholeHits = DICT_STORE.lookup(src);
 
   if (wholeHits.length) {
     var wholeLabel = (w.pieces && w.pieces.length > 1 && w.out && w.out.ur)
@@ -709,20 +671,15 @@ function trDictSectionHtml(w, activeP, script) {
     w.pieces.forEach(function (pc, pi) {
       var isConn = (pc.tier === 'conn') || /^(e|ye|o)$/i.test(pc.src);
       if (isConn) return;
-      var ur = (pc.fixed && pc.fixed.ur) || (pc.ascii && trParse3(pc.ascii).ur) || pc.src;
-      var ro = (pc.fixed && pc.fixed.ro) || (pc.ascii && trParse3(pc.ascii).ro) || pc.src;
-      var hList = DICT_STORE.lookup(ur);
-      if (!hList.length && ur && /ں$/.test(ur)) hList = DICT_STORE.lookup(ur.replace(/ں$/, 'ن'));
-      if (!hList.length && ro) hList = DICT_STORE.lookup(ro);
-      if (!hList.length && pc.src) hList = DICT_STORE.lookup(pc.src);
+      var ur = (pc.fixed && pc.fixed.ur) || (pc.ascii && asciiToScripts(pc.ascii).ur) || pc.src;
+      var ro = (pc.fixed && pc.fixed.ro) || (pc.ascii && asciiToScripts(pc.ascii).ro) || pc.src;
+      var hList = trLookupFirst([ur, ro, pc.src]);
       tabs.push({ id: String(pi), pi: pi, p: pc, label: ur + ' (' + ro + ')', hits: hList });
     });
   } else if (decomp && decomp.stem) {
     var sUr = decomp.stemUr || '';
     var sRo = decomp.stem || '';
-    var sHits = sUr ? DICT_STORE.lookup(sUr) : [];
-    if (!sHits.length && sUr && /ں$/.test(sUr)) sHits = DICT_STORE.lookup(sUr.replace(/ں$/, 'ن'));
-    if (!sHits.length && sRo) sHits = DICT_STORE.lookup(sRo);
+    var sHits = trLookupFirst([sUr, sRo]);
     tabs.push({ id: 'stem', label: (sUr || sRo) + (sRo ? ' (' + sRo + ')' : ''), hits: sHits });
   }
 
@@ -743,12 +700,8 @@ function trDictSectionHtml(w, activeP, script) {
   if (!hits.length) {
     var targetP = (activeTab && activeTab.p) || p;
     var isSuff = targetP && /^(i|ee|ii|am|at|ash|im|id|and|e|ye)$/i.test(targetP.src);
-    var urTarget = (!isSuff && ((targetP && targetP.fixed && targetP.fixed.ur) || (targetP && (targetP.ascii || (targetP.def && targetP.def.ascii)) && trParse3(targetP.ascii || targetP.def.ascii).ur))) || '';
-    if (urTarget) hits = DICT_STORE.lookup(urTarget);
-    if (!hits.length && urTarget && /ں$/.test(urTarget)) hits = DICT_STORE.lookup(urTarget.replace(/ں$/, 'ن'));
-    if (!hits.length && !isSuff && targetP && targetP.fixed && targetP.fixed.ro) hits = DICT_STORE.lookup(targetP.fixed.ro);
-    if (!hits.length && !isSuff && targetP && targetP.src) hits = DICT_STORE.lookup(targetP.src);
-    if (!hits.length && src) hits = DICT_STORE.lookup(src);
+    var urTarget = (!isSuff && ((targetP && targetP.fixed && targetP.fixed.ur) || (targetP && (targetP.ascii || (targetP.def && targetP.def.ascii)) && asciiToScripts(targetP.ascii || targetP.def.ascii).ur))) || '';
+    hits = trLookupFirst([urTarget, !isSuff && targetP && targetP.fixed && targetP.fixed.ro, !isSuff && targetP && targetP.src, src]);
   }
 
   var tabsHtml = '';
@@ -856,7 +809,7 @@ function trDictSectionHtml(w, activeP, script) {
   var defText = '';
   if (h && h.all && h.all.length > 1) {
     defText = h.all.map(function (entry, idx) {
-      return '<div style="margin-bottom:6px;"><strong>(' + (idx + 1) + ')</strong> ' + escapeHtml(entry.def || '') + '</div>';
+      return '<div class="tr-dict-sense"><strong>(' + (idx + 1) + ')</strong> ' + escapeHtml(entry.def || '') + '</div>';
     }).join('');
   } else if (h) {
     defText = escapeHtml(h.def || (h.primary && h.primary.def) || '');
@@ -877,8 +830,7 @@ function trDictSectionHtml(w, activeP, script) {
 function trStatsHtml(s) {
   if (!s.words) return '';
   var bits = [s.words + (s.words === 1 ? ' word' : ' words')];
-  var check = s.guess + s.loose;
-  bits.push(check ? check + ' to check' : 'all verified');
+  bits.push(s.check ? s.check + ' to check' : 'all verified');
   if (s.you) bits.push(s.you + ' corrected');
   return bits.join(' · ');
 }
@@ -887,7 +839,7 @@ function trCorrectionsHtml() {
   var keys = Object.keys(TR.choices);
   if (!keys.length) return '';
   var items = keys.map(function (k, i) {   // the handler gets a position, never user text
-    var c = TR.choices[k], ro = c.t === 'f' ? c.ro : (trParse3(c.a).ro || c.a);
+    var c = TR.choices[k], ro = c.t === 'f' ? c.ro : (asciiToScripts(c.a).ro || c.a);
     return '<li><span lang="ur-Latn" dir="ltr">' + escapeHtml(k) + ' → ' + escapeHtml(ro) + '</span> <button type="button" class="btn link sm" onclick="trUndo(' + i + ')">Undo</button></li>';
   }).join('');
   return '<div class="tr-fixes"><div class="eyebrow">Your corrections</div><ul>' + items + '</ul>' +
@@ -959,7 +911,7 @@ function trCustom(pi, form) {
   var v = inp ? inp.value.trim() : '';
   if (h && v) {
     if (h.p.script) {
-      var hi = trParse3(romanToAscii(v)).hi;
+      var hi = asciiToScripts(romanToAscii(v)).hi;
       TR.choices[h.p.key] = { t: 'f', ro: v, hi: hi, ur: h.p.src };
     } else TR.choices[h.p.key] = { t: 'a', a: romanToAscii(v) };
     trSave('trChoices', TR.choices);

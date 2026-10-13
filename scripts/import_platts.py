@@ -8,18 +8,16 @@ and Roman transliteration with diacritics (<i>), short vowels and etymology (<en
 
 Source: The Digital Dictionaries of South Asia (DSAL) at the University of Chicago
 (https://dsal.uchicago.edu/dictionaries/platts/).
-Pages 1 to 1254 are cached locally in data/platts_cache/p_XXXX.html (gitignored).
-Writes:
-  data/ur_platts.tsv: urdu<TAB>hindi<TAB>roman<TAB>origin<TAB>page
+Fetches pages 1 to 1254 into data/platts_cache/p_XXXX.html (gitignored), which scripts/build_dictionary_bundle.py parses
+into data/dictionary_bundle.json.gz: the one Platts the app and the build scripts read.
 
 Usage:
   python3 scripts/import_platts.py [--pages N] [--workers W]
 """
-import argparse, concurrent.futures, os, re, sys, time, urllib.request
+import argparse, concurrent.futures, os, sys, time, urllib.request
 
 ROOT = os.path.join(os.path.dirname(__file__), '..')
 CACHE_DIR = os.path.join(ROOT, 'data', 'platts_cache')
-OUT_TSV = os.path.join(ROOT, 'data', 'ur_platts.tsv')
 BASE_URL = 'https://dsal.uchicago.edu/cgi-bin/app/platts_query.py?page={page}'
 TOTAL_PAGES = 1254
 
@@ -48,33 +46,6 @@ def fetch_page(page, session_headers):
     return page, ""
 
 
-def parse_page_html(html, page):
-    """Extract (urdu, hindi, roman, origin, page) from page HTML."""
-    rows = []
-    # Pattern matching each <hw> block within its <entry>
-    # <entry> <span class="new_p">A <hw><pa>برزخ</pa> <i>barzaḵẖ</i></hw>
-    raw_entries = re.findall(r'<entry>\s*<span class="new_p">\s*([A-Za-z?]+)?\s*<hw>(.*?)</hw>', html, re.DOTALL)
-    for origin, hw in raw_entries:
-        pas = re.findall(r'<pa>(.*?)</pa>', hw)
-        ds = re.findall(r'<d>(.*?)</d>', hw)
-        ro_matches = re.findall(r'<i>(.*?)</i>', hw)
-
-        ur = pas[0].strip() if pas else ''
-        hi = ds[0].strip() if ds else ''
-        ro = ro_matches[0].replace('*', '').strip() if ro_matches else ''
-        origin = (origin or '').strip()
-
-        # Clean tags or entities
-        ur = re.sub(r'<[^>]+>', '', ur).strip()
-        hi = re.sub(r'<[^>]+>', '', hi).strip()
-        ro = re.sub(r'<[^>]+>', '', ro).strip()
-
-        if ur and ro:
-            rows.append((ur, hi, ro, origin, page))
-
-    return rows
-
-
 def main():
     parser = argparse.ArgumentParser(description="Import Platts dictionary from DSAL")
     parser.add_argument('--pages', type=int, default=TOTAL_PAGES, help="Total pages to scrape (default 1254)")
@@ -87,7 +58,6 @@ def main():
     }
 
     print(f"Fetching {args.pages} pages with {args.workers} workers...")
-    all_rows = []
     page_data = {}
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as executor:
@@ -101,26 +71,7 @@ def main():
             if done_count % 100 == 0 or done_count == args.pages:
                 print(f"  [{done_count}/{args.pages}] pages fetched (cached: {len(page_data)})")
 
-    # Parse in page order
-    seen = set()
-    unique_rows = []
-    for p in range(1, args.pages + 1):
-        if p in page_data:
-            rows = parse_page_html(page_data[p], p)
-            for r in rows:
-                key = (r[0], r[2])  # (urdu, roman)
-                if key not in seen:
-                    seen.add(key)
-                    unique_rows.append(r)
-
-    print(f"Parsed {len(unique_rows)} unique headwords from {len(page_data)} pages.")
-
-    with open(OUT_TSV, 'w', encoding='utf-8') as f:
-        f.write("urdu\thindi\troman\torigin\tpage\n")
-        for ur, hi, ro, orig, pg in unique_rows:
-            f.write(f"{ur}\t{hi}\t{ro}\t{orig}\t{pg}\n")
-
-    print(f"Wrote {len(unique_rows)} entries -> {os.path.relpath(OUT_TSV, ROOT)}")
+    print(f"{len(page_data)} pages cached in {os.path.relpath(CACHE_DIR, ROOT)}: now run scripts/build_dictionary_bundle.py")
 
 
 if __name__ == '__main__':

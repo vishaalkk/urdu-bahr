@@ -22,6 +22,13 @@ quick_suites() {
   echo "── chip transliteration";  node tests/chip_translit_consistency.js
   echo "── practice logic";        node tests/practice_logic.js
   echo "── transcribe logic";      node tests/transcribe_logic.js
+  echo "── transcribe golden (the exceptions' spec)"; node tests/transcribe_golden.js
+  echo "── dictionary lookup (held-out words; floors tests/dictionary_baseline.json)"; node tests/benchmark_dictionary.js
+  echo "── dictionary word of inflected forms (gold; floors tests/lemma_baseline.json)"; node tests/benchmark_lemma.js
+  echo "── same spelling, other reading (Platts pairs; floors tests/readings_baseline.json)"; node tests/benchmark_readings.js
+  echo "── line language (held-out lines; floors tests/lang_baseline.json)"; node tests/benchmark_lang.js
+  echo "── dictionary cache (IndexedDB keyed by the build's fingerprint)"; node tests/dictionary_cache.js
+  echo "── generated data is current (roman_fallback, fa_scan, lang_words)"; node tests/derived_data.js
   echo "── learn examples";        node tests/learn_examples.js
   echo "── learn alignment";       node tests/learn_alignment.js
   echo "── learn render";          node tests/learn_render.js 2>&1 | quiet
@@ -41,6 +48,8 @@ job() {   # job <title> <command…>: run in the background under errexit + pipe
   pids+=($!)
 }
 job "Fran benchmark (Ghalib + Mir: no score may fall below tests/benchmark_baseline.json)" node tests/benchmark.js
+job "Typed Roman, held-out poets (no score may fall below tests/typed_roman_baseline.json)" node tests/typed_roman_heldout.js
+job "Transcribe, held-out poets (no score may fall below tests/transcribe_baseline.json)" node tests/benchmark_transcribe.js
 job "Persian benchmark (quick; the full run is \`npm run bench:fa\`)" bash -c 'set -o pipefail; node tests/benchmark_fa.js --quick 2>&1 | { grep -v "^parser" || true; }'
 for ((s = 0; s < SHARDS; s++)); do job "DOM smoke (jsdom), shard $((s + 1))/$SHARDS" env DOM_SHARD="$s/$SHARDS" node tests/dom_smoke.js; done
 job "quick suites" quick_suites

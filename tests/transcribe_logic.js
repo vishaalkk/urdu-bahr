@@ -4,23 +4,9 @@
 //   - corrections and the Persian list change only the words they name
 //
 // Run: node tests/transcribe_logic.js
-const fs = require('fs'), path = require('path'), vm = require('vm');
-// the whole built page, run with a DOM stub rich enough that its top level (script mode, router) runs to the end
-const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
-const scripts = html.match(/<script[^>]*>([\s\S]*?)<\/script>/gi);
-const domStore = {};
-const elBase = id => ({ id, classList: { add() {}, remove() {}, toggle() {}, contains: () => false }, querySelectorAll: () => [], querySelector: () => null,
-    textContent: '', innerHTML: '', value: '', style: {}, children: [], dataset: {} });
-const makeElement = id => new Proxy(elBase(id), { get: (t, k) => (k in t || typeof k === 'symbol') ? t[k] : () => null, set: (t, k, v) => { t[k] = v; return true; } });   // any method it is asked for is a no-op
-const el = id => domStore[id] || (domStore[id] = makeElement(id));
-const ctx = {
-    window: {}, document: { getElementById: el, querySelectorAll: () => [], querySelector: s => makeElement(s), addEventListener() {}, documentElement: makeElement('html') },
-    $: el, console: { log() {}, warn() {}, error() {} }, setTimeout: fn => { fn(); return 1; }, clearTimeout() {}, setInterval() {}, clearInterval() {},
-    AudioContext: function () { return {}; }, localStorage: { getItem: () => null, setItem() {}, removeItem() {} }
-};   // (the Pue parsers log every character they cannot read: console is muted)
-vm.createContext(ctx);
-scripts.slice(0, 2).forEach(s => vm.runInContext(s.replace(/<\/?script[^>]*>/gi, ''), ctx));
-const run = c => vm.runInContext(c, ctx);
+const fs = require('fs'), path = require('path');
+// the whole built page, with the DOM stub tests/lib_page.js provides (the dictionary is loaded further down, at test 18)
+const { run } = require('./lib_page').loadPage();
 const J = JSON.stringify;
 let bad = 0;
 const ok = (c, m) => { if (!c) { bad++; console.log('FAIL: ' + m); } };
@@ -321,7 +307,10 @@ ok(cJaag.some(c => c.ur === 'جاگ') && cJaag.some(c => c.ur === 'جگ'), 'jaag
 
 // 35. nazr deduplicated candidates & durud options
 const cNazr = run(`(function(){ var w = trBuild('nazr').lines[0].words[0]; return trCands(w.pieces[0], w.pieces[0].def, 'ur'); })()`);
-ok(cNazr.length === 2 && cNazr[0].ur === 'نذر' && cNazr[1].ur === 'نظر', 'nazr has exactly two distinct options (no duplicate نذر): ' + cNazr.map(c => c.ur));
+// (written for the hand-made pair table; with the dictionary, Platts' نزر and نضر are further readings: the intent is no duplicate
+// and both of the pair, نذر first)
+const nazrKeys = cNazr.map(c => c.ur + ' ' + run(`casualKey(${J(c.ro)}, 0)`));
+ok(new Set(nazrKeys).size === nazrKeys.length && cNazr[0].ur === 'نذر' && cNazr.some(c => c.ur === 'نظر'), 'nazr offers نذر first and نظر, no duplicate: ' + cNazr.map(c => c.ur));
 
 const cDurud = run(`(function(){ var w = trBuild('durūd-o-salām').lines[0].words[0]; return trCands(w.pieces[0], w.pieces[0].def, 'ur'); })()`);
 ok(cDurud.length >= 2 && cDurud.some(c => c.ro === 'darūd'), 'durud offers both durūd and darūd: ' + cDurud.map(c => c.ro));

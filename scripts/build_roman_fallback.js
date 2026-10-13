@@ -57,39 +57,25 @@ for (const [typed, base, ur, n] of pairs) {
     byKey.set(k, e);
 }
 
-/* Platts (1884) scholarly Roman -> Pritchett ASCII conversion */
-function plattsToAscii(ro) {
-    if (!ro) return '';
-    let s = ro.trim().toLowerCase();
-    s = s.replace(/k[̱_]h[̱_]|ḵẖ|k͟h/g, ';x').replace(/g[̱_]h[̱_]|g̱ẖ|g͟h/g, ';g');
-    s = s.replace(/ḵ/g, ';x').replace(/ġ/g, ';g');
-    s = s.replace(/ćh/g, 'chh').replace(/ć/g, 'ch');
-    s = s.replace(/ś|ṣh/g, 'sh').replace(/ṣ/g, '.s');
-    s = s.replace(/ż|ẕ/g, ';z').replace(/ẓ/g, '.z');
-    s = s.replace(/z̤/g, ':z').replace(/t̤/g, ':t').replace(/ṭ/g, ';t').replace(/ḍ/g, ';d').replace(/ṛ/g, ';r');
-    s = s.replace(/ḥ/g, ';h').replace(/s̱|ṡ/g, ';s');
-    s = s.replace(/ā/g, 'aa').replace(/ī/g, 'ii').replace(/ū/g, 'uu');
-    s = s.replace(/[ñn̐ṅṉ]/g, ';n');
-    s = s.replace(/[ʻ‘ʿ]/g, '((').replace(/[ʼ’ʾ]/g, '))');
-    s = s.replace(/w/g, 'v');
-    return s;
-}
+/* Platts (1884) scholarly Roman -> the ASCII scheme: the app's own converter (scholarRoToAscii, src/js/05-translit-helpers.js) */
+const plattsToAscii = ro => ctx.scholarRoToAscii(ro);
 
-const plattsFile = path.join(root, 'data/ur_platts.tsv');
+/* Platts' headwords from the dictionary bundle (data/dictionary_bundle.json.gz, the same file the Transcribe drawer reads), in page
+   order. A key keeps all its headwords (nila: نيله nīla, indigo juice, and نيلا nīlā, blue): a Rekhta word takes the one spelled
+   as it is, a classical addition the first */
 const plattsMap = new Map();
-if (fs.existsSync(plattsFile)) {
-    const lines = fs.readFileSync(plattsFile, 'utf8').split('\n').slice(1);
-    for (const l of lines) {
-        const parts = l.split('\t');
-        if (parts.length < 5) continue;
-        const [ur, hi, ro, origin] = parts;
-        if (!ur || !ro || ur.includes(' ') || ro.includes(' ') || ro.includes('-')) continue;
+const bundleFile = path.join(root, 'data/dictionary_bundle.json.gz');
+if (fs.existsSync(bundleFile)) {
+    const platts = JSON.parse(require('zlib').gunzipSync(fs.readFileSync(bundleFile))).filter(e => e.dict === 'Platts');
+    platts.map((e, i) => [e, i]).sort((a, b) => (a[0].page - b[0].page) || (a[1] - b[1])).forEach(([{ ur, ro, origin }]) => {
+        if (!ur || !ro || ur.includes(' ') || ro.includes(' ') || ro.includes('-')) return;
         const k = key1(ro);
-        if (!k || k.length < 2) continue;
+        if (!k || k.length < 2) return;
         const asc = plattsToAscii(ro);
-        if (!asc) continue;
-        if (!plattsMap.has(k)) plattsMap.set(k, { ur: norm(ur), asc, origin });
-    }
+        if (!asc) return;
+        if (!plattsMap.has(k)) plattsMap.set(k, []);
+        if (!plattsMap.get(k).some(x => x.ur === norm(ur))) plattsMap.get(k).push({ ur: norm(ur), asc, origin });
+    });
 }
 
 const result = {};
@@ -106,8 +92,8 @@ for (const [k, e] of byKey) {
         }
     }
     if (!matched) {
-        const p = plattsMap.get(k);
-        if (p && p.ur === ur) {
+        const p = (plattsMap.get(k) || []).find(x => x.ur === ur);
+        if (p) {
             run(`ROMAN_FALLBACK[${JSON.stringify(k)}] = ${JSON.stringify(p.asc)}`);
             const got = norm((run(`lineScripts(${JSON.stringify(w.typed)}, { skipKnown: true })`) || {}).ur || '');
             if (got === ur) { result[k] = p.asc; keptPlatts++; matched = true; }
@@ -118,7 +104,7 @@ for (const [k, e] of byKey) {
 
 // Add high-value classical Persian and Arabic words from Platts not already in result (budget-capped)
 let keptPlattsClassical = 0;
-for (const [k, p] of plattsMap) {
+for (const [k, [p]] of plattsMap) {
     if (Object.keys(result).length >= 3600) break;
     if (fran1[k] || result[k]) continue;
     if (p.origin === 'P' || p.origin === 'A') {

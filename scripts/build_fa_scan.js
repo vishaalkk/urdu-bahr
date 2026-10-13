@@ -16,7 +16,7 @@ const persian = JSON.parse(fs.readFileSync(path.join(root, 'data/persian_meters.
 const lex = F.buildScanLex(Scan, ghazals);
 /* + verb forms (scripts/lib_fa_verbs.js) the engine misreads and Sufinama never showed */
 Object.assign(lex, require('./lib_fa_verbs').verbLex(Scan, lex, F.romanWeights, F.rankReadings));
-/* + Steingass's classical pronunciations (scripts/lib_fa_steingass.js, data/fa_steingass.tsv) for the words still misread */
+/* + Steingass's classical pronunciations (scripts/lib_fa_steingass.js, from data/dictionary_bundle.json.gz) for the words still misread */
 const nBefore = Object.keys(lex).length;
 Object.assign(lex, require('./lib_fa_steingass').steingassLex(Scan, ctx, lex, F.romanWeights, F.rankReadings));
 console.log(`${Object.keys(lex).length - nBefore} readings from Steingass`);
@@ -28,5 +28,6 @@ const persianRows = F.persianMeterRows(persian.filter(m => !/رباعی/.test(m.
 const meters = persianRows.concat(F.contractionRows(Scan.METERS.filter(m => m.kind !== 'rubai' && m.id !== 'H' && m.raw).map(m => [m.id, m.raw]).concat(persianRows)));
 /* + the verb forms as the Persian text prep spells them, for the iẓāfat guess (faIzafatSlots: no iẓāfat on or before a verb) */
 const verbs = [...new Set(require('./lib_fa_verbs').verbForms().map(([u]) => ctx.faScanSpelling(u)).filter(u => !/\s/.test(u)))].sort();
-fs.writeFileSync(path.join(root, 'data/fa_scan.json'), JSON.stringify({ meters, lex, verbs }, null, 0).replace(/\],"/g, '],\n"') + '\n');
-console.log(`${Object.keys(lex).length} Persian readings, ${persianRows.length} Persian meters + ${meters.length - persianRows.length} contracted rows -> data/fa_scan.json`);
+const outArg = process.argv.indexOf('--out'), outFile = outArg > 0 ? process.argv[outArg + 1] : path.join(root, 'data/fa_scan.json');   // --out: elsewhere (tests/derived_data.js)
+fs.writeFileSync(outFile, JSON.stringify({ meters, lex, verbs }, null, 0).replace(/\],"/g, '],\n"') + '\n');
+console.log(`${Object.keys(lex).length} Persian readings, ${persianRows.length} Persian meters + ${meters.length - persianRows.length} contracted rows -> ${path.relative(root, outFile)}`);

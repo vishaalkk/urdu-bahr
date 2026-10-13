@@ -152,7 +152,7 @@ const CASUAL_ALIAS = { ye: 'yih', yeh: 'yih', yah: 'yih', vo: 'vuh', wo: 'vuh', 
   soye: 'so))e', soyi: 'so))ii', soyee: 'so))ii',
   khoye: 'kho))e', khoyi: 'kho))ii', khoyee: 'kho))ii',
   boye: 'bo))e', boyi: 'bo))ii', boyee: 'bo))ii',
-  huye: 'hu))e', huyi: 'hu))ii', huyee: 'hu))ii', huyein: 'hu))ii;N', huyen: 'hu))ii;N',
+  huye: 'hu))e', huyi: 'hu))ii', huyee: 'hu))ii', huyein: 'huu))ii;N', huyen: 'huu))ii;N',   // hu))ii;N parses as ہئیں
   naye: 'na))e', nayi: 'na))ii', nayee: 'na))ii',
   chaaye: 'chaa))e', chaye: 'chaa))e',
   raaye: 'raa))e', raye: 'raa))e',
@@ -182,6 +182,26 @@ function casualKey(s, level) {   // level 0 strict (long vowels kept), 1 loose, 
   if (level >= 2) s = s.replace(/o/g, 'u').replace(/e/g, 'i');
   return level >= 1 ? s.replace(/(.)\1+/g, '$1') : s.replace(/([^aiu])\1+/g, '$1');
 }
+/* ROMAN_CASUAL_MAP[level]: casual key → the corpora's spelling, rebuilt from each spelling's frequency (ASCII_FREQ, in the order the
+   build met them) by scripts/build_app.py's own rules: per key the most frequent spelling (on a tie, the first met); a strict
+   (level 0) entry only when it is at least 10% of its loose group. tests/packed_data.js checks it against the build's digest. */
+const ASCII_FREQ = /*@@ASCII_FREQ@@*/;
+const ROMAN_CASUAL_DIGEST = /*@@ROMAN_CASUAL_DIGEST@@*/;
+function buildCasualMap(freq) {
+  const best = [{}, {}, {}], loose = {};
+  Object.keys(freq).forEach(a => {
+    const c = freq[a];
+    for (let lv = 0; lv < 3; lv++) {
+      const k = casualKey(a, lv), b = best[lv][k];
+      if (!b || c > b[1]) best[lv][k] = [a, c];
+      if (lv === 1) loose[k] = (loose[k] || 0) + c;
+    }
+  });
+  const map = best.map(m => { const o = {}; for (const k in m) o[k] = m[k][0]; return o; });
+  for (const k0 in best[0]) if (best[0][k0][1] < 0.1 * (loose[casualKey(best[0][k0][0], 1)] || 0)) delete map[0][k0];
+  return map;
+}
+const ROMAN_CASUAL_MAP = buildCasualMap(ASCII_FREQ);
 const CASUAL_SPECIAL = /[ḥṣẓżẕṡṭḍṛġḳʿʾñ;:()]/;   // spelled with marks (or already ASCII): the letter rules read these exactly
 function casualLookup(plain, minLv, maxLv) {   // levels minLv..maxLv (default all three)
   if (typeof ROMAN_CASUAL_MAP === 'undefined') return null;
@@ -286,37 +306,34 @@ var RO_FA_SUFFIXES = [
   ['ee', 'ئی', 'ī', 'ई'], ['ii', 'ئی', 'ī', 'ई'], ['i', 'ئی', 'ī', 'ई']
 ];
 
-function roToPritchettAscii(ro, ur) {
+/* A dictionary's scholarly Roman (Platts, Steingass, the Persian list after trFaRo) → the ASCII scheme Pue's parsers read.
+   One converter for all of them: scripts/build_roman_fallback.js reads Platts through it too. ur (optional): a final ہ/ه
+   after short a is written -ah, as Pritchett does. */
+function scholarRoToAscii(ro, ur) {
   if (!ro) return '';
-  var s = ro.toLowerCase()
-    .replace(/[āáâ]/g, 'aa')
-    .replace(/[ūúû]/g, 'uu')
-    .replace(/[īíî]/g, 'ii')
-    .replace(/ḳh|ḳ/g, ';x')
-    .replace(/ġh|ġ/g, ';g')
-    .replace(/ṭ/g, ';t')
-    .replace(/ḍ/g, ';d')
-    .replace(/ṛ/g, ';r')
-    .replace(/ṣ/g, '.s')
-    .replace(/ż|ẕ/g, ';z')
-    .replace(/ẓ/g, '.z')
-    .replace(/ṡ|s̱/g, ';s')
-    .replace(/ḥ/g, ';h')
-    .replace(/ʿ/g, '((')
-    .replace(/[’ʾ']/g, '))');
-  if (ur && /[ہه]$/.test(ur) && /a$/.test(s)) {
-    s = s.slice(0, -1) + 'ah';
-  }
+  var s = String(ro).trim().toLowerCase()
+    .replace(/k[̱_]h[̱_]|ḵẖ|k͟h/g, ';x').replace(/g[̱_]h[̱_]|g̱ẖ|g͟h/g, ';g')
+    .replace(/ḳh|ḳ|ḵ/g, ';x').replace(/ġh|ġ/g, ';g')
+    .replace(/ćh/g, 'chh').replace(/ć/g, 'ch')
+    .replace(/ś|ṣh/g, 'sh').replace(/ṣ/g, '.s')
+    .replace(/ż|ẕ/g, ';z').replace(/ẓ/g, '.z')
+    .replace(/z̤/g, ':z').replace(/t̤/g, ':t').replace(/ṭ/g, ';t').replace(/ḍ/g, ';d').replace(/ṛ/g, ';r')
+    .replace(/ḥ/g, ';h').replace(/s̱|ṡ/g, ';s')
+    .replace(/[āáâ]/g, 'aa').replace(/[īíî]/g, 'ii').replace(/[ūúû]/g, 'uu')
+    .replace(/[ñṅṉ]|n̐/g, ';n')
+    .replace(/[ʻ‘ʿ]/g, '((').replace(/[ʼ’ʾ']/g, '))')
+    .replace(/w/g, 'v');
+  if (ur && /[ہه]$/.test(ur) && /a$/.test(s)) s = s.slice(0, -1) + 'ah';
   return s;
 }
 
-function trParseAscii(asc) {
+/* an ASCII-scheme string in the three scripts (Pue's parsers); '' for a script whose parser is missing or fails */
+function asciiToScripts(asc) {
   var out = { ur: '', hi: '', ro: '' };
   [['ur', 'p_ur'], ['hi', 'p_hi'], ['ro', 'p_di']].forEach(function (pair) {
-    var k = pair[0], p = pair[1];
     try {
-      var obj = (typeof window !== 'undefined' && window[p]) || (typeof globalThis !== 'undefined' && globalThis[p]);
-      if (obj && typeof obj.parse === 'function') out[k] = obj.parse(asc);
+      var obj = (typeof window !== 'undefined' && window[pair[1]]) || (typeof globalThis !== 'undefined' && globalThis[pair[1]]);
+      if (obj && typeof obj.parse === 'function') out[pair[0]] = obj.parse(asc);
     } catch (e) {}
   });
   return out;
@@ -326,13 +343,13 @@ function resolveFaStem(core) {
   if (!core || core.length < 2) return null;
   var hits = trFaHits(core);
   if (hits.length) {
-    var ascHits = roToPritchettAscii(hits[0].ro, hits[0].ur);
+    var ascHits = scholarRoToAscii(hits[0].ro, hits[0].ur);
     return { ur: hits[0].ur, ro: hits[0].ro, hi: hits[0].hi || '', stem: hits[0].ro, ascii: ascHits };
   }
   for (var lv = 0; lv <= 2; lv++) {
     var cas = casualLookup(core, lv, lv);
     if (cas) {
-      var p = trParseAscii(cas);
+      var p = asciiToScripts(cas);
       return { ur: p.ur || cas, ro: p.ro || core, hi: p.hi || '', stem: p.ro || cas, ascii: cas };
     }
   }
@@ -341,208 +358,77 @@ function resolveFaStem(core) {
     for (var lv2 = 0; lv2 <= 2; lv2++) {
       var cas2 = casualLookup(normCore, lv2, lv2);
       if (cas2) {
-        var p2 = trParseAscii(cas2);
+        var p2 = asciiToScripts(cas2);
         return { ur: p2.ur || cas2, ro: p2.ro || core, hi: p2.hi || '', stem: p2.ro || cas2, ascii: cas2 };
       }
     }
   }
   var fb = rekhtaFallback(core);
   if (fb) {
-    var p3 = trParseAscii(fb);
+    var p3 = asciiToScripts(fb);
     return { ur: p3.ur || fb, ro: p3.ro || core, hi: p3.hi || '', stem: p3.ro || fb, ascii: fb };
   }
   return null;
 }
 
+/* One Persian prefix / stem / suffix split → its Urdu, Fārsī (plain and ZWNJ), Roman, Devanagari and ASCII. pfx, sfx: rows of
+   RO_FA_PREFIXES / RO_FA_SUFFIXES or null. lāʾiq is written لایق in Fārsī. */
+function faAffix(pfx, st, stemStr, sfx) {
+  var laiq = /l[aā]+[yi]*q/i.test(stemStr), faStem = laiq ? 'لایق' : trUrToFa(st.ur);
+  var pUr = pfx ? pfx[1] : '', pFa = trUrToFa(pUr), pAsc = !pfx ? '' : (pfx[0] === 'na' || pfx[0] === 'naa') ? 'naa' : pfx[0];
+  var stemAsc = laiq ? 'laa))iq' : (st.ascii || st.stem), r = { stem: st.ro, stemUr: st.ur };
+  if (pfx) { r.pfx = pfx[2]; r.pfxUr = pUr; }
+  if (!sfx) {
+    r.ur = pUr + st.ur; r.fa = pFa + faStem; r.zwnj = pFa + '‌' + faStem;
+    r.ro = pfx[2] + '-' + st.ro; r.hi = pfx[3] + '-' + st.hi; r.morph = pfx[2] + ' + ' + st.ro; r.ascii = pAsc + stemAsc;
+    return r;
+  }
+  /* the suffix's Urdu, Fārsī and ZWNJ forms and ASCII: -ī after a silent h or a vowel takes hamza, -am after h a joiner */
+  var isI = /^(i|ii|ee)$/.test(sfx[0]), isHeh = /[ہه]$/.test(st.ur), u, f, z, a;
+  if (isI && isHeh) { u = '‌ئی'; f = z = '‌ای'; a = '-ii'; }
+  else if (isI && /[آاو]$/.test(st.ur)) { u = f = 'ئی'; z = '‌ئی'; a = '))ii'; }
+  else if (isI) { u = f = 'ی'; z = '‌ی'; a = 'ii'; }
+  else if (sfx[0] === 'am') { if (isHeh) { u = f = z = '‌ام'; a = '-am'; } else { u = f = 'م'; z = '‌ام'; a = 'am'; } }
+  else { u = sfx[1]; f = trUrToFa(sfx[1]); z = '‌' + f; a = sfx[0]; }
+  var pRo = pfx ? pfx[2] + '-' : '';
+  r.ur = pUr + st.ur + u; r.fa = pFa + faStem + f; r.zwnj = pFa + faStem + z;
+  r.ro = pRo + st.ro + '-' + sfx[2]; r.roFa = pRo + (laiq ? 'lāyiq' : st.ro) + '-' + sfx[2];
+  r.hi = pfx ? pfx[3] + '-' + st.hi + '-' + sfx[3] : (st.hi ? st.hi + '-' + sfx[3] : '');
+  r.sfx = sfx[2]; r.morph = pRo.replace('-', ' + ') + st.ro + ' + ' + sfx[2]; r.ascii = pAsc + stemAsc + a;
+  return r;
+}
+
+/* A Persian word typed in Roman as prefix + stem + suffix (naalaaiqam), prefix + stem (naadaan) or stem + suffix (dilam,
+   farmuda-i), the stem found by resolveFaStem */
 function tryFaDecompose(plain) {
   if (!plain || plain.length < 3) return null;
   if (/(?:^|[-_])(?:e|ye|o)(?:[-_]|$)/i.test(plain)) return null;
-  var raw = plain.toLowerCase().replace(/[-_]/g, '');
-
-  /* 1. Prefix + Stem + Suffix (e.g. naalaaiqam, nalaaiqam, nalayiqam) */
-  for (var p = 0; p < RO_FA_PREFIXES.length; p++) {
-    var pfx = RO_FA_PREFIXES[p];
-    if (raw.length > pfx[0].length + 3 && raw.indexOf(pfx[0]) === 0) {
-      var rem = raw.slice(pfx[0].length);
-      for (var s = 0; s < RO_FA_SUFFIXES.length; s++) {
-        var sfx = RO_FA_SUFFIXES[s];
-        if (rem.length > sfx[0].length + 2 && rem.slice(-sfx[0].length) === sfx[0]) {
-          var stemStr = rem.slice(0, -sfx[0].length);
-          var st = resolveFaStem(stemStr);
-          if (st) {
-            var isLaiq = /l[aā]+[yi]*q/i.test(stemStr);
-            var faStemUr = isLaiq ? 'لایق' : trUrToFa(st.ur);
-            var urStem = st.ur;
-            var isI = (sfx[0] === 'i' || sfx[0] === 'ii' || sfx[0] === 'ee');
-            var isHeh = /[ہه]$/.test(st.ur);
-            var isVowel = /[آاو]$/.test(st.ur);
-            var faUr, faZwnj, urOut, sfxAsc;
-            if (isI) {
-              if (isHeh) {
-                urOut = pfx[1] + urStem + '‌ئی';
-                faUr = trUrToFa(pfx[1]) + faStemUr + '\u200cای';
-                faZwnj = trUrToFa(pfx[1]) + faStemUr + '\u200cای';
-                sfxAsc = '-ii';
-              } else if (isVowel) {
-                urOut = pfx[1] + urStem + 'ئی';
-                faUr = trUrToFa(pfx[1]) + faStemUr + 'ئی';
-                faZwnj = trUrToFa(pfx[1]) + faStemUr + '\u200cئی';
-                sfxAsc = '))ii';
-              } else {
-                urOut = pfx[1] + urStem + 'ی';
-                faUr = trUrToFa(pfx[1]) + faStemUr + 'ی';
-                faZwnj = trUrToFa(pfx[1]) + faStemUr + '\u200cی';
-                sfxAsc = 'ii';
-              }
-            } else if (sfx[0] === 'am') {
-              if (isHeh) {
-                urOut = pfx[1] + urStem + '‌ام';
-                faUr = trUrToFa(pfx[1]) + faStemUr + '\u200cام';
-                faZwnj = trUrToFa(pfx[1]) + faStemUr + '\u200cام';
-                sfxAsc = '-am';
-              } else {
-                urOut = pfx[1] + urStem + 'م';
-                faUr = trUrToFa(pfx[1]) + faStemUr + 'م';
-                faZwnj = trUrToFa(pfx[1]) + faStemUr + '\u200cام';
-                sfxAsc = 'am';
-              }
-            } else {
-              faUr = trUrToFa(pfx[1]) + faStemUr + trUrToFa(sfx[1]);
-              faZwnj = trUrToFa(pfx[1]) + faStemUr + '\u200c' + trUrToFa(sfx[1]);
-              urOut = pfx[1] + urStem + sfx[1];
-              sfxAsc = sfx[0];
-            }
-            var roStem = st.ro;
-            var roStemFa = isLaiq ? 'lāyiq' : st.ro;
-            var roOut = pfx[2] + '-' + roStem + '-' + sfx[2];
-            var roFaOut = pfx[2] + '-' + roStemFa + '-' + sfx[2];
-            var hiOut = pfx[3] + '-' + st.hi + '-' + sfx[3];
-            var pfxAsc = (pfx[0] === 'na' || pfx[0] === 'naa') ? 'naa' : pfx[0];
-            var stemAsc = isLaiq ? 'laa))iq' : (st.ascii || st.stem);
-            return {
-              ur: urOut,
-              fa: faUr,
-              zwnj: faZwnj,
-              ro: roOut,
-              roFa: roFaOut,
-              hi: hiOut,
-              stem: roStem,
-              stemUr: urStem,
-              pfx: pfx[2],
-              pfxUr: pfx[1],
-              sfx: sfx[2],
-              morph: pfx[2] + ' + ' + roStem + ' + ' + sfx[2],
-              ascii: (isI && isHeh) ? (pfxAsc + stemAsc + '-ii') : (pfxAsc + stemAsc + sfxAsc)
-            };
-          }
-        }
-      }
-      /* Prefix + Stem (e.g. naadaan, bedaar) */
-      if (rem.length >= 2) {
-        var stPfx = resolveFaStem(rem);
-        if (stPfx) {
-          var isLaiqP = /l[aā]+[yi]*q/i.test(rem);
-          var faStem = isLaiqP ? 'لایق' : trUrToFa(stPfx.ur);
-          var pfxAscP = (pfx[0] === 'na' || pfx[0] === 'naa') ? 'naa' : pfx[0];
-          var stemAscP = isLaiqP ? 'laa))iq' : (stPfx.ascii || stPfx.stem);
-          return {
-            ur: pfx[1] + stPfx.ur,
-            fa: trUrToFa(pfx[1]) + faStem,
-            zwnj: trUrToFa(pfx[1]) + '\u200c' + faStem,
-            ro: pfx[2] + '-' + stPfx.ro,
-            hi: pfx[3] + '-' + stPfx.hi,
-            stem: stPfx.ro,
-            stemUr: stPfx.ur,
-            pfx: pfx[2],
-            pfxUr: pfx[1],
-            morph: pfx[2] + ' + ' + stPfx.ro,
-            ascii: pfxAscP + stemAscP
-          };
-        }
-      }
+  var raw = plain.toLowerCase().replace(/[-_]/g, ''), st, stem, i, j, pfx, sfx;
+  for (i = 0; i < RO_FA_PREFIXES.length; i++) {
+    pfx = RO_FA_PREFIXES[i];
+    if (raw.length <= pfx[0].length + 3 || raw.indexOf(pfx[0]) !== 0) continue;
+    var rem = raw.slice(pfx[0].length);
+    for (j = 0; j < RO_FA_SUFFIXES.length; j++) {
+      sfx = RO_FA_SUFFIXES[j];
+      if (rem.length <= sfx[0].length + 2 || rem.slice(-sfx[0].length) !== sfx[0]) continue;
+      stem = rem.slice(0, -sfx[0].length);
+      if ((st = resolveFaStem(stem))) return faAffix(pfx, st, stem, sfx);
     }
+    if (rem.length >= 2 && (st = resolveFaStem(rem))) return faAffix(pfx, st, rem, null);
   }
-
-  /* 2. Stem + Suffix (e.g. dilam, dastam, aabaadam, farmooda-ee, farmuda-i) */
-  for (var s2 = 0; s2 < RO_FA_SUFFIXES.length; s2++) {
-    var sfx2 = RO_FA_SUFFIXES[s2];
-    if (raw.length > sfx2[0].length + 2 && raw.slice(-sfx2[0].length) === sfx2[0]) {
-      var stemStr2 = raw.slice(0, -sfx2[0].length);
-      if (sfx2[0] === 'at' && stemStr2.length < 4 && !plain.includes('-')) continue;
-      var st2 = resolveFaStem(stemStr2);
-      if (st2) {
-        var isLaiq2 = /l[aā]+[yi]*q/i.test(stemStr2);
-        var faStemUr2 = isLaiq2 ? 'لایق' : trUrToFa(st2.ur);
-        var isI2 = (sfx2[0] === 'i' || sfx2[0] === 'ii' || sfx2[0] === 'ee');
-        var isHeh2 = /[ہه]$/.test(st2.ur);
-        var isVowel2 = /[آاو]$/.test(st2.ur);
-        var urOut2, faUr2, faZwnj2, sfxAsc2;
-        if (isI2) {
-          if (isHeh2) {
-            urOut2 = st2.ur + '‌ئی';
-            faUr2 = faStemUr2 + '\u200cای';
-            faZwnj2 = faStemUr2 + '\u200cای';
-            sfxAsc2 = '-ii';
-          } else if (isVowel2) {
-            urOut2 = st2.ur + 'ئی';
-            faUr2 = faStemUr2 + 'ئی';
-            faZwnj2 = faStemUr2 + '\u200cئی';
-            sfxAsc2 = '))ii';
-          } else {
-            urOut2 = st2.ur + 'ی';
-            faUr2 = faStemUr2 + 'ی';
-            faZwnj2 = faStemUr2 + '\u200cی';
-            sfxAsc2 = 'ii';
-          }
-        } else if (sfx2[0] === 'am') {
-          if (isHeh2) {
-            urOut2 = st2.ur + '‌ام';
-            faUr2 = faStemUr2 + '\u200cام';
-            faZwnj2 = faStemUr2 + '\u200cام';
-            sfxAsc2 = '-am';
-          } else {
-            urOut2 = st2.ur + 'م';
-            faUr2 = faStemUr2 + 'م';
-            faZwnj2 = faStemUr2 + '\u200cام';
-            sfxAsc2 = 'am';
-          }
-        } else {
-          urOut2 = st2.ur + sfx2[1];
-          faUr2 = faStemUr2 + trUrToFa(sfx2[1]);
-          faZwnj2 = faStemUr2 + '\u200c' + trUrToFa(sfx2[1]);
-          sfxAsc2 = sfx2[0];
-        }
-        var roStem2 = st2.ro;
-        var roStemFa2 = isLaiq2 ? 'lāyiq' : st2.ro;
-        var roOut2 = roStem2 + '-' + sfx2[2];
-        var roFaOut2 = roStemFa2 + '-' + sfx2[2];
-        var stemAsc2 = isLaiq2 ? 'laa))iq' : (st2.ascii || st2.stem);
-        return {
-          ur: urOut2,
-          fa: faUr2,
-          zwnj: faZwnj2,
-          ro: roOut2,
-          roFa: roFaOut2,
-          hi: st2.hi ? (st2.hi + '-' + sfx2[3]) : '',
-          stem: roStem2,
-          stemUr: st2.ur,
-          sfx: sfx2[2],
-          morph: roStem2 + ' + ' + sfx2[2],
-          ascii: (isI2 && isHeh2) ? (stemAsc2 + '-ii') : (stemAsc2 + sfxAsc2)
-        };
-      }
-    }
+  for (j = 0; j < RO_FA_SUFFIXES.length; j++) {
+    sfx = RO_FA_SUFFIXES[j];
+    if (raw.length <= sfx[0].length + 2 || raw.slice(-sfx[0].length) !== sfx[0]) continue;
+    stem = raw.slice(0, -sfx[0].length);
+    if (sfx[0] === 'at' && stem.length < 4 && !plain.includes('-')) continue;
+    if ((st = resolveFaStem(stem))) return faAffix(null, st, stem, sfx);
   }
-
   return null;
 }
 
-function stemClean(s) {
-  if (!s || s === 'a') return '';
-  return s.replace(/chhur/g, 'chhu;R').replace(/chhor/g, 'chho;R').replace(/tor/g, 'to;R')
-          .replace(/jur/g, 'ju;R').replace(/mur/g, 'mu;R').replace(/par/g, 'pa;R')
-          .replace(/lar/g, 'la;R').replace(/dor/g, 'do;R').replace(/D/g, ';d').replace(/T/g, ';t');
-}
+/* a stem as typed ('a' alone is no stem). Retroflex ṛ is not guessed from r (mur- may be muṛ- or mur-, as in murjhānā): Transcribe
+   gets it from the dictionary (DICT_STORE.formsFor) */
+function stemClean(s) { return !s || s === 'a' ? '' : s; }
 
 /* Urdu inflectional morphology: productive verbal future/subjunctive/imperative & plural noun forms */
 function tryUrMorphDecompose(plain) {
@@ -553,12 +439,12 @@ function tryUrMorphDecompose(plain) {
   let m = s.match(/^(du|hav|sad|ad|vaf|dav)(?:a|aa)(?:y|)(?:e|ee|ei)n$/);
   if (m) {
     const rootMap = { du: 'du((aa))e;N', hav: 'havaa))e;N', sad: 'sadaa))e;N', ad: 'adaa))e;N', vaf: 'vafaa))e;N', dav: 'davaa))e;N' };
-    return { ascii: rootMap[m[1]], stem: m[1] + 'aa', sfx: '-eñ', morph: m[1] + 'aa + plural' };
+    return { ascii: rootMap[m[1]], stem: m[1] + 'aa', sfx: '-eñ', morph: m[1] + 'aa + plural', listed: true };
   }
   m = s.match(/^(du|hav|sad|ad|vaf|dav)(?:a|aa)(?:y|)(?:oo|uu|u)n$/);
   if (m) {
     const rootMap = { du: 'du((aa))o;N', hav: 'havaa))o;N', sad: 'sadaa))o;N', ad: 'adaa))o;N', vaf: 'vafaa))o;N', dav: 'davaa))o;N' };
-    return { ascii: rootMap[m[1]], stem: m[1] + 'aa', sfx: '-oñ', morph: m[1] + 'aa + oblique plural' };
+    return { ascii: rootMap[m[1]], stem: m[1] + 'aa', sfx: '-oñ', morph: m[1] + 'aa + oblique plural', listed: true };
   }
 
   // 2. Vowel-stem future 1st person: basaaungaa, sajaaoonga, chhuraaoonga, banaaunga, aaungaa, etc.
@@ -666,7 +552,7 @@ function tryUrMorphDecompose(plain) {
     gulon: 'gulo;N', shamon: 'shaamo;N', shaamon: 'shaamo;N', ashkon: 'ashko;N'
   };
   if (OBL_NOUN_MAP[s]) {
-    return { ascii: OBL_NOUN_MAP[s], stem: s.replace(/oñ?$/, ''), sfx: '-oñ', morph: s + ' (oblique plural)' };
+    return { ascii: OBL_NOUN_MAP[s], stem: s.replace(/oñ?$/, ''), sfx: '-oñ', morph: s + ' (oblique plural)', listed: true };
   }
 
   return null;
@@ -674,8 +560,9 @@ function tryUrMorphDecompose(plain) {
 
 /* One typed piece (a word, or one side of a hyphen) → {s, tier}: the ASCII-scheme spelling and which list answered, in the order
    tried. tier: conn (e / ye / o joining a compound), typed (already marked, or one letter: the letter rules read it exactly),
-   known (Pritchett's lists, a neighbour rule, an alias), poets (the Rekhta poets' list), loose (her laxest match), guess (no list:
-   the letter rules). casualRomanLine takes .s; the Transcribe view (src/js/24-transcribe.js) also shows .tier. */
+   known (Pritchett's lists, a neighbour rule, an alias), poets (the Rekhta poets' list), loose (her laxest match), persian (a
+   Persian prefix/suffix split), derived (an Urdu inflection rule, tryUrMorphDecompose: no list confirms it), guess (no list: the
+   letter rules). casualRomanLine takes .s; the Transcribe view (src/js/24-transcribe.js) also shows .tier. */
 function casualPiece(piece, i, tokHasHyphen, prev, next) {
   const plain = piece.toLowerCase().replace(/[āáâ]/g, 'ā').replace(/[īíî]/g, 'ī').replace(/[ūúû]/g, 'ū');
   if (i > 0 && (plain === 'e' || plain === 'ye' || plain === 'o')) return { s: piece, tier: 'conn' };
@@ -720,7 +607,7 @@ function casualPiece(piece, i, tokHasHyphen, prev, next) {
   if (faDec && faDec.ascii) return { s: faDec.ascii, tier: 'persian' };
 
   var urDec = (typeof tryUrMorphDecompose === 'function') ? tryUrMorphDecompose(plain) : null;
-  if (urDec && urDec.ascii) return { s: urDec.ascii, tier: 'known', urDec: urDec };
+  if (urDec && urDec.ascii) return { s: urDec.ascii, tier: 'derived', urDec: urDec };
 
   return { s: rekhtaMarks(piece), tier: 'guess' };
 }
@@ -840,8 +727,6 @@ function rkPlain(ur) {
    ي → ی, ك → ک, هٔ / ۀ → ۂ for the iẓāfat), the half-space joiner (نمی‌دانم) → a space, and a nūn after a long vowel at a word's end
    → ں: Persian prosody does not count it (این chūn → ایں, جان → جاں), exactly as Urdu verse spelling marks it.
    detectScanLang: 'fa' when the text uses Iranian letters or reads as Persian (است، نیست، می‌، را …), else 'ur'. */
-const FA_WORDS = new Set('است نیست هست را از چه چو چون کجا ای بود باشد شد کرد کند گشت آمد دارم دارد نمی می همه هیچ ما شما او ایشان این آن'.split(' '));
-const UR_WORDS = new Set('ہے ہیں میں کا کی کے سے نے کو تھا تھی تھے نہیں کیا ہو ہوا کوئی کچھ یہ وہ اب بھی ہی'.split(' '));
 /* Iranian spelling the Urdu-script engine misreads, fixed while the ZWNJ still shows what is one word:
    - ast written onto a word with a ZWNJ is contracted (مشکل‌ست mush-ki-last, سوخته‌ست sūḳh-tast: the ه goes);
    - final -وی after a consonant is ū + y (روی rūy, موی, هایاهوی), written وئے as Urdu writes it, which the engine reads
@@ -852,15 +737,23 @@ const UR_WORDS = new Set('ہے ہیں میں کا کی کے سے نے کو تھ�
    - final -ای after ā is the iẓāfat (or yā) -ye, as Urdu writes it ائے (سودای saudā-ye, دعای, برای);
    - کاین is ke + īn, one syllable (کیں kīn); توی is tu-yī ("you are"), not ū + y.
    Punctuation goes first: the engine would read ، or ؟ as a letter (دل، as two syllables). */
-const FA_METER_RANK = {
-  29: 100, 27: 95, 11: 90, 10: 85, 33: 80, 34: 80,
-  5: 75, 14: 70, 15: 70, 18: 65, 19: 65, 26: 60,
-  8: 55, 1: 45, 9: 45, 24: 40, 4: 35, 28: 30, 16: 20, 17: 20
-};
+/* how common a meter is in Persian, to break a tie between equally good fits: Ganjoor's verse count for it (PERSIAN_METERS,
+   data/persian_meters.json, summed over the Ganjoor meters that are this Urdu meter). The rubāʿī's 24 patterns are not in that
+   list; they rank with the middle of it. */
+let _faMeterVerses = null;
 function getFaMeterPopularity(id) {
+  if (!_faMeterVerses) {
+    let list = null;
+    try { list = PERSIAN_METERS; } catch (e) { /* declared in a later file (17c-circles.js): not yet, in a partial load */ }
+    if (!Array.isArray(list)) return String(id).startsWith('R') ? 60000 : 0;   // not cached: asked again once it exists
+    _faMeterVerses = {};
+    list.forEach(m => {
+      (m.urdu || []).forEach(u => { _faMeterVerses[u] = (_faMeterVerses[u] || 0) + (m.verses || 0); });
+      _faMeterVerses['F' + m.gid] = m.verses || 0;
+    });
+  }
   const s = String(id);
-  if (s.startsWith('R')) return 50;
-  return FA_METER_RANK[s] || 0;
+  return s.startsWith('R') ? 60000 : (_faMeterVerses[s] || 0);
 }
 const FA_PREVERB = /(^|[\s\u200c])(بر|در|فرا|فرو|باز|پیش)(?=(آمد|آید|آورد|افشان|انداز|انداخت|افروز|افروخت|افکن|افگن|افت|اوفت|انگیز|انگیخت|افراز|افراشت|اندیش|ایست|نگذر|نگرد|ندار|نرو|نبین|نشنو|نمان|نرس|نگوی|نخواه|گذر|گذشت|گشای|گشود|خورد|خوان|شنو|پذیر|گرد|گشت))/g;
 const FA_AVI = /^(قوی|معنوی|علوی|نبوی|دنیوی|اخروی|لغوی|مولوی|ثانوی|پهلوی|نحوی|دعوی|تقوی|فتوی|سلوی|عیسوی|موسوی|اموی|بدوی|خسروی|کسروی)$/;
@@ -1121,25 +1014,20 @@ function faRefrainVariants(text) {
 }
 window.faRefrainVariants = faRefrainVariants;
 
-const FA_RO_WORDS = new Set('kuja kujaa kujā kujast ast nest nist nīst hast ra rā az andar chu chun chūn chih bavad shud gasht kunad amad āmad raft did dīd guft shunid shunīd daram dāram darad dārad nami namī shuma shumā ishan īshān chunīn chunin chunān chunan biyo biya agar dast ba'.split(' '));
-const UR_RO_WORDS = new Set('hai hain huu huun huuñ tha thi the thii thaa ka kaa kā ki kii kī ke ko se ne kya kyaa kyā kyun kyuuñ nahi nahin nahīñ mat ye yeh voh woh vo ab kab jab tab bhi bhī hi hī to hua huaa huā hona hota hoti hote raha rahi rahe gaya gayi gaye chahiye apna apne apni mera meri mere tera teri tere hum ham kuch kuchh koi koī tujhe mujhe'.split(' '));
 
+/* Which language a line is: Iranian letters (ي ك ۀ, final ه) say Persian outright; otherwise each word's log-odds of Persian
+   over Urdu (LANG_WORDS, data/lang_words.json, mined by scripts/build_lang_words.js from the line languages of the shipped
+   collections) is summed, from the two languages' share of lines; Persian above a margin. Scored by tests/benchmark_lang.js. */
+const LANG_WORDS = /*@@LANG_WORDS@@*/;
 function detectScanLang(text) {
   const t = String(text || '');
-  if (/[\u200cيكۀ]|هٔ|ه(?=$|[\s،۔])/.test(t)) return 'fa';
-  let f = 0, u = 0;
-  if (/[a-zA-Z]/.test(t)) {
-    const toks = t.toLowerCase().replace(/['’‘]/g, '').split(/[\s\-.,;:!?"“”«»–—…]+/g).filter(Boolean);
-    toks.forEach(w => {
-      if (FA_RO_WORDS.has(w)) f++;
-      if (UR_RO_WORDS.has(w)) u++;
-      if (/(?:at|am|ash)$/.test(w) && w.length >= 4) f += 0.5;
-      if (w === 'man' || w === 'tu' || w === 'tū') f += 0.5;
-    });
-    return f >= 1.5 && f > u ? 'fa' : 'ur';
-  }
-  t.split(/[\s،۔؟!]+/).forEach(w => { const k = w.replace(/ہ/g, 'ه').replace(/ے/g, 'ی'); if (FA_WORDS.has(k) || FA_WORDS.has(w)) f++; if (UR_WORDS.has(w)) u++; });
-  return f >= 2 && f > u ? 'fa' : 'ur';
+  if (/[يكۀ]|هٔ|ه(?=$|[\s،۔])/.test(t)) return 'fa';   // (not the ZWNJ: Rekhta's Urdu uses it too, شعلہ‌رو)
+  const roman = /[a-zA-Z]/.test(t), table = (LANG_WORDS && LANG_WORDS[roman ? 'ro' : 'ur']) || {};
+  const toks = roman ? t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[ʿʾ’'‘.]/g, '').split(/[^a-z]+/)
+    : t.normalize('NFC').replace(/[\u064B-\u065F\u0670\u0640]/g, '').split(/[\s،۔؟!]+/);
+  let score = (LANG_WORDS && LANG_WORDS.prior) || 0;
+  new Set(toks.filter(Boolean)).forEach(w => { if (table[w]) score += table[w]; });
+  return score > (roman ? 2.5 : 4) ? 'fa' : 'ur';   // margins set on the mining half (Urdu kept at 99.8%+): reading Urdu as Persian respells it, so the doubt goes to Urdu
 }
 window.faScanText = faScanText;
 window.faScanSpelling = faScanSpelling;

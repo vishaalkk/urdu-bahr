@@ -150,6 +150,16 @@ for _k0, _cnt0 in _casual_freq[0].items():
     _k1 = _casual_key(_cnt0.most_common(1)[0][0], 1)
     if _cnt0.most_common(1)[0][1] < 0.10 * _loose_total.get(_k1, 0):
         ROMAN_CASUAL_MAP[0].pop(_k0, None)
+# The page ships the counts, not the three maps: each spelling's frequency in the order met (the order decides a tie), and the
+# browser rebuilds ROMAN_CASUAL_MAP with these same rules (buildCasualMap, src/js/05-translit-helpers.js). The digest of the map
+# built here lets tests/packed_data.js prove the two are identical.
+ASCII_FREQ = {}
+for (_u, _a), _c in _word_pair_freq.items():
+    _a = re.sub(r'-(e|ye)$', '', _a)
+    if '-' in _a or not _a: continue
+    ASCII_FREQ[_a] = ASCII_FREQ.get(_a, 0) + _c
+import hashlib as _hashlib
+ROMAN_CASUAL_DIGEST = _hashlib.sha1(json.dumps(ROMAN_CASUAL_MAP, sort_keys=True, ensure_ascii=False, separators=(',', ':')).encode('utf-8')).hexdigest()
 # Typed-Roman fallback: words the poets have and Pritchett's map lacks, each spelling verified to give the right Urdu word
 # (data/roman_fallback.json, built by scripts/build_roman_fallback.js)
 with open('data/roman_fallback.json', 'r', encoding='utf-8') as f:
@@ -349,6 +359,15 @@ for body_file in manifest['body']:
     body_parts[key] = read_source(body_file)
 
 # ─── 6. Build data substitution map ───────────────────────────────────────────
+# Line-language word weights for detectScanLang (src/js/05-translit-helpers.js), mined by scripts/build_lang_words.js
+with open('data/lang_words.json', 'r', encoding='utf-8') as f:
+    LANG_WORDS = json.load(f)
+
+# The dictionary's fingerprint: the Transcribe drawer's IndexedDB copy is kept only while it matches (12-dictionary-module.js)
+import hashlib
+with open('data/dictionary_bundle.json.gz', 'rb') as f:
+    DICT_BUNDLE_HASH = hashlib.sha1(f.read()).hexdigest()[:12]
+
 # Tabla strokes for the theka (src/js/15c-taal.js), built by scripts/build_tabla_strokes.py from data/tabla/
 with open('data/tabla_strokes.json', 'r', encoding='utf-8') as f:
     TABLA_STROKES = json.load(f)
@@ -362,6 +381,8 @@ substitutions = {
     'EXERCISES_DATA': json.dumps(EXERCISES, ensure_ascii=False),
     'METERS_DATA': json.dumps(METERS_DATA, ensure_ascii=False),
     'PERSIAN_METERS': json.dumps(PERSIAN_METERS, ensure_ascii=False, separators=(',', ':')),
+    'LANG_WORDS': json.dumps(LANG_WORDS, ensure_ascii=False, separators=(',', ':')),
+    'DICT_BUNDLE_HASH': json.dumps(DICT_BUNDLE_HASH),
     'FA_LEXICON': json.dumps(FA_LEXICON, ensure_ascii=False, separators=(',', ':')),
     'FA_VERBS': json.dumps(FA_VERBS, ensure_ascii=False, separators=(',', ':')),
     'GLOSSARY_DATA': json.dumps(GLOSSARY, ensure_ascii=False),
@@ -373,9 +394,10 @@ substitutions = {
     'POETS_DATA': _dumps_json(POETS_PACKED),
     'URDUPOETRY_DATA': json.dumps(URDUPOETRY_EXT, ensure_ascii=False),
     'WORD_ASCII_MAP': json.dumps(WORD_ASCII_MAP, ensure_ascii=False),
-    'ROMAN_CASUAL_MAP': json.dumps(ROMAN_CASUAL_MAP, ensure_ascii=False),
     'KI_NEXT': json.dumps(KI_NEXT, ensure_ascii=False),
     'ROMAN_FALLBACK': _dumps_json(ROMAN_FALLBACK),
+    'ASCII_FREQ': json.dumps(ASCII_FREQ, ensure_ascii=False, separators=(',', ':')),
+    'ROMAN_CASUAL_DIGEST': json.dumps(ROMAN_CASUAL_DIGEST),
     'FAMS': fams_json,
     # meter_map_bundled and rhythm_roll_bundled are NOT placeholders in the JS,
     # they are embedded directly in 04- and 05- files — those files in src/js/

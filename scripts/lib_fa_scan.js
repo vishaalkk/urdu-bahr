@@ -144,7 +144,7 @@ function contractionRows(rows) {
 function loadFaEngine() {
     const fs = require('fs'), path = require('path');
     const { loadEngine } = require('./lib_scan');
-    const fa = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data/fa_scan.json'), 'utf8'));
+    const fa = JSON.parse(fs.readFileSync(process.env.FA_SCAN_JSON || path.join(__dirname, '..', 'data/fa_scan.json'), 'utf8'));   // env: score another build of it
     return loadEngine(lexLines(fa.lex), fa.meters);
 }
 

@@ -1,0 +1,2253 @@
+{
+ "words": {
+  "aae": {
+   "ur": "آئے",
+   "ro": "āʾe",
+   "hi": "आए",
+   "tier": "known",
+   "scan": "آئے"
+  },
+  "aaii": {
+   "ur": "آئی",
+   "ro": "āʾī",
+   "hi": "आई",
+   "tier": "known",
+   "scan": "آئی"
+  },
+  "aaiye": {
+   "ur": "آئیے",
+   "ro": "āʾiye",
+   "hi": "आइये",
+   "tier": "form",
+   "scan": "آئیے"
+  },
+  "aaiyega": {
+   "ur": "آئیے گا",
+   "ro": "āʾiye gā",
+   "hi": "आइये गा",
+   "tier": "derived",
+   "scan": "آئیے گا"
+  },
+  "aake": {
+   "ur": "آ کے",
+   "ro": "ā ke",
+   "hi": "आ के",
+   "tier": "known",
+   "scan": "آ کے"
+  },
+  "aankhon": {
+   "ur": "آنکھوں",
+   "ro": "āñkhoñ",
+   "hi": "आंखों",
+   "tier": "known",
+   "scan": "آنکھوں"
+  },
+  "aaun": {
+   "ur": "آؤں",
+   "ro": "āʾūñ",
+   "hi": "आऊँ",
+   "tier": "known",
+   "scan": "آؤں"
+  },
+  "aaungaa": {
+   "ur": "آؤنگا",
+   "ro": "āʾūñgā",
+   "hi": "आऊंगा",
+   "tier": "known",
+   "scan": "آؤنگا"
+  },
+  "aaxir": {
+   "ur": "آخر",
+   "ro": "āḳhir",
+   "hi": "आख़िर",
+   "tier": "known",
+   "scan": "آخر"
+  },
+  "aaye": {
+   "ur": "آئے",
+   "ro": "āʾe",
+   "hi": "आए",
+   "tier": "known",
+   "scan": "آئے"
+  },
+  "aayee": {
+   "ur": "آئی",
+   "ro": "āʾī",
+   "hi": "आई",
+   "tier": "known",
+   "scan": "آئی"
+  },
+  "aayega": {
+   "ur": "آئے گا",
+   "ro": "āʾe gā",
+   "hi": "आए गा",
+   "tier": "form",
+   "scan": "آئے گا"
+  },
+  "aayein": {
+   "ur": "آئیں",
+   "ro": "āʾeñ",
+   "hi": "आएं",
+   "tier": "known",
+   "scan": "آئیں"
+  },
+  "aayen": {
+   "ur": "آئیں",
+   "ro": "āʾeñ",
+   "hi": "आएँ",
+   "tier": "known",
+   "scan": "آئیں"
+  },
+  "aayenge": {
+   "ur": "آئیں گے",
+   "ro": "āʾeñ ge",
+   "hi": "आएँ गे",
+   "tier": "form",
+   "scan": "آئیں گے"
+  },
+  "aayi": {
+   "ur": "آئی",
+   "ro": "āʾī",
+   "hi": "आई",
+   "tier": "known",
+   "scan": "آئی"
+  },
+  "adna": {
+   "ur": "ادنیٰ",
+   "ro": "adnâ",
+   "hi": "अदना",
+   "tier": "known",
+   "scan": "ادنیٰ"
+  },
+  "adnaa": {
+   "ur": "ادنیٰ",
+   "ro": "adnâ",
+   "hi": "अदना",
+   "tier": "known",
+   "scan": "ادنیٰ"
+  },
+  "ankhon": {
+   "ur": "آنکھوں",
+   "ro": "āñkhoñ",
+   "hi": "आंखों",
+   "tier": "known",
+   "scan": "آنکھوں"
+  },
+  "ashkon": {
+   "ur": "اشکوں",
+   "ro": "ashkoñ",
+   "hi": "अशकों",
+   "tier": "known",
+   "scan": "اشکوں"
+  },
+  "baaton": {
+   "ur": "باتوں",
+   "ro": "bātoñ",
+   "hi": "बातों",
+   "tier": "known",
+   "scan": "باتوں"
+  },
+  "baich": {
+   "ur": "بیچ",
+   "ro": "bech",
+   "hi": "बेच",
+   "tier": "known",
+   "scan": "بیچ"
+  },
+  "banaaoon": {
+   "ur": "بناؤں",
+   "ro": "banāʾūñ",
+   "hi": "बनाऊँ",
+   "tier": "form",
+   "scan": "بناؤں"
+  },
+  "banaaunga": {
+   "ur": "بناؤنگا",
+   "ro": "banāʾūñgā",
+   "hi": "बनाऊंगा",
+   "tier": "known",
+   "scan": "بناؤنگا"
+  },
+  "banaaye": {
+   "ur": "بنائے",
+   "ro": "banāʾe",
+   "hi": "बनाए",
+   "tier": "known",
+   "scan": "بنائے"
+  },
+  "banaayee": {
+   "ur": "بنائی",
+   "ro": "banāʾī",
+   "hi": "बनाई",
+   "tier": "known",
+   "scan": "بنائی"
+  },
+  "banaayi": {
+   "ur": "بنائی",
+   "ro": "banāʾī",
+   "hi": "बनाई",
+   "tier": "known",
+   "scan": "بنائی"
+  },
+  "banaye": {
+   "ur": "بنائے",
+   "ro": "banāʾe",
+   "hi": "बनाए",
+   "tier": "known",
+   "scan": "بنائے"
+  },
+  "banayi": {
+   "ur": "بنائی",
+   "ro": "banāʾī",
+   "hi": "बनाई",
+   "tier": "known",
+   "scan": "بنائی"
+  },
+  "basaaun": {
+   "ur": "بساؤں",
+   "ro": "basāʾūñ",
+   "hi": "बसाऊँ",
+   "tier": "form",
+   "scan": "بساؤں"
+  },
+  "basaaunga": {
+   "ur": "بساؤں گا",
+   "ro": "basāʾūñ gā",
+   "hi": "बसाऊँ गा",
+   "tier": "form",
+   "scan": "بساؤں گا"
+  },
+  "basaaye": {
+   "ur": "بسائے",
+   "ro": "basāʾe",
+   "hi": "बसाए",
+   "tier": "form",
+   "scan": "بسایے"
+  },
+  "basaayega": {
+   "ur": "بسائے گا",
+   "ro": "basāʾe gā",
+   "hi": "बसाए गा",
+   "tier": "form",
+   "scan": "بسائے گا"
+  },
+  "basaayein": {
+   "ur": "بسائیں",
+   "ro": "basāʾeñ",
+   "hi": "बसाएँ",
+   "tier": "form",
+   "scan": "بسائیں"
+  },
+  "basaayenge": {
+   "ur": "بسائیں گے",
+   "ro": "basāʾeñ ge",
+   "hi": "बसाएँ गे",
+   "tier": "form",
+   "scan": "بسائیں گے"
+  },
+  "basaayi": {
+   "ur": "بسائی",
+   "ro": "basāʾī",
+   "hi": "बसाई",
+   "tier": "form",
+   "scan": "بسعیی"
+  },
+  "bataaiye": {
+   "ur": "بتائیے",
+   "ro": "batāʾiye",
+   "hi": "बताइये",
+   "tier": "form",
+   "scan": "بتائیے"
+  },
+  "bataaye": {
+   "ur": "بتائے",
+   "ro": "batāʾe",
+   "hi": "बताए",
+   "tier": "known",
+   "scan": "بتائے"
+  },
+  "bataayee": {
+   "ur": "بتائی",
+   "ro": "batāʾī",
+   "hi": "बताई",
+   "tier": "known",
+   "scan": "بتائی"
+  },
+  "bataayi": {
+   "ur": "بتائی",
+   "ro": "batāʾī",
+   "hi": "बताई",
+   "tier": "known",
+   "scan": "بتائی"
+  },
+  "bataye": {
+   "ur": "بتائے",
+   "ro": "batāʾe",
+   "hi": "बताए",
+   "tier": "known",
+   "scan": "بتائے"
+  },
+  "batayi": {
+   "ur": "بتائی",
+   "ro": "batāʾī",
+   "hi": "बताई",
+   "tier": "known",
+   "scan": "بتائی"
+  },
+  "baton": {
+   "ur": "باتوں",
+   "ro": "bātoñ",
+   "hi": "बातों",
+   "tier": "known",
+   "scan": "باتوں"
+  },
+  "bech": {
+   "ur": "بیچ",
+   "ro": "bech",
+   "hi": "बेच",
+   "tier": "known",
+   "scan": "بیچ"
+  },
+  "bedaar": {
+   "ur": "بیدار",
+   "ro": "bedār",
+   "hi": "बेदार",
+   "tier": "known",
+   "scan": "بیدار"
+  },
+  "bhaayi": {
+   "ur": "بھائی",
+   "ro": "bhāʾī",
+   "hi": "भाई",
+   "tier": "known",
+   "scan": "بھائی"
+  },
+  "bhaid": {
+   "ur": "بھید",
+   "ro": "bhed",
+   "hi": "भेद",
+   "tier": "known",
+   "scan": "بھید"
+  },
+  "bhejoonga": {
+   "ur": "بھیجوں گا",
+   "ro": "bhejūñ gā",
+   "hi": "भेजूँ गा",
+   "tier": "form",
+   "scan": "بھیجوں گا"
+  },
+  "boloonga": {
+   "ur": "بولوں گا",
+   "ro": "bolūñ gā",
+   "hi": "बोलूँ गा",
+   "tier": "form",
+   "scan": "بولوں گا"
+  },
+  "boye": {
+   "ur": "بوئے",
+   "ro": "boʾe",
+   "hi": "बोए",
+   "tier": "known",
+   "scan": "بوئے"
+  },
+  "boyee": {
+   "ur": "بوئی",
+   "ro": "boʾī",
+   "hi": "बोई",
+   "tier": "known",
+   "scan": "بوئی"
+  },
+  "boyi": {
+   "ur": "بوئی",
+   "ro": "boʾī",
+   "hi": "बोई",
+   "tier": "known",
+   "scan": "بوئی"
+  },
+  "buad": {
+   "ur": "بود",
+   "ro": "buvad",
+   "hi": "बुवद",
+   "tier": "known",
+   "scan": "بود"
+  },
+  "bulaaye": {
+   "ur": "بلائے",
+   "ro": "bulāʾe",
+   "hi": "बुलाए",
+   "tier": "known",
+   "scan": "بلائے"
+  },
+  "bulaayee": {
+   "ur": "بلائی",
+   "ro": "bulāʾī",
+   "hi": "बुलाई",
+   "tier": "known",
+   "scan": "بلائی"
+  },
+  "bulaayi": {
+   "ur": "بلائی",
+   "ro": "bulāʾī",
+   "hi": "बुलाई",
+   "tier": "known",
+   "scan": "بلائی"
+  },
+  "bulaye": {
+   "ur": "بلائے",
+   "ro": "bulāʾe",
+   "hi": "बुलाए",
+   "tier": "known",
+   "scan": "بلائے"
+  },
+  "bulayi": {
+   "ur": "بلائی",
+   "ro": "bulāʾī",
+   "hi": "बुलाई",
+   "tier": "known",
+   "scan": "بلائی"
+  },
+  "buwad": {
+   "ur": "بود",
+   "ro": "buvad",
+   "hi": "बुवद",
+   "tier": "known",
+   "scan": "بود"
+  },
+  "chaaye": {
+   "ur": "چائے",
+   "ro": "chāʾe",
+   "hi": "चाए",
+   "tier": "known",
+   "scan": "چائے"
+  },
+  "chalaaye": {
+   "ur": "چلائے",
+   "ro": "chalāʾe",
+   "hi": "चलाए",
+   "tier": "known",
+   "scan": "چلائے"
+  },
+  "chalaayi": {
+   "ur": "چلائی",
+   "ro": "chalāʾī",
+   "hi": "चलाई",
+   "tier": "known",
+   "scan": "چلائی"
+  },
+  "chalaye": {
+   "ur": "چلائے",
+   "ro": "chalāʾe",
+   "hi": "चलाए",
+   "tier": "known",
+   "scan": "چلائے"
+  },
+  "chalayi": {
+   "ur": "چلائی",
+   "ro": "chalāʾī",
+   "hi": "चलाई",
+   "tier": "known",
+   "scan": "چلائی"
+  },
+  "chaye": {
+   "ur": "چائے",
+   "ro": "chāʾe",
+   "hi": "चाए",
+   "tier": "known",
+   "scan": "چائے"
+  },
+  "daikh": {
+   "ur": "دیکھ",
+   "ro": "dekh",
+   "hi": "देख",
+   "tier": "known",
+   "scan": "دیکھ"
+  },
+  "dastam": {
+   "ur": "دستم",
+   "ro": "dastam",
+   "hi": "दसतम",
+   "tier": "poets",
+   "scan": "دستم"
+  },
+  "dava": {
+   "ur": "دوا",
+   "ro": "davā",
+   "hi": "दवा",
+   "tier": "known",
+   "scan": "دوا"
+  },
+  "dekhoonga": {
+   "ur": "دیکھوں گا",
+   "ro": "dekhūñ gā",
+   "hi": "देखूँ गा",
+   "tier": "form",
+   "scan": "دیکھوں گا"
+  },
+  "dhoonga": {
+   "ur": "دھوؤں گا",
+   "ro": "dhoʾūñ gā",
+   "hi": "धोऊँ गा",
+   "tier": "form",
+   "scan": "دھوؤں گا"
+  },
+  "dhoye": {
+   "ur": "دھوئے",
+   "ro": "dhoʾe",
+   "hi": "धोए",
+   "tier": "known",
+   "scan": "دھوئے"
+  },
+  "dhoyee": {
+   "ur": "دھوئی",
+   "ro": "dhoʾī",
+   "hi": "धोई",
+   "tier": "known",
+   "scan": "دھوئی"
+  },
+  "dhoyi": {
+   "ur": "دھوئی",
+   "ro": "dhoʾī",
+   "hi": "धोई",
+   "tier": "known",
+   "scan": "دھوئی"
+  },
+  "dijiye": {
+   "ur": "دیجیے",
+   "ro": "dījiye",
+   "hi": "दीजिये",
+   "tier": "known",
+   "scan": "دیجیے"
+  },
+  "dikhaaye": {
+   "ur": "دکھائے",
+   "ro": "dikhāʾe",
+   "hi": "दिखाए",
+   "tier": "known",
+   "scan": "دکھائے"
+  },
+  "dikhaayee": {
+   "ur": "دکھائی",
+   "ro": "dikhāʾī",
+   "hi": "दिखाई",
+   "tier": "known",
+   "scan": "دکھائی"
+  },
+  "dikhaayi": {
+   "ur": "دکھائی",
+   "ro": "dikhāʾī",
+   "hi": "दिखाई",
+   "tier": "known",
+   "scan": "دکھائی"
+  },
+  "dikhaye": {
+   "ur": "دکھائے",
+   "ro": "dikhāʾe",
+   "hi": "दिखाए",
+   "tier": "known",
+   "scan": "دکھائے"
+  },
+  "dikhayi": {
+   "ur": "دکھائی",
+   "ro": "dikhāʾī",
+   "hi": "दिखाई",
+   "tier": "known",
+   "scan": "دکھائی"
+  },
+  "dilam": {
+   "ur": "دلم",
+   "ro": "dilam",
+   "hi": "दिलम",
+   "tier": "poets",
+   "scan": "دلم"
+  },
+  "dile": {
+   "ur": "دلِ",
+   "ro": "dil-e",
+   "hi": "दिल-ए",
+   "tier": "known",
+   "scan": "دلِ"
+  },
+  "dilon": {
+   "ur": "دلوں",
+   "ro": "diloñ",
+   "hi": "दिलों",
+   "tier": "known",
+   "scan": "دلوں"
+  },
+  "doston": {
+   "ur": "دوستوں",
+   "ro": "dostoñ",
+   "hi": "दोस्तों",
+   "tier": "poets",
+   "scan": "دوستوں"
+  },
+  "duaon": {
+   "ur": "دعاؤں",
+   "ro": "duʿāʾoñ",
+   "hi": "दुआओं",
+   "tier": "form",
+   "scan": "دئون"
+  },
+  "duayein": {
+   "ur": "دعائیں",
+   "ro": "duʿāʾeñ",
+   "hi": "दुआएं",
+   "tier": "derived",
+   "scan": "دعائیں"
+  },
+  "faayda": {
+   "ur": "فائدہ",
+   "ro": "fāʾidah",
+   "hi": "फ़ाइदा",
+   "tier": "known",
+   "scan": "فائدہ"
+  },
+  "faeda": {
+   "ur": "فائدہ",
+   "ro": "fāʾidah",
+   "hi": "फ़ाइदा",
+   "tier": "known",
+   "scan": "فائدہ"
+  },
+  "faida": {
+   "ur": "فائدہ",
+   "ro": "fāʾidah",
+   "hi": "फ़ाइदा",
+   "tier": "known",
+   "scan": "فائدہ"
+  },
+  "fatwa": {
+   "ur": "فتویٰ",
+   "ro": "fatvâ",
+   "hi": "फ़तवा",
+   "tier": "known",
+   "scan": "فتویٰ"
+  },
+  "fatwaa": {
+   "ur": "فتویٰ",
+   "ro": "fatvâ",
+   "hi": "फ़तवा",
+   "tier": "known",
+   "scan": "فتویٰ"
+  },
+  "fayda": {
+   "ur": "فائدہ",
+   "ro": "fāʾidah",
+   "hi": "फ़ाइदा",
+   "tier": "known",
+   "scan": "فائدہ"
+  },
+  "fikar": {
+   "ur": "فکر",
+   "ro": "fikar",
+   "hi": "फ़िकर",
+   "tier": "guess",
+   "scan": "فکر"
+  },
+  "gaae": {
+   "ur": "گائے",
+   "ro": "gāʾe",
+   "hi": "गाए",
+   "tier": "known",
+   "scan": "گائے"
+  },
+  "gaaye": {
+   "ur": "گائے",
+   "ro": "gāʾe",
+   "hi": "गाए",
+   "tier": "known",
+   "scan": "گائے"
+  },
+  "gaayee": {
+   "ur": "گائی",
+   "ro": "gāʾī",
+   "hi": "गाई",
+   "tier": "known",
+   "scan": "گائی"
+  },
+  "gaayein": {
+   "ur": "گائیں",
+   "ro": "gāʾeñ",
+   "hi": "गाएँ",
+   "tier": "known",
+   "scan": "گائیں"
+  },
+  "gaayen": {
+   "ur": "گائیں",
+   "ro": "gāʾeñ",
+   "hi": "गाएँ",
+   "tier": "known",
+   "scan": "گائیں"
+  },
+  "gaayi": {
+   "ur": "گائی",
+   "ro": "gāʾī",
+   "hi": "गाई",
+   "tier": "known",
+   "scan": "گائی"
+  },
+  "gada": {
+   "ur": "گدا",
+   "ro": "gadā",
+   "hi": "गदा",
+   "tier": "known",
+   "scan": "گدا"
+  },
+  "garche": {
+   "ur": "گرچہ",
+   "ro": "garchih",
+   "hi": "गरचिह",
+   "tier": "known",
+   "scan": "گرچہ"
+  },
+  "garchi": {
+   "ur": "گرچہ",
+   "ro": "garchih",
+   "hi": "गरचिह",
+   "tier": "known",
+   "scan": "گرچہ"
+  },
+  "gaye": {
+   "ur": "گئے",
+   "ro": "gaʾe",
+   "hi": "गए",
+   "tier": "known",
+   "scan": "گئے"
+  },
+  "gayee": {
+   "ur": "گئی",
+   "ro": "gaʾī",
+   "hi": "गई",
+   "tier": "known",
+   "scan": "گئی"
+  },
+  "gayein": {
+   "ur": "گئیں",
+   "ro": "gaʾīñ",
+   "hi": "गईं",
+   "tier": "known",
+   "scan": "گئیں"
+  },
+  "gayen": {
+   "ur": "گئیں",
+   "ro": "gaʾīñ",
+   "hi": "गईं",
+   "tier": "known",
+   "scan": "گئیں"
+  },
+  "gayi": {
+   "ur": "گئی",
+   "ro": "gaʾī",
+   "hi": "गई",
+   "tier": "known",
+   "scan": "گئی"
+  },
+  "gayin": {
+   "ur": "گئیں",
+   "ro": "gaʾīñ",
+   "hi": "गईं",
+   "tier": "known",
+   "scan": "گئیں"
+  },
+  "ghaat": {
+   "ur": "گھاٹ",
+   "ro": "ghāṭ",
+   "hi": "घाट",
+   "tier": "known",
+   "scan": "گھاٹ"
+  },
+  "gharon": {
+   "ur": "گھروں",
+   "ro": "gharoñ",
+   "hi": "घरों",
+   "tier": "poets",
+   "scan": "گھروں"
+  },
+  "ghat": {
+   "ur": "گھٹ",
+   "ro": "ghaṭ",
+   "hi": "घट",
+   "tier": "known",
+   "scan": "گھٹ"
+  },
+  "gul": {
+   "ur": "گل",
+   "ro": "gul",
+   "hi": "गुल",
+   "tier": "known",
+   "scan": "گل"
+  },
+  "gulon": {
+   "ur": "گلوں",
+   "ro": "guloñ",
+   "hi": "गुलों",
+   "tier": "known",
+   "scan": "گلوں"
+  },
+  "hai": {
+   "ur": "ہے",
+   "ro": "hai",
+   "hi": "है",
+   "tier": "known",
+   "scan": "ہے"
+  },
+  "hain": {
+   "ur": "ہیں",
+   "ro": "haiñ",
+   "hi": "हैं",
+   "tier": "known",
+   "scan": "ہیں"
+  },
+  "ham": {
+   "ur": "ہم",
+   "ro": "ham",
+   "hi": "हम",
+   "tier": "known",
+   "scan": "ہم"
+  },
+  "harchand": {
+   "ur": "ہر چند",
+   "ro": "har-chand",
+   "hi": "हर-चंद",
+   "tier": "known",
+   "scan": "ہر چند"
+  },
+  "hawaon": {
+   "ur": "ہواؤں",
+   "ro": "havāʾoñ",
+   "hi": "हवाओं",
+   "tier": "known",
+   "scan": "ہواؤں"
+  },
+  "hawayein": {
+   "ur": "ہوائیں",
+   "ro": "havāʾeñ",
+   "hi": "हवाएँ",
+   "tier": "form",
+   "scan": "ہوائیں"
+  },
+  "hoke": {
+   "ur": "ہو کے",
+   "ro": "ho ke",
+   "hi": "हो के",
+   "tier": "known",
+   "scan": "ہو کے"
+  },
+  "hoon": {
+   "ur": "ہوں",
+   "ro": "hūñ",
+   "hi": "हूँ",
+   "tier": "known",
+   "scan": "ہوں"
+  },
+  "hua": {
+   "ur": "ہوا",
+   "ro": "huʾā",
+   "hi": "हुआ",
+   "tier": "known",
+   "scan": "ہوا"
+  },
+  "hum": {
+   "ur": "ہم",
+   "ro": "ham",
+   "hi": "हम",
+   "tier": "known",
+   "scan": "ہم"
+  },
+  "humein": {
+   "ur": "ہمیں",
+   "ro": "hameñ",
+   "hi": "हमें",
+   "tier": "known",
+   "scan": "ہمیں"
+  },
+  "humne": {
+   "ur": "ہم نے",
+   "ro": "ham ne",
+   "hi": "हम ने",
+   "tier": "known",
+   "scan": "ہم نے"
+  },
+  "hun": {
+   "ur": "ہوں",
+   "ro": "hūñ",
+   "hi": "हूँ",
+   "tier": "known",
+   "scan": "ہوں"
+  },
+  "huye": {
+   "ur": "ہوئے",
+   "ro": "huʾe",
+   "hi": "हुए",
+   "tier": "known",
+   "scan": "ہوئے"
+  },
+  "huyee": {
+   "ur": "ہوئی",
+   "ro": "huʾī",
+   "hi": "हुई",
+   "tier": "known",
+   "scan": "ہوئی"
+  },
+  "huyein": {
+   "ur": "ہوئیں",
+   "ro": "hūʾīñ",
+   "hi": "हूईं",
+   "tier": "known",
+   "scan": "ہوئیں"
+  },
+  "huyen": {
+   "ur": "ہوئیں",
+   "ro": "hūʾīñ",
+   "hi": "हूईं",
+   "tier": "known",
+   "scan": "ہوئیں"
+  },
+  "huyi": {
+   "ur": "ہوئی",
+   "ro": "huʾī",
+   "hi": "हुई",
+   "tier": "known",
+   "scan": "ہوئی"
+  },
+  "inko": {
+   "ur": "ان کو",
+   "ro": "in ko",
+   "hi": "इन को",
+   "tier": "known",
+   "scan": "ان کو"
+  },
+  "ishq": {
+   "ur": "عشق",
+   "ro": "ʿishq",
+   "hi": "िश्क़",
+   "tier": "known",
+   "scan": "عشق"
+  },
+  "isko": {
+   "ur": "اس کو",
+   "ro": "is ko",
+   "hi": "इस को",
+   "tier": "known",
+   "scan": "اس کو"
+  },
+  "jaag": {
+   "ur": "جاگ",
+   "ro": "jāg",
+   "hi": "जाग",
+   "tier": "known",
+   "scan": "جاگ"
+  },
+  "jaaiye": {
+   "ur": "جائیے",
+   "ro": "jāʾiye",
+   "hi": "जाइये",
+   "tier": "known",
+   "scan": "جائیے"
+  },
+  "jaake": {
+   "ur": "جا کے",
+   "ro": "jā ke",
+   "hi": "जा के",
+   "tier": "known",
+   "scan": "جا کے"
+  },
+  "jaaoon": {
+   "ur": "جاؤں",
+   "ro": "jāʾūñ",
+   "hi": "जाऊँ",
+   "tier": "known",
+   "scan": "جاؤں"
+  },
+  "jaaye": {
+   "ur": "جائے",
+   "ro": "jāʾe",
+   "hi": "जाए",
+   "tier": "known",
+   "scan": "جائے"
+  },
+  "jaayega": {
+   "ur": "جائے گا",
+   "ro": "jāʾe gā",
+   "hi": "जाए गा",
+   "tier": "form",
+   "scan": "جائے گا"
+  },
+  "jaayein": {
+   "ur": "جائیں",
+   "ro": "jāʾeñ",
+   "hi": "जाएँ",
+   "tier": "form",
+   "scan": "جائیں"
+  },
+  "jaayenge": {
+   "ur": "جائیں گے",
+   "ro": "jāʾeñ ge",
+   "hi": "जाएँ गे",
+   "tier": "form",
+   "scan": "جائیں گے"
+  },
+  "jag": {
+   "ur": "جگ",
+   "ro": "jag",
+   "hi": "जग",
+   "tier": "known",
+   "scan": "جگ"
+  },
+  "jalaaye": {
+   "ur": "جلائے",
+   "ro": "jalāʾe",
+   "hi": "जलाए",
+   "tier": "known",
+   "scan": "جلائے"
+  },
+  "jalaayi": {
+   "ur": "جلائی",
+   "ro": "jalāʾī",
+   "hi": "जलाई",
+   "tier": "known",
+   "scan": "جلائی"
+  },
+  "jalaye": {
+   "ur": "جلائے",
+   "ro": "jalāʾe",
+   "hi": "जलाए",
+   "tier": "known",
+   "scan": "جلائے"
+  },
+  "jalayi": {
+   "ur": "جلائی",
+   "ro": "jalāʾī",
+   "hi": "जलाई",
+   "tier": "known",
+   "scan": "جلائی"
+  },
+  "jaye": {
+   "ur": "جائے",
+   "ro": "jāʾe",
+   "hi": "जाए",
+   "tier": "known",
+   "scan": "جائے"
+  },
+  "kahat": {
+   "ur": "کہت",
+   "ro": "kahat",
+   "hi": "कहत",
+   "tier": "form",
+   "scan": "کہت"
+  },
+  "kahi": {
+   "ur": "کہیں",
+   "ro": "kahīñ",
+   "hi": "कहीं",
+   "tier": "known",
+   "scan": "کہیں"
+  },
+  "karke": {
+   "ur": "کر کے",
+   "ro": "kar ke",
+   "hi": "कर के",
+   "tier": "known",
+   "scan": "کر کے"
+  },
+  "keh": {
+   "ur": "کہ",
+   "ro": "kih",
+   "hi": "कि",
+   "tier": "known",
+   "scan": "کہ"
+  },
+  "khaae": {
+   "ur": "کھائے",
+   "ro": "khāʾe",
+   "hi": "खाए",
+   "tier": "known",
+   "scan": "کھائے"
+  },
+  "khaaye": {
+   "ur": "کھائے",
+   "ro": "khāʾe",
+   "hi": "खाए",
+   "tier": "known",
+   "scan": "کھائے"
+  },
+  "khaayee": {
+   "ur": "کھائی",
+   "ro": "khāʾī",
+   "hi": "खाई",
+   "tier": "known",
+   "scan": "کھائی"
+  },
+  "khaayega": {
+   "ur": "کھائے گا",
+   "ro": "khāʾe gā",
+   "hi": "खाए गा",
+   "tier": "form",
+   "scan": "کھائے گا"
+  },
+  "khaayein": {
+   "ur": "کھائیں",
+   "ro": "khāʾeñ",
+   "hi": "खाएं",
+   "tier": "known",
+   "scan": "کھائیں"
+  },
+  "khaayen": {
+   "ur": "کھائیں",
+   "ro": "khāʾeñ",
+   "hi": "खाएँ",
+   "tier": "known",
+   "scan": "کھائیں"
+  },
+  "khaayi": {
+   "ur": "کھائی",
+   "ro": "khāʾī",
+   "hi": "खाई",
+   "tier": "known",
+   "scan": "کھائی"
+  },
+  "khoye": {
+   "ur": "کھوئے",
+   "ro": "khoʾe",
+   "hi": "खोए",
+   "tier": "known",
+   "scan": "کھوئے"
+  },
+  "khoyee": {
+   "ur": "کھوئی",
+   "ro": "khoʾī",
+   "hi": "खोई",
+   "tier": "known",
+   "scan": "کھوئی"
+  },
+  "khoyi": {
+   "ur": "کھوئی",
+   "ro": "khoʾī",
+   "hi": "खोई",
+   "tier": "known",
+   "scan": "کھوئی"
+  },
+  "khwaabon": {
+   "ur": "خوابوں",
+   "ro": "ḳhvāboñ",
+   "hi": "ख़्वाबों",
+   "tier": "poets",
+   "scan": "خوابوں"
+  },
+  "khwabon": {
+   "ur": "خوابوں",
+   "ro": "ḳhvāboñ",
+   "hi": "ख़्वाबों",
+   "tier": "poets",
+   "scan": "خوابوں"
+  },
+  "kijiye": {
+   "ur": "کیجیے",
+   "ro": "kījiye",
+   "hi": "कीजिये",
+   "tier": "known",
+   "scan": "کیجیے"
+  },
+  "kijiyega": {
+   "ur": "کیجیے گا",
+   "ro": "kījiye gā",
+   "hi": "कीजिये गा",
+   "tier": "derived",
+   "scan": "کیجیے گا"
+  },
+  "kitaabon": {
+   "ur": "کتابوں",
+   "ro": "kitāboñ",
+   "hi": "किताबों",
+   "tier": "poets",
+   "scan": "کتابوں"
+  },
+  "kitabon": {
+   "ur": "کتابوں",
+   "ro": "kitāboñ",
+   "hi": "किताबों",
+   "tier": "poets",
+   "scan": "کتابوں"
+  },
+  "koyi": {
+   "ur": "کوئی",
+   "ro": "koʾī",
+   "hi": "कोई",
+   "tier": "known",
+   "scan": "کوئی"
+  },
+  "kubra": {
+   "ur": "کبریٰ",
+   "ro": "kubrâ",
+   "hi": "कुबरा",
+   "tier": "known",
+   "scan": "کبریٰ"
+  },
+  "kubraa": {
+   "ur": "کبریٰ",
+   "ro": "kubrâ",
+   "hi": "कुबरा",
+   "tier": "known",
+   "scan": "کبریٰ"
+  },
+  "kya": {
+   "ur": "کیا",
+   "ro": "kyā",
+   "hi": "क्या",
+   "tier": "known",
+   "scan": "کیا"
+  },
+  "laae": {
+   "ur": "لائے",
+   "ro": "lāʾe",
+   "hi": "लाए",
+   "tier": "known",
+   "scan": "لائے"
+  },
+  "laaye": {
+   "ur": "لائے",
+   "ro": "lāʾe",
+   "hi": "लाए",
+   "tier": "known",
+   "scan": "لائے"
+  },
+  "laayee": {
+   "ur": "لائی",
+   "ro": "lāʾī",
+   "hi": "लाई",
+   "tier": "known",
+   "scan": "لائی"
+  },
+  "laayein": {
+   "ur": "لائیں",
+   "ro": "lāʾeñ",
+   "hi": "लाएँ",
+   "tier": "known",
+   "scan": "لائیں"
+  },
+  "laayen": {
+   "ur": "لائیں",
+   "ro": "lāʾeñ",
+   "hi": "लाएं",
+   "tier": "known",
+   "scan": "لائیں"
+  },
+  "laayi": {
+   "ur": "لائی",
+   "ro": "lāʾī",
+   "hi": "लाई",
+   "tier": "known",
+   "scan": "لائی"
+  },
+  "lab": {
+   "ur": "لب",
+   "ro": "lab",
+   "hi": "लब",
+   "tier": "known",
+   "scan": "لب"
+  },
+  "lagaaye": {
+   "ur": "لگائے",
+   "ro": "lagāʾe",
+   "hi": "लगाए",
+   "tier": "known",
+   "scan": "لگائے"
+  },
+  "lagaayee": {
+   "ur": "لگائی",
+   "ro": "lagāʾī",
+   "hi": "लगाई",
+   "tier": "known",
+   "scan": "لگائی"
+  },
+  "lagaayi": {
+   "ur": "لگائی",
+   "ro": "lagāʾī",
+   "hi": "लगाई",
+   "tier": "known",
+   "scan": "لگائی"
+  },
+  "lagaye": {
+   "ur": "لگائے",
+   "ro": "lagāʾe",
+   "hi": "लगाए",
+   "tier": "known",
+   "scan": "لگائے"
+  },
+  "lagayi": {
+   "ur": "لگائی",
+   "ro": "lagāʾī",
+   "hi": "लगाई",
+   "tier": "known",
+   "scan": "لگائی"
+  },
+  "larkiyan": {
+   "ur": "لڑکیاں",
+   "ro": "laṛkiyāñ",
+   "hi": "लड़कियाँ",
+   "tier": "form",
+   "scan": "لرکین"
+  },
+  "larzaye": {
+   "ur": "لرزائے",
+   "ro": "larzāʾe",
+   "hi": "लर्ज़ाए",
+   "tier": "derived",
+   "scan": "لرزائے"
+  },
+  "lijiyega": {
+   "ur": "لیجیے گا",
+   "ro": "lījiye gā",
+   "hi": "लीजिये गा",
+   "tier": "derived",
+   "scan": "لیجیے گا"
+  },
+  "mail": {
+   "ur": "میل",
+   "ro": "mail",
+   "hi": "मैल",
+   "tier": "known",
+   "scan": "میل"
+  },
+  "main": {
+   "ur": "میں",
+   "ro": "maiñ",
+   "hi": "मैं",
+   "tier": "known",
+   "scan": "میں"
+  },
+  "mein": {
+   "ur": "میں",
+   "ro": "meñ",
+   "hi": "में",
+   "tier": "known",
+   "scan": "میں"
+  },
+  "milaaye": {
+   "ur": "ملائے",
+   "ro": "milāʾe",
+   "hi": "मिलाए",
+   "tier": "known",
+   "scan": "ملائے"
+  },
+  "milaayi": {
+   "ur": "ملائی",
+   "ro": "milāʾī",
+   "hi": "मिलाई",
+   "tier": "known",
+   "scan": "ملائی"
+  },
+  "milaye": {
+   "ur": "ملائے",
+   "ro": "milāʾe",
+   "hi": "मिलाए",
+   "tier": "known",
+   "scan": "ملائے"
+  },
+  "milayi": {
+   "ur": "ملائی",
+   "ro": "milāʾī",
+   "hi": "मिलाई",
+   "tier": "known",
+   "scan": "ملائی"
+  },
+  "muhabbaten": {
+   "ur": "محبّتیں",
+   "ro": "muḥabbateñ",
+   "hi": "मुहब्बतें",
+   "tier": "form",
+   "scan": "مہبّتین"
+  },
+  "mujtaba": {
+   "ur": "مجتبیٰ",
+   "ro": "mujtabâ",
+   "hi": "मुजतबा",
+   "tier": "known",
+   "scan": "مجتبیٰ"
+  },
+  "mujtabaa": {
+   "ur": "مجتبیٰ",
+   "ro": "mujtabâ",
+   "hi": "मुजतबा",
+   "tier": "known",
+   "scan": "مجتبیٰ"
+  },
+  "murjhaye": {
+   "ur": "مرجھائے",
+   "ro": "murjhāʾe",
+   "hi": "मुरझाए",
+   "tier": "form",
+   "scan": "مرجھائے"
+  },
+  "musa": {
+   "ur": "موسیٰ",
+   "ro": "mūsâ",
+   "hi": "मूसा",
+   "tier": "known",
+   "scan": "موسیٰ"
+  },
+  "musaa": {
+   "ur": "موسیٰ",
+   "ro": "mūsâ",
+   "hi": "मूसा",
+   "tier": "known",
+   "scan": "موسیٰ"
+  },
+  "na": {
+   "ur": "نہ",
+   "ro": "nah",
+   "hi": "न",
+   "tier": "known",
+   "scan": "نہ"
+  },
+  "naadaan": {
+   "ur": "ناداں",
+   "ro": "nādāñ",
+   "hi": "नादाँ",
+   "tier": "known",
+   "scan": "ناداں"
+  },
+  "naalaaiqam": {
+   "ur": "نالائقم",
+   "ro": "nālāʾiqam",
+   "hi": "नालाइक़म",
+   "tier": "persian",
+   "scan": "نالائقم"
+  },
+  "nadaan": {
+   "ur": "ناداں",
+   "ro": "nādāñ",
+   "hi": "नादाँ",
+   "tier": "known",
+   "scan": "ناداں"
+  },
+  "nadan": {
+   "ur": "ناداں",
+   "ro": "nādāñ",
+   "hi": "नादाँ",
+   "tier": "known",
+   "scan": "ناداں"
+  },
+  "nahi": {
+   "ur": "نہیں",
+   "ro": "nahīñ",
+   "hi": "नहीं",
+   "tier": "known",
+   "scan": "نہیں"
+  },
+  "nahin": {
+   "ur": "نہیں",
+   "ro": "nahīñ",
+   "hi": "नहीं",
+   "tier": "known",
+   "scan": "نہیں"
+  },
+  "naye": {
+   "ur": "نئے",
+   "ro": "naʾe",
+   "hi": "नए",
+   "tier": "known",
+   "scan": "نئے"
+  },
+  "nayee": {
+   "ur": "نئی",
+   "ro": "naʾī",
+   "hi": "नई",
+   "tier": "known",
+   "scan": "نئی"
+  },
+  "nayi": {
+   "ur": "نئی",
+   "ro": "naʾī",
+   "hi": "नई",
+   "tier": "known",
+   "scan": "نئی"
+  },
+  "paae": {
+   "ur": "پائے",
+   "ro": "pāʾe",
+   "hi": "पाए",
+   "tier": "known",
+   "scan": "پائے"
+  },
+  "paaye": {
+   "ur": "پائے",
+   "ro": "pāʾe",
+   "hi": "पाए",
+   "tier": "known",
+   "scan": "پائے"
+  },
+  "paayee": {
+   "ur": "پائی",
+   "ro": "pāʾī",
+   "hi": "पाई",
+   "tier": "known",
+   "scan": "پائی"
+  },
+  "paayein": {
+   "ur": "پائیں",
+   "ro": "pāʾeñ",
+   "hi": "पाएं",
+   "tier": "known",
+   "scan": "پائیں"
+  },
+  "paayen": {
+   "ur": "پائیں",
+   "ro": "pāʾeñ",
+   "hi": "पाएँ",
+   "tier": "known",
+   "scan": "پائیں"
+  },
+  "paayi": {
+   "ur": "پائی",
+   "ro": "pāʾī",
+   "hi": "पाई",
+   "tier": "known",
+   "scan": "پائی"
+  },
+  "pada": {
+   "ur": "پڑا",
+   "ro": "paṛā",
+   "hi": "पड़ा",
+   "tier": "known",
+   "scan": "پڑا"
+  },
+  "pade": {
+   "ur": "پڑے",
+   "ro": "paṛe",
+   "hi": "पड़े",
+   "tier": "known",
+   "scan": "پڑے"
+  },
+  "padhoonga": {
+   "ur": "پڑھوں گا",
+   "ro": "paṛhūñ gā",
+   "hi": "पढ़ूँ गा",
+   "tier": "form",
+   "scan": "پدھوں گا"
+  },
+  "padi": {
+   "ur": "پڑی",
+   "ro": "paṛī",
+   "hi": "पड़ी",
+   "tier": "known",
+   "scan": "پڑی"
+  },
+  "paid": {
+   "ur": "پیڑ",
+   "ro": "peṛ",
+   "hi": "पेड़",
+   "tier": "known",
+   "scan": "پیڑ"
+  },
+  "paish": {
+   "ur": "پیش",
+   "ro": "pesh",
+   "hi": "पेश",
+   "tier": "known",
+   "scan": "پیش"
+  },
+  "pait": {
+   "ur": "پیٹ",
+   "ro": "peṭ",
+   "hi": "पेट",
+   "tier": "known",
+   "scan": "پیٹ"
+  },
+  "pe": {
+   "ur": "پہ",
+   "ro": "pah",
+   "hi": "पे",
+   "tier": "known",
+   "scan": "پہ"
+  },
+  "raaton": {
+   "ur": "راتوں",
+   "ro": "rātoñ",
+   "hi": "रातों",
+   "tier": "known",
+   "scan": "راتوں"
+  },
+  "raaye": {
+   "ur": "رائے",
+   "ro": "rāʾe",
+   "hi": "राए",
+   "tier": "known",
+   "scan": "رائے"
+  },
+  "raton": {
+   "ur": "راتوں",
+   "ro": "rātoñ",
+   "hi": "रातों",
+   "tier": "known",
+   "scan": "راتوں"
+  },
+  "raye": {
+   "ur": "رائے",
+   "ro": "rāʾe",
+   "hi": "राए",
+   "tier": "known",
+   "scan": "رائے"
+  },
+  "rokoonga": {
+   "ur": "روکوں گا",
+   "ro": "rokūñ gā",
+   "hi": "रोकूँ गा",
+   "tier": "form",
+   "scan": "روکوں گا"
+  },
+  "roonga": {
+   "ur": "روؤں گا",
+   "ro": "roʾūñ gā",
+   "hi": "रोऊँ गा",
+   "tier": "form",
+   "scan": "روؤں گا"
+  },
+  "roye": {
+   "ur": "روئے",
+   "ro": "roʾe",
+   "hi": "रोए",
+   "tier": "known",
+   "scan": "روئے"
+  },
+  "royee": {
+   "ur": "روئی",
+   "ro": "roʾī",
+   "hi": "रोई",
+   "tier": "known",
+   "scan": "روئی"
+  },
+  "royega": {
+   "ur": "روئے گا",
+   "ro": "roʾe gā",
+   "hi": "रोए गा",
+   "tier": "form",
+   "scan": "روئے گا"
+  },
+  "royi": {
+   "ur": "روئی",
+   "ro": "roʾī",
+   "hi": "रोई",
+   "tier": "known",
+   "scan": "روئی"
+  },
+  "sair": {
+   "ur": "سیر",
+   "ro": "sair",
+   "hi": "सैर",
+   "tier": "known",
+   "scan": "سیر"
+  },
+  "sajaaoonga": {
+   "ur": "سجاؤں گا",
+   "ro": "sajāʾūñ gā",
+   "hi": "सजाऊँ गा",
+   "tier": "form",
+   "scan": "سجاؤں گا"
+  },
+  "samaaye": {
+   "ur": "سمائے",
+   "ro": "samāʾe",
+   "hi": "समाए",
+   "tier": "known",
+   "scan": "سمائے"
+  },
+  "samaayi": {
+   "ur": "سمائی",
+   "ro": "samāʾī",
+   "hi": "समाई",
+   "tier": "known",
+   "scan": "سمائی"
+  },
+  "samaye": {
+   "ur": "سمائے",
+   "ro": "samāʾe",
+   "hi": "समाए",
+   "tier": "known",
+   "scan": "سمائے"
+  },
+  "samayi": {
+   "ur": "سمائی",
+   "ro": "samāʾī",
+   "hi": "समाई",
+   "tier": "known",
+   "scan": "سمائی"
+  },
+  "shaamon": {
+   "ur": "شاموں",
+   "ro": "shāmoñ",
+   "hi": "शामों",
+   "tier": "derived",
+   "scan": "شاموں"
+  },
+  "shahron": {
+   "ur": "شہروں",
+   "ro": "shahroñ",
+   "hi": "शहरों",
+   "tier": "known",
+   "scan": "شہروں"
+  },
+  "shamon": {
+   "ur": "شاموں",
+   "ro": "shāmoñ",
+   "hi": "शामों",
+   "tier": "derived",
+   "scan": "شاموں"
+  },
+  "shehron": {
+   "ur": "شہروں",
+   "ro": "shahroñ",
+   "hi": "शहरों",
+   "tier": "known",
+   "scan": "شہروں"
+  },
+  "soonga": {
+   "ur": "سوؤں گا",
+   "ro": "soʾūñ gā",
+   "hi": "सोऊँ गा",
+   "tier": "form",
+   "scan": "سوؤں گا"
+  },
+  "soye": {
+   "ur": "سوئے",
+   "ro": "soʾe",
+   "hi": "सोए",
+   "tier": "known",
+   "scan": "سوئے"
+  },
+  "soyee": {
+   "ur": "سوئی",
+   "ro": "soʾī",
+   "hi": "सोई",
+   "tier": "known",
+   "scan": "سوئی"
+  },
+  "soyega": {
+   "ur": "سوئے گا",
+   "ro": "soʾe gā",
+   "hi": "सोए गा",
+   "tier": "form",
+   "scan": "سوئے گا"
+  },
+  "soyi": {
+   "ur": "سوئی",
+   "ro": "soʾī",
+   "hi": "सोई",
+   "tier": "known",
+   "scan": "سوئی"
+  },
+  "sughra": {
+   "ur": "صغریٰ",
+   "ro": "ṣuġhrâ",
+   "hi": "सुग़रा",
+   "tier": "known",
+   "scan": "صغریٰ"
+  },
+  "sughraa": {
+   "ur": "صغریٰ",
+   "ro": "ṣuġhrâ",
+   "hi": "सुग़रा",
+   "tier": "known",
+   "scan": "صغریٰ"
+  },
+  "sunaaye": {
+   "ur": "سنائے",
+   "ro": "sunāʾe",
+   "hi": "सुनाए",
+   "tier": "known",
+   "scan": "سنائے"
+  },
+  "sunaayee": {
+   "ur": "سنائی",
+   "ro": "sunāʾī",
+   "hi": "सुनाई",
+   "tier": "known",
+   "scan": "سنائی"
+  },
+  "sunaayi": {
+   "ur": "سنائی",
+   "ro": "sunāʾī",
+   "hi": "सुनाई",
+   "tier": "known",
+   "scan": "سنائی"
+  },
+  "sunaye": {
+   "ur": "سنائے",
+   "ro": "sunāʾe",
+   "hi": "सुनाए",
+   "tier": "known",
+   "scan": "سنائے"
+  },
+  "sunayi": {
+   "ur": "سنائی",
+   "ro": "sunāʾī",
+   "hi": "सुनाई",
+   "tier": "known",
+   "scan": "سنائی"
+  },
+  "taqwa": {
+   "ur": "تقویٰ",
+   "ro": "taqvâ",
+   "hi": "तक़वा",
+   "tier": "known",
+   "scan": "تقویٰ"
+  },
+  "taqwaa": {
+   "ur": "تقویٰ",
+   "ro": "taqvâ",
+   "hi": "तक़वा",
+   "tier": "known",
+   "scan": "تقویٰ"
+  },
+  "tasveeren": {
+   "ur": "تصویریں",
+   "ro": "taṣvīreñ",
+   "hi": "तस्वीरें",
+   "tier": "form",
+   "scan": "تسوییرین"
+  },
+  "unko": {
+   "ur": "ان کو",
+   "ro": "un ko",
+   "hi": "उन को",
+   "tier": "known",
+   "scan": "ان کو"
+  },
+  "usko": {
+   "ur": "اس کو",
+   "ro": "us ko",
+   "hi": "उस को",
+   "tier": "known",
+   "scan": "اس کو"
+  },
+  "uthaye": {
+   "ur": "اٹھائے",
+   "ro": "uṭhāʾe",
+   "hi": "उठाए",
+   "tier": "form",
+   "scan": "اتھائے"
+  },
+  "uzma": {
+   "ur": "عظمیٰ",
+   "ro": "ʿuz̤mâ",
+   "hi": "ुज़्मा",
+   "tier": "known",
+   "scan": "عظمیٰ"
+  },
+  "uzmaa": {
+   "ur": "عظمیٰ",
+   "ro": "ʿuz̤mâ",
+   "hi": "ुज़्मा",
+   "tier": "known",
+   "scan": "عظمیٰ"
+  },
+  "vo": {
+   "ur": "وہ",
+   "ro": "vuh",
+   "hi": "वो",
+   "tier": "known",
+   "scan": "وہ"
+  },
+  "voh": {
+   "ur": "وہ",
+   "ro": "vuh",
+   "hi": "वो",
+   "tier": "known",
+   "scan": "وہ"
+  },
+  "wo": {
+   "ur": "وہ",
+   "ro": "vuh",
+   "hi": "वो",
+   "tier": "known",
+   "scan": "وہ"
+  },
+  "woh": {
+   "ur": "وہ",
+   "ro": "vuh",
+   "hi": "वो",
+   "tier": "known",
+   "scan": "وہ"
+  },
+  "yah": {
+   "ur": "یہ",
+   "ro": "yih",
+   "hi": "ये",
+   "tier": "known",
+   "scan": "یہ"
+  },
+  "yahya": {
+   "ur": "یحییٰ",
+   "ro": "yaḥyâ",
+   "hi": "यहया",
+   "tier": "known",
+   "scan": "یحییٰ"
+  },
+  "yahyaa": {
+   "ur": "یحییٰ",
+   "ro": "yaḥyâ",
+   "hi": "यहया",
+   "tier": "known",
+   "scan": "یحییٰ"
+  },
+  "ye": {
+   "ur": "یہ",
+   "ro": "yih",
+   "hi": "ये",
+   "tier": "known",
+   "scan": "یہ"
+  },
+  "yeh": {
+   "ur": "یہ",
+   "ro": "yih",
+   "hi": "ये",
+   "tier": "known",
+   "scan": "یہ"
+  }
+ },
+ "offers": {
+  "aam": [
+   "عام ʿām",
+   "آم ām"
+  ],
+  "aaye": [
+   "آئے āʾe",
+   "آیے āye"
+  ],
+  "arz": [
+   "عرض ʿarẓ",
+   "ارض arz"
+  ],
+  "baal": [
+   "بال bāl",
+   "بل bal"
+  ],
+  "baan": [
+   "باں bāñ",
+   "بن ban",
+   "بان bān"
+  ],
+  "bahr": [
+   "بحر baḥr",
+   "بہر bahr"
+  ],
+  "baich": [
+   "بیچ bech",
+   "بیچ bīch"
+  ],
+  "bair": [
+   "بیر bair",
+   "بیر ber"
+  ],
+  "bal": [
+   "بال bāl",
+   "بل bal"
+  ],
+  "ban": [
+   "بن ban",
+   "بان bān"
+  ],
+  "bech": [
+   "بیچ bech",
+   "بیچ bīch"
+  ],
+  "ber": [
+   "بیر ber",
+   "بیر bair"
+  ],
+  "bich": [
+   "بیچ bīch",
+   "بیچ bech"
+  ],
+  "biich": [
+   "بیچ bīch",
+   "بیچ bech"
+  ],
+  "bood": [
+   "بود būd",
+   "بود buvad"
+  ],
+  "buad": [
+   "بود buvad",
+   "بود būd"
+  ],
+  "buvad": [
+   "بود buvad",
+   "بود būd"
+  ],
+  "chaal": [
+   "چال chāl",
+   "چل chal"
+  ],
+  "chal": [
+   "چل chal",
+   "چال chāl"
+  ],
+  "daal": [
+   "ڈال ḍāl",
+   "دال dāl",
+   "دل dal"
+  ],
+  "daam": [
+   "دام dām",
+   "دم dam"
+  ],
+  "dal": [
+   "ڈال ḍāl",
+   "دل dal",
+   "دال dāl"
+  ],
+  "dam": [
+   "دم dam",
+   "دام dām"
+  ],
+  "dhaan": [
+   "دھن dhan",
+   "دھان dhān"
+  ],
+  "dhan": [
+   "دھن dhan",
+   "دھان dhān"
+  ],
+  "durood": [
+   "درود durūd",
+   "درود darūd"
+  ],
+  "durud": [
+   "درود durūd",
+   "درود darūd"
+  ],
+  "duruud": [
+   "درود durūd",
+   "درود darūd"
+  ],
+  "gaaye": [
+   "گائے gāʾe",
+   "گیے gaye",
+   "گئے gaʾe"
+  ],
+  "gaye": [
+   "گئے gaʾe",
+   "گیے gaye",
+   "گائے gāʾe"
+  ],
+  "ghaat": [
+   "گھاٹ ghāṭ",
+   "گھات ghāt",
+   "گھٹ ghaṭ"
+  ],
+  "ghat": [
+   "گھٹ ghaṭ",
+   "گھاٹ ghāṭ",
+   "گھات ghāt"
+  ],
+  "ghaza": [
+   "گھز ghaza",
+   "غزا ġhazā",
+   "قضا qaẓā"
+  ],
+  "halal": [
+   "حلال ḥalāl",
+   "ہلال hilāl"
+  ],
+  "hilal": [
+   "ہلال hilāl",
+   "حلال ḥalāl"
+  ],
+  "jaag": [
+   "جاگ jāg",
+   "جگ jag"
+  ],
+  "jaal": [
+   "جل jal",
+   "جال jāl"
+  ],
+  "jag": [
+   "جگ jag",
+   "جاگ jāg"
+  ],
+  "jal": [
+   "جل jal",
+   "جال jāl"
+  ],
+  "kaal": [
+   "کل kal",
+   "کال kāl"
+  ],
+  "kaam": [
+   "کام kām",
+   "کم kam"
+  ],
+  "kal": [
+   "کل kal",
+   "کال kāl"
+  ],
+  "kam": [
+   "کم kam",
+   "کام kām"
+  ],
+  "khar": [
+   "خار ḳhār",
+   "خر ḳhar",
+   "خوار ḳhvār"
+  ],
+  "khwar": [
+   "خوار ḳhvār",
+   "خار ḳhār"
+  ],
+  "maan": [
+   "ماں māñ",
+   "مان maañ",
+   "من man"
+  ],
+  "maar": [
+   "مار mār",
+   "مر mar"
+  ],
+  "mail": [
+   "میل mail",
+   "مائل māʾil",
+   "میل mel"
+  ],
+  "main": [
+   "میں maiñ",
+   "مین mīn"
+  ],
+  "malik": [
+   "مالک mālik",
+   "ملک malik"
+  ],
+  "man": [
+   "من man",
+   "ماں māñ",
+   "مان mān"
+  ],
+  "mar": [
+   "مر mar",
+   "مار mār"
+  ],
+  "meen": [
+   "من min",
+   "میں meñ",
+   "مین mīn"
+  ],
+  "mein": [
+   "میں meñ",
+   "مین mīn"
+  ],
+  "mel": [
+   "میل mel",
+   "مل mil",
+   "میل mail"
+  ],
+  "naag": [
+   "ناگ nāg",
+   "نگ nag"
+  ],
+  "nag": [
+   "ناگ nāg",
+   "نگ nag"
+  ],
+  "naye": [
+   "نئے naʾe",
+   "نائے nāʾe",
+   "نیے naye"
+  ],
+  "nayi": [
+   "نئی naʾī",
+   "نائی nāʾī",
+   "نیی nay-ī"
+  ],
+  "nazar": [
+   "نظر naz̤ar",
+   "نذر nażr"
+  ],
+  "nazr": [
+   "نذر nażr",
+   "نظر naz̤ar"
+  ],
+  "paal": [
+   "پل pal",
+   "پال pāl"
+  ],
+  "paar": [
+   "پر par",
+   "پار pār"
+  ],
+  "pal": [
+   "پل pal",
+   "پال pāl"
+  ],
+  "par": [
+   "پر par",
+   "پار pār"
+  ],
+  "qaza": [
+   "قضا qaẓā",
+   "غزا ġhazā"
+  ],
+  "sada": [
+   "صدا ṣadā",
+   "سادہ saada",
+   "صدائے sadā",
+   "سدا sadā"
+  ],
+  "safar": [
+   "سفر safar",
+   "صفر ṣifr"
+  ],
+  "sair": [
+   "سیر sair",
+   "سیر ser"
+  ],
+  "salaam": [
+   "سلام salām",
+   "صلائےم salā-am",
+   "سالم sālim"
+  ],
+  "salam": [
+   "سلام salām",
+   "سالم saal-am",
+   "سالم sālim"
+  ],
+  "sawab": [
+   "ثواب ṡavāb",
+   "صواب savāb"
+  ],
+  "ser": [
+   "سیر ser",
+   "سیر sair"
+  ],
+  "sur": [
+   "صور ṣūr",
+   "سر sur"
+  ],
+  "taal": [
+   "ٹال ṭāl",
+   "تال tāl",
+   "تل tal"
+  ],
+  "taan": [
+   "تن tan",
+   "تان taañ"
+  ],
+  "tal": [
+   "ٹل ṭal",
+   "ٹال ṭāl",
+   "تل tal",
+   "تال tāl"
+  ],
+  "tan": [
+   "تن tan",
+   "تان tān"
+  ]
+ },
+ "todo": {
+  "aaein": "آئیں",
+  "kismat": "قسمت",
+  "murtaza": "مرتضیٰ",
+  "murtazaa": "مرتضیٰ",
+  "sadayein": "صدائیں",
+  "rahguzaron": "رہگزروں"
+ }
+}

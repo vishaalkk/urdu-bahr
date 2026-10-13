@@ -572,7 +572,7 @@ za-rahmat-kun-nazar-bar-haal-e-zaaram-yaa-rasuulallaah-jami-persian-kalam-22
   - a preverb before an alif-initial verb stem (برافشانیم *ba-raf-shā-nīm*, دراندازیم): small.
   Saadi 22 → 9/10, Saadi 73 → 6/10, Hafiz 233 → 6/10.
 - **Steingass** (1892, public domain; Theodore Beers's scrape of the DSAL edition, MIT): `scripts/import_steingass.py` →
-  `data/fa_steingass.tsv` (50k single-word headwords with classical Roman). `scripts/lib_fa_steingass.js` adds, add-only like
+  `data/fa_steingass.tsv` (50k single-word headwords with classical Roman; since 2026-10-13 read from `data/dictionary_bundle.json.gz` instead). `scripts/lib_fa_steingass.js` adds, add-only like
   the verb forms, the reading of each headword the engine lacks (3.2k words; 46k already agree). Small but consistent gains.
   The PersianG2P/Tihu dictionary was looked at and left: modern Tehrani pronunciation, ~30% coverage of the test words.
 - **ScanFa lexicon packed** in `build_app.py`: words with the same readings share one `lex()` call, readings written as

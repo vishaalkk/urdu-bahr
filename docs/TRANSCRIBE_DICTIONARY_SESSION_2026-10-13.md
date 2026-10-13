@@ -195,3 +195,26 @@ This document records all questions, investigations, architectural decisions, an
 - Added **Test 43** in `tests/transcribe_logic.js`: Verifies `-on` plural noun fallback for `rahguzaron` and compound headword resolution for `rah-guzar` (`rah-guẕār`).
 - Added **Test 44** in `tests/transcribe_logic.js`: Verifies homograph candidate pairs and definitions for `baich` / `bech` (*bećnā* to sell vs *bīć* middle), `mail` / `mel`, and `sair` / `ser`.
 - Verified size budget (`tests/size_budget.js`): Raw size is strictly $\le$ 8,000,000 bytes (7,999,994 bytes); gzip size is $\le$ 3,000,000 bytes.
+
+---
+
+## 3. Superseded later the same day: from per-word fixes to one analyzer
+
+Most fixes above were exceptions for single words, and they moved the held-out typed-Roman score by about +0.2 points. They are now
+general rules checked against the dictionary, and every change is gated by benchmarks that run in `npm test`. A new benchmark's
+floor is what the code scored before the change, and floors only rise.
+
+| Above | Now |
+|---|---|
+| `HOMOPHONES` and `_pair` lists in `24-transcribe.js` (Q2, Q13, Q15) | `DICT_STORE.readingsOf` (one spelling's readings, from Platts' Devanagari) and `soundsLike` (other spellings of the sound), with a short `TR_PAIRS` for classical near-pairs no rule derives |
+| Hamza `CASUAL_ALIAS` blocks, `tryUrMorphDecompose` rules (Q9/Q10) | `PARADIGMS` in `12-dictionary-module.js`, one table of Urdu inflection read forward (`DICT_STORE.formsFor`: a word's forms, spelled by the parser and kept only if they rebuild the dictionary word) and backward (`dictLemmas`). The aliases stay for Scan, which has no dictionary, and are pinned by `tests/data/transcribe_golden.json` |
+| `DICT_STORE.lookup` fallback chain, `بیچ` special case, `ں`→`ن` retries (Q5, Q14, Q15) | `lookupDirect` with a looser key (`dictKeyUr`: Platts' ساتهہ, يہان, سؤال), then the dictionary words of an inflection, ranked by corpus attestation |
+| `urdu_bahr_lexicon_v2` (Q11) | One database, `urdu_bahr_lexicon`, whose copy is kept while its `DICT_BUNDLE_HASH` (stamped by the build) matches |
+| `FA_RO_WORDS` / `UR_RO_WORDS` | `detectScanLang` sums word weights mined from the shipped collections (`scripts/build_lang_words.js`) |
+| `FA_METER_RANK` | Ganjoor's verse counts per meter (`PERSIAN_METERS`) |
+
+Benchmarks: `tests/typed_roman_heldout.js`, `benchmark_transcribe.js`, `benchmark_dictionary.js`, `benchmark_lemma.js`,
+`benchmark_readings.js`, `benchmark_lang.js` and `transcribe_golden.js`.
+Data clean-up: Platts and Steingass come from the dictionary bundle only (`ur_platts.tsv`, `fa_steingass.tsv` and
+`platts_phrases.json` removed); VaznYab removed; `ROMAN_CASUAL_MAP` is rebuilt at load from `ASCII_FREQ`
+(`tests/packed_data.js` checks it against the build's digest).

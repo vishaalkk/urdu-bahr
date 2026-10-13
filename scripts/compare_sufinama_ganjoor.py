@@ -97,13 +97,17 @@ STEINGASS = None
 
 
 def steingass():
-    """Steingass headword -> its Roman in Sufinama's letters (data/fa_steingass.tsv, scripts/import_steingass.py)"""
+    """Steingass headword -> its Roman in Sufinama's letters (from data/dictionary_bundle.json.gz: single words, one reading)"""
     global STEINGASS
     if STEINGASS is None:
+        import gzip, json
         STEINGASS = {}
-        path = os.path.join(ROOT, 'data', 'fa_steingass.tsv')
-        for line in open(path, encoding='utf-8') if os.path.exists(path) else []:
-            fa, ro = line.rstrip('\n').split('\t')
+        path = os.path.join(ROOT, 'data', 'dictionary_bundle.json.gz')
+        entries = json.load(gzip.open(path, 'rt', encoding='utf-8')) if os.path.exists(path) else []
+        for e in entries:
+            fa, ro = e.get('ur', ''), e.get('ro', '')
+            if e.get('dict') != 'Steingass' or not fa or not ro or re.search(r'\s', fa) or re.search(r'[\s,;()=?+/]', ro):
+                continue
             ro = unicodedata.normalize('NFD', ro)
             ro = ro.replace('k\u0331h\u0331', 'ḳh').replace('g\u0331h\u0331', 'ġh').replace('t\u0331h\u0331', 's')
             ro = re.sub(r'[\u0331\u0324\u0323]', '', unicodedata.normalize('NFC', ro)).replace('ẖ', 'h').replace('w', 'v')
