@@ -133,17 +133,49 @@ function devToAscii(str) {
    every known ghazal word, most frequent spelling wins; see scripts/build_app.py, whose _casual_key this mirrors). Words typed
    WITH Pritchett's marks are left to the letter rules, which read them exactly. */
 const CASUAL_ALIAS = { ye: 'yih', yeh: 'yih', yah: 'yih', vo: 'vuh', wo: 'vuh', woh: 'vuh', voh: 'vuh', na: 'nah', pe: 'pah',
+  buad: 'buvad', buwad: 'buvad',
   keh: 'kih', hua: 'hu))aa', kya: 'kyaa', dava: 'davaa', nadan: 'naadaa;n', nadaan: 'naadaa;n', naadaan: 'naadaa;n', dile: 'dil-e', aaxir: 'aa;xir', kahi: 'kahii;N', nahin: 'nahii;N', nahi: 'nahii;N', mein: 'me;N', main: 'mai;N', hai: 'hai', hain: 'hai;N', hun: 'huu;N', hoon: 'huu;N',
   kubra: 'kubr;aa', kubraa: 'kubr;aa', sughra: '.su;Gr;aa', sughraa: '.su;Gr;aa', uzma: '((u:zm;aa', uzmaa: '((u:zm;aa',
   musa: 'muus;aa', musaa: 'muus;aa', fatwa: 'fatv;aa', fatwaa: 'fatv;aa', taqwa: 'taqv;aa', taqwaa: 'taqv;aa',
   adna: 'adn;aa', adnaa: 'adn;aa', yahya: 'ya;hy;aa', yahyaa: 'ya;hy;aa', mujtaba: 'mujtab;aa', mujtabaa: 'mujtab;aa',
   murtaza: 'murta:z;aa', murtazaa: 'murta:z;aa',
   hum: 'ham', humein: 'hame;N', humne: 'ham ne', unko: 'un ko', inko: 'in ko', usko: 'us ko', isko: 'is ko',
-  aake: 'aa ke', jaake: 'jaa ke', hoke: 'ho ke', karke: 'kar ke', gayi: 'ga))ii', gayee: 'ga))ii',
+  aake: 'aa ke', jaake: 'jaa ke', hoke: 'ho ke', karke: 'kar ke',
+  gaye: 'ga))e', gayen: 'ga))ii;N', gayein: 'ga))ii;N', gayin: 'ga))ii;N', gayi: 'ga))ii', gayee: 'ga))ii',
+  aaye: 'aa))e', aae: 'aa))e', aayi: 'aa))ii', aayee: 'aa))ii', aaii: 'aa))ii', aayein: 'aa))e;N', aayen: 'aa))e;N',
+  laaye: 'laa))e', laae: 'laa))e', laayi: 'laa))ii', laayee: 'laa))ii', laayein: 'laa))e;N', laayen: 'laa))e;N',
+  paaye: 'paa))e', paae: 'paa))e', paayi: 'paa))ii', paayee: 'paa))ii', paayein: 'paa))e;N', paayen: 'paa))e;N',
+  khaaye: 'khaa))e', khaae: 'khaa))e', khaayi: 'khaa))ii', khaayee: 'khaa))ii', khaayein: 'khaa))e;N', khaayen: 'khaa))e;N',
+  gaaye: 'gaa))e', gaae: 'gaa))e', gaayi: 'gaa))ii', gaayee: 'gaa))ii', gaayein: 'gaa))e;N', gaayen: 'gaa))e;N',
+  roye: 'ro))e', royi: 'ro))ii', royee: 'ro))ii',
+  dhoye: 'dho))e', dhoyi: 'dho))ii', dhoyee: 'dho))ii',
+  soye: 'so))e', soyi: 'so))ii', soyee: 'so))ii',
+  khoye: 'kho))e', khoyi: 'kho))ii', khoyee: 'kho))ii',
+  boye: 'bo))e', boyi: 'bo))ii', boyee: 'bo))ii',
+  huye: 'hu))e', huyi: 'hu))ii', huyee: 'hu))ii', huyein: 'hu))ii;N', huyen: 'hu))ii;N',
+  naye: 'na))e', nayi: 'na))ii', nayee: 'na))ii',
+  chaaye: 'chaa))e', chaye: 'chaa))e',
+  raaye: 'raa))e', raye: 'raa))e',
+  jaaye: 'jaa))e', jaye: 'jaa))e',
+  koyi: 'ko))ii', bhaayi: 'bhaa))ii',
+  bataaye: 'bataa))e', bataye: 'bataa))e', bataayi: 'bataa))ii', batayi: 'bataa))ii', bataayee: 'bataa))ii',
+  dikhaaye: 'dikhaa))e', dikhaye: 'dikhaa))e', dikhaayi: 'dikhaa))ii', dikhayi: 'dikhaa))ii', dikhaayee: 'dikhaa))ii',
+  sunaaye: 'sunaa))e', sunaye: 'sunaa))e', sunaayi: 'sunaa))ii', sunayi: 'sunaa))ii', sunaayee: 'sunaa))ii',
+  banaaye: 'banaa))e', banaye: 'banaa))e', banaayi: 'banaa))ii', banayi: 'banaa))ii', banaayee: 'banaa))ii',
+  lagaaye: 'lagaa))e', lagaye: 'lagaa))e', lagaayi: 'lagaa))ii', lagayi: 'lagaa))ii', lagaayee: 'lagaa))ii',
+  bulaye: 'bulaa))e', bulaaye: 'bulaa))e', bulayi: 'bulaa))ii', bulaayi: 'bulaa))ii', bulaayee: 'bulaa))ii',
+  chalaye: 'chalaa))e', chalaaye: 'chalaa))e', chalayi: 'chalaa))ii', chalaayi: 'chalaa))ii',
+  jalaye: 'jalaa))e', jalaaye: 'jalaa))e', jalayi: 'jalaa))ii', jalaayi: 'jalaa))ii',
+  milaye: 'milaa))e', milaaye: 'milaa))e', milayi: 'milaa))ii', milaayi: 'milaa))ii',
+  samaaye: 'samaa))e', samaye: 'samaa))e', samaayi: 'samaa))ii', samayi: 'samaa))ii',
   padi: 'pa;Rii', pada: 'pa;Raa', pade: 'pa;Re',
-  garchi: 'garchih', garche: 'garchih' };
+  faida: 'faa))idah', faayda: 'faa))idah', faeda: 'faa))idah', fayda: 'faa))idah',
+  harchand: 'har-chand',
+  garchi: 'garchih', garche: 'garchih',
+  jag: 'jag', jaag: 'jaag',
+  ghat: 'gha;t', ghaat: 'ghaa;t' };
 function casualKey(s, level) {   // level 0 strict (long vowels kept), 1 loose, 2 lax (also o~u, e~i): mirrors _casual_key in build_app.py
-  s = s.normalize('NFC').toLowerCase().replace(/[āáâ]/g, 'aa').replace(/[īíî]/g, 'ii').replace(/[ūúû]/g, 'uu').normalize('NFD').replace(/[̀-ͯ]/g, '')
+  s = s.normalize('NFC').toLowerCase().replace(/ć/g, 'ch').replace(/[āáâ]/g, 'aa').replace(/[īíî]/g, 'ii').replace(/[ūúû]/g, 'uu').replace(/ee/g, 'ii').normalize('NFD').replace(/[̀-ͯ]/g, '')
     .replace(/;g/g, 'gh').replace(/;x/g, 'kh').replace(/[;.:()'’‘ʿʾ-]/g, '').replace(/oo/g, 'uu').replace(/w/g, 'v');
   if (level >= 1) s = s.replace(/aa/g, 'a').replace(/ii/g, 'i').replace(/uu/g, 'u');
   if (level >= 2) s = s.replace(/o/g, 'u').replace(/e/g, 'i');
@@ -184,6 +216,461 @@ function rekhtaFallback(plain) {
   if (typeof ROMAN_FALLBACK === 'undefined') return null;
   return ROMAN_FALLBACK[casualKey(plain, 1)] || null;
 }
+/* Urdu letters in Persian orthography: ہ ھ → ه, ے ۓ → ی, ں → ن, ۂ → هٔ */
+function trUrToFa(ur) {
+  return String(ur || '').replace(/ۂ/g, 'هٔ').replace(/[ہھ]/g, 'ه').replace(/[ےۓ]/g, 'ی').replace(/ں/g, 'ن');
+}
+function trUrSpelling(w) {
+  return String(w || '').replace(/[يى]/g, 'ی').replace(/ك/g, 'ک').replace(/[هۀة]/g, function (c) { return c === 'ه' ? 'ہ' : 'ۂ'; });
+}
+function trFaRo(ro, ur) {
+  var s = String(ro || '').replace(/kH/g, 'ḳh').replace(/gH/g, 'ġh').replace(/zH/g, 'zh').replace(/\.h/g, 'ḥ');
+  var ain = /ع/.test(ur || ''), ham = /[ئءؤ]/.test(ur || '');
+  if (ain && !ham) return s.replace(/\./g, 'ʿ');
+  if (ham && !ain) return s.replace(/\./g, 'ʾ');
+  return s.replace(/\.(e|ī|ii|ai)/g, 'ʾ$1').replace(/\.([aiuāū])/g, 'ʿ$1');
+}
+
+var TR_FA_INDEX = null;
+function trFaIndex() {
+  if (TR_FA_INDEX) return TR_FA_INDEX;
+  TR_FA_INDEX = { strict: {}, loose: {} };
+  var lex = (typeof FA_LEXICON !== 'undefined' && FA_LEXICON) || {};
+  Object.keys(lex).forEach(function (ur) {
+    var e = lex[ur];
+    if (!e || !e[0]) return;
+    var ro = trFaRo(e[0], ur);
+    var k0 = casualKey(ro, 0), k1 = casualKey(ro, 1);
+    if (k0) (TR_FA_INDEX.strict[k0] || (TR_FA_INDEX.strict[k0] = [])).push({ ur: ur, ro: ro, hi: e[1] || '', n: e[2] || 0 });
+    if (k1) (TR_FA_INDEX.loose[k1] || (TR_FA_INDEX.loose[k1] = [])).push({ ur: ur, ro: ro, hi: e[1] || '', n: e[2] || 0 });
+  });
+  Object.keys(TR_FA_INDEX.strict).forEach(function (k) { TR_FA_INDEX.strict[k].sort(function (a, b) { return b.n - a.n; }); });
+  Object.keys(TR_FA_INDEX.loose).forEach(function (k) { TR_FA_INDEX.loose[k].sort(function (a, b) { return b.n - a.n; }); });
+  return TR_FA_INDEX;
+}
+function trFaHits(plain) {
+  var idx = trFaIndex();
+  var k0 = casualKey(plain, 0), k1 = casualKey(plain, 1);
+  var h0 = idx.strict[k0] || [];
+  if (h0.length) return h0;
+  return idx.loose[k1] || [];
+}
+function trFaHitsStrict(plain) {
+  var idx = trFaIndex();
+  var k0 = casualKey(plain, 0);
+  return idx.strict[k0] || [];
+}
+
+var RO_FA_PREFIXES = [
+  ['naa', 'نا', 'nā', 'ना'],
+  ['na',  'نا', 'nā', 'ना'],
+  ['be',  'بے', 'be', 'बे'],
+  ['baa', 'با', 'bā', 'बा'],
+  ['bah', 'بہ', 'bah', 'बह'],
+  ['ba',  'بہ', 'ba', 'ब'],
+  ['ham', 'ہم', 'ham', 'हम'],
+  ['dar', 'در', 'dar', 'दर'],
+  ['bar', 'بر', 'bar', 'बर']
+];
+var RO_FA_SUFFIXES = [
+  ['ashan', 'شاں', 'ashān', 'शाँ'], ['ashaan', 'شاں', 'ashān', 'शाँ'],
+  ['atan', 'تاں', 'atān', 'ताँ'], ['ataan', 'تاں', 'atān', 'ताँ'],
+  ['aman', 'ماں', 'amān', 'माँ'], ['amaan', 'ماں', 'amān', 'माँ'],
+  ['and', 'ند', 'and', 'न्द'], ['ast', 'ست', 'st', 'स्त'],
+  ['ash', 'ش', 'ash', 'श'], ['at', 'ت', 'at', 'त'], ['am', 'م', 'am', 'म'],
+  ['ha', 'ہا', 'hā', 'हा'], ['haa', 'ہا', 'hā', 'हा'],
+  ['an', 'اں', 'ān', 'ाँ'], ['aan', 'اں', 'ān', 'ाँ'],
+  ['id', 'ید', 'īd', 'ीद'], ['eed', 'ید', 'īd', 'ीद'],
+  ['im', 'یم', 'īm', 'ीम'], ['eem', 'یم', 'īm', 'ीम'],
+  ['ee', 'ئی', 'ī', 'ई'], ['ii', 'ئی', 'ī', 'ई'], ['i', 'ئی', 'ī', 'ई']
+];
+
+function roToPritchettAscii(ro, ur) {
+  if (!ro) return '';
+  var s = ro.toLowerCase()
+    .replace(/[āáâ]/g, 'aa')
+    .replace(/[ūúû]/g, 'uu')
+    .replace(/[īíî]/g, 'ii')
+    .replace(/ḳh|ḳ/g, ';x')
+    .replace(/ġh|ġ/g, ';g')
+    .replace(/ṭ/g, ';t')
+    .replace(/ḍ/g, ';d')
+    .replace(/ṛ/g, ';r')
+    .replace(/ṣ/g, '.s')
+    .replace(/ż|ẕ/g, ';z')
+    .replace(/ẓ/g, '.z')
+    .replace(/ṡ|s̱/g, ';s')
+    .replace(/ḥ/g, ';h')
+    .replace(/ʿ/g, '((')
+    .replace(/[’ʾ']/g, '))');
+  if (ur && /[ہه]$/.test(ur) && /a$/.test(s)) {
+    s = s.slice(0, -1) + 'ah';
+  }
+  return s;
+}
+
+function trParseAscii(asc) {
+  var out = { ur: '', hi: '', ro: '' };
+  [['ur', 'p_ur'], ['hi', 'p_hi'], ['ro', 'p_di']].forEach(function (pair) {
+    var k = pair[0], p = pair[1];
+    try {
+      var obj = (typeof window !== 'undefined' && window[p]) || (typeof globalThis !== 'undefined' && globalThis[p]);
+      if (obj && typeof obj.parse === 'function') out[k] = obj.parse(asc);
+    } catch (e) {}
+  });
+  return out;
+}
+
+function resolveFaStem(core) {
+  if (!core || core.length < 2) return null;
+  var hits = trFaHits(core);
+  if (hits.length) {
+    var ascHits = roToPritchettAscii(hits[0].ro, hits[0].ur);
+    return { ur: hits[0].ur, ro: hits[0].ro, hi: hits[0].hi || '', stem: hits[0].ro, ascii: ascHits };
+  }
+  for (var lv = 0; lv <= 2; lv++) {
+    var cas = casualLookup(core, lv, lv);
+    if (cas) {
+      var p = trParseAscii(cas);
+      return { ur: p.ur || cas, ro: p.ro || core, hi: p.hi || '', stem: p.ro || cas, ascii: cas };
+    }
+  }
+  var normCore = core.replace(/([āa])y([iq])/g, '$1i$2').replace(/yi/g, 'i');
+  if (normCore !== core) {
+    for (var lv2 = 0; lv2 <= 2; lv2++) {
+      var cas2 = casualLookup(normCore, lv2, lv2);
+      if (cas2) {
+        var p2 = trParseAscii(cas2);
+        return { ur: p2.ur || cas2, ro: p2.ro || core, hi: p2.hi || '', stem: p2.ro || cas2, ascii: cas2 };
+      }
+    }
+  }
+  var fb = rekhtaFallback(core);
+  if (fb) {
+    var p3 = trParseAscii(fb);
+    return { ur: p3.ur || fb, ro: p3.ro || core, hi: p3.hi || '', stem: p3.ro || fb, ascii: fb };
+  }
+  return null;
+}
+
+function tryFaDecompose(plain) {
+  if (!plain || plain.length < 3) return null;
+  if (/(?:^|[-_])(?:e|ye|o)(?:[-_]|$)/i.test(plain)) return null;
+  var raw = plain.toLowerCase().replace(/[-_]/g, '');
+
+  /* 1. Prefix + Stem + Suffix (e.g. naalaaiqam, nalaaiqam, nalayiqam) */
+  for (var p = 0; p < RO_FA_PREFIXES.length; p++) {
+    var pfx = RO_FA_PREFIXES[p];
+    if (raw.length > pfx[0].length + 3 && raw.indexOf(pfx[0]) === 0) {
+      var rem = raw.slice(pfx[0].length);
+      for (var s = 0; s < RO_FA_SUFFIXES.length; s++) {
+        var sfx = RO_FA_SUFFIXES[s];
+        if (rem.length > sfx[0].length + 2 && rem.slice(-sfx[0].length) === sfx[0]) {
+          var stemStr = rem.slice(0, -sfx[0].length);
+          var st = resolveFaStem(stemStr);
+          if (st) {
+            var isLaiq = /l[aā]+[yi]*q/i.test(stemStr);
+            var faStemUr = isLaiq ? 'لایق' : trUrToFa(st.ur);
+            var urStem = st.ur;
+            var isI = (sfx[0] === 'i' || sfx[0] === 'ii' || sfx[0] === 'ee');
+            var isHeh = /[ہه]$/.test(st.ur);
+            var isVowel = /[آاو]$/.test(st.ur);
+            var faUr, faZwnj, urOut, sfxAsc;
+            if (isI) {
+              if (isHeh) {
+                urOut = pfx[1] + urStem + '‌ئی';
+                faUr = trUrToFa(pfx[1]) + faStemUr + '\u200cای';
+                faZwnj = trUrToFa(pfx[1]) + faStemUr + '\u200cای';
+                sfxAsc = '-ii';
+              } else if (isVowel) {
+                urOut = pfx[1] + urStem + 'ئی';
+                faUr = trUrToFa(pfx[1]) + faStemUr + 'ئی';
+                faZwnj = trUrToFa(pfx[1]) + faStemUr + '\u200cئی';
+                sfxAsc = '))ii';
+              } else {
+                urOut = pfx[1] + urStem + 'ی';
+                faUr = trUrToFa(pfx[1]) + faStemUr + 'ی';
+                faZwnj = trUrToFa(pfx[1]) + faStemUr + '\u200cی';
+                sfxAsc = 'ii';
+              }
+            } else if (sfx[0] === 'am') {
+              if (isHeh) {
+                urOut = pfx[1] + urStem + '‌ام';
+                faUr = trUrToFa(pfx[1]) + faStemUr + '\u200cام';
+                faZwnj = trUrToFa(pfx[1]) + faStemUr + '\u200cام';
+                sfxAsc = '-am';
+              } else {
+                urOut = pfx[1] + urStem + 'م';
+                faUr = trUrToFa(pfx[1]) + faStemUr + 'م';
+                faZwnj = trUrToFa(pfx[1]) + faStemUr + '\u200cام';
+                sfxAsc = 'am';
+              }
+            } else {
+              faUr = trUrToFa(pfx[1]) + faStemUr + trUrToFa(sfx[1]);
+              faZwnj = trUrToFa(pfx[1]) + faStemUr + '\u200c' + trUrToFa(sfx[1]);
+              urOut = pfx[1] + urStem + sfx[1];
+              sfxAsc = sfx[0];
+            }
+            var roStem = st.ro;
+            var roStemFa = isLaiq ? 'lāyiq' : st.ro;
+            var roOut = pfx[2] + '-' + roStem + '-' + sfx[2];
+            var roFaOut = pfx[2] + '-' + roStemFa + '-' + sfx[2];
+            var hiOut = pfx[3] + '-' + st.hi + '-' + sfx[3];
+            var pfxAsc = (pfx[0] === 'na' || pfx[0] === 'naa') ? 'naa' : pfx[0];
+            var stemAsc = isLaiq ? 'laa))iq' : (st.ascii || st.stem);
+            return {
+              ur: urOut,
+              fa: faUr,
+              zwnj: faZwnj,
+              ro: roOut,
+              roFa: roFaOut,
+              hi: hiOut,
+              stem: roStem,
+              stemUr: urStem,
+              pfx: pfx[2],
+              pfxUr: pfx[1],
+              sfx: sfx[2],
+              morph: pfx[2] + ' + ' + roStem + ' + ' + sfx[2],
+              ascii: (isI && isHeh) ? (pfxAsc + stemAsc + '-ii') : (pfxAsc + stemAsc + sfxAsc)
+            };
+          }
+        }
+      }
+      /* Prefix + Stem (e.g. naadaan, bedaar) */
+      if (rem.length >= 2) {
+        var stPfx = resolveFaStem(rem);
+        if (stPfx) {
+          var isLaiqP = /l[aā]+[yi]*q/i.test(rem);
+          var faStem = isLaiqP ? 'لایق' : trUrToFa(stPfx.ur);
+          var pfxAscP = (pfx[0] === 'na' || pfx[0] === 'naa') ? 'naa' : pfx[0];
+          var stemAscP = isLaiqP ? 'laa))iq' : (stPfx.ascii || stPfx.stem);
+          return {
+            ur: pfx[1] + stPfx.ur,
+            fa: trUrToFa(pfx[1]) + faStem,
+            zwnj: trUrToFa(pfx[1]) + '\u200c' + faStem,
+            ro: pfx[2] + '-' + stPfx.ro,
+            hi: pfx[3] + '-' + stPfx.hi,
+            stem: stPfx.ro,
+            stemUr: stPfx.ur,
+            pfx: pfx[2],
+            pfxUr: pfx[1],
+            morph: pfx[2] + ' + ' + stPfx.ro,
+            ascii: pfxAscP + stemAscP
+          };
+        }
+      }
+    }
+  }
+
+  /* 2. Stem + Suffix (e.g. dilam, dastam, aabaadam, farmooda-ee, farmuda-i) */
+  for (var s2 = 0; s2 < RO_FA_SUFFIXES.length; s2++) {
+    var sfx2 = RO_FA_SUFFIXES[s2];
+    if (raw.length > sfx2[0].length + 2 && raw.slice(-sfx2[0].length) === sfx2[0]) {
+      var stemStr2 = raw.slice(0, -sfx2[0].length);
+      if (sfx2[0] === 'at' && stemStr2.length < 4 && !plain.includes('-')) continue;
+      var st2 = resolveFaStem(stemStr2);
+      if (st2) {
+        var isLaiq2 = /l[aā]+[yi]*q/i.test(stemStr2);
+        var faStemUr2 = isLaiq2 ? 'لایق' : trUrToFa(st2.ur);
+        var isI2 = (sfx2[0] === 'i' || sfx2[0] === 'ii' || sfx2[0] === 'ee');
+        var isHeh2 = /[ہه]$/.test(st2.ur);
+        var isVowel2 = /[آاو]$/.test(st2.ur);
+        var urOut2, faUr2, faZwnj2, sfxAsc2;
+        if (isI2) {
+          if (isHeh2) {
+            urOut2 = st2.ur + '‌ئی';
+            faUr2 = faStemUr2 + '\u200cای';
+            faZwnj2 = faStemUr2 + '\u200cای';
+            sfxAsc2 = '-ii';
+          } else if (isVowel2) {
+            urOut2 = st2.ur + 'ئی';
+            faUr2 = faStemUr2 + 'ئی';
+            faZwnj2 = faStemUr2 + '\u200cئی';
+            sfxAsc2 = '))ii';
+          } else {
+            urOut2 = st2.ur + 'ی';
+            faUr2 = faStemUr2 + 'ی';
+            faZwnj2 = faStemUr2 + '\u200cی';
+            sfxAsc2 = 'ii';
+          }
+        } else if (sfx2[0] === 'am') {
+          if (isHeh2) {
+            urOut2 = st2.ur + '‌ام';
+            faUr2 = faStemUr2 + '\u200cام';
+            faZwnj2 = faStemUr2 + '\u200cام';
+            sfxAsc2 = '-am';
+          } else {
+            urOut2 = st2.ur + 'م';
+            faUr2 = faStemUr2 + 'م';
+            faZwnj2 = faStemUr2 + '\u200cام';
+            sfxAsc2 = 'am';
+          }
+        } else {
+          urOut2 = st2.ur + sfx2[1];
+          faUr2 = faStemUr2 + trUrToFa(sfx2[1]);
+          faZwnj2 = faStemUr2 + '\u200c' + trUrToFa(sfx2[1]);
+          sfxAsc2 = sfx2[0];
+        }
+        var roStem2 = st2.ro;
+        var roStemFa2 = isLaiq2 ? 'lāyiq' : st2.ro;
+        var roOut2 = roStem2 + '-' + sfx2[2];
+        var roFaOut2 = roStemFa2 + '-' + sfx2[2];
+        var stemAsc2 = isLaiq2 ? 'laa))iq' : (st2.ascii || st2.stem);
+        return {
+          ur: urOut2,
+          fa: faUr2,
+          zwnj: faZwnj2,
+          ro: roOut2,
+          roFa: roFaOut2,
+          hi: st2.hi ? (st2.hi + '-' + sfx2[3]) : '',
+          stem: roStem2,
+          stemUr: st2.ur,
+          sfx: sfx2[2],
+          morph: roStem2 + ' + ' + sfx2[2],
+          ascii: (isI2 && isHeh2) ? (stemAsc2 + '-ii') : (stemAsc2 + sfxAsc2)
+        };
+      }
+    }
+  }
+
+  return null;
+}
+
+function stemClean(s) {
+  if (!s || s === 'a') return '';
+  return s.replace(/chhur/g, 'chhu;R').replace(/chhor/g, 'chho;R').replace(/tor/g, 'to;R')
+          .replace(/jur/g, 'ju;R').replace(/mur/g, 'mu;R').replace(/par/g, 'pa;R')
+          .replace(/lar/g, 'la;R').replace(/dor/g, 'do;R').replace(/D/g, ';d').replace(/T/g, ';t');
+}
+
+/* Urdu inflectional morphology: productive verbal future/subjunctive/imperative & plural noun forms */
+function tryUrMorphDecompose(plain) {
+  if (!plain || plain.length < 3) return null;
+  const s = plain.toLowerCase().replace(/[-_]/g, '');
+
+  // 1. Feminine plural nouns in -ā'eñ / -ā'oñ (duayein, hawayein, sadayein, adayein, duaoon, hawaon)
+  let m = s.match(/^(du|hav|sad|ad|vaf|dav)(?:a|aa)(?:y|)(?:e|ee|ei)n$/);
+  if (m) {
+    const rootMap = { du: 'du((aa))e;N', hav: 'havaa))e;N', sad: 'sadaa))e;N', ad: 'adaa))e;N', vaf: 'vafaa))e;N', dav: 'davaa))e;N' };
+    return { ascii: rootMap[m[1]], stem: m[1] + 'aa', sfx: '-eñ', morph: m[1] + 'aa + plural' };
+  }
+  m = s.match(/^(du|hav|sad|ad|vaf|dav)(?:a|aa)(?:y|)(?:oo|uu|u)n$/);
+  if (m) {
+    const rootMap = { du: 'du((aa))o;N', hav: 'havaa))o;N', sad: 'sadaa))o;N', ad: 'adaa))o;N', vaf: 'vafaa))o;N', dav: 'davaa))o;N' };
+    return { ascii: rootMap[m[1]], stem: m[1] + 'aa', sfx: '-oñ', morph: m[1] + 'aa + oblique plural' };
+  }
+
+  // 2. Vowel-stem future 1st person: basaaungaa, sajaaoonga, chhuraaoonga, banaaunga, aaungaa, etc.
+  m = s.match(/^([a-zāīū]*?)(?:a|aa)(?:oo|uu|u)ng(a|aa|i|ii)$/);
+  if (m) {
+    const isF = m[2].startsWith('i');
+    const stem = stemClean(m[1]);
+    const spaceAsc = (stem ? (stem + 'aa') : 'aa') + '))uu;N ' + (isF ? 'gii' : 'gaa');
+    return { ascii: spaceAsc, stem: stem ? (stem + 'aa') : 'aa', sfx: isF ? '-ūṅgī' : '-ūṅgā', morph: (stem ? (stem + 'ā') : 'ā') + (isF ? ' + -ūṅgī' : ' + -ūṅgā') };
+  }
+
+  // 3. Vowel-stem future 2nd/3rd plural / polite: basaayenge, basaaenge, aayenge, jaayenge
+  m = s.match(/^([a-zāīū]*?)(?:a|aa)(?:y|)(?:e|ee)ng(e|ee|i|ii|ay)$/);
+  if (m) {
+    const isF = m[2].startsWith('i');
+    const stem = stemClean(m[1]);
+    const spaceAsc = (stem ? (stem + 'aa') : 'aa') + '))e;N ' + (isF ? 'gii' : 'ge');
+    return { ascii: spaceAsc, stem: stem ? (stem + 'aa') : 'aa', sfx: isF ? '-eṅgī' : '-eṅge', morph: (stem ? (stem + 'ā') : 'ā') + (isF ? ' + -eṅgī' : ' + -eṅge') };
+  }
+
+  // 4. Vowel-stem future 2nd/3rd singular: basaayega, aayega, jaayega, khaayega
+  m = s.match(/^([a-zāīū]*?)(?:a|aa)(?:y|)(?:e|ee)g(a|aa|i|ii)$/);
+  if (m) {
+    const isF = m[2].startsWith('i');
+    const stem = stemClean(m[1]);
+    const spaceAsc = (stem ? (stem + 'aa') : 'aa') + '))e ' + (isF ? 'gii' : 'gaa');
+    return { ascii: spaceAsc, stem: stem ? (stem + 'aa') : 'aa', sfx: isF ? '-egī' : '-egā', morph: (stem ? (stem + 'ā') : 'ā') + (isF ? ' + -egī' : ' + -egā') };
+  }
+
+  // 5. Vowel-stem subjunctive 1st person: basaaoon, basaaun, sajaaoon, banaaoon, aaun, jaaoon
+  m = s.match(/^([a-zāīū]*?)(?:a|aa)(?:oo|uu|u)n$/);
+  if (m && !/(?:qanoon|joon|noon|khoon|funoon|haroon|mamnoon)/.test(s)) {
+    const stem = stemClean(m[1]);
+    return { ascii: (stem ? (stem + 'aa') : 'aa') + '))uu;N', stem: stem ? (stem + 'aa') : 'aa', sfx: '-ūṅ', morph: (stem ? (stem + 'ā') : 'ā') + ' + -ūṅ' };
+  }
+
+  // 6. Vowel-stem subjunctive plural / polite: basaayein, basaaen, aaein, jaayein
+  m = s.match(/^([a-zāīū]*?)(?:a|aa)(?:y|)(?:e|ee|ei)n$/);
+  if (m) {
+    const stem = stemClean(m[1]);
+    return { ascii: (stem ? (stem + 'aa') : 'aa') + '))e;N', stem: stem ? (stem + 'aa') : 'aa', sfx: '-eñ', morph: (stem ? (stem + 'ā') : 'ā') + ' + -eñ' };
+  }
+
+  // 6b. Vowel-stem past plural: -aaye / -aye (basaaye, dikhaaye, sunaaye, banaaye, etc.)
+  m = s.match(/^([a-zāīū]+?)(?:a|aa)y(?:e|ee)$/);
+  if (m) {
+    const stem = stemClean(m[1]);
+    return { ascii: (stem ? (stem + 'aa') : 'aa') + '))e', stem: stem ? (stem + 'aa') : 'aa', sfx: '-e', morph: (stem ? (stem + 'ā') : 'ā') + ' + past pl' };
+  }
+
+  // 6c. Vowel-stem past feminine: -aayi / -ayi (basaayi, dikhaayi, sunaayi, banaayi, etc.)
+  m = s.match(/^([a-zāīū]+?)(?:a|aa)y(?:i|ii|ee)$/);
+  if (m) {
+    const stem = stemClean(m[1]);
+    return { ascii: (stem ? (stem + 'aa') : 'aa') + '))ii', stem: stem ? (stem + 'aa') : 'aa', sfx: '-ī', morph: (stem ? (stem + 'ā') : 'ā') + ' + past fem' };
+  }
+
+  // 7. Polite Imperatives: aaiye, jaaiye, bataaiye, aaiyega, jaaiyega
+  m = s.match(/^([a-zāīū]*?)(?:a|aa)(?:y|)(?:i|ee)ye(?:h|)(g(?:a|aa)|)$/);
+  if (m) {
+    const stem = stemClean(m[1]);
+    const gPfx = m[2] ? ' gaa' : '';
+    return { ascii: (stem ? (stem + 'aa') : 'aa') + '))iye' + gPfx, stem: stem ? (stem + 'aa') : 'aa', sfx: m[2] ? '-iyegā' : '-iye', morph: (stem ? (stem + 'ā') : 'ā') + (m[2] ? ' + -iyegā' : ' + -iye') };
+  }
+
+  // 8. Vowel-stem verbs in -o- / -u-: so-oonga, soonga, ro-oonga, roonga, dho-oonga, dhoonga, so-yega, ro-yega
+  m = s.match(/^(dh|s|r|chh)(?:o|oo|u)(?:o|oo|uu|u|)ng(a|aa|i|ii)$/);
+  if (m) {
+    const isF = m[2].startsWith('i');
+    const stem = m[1] === 'chh' ? 'chhu;' : m[1];
+    const spaceAsc = stem + 'o))uu;N ' + (isF ? 'gii' : 'gaa');
+    return { ascii: spaceAsc, stem: stem + 'o', sfx: isF ? '-ūṅgī' : '-ūṅgā', morph: stem + 'o + future' };
+  }
+  m = s.match(/^(dh|s|r|chh)(?:o|oo)(?:y|)(?:e|ee)g(a|aa|i|ii)$/);
+  if (m) {
+    const isF = m[2].startsWith('i');
+    const stem = m[1] === 'chh' ? 'chhu;' : m[1];
+    return { ascii: stem + 'o))e ' + (isF ? 'gii' : 'gaa'), stem: stem + 'o', sfx: isF ? '-egī' : '-egā', morph: stem + 'o + future 3sg' };
+  }
+
+  // 9. Consonant-stem future: dekhoonga, boloonga, rokoonga, chhoroonga, bhejoonga
+  m = s.match(/^([a-zāīū]+?)(?:oo|uu|u)ng(a|aa|i|ii)$/);
+  if (m && !m[1].endsWith('a')) {
+    const isF = m[2].startsWith('i');
+    const stem = stemClean(m[1]);
+    const spaceAsc = stem + 'uu;N ' + (isF ? 'gii' : 'gaa');
+    return { ascii: spaceAsc, stem: stem, sfx: isF ? '-ūṅgī' : '-ūṅgā', morph: stem + (isF ? ' + -ūṅgī' : ' + -ūṅgā') };
+  }
+
+
+  // 10. Honorific imperatives: kijiye, kijiyega, dijiye, dijiyega, lijiye, lijiyega
+  m = s.match(/^(k|d|l)(?:i|ee)j(?:i|ee)ye(?:h|)(g(?:a|aa)|)$/);
+  if (m) {
+    const rMap = { k: 'kiijiye', d: 'diijiye', l: 'liijiye' };
+    const gPfx = m[2] ? ' gaa' : '';
+    return { ascii: rMap[m[1]] + gPfx, stem: m[1], sfx: m[2] ? '-iyegā' : '-iye', morph: rMap[m[1]] + (m[2] ? ' gaa' : '') };
+  }
+
+  // 11. High-frequency regular oblique plural nouns in -on / -oñ: kitabon, doston, etc.
+  const OBL_NOUN_MAP = {
+    kitabon: 'kitaabo;N', kitaabon: 'kitaabo;N', doston: 'dosto;N',
+    raaton: 'raato;N', raton: 'raato;N', baaton: 'baato;N', baton: 'baato;N',
+    aankhon: 'aankho;N', ankhon: 'aankho;N', dilon: 'dilo;N', gharon: 'gharo;N',
+    shehron: 'shahro;N', shahron: 'shahro;N', khwabon: ';xvaabo;N', khwaabon: ';xvaabo;N',
+    gulon: 'gulo;N', shamon: 'shaamo;N', shaamon: 'shaamo;N', ashkon: 'ashko;N'
+  };
+  if (OBL_NOUN_MAP[s]) {
+    return { ascii: OBL_NOUN_MAP[s], stem: s.replace(/oñ?$/, ''), sfx: '-oñ', morph: s + ' (oblique plural)' };
+  }
+
+  return null;
+}
+
 /* One typed piece (a word, or one side of a hyphen) → {s, tier}: the ASCII-scheme spelling and which list answered, in the order
    tried. tier: conn (e / ye / o joining a compound), typed (already marked, or one letter: the letter rules read it exactly),
    known (Pritchett's lists, a neighbour rule, an alias), poets (the Rekhta poets' list), loose (her laxest match), guess (no list:
@@ -191,6 +678,20 @@ function rekhtaFallback(plain) {
 function casualPiece(piece, i, tokHasHyphen, prev, next) {
   const plain = piece.toLowerCase().replace(/[āáâ]/g, 'ā').replace(/[īíî]/g, 'ī').replace(/[ūúû]/g, 'ū');
   if (i > 0 && (plain === 'e' || plain === 'ye' || plain === 'o')) return { s: piece, tier: 'conn' };
+  if (tokHasHyphen && i === 0) {
+    if (plain === 'na' || plain === 'naa') return { s: 'naa', tier: 'known' };
+    if (plain === 'bah') return { s: 'bah', tier: 'known' };
+    if (plain === 'baa' || plain === 'bā') return { s: 'baa', tier: 'known' };
+  }
+  if (tokHasHyphen && i > 0) {
+    if (plain === 'am' || plain === 'at' || plain === 'ash') return { s: plain, tier: 'persian' };
+    if (plain === 'ee' || plain === 'ii' || plain === 'i') return { s: 'ii', tier: 'persian' };
+    if (plain === 'im' || plain === 'eem') return { s: 'im', tier: 'persian' };
+    if (plain === 'id' || plain === 'eed') return { s: 'id', tier: 'persian' };
+    if (plain === 'and' || plain === 'ast') return { s: plain, tier: 'persian' };
+  }
+  const cleanApos = piece.toLowerCase().replace(/['’]/g, '');
+  if (cleanApos === 'buad' || cleanApos === 'buwad') return { s: 'buvad', tier: 'known' };
   if (plain.length < 2 || !/^[a-zāīū.]+$/.test(plain) || CASUAL_SPECIAL.test(piece)) return { s: rekhtaMarks(piece), tier: 'typed' };
   if (!tokHasHyphen) {   // hyphenated compounds keep their own pieces
     const c = collocSpelling(casualKey(plain, 1), prev, next);
@@ -206,8 +707,20 @@ function casualPiece(piece, i, tokHasHyphen, prev, next) {
      otherwise hijacks khud as khod (کھود) */
   let h;
   if ((h = casualLookup(plain, 0, 1))) return { s: h, tier: 'known' };
+  if (plain.includes('eh')) {
+    const ah = plain.replace(/e(?=h)/g, 'a');
+    if ((h = casualLookup(ah, 0, 1))) return { s: h, tier: 'known' };
+    if ((h = rekhtaFallback(ah))) return { s: h, tier: 'poets' };
+    if ((h = casualLookup(ah, 2, 2))) return { s: h, tier: 'loose' };
+  }
   if ((h = rekhtaFallback(plain))) return { s: h, tier: 'poets' };
   if ((h = casualLookup(plain, 2, 2))) return { s: h, tier: 'loose' };
+  var faDec = (typeof tryFaDecompose === 'function') ? tryFaDecompose(plain) : null;
+  if (faDec && faDec.ascii) return { s: faDec.ascii, tier: 'persian' };
+
+  var urDec = (typeof tryUrMorphDecompose === 'function') ? tryUrMorphDecompose(plain) : null;
+  if (urDec && urDec.ascii) return { s: urDec.ascii, tier: 'known', urDec: urDec };
+
   return { s: rekhtaMarks(piece), tier: 'guess' };
 }
 function casualRomanLine(line) {
@@ -218,6 +731,10 @@ function casualRomanLine(line) {
     const next = words[++wi] || '', prev = words[wi - 2] || '';
     tok = tok.replace(/^['’‘]+|['’‘]+$/g, '');   // a quoted takhallus: 'dāġh'
     const hyph = tok.includes('-');
+    if (hyph) {
+      const faWhole = (typeof tryFaDecompose === 'function') ? tryFaDecompose(tok) : null;
+      if (faWhole && faWhole.sfx && faWhole.ascii) return faWhole.ascii;
+    }
     return tok.split('-').map((piece, i) => casualPiece(piece, i, hyph, prev, next).s).join('-');
   }).join('');
   return out.replace(/(\S)\s+o\s+(\S)/g, '$1-o-$2');   // dard o gham -> dard-o-gham (the conjunction و)
@@ -255,7 +772,8 @@ function romanToAscii(str) {
        .replace(/ḥ/g, ';h')
        .replace(/ʿ/g, '((')
        .replace(/[’ʾ']/g, '))')
-       .replace(/u([aā])/g, 'u))$1');
+       .replace(/u([aā])/g, 'u))$1')
+       .replace(/aa(?!\)\))(?=[ieo])/g, 'aa))');
   return s;
 }
 

@@ -86,11 +86,26 @@ def parse_platts_page(filepath, page_num):
             'ro': ro,
             'origin': origin,
             'page': page_num,
+            'dict': 'Platts',
             'def': main_def[:300],
             'phrases': sub_phrases[:15]
         })
 
     return entries
+
+
+def entry_priority(e):
+    d = e.get('def', '').strip()
+    score = 0
+    if d.startswith('= ') or d.startswith('See ') or 'cf. P.' in d[:35] or 'cf. ' in d[:25]:
+        score -= 50
+    if len(d) > 80:
+        score += 30
+    elif len(d) > 40:
+        score += 15
+    if any(pos in d[:40] for pos in ['pron.', 's.m.', 's.f.', 'adj.', 'v.t.', 'v.i.', 'adv.']):
+        score += 20
+    return score
 
 
 def main():
@@ -110,7 +125,7 @@ def main():
         page_entries = parse_platts_page(path, page_num)
 
         for ent in page_entries:
-            key = (ent['ur'], ent['ro'])
+            key = (ent['ur'], ent['ro'], ent.get('origin', ''), ent.get('def', '')[:40])
             if key not in all_entries:
                 all_entries[key] = ent
             for phr in ent['phrases']:
@@ -136,15 +151,16 @@ def main():
             ro = ro.replace('*', '').strip()
             if not fa or not ro:
                 continue
-            key = (fa, ro)
+            clean_d = clean_text(defs)[:240]
+            key = (fa, ro, 'P', clean_d[:40])
             if key not in all_entries:
-                clean_d = clean_text(defs)[:240]
                 all_entries[key] = {
                     'ur': fa,
                     'hi': '',
                     'ro': ro,
                     'origin': 'P',
                     'page': 0,
+                    'dict': 'Steingass',
                     'def': clean_d,
                     'phrases': []
                 }
@@ -157,7 +173,9 @@ def main():
     print(f"Wrote {len(all_phrases)} phrases to {os.path.relpath(OUT_PHRASES, ROOT)}")
 
     # Format dictionary bundle as a list for export
+    # Substantive definitions precede cross-reference stubs
     bundle_data = list(all_entries.values())
+    bundle_data.sort(key=lambda e: (-entry_priority(e), e.get('page', 0)))
     raw_json = json.dumps(bundle_data, ensure_ascii=False, separators=(',', ':'))
 
     with open(OUT_BUNDLE, 'w', encoding='utf-8') as f:

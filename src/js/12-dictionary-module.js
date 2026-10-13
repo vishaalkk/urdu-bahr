@@ -116,6 +116,14 @@ function playWordRhythm(idx, rawPat, btn) {
 /* ================= PLATTS & STEINGASS CLASSICAL LEXICON ================= */
 const DICT_ORIGIN_NAMES = { P: 'Persian', A: 'Arabic', S: 'Sanskrit', H: 'Hindi', T: 'Turkish' };
 
+function dictFoldUr(s) {
+  return String(s || '').normalize('NFC')
+    .replace(/[\u064B-\u065F\u0670\u0640]/g, '')
+    .replace(/[هۀۂة]/g, 'ہ')
+    .replace(/[يى]/g, 'ی')
+    .replace(/ك/g, 'ک');
+}
+
 const DICT_STORE = {
   status: 'unloaded', // 'unloaded' | 'loading' | 'ready' | 'error'
   error: null,
@@ -176,9 +184,17 @@ const DICT_STORE = {
       const e = data[i];
       if (e.ur) {
         const u = e.ur.normalize('NFC').replace(/[\u064B-\u065F\u0670\u0640]/g, '');
-        let arr = this.indexUr.get(u);
-        if (!arr) { arr = []; this.indexUr.set(u, arr); }
-        arr.push(e);
+        const uFold = dictFoldUr(u);
+        const keys = new Set([u, uFold]);
+        const uNoSpace = u.replace(/[\s\u200c\u200d\u200e\u200f\-]/g, '');
+        const uFoldNoSpace = uFold.replace(/[\s\u200c\u200d\u200e\u200f\-]/g, '');
+        if (uNoSpace) keys.add(uNoSpace);
+        if (uFoldNoSpace) keys.add(uFoldNoSpace);
+        keys.forEach(k => {
+          let arr = this.indexUr.get(k);
+          if (!arr) { arr = []; this.indexUr.set(k, arr); }
+          if (!arr.includes(e)) arr.push(e);
+        });
       }
       if (e.ro) {
         const r = typeof casualKey === 'function' ? casualKey(e.ro, 1) : e.ro.toLowerCase().replace(/[^a-z]/g, '');
@@ -194,7 +210,8 @@ const DICT_STORE = {
   async openIDB() {
     return new Promise((resolve, reject) => {
       if (typeof indexedDB === 'undefined') return reject(new Error('IndexedDB unavailable'));
-      const req = indexedDB.open('urdu_bahr_lexicon_v1', 1);
+      try { indexedDB.deleteDatabase('urdu_bahr_lexicon_v1'); } catch (e) {}
+      const req = indexedDB.open('urdu_bahr_lexicon_v2', 1);
       req.onupgradeneeded = () => {
         const db = req.result;
         if (!db.objectStoreNames.contains('bundle')) db.createObjectStore('bundle');
@@ -236,19 +253,91 @@ const DICT_STORE = {
     const results = [];
     const seen = new Set();
     const add = e => {
-      const k = e.ur + '|' + e.ro;
+      const k = e.ur + '|' + e.ro + '|' + (e.origin || '') + '|' + (e.def ? e.def.slice(0, 30) : '');
       if (!seen.has(k)) { seen.add(k); results.push(e); }
     };
 
     const uNorm = word.normalize('NFC').replace(/[\u064B-\u065F\u0670\u0640]/g, '');
-    if (this.indexUr && this.indexUr.has(uNorm)) {
-      this.indexUr.get(uNorm).forEach(add);
-    }
+    const uFold = dictFoldUr(uNorm);
+    const uNoSpace = uNorm.replace(/[\s\u200c\u200d\u200e\u200f\-]/g, '');
+    const uFoldNoSpace = uFold.replace(/[\s\u200c\u200d\u200e\u200f\-]/g, '');
+    [uNorm, uFold, uNoSpace, uFoldNoSpace].forEach(k => {
+      if (k && this.indexUr && this.indexUr.has(k)) {
+        this.indexUr.get(k).forEach(add);
+      }
+    });
 
     const rKey = typeof casualKey === 'function' ? casualKey(word, 1) : word.toLowerCase().replace(/[^a-z]/g, '');
     if (rKey && this.indexRo && this.indexRo.has(rKey)) {
       this.indexRo.get(rKey).forEach(add);
     }
+
+    // 1. Oblique & inflectional normalizations (before splitting compounds)
+    if (results.length === 0) {
+      if (/ے$/.test(word)) {
+        const uHeh = word.replace(/ے$/, 'ہ');
+        this.lookup(uHeh).forEach(add);
+        if (results.length === 0) {
+          const uAlif = word.replace(/ے$/, 'ا');
+          this.lookup(uAlif).forEach(add);
+        }
+      } else if (/[a-z]e$/i.test(word)) {
+        const rA = word.replace(/e$/i, 'a');
+        this.lookup(rA).forEach(add);
+        if (results.length === 0) {
+          const rAh = word.replace(/e$/i, 'ah');
+          this.lookup(rAh).forEach(add);
+        }
+      } else if (/وں$/.test(word)) {
+        const uSing = word.replace(/وں$/, '');
+        this.lookup(uSing).forEach(add);
+      } else if (/(?:at|[اَ]?ت)$/i.test(word)) {
+        const stemPart = word.replace(/(?:at|[اَ]?ت)$/i, '');
+        if (stemPart && stemPart.length >= 2) {
+          this.lookup(stemPart + (/[a-z]/i.test(stemPart) ? 'na' : 'نا')).forEach(add);
+        }
+      }
+    }
+
+    // 2. Compound phrase decomposition fallback (only if whole compound not found)
+    if (results.length === 0 && (word.includes('-') || /[\s\u0650]/.test(word))) {
+      const parts = word.split(/-(?:e|ye|o)-|[-_\s\u0650]+/).filter(Boolean);
+      parts.forEach(part => {
+        if (/^(e|ye|o|va)$/i.test(part)) return;
+        const sub = this.lookup(part);
+        sub.forEach(add);
+      });
+    }
+
+    if (results.length > 1) {
+      const wClean = word.toLowerCase().replace(/[^a-z]/g, '');
+      const orgWeights = { A: 30, P: 30, H: 30, T: 25, S: 0 };
+      results.sort((a, b) => {
+        if (wClean) {
+          const exactA = (a.ro && a.ro.toLowerCase().replace(/[^a-z]/g, '') === wClean);
+          const exactB = (b.ro && b.ro.toLowerCase().replace(/[^a-z]/g, '') === wClean);
+          if (exactA !== exactB) return exactA ? -1 : 1;
+        }
+        const exactUrA = (a.ur === word || dictFoldUr(a.ur) === uFold);
+        const exactUrB = (b.ur === word || dictFoldUr(b.ur) === uFold);
+        if (exactUrA !== exactUrB) return exactUrA ? -1 : 1;
+
+        const isStubA = /^(=\s|See\s|\(.*cf\.)/i.test(a.def || '') || /cf\.\s+[PAH]\./i.test((a.def || '').slice(0, 35));
+        const isStubB = /^(=\s|See\s|\(.*cf\.)/i.test(b.def || '') || /cf\.\s+[PAH]\./i.test((b.def || '').slice(0, 35));
+        if (isStubA !== isStubB) return isStubA ? 1 : -1;
+
+        const owA = orgWeights[a.origin] || 10;
+        const owB = orgWeights[b.origin] || 10;
+        if (owA !== owB) return owB - owA;
+
+        const hypA = (a.ro && a.ro.includes('-') && !word.includes('-')) ? 1 : 0;
+        const hypB = (b.ro && b.ro.includes('-') && !word.includes('-')) ? 1 : 0;
+        if (hypA !== hypB) return hypA - hypB;
+
+        return (b.def ? b.def.length : 0) - (a.def ? a.def.length : 0);
+      });
+    }
+
     return results;
   }
 };
@@ -290,10 +379,10 @@ function renderLexiconSection() {
       <div class="card dict-load-card">
         <h3 style="margin: 0 0 var(--sp-2);">📚 Platts &amp; Steingass Classical Lexicon</h3>
         <p class="dim small" style="max-width: 540px; margin: 0 auto var(--sp-3); line-height: 1.5;">
-          117,795 classical headwords with definitions, etymology (Arabic, Persian, Sanskrit, Hindi), and 28,300+ idioms.
-          Downloads compressed (<strong>5.8 MB</strong>) once and stays cached in your browser's local storage permanently.
+          125,758 classical headwords with definitions, etymology (Arabic, Persian, Sanskrit, Hindi), and 28,300+ idioms.
+          Downloads compressed (<strong>6.5 MB</strong>) once and stays cached in your browser's local storage permanently.
         </p>
-        <button type="button" class="btn sm" onclick="triggerLoadDictionary()">⬇️ Load Classical Lexicon (5.8 MB)</button>
+        <button type="button" class="btn sm" onclick="triggerLoadDictionary()">⬇️ Load Classical Lexicon (6.5 MB)</button>
       </div>
     `;
     return;
@@ -302,7 +391,7 @@ function renderLexiconSection() {
   if (DICT_STORE.status === 'loading') {
     list.innerHTML = `
       <div class="card dict-load-card">
-        <div class="dim small">Downloading and indexing 117,795 classical dictionary entries…</div>
+        <div class="dim small">Downloading and indexing 125,758 classical dictionary entries…</div>
       </div>
     `;
     return;
@@ -324,7 +413,11 @@ function renderLexiconSection() {
   const org = DICT_STORE.lexiconOrigin;
 
   let results = [];
+  let compoundNote = '';
   if (q) {
+    const qClean = q.replace(/[^a-z]/g, '');
+    const qUrFold = dictFoldUr(q);
+    const orgWeights = { A: 30, P: 30, H: 30, T: 25, S: 0 };
     results = DICT_STORE.entries.filter(e => {
       if (org !== 'all' && e.origin !== org) return false;
       if (e.ur && e.ur.includes(q)) return true;
@@ -333,6 +426,46 @@ function renderLexiconSection() {
       if (e.hi && e.hi.includes(q)) return true;
       if (e.def && e.def.toLowerCase().includes(q)) return true;
       return false;
+    });
+
+    if (results.length === 0 && (q.includes('-') || /[\s\u0650]/.test(q))) {
+      const qParts = q.split(/-(?:e|ye|o)-|[-_\s\u0650]+/).filter(Boolean);
+      const seenComp = new Set();
+      qParts.forEach(part => {
+        if (/^(e|ye|o|va)$/i.test(part)) return;
+        const subHits = DICT_STORE.lookup(part);
+        subHits.forEach(e => {
+          if (org !== 'all' && e.origin !== org) return;
+          const k = e.ur + '|' + e.ro + '|' + (e.origin || '');
+          if (!seenComp.has(k)) {
+            seenComp.add(k);
+            results.push(e);
+          }
+        });
+      });
+      if (results.length > 0) {
+        compoundNote = `<div class="dim small" style="margin-bottom:var(--sp-2);padding:var(--sp-1) var(--sp-2);background:var(--bg-card);border-radius:var(--radius-sm);font-size:12px;">Showing constituent entries for compound query ‘${escapeHtml(q)}’</div>`;
+      }
+    }
+
+    results.sort((a, b) => {
+      function score(e) {
+        let s = 0;
+        const uFold = dictFoldUr(e.ur);
+        if (e.ur === q || uFold === qUrFold) s += 100;
+        else if (e.ur && e.ur.startsWith(q)) s += 40;
+
+        if (qClean && e.ro && e.ro.toLowerCase().replace(/[^a-z]/g, '') === qClean) s += 80;
+        else if (qCasual && e.ro && typeof casualKey === 'function' && casualKey(e.ro, 1) === qCasual) s += 60;
+        else if (e.ro && e.ro.toLowerCase().startsWith(q)) s += 30;
+
+        if (org === 'all') s += (orgWeights[e.origin] || 10);
+        if (e.ro && e.ro.includes('-') && !q.includes('-')) s -= 15;
+        if (/^(=\s|See\s|\(.*cf\.)/i.test(e.def || '')) s -= 40;
+        s += Math.min(10, Math.floor((e.def ? e.def.length : 0) / 40));
+        return s;
+      }
+      return score(b) - score(a);
     });
   } else {
     results = org === 'all' ? DICT_STORE.entries : DICT_STORE.entries.filter(e => e.origin === org);
@@ -346,10 +479,12 @@ function renderLexiconSection() {
   const scriptClass = (cs === 'ur') ? 'urdu' : ((cs === 'hi') ? 'deva' : 'mono');
   const langDirAttr = (cs === 'ur') ? 'lang="ur" dir="rtl"' : ((cs === 'hi') ? 'lang="hi"' : 'lang="ur-Latn" dir="ltr"');
 
-  list.innerHTML = results.slice(0, 100).map(e => {
+  list.innerHTML = compoundNote + results.slice(0, 100).map(e => {
     const dispWord = cs === 'hi' ? (e.hi || e.ro) : (cs === 'ro' ? e.ro : e.ur);
     const orgLabel = DICT_ORIGIN_NAMES[e.origin] || e.origin || '';
     const badgeCls = e.origin && ('origin-' + e.origin) in { 'origin-P': 1, 'origin-A': 1, 'origin-S': 1, 'origin-H': 1 } ? 'origin-' + e.origin : 'origin-default';
+    const dictSrc = e.dict || (e.page ? 'Platts' : 'Steingass');
+    const dictBadge = `<span class="dict-lex-badge dict-source-${dictSrc.toLowerCase()}">${escapeHtml(dictSrc)}</span>`;
     const pageHtml = e.page ? `<span class="dict-lex-page">p. ${e.page}</span>` : '';
     const phrasesHtml = (e.phrases && e.phrases.length) ? `
       <div class="dict-lex-phrases">
@@ -362,6 +497,7 @@ function renderLexiconSection() {
         <div class="dict-lex-head">
           <span class="dict-word ${scriptClass}" ${langDirAttr}>${escapeHtml(dispWord)}</span>
           <span class="mono dim" style="font-size: 13px;">${escapeHtml(e.ro)}</span>
+          ${dictBadge}
           ${orgLabel ? `<span class="dict-lex-badge ${badgeCls}">${orgLabel}</span>` : ''}
           ${pageHtml}
         </div>

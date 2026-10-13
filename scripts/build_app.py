@@ -129,9 +129,9 @@ WORD_ASCII_MAP = {_u: _a for _u, (_a, _c) in _word_best.items()}
 def _casual_key(a, level):
     # level 0 strict: long vowels kept (aa ii uu); 1 loose: long vowels folded; 2 lax: also o~u and e~i. Mirrors casualKey() in
     # src/js/05-translit-helpers.js.
-    a = a.lower().replace(';g', 'gh').replace(';x', 'kh')
+    a = a.lower().replace('ć', 'ch').replace(';g', 'gh').replace(';x', 'kh')
     a = re.sub(r"[;.:()'\u2019\u2018\u02bf\u02be-]", '', a)
-    a = a.replace('oo', 'uu').replace('w', 'v')
+    a = a.replace('oo', 'uu').replace('ee', 'ii').replace('w', 'v')
     if level >= 1: a = a.replace('aa', 'a').replace('ii', 'i').replace('uu', 'u')
     if level >= 2: a = a.replace('o', 'u').replace('e', 'i')
     return re.sub(r'(.)\1+' if level >= 1 else r'([^aiu])\1+', r'\1', a)

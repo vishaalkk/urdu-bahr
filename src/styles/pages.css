@@ -1017,6 +1017,8 @@ a.hb-ref:hover { color: var(--ink); }
 .dict-lex-badge.origin-S { background: rgba(245, 158, 11, 0.14); color: #d97706; }
 .dict-lex-badge.origin-H { background: rgba(139, 92, 246, 0.14); color: #7c3aed; }
 .dict-lex-badge.origin-default { background: var(--bg2); color: var(--dim); }
+.dict-lex-badge.dict-source-platts { background: var(--bg2); color: var(--ink); border: 1px solid var(--line2); }
+.dict-lex-badge.dict-source-steingass { background: rgba(99, 102, 241, 0.12); color: #4f46e5; border: 1px solid rgba(99, 102, 241, 0.25); }
 .dict-lex-page { font-size: 11px; color: var(--faint); font-family: var(--mono); margin-left: auto; }
 .dict-lex-def { font-size: 14px; line-height: 1.5; color: var(--ink); font-family: var(--sans); }
 .dict-lex-phrases { margin-top: var(--sp-2); padding-left: var(--sp-3); border-left: 2px solid var(--line2); font-size: 13px; display: flex; flex-direction: column; gap: 4px; }
