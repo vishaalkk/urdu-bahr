@@ -9,13 +9,16 @@ const fs = require('fs'), path = require('path'), os = require('os');
 const { execFileSync } = require('child_process');
 const root = path.join(__dirname, '..');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'derived-'));
+/* [file, builder, sources only some checkouts have]: a builder whose local-only sources are missing (CI) is skipped, not failed */
 const BUILDS = [
-    ['data/roman_fallback.json', 'scripts/build_roman_fallback.js'],
-    ['data/fa_scan.json', 'scripts/build_fa_scan.js'],
-    ['data/lang_words.json', 'scripts/build_lang_words.js']
+    ['data/roman_fallback.json', 'scripts/build_roman_fallback.js', []],
+    ['data/fa_scan.json', 'scripts/build_fa_scan.js', ['data/sufinama_ghazals.json']],   // the Sufinama scrape is gitignored
+    ['data/lang_words.json', 'scripts/build_lang_words.js', []]
 ];
 let bad = 0;
-for (const [file, script] of BUILDS) {
+for (const [file, script, local] of BUILDS) {
+    const missing = local.filter(f => !fs.existsSync(path.join(root, f)));
+    if (missing.length) { console.log(`  - ${file}: skipped (its builder needs ${missing.join(', ')}, kept locally only)`); continue; }
     const out = path.join(tmp, path.basename(file));
     execFileSync('node', [path.join(root, script), '--out', out], { stdio: 'ignore' });
     const same = fs.readFileSync(out).equals(fs.readFileSync(path.join(root, file)));
