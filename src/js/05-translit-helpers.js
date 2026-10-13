@@ -173,6 +173,7 @@ const CASUAL_ALIAS = { ye: 'yih', yeh: 'yih', yah: 'yih', vo: 'vuh', wo: 'vuh', 
   harchand: 'har-chand',
   garchi: 'garchih', garche: 'garchih',
   jag: 'jag', jaag: 'jaag',
+  baich: 'bech', daikh: 'dekh', bhaid: 'bhed', paish: 'pesh', pait: 'pe;t', paid: 'pe;R',
   ghat: 'gha;t', ghaat: 'ghaa;t' };
 function casualKey(s, level) {   // level 0 strict (long vowels kept), 1 loose, 2 lax (also o~u, e~i): mirrors _casual_key in build_app.py
   s = s.normalize('NFC').toLowerCase().replace(/ć/g, 'ch').replace(/[āáâ]/g, 'aa').replace(/[īíî]/g, 'ii').replace(/[ūúû]/g, 'uu').replace(/ee/g, 'ii').normalize('NFD').replace(/[̀-ͯ]/g, '')

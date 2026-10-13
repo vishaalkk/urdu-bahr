@@ -131,10 +131,67 @@ This document records all questions, investigations, architectural decisions, an
   - Dictionary drawer immediately displays Steingass: *He, she, or it was... — buwad, Let him be; it may, might, or will be.*
   - Homophone pills provide single-click switching between `buvad` (2 syllables) and `būd` (1 syllable).
 
+### Q13: Candidate Duplication and Reading Pill Merging for *ham* (ہم vs حام vs حم)
+- **User Query**: When typing `ham`, Row 1 showed four candidates with duplicate `[ ہم ham ]`. Row 2 showed multiple `ham (P)` pills where one pill merged 4 unrelated definitions (Hām son of Noah, also/fellow-citizen, shedding tears, father-in-law). Clicking candidates rearranged the numbered meanings confusingly.
+- **Root Cause**:
+  1. **Unicode Goal Heh vs Arabic Heh Collision**: Standard parser outputs Urdu Goal Heh `\u06C1` (**ہم**), whereas Platts/Steingass headwords use Arabic Heh `\u0647` (**هم**). Strict Unicode equality `c.ur === targetUr` failed, causing candidate deduplication to register both.
+  2. **Missing Script in Reading Pill Grouping Key**: In `trDictSectionHtml`, grouping key was `trFoldRo(x.ro) + '|' + (x.origin || '') + '|' + (x.dict || '')`. Because `ḥām`, `ham`, and `ḥam` all fold to `ham`, and Steingass tagged them with `P`, distinct headwords **`حام`** (Noah), **`ہم`** (fellow-citizen), and **`حم`** (father-in-law) shared `'ham|P|Steingass'` and were squashed into definitions (1)-(4) of a single pill.
+  3. **Heterograph Pollution in wholeHits**: `trDictSectionHtml` was appending `DICT_STORE.lookup(src)` even when exact script matches (`w.out.ur`) already existed.
+  4. **Stale Hit Selection**: `trPick` did not reset `TR.dictHitIdx = null`, keeping previous index selection active across different headword candidate changes.
+- **Solution**:
+  - Unified script comparisons via `dictFoldUr`, eliminating duplicate candidate buttons in Row 1.
+  - Included normalized Urdu script in reading pill grouping key: `normUr + '|' + trFoldRo(x.ro) + '|' + (x.origin || '') + '|' + (x.dict || '')`.
+  - Scoped dictionary lookup to only query `src` if `!wholeHits.length`, preventing heterograph pollution.
+  - Reset `TR.dictHitIdx = null` upon picking a candidate in `trPick`.
+
+### Q14: Plural Normalization for *rahguzaron* and Compound Discovery for *rah-guzar*
+- **User Query**: Typing `rahguzaron` showed no dictionary entry. Changing it to `rah-guzar` also failed to show the compound word definition.
+- **Root Cause**:
+  1. **Missing `-on` Plural Normalization**: In `DICT_STORE.lookup`, plural fallback only checked Urdu noon ghunna `/وں$/`. Casual Roman `rahguzaron` was transliterated to `رہگزرون` (ending in standard noon `ن`), and Roman plural stripping lacked `/[a-z](?:on|oñ|o;N)$/i`. Thus neither `rahguzaron` nor `رہگزرون` fell back to singular `rahguzar`.
+  2. **Compound Decomposition Overwriting Headwords**: For hyphenated compound `rah-guzar`, `trDictSectionHtml` queried `w.out.ur` (`رہ گزر` with space). Because `رہ گزر` did not match `indexUr`, `lookup` fell back to splitting it into `rah` (road) and `gazar` (pass). Because `wholeHits` was now populated with these piece hits, it never called `DICT_STORE.lookup(src)` (which would have found the compound headword `رهگذار` / `rah-guẕār` in Steingass and Platts).
+- **Solution**:
+  - Expanded plural/oblique normalization in `DICT_STORE.lookup` for `/و[ںن]$/` and `/[a-z](?:on|oñ|o;N)$/i`.
+  - Prioritized `DICT_STORE.lookup(src)` for hyphenated compounds before falling back to decomposed space-separated strings.
+  - Clicking the whole compound tab (`رہ گزر (rah-guzar)`) displays the full compound definition: *A pass, passage, road... a traveller; a guard*.
+
+### Q15: Homographs and Verb Stem Fallback for *baich* (بیچ to sell vs بیچ middle/center)
+- **User Query**: How to write the word `baich` meaning "to sell", when typing `baich` currently shows the noun meaning *middle/center* (`bīch` بیچ)? Also expand handling for other words with this pattern (`mail`/`mel` میل, `sair`/`ser` سیر, `bair`/`ber` بیر, `daikh`/`dekh` دیکھ, `paish`/`pesh` پیش, `bhaid`/`bhed` بھید, `pait`/`pet` پیٹ, `paid`/`per` پیڑ).
+- **Root Cause**:
+  1. **Urdu Homograph Collisions**:
+     - The exact Urdu spelling **بیچ** represents two distinct words:
+       - Verb root *bech* (Devanagari: बेच) from infinitive *bećnā* (بیچنا) = "to sell".
+       - Noun/preposition *bīch* (Devanagari: बीच) = "middle, midst, center".
+     - Platts indexes verbs under their infinitive form (*bećnā* p. 207). Without a verbal stem $\to$ infinitive fallback, querying `بیچ` only ever matched the noun *bīć* (p. 179).
+  2. **19th-Century Typography in Platts**:
+     - In Platts' 1884 printing, retroflex consonants used older characters (`ٿ` \u067F for `ٹ`, `ڐ` \u0690 for `ڈ`, `ڙ` \u0699 for `ڑ`), and aspirated consonants used Arabic heh `ه` (\u0647) instead of do-chashmī he `ھ` (\u06BE).
+     - Because `dictFoldUr` previously left `ھ`, `ٿ`, `ڐ`, `ڙ` unfolded, modern Urdu inputs for aspirated and retroflex verb stems (e.g., `دیکھنا`, `بیٹھنا`) failed exact script match.
+  3. **Homophone Candidate Pairing & Script Mirroring**:
+     - When typing `baich` or `bech`, users were not offered `[ بیچ bīch ]` (Devanagari: बीच) alongside `[ بیچ bech ]` (Devanagari: बेच).
+     - Selecting `bech` vs `bīch` did not dynamically reprioritize dictionary drawer definitions to match the active reading.
+- **Solution**:
+  1. Added `CASUAL_ALIAS` entries in `src/js/05-translit-helpers.js`:
+     - `baich: 'bech'`, `daikh: 'dekh'`, `bhaid: 'bhed'`, `paish: 'pesh'`, `pait: 'pe;t'`, `paid: 'pe;R'`.
+  2. Normalized 19th-century typography in `dictFoldUr` (`src/js/12-dictionary-module.js`):
+     - Maps `ٿ` $\to$ `ٹ`, `ڐ` $\to$ `ڈ`, `ڙ` $\to$ `ڑ`, and `[هۀۂةھ]` $\to$ `ہ`.
+  3. Added verbal stem $\to$ infinitive fallback in `DICT_STORE.lookup` (`src/js/12-dictionary-module.js`):
+     - Single-word non-compound queries ending in letters fall back to `word + 'na'` (Roman) and `word + 'نا'` (Urdu), bounded by depth guard `_depth <= 1` to prevent recursion loops.
+     - `بیچ` explicitly incorporates `بیچنا` (*bećnā*, to sell) alongside `bīć` (middle).
+  4. Added homophone candidate pairs in `HOMOPHONES` (`src/js/24-transcribe.js`):
+     - `bech` / `baich` $\leftrightarrow$ `bīch` (Devanagari: बेच vs बीच)
+     - `mail` $\leftrightarrow$ `mel` (Devanagari: मैल dirt vs मेल union/meeting)
+     - `sair` $\leftrightarrow$ `ser` (Devanagari: सैर walk/stroll vs सेर full/satiated)
+     - `bair` $\leftrightarrow$ `ber` (Devanagari: बैر enmity vs बेर jujube/time)
+  5. Implemented `roMatchScore` and `w.out.ro` lookup in `trDictSectionHtml` (`src/js/24-transcribe.js`):
+     - Folds Platts' acute `ć` $\to$ `ch`.
+     - Prioritizes the dictionary entry matching the active reading: selecting `[ بیچ bech ]` brings *bećnā* (to sell) to the front; selecting `[ بیچ bīch ]` brings *bīć* (middle) to the front.
+
 ---
 
 ## 2. Regression Test Coverage
 
 - Added **Test 40** in `tests/transcribe_logic.js`: Verifies standard hamza resolution and candidate alternatives for `gaye`, `aaye`, `naye`, `koyi`.
 - Added **Test 41** in `tests/transcribe_logic.js`: Verifies that `gada` in Persian context defaults to the *beggar / poor* definition in Steingass and Platts.
-- Verified size budget (`tests/size_budget.js`): Raw size is strictly $\le$ 8,000,000 bytes; gzip size is $\le$ 3,000,000 bytes.
+- Added **Test 42** in `tests/transcribe_logic.js`: Verifies candidate deduplication for `ham` (no duplicate `ہم`), and verifies strict separation of `ہم` from heterographs `حام` (son of Noah) and `حم`.
+- Added **Test 43** in `tests/transcribe_logic.js`: Verifies `-on` plural noun fallback for `rahguzaron` and compound headword resolution for `rah-guzar` (`rah-guẕār`).
+- Added **Test 44** in `tests/transcribe_logic.js`: Verifies homograph candidate pairs and definitions for `baich` / `bech` (*bećnā* to sell vs *bīć* middle), `mail` / `mel`, and `sair` / `ser`.
+- Verified size budget (`tests/size_budget.js`): Raw size is strictly $\le$ 8,000,000 bytes (7,999,994 bytes); gzip size is $\le$ 3,000,000 bytes.

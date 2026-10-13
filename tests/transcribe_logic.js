@@ -382,6 +382,47 @@ ok(bKoyi.lines[0].out.ur === 'کوئی', 'koyi transliterates to کوئی: ' + b
 const dGada = run(`(function(){ var w = trBuild('har gada yaad-e-sultan bu\\'ad').lines[0].words[1]; return trDictSectionHtml(w, w.pieces[0]); })()`);
 ok(dGada.includes('beggar') || dGada.includes('Poor, indigent'), 'gada defaults to gadā beggar definition: ' + dGada.slice(0, 100));
 
+// 42. Heterograph separation and duplicate prevention (ham: ہم vs حام vs حم)
+const cHam = run(`(function(){ var w = trBuild('ham').lines[0].words[0]; return trCands(w.pieces[0], w.pieces[0].def, 'ur'); })()`);
+const hamUrList = cHam.map(c => run(`dictFoldUr(${J(c.ur)})`));
+ok(new Set(hamUrList).size === cHam.length, 'candidates for ham have distinct normalized Urdu scripts (no duplicate ہم): ' + JSON.stringify(cHam.map(c => c.ur)));
+
+const dHam = run(`(function(){ var w = trBuild('ham').lines[0].words[0]; return trDictSectionHtml(w, w.pieces[0]); })()`);
+ok(!dHam.includes('son of Noah'), 'ham (ہم) does not bundle heterograph ḥām (حام, son of Noah): ' + dHam.slice(0, 100));
+
+const dNoah = run(`(function(){ var w = trBuild('ham', { choices: { ham: { t: 'f', ur: 'حام', ro: 'ḥām', hi: '' } } }).lines[0].words[0]; return trDictSectionHtml(w, w.pieces[0]); })()`);
+ok(dNoah.includes('son of Noah') && !dNoah.includes('fellow-citizen'), 'ḥām (حام) definition contains son of Noah without merging ham (ہم, fellow-citizen): ' + dNoah.slice(0, 100));
+
+// 43. Plural noun fallback and compound lookup (rahguzaron, rah-guzar -> rah-guẕār)
+const lkRahguzaron = run(`DICT_STORE.lookup('rahguzaron')`);
+ok(lkRahguzaron.some(e => e.ro.includes('guẕār') || e.ro.includes('guẕar')), 'rahguzaron lookup resolves to rah-guẕār: ' + (lkRahguzaron[0] && lkRahguzaron[0].ro));
+
+const dRahguzaron = run(`(function(){ var w = trBuild('rahguzaron').lines[0].words[0]; return trDictSectionHtml(w, w.pieces[0]); })()`);
+ok(dRahguzaron.includes('traveller') || dRahguzaron.includes('passage'), 'rahguzaron drawer shows rah-guẕār definition: ' + dRahguzaron.slice(0, 100));
+
+const dRahguzarWhole = run(`(function(){ var w = trBuild('rah-guzar').lines[0].words[0]; TR.dictTarget = 'whole'; return trDictSectionHtml(w, w.pieces[0]); })()`);
+ok(dRahguzarWhole.includes('traveller') || dRahguzarWhole.includes('passage'), 'rah-guzar whole compound tab shows rah-guẕār definition: ' + dRahguzarWhole.slice(0, 100));
+run(`TR.dictTarget = null;`);
+
+// 44. Homographs and verbal stem fallback (baich/bech -> bećnā to sell vs bīch middle)
+const bBaich = build('baich').lines[0].words[0];
+ok(bBaich.out.ur === 'بیچ' && bBaich.out.hi === 'बेच' && bBaich.out.ro === 'bech', 'baich transliterates to bech / بیچ / बेच: ' + JSON.stringify(bBaich.out));
+
+const cBaich = run(`trCands(trBuild('baich').lines[0].words[0].pieces[0], trBuild('baich').lines[0].words[0].pieces[0].def, 'ur')`);
+ok(cBaich.some(c => c.ro === 'bech' && c.hi === 'बेच') && cBaich.some(c => c.ro === 'bīch' && c.hi === 'बीच'), 'baich offers candidates bech (बेच) and bīch (बीच): ' + JSON.stringify(cBaich.map(c => c.ro + '/' + c.hi)));
+
+const dBech = run(`(function(){ var w = trBuild('baich').lines[0].words[0]; return trDictSectionHtml(w, w.pieces[0]); })()`);
+ok(dBech.includes('To sell') || dBech.includes('dispose of'), 'baich default drawer displays Platts bećnā (to sell) definition: ' + dBech.slice(0, 100));
+
+const dBichPick = run(`(function(){ var w = trBuild('baich', { choices: { baich: { t: 'f', ur: 'بیچ', ro: 'bīch', hi: 'बीच' } } }).lines[0].words[0]; return trDictSectionHtml(w, w.pieces[0]); })()`);
+ok(dBichPick.includes('Middle') || dBichPick.includes('midst'), 'selecting bīch displays Platts bīć (middle/center) definition: ' + dBichPick.slice(0, 100));
+
+const cMail = run(`trCands(trBuild('mail').lines[0].words[0].pieces[0], trBuild('mail').lines[0].words[0].pieces[0].def, 'ur')`);
+ok(cMail.some(c => c.ro === 'mel'), 'mail offers mel candidate: ' + cMail.map(c => c.ro));
+
+const cSair = run(`trCands(trBuild('sair').lines[0].words[0].pieces[0], trBuild('sair').lines[0].words[0].pieces[0].def, 'ur')`);
+ok(cSair.some(c => c.ro === 'ser'), 'sair offers ser candidate: ' + cSair.map(c => c.ro));
+
 console.log(bad ? `${bad} FAILED` : 'transcribe logic: all checks passed');
 process.exit(bad ? 1 : 0);
 

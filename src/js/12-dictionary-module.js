@@ -117,11 +117,8 @@ function playWordRhythm(idx, rawPat, btn) {
 const DICT_ORIGIN_NAMES = { P: 'Persian', A: 'Arabic', S: 'Sanskrit', H: 'Hindi', T: 'Turkish' };
 
 function dictFoldUr(s) {
-  return String(s || '').normalize('NFC')
-    .replace(/[\u064B-\u065F\u0670\u0640]/g, '')
-    .replace(/[هۀۂة]/g, 'ہ')
-    .replace(/[يى]/g, 'ی')
-    .replace(/ك/g, 'ک');
+  return String(s || '').normalize('NFC').replace(/[\u064B-\u065F\u0670\u0640]/g, '')
+    .replace(/[هۀۂةھ]/g, 'ہ').replace(/[يى]/g, 'ی').replace(/ك/g, 'ک').replace(/ٿ/g, 'ٹ').replace(/ڐ/g, 'ڈ').replace(/ڙ/g, 'ڑ');
 }
 
 const DICT_STORE = {
@@ -247,8 +244,8 @@ const DICT_STORE = {
     } catch (e) {}
   },
 
-  lookup(word) {
-    if (!this.entries || !word) return [];
+  lookup(word, _depth) {
+    if (!this.entries || !word || (_depth || 0) > 1) return [];
     word = String(word).trim();
     const results = [];
     const seen = new Set();
@@ -274,29 +271,42 @@ const DICT_STORE = {
 
     // 1. Oblique & inflectional normalizations (before splitting compounds)
     if (results.length === 0) {
+      const nextD = (_depth || 0) + 1;
       if (/ے$/.test(word)) {
         const uHeh = word.replace(/ے$/, 'ہ');
-        this.lookup(uHeh).forEach(add);
+        this.lookup(uHeh, nextD).forEach(add);
         if (results.length === 0) {
           const uAlif = word.replace(/ے$/, 'ا');
-          this.lookup(uAlif).forEach(add);
+          this.lookup(uAlif, nextD).forEach(add);
         }
       } else if (/[a-z]e$/i.test(word)) {
         const rA = word.replace(/e$/i, 'a');
-        this.lookup(rA).forEach(add);
+        this.lookup(rA, nextD).forEach(add);
         if (results.length === 0) {
           const rAh = word.replace(/e$/i, 'ah');
-          this.lookup(rAh).forEach(add);
+          this.lookup(rAh, nextD).forEach(add);
         }
-      } else if (/وں$/.test(word)) {
-        const uSing = word.replace(/وں$/, '');
-        this.lookup(uSing).forEach(add);
+      } else if (/و[ںن]$/.test(word)) {
+        const uSing = word.replace(/و[ںن]$/, '');
+        this.lookup(uSing, nextD).forEach(add);
+      } else if (/[a-z](?:on|oñ|o;N)$/i.test(word)) {
+        const rSing = word.replace(/(?:on|oñ|o;N)$/i, '');
+        this.lookup(rSing, nextD).forEach(add);
       } else if (/(?:at|[اَ]?ت)$/i.test(word)) {
         const stemPart = word.replace(/(?:at|[اَ]?ت)$/i, '');
         if (stemPart && stemPart.length >= 2) {
-          this.lookup(stemPart + (/[a-z]/i.test(stemPart) ? 'na' : 'نا')).forEach(add);
+          this.lookup(stemPart + (/[a-z]/i.test(stemPart) ? 'na' : 'نا'), nextD).forEach(add);
+        }
+      } else if (!/[-\s\u0650]/.test(word)) {
+        if (/[a-z]$/i.test(word) && !/(?:na|nā)$/i.test(word) && word.length >= 2) {
+          this.lookup(word + 'na', nextD).forEach(add);
+        } else if (/[؀-ۿ]$/.test(word) && !/نا$/.test(word) && word.length >= 2) {
+          this.lookup(word + 'نا', nextD).forEach(add);
         }
       }
+    }
+    if (!(_depth || 0) && (word === 'بیچ' || dictFoldUr(word) === 'بیچ')) {
+      this.lookup('بیچنا', 1).forEach(add);
     }
 
     // 2. Compound phrase decomposition fallback (only if whole compound not found)

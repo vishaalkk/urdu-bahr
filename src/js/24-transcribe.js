@@ -151,10 +151,11 @@ function trScriptWords(raw, o) {
 /* ---- candidates for one piece ---- */
 
 function trCands(piece, def, lang) {
-  var out = [], seen = {};
+  var out = [], seen = {}, fUr = function (s) { return (typeof dictFoldUr === 'function') ? dictFoldUr(s) : (s || ''); };
   function add(c) {
     if (!c || !c.ro) return;
-    var k = (c.ur || '') + '|' + casualKey(c.ro, 0);
+    var normUr = fUr(c.ur);
+    var k = normUr + '|' + casualKey(c.ro, 0);
     if (!seen[k] && !seen[c.ro]) {
       seen[k] = 1;
       seen[c.ro] = 1;
@@ -248,63 +249,16 @@ function trCands(piece, def, lang) {
   var HOMOPHONES = {
     sada: [{ ur: 'صدا', ro: 'ṣadā' }, { ur: 'سدا', ro: 'sadā' }],
     aam: [{ ur: 'عام', ro: 'ʿāmm' }, { ur: 'آم', ro: 'ām' }],
-    nazar: [{ ur: 'نظر', ro: 'naz̤ar' }, { ur: 'نذر', ro: 'nażr' }],
-    nazr: [{ ur: 'نذر', ro: 'nażr' }, { ur: 'نظر', ro: 'naz̤ar' }],
     safar: [{ ur: 'سفر', ro: 'safar' }, { ur: 'صفر', ro: 'ṣifr' }],
     arz: [{ ur: 'عرض', ro: 'ʿarẓ' }, { ur: 'ارض', ro: 'arz' }],
     bahr: [{ ur: 'بحر', ro: 'baḥr' }, { ur: 'بہر', ro: 'bahr' }],
     sawab: [{ ur: 'ثواب', ro: 'ṡavāb' }, { ur: 'صواب', ro: 'savāb' }],
-    khar: [{ ur: 'خار', ro: 'ḳhār' }, { ur: 'خوار', ro: 'ḳhvār' }],
-    khwar: [{ ur: 'خوار', ro: 'ḳhvār' }, { ur: 'خار', ro: 'ḳhār' }],
-    halal: [{ ur: 'حلال', ro: 'ḥalāl' }, { ur: 'ہلال', ro: 'hilāl' }],
-    hilal: [{ ur: 'ہلال', ro: 'hilāl' }, { ur: 'حلال', ro: 'ḥalāl' }],
-    qaza: [{ ur: 'قضا', ro: 'qaẓā' }, { ur: 'غزا', ro: 'ġhazā' }],
-    ghaza: [{ ur: 'غزا', ro: 'ġhazā' }, { ur: 'قضا', ro: 'qaẓā' }],
     malik: [{ ur: 'ملک', ro: 'malik' }, { ur: 'مالک', ro: 'mālik' }],
     sur: [{ ur: 'سر', ro: 'sur' }, { ur: 'صور', ro: 'ṣūr' }],
-    jag: [{ ur: 'جگ', ro: 'jag' }, { ur: 'جاگ', ro: 'jāg' }],
-    jaag: [{ ur: 'جاگ', ro: 'jāg' }, { ur: 'جگ', ro: 'jag' }],
     ghat: [{ ur: 'گھٹ', ro: 'ghaṭ' }, { ur: 'گھاٹ', ro: 'ghāṭ' }, { ur: 'گھات', ro: 'ghāt' }],
     ghaat: [{ ur: 'گھاٹ', ro: 'ghāṭ' }, { ur: 'گھات', ro: 'ghāt' }, { ur: 'گھٹ', ro: 'ghaṭ' }],
-    bal: [{ ur: 'بل', ro: 'bal' }, { ur: 'بال', ro: 'bāl' }],
-    baal: [{ ur: 'بال', ro: 'bāl' }, { ur: 'بل', ro: 'bal' }],
-    chal: [{ ur: 'چل', ro: 'chal' }, { ur: 'چال', ro: 'chāl' }],
-    chaal: [{ ur: 'چال', ro: 'chāl' }, { ur: 'چل', ro: 'chal' }],
-    jal: [{ ur: 'جل', ro: 'jal' }, { ur: 'جال', ro: 'jāl' }],
-    jaal: [{ ur: 'جال', ro: 'jāl' }, { ur: 'جل', ro: 'jal' }],
-    kal: [{ ur: 'کل', ro: 'kal' }, { ur: 'کال', ro: 'kāl' }],
-    kaal: [{ ur: 'کال', ro: 'kāl' }, { ur: 'کل', ro: 'kal' }],
-    pal: [{ ur: 'پل', ro: 'pal' }, { ur: 'پال', ro: 'pāl' }],
-    paal: [{ ur: 'پال', ro: 'pāl' }, { ur: 'پل', ro: 'pal' }],
-    mar: [{ ur: 'مر', ro: 'mar' }, { ur: 'مار', ro: 'mār' }],
-    maar: [{ ur: 'مار', ro: 'mār' }, { ur: 'مر', ro: 'mar' }],
-    par: [{ ur: 'پر', ro: 'par' }, { ur: 'پار', ro: 'pār' }],
-    paar: [{ ur: 'پار', ro: 'pār' }, { ur: 'پر', ro: 'par' }],
-    dal: [{ ur: 'دل', ro: 'dal' }, { ur: 'دال', ro: 'dāl' }],
-    daal: [{ ur: 'دال', ro: 'dāl' }, { ur: 'دل', ro: 'dal' }],
-    tal: [{ ur: 'تل', ro: 'tal' }, { ur: 'تال', ro: 'tāl' }],
-    taal: [{ ur: 'تال', ro: 'tāl' }, { ur: 'تل', ro: 'tal' }],
-    tan: [{ ur: 'تن', ro: 'tan' }, { ur: 'تان', ro: 'tān' }],
-    taan: [{ ur: 'تان', ro: 'tān' }, { ur: 'تن', ro: 'tan' }],
     man: [{ ur: 'من', ro: 'man' }, { ur: 'مان', ro: 'mān' }, { ur: 'ماں', ro: 'māñ' }],
     maan: [{ ur: 'مان', ro: 'mān' }, { ur: 'من', ro: 'man' }, { ur: 'ماں', ro: 'māñ' }],
-    ban: [{ ur: 'بن', ro: 'ban' }, { ur: 'بان', ro: 'bān' }],
-    baan: [{ ur: 'بان', ro: 'bān' }, { ur: 'بن', ro: 'ban' }],
-    dhan: [{ ur: 'دھن', ro: 'dhan' }, { ur: 'دھان', ro: 'dhān' }],
-    dhaan: [{ ur: 'دھان', ro: 'dhān' }, { ur: 'دھن', ro: 'dhan' }],
-    nag: [{ ur: 'نگ', ro: 'nag' }, { ur: 'ناگ', ro: 'nāg' }],
-    naag: [{ ur: 'ناگ', ro: 'nāg' }, { ur: 'نگ', ro: 'nag' }],
-    kam: [{ ur: 'کم', ro: 'kam' }, { ur: 'کام', ro: 'kām' }],
-    kaam: [{ ur: 'کام', ro: 'kām' }, { ur: 'کم', ro: 'kam' }],
-    dam: [{ ur: 'دم', ro: 'dam' }, { ur: 'دام', ro: 'dām' }],
-    daam: [{ ur: 'دام', ro: 'dām' }, { ur: 'دم', ro: 'dam' }],
-    durud: [{ ur: 'درود', ro: 'durūd' }, { ur: 'درود', ro: 'darūd' }],
-    duruud: [{ ur: 'درود', ro: 'durūd' }, { ur: 'درود', ro: 'darūd' }],
-    durood: [{ ur: 'درود', ro: 'durūd' }, { ur: 'درود', ro: 'darūd' }],
-    durūd: [{ ur: 'درود', ro: 'durūd' }, { ur: 'درود', ro: 'darūd' }],
-    salam: [{ ur: 'سلام', ro: 'salām' }, { ur: 'سالم', ro: 'sālim' }],
-    salaam: [{ ur: 'سلام', ro: 'salām' }, { ur: 'سالم', ro: 'sālim' }],
-    salām: [{ ur: 'سلام', ro: 'salām' }, { ur: 'سالم', ro: 'sālim' }],
     main: [{ ur: 'میں', ro: 'maiñ' }, { ur: 'مین', ro: 'mīn' }],
     mein: [{ ur: 'میں', ro: 'meñ' }, { ur: 'مین', ro: 'mīn' }],
     meen: [{ ur: 'مین', ro: 'mīn' }, { ur: 'میں', ro: 'meñ' }],
@@ -312,22 +266,38 @@ function trCands(piece, def, lang) {
     gaaye: [{ ur: 'گائے', ro: 'gāʾe' }, { ur: 'گئے', ro: 'gaʾe' }, { ur: 'گیے', ro: 'gaye' }],
     aaye: [{ ur: 'آئے', ro: 'āʾe' }, { ur: 'آیے', ro: 'āye' }],
     naye: [{ ur: 'نئے', ro: 'naʾe' }, { ur: 'نیے', ro: 'naye' }],
-    nayi: [{ ur: 'نئی', ro: 'naʾī' }, { ur: 'نیی', ro: 'nayī' }],
-    buvad: [{ ur: 'بود', ro: 'buvad' }, { ur: 'بود', ro: 'būd' }],
-    buad: [{ ur: 'بود', ro: 'buvad' }, { ur: 'بود', ro: 'būd' }],
-    bood: [{ ur: 'بود', ro: 'būd' }, { ur: 'بود', ro: 'buvad' }]
+    nayi: [{ ur: 'نئی', ro: 'naʾī' }, { ur: 'نیی', ro: 'nayī' }]
   };
+  function _pair(p) {
+    var c1 = { ur: p[2], ro: p[3], hi: p[6] || '' }, c2 = { ur: p[4], ro: p[5], hi: p[7] || '' };
+    HOMOPHONES[p[0]] = [c1, c2]; HOMOPHONES[p[1]] = [c2, c1];
+  }
+  [['nazar','nazr','نظر','naz̤ar','نذر','nażr'],['khar','khwar','خار','ḳhār','خوار','ḳhvār'],['halal','hilal','حلال','ḥalāl','ہلال','hilāl'],
+   ['qaza','ghaza','قضا','qaẓā', 'غزا','ġhazā'],['jag','jaag','جگ','jag','جاگ','jāg'],['bal','baal','بل','bal','بال','bāl'],
+   ['chal','chaal','چل','chal','چال','chāl'],['jal','jaal','جل','jal','جال','jāl'],['kal','kaal','کل','kal','کال','kāl'],
+   ['pal','paal','پل','pal','پال','pāl'],['mar','maar','مر','mar','مار','mār'],['par','paar','پر','par','پار','pār'],
+   ['dal','daal','دل','dal','دال','dāl'],['tal','taal','تل','tal','تال','tāl'],['tan','taan','تن','tan','تان','tān'],
+   ['ban','baan','بن','ban','بان','bān'],['dhan','dhaan','دھن','dhan','دھان','dhān'],['nag','naag','نگ','nag','ناگ','nāg'],
+   ['kam','kaam','کم','kam','کام','kām'],['dam','daam','دم','dam','دام','dām'],['bech','bich','بیچ','bech','بیچ','bīch','बेच','बीच'],
+   ['mail','mel','میل','mail','میل','mel','मैल','मेल'],['sair','ser','سیر','sair','سیر','ser','सैर','सेर'],['bair','ber','بیر','bair','بیر','ber','बैर','बेर']
+  ].forEach(_pair);
+  HOMOPHONES.baich = HOMOPHONES.bech; HOMOPHONES.biich = HOMOPHONES.bich;
+  HOMOPHONES.durud = HOMOPHONES.duruud = HOMOPHONES.durood = HOMOPHONES.durūd = [{ ur: 'درود', ro: 'durūd' }, { ur: 'درود', ro: 'darūd' }];
+  HOMOPHONES.salam = HOMOPHONES.salaam = HOMOPHONES.salām = [{ ur: 'سلام', ro: 'salām' }, { ur: 'سالم', ro: 'sālim' }];
+  HOMOPHONES.buvad = HOMOPHONES.buad = HOMOPHONES.bood = [{ ur: 'بود', ro: 'buvad' }, { ur: 'بود', ro: 'būd' }];
   if (HOMOPHONES[plain] && !(isFa && (plain === 'man' || plain === 'maan'))) {
     HOMOPHONES[plain].forEach(function (h) {
       var targetUr = isFa ? trUrToFa(h.ur) : h.ur;
+      var normUr = fUr(targetUr);
       var already = out.some(function (c) {
-        return c.ur === targetUr && (c.ro === h.ro || casualKey(c.ro, 0) === casualKey(h.ro, 0));
+        return fUr(c.ur) === normUr && (c.ro === h.ro || casualKey(c.ro, 0) === casualKey(h.ro, 0));
       });
       if (!already) {
-        var k = (targetUr || '') + '|' + casualKey(h.ro, 0);
+        var k = normUr + '|' + casualKey(h.ro, 0);
         seen[k] = 1;
+        seen[normUr] = 1;
         seen[h.ro] = 1;
-        out.push({ ur: targetUr, ro: h.ro, hi: '', fixed: { ur: targetUr, ro: h.ro, hi: '' }, tag: 'homophone' });
+        out.push({ ur: targetUr, ro: h.ro, hi: h.hi || '', fixed: { ur: targetUr, ro: h.ro, hi: h.hi || '' }, tag: 'homophone' });
       }
     });
   } else if (typeof DICT_STORE !== 'undefined' && DICT_STORE.indexRo && !(isFa && (plain === 'man' || plain === 'maan'))) {
@@ -352,10 +322,11 @@ function trCands(piece, def, lang) {
         if (h.ur.length < 2 && plain.length >= 2) return;
         if (h.origin === 'S' && hits.some(function (x) { return x.origin !== 'S' && (x.origin === 'A' || x.origin === 'P' || x.origin === 'H'); })) return;
         var targetUr = isFa ? trUrToFa(h.ur) : h.ur;
-        if (seenDictUr[targetUr]) return;
-        seenDictUr[targetUr] = 1;
+        var normUr = fUr(targetUr);
+        if (seenDictUr[normUr]) return;
+        seenDictUr[normUr] = 1;
         var already = out.some(function (c) {
-          return c.ur === targetUr;
+          return fUr(c.ur) === normUr;
         });
         if (!already) {
           candsFromDict.push({ ur: targetUr, ro: h.ro || plain, hi: '', fixed: { ur: targetUr, ro: h.ro || plain, hi: '' }, tag: 'lexicon' });
@@ -363,9 +334,11 @@ function trCands(piece, def, lang) {
       });
     });
     candsFromDict.slice(0, 3).forEach(function (c) {
-      var k = (c.ur || '') + '|' + casualKey(c.ro, 0);
-      if (!seen[k] && !seen[c.ur]) {
+      var normUr = fUr(c.ur);
+      var k = normUr + '|' + casualKey(c.ro, 0);
+      if (!seen[k] && !seen[normUr] && !seen[c.ur]) {
         seen[k] = 1;
+        seen[normUr] = 1;
         seen[c.ur] = 1;
         out.push(c);
       }
@@ -701,7 +674,18 @@ function trDictSectionHtml(w, activeP, script) {
   // Build candidate tabs
   var tabs = [];
   var wholeHits = [];
-  if (w.out && w.out.ur) wholeHits = DICT_STORE.lookup(w.out.ur);
+  if (src && src.includes('-')) {
+    wholeHits = DICT_STORE.lookup(src);
+    if (!wholeHits.length) wholeHits = DICT_STORE.lookup(src.replace(/-/g, ''));
+  }
+  if (!wholeHits.length && w.out && w.out.ur) {
+    wholeHits = DICT_STORE.lookup(w.out.ur);
+    if (w.out.ro && w.out.ro !== w.out.ur) {
+      DICT_STORE.lookup(w.out.ro).forEach(function (rh) {
+        if (!wholeHits.some(function (wh) { return wh.ur === rh.ur && wh.ro === rh.ro && wh.def === rh.def; })) wholeHits.push(rh);
+      });
+    }
+  }
   if (!wholeHits.length && decomp && decomp.pfxUr && decomp.stemUr) {
     wholeHits = DICT_STORE.lookup(decomp.pfxUr + ' ' + decomp.stemUr);
     if (!wholeHits.length) wholeHits = DICT_STORE.lookup(decomp.pfxUr + decomp.stemUr);
@@ -710,17 +694,8 @@ function trDictSectionHtml(w, activeP, script) {
     wholeHits = DICT_STORE.lookup(decomp.pfx + '-' + decomp.stem);
     if (!wholeHits.length) wholeHits = DICT_STORE.lookup(decomp.pfx + decomp.stem);
   }
-  if (!wholeHits.length && src && src.includes('-')) {
+  if (!wholeHits.length && src && !src.includes('-')) {
     wholeHits = DICT_STORE.lookup(src);
-    if (!wholeHits.length) wholeHits = DICT_STORE.lookup(src.replace(/-/g, ''));
-  }
-  if (src && !src.includes('-')) {
-    var srcHits = DICT_STORE.lookup(src);
-    srcHits.forEach(function (sh) {
-      if (!wholeHits.some(function (wh) { return wh.ur === sh.ur && wh.ro === sh.ro && wh.def === sh.def; })) {
-        wholeHits.push(sh);
-      }
-    });
   }
 
   if (wholeHits.length) {
@@ -789,13 +764,14 @@ function trDictSectionHtml(w, activeP, script) {
 
   function trFoldRo(s) {
     if (!s) return '';
-    return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z]/g, '');
+    return s.normalize('NFC').replace(/ć/g, 'ch').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z]/g, '');
   }
 
   var distinctReadings = [];
   var seenReadings = {};
   hits.forEach(function (x) {
-    var key = trFoldRo(x.ro) + '|' + (x.origin || '') + '|' + (x.dict || '');
+    var normUr = (typeof dictFoldUr === 'function') ? dictFoldUr(x.ur) : (x.ur || '');
+    var key = normUr + '|' + trFoldRo(x.ro) + '|' + (x.origin || '') + '|' + (x.dict || '');
     if (!seenReadings[key]) {
       var item = { primary: x, all: [x], ro: x.ro, origin: x.origin, dict: x.dict, ur: x.ur, page: x.page, def: x.def, phrases: x.phrases ? x.phrases.slice() : [] };
       seenReadings[key] = item;
@@ -808,13 +784,23 @@ function trDictSectionHtml(w, activeP, script) {
     }
   });
 
-  var cleanSrc = trFoldRo(src);
+  var activeRo = (p && p.fixed && p.fixed.ro) || (p && p.ro) || (w.out && w.out.ro) || src;
+  var cleanSrc = trFoldRo(activeRo);
   var isFaMode = (typeof TR !== 'undefined' && TR.script === 'fa') || (w && w.lang === 'fa');
 
+  function roMatchScore(cand) {
+    if (!cleanSrc) return 0;
+    var cr = trFoldRo(cand.ro);
+    if (cr === cleanSrc) return 100;
+    if (cr.replace(/na$/, '') === cleanSrc) return 90;
+    if (cr.replace(/a$/, '') === cleanSrc) return 80;
+    return cr.startsWith(cleanSrc) ? 70 : 0;
+  }
+
   distinctReadings.sort(function(a, b) {
-    var aMatch = (cleanSrc && trFoldRo(a.ro) === cleanSrc) ? 1 : 0;
-    var bMatch = (cleanSrc && trFoldRo(b.ro) === cleanSrc) ? 1 : 0;
-    if (aMatch !== bMatch) return bMatch - aMatch;
+    var aScore = roMatchScore(a);
+    var bScore = roMatchScore(b);
+    if (aScore !== bScore) return bScore - aScore;
     if (isFaMode) {
       var aP = (a.origin === 'P' || a.dict === 'Steingass') ? 1 : 0;
       var bP = (b.origin === 'P' || b.dict === 'Steingass') ? 1 : 0;
@@ -826,9 +812,9 @@ function trDictSectionHtml(w, activeP, script) {
   var defaultMatch = null;
   if (cleanSrc) {
     defaultMatch = (isFaMode ? distinctReadings.find(function(x) {
-      return trFoldRo(x.ro) === cleanSrc && (x.origin === 'P' || x.dict === 'Steingass');
+      return (roMatchScore(x) > 0) && (x.origin === 'P' || x.dict === 'Steingass');
     }) : null) || distinctReadings.find(function(x) {
-      return trFoldRo(x.ro) === cleanSrc;
+      return roMatchScore(x) > 0;
     });
   }
   if (!defaultMatch && decomp && decomp.stem) {
@@ -964,6 +950,7 @@ function trPick(pi, ci) {
   var c = trCands(h.p, h.p.def, cLang)[ci]; if (!c) return;
   if (c.isDefault) delete TR.choices[h.p.key]; else TR.choices[h.p.key] = trChoiceFor(c);
   TR.dictTarget = String(pi);
+  TR.dictHitIdx = null;
   trSave('trChoices', TR.choices);
   trRender();
 }
