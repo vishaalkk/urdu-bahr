@@ -171,17 +171,17 @@
 .chip.flex {
   position: relative;
 }
-/* Calligraphic Nuqta (Diamond ◆) micro-pip for flexible syllables */
+/* Calligraphic Nuqta (Diamond ◆) micro-pip for flexible syllables — perched on top rim so letters are never obscured */
 .chip.flex::before {
   content: '';
   position: absolute;
-  top: 4px;
-  inset-inline-end: 4px;
+  top: -3px;
+  inset-inline-end: 3px;
   width: 4.5px;
   height: 4.5px;
   background: var(--rose);
   transform: rotate(45deg);
-  box-shadow: 0 0 0 1px var(--bg2);
+  box-shadow: 0 0 0 1px var(--bg);
   pointer-events: none;
   z-index: 2;
 }
