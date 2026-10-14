@@ -664,8 +664,12 @@ function casualPiece(piece, i, tokHasHyphen, prev, next) {
     const c = collocSpelling(casualKey(plain, 1), prev, next);
     if (c) return { s: c, tier: 'known' };
   }
-  if (plain === 'ki') {   // کہ (that) or کی (of): the next word decides where the corpora know it (KI_NEXT); کی is the commoner reading
-    // overall (54% of Pritchett's, 69% of Rekhta's poets), so it is the default when the next word is unknown
+  if (plain === 'ki') {   // کہ (that) or کی (of): line-initial (!prev) or after clause conjunctions / speech verbs is always کہ (kih);
+    // otherwise the next word decides where the corpora know it (KI_NEXT); کی is the commoner reading overall
+    if (!prev) return { s: 'kih', tier: 'known' };
+    const pk = (prev || '').toLowerCase().replace(/[^a-z]/g, '');
+    if (pk === 'jab' || pk === 'tab' || pk === 'ab' || pk === 'ta' || pk === 'balke' || pk === 'chunki' ||
+        pk === 'kaha' || pk === 'dekha' || pk === 'socha' || pk === 'samjha' || pk === 'chaha') return { s: 'kih', tier: 'known' };
     const n = (typeof KI_NEXT !== 'undefined' && KI_NEXT[casualKey(next.split('-')[0], 1)]) || null;
     return { s: n ? (n[1] > 2 * n[0] ? 'kii' : 'kih') : 'kii', tier: 'known' };
   }
