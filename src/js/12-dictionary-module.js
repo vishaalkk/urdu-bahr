@@ -482,7 +482,7 @@ const DICT_STORE = {
     const out = [];
     found.sort((a, b) => b[2] - a[2]).forEach(([ro, eur]) => {
       const sc = this.spelled(ro, eur);
-      if (sc && dictKeyUr(sc.ur) === dictKeyUr(ur) && !out.some(o => typedKey(o.ro) === typedKey(sc.ro))) out.push(sc);
+      if (sc && dictFoldUr(sc.ur) === dictFoldUr(ur) && !out.some(o => typedKey(o.ro) === typedKey(sc.ro))) out.push(sc);
     });
     this._readings.set(ur, out);
     return out;
@@ -507,7 +507,7 @@ const DICT_STORE = {
     hits.map(e => ({ e, score: byScore ? 2 * typedDistance(t, e.ro) + strict(e.ro) - 2 * used(e) : typedDistance(t, e.ro), n: (e.phrases || []).length }))
       .sort((a, b) => a.score - b.score || b.n - a.n).forEach(({ e }) => {
       const sc = this.spelled(e.ro, e.ur);
-      if (sc && !out.some(o => dictKeyUr(o.ur) === dictKeyUr(sc.ur))) out.push(sc);
+      if (sc && !out.some(o => dictFoldUr(o.ur) === dictFoldUr(sc.ur))) out.push(sc);
     });
     return out;
   },

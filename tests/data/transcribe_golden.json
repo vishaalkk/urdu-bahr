@@ -87,21 +87,21 @@
   "aayein": {
    "ur": "آئیں",
    "ro": "āʾeñ",
-   "hi": "आएं",
+   "hi": "आएँ",
    "tier": "known",
    "scan": "آئیں"
   },
   "aayen": {
    "ur": "آئیں",
    "ro": "āʾeñ",
-   "hi": "आएँ",
+   "hi": "आएं",
    "tier": "known",
    "scan": "آئیں"
   },
   "aayenge": {
    "ur": "آئیں گے",
    "ro": "āʾeñ ge",
-   "hi": "आएँ गे",
+   "hi": "आएं गे",
    "tier": "form",
    "scan": "آئیں گے"
   },
@@ -140,12 +140,61 @@
    "tier": "known",
    "scan": "اشکوں"
   },
+  "baDa": {
+   "ur": "بڑا",
+   "ro": "baṛā",
+   "hi": "बड़ा",
+   "tier": "known",
+   "scan": "بڑا"
+  },
+  "baDe": {
+   "ur": "بڑے",
+   "ro": "baṛe",
+   "hi": "बड़े",
+   "tier": "known",
+   "scan": "بڑے"
+  },
+  "baDh": {
+   "ur": "بڑھ",
+   "ro": "baṛh",
+   "hi": "बढ़",
+   "tier": "known",
+   "scan": "بڑھ"
+  },
+  "baDha": {
+   "ur": "بڑھا",
+   "ro": "baṛhā",
+   "hi": "बढ़ा",
+   "tier": "known",
+   "scan": "بڑھا"
+  },
+  "baDi": {
+   "ur": "بڑی",
+   "ro": "baṛī",
+   "hi": "बड़ी",
+   "tier": "known",
+   "scan": "بڑی"
+  },
   "baaton": {
    "ur": "باتوں",
    "ro": "bātoñ",
    "hi": "बातों",
    "tier": "known",
    "scan": "باتوں"
+  },
+  "badh": {
+   "ur": "بڑھ",
+   "ro": "baṛh",
+   "hi": "बढ़",
+   "tier": "known",
+   "scan": "بڑھ"
+  },
+  "badha": {
+   "ur": "بڑھا",
+   "ro": "baṛhā",
+   "hi": "बढ़ा",
+   "tier": "known",
+   "scan": "بڑھا"
   },
   "baich": {
    "ur": "بیچ",
@@ -336,6 +385,20 @@
    "tier": "form",
    "scan": "بھیجوں گا"
   },
+  "bichhaD": {
+   "ur": "بچھڑ",
+   "ro": "bichhaṛ",
+   "hi": "बिछड़",
+   "tier": "known",
+   "scan": "بچھڑ"
+  },
+  "bichhad": {
+   "ur": "بچھڑ",
+   "ro": "bichhaṛ",
+   "hi": "बिछड़",
+   "tier": "known",
+   "scan": "بچھڑ"
+  },
   "boloonga": {
    "ur": "بولوں گا",
    "ro": "bolūñ gā",
@@ -413,12 +476,40 @@
    "tier": "known",
    "scan": "بود"
   },
+  "chaDh": {
+   "ur": "چڑھ",
+   "ro": "chaṛh",
+   "hi": "चढ़",
+   "tier": "known",
+   "scan": "چڑھ"
+  },
+  "chaDha": {
+   "ur": "چڑھا",
+   "ro": "chaṛhā",
+   "hi": "चढ़ा",
+   "tier": "known",
+   "scan": "چڑھا"
+  },
   "chaaye": {
    "ur": "چائے",
    "ro": "chāʾe",
    "hi": "चाए",
    "tier": "known",
    "scan": "چائے"
+  },
+  "chadh": {
+   "ur": "چڑھ",
+   "ro": "chaṛh",
+   "hi": "चढ़",
+   "tier": "known",
+   "scan": "چڑھ"
+  },
+  "chadha": {
+   "ur": "چڑھا",
+   "ro": "chaṛhā",
+   "hi": "चढ़ा",
+   "tier": "known",
+   "scan": "چڑھا"
   },
   "chalaaye": {
    "ur": "چلائے",
@@ -455,6 +546,62 @@
    "tier": "known",
    "scan": "چائے"
   },
+  "chhoD": {
+   "ur": "چھوڑ",
+   "ro": "chhoṛ",
+   "hi": "छोड़",
+   "tier": "known",
+   "scan": "چھوڑ"
+  },
+  "chhoDa": {
+   "ur": "چھوڑا",
+   "ro": "chhoṛā",
+   "hi": "छोड़ा",
+   "tier": "known",
+   "scan": "چھوڑا"
+  },
+  "chhoDe": {
+   "ur": "چھوڑے",
+   "ro": "chhoṛe",
+   "hi": "छोड़े",
+   "tier": "known",
+   "scan": "چھوڑے"
+  },
+  "chhoDi": {
+   "ur": "چھوڑی",
+   "ro": "chhoṛī",
+   "hi": "छोड़ी",
+   "tier": "known",
+   "scan": "چھوڑی"
+  },
+  "chhod": {
+   "ur": "چھوڑ",
+   "ro": "chhoṛ",
+   "hi": "छोड़",
+   "tier": "known",
+   "scan": "چھوڑ"
+  },
+  "chhoda": {
+   "ur": "چھوڑا",
+   "ro": "chhoṛā",
+   "hi": "छोड़ा",
+   "tier": "known",
+   "scan": "چھوڑا"
+  },
+  "chhode": {
+   "ur": "چھوڑے",
+   "ro": "chhoṛe",
+   "hi": "छोड़े",
+   "tier": "known",
+   "scan": "چھوڑے"
+  },
+  "chhodi": {
+   "ur": "چھوڑی",
+   "ro": "chhoṛī",
+   "hi": "छोड़ी",
+   "tier": "known",
+   "scan": "چھوڑی"
+  },
   "daikh": {
    "ur": "دیکھ",
    "ro": "dekh",
@@ -468,6 +615,27 @@
    "hi": "दसतम",
    "tier": "poets",
    "scan": "دستم"
+  },
+  "dauD": {
+   "ur": "دوڑ",
+   "ro": "dauṛ",
+   "hi": "दौड़",
+   "tier": "known",
+   "scan": "دوڑ"
+  },
+  "daud": {
+   "ur": "دوڑ",
+   "ro": "dauṛ",
+   "hi": "दौड़",
+   "tier": "known",
+   "scan": "دوڑ"
+  },
+  "dauda": {
+   "ur": "دوڑا",
+   "ro": "dauṛā",
+   "hi": "दौड़ा",
+   "tier": "known",
+   "scan": "دوڑا"
   },
   "dava": {
    "ur": "دوا",
@@ -557,7 +725,7 @@
    "ur": "دلم",
    "ro": "dilam",
    "hi": "दिलम",
-   "tier": "poets",
+   "tier": "persian",
    "scan": "دلم"
   },
   "dile": {
@@ -675,7 +843,7 @@
   "gaayen": {
    "ur": "گائیں",
    "ro": "gāʾeñ",
-   "hi": "गाएँ",
+   "hi": "गाएं",
    "tier": "known",
    "scan": "گائیں"
   },
@@ -749,12 +917,26 @@
    "tier": "known",
    "scan": "گئیں"
   },
+  "ghaDi": {
+   "ur": "گھڑی",
+   "ro": "ghaṛī",
+   "hi": "घड़ी",
+   "tier": "known",
+   "scan": "گھڑی"
+  },
   "ghaat": {
    "ur": "گھاٹ",
    "ro": "ghāṭ",
    "hi": "घाट",
    "tier": "known",
    "scan": "گھاٹ"
+  },
+  "ghadi": {
+   "ur": "گھڑی",
+   "ro": "ghaṛī",
+   "hi": "घड़ी",
+   "tier": "known",
+   "scan": "گھڑی"
   },
   "gharon": {
    "ur": "گھروں",
@@ -983,7 +1165,7 @@
   "jaayenge": {
    "ur": "جائیں گے",
    "ro": "jāʾeñ ge",
-   "hi": "जाएँ गे",
+   "hi": "जाएं गे",
    "tier": "form",
    "scan": "جائیں گے"
   },
@@ -1095,7 +1277,7 @@
   "khaayen": {
    "ur": "کھائیں",
    "ro": "khāʾeñ",
-   "hi": "खाएँ",
+   "hi": "खाएं",
    "tier": "known",
    "scan": "کھائیں"
   },
@@ -1221,14 +1403,14 @@
   "laayein": {
    "ur": "لائیں",
    "ro": "lāʾeñ",
-   "hi": "लाएँ",
+   "hi": "लाएं",
    "tier": "known",
    "scan": "لائیں"
   },
   "laayen": {
    "ur": "لائیں",
    "ro": "lāʾeñ",
-   "hi": "लाएं",
+   "hi": "लाएँ",
    "tier": "known",
    "scan": "لائیں"
   },
@@ -1442,6 +1624,20 @@
    "tier": "known",
    "scan": "نہیں"
   },
+  "nain": {
+   "ur": "نین",
+   "ro": "nain",
+   "hi": "नैन",
+   "tier": "known",
+   "scan": "نین"
+  },
+  "naina": {
+   "ur": "نینا",
+   "ro": "nainā",
+   "hi": "नैना",
+   "tier": "known",
+   "scan": "نینا"
+  },
   "naye": {
    "ur": "نئے",
    "ro": "naʾe",
@@ -1487,7 +1683,7 @@
   "paayein": {
    "ur": "پائیں",
    "ro": "pāʾeñ",
-   "hi": "पाएं",
+   "hi": "पाएँ",
    "tier": "known",
    "scan": "پائیں"
   },
@@ -1805,6 +2001,34 @@
    "hi": "तस्वीरें",
    "tier": "form",
    "scan": "تسوییرین"
+  },
+  "uD": {
+   "ur": "اڑ",
+   "ro": "uṛ",
+   "hi": "उड़",
+   "tier": "known",
+   "scan": "اڑ"
+  },
+  "uDa": {
+   "ur": "اڑا",
+   "ro": "uṛā",
+   "hi": "उड़ा",
+   "tier": "known",
+   "scan": "اڑا"
+  },
+  "ud": {
+   "ur": "اڑ",
+   "ro": "uṛ",
+   "hi": "उड़",
+   "tier": "known",
+   "scan": "اڑ"
+  },
+  "uda": {
+   "ur": "اڑا",
+   "ro": "uṛā",
+   "hi": "उड़ा",
+   "tier": "known",
+   "scan": "اڑا"
   },
   "unko": {
    "ur": "ان کو",

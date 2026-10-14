@@ -356,12 +356,6 @@ function trBuild(text, opts) {
         else p.def = { ascii: p.ascii };
         var ch = choices[p.key];
         if (!trReviewable(p)) return;
-        if (ch) {
-          if (ch.t === 'f') p.fixed = { ur: ch.ur || '', ro: ch.ro, hi: ch.hi || '', decomp: ch.decomp || null };
-          else { p.fixed = null; p.ascii = ch.a; }
-          p.chosen = true; p.baseTier = p.tier; p.tier = 'you';
-          return;
-        }
         /* a word no list knows, or that only the inflection regexes or the Persian splitter built: a regular form of a
            dictionary word, when the dictionary has one (formsFor, src/js/12-dictionary-module.js) */
         var forms = (!scripted && lineLang !== 'fa' && /^(guess|derived|persian)$/.test(p.tier) && !/-/.test(p.src) && typeof DICT_STORE !== 'undefined' && DICT_STORE.status === 'ready')
@@ -376,58 +370,63 @@ function trBuild(text, opts) {
         if (forms.length) {
           p.ascii = forms[0].ascii; p.fixed = null; p.def = { ascii: p.ascii };
           p.baseTier = p.tier; p.tier = 'form';
-          return;
-        }
-        /* a word no list knows, nor any rule: the dictionary word it sounds like, at most one short vowel or vowel length away
-           (faasla: فاصلہ fāṣilah), spelled by the parsers (DICT_STORE.soundsLike), is its first alternative, not its reading: as the
-           reading it gained Urdu words and lost Roman ones (the dictionary's Roman is classical: ḳhat̤rah, Rekhta's ḳhatra) */
-        var near = (!scripted && lineLang !== 'fa' && p.tier === 'guess' && !/-/.test(p.src) && typeof DICT_STORE !== 'undefined' && DICT_STORE.status === 'ready')
-          ? DICT_STORE.soundsLike(p.src.toLowerCase(), true)[0] : null;
-        if (near && typedDistance(p.src, near.ro.replace(/ah$/, 'a')) <= 1) {   // its final -ah is the silent h typed -a
-          p.near = { ur: near.ur, ro: near.ro, hi: near.hi };
-        }
-        if (!p.near && !scripted && lineLang !== 'fa' && p.tier === 'guess' && !/-/.test(p.src) && typeof trPhoneticHits === 'function') {
-          var pNearList = trPhoneticHits(p.src.toLowerCase());
-          if (pNearList && pNearList.length) {
-            var pScripts = asciiToScripts(pNearList[0].ascii);
-            if (pScripts && pScripts.ur && (!p.def || p.def.ascii !== pNearList[0].ascii)) {
-              p.near = { ur: pScripts.ur, ro: pScripts.ro, hi: pScripts.hi };
-            }
+        } else {
+          /* a word no list knows, nor any rule: the dictionary word it sounds like, at most one short vowel or vowel length away
+             (faasla: فاصلہ fāṣilah), spelled by the parsers (DICT_STORE.soundsLike), is its first alternative, not its reading: as the
+             reading it gained Urdu words and lost Roman ones (the dictionary's Roman is classical: ḳhat̤rah, Rekhta's ḳhatra) */
+          var near = (!scripted && lineLang !== 'fa' && p.tier === 'guess' && !/-/.test(p.src) && typeof DICT_STORE !== 'undefined' && DICT_STORE.status === 'ready')
+            ? DICT_STORE.soundsLike(p.src.toLowerCase(), true)[0] : null;
+          if (near && typedDistance(p.src, near.ro.replace(/ah$/, 'a')) <= 1) {   // its final -ah is the silent h typed -a
+            p.near = { ur: near.ur, ro: near.ro, hi: near.hi };
           }
-        }
-        if (!scripted && !p.opaque) {
-          if (lineLang === 'fa' && p.src.toLowerCase() === 'man') {
-            var mHits = trFaHits('man');
-            if (mHits.length) {
-              p.fixed = { ur: mHits[0].ur, ro: mHits[0].ro, hi: mHits[0].hi };
-              p.baseTier = p.tier; p.tier = 'persian';
-              p.def = { fixed: p.fixed };
-            }
-          } else if (p.tier === 'guess' || lineLang === 'fa') {
-            var hits = (p.tier === 'guess') ? trFaHits(p.src) : trFaHitsStrict(p.src);
-            if (!hits.length && p.tier !== 'guess') {
-              /* casual typing drops vowel length (mara: مرا marā): the Persian word under the loose key, unless it is only the
-                 word already read with the Persian ن for ں, a final ئے or an initial آ (darin دریں, ku کو, ab اب) */
-              var loose = trFaIndex().loose[casualKey(p.src, 1)] || [];
-              var fold = function (u) { return String(u || '').replace(/ں/g, 'ن').replace(/^آ/, 'ا').replace(/ئے$|ی$|ے$/, ''); };
-              var cur = p.fixed ? p.fixed.ur : (p.ascii ? asciiToScripts(p.ascii).ur : '');
-              if (loose.length && fold(loose[0].ur) !== fold(cur)) hits = loose;
-            }
-            if (hits.length) {
-              p.fixed = { ur: hits[0].ur, ro: hits[0].ro, hi: hits[0].hi };
-              p.baseTier = p.tier; p.tier = 'persian';
-              p.def = { fixed: p.fixed };
-            } else {
-              var decomp = tryFaDecompose(p.src.toLowerCase());
-              if (decomp && (p.tier === 'guess' || lineLang === 'fa')) {
-                var chosenUr = (lineLang === 'fa' && decomp.fa) ? decomp.fa : decomp.ur;
-                var chosenRo = (lineLang === 'fa' && decomp.roFa) ? decomp.roFa : decomp.ro;
-                p.fixed = { ur: chosenUr, ro: chosenRo, hi: decomp.hi, decomp: decomp };
-                p.baseTier = p.tier; p.tier = 'persian';
-                p.def = { fixed: p.fixed };
+          if (!p.near && !scripted && lineLang !== 'fa' && p.tier === 'guess' && !/-/.test(p.src) && typeof trPhoneticHits === 'function') {
+            var pNearList = trPhoneticHits(p.src.toLowerCase());
+            if (pNearList && pNearList.length) {
+              var pScripts = asciiToScripts(pNearList[0].ascii);
+              if (pScripts && pScripts.ur && (!p.def || p.def.ascii !== pNearList[0].ascii)) {
+                p.near = { ur: pScripts.ur, ro: pScripts.ro, hi: pScripts.hi };
               }
             }
           }
+          if (!scripted && !p.opaque) {
+            if (lineLang === 'fa' && p.src.toLowerCase() === 'man') {
+              var mHits = trFaHits('man');
+              if (mHits.length) {
+                p.fixed = { ur: mHits[0].ur, ro: mHits[0].ro, hi: mHits[0].hi };
+                p.baseTier = p.tier; p.tier = 'persian';
+                p.def = { fixed: p.fixed };
+              }
+            } else if (p.tier === 'guess' || lineLang === 'fa') {
+              var hits = (p.tier === 'guess') ? trFaHits(p.src) : trFaHitsStrict(p.src);
+              if (!hits.length && p.tier !== 'guess') {
+                /* casual typing drops vowel length (mara: مرا marā): the Persian word under the loose key, unless it is only the
+                   word already read with the Persian ن for ں, a final ئے or an initial آ (darin دریں, ku کو, ab اب) */
+                var loose = trFaIndex().loose[casualKey(p.src, 1)] || [];
+                var fold = function (u) { return String(u || '').replace(/ں/g, 'ن').replace(/^آ/, 'ا').replace(/ئے$|ی$|ے$/, ''); };
+                var cur = p.fixed ? p.fixed.ur : (p.ascii ? asciiToScripts(p.ascii).ur : '');
+                if (loose.length && fold(loose[0].ur) !== fold(cur)) hits = loose;
+              }
+              if (hits.length) {
+                p.fixed = { ur: hits[0].ur, ro: hits[0].ro, hi: hits[0].hi };
+                p.baseTier = p.tier; p.tier = 'persian';
+                p.def = { fixed: p.fixed };
+              } else {
+                var decomp = tryFaDecompose(p.src.toLowerCase());
+                if (decomp && (p.tier === 'guess' || lineLang === 'fa')) {
+                  var chosenUr = (lineLang === 'fa' && decomp.fa) ? decomp.fa : decomp.ur;
+                  var chosenRo = (lineLang === 'fa' && decomp.roFa) ? decomp.roFa : decomp.ro;
+                  p.fixed = { ur: chosenUr, ro: chosenRo, hi: decomp.hi, decomp: decomp };
+                  p.baseTier = p.tier; p.tier = 'persian';
+                  p.def = { fixed: p.fixed };
+                }
+              }
+            }
+          }
+        }
+        if (ch) {
+          if (ch.t === 'f') p.fixed = { ur: ch.ur || '', ro: ch.ro, hi: ch.hi || '', decomp: ch.decomp || null };
+          else { p.fixed = null; p.ascii = ch.a; }
+          p.chosen = true; p.baseTier = p.tier; p.tier = 'you';
         }
       });
       w.out = trWordOut(w);
@@ -592,7 +591,7 @@ function trEditHtml(w, script) {
     var p = r.p, pi = r.pi, cands = r.cands;
     var cur = p.fixed ? p.fixed.ro : null;
     var btns = cands.map(function (c, ci) {
-      var isCur = p.fixed ? c.ro === cur : (!c.fixed && c.ascii === p.ascii);
+      var isCur = p.fixed ? (c.ro === cur && (!c.ur || !p.fixed.ur || c.ur === p.fixed.ur)) : (!c.fixed && c.ascii === p.ascii);
       var tip = c.ro + (TR_TAG_NOTE[c.tag] ? ' · ' + TR_TAG_NOTE[c.tag] : '');
       return '<button type="button" class="btn sm tr-cand ' + cls + (isCur ? ' on' : '') + '" lang="' + lang + '" aria-pressed="' + isCur + '" title="' + escapeHtml(tip) + '" onclick="trPick(' + pi + ',' + ci + ')">' + trCandHtml(c, script) + '</button>';
     }).join('');
@@ -787,10 +786,11 @@ function trDictSectionHtml(w, activeP, script) {
   function roMatchScore(cand) {
     if (!cleanSrc) return 0;
     var cr = trFoldRo(cand.ro);
-    if (cr === cleanSrc) return 100;
-    if (cr.replace(/na$/, '') === cleanSrc) return 90;
-    if (cr.replace(/a$/, '') === cleanSrc) return 80;
-    return cr.startsWith(cleanSrc) ? 70 : 0;
+    var nasalBonus = (/[ñṅ]/.test(cand.ro || '') === /[ñṅ]/.test(activeRo || '')) ? 5 : 0;
+    if (cr === cleanSrc) return 100 + nasalBonus;
+    if (cr.replace(/na$/, '') === cleanSrc) return 90 + nasalBonus;
+    if (cr.replace(/a$/, '') === cleanSrc) return 80 + nasalBonus;
+    return cr.startsWith(cleanSrc) ? (70 + nasalBonus) : 0;
   }
 
   if (!verbForm) distinctReadings.sort(function(a, b) {

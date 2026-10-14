@@ -468,6 +468,39 @@ ok(build('maiN').lines[0].out.ur === 'میں', 'maiN in Transcribe transliterate
 ok(build('Dil').lines[0].out.ur === 'دل', 'Initial Dil preserves dental dāl (دل): ' + build('Dil').lines[0].out.ur);
 ok(build('Tum').lines[0].out.ur === 'تم', 'Initial Tum preserves dental te (تم): ' + build('Tum').lines[0].out.ur);
 
+// 53. nain (eyes: نین / नैन / nain) support and distinct noon-ghunna candidates
+const bNain = build('nain');
+ok(bNain.lines[0].out.ur === 'نین' && bNain.lines[0].out.hi === 'नैन' && bNain.lines[0].out.ro === 'nain', 'nain transliterates to نین / नैन / nain: ' + JSON.stringify(bNain.lines[0].out));
+const bNaina = build('naina');
+ok(bNaina.lines[0].out.ur === 'نینا' && bNaina.lines[0].out.hi === 'नैना' && bNaina.lines[0].out.ro === 'nainā', 'naina transliterates to نینا / नैना / nainā: ' + JSON.stringify(bNaina.lines[0].out));
+const scNain = run(`lineScripts('nain', { skipKnown: true })`);
+ok(scNain.ur === 'نین' && scNain.hi === 'नैन', 'Scan lineScripts resolves nain to نین: ' + JSON.stringify(scNain));
+const scNaina = run(`lineScripts('naina', { skipKnown: true })`);
+ok(scNaina.ur === 'نینا' && scNaina.hi === 'नैना', 'Scan lineScripts resolves naina to نینا: ' + JSON.stringify(scNaina));
+const cNain = run(`(function(){ var p = trBuild('nain').lines[0].words[0].pieces[0]; return trCands(p, p.def, 'ur'); })()`);
+ok(cNain[0].ur === 'نین' && cNain[0].ro === 'nain', 'nain offers نین as primary default candidate: ' + cNain[0].ur + ' ' + cNain[0].ro);
+ok(cNain.some(c => c.ur === 'نئیں'), 'nain offers alternative naʾīñ (نئیں): ' + cNain.map(c => c.ur));
+const urCounts = {};
+cNain.forEach(c => { urCounts[c.ur] = (urCounts[c.ur] || 0) + 1; });
+ok(!Object.entries(urCounts).some(([u, cnt]) => cnt > 1), 'candidates do not have duplicate identical Urdu spellings: ' + JSON.stringify(urCounts));
+const rNain = run(`DICT_STORE.readingsOf('نین')`);
+ok(!rNain.some(r => r.ur === 'نیں'), 'readingsOf(نین) does not leak نیں (nīñ/naiñ/neñ): ' + rNain.map(r => r.ur + ':' + r.ro));
+const dNain = run(`(function(){ var w = trBuild('nain').lines[0].words[0]; return trDictSectionHtml(w, w.pieces[0]); })()`);
+ok(dNain.includes('nainā') || dNain.includes('eye') || dNain.includes('Eye'), 'nain dictionary drawer leads with eye definition: ' + dNain.slice(0, 150));
+
+// Candidate buttons do not swap positions upon user choice, highlighting selection in-place
+const hTore0 = run('(function(){ var w = trBuild("tore").lines[0].words[0]; return trEditHtml(w, "ur"); })()');
+const hTore1 = run('(function(){ var w = trBuild("tore", { choices: { tore: { t: "a", a: "tore" } } }).lines[0].words[0]; return trEditHtml(w, "ur"); })()');
+const getBtnState = h => (h.match(/<button [^>]*tr-cand[^>]*>[\s\S]*?<\/button>/g) || []).map(b => ({
+  on: b.includes('aria-pressed="true"'),
+  ro: (b.match(/tr-cand-ro-lbl">([^<]*)/) || [])[1],
+  ur: (b.match(/tr-cand-script"[^>]*>([^<]*)/) || [])[1]
+}));
+const s0 = getBtnState(hTore0), s1 = getBtnState(hTore1);
+ok(s0.length === s1.length && s0[0].ro === s1[0].ro && s0[1].ro === s1[1].ro, 'tore candidates keep stable button order when choice made: ' + s0.map(b => b.ro).join(' vs ') + ' / ' + s1.map(b => b.ro).join(' vs '));
+ok(s0[0].on && !s0[1].on, 'tore default button 0 is selected');
+ok(!s1[0].on && s1[1].on, 'tore chosen button 1 is selected in-place without swapping');
+
 console.log(bad ? `${bad} FAILED` : 'transcribe logic: all checks passed');
 process.exit(bad ? 1 : 0);
 
