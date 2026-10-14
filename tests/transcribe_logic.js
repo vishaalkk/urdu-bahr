@@ -501,6 +501,21 @@ ok(s0.length === s1.length && s0[0].ro === s1[0].ro && s0[1].ro === s1[1].ro, 't
 ok(s0[0].on && !s0[1].on, 'tore default button 0 is selected');
 ok(!s1[0].on && s1[1].on, 'tore chosen button 1 is selected in-place without swapping');
 
+// 54. Platts s̤ transliteration (mis̤l, mas̤al -> مثل)
+const rMislAsc = run('romanToAscii("mis̤l")');
+ok(rMislAsc === 'mi;sl', 'romanToAscii maps mis̤l to mi;sl: ' + rMislAsc);
+const sMislAsc = run('scholarRoToAscii("mis̤l", "مثل")');
+ok(sMislAsc === 'mi;sl', 'scholarRoToAscii maps mis̤l to mi;sl: ' + sMislAsc);
+const spMisl = run('DICT_STORE.spelled("mis̤l", "مثل")');
+ok(spMisl && spMisl.ur === 'مثل' && spMisl.ro === 'miṡl', 'DICT_STORE.spelled handles Platts mis̤l: ' + (spMisl ? spMisl.ro : null));
+const rdsMisl = run('DICT_STORE.readingsOf("مثل")');
+ok(rdsMisl.some(r => r.ro === 'miṡl') && rdsMisl.some(r => r.ro === 'maṡal'), 'DICT_STORE.readingsOf offers miṡl and maṡal for مثل: ' + rdsMisl.map(r => r.ro).join(', '));
+const bMislP = run('trBuild("misl")').lines[0].words[0].pieces[0];
+const cMisl = run(`trCustomChoice("mis̤l", ${JSON.stringify(bMislP)})`);
+ok(cMisl && cMisl.a === 'mi;sl', 'trCustomChoice maps mis̤l to mi;sl: ' + (cMisl ? cMisl.a : null));
+const bMislTyped = run('trBuild("mis̤l")');
+ok(bMislTyped.lines[0].out.ur === 'مثل', 'typed mis̤l builds to مثل: ' + bMislTyped.lines[0].out.ur);
+
 console.log(bad ? `${bad} FAILED` : 'transcribe logic: all checks passed');
 process.exit(bad ? 1 : 0);
 

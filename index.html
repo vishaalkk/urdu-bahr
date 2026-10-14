@@ -8580,7 +8580,7 @@ function normVerseKey(str) {
     .replace(/[ṛ]/g, 'r')
     .replace(/[ṣ]/g, 's')
     .replace(/[żẕẓž]/g, 'z')
-    .replace(/ṡ|s̱/g, 's')
+    .replace(/ṡ|s̱|s̤/g, 's')
     .replace(/[z̤]/g, 'z')
     .replace(/[t̤]/g, 't')
     .replace(/[ḥ]/g, 'h')
@@ -8777,7 +8777,7 @@ function buildCasualMap(freq) {
   return map;
 }
 const ROMAN_CASUAL_MAP = buildCasualMap(ASCII_FREQ);
-const CASUAL_SPECIAL = /[ḥṣẓżẕṡṭḍṛġḳʿʾñ;:()]|(?<=[a-zāīūñ])[TRDNH]/;   // spelled with marks (or already ASCII, or intentional medial/terminal capitals): the letter rules read these exactly
+const CASUAL_SPECIAL = /[ḥṣẓżẕṡṭḍṛġḳʿʾñ;:()]|\u0324|(?<=[a-zāīūñ])[TRDNH]/;   // spelled with marks (or already ASCII, or intentional medial/terminal capitals): the letter rules read these exactly
 function casualLookup(plain, minLv, maxLv) {   // levels minLv..maxLv (default all three)
   if (typeof ROMAN_CASUAL_MAP === 'undefined') return null;
   for (let lv = minLv || 0; lv <= (maxLv == null ? 2 : maxLv); lv++) {
@@ -8796,7 +8796,7 @@ function phoneticKey(s, lax) {
     .replace(/;d/g, 'd').replace(/;r/g, 'r').replace(/\.s/g, 's').replace(/\.z/g, 'z')
     .replace(/:z/g, 'z').replace(/:t/g, 't').replace(/;h/g, 'h').replace(/;s/g, 's').replace(/;z/g, 'z')
     .replace(/[āáâ]/g, 'a').replace(/[īíî]/g, 'i').replace(/[ūúû]/g, 'u').replace(/[ñṅṉ]/g, 'n')
-    .replace(/[ṭt̤]/g, 't').replace(/[ḍ]/g, 'd').replace(/[ṛ]/g, 'r').replace(/[ṣṡs̱]/g, 's')
+    .replace(/[ṭt̤]/g, 't').replace(/[ḍ]/g, 'd').replace(/[ṛ]/g, 'r').replace(/s̤|[ṣṡs̱]/g, 's')
     .replace(/[żẕẓžz̤]/g, 'z').replace(/[ḥ]/g, 'h').replace(/[ḳ]/g, 'k').replace(/[ġ]/g, 'g')
     .replace(/[ʿʽ‘'ʾ’"`;.:()\-]/g, '');
 
@@ -8978,7 +8978,7 @@ function scholarRoToAscii(ro, ur) {
     .replace(/ś|ṣh/g, 'sh').replace(/ṣ/g, '.s')
     .replace(/ż|ẕ/g, ';z').replace(/ẓ/g, '.z')
     .replace(/z̤/g, ':z').replace(/t̤/g, ':t').replace(/ṭ/g, ';t').replace(/ḍ/g, ';d').replace(/ṛ/g, ';r')
-    .replace(/ḥ/g, ';h').replace(/s̱|ṡ/g, ';s')
+    .replace(/ḥ/g, ';h').replace(/s̱|ṡ|s̤/g, ';s')
     .replace(/[āáâ]/g, 'aa').replace(/[īíî]/g, 'ii').replace(/[ūúû]/g, 'uu')
     .replace(/[ñṅṉ]|n̐/g, ';n')
     .replace(/[ʻ‘ʿ]/g, '((').replace(/[ʼ’ʾ']/g, '))')
@@ -9319,7 +9319,7 @@ function romanToAscii(str) {
        .replace(/ṣ/g, '.s')
        .replace(/ż|ẕ/g, ';z')            /* ذ: Pritchett writes ż, scholars ẕ */
        .replace(/ẓ/g, '.z')                /* ض */
-       .replace(/ṡ|s̱/g, ';s')              /* ث: Pritchett ṡ, scholars s̱ */
+       .replace(/ṡ|s̱|s̤/g, ';s')              /* ث: Pritchett ṡ, scholars s̱, Platts s̤ */
        .replace(/z̤/g, ':z')
        .replace(/t̤/g, ':t')
        .replace(/ḥ/g, ';h')
