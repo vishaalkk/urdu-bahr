@@ -456,6 +456,18 @@ ok(cXwab.includes('خواب'), 'xwab offers ḳhvāb (خواب) via phonetic can
 const cFul = run(`(function(){ var p = trBuild('ful').lines[0].words[0].pieces[0]; return trCands(p, p.def, 'ur').map(function (c) { return c.ur; }); })()`);
 ok(cFul.includes('پھول'), 'ful offers phūl (پھول) via phonetic candidate matching: ' + cFul.join(' · '));
 
+// 52. Medial capitals & casual retroflex aliases in Transcribe
+ok(build('roTi').lines[0].out.ur === 'روٹی', 'roTi in Transcribe transliterates to roṭī (روٹی): ' + build('roTi').lines[0].out.ur);
+ok(build('baRi').lines[0].out.ur === 'بڑی', 'baRi in Transcribe transliterates to baṛī (بڑی): ' + build('baRi').lines[0].out.ur);
+ok(build('baDi').lines[0].out.ur === 'بڑی', 'baDi in Transcribe transliterates to baṛī (بڑی): ' + build('baDi').lines[0].out.ur);
+ok(build('saRak').lines[0].out.ur === 'سڑک', 'saRak in Transcribe transliterates to saṛak (سڑک): ' + build('saRak').lines[0].out.ur);
+ok(build('laRki').lines[0].out.ur === 'لڑکی', 'laRki in Transcribe transliterates to laṛkī (لڑکی): ' + build('laRki').lines[0].out.ur);
+ok(build('chhoD').lines[0].out.ur === 'چھوڑ', 'chhoD in Transcribe transliterates to chhoṛ (چھوڑ): ' + build('chhoD').lines[0].out.ur);
+ok(build('peT').lines[0].out.ur === 'پیٹ', 'peT in Transcribe transliterates to peṭ (پیٹ): ' + build('peT').lines[0].out.ur);
+ok(build('maiN').lines[0].out.ur === 'میں', 'maiN in Transcribe transliterates to maiñ (میں): ' + build('maiN').lines[0].out.ur);
+ok(build('Dil').lines[0].out.ur === 'دل', 'Initial Dil preserves dental dāl (دل): ' + build('Dil').lines[0].out.ur);
+ok(build('Tum').lines[0].out.ur === 'تم', 'Initial Tum preserves dental te (تم): ' + build('Tum').lines[0].out.ur);
+
 console.log(bad ? `${bad} FAILED` : 'transcribe logic: all checks passed');
 process.exit(bad ? 1 : 0);
 

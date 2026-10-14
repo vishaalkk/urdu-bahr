@@ -173,6 +173,14 @@ const CASUAL_ALIAS = { ye: 'yih', yeh: 'yih', yah: 'yih', vo: 'vuh', wo: 'vuh', 
   milaye: 'milaa))e', milaaye: 'milaa))e', milayi: 'milaa))ii', milaayi: 'milaa))ii',
   samaaye: 'samaa))e', samaye: 'samaa))e', samaayi: 'samaa))ii', samayi: 'samaa))ii',
   padi: 'pa;Rii', pada: 'pa;Raa', pade: 'pa;Re',
+  badi: 'ba;Rii', bada: 'ba;Raa', bade: 'ba;Re', baDi: 'ba;Rii', baDa: 'ba;Raa', baDe: 'ba;Re',
+  chhod: 'chho;R', chhoD: 'chho;R', chhoda: 'chho;Raa', chhoDa: 'chho;Raa', chhode: 'chho;Re', chhoDe: 'chho;Re', chhodi: 'chho;Rii', chhoDi: 'chho;Rii',
+  ghadi: 'gha;Rii', ghaDi: 'gha;Rii',
+  bichhad: 'bichha;R', bichhaD: 'bichha;R',
+  daud: 'dau;R', dauda: 'dau;Raa', dauD: 'dau;R',
+  chadh: 'cha;Rh', chadha: 'cha;Rhaa', chaDh: 'cha;Rh', chaDha: 'cha;Rhaa',
+  badh: 'ba;Rh', badha: 'ba;Rhaa', baDh: 'ba;Rh', baDha: 'ba;Rhaa',
+  ud: 'u;R', uda: 'u;Raa', uD: 'u;R', uDa: 'u;Raa',
   faida: 'faa))idah', faayda: 'faa))idah', faeda: 'faa))idah', fayda: 'faa))idah',
   harchand: 'har-chand',
   garchi: 'garchih', garche: 'garchih',
@@ -206,7 +214,7 @@ function buildCasualMap(freq) {
   return map;
 }
 const ROMAN_CASUAL_MAP = buildCasualMap(ASCII_FREQ);
-const CASUAL_SPECIAL = /[ḥṣẓżẕṡṭḍṛġḳʿʾñ;:()]/;   // spelled with marks (or already ASCII): the letter rules read these exactly
+const CASUAL_SPECIAL = /[ḥṣẓżẕṡṭḍṛġḳʿʾñ;:()]|(?<=[a-zāīūñ])[TRDNH]/;   // spelled with marks (or already ASCII, or intentional medial/terminal capitals): the letter rules read these exactly
 function casualLookup(plain, minLv, maxLv) {   // levels minLv..maxLv (default all three)
   if (typeof ROMAN_CASUAL_MAP === 'undefined') return null;
   for (let lv = minLv || 0; lv <= (maxLv == null ? 2 : maxLv); lv++) {
@@ -291,8 +299,18 @@ function trPhoneticHits(plain) {
 /* Rekhta-style marks, for a word the lookup does not know: a capital in the middle of a word is retroflex (jhūTī ṭ, ulTī ṭ, baḌā ṛ);
    .e .ī after a vowel are a hamza (aa.e, jaa.e); .a .i .u are an ʿain (shā.ir, ma.asūm, va.ade); .h is ḥ (sub.h) */
 function rekhtaMarks(piece) {
-  return piece.replace(/(?<=[a-zāīūñ])T/g, ';t').replace(/(?<=[a-zāīūñ])D(?!h)/g, ';d').replace(/Ḍ|Ṛ/g, ';r')
+  let s = piece
+    .replace(/(?<=[a-zāīūñ])Rh/g, ';rh').replace(/(?<=[a-zāīūñ])R/g, ';r').replace(/Ḍ|Ṛ/g, ';r')
+    .replace(/(?<=[a-zāīūñ])Th/g, ';th').replace(/(?<=[a-zāīūñ])T/g, ';t')
+    .replace(/(?<=[a-zāīūñ])Dh/g, ';dh').replace(/(?<=[a-zāīūñ])D(?!h)/g, ';d')
+    .replace(/(?<=[a-zāīūñ])N/g, ';n')
+    .replace(/(?<=[a-zāīūñ])H/g, ';h')
+    .replace(/(?<=[a-zāīūñ])S/g, '.s')
+    .replace(/(?<=[a-zāīūñ])Z/g, '.z')
     .replace(/\.h/g, ';h').replace(/\.(e|ī|ii|ai)/g, '))$1').replace(/\.([aiuāū])/g, '(($1');
+  if (/(?:;[trd]h?|;n|\.[sz])[a-zāīūñ]*(?<![iī])i$/i.test(s)) s = s.replace(/i$/, 'ii');
+  if (/(?:;[trd]h?|;n|\.[sz])[a-zāīūñ]*(?<![aā])a$/i.test(s)) s = s.replace(/a$/, 'aa');
+  return s;
 }
 /* Neighbour rules (data/collocations.json, built by scripts/build_collocations.py): a typed word whose casual key stands for
    several words (rah / raah, ab / aab) is settled by the word before it (L1) or after it (R1). A rule answers with the strict
@@ -659,6 +677,7 @@ function casualPiece(piece, i, tokHasHyphen, prev, next) {
   }
   const cleanApos = piece.toLowerCase().replace(/['’]/g, '');
   if (cleanApos === 'buad' || cleanApos === 'buwad') return { s: 'buvad', tier: 'known' };
+  if (CASUAL_ALIAS[piece] || CASUAL_ALIAS[plain]) return { s: CASUAL_ALIAS[piece] || CASUAL_ALIAS[plain], tier: 'known' };
   if (plain.length < 2 || !/^[a-zāīū.]+$/.test(plain) || CASUAL_SPECIAL.test(piece)) return { s: rekhtaMarks(piece), tier: 'typed' };
   if (!tokHasHyphen) {   // hyphenated compounds keep their own pieces
     const c = collocSpelling(casualKey(plain, 1), prev, next);
