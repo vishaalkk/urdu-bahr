@@ -87,13 +87,13 @@ button.tr-w:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px;
 
 .tr-edit { position: relative; margin: var(--sp-1) 0 var(--sp-2); padding: var(--sp-1) var(--sp-6, 32px) var(--sp-1) var(--sp-3); border-inline-start: 1px solid var(--line2); direction: ltr; }
 .tr-edit-row { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-2); align-items: center; padding: 2px 0; }
-.tr-edit-src { font-family: var(--mono-ro); font-size: var(--fs-sm); color: var(--faint); min-width: 4.5em; }
-.tr-cand { display: inline-flex; align-items: center; gap: 6px; text-transform: none; letter-spacing: 0; min-height: 28px; padding: 0 var(--sp-2); border-radius: 4px; }
-.tr-cand-script { font-family: var(--urdu); font-size: 16px; direction: rtl; line-height: 1.2; }
-.tr-cand-deva { font-family: var(--deva); font-size: 14px; line-height: 1.2; }
-.tr-cand-ro-lbl { font-family: var(--mono-ro); font-size: var(--fs-xs, 12px); color: var(--faint); letter-spacing: 0; }
+.tr-edit-src { font-family: var(--mono-ro) !important; font-size: var(--fs-sm); color: var(--faint); min-width: 4.5em; direction: ltr !important; text-align: left !important; }
+.tr-cand { display: inline-flex; align-items: center; gap: 6px; text-transform: none; letter-spacing: 0; min-height: 28px !important; height: 28px !important; line-height: 1.2 !important; padding: 0 var(--sp-2) !important; border-radius: 4px; direction: ltr !important; }
+.tr-cand-script { font-family: var(--urdu) !important; font-size: 16px !important; direction: rtl !important; line-height: 1 !important; }
+.tr-cand-deva { font-family: var(--deva) !important; font-size: 14px !important; line-height: 1.2 !important; }
+.tr-cand-ro-lbl { font-family: var(--mono-ro) !important; font-size: var(--fs-xs, 12px) !important; color: var(--faint); letter-spacing: 0; direction: ltr !important; line-height: 1 !important; }
 .tr-cand:hover .tr-cand-ro-lbl, .tr-cand.on .tr-cand-ro-lbl { color: var(--ink); }
-.tr-input { font-family: var(--mono-ro); font-size: var(--fs-sm); color: var(--ink); background: var(--bg2); border: 1px solid var(--line2); border-radius: 4px; padding: 0 var(--sp-2); min-height: 28px; width: 8em; max-width: 100%; }
+.tr-input { font-family: var(--mono-ro) !important; font-size: var(--fs-sm) !important; color: var(--ink); background: var(--bg2); border: 1px solid var(--line2); border-radius: 4px; padding: 0 var(--sp-2); min-height: 28px !important; height: 28px !important; width: 8em; max-width: 100%; direction: ltr !important; text-align: left !important; line-height: normal !important; }
 .tr-input:focus-visible { outline: none; border-color: var(--gold); }
 .tr-close { position: absolute; top: 0; inset-inline-end: 0; min-height: 28px; padding: 0 var(--sp-2); }
 .tr-fixes { margin-top: var(--sp-5, var(--sp-4)); padding-top: var(--sp-3); border-top: 1px solid var(--line); }
@@ -226,13 +226,16 @@ button.tr-w:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px;
   padding-bottom: var(--sp-2);
   border-bottom: 1px solid var(--line);
   padding-inline-end: 36px; /* leave room for close button */
+  direction: ltr !important;
 }
 .tr-inspector .tr-edit-src {
-  font-family: var(--mono-ro);
-  font-size: 13.5px;
+  font-family: var(--mono-ro) !important;
+  font-size: 13.5px !important;
   font-weight: 500;
   color: var(--ink);
   min-width: 4.5em;
+  direction: ltr !important;
+  text-align: left !important;
 }
 .tr-inspector .tr-cand { min-height: 28px; }
 .tr-inspector .tr-close {

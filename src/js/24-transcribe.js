@@ -556,7 +556,7 @@ function trCandHtml(c, script) {
 function trEditHtml(w, script) {
   var rows = [];
   var cls = 'tr-cand-' + script;
-  var lang = script === 'ro' ? 'ur-Latn' : script;
+  var lang = script === 'ro' ? 'und-Latn' : script;
   var cLang = (script === 'fa' || w.lang === 'fa') ? 'fa' : 'ur';
 
   var rev = [];
@@ -578,8 +578,8 @@ function trEditHtml(w, script) {
       return '<button type="button" class="btn sm tr-cand ' + cls + (isCur ? ' on' : '') + '" lang="' + lang + '" aria-pressed="' + isCur + '" title="' + escapeHtml(tip) + '" onclick="trPick(' + pi + ',' + ci + ')">' + trCandHtml(c, script) + '</button>';
     }).join('');
     rows.push('<form class="tr-edit-row" onsubmit="return trCustom(' + pi + ', this)">' +
-      '<span class="tr-edit-src" lang="ur-Latn" dir="ltr" title="' + escapeHtml(TR_TIER_NOTE[p.tier] || '') + '">' + escapeHtml(p.src) + '</span>' + btns +
-      '<input class="tr-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" lang="ur-Latn" dir="ltr" aria-label="Type the spelling of ' + escapeHtml(p.src) + '" placeholder="type…">' +
+      '<span class="tr-edit-src" lang="und-Latn" dir="ltr" title="' + escapeHtml(TR_TIER_NOTE[p.tier] || '') + '">' + escapeHtml(p.src) + '</span>' + btns +
+      '<input class="tr-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" lang="und-Latn" dir="ltr" aria-label="Type the spelling of ' + escapeHtml(p.src) + '" placeholder="type…">' +
       '<button type="submit" class="btn sm">Use</button></form>');
   });
   var activePiece = null;
@@ -864,7 +864,7 @@ function trCorrectionsHtml() {
   if (!keys.length) return '';
   var items = keys.map(function (k, i) {   // the handler gets a position, never user text
     var c = TR.choices[k], ro = c.t === 'f' ? c.ro : (asciiToScripts(c.a).ro || c.a);
-    return '<li><span lang="ur-Latn" dir="ltr">' + escapeHtml(k) + ' → ' + escapeHtml(ro) + '</span> <button type="button" class="btn link sm" onclick="trUndo(' + i + ')">Undo</button></li>';
+    return '<li><span lang="und-Latn" dir="ltr">' + escapeHtml(k) + ' → ' + escapeHtml(ro) + '</span> <button type="button" class="btn link sm" onclick="trUndo(' + i + ')">Undo</button></li>';
   }).join('');
   return '<div class="tr-fixes"><div class="eyebrow">Your corrections</div><ul>' + items + '</ul>' +
     '<button type="button" class="btn ghost sm" onclick="trUndoAll()">Clear all</button></div>';
