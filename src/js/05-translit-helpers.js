@@ -215,6 +215,79 @@ function casualLookup(plain, minLv, maxLv) {   // levels minLv..maxLv (default a
   }
   return null;
 }
+/* Hindustani Metaphone / phonetic key: normalizes multi-variant casual Roman
+   (kareeb ~ qariib, khwaab ~ xwab ~ khvaab, phool ~ fool, shikwa ~ shikvah, etc.)
+   lax: false preserves e and o, true folds e~i and o~u. */
+function phoneticKey(s, lax) {
+  if (!s) return '';
+  var str = String(s).toLowerCase().normalize('NFC')
+    .replace(/;x/g, 'kh').replace(/;g/g, 'gh').replace(/;n/g, 'n').replace(/;t/g, 't')
+    .replace(/;d/g, 'd').replace(/;r/g, 'r').replace(/\.s/g, 's').replace(/\.z/g, 'z')
+    .replace(/:z/g, 'z').replace(/:t/g, 't').replace(/;h/g, 'h').replace(/;s/g, 's').replace(/;z/g, 'z')
+    .replace(/[āáâ]/g, 'a').replace(/[īíî]/g, 'i').replace(/[ūúû]/g, 'u').replace(/[ñṅṉ]/g, 'n')
+    .replace(/[ṭt̤]/g, 't').replace(/[ḍ]/g, 'd').replace(/[ṛ]/g, 'r').replace(/[ṣṡs̱]/g, 's')
+    .replace(/[żẕẓžz̤]/g, 'z').replace(/[ḥ]/g, 'h').replace(/[ḳ]/g, 'k').replace(/[ġ]/g, 'g')
+    .replace(/[ʿʽ‘'ʾ’"`;.:()\-]/g, '');
+
+  str = str.replace(/^(?:khw|xw|xv|khv)/, 'kh');
+  str = str.replace(/w/g, 'v')
+    .replace(/ph/g, 'f')
+    .replace(/q/g, 'k')
+    .replace(/x/g, 'kh')
+    .replace(/chh/g, 'ch')
+    .replace(/zh/g, 'z');
+
+  str = str.replace(/oo|uu/g, 'u')
+    .replace(/ee|ii/g, 'i')
+    .replace(/aa/g, 'a')
+    .replace(/ai|ay|ei|ey|ae/g, 'e')
+    .replace(/au|aw/g, 'o');
+
+  if (lax) {
+    str = str.replace(/o/g, 'u').replace(/e/g, 'i');
+  }
+
+  str = str.replace(/ah$/, 'a').replace(/([b-df-hj-np-tv-z])h$/, '$1');
+  str = str.replace(/(.)\1+/g, '$1');
+  return str;
+}
+var _trPhoneticIndex = null;
+function trPhoneticIndex() {
+  if (_trPhoneticIndex) return _trPhoneticIndex;
+  var strict = {}, lax = {};
+  if (typeof ASCII_FREQ !== 'undefined') {
+    Object.keys(ASCII_FREQ).forEach(function (asc) {
+      var c = ASCII_FREQ[asc];
+      var ks = phoneticKey(asc, false), kl = phoneticKey(asc, true);
+      if (ks) { (strict[ks] || (strict[ks] = [])).push({ ascii: asc, count: c, tag: 'list' }); }
+      if (kl) { (lax[kl] || (lax[kl] = [])).push({ ascii: asc, count: c, tag: 'loose' }); }
+    });
+  }
+  if (typeof ROMAN_FALLBACK !== 'undefined') {
+    Object.keys(ROMAN_FALLBACK).forEach(function (k1) {
+      var asc = ROMAN_FALLBACK[k1];
+      var ks = phoneticKey(asc, false), kl = phoneticKey(asc, true);
+      if (ks && !(strict[ks] || []).some(function (x) { return x.ascii === asc; })) {
+        (strict[ks] || (strict[ks] = [])).push({ ascii: asc, count: 1, tag: 'poets' });
+      }
+      if (kl && !(lax[kl] || []).some(function (x) { return x.ascii === asc; })) {
+        (lax[kl] || (lax[kl] = [])).push({ ascii: asc, count: 1, tag: 'poets' });
+      }
+    });
+  }
+  Object.keys(strict).forEach(function (k) { strict[k].sort(function (a, b) { return b.count - a.count; }); });
+  Object.keys(lax).forEach(function (k) { lax[k].sort(function (a, b) { return b.count - a.count; }); });
+  _trPhoneticIndex = { strict: strict, lax: lax };
+  return _trPhoneticIndex;
+}
+function trPhoneticHits(plain) {
+  var idx = trPhoneticIndex();
+  var ks = phoneticKey(plain, false);
+  var hs = idx.strict[ks] || [];
+  if (hs.length) return hs;
+  var kl = phoneticKey(plain, true);
+  return idx.lax[kl] || [];
+}
 /* Rekhta-style marks, for a word the lookup does not know: a capital in the middle of a word is retroflex (jhūTī ṭ, ulTī ṭ, baḌā ṛ);
    .e .ī after a vowel are a hamza (aa.e, jaa.e); .a .i .u are an ʿain (shā.ir, ma.asūm, va.ade); .h is ḥ (sub.h) */
 function rekhtaMarks(piece) {
@@ -228,7 +301,9 @@ function collocSpelling(key, prevWord, nextWord) {
   if (typeof COLLOCATIONS === 'undefined' || typeof ROMAN_CASUAL_MAP === 'undefined') return null;
   const nb = w => (w ? casualKey(w.split('-')[w === prevWord ? w.split('-').length - 1 : 0], 1) : '');
   const pk = nb(prevWord), nk = nb(nextWord);
-  const label = (pk && COLLOCATIONS.L1[pk + ' ' + key]) || (nk && COLLOCATIONS.R1[key + ' ' + nk]);
+  const label = (pk && nk && COLLOCATIONS.LR && COLLOCATIONS.LR[pk + '|' + key + '|' + nk]) ||
+                (pk && COLLOCATIONS.L1 && COLLOCATIONS.L1[pk + ' ' + key]) ||
+                (nk && COLLOCATIONS.R1 && COLLOCATIONS.R1[key + ' ' + nk]);
   if (key === 'ki') return label === 'ki' ? 'kih' : label === 'kii' ? 'kii' : null;   // Rekhta writes ki for کہ and kī for کی
   return (label && ROMAN_CASUAL_MAP[0][label]) || null;
 }

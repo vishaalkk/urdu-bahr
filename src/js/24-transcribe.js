@@ -173,7 +173,7 @@ function trCands(piece, def, lang) {
   function viaAscii(a, tag, isDefault) {
     var p = asciiToScripts(a);
     if (isFa && /[ñں]/.test(p.ur) && !/[ñ]/.test(plain)) {
-      if (tag === 'list' || tag === 'loose') return; // suppress Urdu colloquialisms like māñ in Persian context
+      if (tag === 'list' || tag === 'loose' || tag === 'phonetic') return; // suppress Urdu colloquialisms like māñ in Persian context
     }
     add({ ro: p.ro, hi: p.hi, ur: isFa ? trUrToFa(p.ur) : p.ur, ascii: a, tag: tag, isDefault: !!isDefault });
   }
@@ -271,7 +271,7 @@ function trCands(piece, def, lang) {
   });
 
   /* Generalized phonetic confusions: g↔gh always (classical near-homophones); others when the piece is not an exact known match */
-  var isKnown = piece && piece.tier === 'known';
+  var isKnown = piece && (piece.tier === 'known' || piece.tier === 'poets');
   var TR_CONFUSIONS = [
     { p: /gh/g, r: 'g', always: true },
     { p: /(^|[^n])g(?!h)/g, r: '$1gh', always: true },
@@ -306,6 +306,16 @@ function trCands(piece, def, lang) {
       add({ ro: decAlt.ro, hi: decAlt.hi, ur: isFa ? (decAlt.fa || trUrToFa(decAlt.ur)) : decAlt.ur, fixed: { ur: decAlt.ur, ro: decAlt.ro, hi: decAlt.hi, decomp: decAlt }, tag: 'persian' });
     }
   });
+
+  /* Hindustani Metaphone / Soundex matches: multi-variant casual Roman (kareeb, xwab, ful, etc.) */
+  if (!isFa && !isKnown && typeof trPhoneticHits === 'function') {
+    var pHits = trPhoneticHits(plain);
+    if (pHits && pHits.length) {
+      pHits.slice(0, 3).forEach(function (h) {
+        viaAscii(h.ascii, 'phonetic');
+      });
+    }
+  }
 
   if (plain.includes('kh')) {
     var px = plain.replace(/kh/g, ';x');
@@ -375,6 +385,15 @@ function trBuild(text, opts) {
           ? DICT_STORE.soundsLike(p.src.toLowerCase(), true)[0] : null;
         if (near && typedDistance(p.src, near.ro.replace(/ah$/, 'a')) <= 1) {   // its final -ah is the silent h typed -a
           p.near = { ur: near.ur, ro: near.ro, hi: near.hi };
+        }
+        if (!p.near && !scripted && lineLang !== 'fa' && p.tier === 'guess' && !/-/.test(p.src) && typeof trPhoneticHits === 'function') {
+          var pNearList = trPhoneticHits(p.src.toLowerCase());
+          if (pNearList && pNearList.length) {
+            var pScripts = asciiToScripts(pNearList[0].ascii);
+            if (pScripts && pScripts.ur && (!p.def || p.def.ascii !== pNearList[0].ascii)) {
+              p.near = { ur: pScripts.ur, ro: pScripts.ro, hi: pScripts.hi };
+            }
+          }
         }
         if (!scripted && !p.opaque) {
           if (lineLang === 'fa' && p.src.toLowerCase() === 'man') {
@@ -514,7 +533,7 @@ var TR_PAIRS = [['sada', 'sadaa', ['صدا', 'ṣadā'], ['سدا', 'sadā']], [
   ['salam', 'salām', ['سلام', 'salām'], ['سالم', 'sālim']], ['nazar', 'nazr', ['نظر', 'naz̤ar'], ['نذر', 'nażr']],
   ['durud', 'durūd', ['درود', 'durūd'], ['درود', 'darūd']], ['buvad', 'buad', ['بود', 'buvad'], ['بود', 'būd']], ['bood', 'būd', ['بود', 'buvad'], ['بود', 'būd']],
   ['main', 'meen', ['میں', 'maiñ'], ['مین', 'mīn']], ['mein', 'meen', ['میں', 'meñ'], ['مین', 'mīn']], ['gaye', 'gāye', ['گئے', 'gaʾe'], ['گیے', 'gaye']], ['naye', 'nayi', ['نئے', 'naʾe'], ['نیے', 'naye']], ['aaye', 'āye', ['آئے', 'āʾe'], ['آیے', 'āye']]];
-var TR_TAG_NOTE = { now: 'as read now', list: 'Pritchett’s list', loose: 'loose match', poets: 'Rekhta poets', persian: 'Persian list', letters: 'from the letters', reading: 'same spelling, another word', lexicon: 'dictionary', pair: 'classical pair', form: 'dictionary word’s form' };
+var TR_TAG_NOTE = { now: 'as read now', list: 'Pritchett’s list', loose: 'loose match', poets: 'Rekhta poets', persian: 'Persian list', letters: 'from the letters', reading: 'same spelling, another word', lexicon: 'dictionary', pair: 'classical pair', form: 'dictionary word’s form', phonetic: 'sounds like' };
 
 function trScriptAttrs(script) {
   return script === 'ur' ? 'class="tr-res tr-res-ur" lang="ur" dir="rtl"' : script === 'fa' ? 'class="tr-res tr-res-ur" lang="fa" dir="rtl"' : script === 'hi' ? 'class="tr-res tr-res-hi" lang="hi" dir="ltr"' : 'class="tr-res tr-res-ro" lang="und-Latn" dir="ltr"';
@@ -607,7 +626,7 @@ function trRivals(p, cands) {
   if (!/^(known|poets)$/.test(p.tier) || !cands.length || typeof typedDistance !== 'function') return alts.length;
   var own = typedDistance(p.src, cands[0].ro || '');
   return alts.filter(function (c) {
-    if (c.tag === 'reading') return false;
+    if (c.tag === 'reading' || c.tag === 'phonetic') return false;
     return !/^(lexicon|form)$/.test(c.tag) || typedDistance(p.src, c.ro || '') <= own;
   }).length;
 }

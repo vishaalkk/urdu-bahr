@@ -440,6 +440,22 @@ ok(build('ab', { lang: 'fa' }).lines[0].out.ur === 'اب', 'ab in a Persian line
 const faasla = run(`(function(){ var w = trBuild('faasla').lines[0].words[0], p = w.pieces[0]; return [w.needsCheck, trCands(p, p.def, 'ur').map(function (c) { return c.ur; })]; })()`);
 ok(faasla[0] && faasla[1][1] === 'فاصلہ', 'faasla is underlined and offers فاصلہ next: ' + faasla[1].join(' · '));
 
+// 50. Bidirectional collocations (LR rules): settles ambiguous words based on surrounding context
+ok(run(`collocSpelling('rah', 'abhi', 'men')`) === 'raah', 'abhi rah men disambiguates to rāh via LR rule');
+ok(run(`collocSpelling('ab', 'be', 'hai')`) === 'aab', 'be ab hai disambiguates to āb via LR rule');
+ok(run(`collocSpelling('tab', 'be', 'hai')`) === 'taab', 'be tab hai disambiguates to tāb via LR rule');
+
+// 51. Hindustani Metaphone / phonetic soundex matching for multi-variant casual Roman
+ok(run(`phoneticKey('qareeb')`) === run(`phoneticKey('kareeb')`), 'phoneticKey normalizes qareeb and kareeb identically');
+ok(run(`phoneticKey('khwaab')`) === run(`phoneticKey('xwab')`), 'phoneticKey normalizes khwaab and xwab identically');
+ok(run(`phoneticKey('phool')`) === run(`phoneticKey('ful')`), 'phoneticKey normalizes phool and ful identically');
+const cKareeb = run(`(function(){ var p = trBuild('kareeb').lines[0].words[0].pieces[0]; return trCands(p, p.def, 'ur').map(function (c) { return c.ur; }); })()`);
+ok(cKareeb.includes('قریب'), 'kareeb offers qarīb (قریب) via phonetic candidate matching: ' + cKareeb.join(' · '));
+const cXwab = run(`(function(){ var p = trBuild('xwab').lines[0].words[0].pieces[0]; return trCands(p, p.def, 'ur').map(function (c) { return c.ur; }); })()`);
+ok(cXwab.includes('خواب'), 'xwab offers ḳhvāb (خواب) via phonetic candidate matching: ' + cXwab.join(' · '));
+const cFul = run(`(function(){ var p = trBuild('ful').lines[0].words[0].pieces[0]; return trCands(p, p.def, 'ur').map(function (c) { return c.ur; }); })()`);
+ok(cFul.includes('پھول'), 'ful offers phūl (پھول) via phonetic candidate matching: ' + cFul.join(' · '));
+
 console.log(bad ? `${bad} FAILED` : 'transcribe logic: all checks passed');
 process.exit(bad ? 1 : 0);
 

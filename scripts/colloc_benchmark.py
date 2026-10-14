@@ -15,6 +15,7 @@ from statistics import mean
 from colloc_lib import ambiguous_in, build_table, evaluate, load_corpus
 
 VARIANTS = {
+    'shipped (LR+L1+R1, n>=2, 85%)': dict(kinds=('LR', 'L1', 'R1'), min_n=2, purity=0.85, min_groups=2),
     'L1+R1':                dict(kinds=('L1', 'R1')),
     'L1+R1 +trigrams':      dict(kinds=('LR', 'L2', 'R2', 'L1', 'R1')),
     'L1+R1 loose (n>=2, 80%)': dict(kinds=('L1', 'R1'), min_n=2, purity=0.8, min_groups=1),
@@ -50,7 +51,7 @@ def fmt(res):
 
 if __name__ == '__main__':
     if '--check' in sys.argv:
-        res = run('letters', VARIANTS['L1+R1'], 'V')
+        res = run('letters', VARIANTS['shipped (LR+L1+R1, n>=2, 85%)'], 'V')
         net = mean(x['net'] for x, _ in res)
         print(fmt(res))
         sys.exit(0 if net > 0 else 1)

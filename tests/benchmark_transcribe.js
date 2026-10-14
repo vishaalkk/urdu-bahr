@@ -26,7 +26,7 @@ const fb = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'tr-bench-')), 'fallb
 execFileSync('node', [path.join(root, 'scripts/build_roman_fallback.js'), '--exclude', POETS.join(','), '--out', fb], { stdio: 'ignore' });
 run(`Object.keys(ROMAN_FALLBACK).forEach(k => delete ROMAN_FALLBACK[k]); Object.assign(ROMAN_FALLBACK, ${fs.readFileSync(fb, 'utf8')});`);
 const colloc = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'collocations_heldout.json'), 'utf8'));
-run(`COLLOCATIONS.L1 = ${J(colloc.L1)}; COLLOCATIONS.R1 = ${J(colloc.R1)};`);
+run(`COLLOCATIONS.L1 = ${J(colloc.L1)}; COLLOCATIONS.R1 = ${J(colloc.R1)}; COLLOCATIONS.LR = ${J(colloc.LR || {})};`);
 
 const data = JSON.parse(fs.readFileSync(path.join(root, 'data/poets_extended.json'), 'utf8')).ghazals;
 

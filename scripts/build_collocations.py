@@ -21,18 +21,21 @@ import os
 
 from colloc_lib import DATA, build_table, load_corpus
 
-KINDS = ('L1', 'R1')
+KINDS = ('LR', 'L1', 'R1')
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--exclude', default='', help='comma-separated Rekhta poets (jaun,faraz,...) to leave out, for held-out testing')
     ap.add_argument('--out', default=os.path.join(DATA, 'collocations.json'))
+    ap.add_argument('--min-n', type=int, default=2)
+    ap.add_argument('--purity', type=float, default=0.85)
+    ap.add_argument('--min-groups', type=int, default=2)
     a = ap.parse_args()
     skip = tuple(x + '_scanned.json/' for x in a.exclude.split(',') if x)
     corpus = load_corpus('letters')
     corpus.groups = [g for g in corpus.groups if not (g[0] == 'R' and g[1].startswith(skip))] if skip else corpus.groups
-    table = build_table(corpus.groups, kinds=KINDS)
+    table = build_table(corpus.groups, kinds=KINDS, min_n=a.min_n, purity=a.purity, min_groups=a.min_groups)
     out = {kind: dict(sorted(table.rules[kind].items())) for kind in KINDS}
     path = a.out
     with open(path, 'w', encoding='utf-8') as f:

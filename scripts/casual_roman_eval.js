@@ -70,10 +70,10 @@ const SPLIT = new Set();
     execFileSync('node', [path.join(root, 'scripts/build_roman_fallback.js'), '--exclude', poets.join(','), '--out', out], { stdio: 'ignore' });
     run(`Object.keys(ROMAN_FALLBACK).forEach(k => delete ROMAN_FALLBACK[k]); Object.assign(ROMAN_FALLBACK, ${fs.readFileSync(out, 'utf8')});`);
 }
-run(`COLLOCATIONS.L1 = {}; COLLOCATIONS.R1 = {};`);
+run(`COLLOCATIONS.L1 = {}; COLLOCATIONS.R1 = {}; COLLOCATIONS.LR = {};`);
 const a = score('no neighbour table');
 const table = JSON.parse(fs.readFileSync(tablePath, 'utf8'));
-run(`Object.assign(COLLOCATIONS.L1, ${JSON.stringify(table.L1)}); Object.assign(COLLOCATIONS.R1, ${JSON.stringify(table.R1)});`);
+run(`Object.assign(COLLOCATIONS.L1, ${JSON.stringify(table.L1)}); Object.assign(COLLOCATIONS.R1, ${JSON.stringify(table.R1)}); ${table.LR ? `Object.assign(COLLOCATIONS.LR, ${JSON.stringify(table.LR)});` : ''}`);
 const b = score('with neighbour table');
 console.log(`net words: ${b.ok - a.ok >= 0 ? '+' : ''}${b.ok - a.ok} overall, ${b.ambOk - a.ambOk >= 0 ? '+' : ''}${b.ambOk - a.ambOk} on multi-spelling words`);
 if (process.argv.includes('--json')) console.log('JSON ' + JSON.stringify({ plain: a, neighbours: b }));   // for tests/typed_roman_heldout.js
