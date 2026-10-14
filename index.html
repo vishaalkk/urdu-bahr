@@ -3129,7 +3129,14 @@ html[data-script="ro"] .pr-line, html[data-script="hi"] .pr-line { font-family: 
 .pr-fam.urdu { font-style: normal; }
 .pr-tech, .pr-flexnote { max-width: 46ch; margin-left: auto; margin-right: auto; text-align: center; }
 
-/* Transcribe (#/lab/transcribe): see src/js/24-transcribe.js. Flat, hairlines, tokens only (docs/DESIGN_PRINCIPLES.md). */
+/* Layout grid: two columns on desktop, stacked on mobile */
+.tr-grid { display: flex; flex-direction: column; gap: var(--sp-2); margin-top: var(--sp-2); }
+.tr-col { display: flex; flex-direction: column; }
+.tr-pane-head { display: flex; align-items: center; justify-content: space-between; min-height: 34px; gap: var(--sp-2); }
+.tr-pane-lbl { font-family: var(--sans); font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); }
+.tr-samples { margin: 0; }
+.tr-input-wrap { width: 100%; }
+
 .tr-controls { margin: var(--sp-2) 0 var(--sp-3); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--sp-2) var(--sp-4); }
 .tr-script-switch { display: inline-flex; gap: var(--sp-3); align-items: center; }
 .tr-script-btn {
@@ -3143,6 +3150,8 @@ html[data-script="ro"] .pr-line, html[data-script="hi"] .pr-line { font-family: 
   transition: color 150ms ease-out;
   border-bottom: 2px solid transparent;
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
 }
 .tr-script-btn:hover { color: var(--ink); }
 .tr-script-btn.on {
@@ -3150,10 +3159,25 @@ html[data-script="ro"] .pr-line, html[data-script="hi"] .pr-line { font-family: 
   font-weight: 500;
   border-bottom-color: var(--gold);
 }
+.tr-script-btn-ur,
+.tr-script-btn-fa {
+  font-family: var(--urdu);
+  font-size: 16.5px;
+  direction: rtl;
+  unicode-bidi: isolate;
+  line-height: 1;
+  position: relative;
+  top: -2px;
+}
+.tr-script-btn-hi {
+  font-family: var(--deva);
+  font-size: 14px;
+}
 .tr-actions { display: inline-flex; gap: var(--sp-2); align-items: center; flex-wrap: wrap; }
 .tr-msg { color: var(--gold); margin-inline-start: var(--sp-2); }
 .tr-legend { margin: 0 0 var(--sp-3); }
 .tr-input-area { direction: ltr; unicode-bidi: plaintext; text-align: start; font-family: var(--serif); font-size: 18px; line-height: 1.6; }
+.tr-out-wrap { width: 100%; }
 .tr-out { margin-top: var(--sp-3); }
 .tr-line { margin: 0 0 var(--sp-1); }
 .tr-gap { height: var(--sp-4); }
@@ -3164,7 +3188,16 @@ html[data-script="ro"] .pr-line, html[data-script="hi"] .pr-line { font-family: 
 .tr-res-ur { font-family: var(--urdu); font-size: 24px; line-height: 2.2; direction: rtl; text-align: right; }
 .tr-w { font: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; text-decoration-line: none; text-underline-offset: 5px; text-decoration-thickness: 1px; }
 button.tr-w { cursor: pointer; }
-button.tr-w:hover, button.tr-w.on { text-decoration-line: underline; text-decoration-style: solid; text-decoration-color: var(--ink); }
+button.tr-w:hover { text-decoration-line: underline; text-decoration-style: solid; text-decoration-color: var(--ink); }
+button.tr-w.on {
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-color: var(--gold);
+  text-decoration-thickness: 2px;
+  background: color-mix(in srgb, var(--gold) 14%, transparent);
+  border-radius: 3px;
+  padding: 0 2px;
+}
 button.tr-w:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 2px; }
 
 /* Underlines:
@@ -3188,6 +3221,78 @@ button.tr-w:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px;
 .tr-fixes { margin-top: var(--sp-5, var(--sp-4)); padding-top: var(--sp-3); border-top: 1px solid var(--line); }
 .tr-fixes ul { margin: var(--sp-1) 0 var(--sp-2); padding: 0; list-style: none; font-family: var(--mono-ro); font-size: var(--fs-sm); }
 .tr-fixes li { padding: 2px 0; }
+.tr-pane-foot { display: flex; align-items: center; justify-content: space-between; min-height: 30px; margin-top: var(--sp-2); gap: var(--sp-2); flex-wrap: wrap; }
+.tr-in-foot { justify-content: flex-start; }
+.tr-out-foot { justify-content: space-between; }
+.tr-out-foot .tr-legend { margin: 0; }
+
+@media (max-width: 767px) {
+  .tr-pane-lbl { display: none; }
+  .tr-in-clear { display: none !important; }
+  .tr-samples { margin: var(--sp-1) 0 var(--sp-2); }
+  .tr-out-wrap { background: transparent; border: none; padding: 0; min-height: auto; }
+}
+
+@media (min-width: 768px) {
+  .tr-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-4);
+    align-items: stretch;
+    margin-top: var(--sp-3);
+  }
+  .tr-col {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .tr-in-head, .tr-out-head {
+    height: 34px;
+    min-height: 34px;
+    margin-bottom: var(--sp-2);
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+  }
+  .tr-controls {
+    margin: 0;
+  }
+  .tr-input-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .tr-input-area {
+    min-height: 380px;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    resize: vertical;
+  }
+  .tr-out-wrap {
+    flex: 1;
+    min-height: 380px;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    background: var(--bg);
+    border: 1px solid var(--line2);
+    border-radius: var(--radius-md, 10px);
+    overflow-y: auto;
+  }
+  .tr-out {
+    margin-top: 0;
+  }
+  .tr-out:empty::before {
+    content: "Transliteration will appear here as you type…";
+    display: block;
+    font-family: var(--sans);
+    font-size: var(--fs-sm);
+    color: var(--faint);
+    font-style: italic;
+    padding: var(--sp-2) 0;
+  }
+}
+
 @media (max-width: 480px) { .tr-res-ro { font-size: 16px; } }
 
 .tr-dict-box { margin-top: var(--sp-2); padding-top: var(--sp-2); border-top: 1px dashed var(--line); font-family: var(--sans); }
@@ -3218,6 +3323,66 @@ button.tr-w:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px;
 
 .tr-dict-morph { margin-bottom: var(--sp-2); padding: var(--sp-1) var(--sp-2); background: var(--bg2); border-radius: var(--radius-sm); font-size: 12px; }
 .tr-dict-sense { margin-bottom: 6px; }
+
+/* Word Inspector: wide docked panel below the 2 columns */
+.tr-inspector {
+  margin-top: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--bg2);
+  border: 1px solid var(--line2);
+  border-radius: var(--radius-md, 10px);
+  position: relative;
+  transition: opacity 140ms ease-out;
+}
+.tr-inspector.hidden { display: none; }
+.tr-inspector .tr-edit {
+  border-inline-start: none;
+  padding: 0;
+  margin: 0;
+}
+.tr-inspector .tr-edit-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-1) var(--sp-2);
+  padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--line);
+  padding-inline-end: 36px; /* leave room for close button */
+}
+.tr-inspector .tr-edit-src {
+  font-family: var(--mono-ro);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink);
+  min-width: 4.5em;
+}
+.tr-inspector .tr-cand { min-height: 28px; }
+.tr-inspector .tr-close {
+  top: 0;
+  inset-inline-end: 0;
+}
+.tr-inspector .tr-dict-box {
+  margin-top: var(--sp-2);
+  padding-top: 0;
+  border-top: none;
+}
+.tr-inspector .tr-dict-head { margin-top: 4px; }
+.tr-inspector .tr-dict-body {
+  font-size: 14px;
+  line-height: 1.55;
+  max-width: 95ch;
+}
+
+/* Widen desktop layout for Transliterator workspace */
+@media (min-width: 1024px) {
+  body:has(#transcribe-section.on) .wrap,
+  body:has(#transcribe-section.on) header#siteHeader,
+  body.route-transcribe .wrap,
+  body.route-transcribe header#siteHeader {
+    max-width: 1200px;
+    transition: max-width 180ms ease-out;
+  }
+}
 
 /* ===================== CIRCLES (DAWĀʾIR) =====================
    Exact Quiet Manuscript design from initial mockup (bahr_circles_mockup.html).
@@ -5048,26 +5213,48 @@ html[data-script="ascii"] .fa-couplet-line.fa-hi { display: none; }
     <p class="lede dim small">Between Roman with diacritics, Urdu script, Fārsī script and Devanagari, in any direction. Paste a text in any of them, casual Roman included, and choose what to see. Words no list knows are underlined: tap one to choose another spelling.</p>
   </div>
 
-  <textarea id="trIn" rows="6" class="scan-input tr-input-area" spellcheck="false" autocapitalize="off" placeholder="Paste text in Roman, Urdu, Fārsī or Hindi, one line to a line" oninput="trOnInput()"></textarea>
+  <div class="tr-grid">
+    <!-- Left Column: Source / Input -->
+    <div class="tr-col tr-col-in">
+      <div class="tr-pane-head tr-in-head">
+        <span class="eyebrow tr-pane-lbl">Input</span>
+        <div id="trEmpty" class="scan-samples tr-samples">
+          <span class="tiny muted">Try:</span>
+          <button type="button" class="btn ghost sm" onclick="trSample()">a ghazal in casual Roman</button>
+        </div>
+      </div>
+      <div class="tr-input-wrap">
+        <textarea id="trIn" rows="7" class="scan-input tr-input-area" spellcheck="false" autocapitalize="off" placeholder="Paste text in Roman, Urdu, Fārsī or Hindi, one line to a line" oninput="trOnInput()"></textarea>
+      </div>
+      <div class="tr-pane-foot tr-in-foot">
+        <button type="button" id="trInClear" class="btn ghost sm tr-in-clear hidden" onclick="trClear()">Clear</button>
+      </div>
+    </div>
 
-  <div class="row tr-controls">
-    <div class="tr-script-switch" id="trScriptBtns" role="group" aria-label="Script to show"></div>
-    <div id="trActions" class="tr-actions hidden">
-      <button type="button" class="btn sm" onclick="trCopy()">Copy</button>
-      <button type="button" class="btn ghost sm" onclick="trClear()">Clear</button>
-      <span id="trStats" class="tiny faint"></span>
-      <span id="trMsg" class="tiny faint tr-msg" role="status" aria-live="polite"></span>
+    <!-- Right Column: Target / Transliteration -->
+    <div class="tr-col tr-col-out">
+      <div class="tr-pane-head tr-controls tr-out-head">
+        <div class="tr-script-switch" id="trScriptBtns" role="group" aria-label="Script to show"></div>
+      </div>
+
+      <div class="tr-out-wrap">
+        <div id="trOut" class="tr-out"></div>
+      </div>
+
+      <div class="tr-pane-foot tr-out-foot">
+        <div id="trActions" class="tr-actions hidden">
+          <button type="button" class="btn sm" onclick="trCopy()">Copy</button>
+          <span id="trStats" class="tiny faint"></span>
+          <span id="trMsg" class="tiny faint tr-msg" role="status" aria-live="polite"></span>
+        </div>
+        <p id="trLegend" class="tiny faint tr-legend hidden">Tap an underlined word to see other spellings.</p>
+      </div>
     </div>
   </div>
 
-  <div id="trEmpty" class="scan-samples">
-    <span class="tiny muted">Try:</span>
-    <button type="button" class="btn ghost sm" onclick="trSample()">a ghazal in casual Roman</button>
-  </div>
+  <!-- Word Inspector: candidate spellings & dictionary for the active word -->
+  <div id="trInspector" class="tr-inspector hidden"></div>
 
-  <p id="trLegend" class="tiny faint tr-legend hidden">Tap an underlined word to see other spellings.</p>
-
-  <div id="trOut" class="tr-out"></div>
   <div id="trFixes"></div>
 </section>
 <section id="dictionary-section" class="tab-view" style="display:none">
@@ -22452,18 +22639,32 @@ function trRender() {
     if (l.blank) return '<div class="tr-gap" aria-hidden="true"></div>';
     var body = l.verified ? '<div ' + attrs + '>' + escapeHtml(l.out[script]) + '</div>'
       : '<div ' + attrs + '>' + l.words.map(function (w, wi) { return trWordHtml(w, li, wi, script); }).join(' ') + '</div>';
-    var edit = (TR.open && TR.open.li === li && l.words[TR.open.wi]) ? trEditHtml(l.words[TR.open.wi], script) : '';
-    return '<div class="tr-line">' + body + edit + '</div>';
+    return '<div class="tr-line">' + body + '</div>';
   }).join('');
   host.innerHTML = html;
+
+  var insp = $('trInspector');
+  if (insp) {
+    var openWord = (TR.open && m.lines[TR.open.li] && m.lines[TR.open.li].words[TR.open.wi]) || null;
+    if (openWord) {
+      insp.innerHTML = trEditHtml(openWord, script);
+      insp.classList.remove('hidden');
+    } else {
+      insp.innerHTML = '';
+      insp.classList.add('hidden');
+    }
+  }
+
   var st = $('trStats'); if (st) st.textContent = trStatsHtml(m.stats);
   var fx = $('trFixes'); if (fx) fx.innerHTML = trCorrectionsHtml();
   var ac = $('trActions'); if (ac) ac.classList.toggle('hidden', !has);
   var em = $('trEmpty'); if (em) em.classList.toggle('hidden', has);
   var lg = $('trLegend'); if (lg) lg.classList.toggle('hidden', !has);
+  var inClr = $('trInClear'); if (inClr) inClr.classList.toggle('hidden', !has);
   var sb = $('trScriptBtns');
   if (sb) sb.innerHTML = TR_SCRIPTS.map(function (s) {
-    return '<button type="button" class="tr-script-btn' + (TR.script === s[0] ? ' on' : '') + '" aria-pressed="' + (TR.script === s[0]) + '" onclick="trSetScript(\'' + s[0] + '\')">' + s[1] + '</button>';
+    var cls = 'tr-script-btn tr-script-btn-' + s[0] + (TR.script === s[0] ? ' on' : '');
+    return '<button type="button" class="' + cls + '" data-script="' + s[0] + '" aria-pressed="' + (TR.script === s[0]) + '" onclick="trSetScript(\'' + s[0] + '\')">' + s[1] + '</button>';
   }).join('');
   var ms = $('trMsg'); if (ms) ms.textContent = TR.msg || '';
 }
@@ -22477,9 +22678,16 @@ function trOnInput() {
 }
 function trSetScript(s) { TR.script = s; trSave('trScript', s); trRender(); }
 function trOpen(li, wi) {
-  TR.open = (TR.open && TR.open.li === li && TR.open.wi === wi) ? null : { li: li, wi: wi };
+  var wasClosed = !TR.open || TR.open.li !== li || TR.open.wi !== wi;
+  TR.open = wasClosed ? { li: li, wi: wi } : null;
   TR.dictTarget = null; TR.dictHitIdx = null;
   trRender();
+  if (wasClosed) {
+    var insp = $('trInspector');
+    if (insp && typeof insp.scrollIntoView === 'function') {
+      try { insp.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
+    }
+  }
 }
 function trClose() { TR.open = null; TR.dictTarget = null; TR.dictHitIdx = null; trRender(); }
 function trSetDictTarget(t) { TR.dictTarget = t; TR.dictHitIdx = null; trRender(); }

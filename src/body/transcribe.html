@@ -5,25 +5,47 @@
     <p class="lede dim small">Between Roman with diacritics, Urdu script, Fārsī script and Devanagari, in any direction. Paste a text in any of them, casual Roman included, and choose what to see. Words no list knows are underlined: tap one to choose another spelling.</p>
   </div>
 
-  <textarea id="trIn" rows="6" class="scan-input tr-input-area" spellcheck="false" autocapitalize="off" placeholder="Paste text in Roman, Urdu, Fārsī or Hindi, one line to a line" oninput="trOnInput()"></textarea>
+  <div class="tr-grid">
+    <!-- Left Column: Source / Input -->
+    <div class="tr-col tr-col-in">
+      <div class="tr-pane-head tr-in-head">
+        <span class="eyebrow tr-pane-lbl">Input</span>
+        <div id="trEmpty" class="scan-samples tr-samples">
+          <span class="tiny muted">Try:</span>
+          <button type="button" class="btn ghost sm" onclick="trSample()">a ghazal in casual Roman</button>
+        </div>
+      </div>
+      <div class="tr-input-wrap">
+        <textarea id="trIn" rows="7" class="scan-input tr-input-area" spellcheck="false" autocapitalize="off" placeholder="Paste text in Roman, Urdu, Fārsī or Hindi, one line to a line" oninput="trOnInput()"></textarea>
+      </div>
+      <div class="tr-pane-foot tr-in-foot">
+        <button type="button" id="trInClear" class="btn ghost sm tr-in-clear hidden" onclick="trClear()">Clear</button>
+      </div>
+    </div>
 
-  <div class="row tr-controls">
-    <div class="tr-script-switch" id="trScriptBtns" role="group" aria-label="Script to show"></div>
-    <div id="trActions" class="tr-actions hidden">
-      <button type="button" class="btn sm" onclick="trCopy()">Copy</button>
-      <button type="button" class="btn ghost sm" onclick="trClear()">Clear</button>
-      <span id="trStats" class="tiny faint"></span>
-      <span id="trMsg" class="tiny faint tr-msg" role="status" aria-live="polite"></span>
+    <!-- Right Column: Target / Transliteration -->
+    <div class="tr-col tr-col-out">
+      <div class="tr-pane-head tr-controls tr-out-head">
+        <div class="tr-script-switch" id="trScriptBtns" role="group" aria-label="Script to show"></div>
+      </div>
+
+      <div class="tr-out-wrap">
+        <div id="trOut" class="tr-out"></div>
+      </div>
+
+      <div class="tr-pane-foot tr-out-foot">
+        <div id="trActions" class="tr-actions hidden">
+          <button type="button" class="btn sm" onclick="trCopy()">Copy</button>
+          <span id="trStats" class="tiny faint"></span>
+          <span id="trMsg" class="tiny faint tr-msg" role="status" aria-live="polite"></span>
+        </div>
+        <p id="trLegend" class="tiny faint tr-legend hidden">Tap an underlined word to see other spellings.</p>
+      </div>
     </div>
   </div>
 
-  <div id="trEmpty" class="scan-samples">
-    <span class="tiny muted">Try:</span>
-    <button type="button" class="btn ghost sm" onclick="trSample()">a ghazal in casual Roman</button>
-  </div>
+  <!-- Word Inspector: candidate spellings & dictionary for the active word -->
+  <div id="trInspector" class="tr-inspector hidden"></div>
 
-  <p id="trLegend" class="tiny faint tr-legend hidden">Tap an underlined word to see other spellings.</p>
-
-  <div id="trOut" class="tr-out"></div>
   <div id="trFixes"></div>
 </section>

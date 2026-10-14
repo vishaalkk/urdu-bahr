@@ -1,4 +1,11 @@
-/* Transcribe (#/lab/transcribe): see src/js/24-transcribe.js. Flat, hairlines, tokens only (docs/DESIGN_PRINCIPLES.md). */
+/* Layout grid: two columns on desktop, stacked on mobile */
+.tr-grid { display: flex; flex-direction: column; gap: var(--sp-2); margin-top: var(--sp-2); }
+.tr-col { display: flex; flex-direction: column; }
+.tr-pane-head { display: flex; align-items: center; justify-content: space-between; min-height: 34px; gap: var(--sp-2); }
+.tr-pane-lbl { font-family: var(--sans); font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); }
+.tr-samples { margin: 0; }
+.tr-input-wrap { width: 100%; }
+
 .tr-controls { margin: var(--sp-2) 0 var(--sp-3); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--sp-2) var(--sp-4); }
 .tr-script-switch { display: inline-flex; gap: var(--sp-3); align-items: center; }
 .tr-script-btn {
@@ -12,6 +19,8 @@
   transition: color 150ms ease-out;
   border-bottom: 2px solid transparent;
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
 }
 .tr-script-btn:hover { color: var(--ink); }
 .tr-script-btn.on {
@@ -19,10 +28,25 @@
   font-weight: 500;
   border-bottom-color: var(--gold);
 }
+.tr-script-btn-ur,
+.tr-script-btn-fa {
+  font-family: var(--urdu);
+  font-size: 16.5px;
+  direction: rtl;
+  unicode-bidi: isolate;
+  line-height: 1;
+  position: relative;
+  top: -2px;
+}
+.tr-script-btn-hi {
+  font-family: var(--deva);
+  font-size: 14px;
+}
 .tr-actions { display: inline-flex; gap: var(--sp-2); align-items: center; flex-wrap: wrap; }
 .tr-msg { color: var(--gold); margin-inline-start: var(--sp-2); }
 .tr-legend { margin: 0 0 var(--sp-3); }
 .tr-input-area { direction: ltr; unicode-bidi: plaintext; text-align: start; font-family: var(--serif); font-size: 18px; line-height: 1.6; }
+.tr-out-wrap { width: 100%; }
 .tr-out { margin-top: var(--sp-3); }
 .tr-line { margin: 0 0 var(--sp-1); }
 .tr-gap { height: var(--sp-4); }
@@ -33,7 +57,16 @@
 .tr-res-ur { font-family: var(--urdu); font-size: 24px; line-height: 2.2; direction: rtl; text-align: right; }
 .tr-w { font: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; text-decoration-line: none; text-underline-offset: 5px; text-decoration-thickness: 1px; }
 button.tr-w { cursor: pointer; }
-button.tr-w:hover, button.tr-w.on { text-decoration-line: underline; text-decoration-style: solid; text-decoration-color: var(--ink); }
+button.tr-w:hover { text-decoration-line: underline; text-decoration-style: solid; text-decoration-color: var(--ink); }
+button.tr-w.on {
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-color: var(--gold);
+  text-decoration-thickness: 2px;
+  background: color-mix(in srgb, var(--gold) 14%, transparent);
+  border-radius: 3px;
+  padding: 0 2px;
+}
 button.tr-w:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 2px; }
 
 /* Underlines:
@@ -57,6 +90,78 @@ button.tr-w:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px;
 .tr-fixes { margin-top: var(--sp-5, var(--sp-4)); padding-top: var(--sp-3); border-top: 1px solid var(--line); }
 .tr-fixes ul { margin: var(--sp-1) 0 var(--sp-2); padding: 0; list-style: none; font-family: var(--mono-ro); font-size: var(--fs-sm); }
 .tr-fixes li { padding: 2px 0; }
+.tr-pane-foot { display: flex; align-items: center; justify-content: space-between; min-height: 30px; margin-top: var(--sp-2); gap: var(--sp-2); flex-wrap: wrap; }
+.tr-in-foot { justify-content: flex-start; }
+.tr-out-foot { justify-content: space-between; }
+.tr-out-foot .tr-legend { margin: 0; }
+
+@media (max-width: 767px) {
+  .tr-pane-lbl { display: none; }
+  .tr-in-clear { display: none !important; }
+  .tr-samples { margin: var(--sp-1) 0 var(--sp-2); }
+  .tr-out-wrap { background: transparent; border: none; padding: 0; min-height: auto; }
+}
+
+@media (min-width: 768px) {
+  .tr-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-4);
+    align-items: stretch;
+    margin-top: var(--sp-3);
+  }
+  .tr-col {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .tr-in-head, .tr-out-head {
+    height: 34px;
+    min-height: 34px;
+    margin-bottom: var(--sp-2);
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+  }
+  .tr-controls {
+    margin: 0;
+  }
+  .tr-input-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .tr-input-area {
+    min-height: 380px;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    resize: vertical;
+  }
+  .tr-out-wrap {
+    flex: 1;
+    min-height: 380px;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    background: var(--bg);
+    border: 1px solid var(--line2);
+    border-radius: var(--radius-md, 10px);
+    overflow-y: auto;
+  }
+  .tr-out {
+    margin-top: 0;
+  }
+  .tr-out:empty::before {
+    content: "Transliteration will appear here as you type…";
+    display: block;
+    font-family: var(--sans);
+    font-size: var(--fs-sm);
+    color: var(--faint);
+    font-style: italic;
+    padding: var(--sp-2) 0;
+  }
+}
+
 @media (max-width: 480px) { .tr-res-ro { font-size: 16px; } }
 
 .tr-dict-box { margin-top: var(--sp-2); padding-top: var(--sp-2); border-top: 1px dashed var(--line); font-family: var(--sans); }
@@ -87,3 +192,63 @@ button.tr-w:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px;
 
 .tr-dict-morph { margin-bottom: var(--sp-2); padding: var(--sp-1) var(--sp-2); background: var(--bg2); border-radius: var(--radius-sm); font-size: 12px; }
 .tr-dict-sense { margin-bottom: 6px; }
+
+/* Word Inspector: wide docked panel below the 2 columns */
+.tr-inspector {
+  margin-top: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--bg2);
+  border: 1px solid var(--line2);
+  border-radius: var(--radius-md, 10px);
+  position: relative;
+  transition: opacity 140ms ease-out;
+}
+.tr-inspector.hidden { display: none; }
+.tr-inspector .tr-edit {
+  border-inline-start: none;
+  padding: 0;
+  margin: 0;
+}
+.tr-inspector .tr-edit-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-1) var(--sp-2);
+  padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--line);
+  padding-inline-end: 36px; /* leave room for close button */
+}
+.tr-inspector .tr-edit-src {
+  font-family: var(--mono-ro);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink);
+  min-width: 4.5em;
+}
+.tr-inspector .tr-cand { min-height: 28px; }
+.tr-inspector .tr-close {
+  top: 0;
+  inset-inline-end: 0;
+}
+.tr-inspector .tr-dict-box {
+  margin-top: var(--sp-2);
+  padding-top: 0;
+  border-top: none;
+}
+.tr-inspector .tr-dict-head { margin-top: 4px; }
+.tr-inspector .tr-dict-body {
+  font-size: 14px;
+  line-height: 1.55;
+  max-width: 95ch;
+}
+
+/* Widen desktop layout for Transliterator workspace */
+@media (min-width: 1024px) {
+  body:has(#transcribe-section.on) .wrap,
+  body:has(#transcribe-section.on) header#siteHeader,
+  body.route-transcribe .wrap,
+  body.route-transcribe header#siteHeader {
+    max-width: 1200px;
+    transition: max-width 180ms ease-out;
+  }
+}

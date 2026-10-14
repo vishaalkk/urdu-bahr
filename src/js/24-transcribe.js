@@ -881,18 +881,32 @@ function trRender() {
     if (l.blank) return '<div class="tr-gap" aria-hidden="true"></div>';
     var body = l.verified ? '<div ' + attrs + '>' + escapeHtml(l.out[script]) + '</div>'
       : '<div ' + attrs + '>' + l.words.map(function (w, wi) { return trWordHtml(w, li, wi, script); }).join(' ') + '</div>';
-    var edit = (TR.open && TR.open.li === li && l.words[TR.open.wi]) ? trEditHtml(l.words[TR.open.wi], script) : '';
-    return '<div class="tr-line">' + body + edit + '</div>';
+    return '<div class="tr-line">' + body + '</div>';
   }).join('');
   host.innerHTML = html;
+
+  var insp = $('trInspector');
+  if (insp) {
+    var openWord = (TR.open && m.lines[TR.open.li] && m.lines[TR.open.li].words[TR.open.wi]) || null;
+    if (openWord) {
+      insp.innerHTML = trEditHtml(openWord, script);
+      insp.classList.remove('hidden');
+    } else {
+      insp.innerHTML = '';
+      insp.classList.add('hidden');
+    }
+  }
+
   var st = $('trStats'); if (st) st.textContent = trStatsHtml(m.stats);
   var fx = $('trFixes'); if (fx) fx.innerHTML = trCorrectionsHtml();
   var ac = $('trActions'); if (ac) ac.classList.toggle('hidden', !has);
   var em = $('trEmpty'); if (em) em.classList.toggle('hidden', has);
   var lg = $('trLegend'); if (lg) lg.classList.toggle('hidden', !has);
+  var inClr = $('trInClear'); if (inClr) inClr.classList.toggle('hidden', !has);
   var sb = $('trScriptBtns');
   if (sb) sb.innerHTML = TR_SCRIPTS.map(function (s) {
-    return '<button type="button" class="tr-script-btn' + (TR.script === s[0] ? ' on' : '') + '" aria-pressed="' + (TR.script === s[0]) + '" onclick="trSetScript(\'' + s[0] + '\')">' + s[1] + '</button>';
+    var cls = 'tr-script-btn tr-script-btn-' + s[0] + (TR.script === s[0] ? ' on' : '');
+    return '<button type="button" class="' + cls + '" data-script="' + s[0] + '" aria-pressed="' + (TR.script === s[0]) + '" onclick="trSetScript(\'' + s[0] + '\')">' + s[1] + '</button>';
   }).join('');
   var ms = $('trMsg'); if (ms) ms.textContent = TR.msg || '';
 }
@@ -906,9 +920,16 @@ function trOnInput() {
 }
 function trSetScript(s) { TR.script = s; trSave('trScript', s); trRender(); }
 function trOpen(li, wi) {
-  TR.open = (TR.open && TR.open.li === li && TR.open.wi === wi) ? null : { li: li, wi: wi };
+  var wasClosed = !TR.open || TR.open.li !== li || TR.open.wi !== wi;
+  TR.open = wasClosed ? { li: li, wi: wi } : null;
   TR.dictTarget = null; TR.dictHitIdx = null;
   trRender();
+  if (wasClosed) {
+    var insp = $('trInspector');
+    if (insp && typeof insp.scrollIntoView === 'function') {
+      try { insp.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
+    }
+  }
 }
 function trClose() { TR.open = null; TR.dictTarget = null; TR.dictHitIdx = null; trRender(); }
 function trSetDictTarget(t) { TR.dictTarget = t; TR.dictHitIdx = null; trRender(); }
