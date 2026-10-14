@@ -517,7 +517,7 @@ var TR_PAIRS = [['sada', 'sadaa', ['صدا', 'ṣadā'], ['سدا', 'sadā']], [
 var TR_TAG_NOTE = { now: 'as read now', list: 'Pritchett’s list', loose: 'loose match', poets: 'Rekhta poets', persian: 'Persian list', letters: 'from the letters', reading: 'same spelling, another word', lexicon: 'dictionary', pair: 'classical pair', form: 'dictionary word’s form' };
 
 function trScriptAttrs(script) {
-  return script === 'ur' ? 'class="tr-res tr-res-ur" lang="ur" dir="rtl"' : script === 'fa' ? 'class="tr-res tr-res-ur" lang="fa" dir="rtl"' : script === 'hi' ? 'class="tr-res tr-res-hi" lang="hi" dir="ltr"' : 'class="tr-res tr-res-ro" lang="ur-Latn" dir="ltr"';
+  return script === 'ur' ? 'class="tr-res tr-res-ur" lang="ur" dir="rtl"' : script === 'fa' ? 'class="tr-res tr-res-ur" lang="fa" dir="rtl"' : script === 'hi' ? 'class="tr-res tr-res-hi" lang="hi" dir="ltr"' : 'class="tr-res tr-res-ro" lang="und-Latn" dir="ltr"';
 }
 
 function trWordHtml(w, li, wi, script) {

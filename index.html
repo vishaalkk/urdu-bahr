@@ -3183,7 +3183,16 @@ html[data-script="ro"] .pr-line, html[data-script="hi"] .pr-line { font-family: 
 .tr-gap { height: var(--sp-4); }
 /* direction and font are set here, not inherited: Roman and Devanagari read left to right and sit on the left */
 .tr-res { color: var(--ink); direction: ltr; text-align: left; unicode-bidi: isolate; overflow-wrap: anywhere; }
-.tr-res-ro { font-family: var(--mono-ro); font-size: 17px; line-height: 1.9; letter-spacing: 0; word-spacing: normal; }
+.tr-res-ro,
+.tr-res-ro[lang] {
+  font-family: var(--mono-ro) !important;
+  font-size: 17px;
+  line-height: 1.9 !important;
+  letter-spacing: 0;
+  word-spacing: normal;
+  direction: ltr !important;
+  text-align: left !important;
+}
 .tr-res-hi { font-family: var(--deva); font-size: 20px; line-height: 1.9; }
 .tr-res-ur { font-family: var(--urdu); font-size: 24px; line-height: 2.2; direction: rtl; text-align: right; }
 .tr-w { font: inherit; color: inherit; background: none; border: 0; padding: 0; margin: 0; text-decoration-line: none; text-underline-offset: 5px; text-decoration-thickness: 1px; }
@@ -22275,7 +22284,7 @@ var TR_PAIRS = [['sada', 'sadaa', ['صدا', 'ṣadā'], ['سدا', 'sadā']], [
 var TR_TAG_NOTE = { now: 'as read now', list: 'Pritchett’s list', loose: 'loose match', poets: 'Rekhta poets', persian: 'Persian list', letters: 'from the letters', reading: 'same spelling, another word', lexicon: 'dictionary', pair: 'classical pair', form: 'dictionary word’s form' };
 
 function trScriptAttrs(script) {
-  return script === 'ur' ? 'class="tr-res tr-res-ur" lang="ur" dir="rtl"' : script === 'fa' ? 'class="tr-res tr-res-ur" lang="fa" dir="rtl"' : script === 'hi' ? 'class="tr-res tr-res-hi" lang="hi" dir="ltr"' : 'class="tr-res tr-res-ro" lang="ur-Latn" dir="ltr"';
+  return script === 'ur' ? 'class="tr-res tr-res-ur" lang="ur" dir="rtl"' : script === 'fa' ? 'class="tr-res tr-res-ur" lang="fa" dir="rtl"' : script === 'hi' ? 'class="tr-res tr-res-hi" lang="hi" dir="ltr"' : 'class="tr-res tr-res-ro" lang="und-Latn" dir="ltr"';
 }
 
 function trWordHtml(w, li, wi, script) {
