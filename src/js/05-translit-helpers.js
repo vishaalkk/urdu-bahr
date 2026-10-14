@@ -121,6 +121,10 @@ function devToAscii(str) {
       out += ';n';
     } else if(ch === 'ः') {
       out += 'h';
+    } else if(matraMap[ch]) {   // after a nukta letter, already turned to ASCII above (ड़ी, ज़िं): the vowel sign still counts
+      out += matraMap[ch];
+    } else if(ch === '्') {
+      /* a virama after a nukta letter: no vowel */
     } else {
       out += ch;
     }

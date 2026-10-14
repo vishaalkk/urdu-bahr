@@ -412,6 +412,34 @@ ok(cMail.some(c => c.ro === 'mel'), 'mail offers mel candidate: ' + cMail.map(c 
 const cSair = run(`trCands(trBuild('sair').lines[0].words[0].pieces[0], trBuild('sair').lines[0].words[0].pieces[0].def, 'ur')`);
 ok(cSair.some(c => c.ro === 'ser'), 'sair offers ser candidate: ' + cSair.map(c => c.ro));
 
+// 45. A spelling typed in the correction box ("Use"): Urdu script, Devanagari and Rekhta-style Roman capitals are read, and nothing
+//     unreadable replaces the word (typing انگڑی used to blank the word out of the line; ungRi lost its ṛ)
+const useOut = v => { const c = run(`trCustomChoice(${J(v)}, { src: 'ungri' })`); return c ? run(`trBuild('meri ungri', { choices: { ungri: ${J(c)} } }).lines[0].out`) : null; };
+ok((useOut('انگڑی') || {}).ur === 'میری انگڑی', 'an Urdu-script correction keeps the word: ' + J(useOut('انگڑی')));
+ok((useOut('उंगड़ी') || {}).ur === 'میری انگڑی', 'a Devanagari correction with a nukta letter and a vowel sign: ' + J(useOut('उंगड़ी')));
+ok((useOut('ungRi') || {}).ur === 'میری انگڑی', 'a capital R in a Roman correction is ṛ: ' + J(useOut('ungRi')));
+ok(useOut('???') === null, 'an unreadable correction changes nothing');
+ok(run(`devToAscii('लड़की')`) === 'l;rkii', 'devToAscii keeps the vowel sign after a nukta letter: ' + run(`devToAscii('लड़की')`));
+
+// 46. A word's family from the dictionaries' own links (rel): hārnā leads to hār "defeat"; a verb form read in the drawer (hari
+//     picked as hārī, of hārnā) opens on the verb, with its family next, before the same spelling's unrelated headwords
+ok(run(`DICT_STORE.lookup('ہارنا').some(e => e.ro === 'hār' && /defeat/.test(e.def))`), 'hārnā\'s family includes hār, "defeat"');
+const hari = run(`(function(){ var p = trBuild('hari').lines[0].words[0].pieces[0]; return trCands(p, p.def, 'ur').find(function (x) { return x.ro === 'hārī'; }); })()`);
+ok(hari && hari.tag === 'form', 'hari offers hārī as a form of a dictionary verb: ' + J(hari));
+const hariPills = (run(`(function(){ var w = trBuild('hari', { choices: { hari: { t: 'a', a: ${J(hari && hari.ascii)} } } }).lines[0].words[0]; return trDictSectionHtml(w, w.pieces[0]); })()`)
+    .match(/tr-pill-ro">[^<]*/g) || []).map(x => x.split('>')[1]);
+ok(hariPills[0] === 'hārnā' && hariPills.includes('hār'), 'the drawer for hārī leads with hārnā and shows hār: ' + hariPills.join(', '));
+// 47. Fallon's DSAL text: typesetting glyphs (ﮩ) are letters, and /?/ is the mark DSAL could not show
+ok(run(`DICT_STORE.entries.filter(e => e.dict === 'Fallon' && /[\\uFB50-\\uFDFF\\uFE70-\\uFEFF]/.test(e.ur)).length`) === 0, 'no Fallon headword keeps a presentation-form glyph');
+ok(run(`DICT_STORE.entries.filter(e => e.dict === 'Fallon' && (e.ro + e.def).includes('/?/')).length`) === 0, 'no Fallon text keeps a /?/ placeholder');
+ok(run(`DICT_STORE.lookup('ہارنا').some(e => e.dict === 'Fallon')`), 'Fallon\'s hārnā is found (its ﮩ was unfindable)');
+// 48. Casual typing drops vowel length: in a Persian line mara is مرا marā (the Persian list), not the Urdu list's مارا mārā
+ok(build('mara az khud khabar nist').lines[0].out.ur.split(' ')[0] === 'مرا', 'mara in a Persian line is مرا: ' + build('mara az khud khabar nist').lines[0].out.ur);
+ok(build('ab', { lang: 'fa' }).lines[0].out.ur === 'اب', 'ab in a Persian line stays اب (the loose آب is the same word)');
+// 49. A word no list reads offers the dictionary word one short vowel away first, without making it the reading
+const faasla = run(`(function(){ var w = trBuild('faasla').lines[0].words[0], p = w.pieces[0]; return [w.needsCheck, trCands(p, p.def, 'ur').map(function (c) { return c.ur; })]; })()`);
+ok(faasla[0] && faasla[1][1] === 'فاصلہ', 'faasla is underlined and offers فاصلہ next: ' + faasla[1].join(' · '));
+
 console.log(bad ? `${bad} FAILED` : 'transcribe logic: all checks passed');
 process.exit(bad ? 1 : 0);
 

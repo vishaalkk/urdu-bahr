@@ -2,7 +2,7 @@
   "metadata": {
     "title": "Attributions & Scholarly Citations",
     "description": "Primary academic and computational sources powering the Urdu Meter Handbook and Interactive Studio.",
-    "entries_count": 12
+    "entries_count": 13
   },
   "entries": [
     {
@@ -145,6 +145,18 @@
       "publisher_or_affiliation": "W. H. Allen & Co., London. Digital edition: Digital Dictionaries of South Asia (University of Chicago). Worldwide Public Domain (author 1830–1904).",
       "canonical_url": "https://dsal.uchicago.edu/dictionaries/platts/",
       "summary": "The monumental trilingual dictionary of classical Urdu, Hindi, Arabic, and Persian vocabulary (52,521 headwords), cited by Frances Pritchett as the definitive authority on syllable division, etymology, and classical pronunciation. Public domain worldwide (published 1884; author died 1904). Scraped and cached locally via scripts/import_platts.py, with verified entries distilled into the app's offline transliteration and scansion pipeline."
+    },
+    {
+      "id": "fallon_1879",
+      "tag": "Hindustani Lexicography & Folk Idiom",
+      "authors": [
+        "Samuel William Fallon"
+      ],
+      "title": "A New Hindustani-English Dictionary, with illustrations from Hindustani literature and folk-lore",
+      "year": "1879",
+      "publisher_or_affiliation": "Medical Hall Press, Banaras; Trübner & Co., London. Digital edition: Digital Dictionaries of South Asia (University of Chicago). Worldwide Public Domain (author died 1880).",
+      "canonical_url": "https://dsal.uchicago.edu/dictionaries/fallon/",
+      "summary": "A dictionary of the spoken Hindustani of north India, rich in proverbs, folk sayings and verb phrases (chelā k., chīṅ bolnā), with each headword in Urdu script, Devanagari and Roman. Public domain worldwide. Downloaded and cached locally via scripts/import_fallon.py, and shown beside Platts and Steingass in the Transcribe drawer and the Dictionary tab."
     },
     {
       "id": "jahanshiri_grammar",

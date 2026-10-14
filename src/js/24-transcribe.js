@@ -179,6 +179,7 @@ function trCands(piece, def, lang) {
   }
   if (def.fixed) add({ ro: def.fixed.ro, hi: def.fixed.hi, ur: isFa ? trUrToFa(def.fixed.ur) : def.fixed.ur, fixed: def.fixed, tag: 'persian', isDefault: true });
   else viaAscii(def.ascii, 'now', true);
+  if (piece.near && piece.tier === 'guess') add({ ro: piece.near.ro, hi: piece.near.hi, ur: piece.near.ur, fixed: piece.near, tag: 'lexicon' });
 
   if (isFa) {
     trFaHits(plain).slice(0, 3).forEach(function (h) {
@@ -367,6 +368,14 @@ function trBuild(text, opts) {
           p.baseTier = p.tier; p.tier = 'form';
           return;
         }
+        /* a word no list knows, nor any rule: the dictionary word it sounds like, at most one short vowel or vowel length away
+           (faasla: فاصلہ fāṣilah), spelled by the parsers (DICT_STORE.soundsLike), is its first alternative, not its reading: as the
+           reading it gained Urdu words and lost Roman ones (the dictionary's Roman is classical: ḳhat̤rah, Rekhta's ḳhatra) */
+        var near = (!scripted && lineLang !== 'fa' && p.tier === 'guess' && !/-/.test(p.src) && typeof DICT_STORE !== 'undefined' && DICT_STORE.status === 'ready')
+          ? DICT_STORE.soundsLike(p.src.toLowerCase(), true)[0] : null;
+        if (near && typedDistance(p.src, near.ro.replace(/ah$/, 'a')) <= 1) {   // its final -ah is the silent h typed -a
+          p.near = { ur: near.ur, ro: near.ro, hi: near.hi };
+        }
         if (!scripted && !p.opaque) {
           if (lineLang === 'fa' && p.src.toLowerCase() === 'man') {
             var mHits = trFaHits('man');
@@ -377,6 +386,14 @@ function trBuild(text, opts) {
             }
           } else if (p.tier === 'guess' || lineLang === 'fa') {
             var hits = (p.tier === 'guess') ? trFaHits(p.src) : trFaHitsStrict(p.src);
+            if (!hits.length && p.tier !== 'guess') {
+              /* casual typing drops vowel length (mara: مرا marā): the Persian word under the loose key, unless it is only the
+                 word already read with the Persian ن for ں, a final ئے or an initial آ (darin دریں, ku کو, ab اب) */
+              var loose = trFaIndex().loose[casualKey(p.src, 1)] || [];
+              var fold = function (u) { return String(u || '').replace(/ں/g, 'ن').replace(/^آ/, 'ا').replace(/ئے$|ی$|ے$/, ''); };
+              var cur = p.fixed ? p.fixed.ur : (p.ascii ? asciiToScripts(p.ascii).ur : '');
+              if (loose.length && fold(loose[0].ur) !== fold(cur)) hits = loose;
+            }
             if (hits.length) {
               p.fixed = { ur: hits[0].ur, ro: hits[0].ro, hi: hits[0].hi };
               p.baseTier = p.tier; p.tier = 'persian';
@@ -595,6 +612,12 @@ function trRivals(p, cands) {
   }).length;
 }
 
+/* the reading shown is a regular form of a dictionary verb (hārī of hārnā, picked or given): the drawer leads with the verb */
+function trIsVerbForm(p) {
+  if (!p || !p.ascii || !p.src || typeof DICT_STORE === 'undefined' || DICT_STORE.status !== 'ready') return false;
+  return DICT_STORE.formsFor(p.src).some(function (f) { return f.ascii === p.ascii && /naa$/.test(f.base || ''); });
+}
+
 /* the entries for the first of several spellings of one word that the dictionary knows */
 function trLookupFirst(spellings) {
   for (var i = 0; i < spellings.length; i++) {
@@ -635,19 +658,20 @@ function trDictSectionHtml(w, activeP, script) {
   }
   if (DICT_STORE.status !== 'ready') {
     if (DICT_STORE.status === 'unloaded') {
-      return morphBanner + '<div class="tr-dict-teaser"><button type="button" class="btn link sm" onclick="triggerLoadDictionary()"><span class="icon">📖</span> View Platts / Steingass definition</button></div>';
+      return morphBanner + '<div class="tr-dict-teaser"><button type="button" class="btn link sm" onclick="triggerLoadDictionary()"><span class="icon">📖</span> View Platts / Fallon / Steingass definition</button></div>';
     } else if (DICT_STORE.status === 'loading') {
       return morphBanner + '<div class="tr-dict-teaser dim small">Loading dictionary…</div>';
     }
     return morphBanner;
   }
 
+  var verbForm = trIsVerbForm(p);   // the lookup leads with the verb and its family; their order stands (no re-sort below)
   // Build candidate tabs. DICT_STORE.lookup already folds spellings and finds a form's dictionary word: what is left to try is
   // which spelling of the word to ask with (typed, Urdu, Roman, a compound whole or unspaced)
   var tabs = [];
   var wholeHits = src && src.includes('-') ? trLookupFirst([src, src.replace(/-/g, '')]) : [];
   if (!wholeHits.length && w.out && w.out.ur) {
-    wholeHits = DICT_STORE.lookup(w.out.ur);
+    wholeHits = DICT_STORE.lookup(w.out.ur, 0, { verbFirst: verbForm });
     if (w.out.ro && w.out.ro !== w.out.ur) {
       DICT_STORE.lookup(w.out.ro).forEach(function (rh) {
         if (!wholeHits.some(function (wh) { return wh.ur === rh.ur && wh.ro === rh.ro && wh.def === rh.def; })) wholeHits.push(rh);
@@ -750,7 +774,7 @@ function trDictSectionHtml(w, activeP, script) {
     return cr.startsWith(cleanSrc) ? 70 : 0;
   }
 
-  distinctReadings.sort(function(a, b) {
+  if (!verbForm) distinctReadings.sort(function(a, b) {
     var aScore = roMatchScore(a);
     var bScore = roMatchScore(b);
     if (aScore !== bScore) return bScore - aScore;
@@ -762,8 +786,8 @@ function trDictSectionHtml(w, activeP, script) {
     return 0;
   });
 
-  var defaultMatch = null;
-  if (cleanSrc) {
+  var defaultMatch = verbForm ? distinctReadings[0] : null;
+  if (!defaultMatch && cleanSrc) {
     defaultMatch = (isFaMode ? distinctReadings.find(function(x) {
       return (roMatchScore(x) > 0) && (x.origin === 'P' || x.dict === 'Steingass');
     }) : null) || distinctReadings.find(function(x) {
@@ -783,7 +807,7 @@ function trDictSectionHtml(w, activeP, script) {
   var h = distinctReadings[selIdx] || (hits[0] ? { primary: hits[0], all: [hits[0]], ro: hits[0].ro, origin: hits[0].origin, dict: hits[0].dict, ur: hits[0].ur, page: hits[0].page, def: hits[0].def } : null);
 
   var dictSource = h.dict || (h.page ? 'Platts' : 'Steingass');
-  var dictTitle = dictSource === 'Steingass' ? 'Steingass (Persian)' : 'Platts (Urdu/Hindi)';
+  var dictTitle = dictSource === 'Steingass' ? 'Steingass (Persian)' : dictSource === 'Fallon' ? 'Fallon (Hindustani)' : 'Platts (Urdu/Hindi)';
   var org = (typeof DICT_ORIGIN_NAMES !== 'undefined' && DICT_ORIGIN_NAMES[h.origin]) || h.origin || '';
   var badgeCls = h.origin ? 'origin-' + h.origin : 'origin-default';
   var phrasesHtml = (h.phrases && h.phrases.length) ? '<div class="tr-dict-phrases">' +
@@ -906,14 +930,25 @@ function trPick(pi, ci) {
   trSave('trChoices', TR.choices);
   trRender();
 }
+/* A spelling typed in the box: Urdu script is taken as written (its Roman and Devanagari read from it), Devanagari through
+   devToAscii, Roman with Rekhta's capitals kept as marks (ungRi, ulTi, baDi: ṛ ṭ ḍ, which romanToAscii alone would lowercase
+   away). Nothing readable, nothing changed: the word is never replaced by an empty one. */
+function trCustomChoice(v, p) {
+  if (/[\u0600-\u06FF]/.test(v)) {
+    var u = (typeof urduWordsToScripts === 'function' && urduWordsToScripts(v)) || {};
+    return { t: 'f', ur: v, ro: u.ro || v, hi: u.hi || '' };
+  }
+  var a = /[\u0900-\u097F]/.test(v) ? devToAscii(v) : romanToAscii(rekhtaMarks(v.replace(/(?<=[a-zāīūñ])R/g, ';r')));
+  if (!a || !/[a-z]/i.test(a)) return null;
+  if (p.script) return { t: 'f', ro: asciiToScripts(a).ro || v, hi: asciiToScripts(a).hi, ur: p.src };
+  return { t: 'a', a: a };
+}
 function trCustom(pi, form) {
   var h = trOpenPiece(pi), inp = form && form.querySelector ? form.querySelector('input') : null;
   var v = inp ? inp.value.trim() : '';
-  if (h && v) {
-    if (h.p.script) {
-      var hi = asciiToScripts(romanToAscii(v)).hi;
-      TR.choices[h.p.key] = { t: 'f', ro: v, hi: hi, ur: h.p.src };
-    } else TR.choices[h.p.key] = { t: 'a', a: romanToAscii(v) };
+  var c = h && v ? trCustomChoice(v, h.p) : null;
+  if (c) {
+    TR.choices[h.p.key] = c;
     trSave('trChoices', TR.choices);
     trRender();
   }

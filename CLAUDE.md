@@ -54,12 +54,14 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   Persian engine `window.ScanFa`: `build_app.py` splices `data/fa_scan.json` (`scripts/build_fa_scan.js`) into a second copy of the
   engine block; Persian lines (`l.lang === 'fa'`) scan on it via `scanCorpusLine` / `engineOf`. Persian-only meter ids are `F<Ganjoor id>`.
   Persian word list `data/fa_lexicon.json` (`scripts/build_fa_lexicon.js`) for Fārsī Roman/Devanagari only.
-  Steingass and Platts live in ONE place, `data/dictionary_bundle.json.gz` (`scripts/import_steingass.py`, `scripts/import_platts.py`
-  download the sources; `scripts/build_dictionary_bundle.py` builds it): the Transcribe drawer reads it (IndexedDB), ScanFa's build
-  takes Steingass's classical readings from it (`lib_fa_steingass.js`, add-only), the typed-Roman fallback takes Platts from it.
+  Steingass, Platts and Fallon (1879, Hindustani; stress apostrophes dropped from his Roman) live in ONE place,
+  `data/dictionary_bundle.json.gz` (`scripts/import_steingass.py`, `scripts/import_platts.py`, `scripts/import_fallon.py`
+  download the sources; `scripts/build_dictionary_bundle.py` builds it): the Transcribe drawer and the Dictionary tab read it
+  (IndexedDB), ScanFa's build takes Steingass's classical readings from it (`lib_fa_steingass.js`, add-only), the typed-Roman
+  fallback, `readingsOf` and `dictEntryForms` take Platts only (`dict === 'Platts'`).
   `scripts/compare_sufinama_ganjoor.py` lists where Sufinama's words differ from Ganjoor's (a review file; nothing is applied).
 - **Transliterator** (`src/js/24-transcribe.js`, `#/lab/transcribe`): a whole text between Roman (casual or diacritics), Urdu script,
-  Fārsī script and Devanagari, in any direction, no scansion. Persian-script lines read the Persian list first; Fārsī output is
+  Fārsī script and Devanagari, in any direction, no scansion. Persian-script lines read the Persian list first, and in a Persian line a word the Urdu lists know takes the Persian list's reading even with vowel length dropped (mara: مرا, not مارا); Fārsī output is
   `trUrToFa` (Urdu letters in Persian orthography). It adds no reading of its own: words come from Scan's pipeline (`romanToAscii`, `asciiToScripts`),
   and each word's tier (known / poets / persian / loose / derived / guess) is what `casualPiece` reports (Transcribe adds form: a dictionary word's
   regular form, once the dictionary has loaded; the dictionary's IndexedDB copy is kept while it matches `DICT_BUNDLE_HASH`, stamped by the build), the same chain `casualRomanLine` uses. Guessed
@@ -67,7 +69,10 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   (`store` key `trChoices`). Logic: `tests/transcribe_logic.js`.
   Analyzer (`12-dictionary-module.js`): one table of Urdu's regular inflection (`PARADIGMS`), read forward (a dictionary word's
   forms: `dictEntryForms`, `knownForms`, `DICT_STORE.formsFor`) and backward (a form's dictionary words: `dictLemmas` in
-  `DICT_STORE.lookup`); same-spelling readings `readingsOf`, sound-alikes `soundsLike`. Line language: `detectScanLang` sums word
+  `DICT_STORE.lookup`); same-spelling readings `readingsOf`, sound-alikes `soundsLike`. Word families: `build_dictionary_bundle.py`
+  reads each entry's own links ("v.n. fr. X", "caus. of", "pl. of", "corr. of", "= X", "fr. X"; "next"/"prec." resolved) into `rel`
+  (only targets that are headwords); `DICT_STORE.family` follows them both ways, and the drawer leads with the verb for a verb form.
+  The dictionaries' text is never edited: only Fallon's DSAL encoding is repaired (NFKC for ﮩ, `/?/` → ḳh / ġ / ʿ). Line language: `detectScanLang` sums word
   weights mined by `scripts/build_lang_words.js` → `data/lang_words.json`.
   Gates (all in `npm test`; floors only rise, `--update`; a new benchmark's floor is what the code BEFORE the change scores): `tests/typed_roman_heldout.js` (typed Roman on held-out Rekhta poets → Urdu,
   Roman, Devanagari, inflected words; `tests/typed_roman_baseline.json`), `tests/transcribe_golden.js` (what every hand-written exception

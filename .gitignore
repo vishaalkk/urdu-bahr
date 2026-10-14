@@ -51,6 +51,7 @@ bahr_circles_mockup.html
 data/ganjoor_cache/
 data/steingass_cache/
 data/platts_cache/
+data/fallon_cache/
 # review file from scripts/compare_sufinama_ganjoor.py: local only
 data/sufinama_ganjoor_diff.json
 data/dictionary_bundle.json

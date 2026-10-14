@@ -236,6 +236,18 @@ function dictGender(e) {
   const m = /(?:^|[\s,\]\)])s\.\s?([mf])\./.exec(head);
   return m ? m[1] : '';
 }
+/* Spellings that differ from a typed word by one short vowel: Urdu speech and casual typing drop a short a / i / u between two
+   consonants (fāṣila: faasla, qāfila: qafla, ḥauṣila: hausla) and sometimes add one (fikr: fikar). One vowel restored inside a
+   consonant pair (not a digraph: kh, gh, sh… stay whole), or one dropped from between two consonants. */
+function shortVowelVariants(t) {
+  const cons = c => /[b-df-hj-np-tv-z]/.test(c || ''), out = [];
+  for (let i = 1; i < t.length; i++) {
+    if (cons(t[i - 1]) && cons(t[i]) && !(t[i] === 'h' && /[kgcjtdpbszr]/.test(t[i - 1]))) ['a', 'i', 'u'].forEach(v => out.push(t.slice(0, i) + v + t.slice(i)));
+    if (/[aiu]/.test(t[i]) && cons(t[i - 1]) && cons(t[i + 1])) out.push(t.slice(0, i) + t.slice(i + 1));
+  }
+  return out;
+}
+
 /* a dictionary Roman's typed key: casualKey, with Platts' ʻain and ʼ (U+02BB/02BC) dropped as ʿ ʾ are */
 function dictRoKey(r) { return casualKey(String(r).replace(/[ʻʼ]/g, ''), 1); }
 /* an entry's forms: [scholarly Roman of the form, its ASCII, the ASCII of the dictionary word itself]. An untagged entry (many
@@ -339,6 +351,8 @@ const DICT_STORE = {
     this.entries = data;
     this.indexUr = new Map();
     this.indexRo = new Map();
+    this.indexRel = new Map();   // a word's Roman key → the entries that say they come from it (rel, scripts/build_dictionary_bundle.py)
+    this._forms = null; this._readings = null;
     for (let i = 0; i < data.length; i++) {
       const e = data[i];
       e.pos = dictPos(e);
@@ -356,6 +370,13 @@ const DICT_STORE = {
           if (!arr.includes(e)) arr.push(e);
         });
       }
+      (e.rel || []).forEach(([, target]) => {
+        const k = dictRoKey(target);
+        if (!k) return;
+        let arr = this.indexRel.get(k);
+        if (!arr) this.indexRel.set(k, arr = []);
+        if (!arr.includes(e)) arr.push(e);
+      });
       if (e.ro) {
         const r = typeof casualKey === 'function' ? dictRoKey(e.ro) : e.ro.toLowerCase().replace(/[^a-z]/g, '');
         if (r) {
@@ -467,18 +488,24 @@ const DICT_STORE = {
     return out;
   },
 
-  /* Other spellings of the sound typed (sada: صدا ṣadā, سدا sadā; kismat: قسمت): the typed key, with a short vowel dropped or
-     added before the last consonant (fikar ~ fikr) and k ~ q; commonest first */
-  soundsLike(typed) {
+  /* Other spellings of the sound typed (sada: صدا ṣadā, سدا sadā; kismat: قسمت; faasla: فاصلہ fāṣila): the typed key, with one
+     short vowel restored or dropped (shortVowelVariants) and k ~ q; closest to what was typed first, then commonest (byScore: by
+     the score below, for a word nothing else reads). Fallon's folk headwords are not offered (tests/benchmark_transcribe.js: calm) */
+  soundsLike(typed, byScore) {
     const t = String(typed || '').toLowerCase();
     if (!this.indexRo || !/^[a-zāīū]+$/.test(t)) return [];
     const keys = new Set([dictRoKey(t)]);
-    const sync = t.replace(/([b-df-hj-np-tv-z])a([b-df-hj-np-tv-z])$/, '$1$2'), epen = t.replace(/([b-df-hj-np-tv-z])([b-df-hj-np-tv-z])$/, '$1a$2');
-    [sync, epen, t.replace(/k/g, 'q'), t.replace(/q/g, 'k')].forEach(v => { if (v !== t) keys.add(dictRoKey(v)); });
+    shortVowelVariants(t).concat([t.replace(/k/g, 'q'), t.replace(/q/g, 'k')]).forEach(v => { if (v !== t) keys.add(dictRoKey(v)); });
     const hits = [];
-    keys.forEach(k => (this.indexRo.get(k) || []).forEach(e => { if (e.ur && !/[\s-]/.test(e.ro)) hits.push(e); }));
+    keys.forEach(k => (this.indexRo.get(k) || []).forEach(e => { if (e.ur && e.dict !== 'Fallon' && !/[\s-]/.test(e.ro)) hits.push(e); }));
     const out = [];
-    hits.map(e => ({ e, d: typedDistance(t, e.ro), n: (e.phrases || []).length })).sort((a, b) => a.d - b.d || b.n - a.n).forEach(({ e }) => {
+    /* one score, lowest first: the distance from what was typed (twice: consonants and short vowels), with vowel length (once), less
+       two for a word the verified corpora use, so a common word one dropped vowel away (faasla: fāṣila) beats a rare exact one
+       (Steingass's fasla); ties go to the commoner by phrases listed */
+    const strict = r => editDistance(casualKey(t, 0), casualKey(String(r).replace(/[ʻʼ]/g, ''), 0));
+    const used = e => typeof wordAscii === 'function' && !!wordAscii(e.ur) ? 1 : 0;
+    hits.map(e => ({ e, score: byScore ? 2 * typedDistance(t, e.ro) + strict(e.ro) - 2 * used(e) : typedDistance(t, e.ro), n: (e.phrases || []).length }))
+      .sort((a, b) => a.score - b.score || b.n - a.n).forEach(({ e }) => {
       const sc = this.spelled(e.ro, e.ur);
       if (sc && !out.some(o => dictKeyUr(o.ur) === dictKeyUr(sc.ur))) out.push(sc);
     });
@@ -500,15 +527,28 @@ const DICT_STORE = {
 
   /* Every reading of a word, in tiers: the word itself, then the dictionary words it can be an inflection of (a bare verb stem
      is also its infinitive: بیچ is bīch and bećnā's stem), then, for a compound nothing names whole, its parts */
-  lookup(word, _depth) {
+  /* A word's family, as the dictionaries record it: the words its entries say they come from (hār → hārnā, ajzā → juz) and the
+     entries that say they come from it (hārnā → hār "defeat", ćalnā → ćalānā). Each entry's rel names the other word in Roman. */
+  family(entries) {
+    const out = [];
+    const push = e => { if (!entries.includes(e) && !out.includes(e)) out.push(e); };
+    entries.forEach(e => {
+      (e.rel || []).forEach(([, target]) => (this.indexRo.get(dictRoKey(target)) || []).forEach(push));
+      (this.indexRel.get(dictRoKey(e.ro)) || []).forEach(push);
+    });
+    return out;
+  },
+
+  lookup(word, _depth, opts) {
     if (!this.entries || !word || (_depth || 0) > 1) return [];
+    opts = opts || {};
     word = String(word).trim();
     const results = [], tier = new Map(), seen = new Set();
     const add = (e, t) => {
       const k = e.ur + '|' + e.ro + '|' + (e.origin || '') + '|' + (e.def ? e.def.slice(0, 30) : '');
       if (!seen.has(k)) { seen.add(k); results.push(e); tier.set(e, t); }
     };
-    this.lookupDirect(word).forEach(e => add(e, 0));
+    this.lookupDirect(word).forEach(e => add(e, e.dict === 'Fallon' ? 1.5 : 0));   // Fallon, a supplement, ranks after the inflection tier too (samjhe!: not before samajhnā)
     /* the dictionary words an inflection can come from, each kept only with the part of speech its ending allows, then ranked:
        a word the verified corpora use first (رات before the verb راتنا), an attested verb before an attested participle entry
        (دیکھے: دیکھنا before دیکھا), then the commoner word by how many phrases Platts lists under it (ستارہ before ستار) */
@@ -517,10 +557,19 @@ const DICT_STORE = {
       .filter(c => c.hits.length);
     const seenInCorpus = f => !/[a-z]/i.test(f) && typeof wordAscii === 'function' && !!wordAscii(f);
     cands.forEach(c => {
-      const seen = seenInCorpus(c.form), phrases = Math.max(...c.hits.map(e => (e.phrases || []).length));
-      const rank = 1 - (seen ? 0.5 : 0) - (seen && c.verb ? 0.3 : 0) - Math.min(phrases, 15) / 100 + c.i / 1000;
+      const seen = seenInCorpus(c.form), phrases = Math.max(...c.hits.map(e => e.dict === 'Fallon' ? 0 : (e.phrases || []).length));   // Platts' count: Fallon lists phrases under common words too
+      const rank = (opts.verbFirst && c.verb ? -1 : 1) - (seen ? 0.5 : 0) - (seen && c.verb ? 0.3 : 0) - Math.min(phrases, 15) / 100 + c.i / 1000;
       c.hits.forEach(e => add(e, rank));
     });
+    /* the family of the word's entries and dictionary words, after them; when the reading is a verb's form (opts.verbFirst:
+       the drawer's hārī, of hārnā) the verb leads and its family follows it, before the same spelling's other headwords */
+    if (results.length && !(_depth || 0)) {
+      const base = results.slice().sort((a, b) => tier.get(a) - tier.get(b)).slice(0, 8);   // the likeliest readings' families first
+      let added = 0;
+      base.forEach(b => this.family([b]).filter(e => !tier.has(e)).slice(0, 3).forEach(e => {
+        if (added++ < 10) add(e, tier.get(b) < 0 ? tier.get(b) + 0.5 : 1.9);
+      }));
+    }
     if (!results.length && (word.includes('-') || /[\sِ]/.test(word))) {
       word.split(/-(?:e|ye|o)-|[-_\sِ]+/).filter(Boolean).forEach(part => {
         if (!/^(e|ye|o|va)$/i.test(part)) this.lookup(part, (_depth || 0) + 1).forEach(e => add(e, 2));
@@ -544,6 +593,9 @@ const DICT_STORE = {
         const isStubA = /^(=\s|See\s|\(.*cf\.)/i.test(a.def || '') || /cf\.\s+[PAH]\./i.test((a.def || '').slice(0, 35));
         const isStubB = /^(=\s|See\s|\(.*cf\.)/i.test(b.def || '') || /cf\.\s+[PAH]\./i.test((b.def || '').slice(0, 35));
         if (isStubA !== isStubB) return isStubA ? 1 : -1;
+
+        const fallA = a.dict === 'Fallon' ? 1 : 0, fallB = b.dict === 'Fallon' ? 1 : 0;   // the supplement: after Platts and Steingass, whatever the origin
+        if (fallA !== fallB) return fallA - fallB;
 
         const owA = orgWeights[a.origin] || 10;
         const owB = orgWeights[b.origin] || 10;
@@ -596,12 +648,12 @@ function renderLexiconSection() {
   if (DICT_STORE.status === 'unloaded') {
     list.innerHTML = `
       <div class="card dict-load-card">
-        <h3 class="dict-load-title">📚 Platts &amp; Steingass Classical Lexicon</h3>
+        <h3 class="dict-load-title">📚 Platts, Fallon &amp; Steingass Classical Lexicon</h3>
         <p class="dim small dict-load-note">
-          125,758 classical headwords with definitions, etymology (Arabic, Persian, Sanskrit, Hindi), and 28,300+ idioms.
-          Downloads compressed (<strong>6.5 MB</strong>) once and stays cached in your browser's local storage permanently.
+          144,850 classical headwords with definitions, etymology (Arabic, Persian, Sanskrit, Hindi), and 28,300+ idioms.
+          Downloads compressed (<strong>8.7 MB</strong>) once and stays cached in your browser's local storage permanently.
         </p>
-        <button type="button" class="btn sm" onclick="triggerLoadDictionary()">⬇️ Load Classical Lexicon (6.5 MB)</button>
+        <button type="button" class="btn sm" onclick="triggerLoadDictionary()">⬇️ Load Classical Lexicon (8.7 MB)</button>
       </div>
     `;
     return;
@@ -610,7 +662,7 @@ function renderLexiconSection() {
   if (DICT_STORE.status === 'loading') {
     list.innerHTML = `
       <div class="card dict-load-card">
-        <div class="dim small">Downloading and indexing 125,758 classical dictionary entries…</div>
+        <div class="dim small">Downloading and indexing 144,850 classical dictionary entries…</div>
       </div>
     `;
     return;
@@ -681,6 +733,7 @@ function renderLexiconSection() {
         if (org === 'all') s += (orgWeights[e.origin] || 10);
         if (e.ro && e.ro.includes('-') && !q.includes('-')) s -= 15;
         if (/^(=\s|See\s|\(.*cf\.)/i.test(e.def || '')) s -= 40;
+        if (e.dict === 'Fallon') s -= 5;
         s += Math.min(10, Math.floor((e.def ? e.def.length : 0) / 40));
         return s;
       }
