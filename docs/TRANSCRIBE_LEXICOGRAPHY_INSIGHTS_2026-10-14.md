@@ -2,6 +2,14 @@
 **Date:** October 14, 2026  
 **Scope:** Transcribe (`#/lab/transcribe`), Dictionary Module (`src/js/12-dictionary-module.js`, `scripts/build_dictionary_bundle.py`), and Transliteration Helpers (`src/js/05-translit-helpers.js`, `src/js/24-transcribe.js`).
 
+> **Superseded on October 15, 2026 (commit 2657244): one typed-word scorer, not more aliases.** §3's advice to "standardize
+> `CASUAL_ALIAS`" for casual spellings (vazoo, baDi, chhod, daikh) is replaced by `casualCands` in `05-translit-helpers.js`. It finds a
+> list word under its casual-spelling variants (d/D for ṛ, g for ġh, k for q, ai for e, a final -a for a silent -ah) and its consonant
+> skeleton, then scores it by how a typist spells each sound. 136 of 230 aliases were deleted. `tests/transcribe_golden.js` now fails
+> on any alias the scorer makes redundant. The `baDi`/`chhod` family also hid bad data: `data/roman_fallback.json` spelled 14 ṛ words
+> with ḍ (Rekhta's Ḍ is ṛ), and the fallback builder's check passed only because the alias answered first. Add an alias only for a
+> closed-class spelling (yih, vuh, nah; un ko) or a word no list has (peṭ, nain, vuẓū). See CLAUDE.md, "Typed-word scorer".
+
 ---
 
 ## Executive Summary

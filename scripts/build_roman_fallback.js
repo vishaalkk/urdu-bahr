@@ -30,6 +30,9 @@ run('Object.keys(ROMAN_FALLBACK).forEach(k => delete ROMAN_FALLBACK[k])');   // 
    (pade = pa;De, پڈے, was kept because the alias pade = pa;Re gave پڑے), and the scorer reads every fallback spelling for other
    typed words too */
 run('Object.keys(CASUAL_ALIAS).forEach(k => delete CASUAL_ALIAS[k])');
+/* the scorer's index is built now, from Pritchett's list alone: built at the first check below, it would keep that check's trial
+   spelling as a poets' word for the rest of the run */
+run('casualIndexReset(); casualIndex();');
 const fran1 = run('ROMAN_CASUAL_MAP[1]');
 const norm = w => w.normalize('NFC').replace(/[ً-ٰٟـّٔؔ‌‍]/g, '').replace(/[يى]/g, 'ی').replace(/ك/g, 'ک').replace(/[ۂۀ]/g, 'ہ').replace(/[^ء-ۿ]/g, '');
 const key1 = w => run(`casualKey(${JSON.stringify(w)}, 1)`);
