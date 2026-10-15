@@ -18,7 +18,7 @@ const opt = (k, d) => (argv.includes(k) ? argv[argv.indexOf(k) + 1] : d);
 const exclude = opt('--exclude', '');
 const out = opt('--out', path.join(root, 'data/roman_fallback.json'));
 
-const tmp = path.join(os.tmpdir(), 'roman_pairs.json');
+const tmp = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'roman-pairs-')), 'roman_pairs.json');   // one per run: the benchmarks build theirs side by side
 execFileSync('python3', [path.join(root, 'scripts/roman_fallback.py'), '--exclude', exclude, '--out', tmp], { stdio: 'ignore' });
 const pairs = JSON.parse(fs.readFileSync(tmp, 'utf8'));
 
@@ -26,6 +26,10 @@ const { ctx } = loadEngine();
 ctx.console = { log() {}, warn() {}, error() {} };   // the Pue parser logs every character it cannot read
 const run = c => vm.runInContext(c, ctx);
 run('Object.keys(ROMAN_FALLBACK).forEach(k => delete ROMAN_FALLBACK[k])');   // verify without any existing fallback
+/* and without the hand-written aliases: an alias answers before the fallback, so a spelling checked under it is never really read
+   (pade = pa;De, پڈے, was kept because the alias pade = pa;Re gave پڑے), and the scorer reads every fallback spelling for other
+   typed words too */
+run('Object.keys(CASUAL_ALIAS).forEach(k => delete CASUAL_ALIAS[k])');
 const fran1 = run('ROMAN_CASUAL_MAP[1]');
 const norm = w => w.normalize('NFC').replace(/[ً-ٰٟـّٔؔ‌‍]/g, '').replace(/[يى]/g, 'ی').replace(/ك/g, 'ک').replace(/[ۂۀ]/g, 'ہ').replace(/[^ء-ۿ]/g, '');
 const key1 = w => run(`casualKey(${JSON.stringify(w)}, 1)`);

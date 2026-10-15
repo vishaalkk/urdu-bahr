@@ -2,7 +2,8 @@
 // same word in each script, and the floors.
 //   typedRoman   a Rekhta Roman line as a casual typist writes it: no diacritics, ñ → n, dotted letters plain (ṭ → t)
 //   urNorm       an Urdu word with its optional marks dropped and Arabic letter forms folded (ي → ی, ك → ک, ۂ → ہ)
-//   roFold       a Roman word: Pritchett's ā and Rekhta's aa agree, dots and ʿ ʾ drop, ñ (nūn ghunna) stays
+//   roFold       a Roman word: Pritchett's ā and Rekhta's aa agree, dots and ʿ ʾ drop, ñ (nūn ghunna) stays; Rekhta's notation
+//                is read as hers: its Ḍ is her ṛ (ڑ: bichhḌe), its a.a her aʿ (ka.aba), its final -a her silent -ah (parda: pardah)
 //   foldNasal    Devanagari ँ = ं (Pue's parser writes either for the same nasal, depending on what it parsed before)
 //   hiFold       a Devanagari word: nukta dropped, nasals folded, letters only
 //   INFLECTED    an Urdu word with a plural / oblique / verb ending (-oñ -eñ -iyāñ -e, -ī after a vowel) on a stem of 2+ letters
@@ -12,7 +13,7 @@ const fs = require('fs'), path = require('path');
 const typedRoman = ro => ro.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ñ/g, 'n').replace(/[ḍṭṛḳġṣẓżḥ]/gi, c => c.normalize('NFD')[0]);
 const urNorm = w => w.normalize('NFC').replace(/[ً-ٰٟـّٔؔ‌‍]/g, '')
     .replace(/[يى]/g, 'ی').replace(/ك/g, 'ک').replace(/[ۂۀ]/g, 'ہ').replace(/[^ء-ۿ]/g, '');
-const roFold = w => w.normalize('NFC').toLowerCase().replace(/ā/g, 'aa').replace(/ī/g, 'ii').replace(/ū/g, 'uu').replace(/ñ/g, 'N')
+const roFold = w => w.normalize('NFC').replace(/Ḍ/g, 'ṛ').replace(/a\.a/g, 'aʿ').replace(/ah(?=[^a-zāīūñ]*$|-)/gi, 'a').toLowerCase().replace(/ā/g, 'aa').replace(/ī/g, 'ii').replace(/ū/g, 'uu').replace(/ñ/g, 'N')
     .normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zN]/g, '').replace(/w/g, 'v');
 const foldNasal = h => String(h || '').replace(/ँ/g, 'ं');
 const hiFold = w => foldNasal(w.normalize('NFC').replace(/़/g, '')).replace(/[^ऀ-ॿ]/g, '');

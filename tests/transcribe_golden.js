@@ -4,6 +4,8 @@
 //   offers  a homophone key → the classical pairs its alternatives must keep offering
 //   todo    known-wrong words with the right Urdu: listed, not failed; one that comes out right fails the run, so it is moved
 //           into `words` (re-run the builder) and cannot silently break again
+//   aliases every CASUAL_ALIAS entry is still needed: one whose word comes out the same without it (Transcribe and Scan) is what the
+//           typed-word scorer (casualCands) already gives, so the run fails until it is deleted
 // Run: node tests/transcribe_golden.js [-v]
 const fs = require('fs'), path = require('path');
 const { loadPage } = require('./lib_page');
@@ -40,6 +42,18 @@ for (const [w, want] of Object.entries(G.todo)) {
     if (fold(got) === fold(want)) fail(`${w} now gives ${want}: move it from todo into words (node scripts/build_transcribe_golden.js)`);
     else { open++; if (VERBOSE) console.log(`  todo ${w}: ${got} (want ${want})`); }
 }
+const aliases = run('Object.keys(CASUAL_ALIAS)');
+const redundant = aliases.filter(k => {
+    const want = G.words[k];
+    if (!want) return false;
+    run(`var __alias = CASUAL_ALIAS[${J(k)}]; delete CASUAL_ALIAS[${J(k)}];`);
+    const line = run(`trBuild(${J(k)}).lines[0]`), scan = (run(`lineScripts(${J(k)}, { skipKnown: true })`) || {}).ur || '';
+    run(`CASUAL_ALIAS[${J(k)}] = __alias;`);
+    return line.out.ur === want.ur && line.out.ro === want.ro && hiFold(line.out.hi) === hiFold(want.hi) && (want.scan == null || scan === want.scan);
+});
+if (redundant.length) fail(`aliases the scorer already gives (delete them from CASUAL_ALIAS): ${redundant.join(', ')}`);
+const unpinned = aliases.filter(k => !G.words[k] && !G.todo[k]);
+if (unpinned.length) fail(`aliases with no golden row (node scripts/build_transcribe_golden.js): ${unpinned.join(', ')}`);
 const n = Object.keys(G.words).length, h = Object.keys(G.offers).length;
-console.log(bad ? `${bad} FAILED` : `transcribe golden: ${n} words, ${h} homophone keys hold; ${open} known-wrong still open`);
+console.log(bad ? `${bad} FAILED` : `transcribe golden: ${n} words, ${h} homophone keys hold; ${open} known-wrong still open; ${aliases.length} aliases, each still needed`);
 process.exit(bad ? 1 : 0);

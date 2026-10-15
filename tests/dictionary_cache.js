@@ -4,6 +4,7 @@
 //   2. revisit: no download
 //   3. a rebuilt dictionary (a page with another fingerprint): one download, saved with the new fingerprint
 //   4. revisit after it: no download
+//   5. DICT_STORE.loadCached() (what Transcribe calls on opening): the saved copy when its fingerprint matches, never a download
 // Run after `npm run build`: node tests/dictionary_cache.js
 const fs = require('fs'), path = require('path'), os = require('os');
 const { loadPage } = require('./lib_page');
@@ -37,14 +38,14 @@ const fakeIDB = {
     }
 };
 const fetched = [];
-async function visit(page) {
+async function visit(page, cachedOnly) {
     if (page) process.env.URDU_BAHR_HTML = page; else delete process.env.URDU_BAHR_HTML;
     const { ctx, run } = loadPage();
     Object.assign(ctx, { indexedDB: fakeIDB, Response, DecompressionStream, fetch: async u => { fetched.push(u); return new Response(gz); } });
     const before = fetched.length;
-    await run('DICT_STORE.load()');
+    const ready = await run(cachedOnly ? 'DICT_STORE.loadCached()' : 'DICT_STORE.load()');
     await new Promise(r => setTimeout(r, 20));   // the save is not awaited by load()
-    return { downloads: fetched.slice(before), entries: run('DICT_STORE.entries.length'), saved: (dbs.urdu_bahr_lexicon && dbs.urdu_bahr_lexicon.get('all') || {}).hash };
+    return { ready, status: run('DICT_STORE.status'), downloads: fetched.slice(before), entries: run('DICT_STORE.entries ? DICT_STORE.entries.length : 0'), saved: (dbs.urdu_bahr_lexicon && dbs.urdu_bahr_lexicon.get('all') || {}).hash };
 }
 
 (async () => {
@@ -61,7 +62,11 @@ async function visit(page) {
     ok(v3.downloads.length === 1 && v3.saved === '0123456789ab', 'a rebuilt dictionary (new fingerprint) is downloaded again and saved with it');
     const v4 = await visit(rebuilt);
     ok(v4.downloads.length === 0, 'and only once: ' + v4.downloads.length + ' downloads on the revisit');
+    const v5 = await visit(rebuilt, true);
+    ok(v5.ready === true && v5.status === 'ready' && v5.downloads.length === 0 && v5.entries === v1.entries, 'loadCached reads the saved copy, with no download');
+    const v6 = await visit(undefined, true);
+    ok(v6.ready === false && v6.status === 'unloaded' && v6.downloads.length === 0, 'loadCached with another build\'s copy saved downloads nothing and loads nothing');
     fs.rmSync(path.dirname(rebuilt), { recursive: true, force: true });
-    console.log(bad ? `${bad} FAILED` : 'dictionary cache: downloads on a new fingerprint only (4 visits checked)');
+    console.log(bad ? `${bad} FAILED` : 'dictionary cache: downloads on a new fingerprint only (6 visits checked)');
     process.exit(bad ? 1 : 0);
 })();

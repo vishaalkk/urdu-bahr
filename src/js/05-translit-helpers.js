@@ -136,56 +136,37 @@ function devToAscii(str) {
    Most people type Roman without ā ī ū ḳh ġh ʿ, so a typed word is looked up by a folded key in ROMAN_CASUAL_MAP (built from
    every known ghazal word, most frequent spelling wins; see scripts/build_app.py, whose _casual_key this mirrors). Words typed
    WITH Pritchett's marks are left to the letter rules, which read them exactly. */
-const CASUAL_ALIAS = { ye: 'yih', yeh: 'yih', yah: 'yih', vo: 'vuh', wo: 'vuh', woh: 'vuh', voh: 'vuh', na: 'nah', pe: 'pah',
-  buad: 'buvad', buwad: 'buvad',
-  keh: 'kih', hua: 'hu))aa', kya: 'kyaa', dava: 'davaa', nadan: 'naadaa;n', nadaan: 'naadaa;n', naadaan: 'naadaa;n', dile: 'dil-e', aaxir: 'aa;xir', kahi: 'kahii;N', nahin: 'nahii;N', nahi: 'nahii;N', mein: 'me;N', main: 'mai;N', hai: 'hai', hain: 'hai;N', hun: 'huu;N', hoon: 'huu;N',
+const CASUAL_ALIAS = { ye: 'yih', yah: 'yih', vo: 'vuh', wo: 'vuh', na: 'nah', pe: 'pah',
+  keh: 'kih', nadan: 'naadaa;n', nadaan: 'naadaa;n', dile: 'dil-e', kahi: 'kahii;N', nahi: 'nahii;N',
   kubra: 'kubr;aa', kubraa: 'kubr;aa', sughra: '.su;Gr;aa', sughraa: '.su;Gr;aa', uzma: '((u:zm;aa', uzmaa: '((u:zm;aa',
   musa: 'muus;aa', musaa: 'muus;aa', fatwa: 'fatv;aa', fatwaa: 'fatv;aa', taqwa: 'taqv;aa', taqwaa: 'taqv;aa',
   adna: 'adn;aa', adnaa: 'adn;aa', yahya: 'ya;hy;aa', yahyaa: 'ya;hy;aa', mujtaba: 'mujtab;aa', mujtabaa: 'mujtab;aa',
   murtaza: 'murta:z;aa', murtazaa: 'murta:z;aa',
   hum: 'ham', humein: 'hame;N', humne: 'ham ne', unko: 'un ko', inko: 'in ko', usko: 'us ko', isko: 'is ko',
   aake: 'aa ke', jaake: 'jaa ke', hoke: 'ho ke', karke: 'kar ke',
-  gaye: 'ga))e', gayen: 'ga))ii;N', gayein: 'ga))ii;N', gayin: 'ga))ii;N', gayi: 'ga))ii', gayee: 'ga))ii',
-  aaye: 'aa))e', aae: 'aa))e', aayi: 'aa))ii', aayee: 'aa))ii', aaii: 'aa))ii', aayein: 'aa))e;N', aayen: 'aa))e;N',
-  laaye: 'laa))e', laae: 'laa))e', laayi: 'laa))ii', laayee: 'laa))ii', laayein: 'laa))e;N', laayen: 'laa))e;N',
-  paaye: 'paa))e', paae: 'paa))e', paayi: 'paa))ii', paayee: 'paa))ii', paayein: 'paa))e;N', paayen: 'paa))e;N',
-  khaaye: 'khaa))e', khaae: 'khaa))e', khaayi: 'khaa))ii', khaayee: 'khaa))ii', khaayein: 'khaa))e;N', khaayen: 'khaa))e;N',
-  gaaye: 'gaa))e', gaae: 'gaa))e', gaayi: 'gaa))ii', gaayee: 'gaa))ii', gaayein: 'gaa))e;N', gaayen: 'gaa))e;N',
-  roye: 'ro))e', royi: 'ro))ii', royee: 'ro))ii',
-  dhoye: 'dho))e', dhoyi: 'dho))ii', dhoyee: 'dho))ii',
-  soye: 'so))e', soyi: 'so))ii', soyee: 'so))ii',
-  khoye: 'kho))e', khoyi: 'kho))ii', khoyee: 'kho))ii',
+  gaye: 'ga))e', gayen: 'ga))ii;N', gayein: 'ga))ii;N',
+  aaye: 'aa))e',
+  gaaye: 'gaa))e', gaae: 'gaa))e', gaayi: 'gaa))ii', gaayee: 'gaa))ii',
+  roye: 'ro))e',
+  dhoyi: 'dho))ii', dhoyee: 'dho))ii',
+  soyi: 'so))ii', soyee: 'so))ii',
+  khoyi: 'kho))ii', khoyee: 'kho))ii',
   boye: 'bo))e', boyi: 'bo))ii', boyee: 'bo))ii',
-  huye: 'hu))e', huyi: 'hu))ii', huyee: 'hu))ii', huyein: 'huu))ii;N', huyen: 'huu))ii;N',   // hu))ii;N parses as ہئیں
-  naye: 'na))e', nayi: 'na))ii', nayee: 'na))ii',
+  huyein: 'huu))ii;N', huyen: 'huu))ii;N',   // hu))ii;N parses as ہئیں
+  naye: 'na))e',
   chaaye: 'chaa))e', chaye: 'chaa))e',
   raaye: 'raa))e', raye: 'raa))e',
-  jaaye: 'jaa))e', jaye: 'jaa))e',
-  koyi: 'ko))ii', bhaayi: 'bhaa))ii',
-  bataaye: 'bataa))e', bataye: 'bataa))e', bataayi: 'bataa))ii', batayi: 'bataa))ii', bataayee: 'bataa))ii',
-  dikhaaye: 'dikhaa))e', dikhaye: 'dikhaa))e', dikhaayi: 'dikhaa))ii', dikhayi: 'dikhaa))ii', dikhaayee: 'dikhaa))ii',
-  sunaaye: 'sunaa))e', sunaye: 'sunaa))e', sunaayi: 'sunaa))ii', sunayi: 'sunaa))ii', sunaayee: 'sunaa))ii',
-  banaaye: 'banaa))e', banaye: 'banaa))e', banaayi: 'banaa))ii', banayi: 'banaa))ii', banaayee: 'banaa))ii',
-  lagaaye: 'lagaa))e', lagaye: 'lagaa))e', lagaayi: 'lagaa))ii', lagayi: 'lagaa))ii', lagaayee: 'lagaa))ii',
-  bulaye: 'bulaa))e', bulaaye: 'bulaa))e', bulayi: 'bulaa))ii', bulaayi: 'bulaa))ii', bulaayee: 'bulaa))ii',
-  chalaye: 'chalaa))e', chalaaye: 'chalaa))e', chalayi: 'chalaa))ii', chalaayi: 'chalaa))ii',
-  jalaye: 'jalaa))e', jalaaye: 'jalaa))e', jalayi: 'jalaa))ii', jalaayi: 'jalaa))ii',
-  milaye: 'milaa))e', milaaye: 'milaa))e', milayi: 'milaa))ii', milaayi: 'milaa))ii',
-  samaaye: 'samaa))e', samaye: 'samaa))e', samaayi: 'samaa))ii', samayi: 'samaa))ii',
-  padi: 'pa;Rii', pada: 'pa;Raa', pade: 'pa;Re',
-  baDi: 'ba;Rii', baDa: 'ba;Raa', baDe: 'ba;Re',
-  chhod: 'chho;R', chhoD: 'chho;R', chhoda: 'chho;Raa', chhoDa: 'chho;Raa', chhode: 'chho;Re', chhoDe: 'chho;Re', chhodi: 'chho;Rii', chhoDi: 'chho;Rii',
-  ghadi: 'gha;Rii', ghaDi: 'gha;Rii',
-  bichhad: 'bichha;R', bichhaD: 'bichha;R',
-  daud: 'dau;R', dauda: 'dau;Raa', dauD: 'dau;R',
-  chadh: 'cha;Rh', chadha: 'cha;Rhaa', chaDh: 'cha;Rh', chaDha: 'cha;Rhaa',
-  badh: 'ba;Rh', badha: 'ba;Rhaa', baDh: 'ba;Rh', baDha: 'ba;Rhaa',
-  ud: 'u;R', uda: 'u;Raa', uD: 'u;R', uDa: 'u;Raa',
-  faida: 'faa))idah', faayda: 'faa))idah', faeda: 'faa))idah', fayda: 'faa))idah',
+  bhaayi: 'bhaa))ii',
+  bataayi: 'bataa))ii', batayi: 'bataa))ii', bataayee: 'bataa))ii',
+  bulaayee: 'bulaa))ii',
+  samaaye: 'samaa))e', samaye: 'samaa))e',
+  baDe: 'ba;Re',
+  ud: 'u;R',
+  faayda: 'faa))idah', faeda: 'faa))idah', fayda: 'faa))idah',
   harchand: 'har-chand',
   garchi: 'garchih', garche: 'garchih',
-  jag: 'jag', jaag: 'jaag',
-  baich: 'bech', daikh: 'dekh', bhaid: 'bhed', paish: 'pesh', pait: 'pe;t', paid: 'pe;R',
+  jag: 'jag',
+  pait: 'pe;t', paid: 'pe;R',
   ghat: 'gha;t', ghaat: 'ghaa;t', nain: 'nain', naina: 'nainaa',
   vazoo: 'vu.zuu', wazoo: 'vu.zuu', vazu: 'vu.zuu', wazu: 'vu.zuu' };
 function casualKey(s, level) {   // level 0 strict (long vowels kept), 1 loose, 2 lax (also o~u, e~i): mirrors _casual_key in build_app.py
@@ -215,7 +196,8 @@ function buildCasualMap(freq) {
   return map;
 }
 const ROMAN_CASUAL_MAP = buildCasualMap(ASCII_FREQ);
-const CASUAL_SPECIAL = /[ḥṣẓżẕṡṭḍṛġḳʿʾñ;:()]|\u0324|(?<=[a-zāīūñ])[TRDNH]/;   // spelled with marks (or already ASCII, or intentional medial/terminal capitals): the letter rules read these exactly
+const CASUAL_SPECIAL = /[ḥṣẓżẕṡṭḍṛġḳʿʾñ;:()]|\u0324/;   // spelled with marks (or already ASCII): the letter rules read these exactly
+const CASUAL_CAPITAL = /(?<=[a-zāīūñ'])[TRDNHSZ]/;   // a capital inside a word marks a letter (baRi ṛ, roTi ṭ): the scorer below reads it
 function casualLookup(plain, minLv, maxLv) {   // levels minLv..maxLv (default all three)
   if (typeof ROMAN_CASUAL_MAP === 'undefined') return null;
   for (let lv = minLv || 0; lv <= (maxLv == null ? 2 : maxLv); lv++) {
@@ -223,6 +205,176 @@ function casualLookup(plain, minLv, maxLv) {   // levels minLv..maxLv (default a
     if (Object.prototype.hasOwnProperty.call(ROMAN_CASUAL_MAP[lv], k)) return ROMAN_CASUAL_MAP[lv][k];
   }
   return null;
+}
+
+/* ---- How a casual typist spells a word: one scorer in place of per-word aliases ----
+   A typed word no list matches as typed is looked for among every spelling of Pritchett's corpora (ASCII_FREQ, with its count)
+   and of the poets' list, under typing variants of its key (d or D for ṛ, g for ġh, k for q, f for ph, j for z, ai for e, au for
+   o, eh for ah, a final -a for a silent -ah, kh for ḳhv) and under its consonant skeleton (vowels dropped: bohot ~ bahut,
+   zindgi ~ zindagī, sheher ~ shahr). Each candidate is scored by typingCost: an alignment of what was typed against the
+   candidate's sounds, each sound with the spellings casual typists use for it and what they cost (ā typed a is cheap, a typed aa
+   is not; ṛ typed d or r costs a little; a short vowel dropped between consonants, a doubled consonant typed once, a silent ʿain
+   or hamza cost little or nothing; a long vowel left out or an ending added costs a lot). A capital inside a word is a mark: T is
+   ṭ, D or R is ṛ (or ḍ), N is ñ. Less a little for how common the spelling is. No word is named here: a word the lists have is
+   reachable by every casual spelling of it at once. The constants were tuned on Rekhta poets the benchmarks do not score. */
+const CASUAL_SCORE = {
+  beta: 0.1,      // per log of a spelling's count: how far being common outweighs being closer
+  tau: 0.5,       // a typing cost above this is another word, not a casual spelling of this one
+  tauCap: 0.3,    // the same for a word with a capital mark (the capital is a precise spelling)
+  strong: 0.7,    // a list match as typed gives way only when what was typed contradicts it this clearly (chaand: chāñd, not chand)
+  margin: 0.5,    //   and the other spelling is this much closer
+  poetsN: 3, poets: 0.1,   // the poets' list has no counts: a spelling of it counts as a few uses, a little behind Pritchett's
+  skelMax: 40     // how many of one consonant skeleton's spellings are scored, commonest first
+};
+/* the sounds of an ASCII spelling, as a typist hears them: one token per letter (ḳh, ā, ṛ, ʿ ...); a final -ah is a + silent h */
+const ASCII_SOUNDS = [[';xv', 'ḳh v'], [';x', 'ḳh'], [';g', 'ġh'], [';th', 'ṭh'], [';t', 'ṭ'], [';dh', 'ḍh'], [';d', 'ḍ'], [';rh', 'ṛh'], [';r', 'ṛ'],
+  [':t', 't̤'], [';s', 'ṡ'], ['.s', 'ṣ'], [';z', 'ż'], ['.z', 'ẓ'], [':z', 'z̤'], [';h', 'ḥ'], ['((', 'ʿ'], ['))', 'ʾ'], [';n', 'ñ'], [';aa', 'ā'],
+  ['chh', 'chh'], ['ch', 'ch'], ['kh', 'kh'], ['gh', 'gh'], ['sh', 'sh'], ['zh', 'zh'], ['ph', 'ph'], ['bh', 'bh'], ['th', 'th'], ['dh', 'dh'],
+  ['jh', 'jh'], ['aa', 'ā'], ['ii', 'ī'], ['uu', 'ū'], ['ai', 'ai'], ['au', 'au']];
+const _asciiSounds = new Map();
+function asciiSounds(ascii) {
+  let out = _asciiSounds.get(ascii);
+  if (out) return out;
+  const s = String(ascii).replace(/;([A-Z])/g, (m, x) => ';' + x.toLowerCase()).replace(/-/g, '');
+  out = [];
+  for (let i = 0; i < s.length;) {
+    const hit = ASCII_SOUNDS.find(([p]) => s.startsWith(p, i));
+    if (hit) { out.push(...hit[1].split(' ')); i += hit[0].length; }
+    else { if (!/[';:.]/.test(s[i])) out.push(s[i]); i++; }
+  }
+  if (out.length > 1 && out[out.length - 1] === 'h' && out[out.length - 2] === 'a') out[out.length - 1] = 'h̥';   // the silent final h
+  _asciiSounds.set(ascii, out);
+  return out;
+}
+const SOUND_VOWEL = { a: 1, ā: 1, i: 1, ī: 1, u: 1, ū: 1, e: 1, ai: 1, o: 1, au: 1 };
+/* how each sound is typed and what that costs: 0 as expected, ~0.3 a common casual spelling, ~1 another letter */
+const SOUND_TYPED = {
+  'ā': [['aa', 0], ['a', 0.15], ['A', 0.1]], 'a': [['a', 0], ['aa', 0.7], ['e', 0.8], ['u', 1], ['i', 1], ['o', 1]],
+  'ī': [['ii', 0], ['ee', 0], ['i', 0.1], ['ie', 0.4], ['y', 0.5], ['e', 0.7], ['ey', 0.6]], 'i': [['i', 0], ['e', 0.6], ['ee', 0.6], ['y', 0.6], ['a', 1], ['u', 1]],
+  'ū': [['uu', 0], ['oo', 0], ['u', 0.15], ['o', 0.5], ['ou', 0.5]], 'u': [['u', 0], ['o', 0.4], ['oo', 0.6], ['a', 1], ['i', 1]],
+  'e': [['e', 0], ['ai', 0.45], ['ay', 0.5], ['ae', 0.5], ['ei', 0.5], ['ee', 0.8], ['i', 0.8]],
+  'ai': [['ai', 0], ['ay', 0.3], ['e', 0.4], ['ae', 0.4], ['ei', 0.4]],
+  'o': [['o', 0], ['oo', 0.5], ['u', 0.45], ['ou', 0.5], ['au', 0.6], ['ow', 0.6]],
+  'au': [['au', 0], ['ou', 0.3], ['aw', 0.3], ['o', 0.4], ['ow', 0.4]],
+  'ḳh': [['kh', 0], ['x', 0.1], ['k', 0.8]], 'ġh': [['gh', 0], ['g', 0.35]], 'q': [['q', 0], ['k', 0.35]], 'k': [['k', 0], ['q', 0.6], ['c', 0.6]],
+  'kh': [['kh', 0], ['k', 0.5]], 'gh': [['gh', 0], ['g', 0.5]], 'ph': [['ph', 0], ['f', 0.3]], 'f': [['f', 0], ['ph', 0.4]],
+  'bh': [['bh', 0], ['b', 0.5]], 'th': [['th', 0], ['t', 0.5]], 'dh': [['dh', 0], ['d', 0.5]], 'jh': [['jh', 0], ['j', 0.5]],
+  'chh': [['chh', 0], ['ch', 0.35], ['cch', 0.2], ['c', 0.7]], 'ch': [['ch', 0], ['c', 0.5]], 'sh': [['sh', 0], ['s', 0.6]], 'zh': [['zh', 0], ['z', 0.4], ['j', 0.5]],
+  'ṭ': [['T', 0], ['t', 0.3]], 'ṭh': [['Th', 0], ['th', 0.3], ['t', 0.7]], 't̤': [['t', 0], ['T', 0.6]], 't': [['t', 0], ['T', 0.7]],
+  'ḍ': [['D', 0], ['d', 0.3]], 'ḍh': [['Dh', 0], ['dh', 0.3]], 'd': [['d', 0], ['D', 0.7]],
+  'ṛ': [['R', 0], ['D', 0.05], ['r', 0.3], ['d', 0.35]], 'ṛh': [['Rh', 0], ['Dh', 0.05], ['rh', 0.3], ['dh', 0.35]], 'r': [['r', 0], ['R', 0.7]],
+  'ṡ': [['s', 0], ['S', 0.2]], 'ṣ': [['s', 0], ['S', 0.2]], 's': [['s', 0], ['S', 0.5]],
+  'ż': [['z', 0], ['Z', 0.2], ['j', 0.6]], 'ẓ': [['z', 0], ['Z', 0.2], ['j', 0.6]], 'z̤': [['z', 0], ['Z', 0.2], ['j', 0.6]], 'z': [['z', 0], ['Z', 0.5], ['j', 0.6]],
+  'ḥ': [['h', 0], ['H', 0.1]], 'h': [['h', 0], ['H', 0.5]], 'h̥': [['h', 0]],
+  'ʿ': [["'", 0], ['.', 0]], 'ʾ': [["'", 0], ['.', 0], ['y', 0.15], ['i', 0.4]],
+  'ñ': [['n', 0], ['N', 0], ['m', 0.5]], 'n': [['n', 0], ['N', 0.5], ['m', 0.5]],
+  'v': [['v', 0], ['w', 0], ['u', 0.6]], 'y': [['y', 0], ['i', 0.3], ['e', 0.5]], 'j': [['j', 0], ['z', 0.7]]
+};
+/* a sound the typist left out */
+function soundDropped(C, j) {
+  const c = C[j], prev = C[j - 1], next = C[j + 1];
+  if (c === 'ʿ' || c === 'ʾ') return 0;
+  if (c === 'h̥') return 0.1;
+  if (c === prev && !SOUND_VOWEL[c]) return 0.25;                    // a doubled consonant typed once (mohabat)
+  if (c === 'v' && prev === 'ḳh') return 0.15;                       // the silent v of ḳhvāb (khaab)
+  if (c === 'ñ') return next ? 0.6 : 0.45;                           // nahi for nahīñ
+  if (c === 'a' || c === 'i' || c === 'u') return (prev && !SOUND_VOWEL[prev] && next && !SOUND_VOWEL[next]) ? 0.4 : 0.8;   // a short vowel dropped between consonants (zindgi)
+  if (c === 'h' || c === 'ḥ') return 0.6;
+  if (c === 'y' && prev && SOUND_VOWEL[prev] && next && SOUND_VOWEL[next]) return 0.3;
+  if (c === 'ā' || c === 'ī' || c === 'ū') return next ? 1.3 : 1.6;   // a long vowel left out, worst at the end (paid is not paidā)
+  return SOUND_VOWEL[c] ? 0.9 : 1;
+}
+/* a letter the typist added */
+function letterAdded(T, i) {
+  const ch = T[i], prevT = T[i - 1];
+  if (ch === "'" || ch === '.') return 0;
+  if (ch === prevT && !/[aeiouh]/.test(ch)) return 0.4;              // a consonant typed twice (not the h of chh: chhup is not chup)
+  if (/[aiue]/.test(ch) && prevT && !/[aeiou]/i.test(prevT) && T[i + 1] && !/[aeiou]/i.test(T[i + 1])) return 0.4;   // a short vowel added (fikar, subah)
+  if (/[aeiou]/.test(ch) && i === T.length - 1) return 1.2;          // a final vowel added: an ending, not a spelling
+  if (ch === 'y' && prevT && /[aeiou]/.test(prevT) && T[i + 1] && /[aeiou]/.test(T[i + 1])) return 0.2;   // a glide (gaye)
+  return 1;
+}
+/* the cost of typing the sounds C as the letters T */
+function typingCost(T, C) {
+  const n = T.length, m = C.length, W = n + 1, dp = new Array((m + 1) * W).fill(Infinity);
+  dp[0] = 0;
+  for (let j = 0; j <= m; j++) for (let i = 0; i <= n; i++) {
+    const d = dp[j * W + i];
+    if (d === Infinity) continue;
+    if (i < n) dp[j * W + i + 1] = Math.min(dp[j * W + i + 1], d + letterAdded(T, i));
+    if (j === m) continue;
+    const c = C[j], next = C[j + 1];
+    let matched = false;
+    for (const [str, w0] of SOUND_TYPED[c] || [[c, 0]]) {
+      if (!T.startsWith(str, i)) continue;
+      let w = w0;
+      if ((c === 'a' || c === 'i') && str === 'e' && (next === 'h' || next === 'ḥ' || next === 'ʿ')) w = 0.25;   // kehna, mehmaan, eʿtibaar
+      else if (c === 'ā' && str === 'a' && j === m - 1) w = 0.1;                                                 // a final ā typed a (kya)
+      const at = (j + 1) * W + i + str.length;
+      dp[at] = Math.min(dp[at], d + w);
+      if (str.length === 1) matched = true;
+    }
+    dp[(j + 1) * W + i] = Math.min(dp[(j + 1) * W + i], d + soundDropped(C, j));
+    if (i < n && !matched) dp[(j + 1) * W + i + 1] = Math.min(dp[(j + 1) * W + i + 1], d + 1.2);   // another letter
+  }
+  return dp[m * W + n];
+}
+/* the typed word as the scorer reads it: long-vowel marks as doubled letters, a capital inside the word kept as a mark */
+function typedLetters(piece, keepFirst) {
+  const s = String(piece).normalize('NFC').replace(/[āáâ]/g, 'aa').replace(/[īíî]/g, 'ii').replace(/[ūúû]/g, 'uu').replace(/[’‘]/g, "'");
+  const rest = s.slice(1).replace(/[A-Z]/g, x => /[TDRNHSZ]/.test(x) ? x : x.toLowerCase());
+  return (keepFirst && /[TD]/.test(s[0]) ? s[0] : s[0].toLowerCase()) + rest;
+}
+/* what typing the sounds C as piece costs. A first capital is a mark (Rekhta's Thanḍī, Dūbtī) or only a capital (Dil, Tum): the
+   cheaper reading counts */
+function typedCost(piece, C) {
+  const a = typingCost(typedLetters(piece), C);
+  return /^[TD]/.test(piece) ? Math.min(a, typingCost(typedLetters(piece, true), C)) : a;
+}
+/* a spelling's consonant skeleton: its lax casual key without vowels, y, h or doubled letters */
+function consonantSkeleton(s) { return casualKey(s, 2).replace(/[aeiouy]/g, '').replace(/h/g, '').replace(/(.)\1+/g, '$1'); }
+/* the typed word's keys with the casual spellings undone */
+function typedKeys(t) {
+  const keys = new Set([t.toLowerCase()]);
+  const alt = (re, to) => [...keys].forEach(k => { const v = k.replace(re, to); if (v !== k) keys.add(v); });
+  alt(/ai/g, 'e'); alt(/au|ou|ow/g, 'o'); alt(/e(?=h)/g, 'a'); alt(/a$/, 'ah'); alt(/([aeiou])y(?=[aeiou])/g, '$1');
+  alt(/x/g, 'kh'); alt(/g(?!h)/g, 'gh'); alt(/k(?!h)/g, 'q'); alt(/f/g, 'ph'); alt(/j/g, 'z'); alt(/^kh(?=[aeiou])/, 'khv');
+  alt(/(?<=.)d(?!h)/g, 'r'); alt(/(?<=.)dh/g, 'rh');
+  return [...keys].slice(0, 24);
+}
+/* the index the scorer looks in, built on first use: every spelling of Pritchett's corpora and of the poets' list, under its lax
+   casual key and its consonant skeleton. A test that swaps ROMAN_FALLBACK calls casualIndexReset after it. */
+let _casualIndex = null;
+const _casualCands = new Map();
+function casualIndexReset() { _casualIndex = null; _casualCands.clear(); }
+function casualIndex() {
+  if (_casualIndex) return _casualIndex;
+  const byKey = new Map(), bySkel = new Map(), seen = new Set();
+  const add = (a, n, src) => {
+    if (!a || /[\s-]/.test(a) || seen.has(a)) return;
+    seen.add(a);
+    const e = { a, n, src };
+    [[byKey, casualKey(a, 2)], [bySkel, consonantSkeleton(a)]].forEach(([m, k]) => { if (!m.has(k)) m.set(k, []); m.get(k).push(e); });
+  };
+  Object.keys(ASCII_FREQ).forEach(a => add(a, ASCII_FREQ[a], 'list'));
+  if (typeof ROMAN_FALLBACK !== 'undefined') Object.keys(ROMAN_FALLBACK).forEach(k => add(ROMAN_FALLBACK[k], CASUAL_SCORE.poetsN, 'poets'));
+  bySkel.forEach(arr => arr.sort((a, b) => b.n - a.n));
+  return (_casualIndex = { byKey, bySkel });
+}
+/* the typed word's candidate spellings, cheapest first: [{a: ASCII, tc: typing cost, cost: tc less its commonness, n, src}] */
+function casualCands(piece) {
+  if (_casualCands.has(piece)) return _casualCands.get(piece);
+  const P = CASUAL_SCORE, idx = casualIndex(), seen = new Map(), T = typedLetters(piece);
+  const consider = e => {
+    if (seen.has(e.a)) return;
+    const tc = typedCost(piece, asciiSounds(e.a));
+    seen.set(e.a, { a: e.a, tc, n: e.n, src: e.src, cost: tc - P.beta * Math.log(1 + e.n) + (e.src === 'poets' ? P.poets : 0) });
+  };
+  typedKeys(T).forEach(k => (idx.byKey.get(casualKey(k, 2)) || []).forEach(consider));
+  (idx.bySkel.get(consonantSkeleton(T.toLowerCase())) || []).slice(0, P.skelMax).forEach(consider);
+  const out = [...seen.values()].sort((a, b) => a.cost - b.cost);
+  _casualCands.set(piece, out);
+  return out;
 }
 /* Hindustani Metaphone / phonetic key: normalizes multi-variant casual Roman
    (kareeb ~ qariib, khwaab ~ xwab ~ khvaab, phool ~ fool, shikwa ~ shikvah, etc.)
@@ -680,7 +832,15 @@ function casualPiece(piece, i, tokHasHyphen, prev, next) {
   const cleanApos = piece.toLowerCase().replace(/['’]/g, '');
   if (cleanApos === 'buad' || cleanApos === 'buwad') return { s: 'buvad', tier: 'known' };
   if (CASUAL_ALIAS[piece] || CASUAL_ALIAS[plain]) return { s: CASUAL_ALIAS[piece] || CASUAL_ALIAS[plain], tier: 'known' };
-  if (plain.length < 2 || !/^[a-zāīū.]+$/.test(plain) || CASUAL_SPECIAL.test(piece)) return { s: rekhtaMarks(piece), tier: 'typed' };
+  const apos = /['’]/.test(piece.slice(1, -1));   // an apostrophe inside a word marks an ʿain or a hamza (mo'tabar, jur'at)
+  if (plain.length < 2 || !/^[a-zāīū.'’]+$/.test(plain) || CASUAL_SPECIAL.test(piece)) return { s: rekhtaMarks(piece), tier: 'typed' };
+  /* a capital inside the word (baRi, roTi) or an apostrophe is a precise mark: the list word closest to it, if a typist could have
+     meant it; otherwise the letter rules read the marks, and the vowels are still a guess */
+  if (CASUAL_CAPITAL.test(piece) || apos) {
+    const best = casualCands(piece)[0];
+    if (best && best.tc <= CASUAL_SCORE[apos ? 'tau' : 'tauCap']) return { s: best.a, tier: 'known' };
+    return { s: rekhtaMarks(piece), tier: 'guess' };
+  }
   if (!tokHasHyphen) {   // hyphenated compounds keep their own pieces
     const c = collocSpelling(casualKey(plain, 1), prev, next);
     if (c) return { s: c, tier: 'known' };
@@ -694,18 +854,29 @@ function casualPiece(piece, i, tokHasHyphen, prev, next) {
     const n = (typeof KI_NEXT !== 'undefined' && KI_NEXT[casualKey(next.split('-')[0], 1)]) || null;
     return { s: n ? (n[1] > 2 * n[0] ? 'kii' : 'kih') : 'kii', tier: 'known' };
   }
-  if (CASUAL_ALIAS[plain]) return { s: CASUAL_ALIAS[plain], tier: 'known' };
-  /* Pritchett's strict and loose matches, then the poets' verified word list, and only then her laxest match (o~u, e~i), which
-     otherwise hijacks khud as khod (کھود) */
+  /* Pritchett's strict and loose matches stand, unless what was typed clearly says another of her spellings (chaand: chāñd, not
+     chand; chhup: chhup, not chup); then the poets' verified list; then the closest spelling of either, if a casual typist would
+     type it so (casualCands); only then her laxest match (o~u, e~i), which otherwise hijacks khud as khod (کھود) */
+  const P = CASUAL_SCORE, cands = casualCands(piece), best = cands[0];
   let h;
-  if ((h = casualLookup(plain, 0, 1))) return { s: h, tier: 'known' };
+  if ((h = casualLookup(plain, 0, 1))) {
+    const own = cands.find(c => c.a === h), ownCost = own ? own.tc : typedCost(piece, asciiSounds(h));
+    if (best && best.a !== h && ownCost >= P.strong && best.tc <= ownCost - P.margin && best.tc <= P.tau) return { s: best.a, tier: 'known' };
+    return { s: h, tier: 'known' };
+  }
   if (plain.includes('eh')) {
     const ah = plain.replace(/e(?=h)/g, 'a');
     if ((h = casualLookup(ah, 0, 1))) return { s: h, tier: 'known' };
     if ((h = rekhtaFallback(ah))) return { s: h, tier: 'poets' };
-    if ((h = casualLookup(ah, 2, 2))) return { s: h, tier: 'loose' };
   }
   if ((h = rekhtaFallback(plain))) return { s: h, tier: 'poets' };
+  if (best && best.tc <= P.tau) {
+    /* the same word as an inflection rule builds it is spelled the rule's way: a future apart, as Urdu writes it now (jaayega:
+       جائے گا, where Pritchett's corpora join it, جاۓگا) */
+    const ud = (typeof tryUrMorphDecompose === 'function') ? tryUrMorphDecompose(plain) : null;
+    if (ud && ud.ascii && ud.ascii.replace(/\s/g, '') === best.a) return { s: ud.ascii, tier: 'derived', urDec: ud };
+    return { s: best.a, tier: best.src === 'poets' ? 'poets' : 'loose' };
+  }
   if ((h = casualLookup(plain, 2, 2))) return { s: h, tier: 'loose' };
   var faDec = (typeof tryFaDecompose === 'function') ? tryFaDecompose(plain) : null;
   if (faDec && faDec.ascii) return { s: faDec.ascii, tier: 'persian' };
@@ -737,16 +908,9 @@ function romanToAscii(str) {
   let s = casualRomanLine(str).toLowerCase();
   /* standalone / fused iẓāfat: 'dil e nādāñ', 'dile nādāñ' -> dil-e */
   s = s.replace(/([a-zāīūñḍṭṛḥ])\s+e(?=\s)/g, '$1-e')
-       .replace(/\bdile\b/g, 'dil-e')
-       .replace(/\bnadan\b/g, 'naadaa;n')
        /* Urdu words do not end in a short -a after i: diya, liya, kiya, dariya = -iyā */
        .replace(/([a-z]i)ya\b/g, '$1yaa');
-  s = s.replace(/\bhua\b/g, 'hu))aa')
-       .replace(/\bkya\b/g, 'kyaa')
-       .replace(/\bdava\b/g, 'davaa')
-       .replace(/\baaxir\b/g, 'aa;xir')
-       .replace(/\bnaadaan\b/g, 'naadaa;n')
-       .replace(/[āáâ]/g, 'aa')
+  s = s.replace(/[āáâ]/g, 'aa')
        .replace(/[īíî]/g, 'ii')
        .replace(/[ūúû]/g, 'uu')
        .replace(/ñ/g, ';n')

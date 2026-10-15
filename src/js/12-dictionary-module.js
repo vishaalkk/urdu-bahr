@@ -347,6 +347,17 @@ const DICT_STORE = {
     return this.loadPromise;
   },
 
+  /* the saved copy only, when it carries this build's fingerprint: nothing is downloaded. Transcribe opens with the dictionary a
+     returning visitor already has (the forms, sound-alikes and underlines need it), without waiting for a click */
+  async loadCached() {
+    if (this.status !== 'unloaded') return this.status === 'ready';
+    const cached = await this.readFromIDB();
+    if (this.status !== 'unloaded' || !cached || cached.hash !== DICT_BUNDLE_HASH || !Array.isArray(cached.data)) return this.status === 'ready';
+    this.initEntries(cached.data);
+    this.status = 'ready';
+    return true;
+  },
+
   initEntries(data) {
     this.entries = data;
     this.indexUr = new Map();
@@ -510,6 +521,17 @@ const DICT_STORE = {
       if (sc && !out.some(o => dictFoldUr(o.ur) === dictFoldUr(sc.ur))) out.push(sc);
     });
     return out;
+  },
+
+  /* an Urdu spelling the Urdu dictionaries have as a headword (Platts or Fallon), not one only Steingass' Persian lists */
+  isUrduWord(ur) {
+    if (!ur || !this.indexUr) return false;
+    this._urduWord = this._urduWord || new Map();
+    if (!this._urduWord.has(ur)) {
+      const f = dictFoldUr(ur);
+      this._urduWord.set(ur, this.lookupDirect(ur).some(e => e.dict !== 'Steingass' && dictFoldUr(e.ur) === f));
+    }
+    return this._urduWord.get(ur);
   },
 
   /* The entries a spelling names, without inflection: its exact Urdu (folded, unspaced, the looser key) or its typed Roman */

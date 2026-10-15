@@ -7,6 +7,13 @@
    "tier": "known",
    "scan": "آئے"
   },
+  "aaein": {
+   "ur": "آئیں",
+   "ro": "āʾeñ",
+   "hi": "आएं",
+   "tier": "form",
+   "scan": "آئیں"
+  },
   "aaii": {
    "ur": "آئی",
    "ro": "āʾī",
@@ -807,9 +814,9 @@
   },
   "fikar": {
    "ur": "فکر",
-   "ro": "fikar",
+   "ro": "fikr",
    "hi": "फ़िकर",
-   "tier": "guess",
+   "tier": "loose",
    "scan": "فکر"
   },
   "gaae": {
@@ -1337,6 +1344,13 @@
    "tier": "derived",
    "scan": "کیجیے گا"
   },
+  "kismat": {
+   "ur": "قسمت",
+   "ro": "qismat",
+   "hi": "क़िस्मत",
+   "tier": "loose",
+   "scan": "قسمت"
+  },
   "kitaabon": {
    "ur": "کتابوں",
    "ro": "kitāboñ",
@@ -1468,7 +1482,7 @@
    "ro": "laṛkiyāñ",
    "hi": "लड़कियाँ",
    "tier": "form",
-   "scan": "لرکین"
+   "scan": "لڑکیاں"
   },
   "larzaye": {
    "ur": "لرزائے",
@@ -2065,6 +2079,20 @@
    "tier": "known",
    "scan": "عظمیٰ"
   },
+  "vazoo": {
+   "ur": "وضو",
+   "ro": "vuẓū",
+   "hi": "वुज़ू",
+   "tier": "known",
+   "scan": "وضو"
+  },
+  "vazu": {
+   "ur": "وضو",
+   "ro": "vuẓū",
+   "hi": "वुज़ू",
+   "tier": "known",
+   "scan": "وضو"
+  },
   "vo": {
    "ur": "وہ",
    "ro": "vuh",
@@ -2078,6 +2106,20 @@
    "hi": "वो",
    "tier": "known",
    "scan": "وہ"
+  },
+  "wazoo": {
+   "ur": "وضو",
+   "ro": "vuẓū",
+   "hi": "वुज़ू",
+   "tier": "known",
+   "scan": "وضو"
+  },
+  "wazu": {
+   "ur": "وضو",
+   "ro": "vuẓū",
+   "hi": "वुज़ू",
+   "tier": "known",
+   "scan": "وضو"
   },
   "wo": {
    "ur": "وہ",
@@ -2266,7 +2308,6 @@
    "گھات ghāt"
   ],
   "ghaza": [
-   "گھز ghaza",
    "غزا ġhazā",
    "قضا qaẓā"
   ],
@@ -2467,8 +2508,6 @@
   ]
  },
  "todo": {
-  "aaein": "آئیں",
-  "kismat": "قسمت",
   "murtaza": "مرتضیٰ",
   "murtazaa": "مرتضیٰ",
   "sadayein": "صدائیں",

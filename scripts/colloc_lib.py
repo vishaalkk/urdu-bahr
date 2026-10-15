@@ -61,11 +61,19 @@ _LETTERS = [('ā', 'aa'), ('ī', 'ii'), ('ū', 'uu'), ('ñ', ';N'), ('ġh', ';G'
             ('ḥ', ';h'), ('ʿ', '(('), ('’', '))'), ('ʾ', '))'), ("'", '))')]
 
 
+# Rekhta's capitals are letters: Ḍ is ڑ (ṛ: bichhḌe), D is ڈ (Dūbtī), T is ٹ (kaaTī). Read before the rest is lowercased.
+_REKHTA_CAPS = [('Ḍ', '\x01'), ('D', '\x02'), ('T', '\x03')]
+_REKHTA_CAPS_ASCII = [('\x01', ';R'), ('\x02', ';D'), ('\x03', ';T')]
+
+
 def letter_ascii(ro):
-    s = ro.lower()
-    for a, b in _LETTERS:
+    s = ro
+    for a, b in _REKHTA_CAPS:
         s = s.replace(a, b)
-    return re.sub(r';N(?=g|j|d|k|t|ch)', 'n', s)
+    s = s.lower()
+    for a, b in _LETTERS + _REKHTA_CAPS_ASCII:
+        s = s.replace(a, b)
+    return re.sub(r';N(?=g|j|d|k|t|ch|;[DT])', 'n', s)
 
 
 class Corpus:

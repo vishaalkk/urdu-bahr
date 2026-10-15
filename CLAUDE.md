@@ -81,8 +81,17 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   `tests/benchmark_transcribe.js` (Transcribe's own output on held-out poets, incl. underlining: caught / calm),
   `tests/benchmark_readings.js` (Platts homographs offered), `tests/benchmark_lang.js` (line language); `tests/dictionary_cache.js`
   (IndexedDB copy kept per fingerprint); `tests/derived_data.js` (roman_fallback / fa_scan / lang_words match their builders: rebuild
-  data with its script when its code changes). Shared: `tests/lib_page.js` (the built page in a vm), `tests/lib_bench.js` (folds, floors). Replace exceptions with general
+  data with its script when its code changes). Shared: `tests/lib_page.js` (the built page in a vm), `tests/lib_bench.js` (folds, floors;
+  `roFold` reads Rekhta's Ḍ as ṛ and Pritchett's final silent -ah as Rekhta's -a, notation, not error). Replace exceptions with general
   rules checked against the dictionary; never add an alias without a golden row. One converter from dictionary Roman: `scholarRoToAscii`.
+  **Typed-word scorer** (`casualCands`, `typingCost`, `CASUAL_SCORE`, `05-translit-helpers.js`): a typed word no list matches as typed
+  is looked up in Pritchett's list and the poets' list under its casual-spelling variants (d/D for ṛ, g for ġh, k for q, f for ph, ai
+  for e, a final -a for a silent -ah …) and its consonant skeleton, and scored by how a typist spells each sound (`SOUND_TYPED`) less
+  its commonness. A capital or apostrophe inside a word (baRi, mo'tabar) is a mark it reads, not a reason to skip the lists. A list
+  word typed as the list spells it stands unless the typing clearly says otherwise (chaand: چاند). Before adding an alias, check the
+  scorer cannot reach the word: `tests/transcribe_golden.js` fails on an alias whose word comes out the same without it. Aliases are
+  for closed-class spellings (yih, vuh, nah; un ko; gaʾe) and words no list has (peṭ, nain, vuẓū). The poets' list
+  (`data/roman_fallback.json`) is verified with the aliases off (an alias answering first once let ڈ through for ڑ: pade = pa;De).
 - **Collocations**: `data/collocations.json` (`scripts/build_collocations.py`) holds neighbour rules for typed Roman
   (`collocSpelling` in `05-translit-helpers.js`). Judge changes with `scripts/colloc_benchmark.py` and `scripts/casual_roman_eval.js`
   (typed Roman → right Urdu word, table mined without the test poets). `tests/benchmark.js` `typed.*` goes the other way (Urdu → Roman)

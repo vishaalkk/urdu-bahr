@@ -361,6 +361,8 @@ function trBuild(text, opts) {
            dictionary word, when the dictionary has one (formsFor, src/js/12-dictionary-module.js) */
         var forms = (!scripted && lineLang !== 'fa' && /^(guess|derived|persian)$/.test(p.tier) && !/-/.test(p.src) && typeof DICT_STORE !== 'undefined' && DICT_STORE.status === 'ready')
           ? DICT_STORE.formsFor(p.src) : [];
+        /* a capital inside the word is a precise mark (roTi: ṭ): a form that has another letter there is another word (rotī) */
+        if (forms.length && CASUAL_CAPITAL.test(p.src)) forms = forms.filter(function (f) { return typedCost(p.src, asciiSounds(f.ascii)) <= CASUAL_SCORE.tauCap; });
         /* a reading the lists or the Persian splitter gave stays unless the dictionary's is closer to what was typed; a tie goes to
            the dictionary (its form is checked), except against a hand-listed inflection (OBL_NOUN_MAP: shamon is shāmoñ) */
         if (forms.length && p.tier !== 'guess' && p.ascii && !forms.some(function (f) { return f.ascii === p.ascii; })) {
@@ -618,16 +620,20 @@ function trEditHtml(w, script) {
 }
 
 /* how many alternatives make a word worth a second look. For a word no list vouches for, any. For a word Pritchett's or the poets'
-   lists know: those from the lists and rules, and a dictionary word spelled otherwise only when it is as close to what was
-   typed as the list's reading (the list may have the wrong word); the same spelling's other readings are offered on a tap,
-   not underlined. Tuned on tests/benchmark_transcribe.js (caught: no silent errors; calm: no needless underlines). */
+   lists know, only another Urdu word (the same Urdu in another Roman is offered on a tap, not underlined): one from the lists and
+   rules; a regular form of a dictionary word as close to what was typed as the list's reading (the list may have the wrong
+   word); and a dictionary word that sounds the same only if an Urdu dictionary has it (Platts or Fallon: a word only Steingass
+   lists, such as haiʿ for hai, is no rival). Tuned on tests/benchmark_transcribe.js (caught: no silent errors; calm: no
+   needless underlines). */
 function trRivals(p, cands) {
   var alts = cands.filter(function (c) { return !c.isDefault; });
   if (!/^(known|poets)$/.test(p.tier) || !cands.length || typeof typedDistance !== 'function') return alts.length;
-  var own = typedDistance(p.src, cands[0].ro || '');
+  var own = typedDistance(p.src, cands[0].ro || ''), u0 = dictFoldUr(cands[0].ur || '');
   return alts.filter(function (c) {
-    if (c.tag === 'reading' || c.tag === 'phonetic') return false;
-    return !/^(lexicon|form)$/.test(c.tag) || typedDistance(p.src, c.ro || '') <= own;
+    if (c.tag === 'reading' || c.tag === 'phonetic' || dictFoldUr(c.ur || '') === u0) return false;
+    if (c.tag === 'form') return typedDistance(p.src, c.ro || '') <= own;
+    if (c.tag === 'lexicon') return typedDistance(p.src, c.ro || '') <= own && DICT_STORE.isUrduWord(c.ur);
+    return true;
   }).length;
 }
 
@@ -1082,6 +1088,9 @@ function mountTranscribe(params) {
   else if (!ta.value) ta.value = trLoad('trText', '') || '';
   TR.open = null;
   trRender();
+  /* a dictionary this browser saved before is read at once (IndexedDB, no download); a first visit still loads it on a click */
+  if (typeof DICT_STORE !== 'undefined' && DICT_STORE.status === 'unloaded' && typeof DICT_STORE.loadCached === 'function')
+    DICT_STORE.loadCached().then(function (ready) { if (ready) trRender(); }, function () {});
 }
 
 /* self-mount: this file loads after 21-learn.js's initial handleRoute(), like 23-practice.js */

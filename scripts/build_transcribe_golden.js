@@ -31,7 +31,17 @@ const ruleExamples = ('duayein hawayein sadayein duaon hawaon basaaunga sajaaoon
     'kijiye kijiyega dijiye lijiyega naalaaiqam naadaan bedaar dilam dastam').split(' ');
 const pinned = 'gaye aaye naye koyi gada ham rahguzaron baich bech mail sair kahat main lab gul fikar ishq faida kismat'.split(' ')
     // words that left the todo list: once right, they stay right
-    .concat('murjhaye larzaye uthaye padhoonga larkiyan tasveeren muhabbaten huyein huyen basaaye basaayi duaon'.split(' '));
+    .concat('murjhaye larzaye uthaye padhoonga larkiyan tasveeren muhabbaten huyein huyen basaaye basaayi duaon'.split(' '))
+    // words that had an alias until the typed-word scorer (casualCands) read them: the scorer must keep giving what the alias gave
+    .concat(('yeh woh voh buad buwad hua kya dava naadaan aaxir nahin mein main hai hain hun hoon gayin gayi gayee aae aayi ' +
+        'aayee aaii aayein aayen laaye laae laayi laayee laayein laayen paaye paae paayi paayee paayein paayen khaaye ' +
+        'khaae khaayi khaayee khaayein khaayen gaayein gaayen royi royee dhoye soye khoye huye huyi huyee nayi nayee ' +
+        'jaaye jaye koyi bataaye bataye dikhaaye dikhaye dikhaayi dikhayi dikhaayee sunaaye sunaye sunaayi sunayi ' +
+        'sunaayee banaaye banaye banaayi banayi banaayee lagaaye lagaye lagaayi lagayi lagaayee bulaye bulaaye bulayi ' +
+        'bulaayi chalaye chalaaye chalayi chalaayi jalaye jalaaye jalayi jalaayi milaye milaaye milayi milaayi samaayi ' +
+        'samayi padi pada pade baDi baDa chhod chhoD chhoda chhoDa chhode chhoDe chhodi chhoDi ghadi ghaDi bichhad ' +
+        'bichhaD daud dauda dauD chadh chadha chaDh chaDha badh badha baDh baDha uda uD uDa faida jaag baich daikh ' +
+        'bhaid paish').split(' '));
 
 const old = fs.existsSync(OUT) ? JSON.parse(fs.readFileSync(OUT, 'utf8')) : {};
 const todo = old.todo || {};

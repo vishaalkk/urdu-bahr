@@ -436,9 +436,26 @@ ok(run(`DICT_STORE.lookup('ہارنا').some(e => e.dict === 'Fallon')`), 'Fallo
 // 48. Casual typing drops vowel length: in a Persian line mara is مرا marā (the Persian list), not the Urdu list's مارا mārā
 ok(build('mara az khud khabar nist').lines[0].out.ur.split(' ')[0] === 'مرا', 'mara in a Persian line is مرا: ' + build('mara az khud khabar nist').lines[0].out.ur);
 ok(build('ab', { lang: 'fa' }).lines[0].out.ur === 'اب', 'ab in a Persian line stays اب (the loose آب is the same word)');
-// 49. A word no list reads offers the dictionary word one short vowel away first, without making it the reading
+// 49. Casual typing drops a short vowel (faasla for fāṣilah): the scorer reads Pritchett's word, and still underlines it (a near
+//     match is worth a look)
 const faasla = run(`(function(){ var w = trBuild('faasla').lines[0].words[0], p = w.pieces[0]; return [w.needsCheck, trCands(p, p.def, 'ur').map(function (c) { return c.ur; })]; })()`);
-ok(faasla[0] && faasla[1][1] === 'فاصلہ', 'faasla is underlined and offers فاصلہ next: ' + faasla[1].join(' · '));
+ok(faasla[0] && faasla[1][0] === 'فاصلہ', 'faasla reads فاصلہ and is underlined: ' + faasla[1].join(' · '));
+
+// 49b. The typed-word scorer (casualCands): every casual spelling of a word the lists have reaches it, with no alias. Each of
+//      these was once an alias or a reported bug: d or D for ṛ, ai for e, g for ġh, k for q, f for ph, a dropped or added short
+//      vowel, a final -a for a silent h, a doubled consonant typed once, a typed long vowel, a capital as a mark
+[['padi', 'پڑی'], ['chhod', 'چھوڑ'], ['ghadi', 'گھڑی'], ['chadh', 'چڑھ'], ['daikh', 'دیکھ'], ['paish', 'پیش'], ['bhaid', 'بھید'],
+  ['gazal', 'غزل'], ['wakt', 'وقت'], ['takdir', 'تقدیر'], ['furkat', 'فرقت'], ['laikin', 'لیکن'], ['mout', 'موت'], ['mosam', 'موسم'],
+  ['subah', 'صبح'], ['ishk', 'عشق'], ['gubaar', 'غبار'], ['mohalla', 'محلہ'], ['chaand', 'چاند'], ['chhup', 'چھپ'],
+  ['taDap', 'تڑپ'], ['ThanDi', 'ٹھنڈی'], ['toD', 'توڑ'], ["ta'alluq", 'تعلق']].forEach(([w, ur]) => {
+  const scan = (run(`lineScripts(${J(w)}, { skipKnown: true })`) || {}).ur;
+  ok(scan === ur, `casual ${w} reads ${ur} (Scan): ${scan}`);
+});
+// the scorer keeps a list word typed as the list spells it, and the special rules before it
+ok(run(`casualPiece('avaz', 0, false, '', '')`).s === 'aavaaz', 'avaz stays āvāz (a silent ʿain does not make it ʿavaẓ)');
+ok(run(`casualPiece('Dil', 0, false, '', '')`).s === 'dil' && run(`casualPiece('Tum', 0, false, '', '')`).s === 'tum', 'a first capital is only a capital');
+ok(/ٹ/.test(run(`lineScripts('luT', { skipKnown: true })`).ur) && !/ت/.test(run(`lineScripts('luT', { skipKnown: true })`).ur), 'luT has ṭ (ٹ): a capital mark is exact');
+ok(run(`casualPiece('jaayega', 0, false, '', '')`).s === 'jaa))e gaa', 'a future is written apart (جائے گا), as an inflection rule spells it');
 
 // 50. Bidirectional collocations (LR rules): settles ambiguous words based on surrounding context
 ok(run(`collocSpelling('rah', 'abhi', 'men')`) === 'raah', 'abhi rah men disambiguates to rāh via LR rule');
