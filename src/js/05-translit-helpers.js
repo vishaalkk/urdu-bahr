@@ -186,7 +186,8 @@ const CASUAL_ALIAS = { ye: 'yih', yeh: 'yih', yah: 'yih', vo: 'vuh', wo: 'vuh', 
   garchi: 'garchih', garche: 'garchih',
   jag: 'jag', jaag: 'jaag',
   baich: 'bech', daikh: 'dekh', bhaid: 'bhed', paish: 'pesh', pait: 'pe;t', paid: 'pe;R',
-  ghat: 'gha;t', ghaat: 'ghaa;t', nain: 'nain', naina: 'nainaa' };
+  ghat: 'gha;t', ghaat: 'ghaa;t', nain: 'nain', naina: 'nainaa',
+  vazoo: 'vu.zuu', wazoo: 'vu.zuu', vazu: 'vu.zuu', wazu: 'vu.zuu' };
 function casualKey(s, level) {   // level 0 strict (long vowels kept), 1 loose, 2 lax (also o~u, e~i): mirrors _casual_key in build_app.py
   s = s.normalize('NFC').toLowerCase().replace(/ć/g, 'ch').replace(/[āáâ]/g, 'aa').replace(/[īíî]/g, 'ii').replace(/[ūúû]/g, 'uu').replace(/ee/g, 'ii').normalize('NFD').replace(/[̀-ͯ]/g, '')
     .replace(/;g/g, 'gh').replace(/;x/g, 'kh').replace(/[;.:()'’‘ʿʾ-]/g, '').replace(/oo/g, 'uu').replace(/w/g, 'v');
@@ -421,6 +422,7 @@ function scholarRoToAscii(ro, ur) {
     .replace(/[ʻ‘ʿ]/g, '((').replace(/[ʼ’ʾ']/g, '))')
     .replace(/w/g, 'v');
   if (ur && /[ہه]$/.test(ur) && /a$/.test(s)) s = s.slice(0, -1) + 'ah';
+  if (ur && /[ءؤ]$/.test(ur) && /\)\)$/.test(s)) s = s.slice(0, -2);
   return s;
 }
 

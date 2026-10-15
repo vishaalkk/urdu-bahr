@@ -37,6 +37,19 @@ def clean_text(s):
     return s.strip()
 
 
+def truncate_def(text, max_len=600):
+    if not text or len(text) <= max_len:
+        return text
+    sub = text[:max_len]
+    m = re.search(r'^(.*[.;—–])\s*.*$', sub)
+    if m and len(m.group(1)) >= max_len // 2:
+        return m.group(1).rstrip()
+    m_sp = re.search(r'^(.*\s)\S*$', sub)
+    if m_sp and len(m_sp.group(1)) >= max_len // 2:
+        return m_sp.group(1).rstrip() + '…'
+    return sub.rstrip() + '…'
+
+
 def parse_platts_page(filepath, page_num):
     with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
         html = f.read()
@@ -87,7 +100,7 @@ def parse_platts_page(filepath, page_num):
             'origin': origin,
             'page': page_num,
             'dict': 'Platts',
-            'def': main_def[:300],
+            'def': truncate_def(main_def),
             'phrases': sub_phrases[:15]
         })
 
@@ -203,7 +216,7 @@ def parse_fallon_page(filepath, page_num):
             'origin': origin,
             'page': page_num,
             'dict': 'Fallon',
-            'def': fallon_roman(main_def)[:300],
+            'def': truncate_def(fallon_roman(main_def)),
             'phrases': sub_phrases[:15]
         })
 
@@ -272,7 +285,7 @@ def main():
             ro = ro.replace('*', '').strip()
             if not fa or not ro:
                 continue
-            clean_d = clean_text(defs)[:240]
+            clean_d = truncate_def(clean_text(defs))
             key = (fa, ro, 'P', clean_d[:40])
             if key not in all_entries:
                 all_entries[key] = {

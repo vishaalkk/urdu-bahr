@@ -516,6 +516,38 @@ ok(cMisl && cMisl.a === 'mi;sl', 'trCustomChoice maps mis̤l to mi;sl: ' + (cMis
 const bMislTyped = run('trBuild("mis̤l")');
 ok(bMislTyped.lines[0].out.ur === 'مثل', 'typed mis̤l builds to مثل: ' + bMislTyped.lines[0].out.ur);
 
+// 55. vazoo ablution alias and trUseDictReading
+const bVazoo = run('trBuild("vazoo")');
+ok(bVazoo.lines[0].out.ur === 'وضو' && bVazoo.lines[0].out.ro === 'vuẓū', 'vazoo defaults to وضو vuẓū: ' + bVazoo.lines[0].out.ur + ' / ' + bVazoo.lines[0].out.ro);
+const bWazoo = run('trBuild("wazoo")');
+ok(bWazoo.lines[0].out.ur === 'وضو', 'wazoo defaults to وضو: ' + bWazoo.lines[0].out.ur);
+const spWazu = run('DICT_STORE.spelled("waẓū’", "وضؤ")');
+ok(spWazu && spWazu.ur === 'وضو', 'DICT_STORE.spelled handles waẓū’ / وضؤ: ' + (spWazu ? spWazu.ur : null));
+
+// Verify dictionary header has "Use this reading" button and trUseDictReading applies choice
+run(`
+TR.model = trBuild("vazoo");
+TR.open = { li: 0, wi: 0 };
+TR.dictTarget = "0";
+TR.dictHitIdx = 0;
+TR.choices = {};
+var wV = TR.model.lines[0].words[0];
+var dHtmlV = trDictSectionHtml(wV, wV.pieces[0]);
+`);
+const dHtmlV = run('dHtmlV');
+ok(dHtmlV.includes('tr-dict-use') && dHtmlV.includes('Applied'), 'Active dictionary reading displays applied indicator: ' + dHtmlV.slice(0, 300));
+run(`
+TR.dictHitIdx = 2; // Steingass waẓū’
+var dHtmlV2 = trDictSectionHtml(wV, wV.pieces[0]);
+`);
+const dHtmlV2 = run('dHtmlV2');
+ok(dHtmlV2.includes('Use this reading'), 'Alternate dictionary reading displays "Use this reading" button');
+run('trUseDictReading(2);');
+const chV = run('TR.choices["vazoo"]');
+ok(chV && chV.ur === 'وضؤ' && chV.ro === 'waẓū’', 'trUseDictReading applies chosen dictionary reading: ' + JSON.stringify(chV));
+const dDefFull = run('dHtmlV2');
+ok(dDefFull.includes('washing the whole face'), 'Steingass definition is not truncated mid-sentence: ' + dDefFull.slice(dDefFull.indexOf('forehead'), dDefFull.indexOf('forehead') + 60));
+
 console.log(bad ? `${bad} FAILED` : 'transcribe logic: all checks passed');
 process.exit(bad ? 1 : 0);
 

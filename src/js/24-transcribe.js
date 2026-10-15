@@ -849,6 +849,18 @@ function trDictSectionHtml(w, activeP, script) {
       }).join('') + '</div>';
   }
 
+  if (typeof TR !== 'undefined') {
+    TR._curDictReadings = distinctReadings;
+    TR._curDictPiece = p;
+  }
+
+  var curUr = (p && p.fixed && p.fixed.ur) || (p && p.ascii && typeof asciiToScripts === 'function' && asciiToScripts(p.ascii).ur) || '';
+  var curRo = (p && p.fixed && p.fixed.ro) || (p && p.ascii && typeof asciiToScripts === 'function' && asciiToScripts(p.ascii).ro) || '';
+  var isCurReading = h && ((h.ur && curUr && typeof dictFoldUr === 'function' && dictFoldUr(h.ur) === dictFoldUr(curUr)) || (h.ro && curRo && trFoldRo(h.ro) === trFoldRo(curRo)));
+  var useBtn = isCurReading
+    ? '<button type="button" class="btn sm tr-dict-use on" disabled title="Currently applied">✓ Applied</button>'
+    : '<button type="button" class="btn sm tr-dict-use" onclick="trUseDictReading(' + selIdx + ')" title="Apply ' + escapeHtml((h && (h.ur || h.ro)) || '') + ' to ' + escapeHtml(p ? p.src : '') + '">Use this reading</button>';
+
   var defText = '';
   if (h && h.all && h.all.length > 1) {
     defText = h.all.map(function (entry, idx) {
@@ -865,7 +877,8 @@ function trDictSectionHtml(w, activeP, script) {
     '<div class="tr-dict-head">' + headUr + headRo +
     '<span class="tr-dict-title">' + escapeHtml(dictTitle) + '</span>' +
     (org ? '<span class="dict-lex-badge ' + badgeCls + '">' + escapeHtml(org) + '</span>' : '') +
-    (h.page ? '<span class="dict-lex-page">p. ' + h.page + '</span>' : '') + '</div>' +
+    (h.page ? '<span class="dict-lex-page">p. ' + h.page + '</span>' : '') +
+    useBtn + '</div>' +
     '<div class="tr-dict-body">' + defText + '</div>' +
     phrasesHtml + '</div>';
 }
@@ -953,6 +966,28 @@ function trOpen(li, wi) {
 function trClose() { TR.open = null; TR.dictTarget = null; TR.dictHitIdx = null; trRender(); }
 function trSetDictTarget(t) { TR.dictTarget = t; TR.dictHitIdx = null; trRender(); }
 function trSetDictHit(idx) { TR.dictHitIdx = idx; trRender(); }
+function trUseDictReading(idx) {
+  if (!TR.open || !TR.model) return;
+  var l = TR.model.lines[TR.open.li], w = l && l.words[TR.open.wi];
+  if (!w || !w.pieces || !w.pieces.length) return;
+  var pi = (TR.dictTarget != null && w.pieces[Number(TR.dictTarget)]) ? Number(TR.dictTarget) : 0;
+  var p = w.pieces[pi];
+  if (!p) return;
+  var r = (TR._curDictReadings && TR._curDictReadings[idx]) || null;
+  if (!r) return;
+  var ur = r.ur || '';
+  var ro = r.ro || '';
+  var hi = r.hi || '';
+  if (!hi && typeof asciiToScripts === 'function' && typeof scholarRoToAscii === 'function') {
+    try { hi = asciiToScripts(scholarRoToAscii(ro, ur)).hi || ''; } catch (e) {}
+  }
+  if (!ro && typeof asciiToScripts === 'function' && typeof scholarRoToAscii === 'function') {
+    try { ro = asciiToScripts(scholarRoToAscii(ro, ur)).ro || r.ro; } catch (e) {}
+  }
+  TR.choices[p.key] = { t: 'f', ur: ur, ro: ro, hi: hi };
+  trSave('trChoices', TR.choices);
+  trRender();
+}
 
 function trChoiceFor(c) { return c.fixed ? { t: 'f', ro: c.fixed.ro, hi: c.fixed.hi || '', ur: c.fixed.ur || '', decomp: c.fixed.decomp || null } : { t: 'a', a: c.ascii }; }
 function trOpenPiece(pi) {
