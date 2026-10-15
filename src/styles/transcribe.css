@@ -8,6 +8,7 @@
 
 .tr-controls { margin: var(--sp-2) 0 var(--sp-3); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--sp-2) var(--sp-4); }
 .tr-script-switch { display: inline-flex; gap: var(--sp-3); align-items: center; }
+.tr-style-switch .tr-script-btn { font-size: 12px; }
 .tr-script-btn {
   font-family: var(--sans);
   font-size: 13px;

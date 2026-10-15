@@ -585,6 +585,18 @@ ok(rdsRahi[0].ro === 'rahnā' && (rdsRahi[0].dict === 'Platts' || rdsRahi[0].dic
 const rdsBari = run('rdsBari');
 ok(rdsBari.some(r => r.ro === 'baṛā'), 'baRi readings include adjective base baṛā: ' + JSON.stringify(rdsBari.map(r => r.ro)));
 
+// 56. Roman style: Modern spells the commonest words as most people do (woh, ki, chaen), Classical as Pritchett; the Urdu is the same
+run('TR.style = "modern"');
+const modern = build('vo kahta hai ki chain nahin').lines[0].out;
+run('TR.style = "classical"');
+const classical = build('vo kahta hai ki chain nahin').lines[0].out;
+ok(modern.ro === 'woh kahtā hai ki chaen nahin' && classical.ro === 'vuh kahtā hai kih chain nahīñ' && modern.ur === classical.ur,
+  'Modern / Classical Roman, same Urdu: ' + modern.ro + ' | ' + classical.ro);
+// a plain Roman typed in the box for the word shown keeps the word and that Roman
+const pChain = run('trBuild("chain").lines[0].words[0].pieces[0]');
+const cChaen = run(`trCustomChoice("chaen", ${J(pChain)})`);
+ok(cChaen && cChaen.ur === 'چین' && cChaen.ro === 'chaen', 'chaen typed for chain keeps چین with Roman chaen: ' + J(cChaen));
+ok(build('chain', { choices: { chain: cChaen } }).lines[0].out.ro === 'chaen', 'the kept Roman is shown');
 console.log(bad ? `${bad} FAILED` : 'transcribe logic: all checks passed');
 process.exit(bad ? 1 : 0);
 

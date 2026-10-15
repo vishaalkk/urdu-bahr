@@ -3139,6 +3139,7 @@ html[data-script="ro"] .pr-line, html[data-script="hi"] .pr-line { font-family: 
 
 .tr-controls { margin: var(--sp-2) 0 var(--sp-3); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--sp-2) var(--sp-4); }
 .tr-script-switch { display: inline-flex; gap: var(--sp-3); align-items: center; }
+.tr-style-switch .tr-script-btn { font-size: 12px; }
 .tr-script-btn {
   font-family: var(--sans);
   font-size: 13px;
@@ -5249,6 +5250,7 @@ html[data-script="ascii"] .fa-couplet-line.fa-hi { display: none; }
     <div class="tr-col tr-col-out">
       <div class="tr-pane-head tr-controls tr-out-head">
         <div class="tr-script-switch" id="trScriptBtns" role="group" aria-label="Script to show"></div>
+        <div class="tr-script-switch tr-style-switch hidden" id="trStyleBtns" role="group" aria-label="Roman style"></div>
       </div>
 
       <div class="tr-out-wrap">
@@ -22077,6 +22079,17 @@ var TR_TRAIL = /[.,;:!?"“”‘’'«»\]}>—–…،۔؟؛]+$/;
 var TR_LETTER = /[a-zāīūñḍṭṛḥṣẓżḳġʿʾ]/i;
 var TR_SEVERITY = { guess: 4, loose: 3, derived: 3, persian: 2, form: 2, you: 1 };
 var TR_SCRIPTS = [['ro', 'Roman'], ['ur', 'اردو'], ['fa', 'فارسی'], ['hi', 'हिन्दी']];
+/* Roman style. Classical is Pritchett's own spelling (vuh, yih, kih). Modern spells the commonest words as most people write them
+   today; only the Roman changes, never the Urdu, the Devanagari or the scansion. A word's own choice (typed in its box) wins over both. */
+var TR_STYLES = [['classical', 'Classical'], ['modern', 'Modern']];
+var TR_MODERN_RO = { vuh: 'woh', yih: 'yeh', kih: 'ki', nah: 'na', chain: 'chaen', 'meñ': 'mein', 'haiñ': 'hain', 'nahīñ': 'nahin',
+  'kyūñ': 'kyun', 'yūñ': 'yun', 'hūñ': 'hun', 'maiñ': 'main' };
+function trStyleRo(ro) {
+  if (TR.style !== 'modern' || !ro) return ro;
+  return String(ro).split(' ').map(function (w) {
+    return w.split('-').map(function (pc) { return Object.prototype.hasOwnProperty.call(TR_MODERN_RO, pc) ? TR_MODERN_RO[pc] : pc; }).join('-');
+  }).join(' ');
+}
 
 /* ---- script helpers ---- */
 
@@ -22485,12 +22498,13 @@ function trBuild(text, opts) {
           }
         }
         if (ch) {
-          if (ch.t === 'f') p.fixed = { ur: ch.ur || '', ro: ch.ro, hi: ch.hi || '', decomp: ch.decomp || null };
+          if (ch.t === 'f') p.fixed = { ur: ch.ur || '', ro: ch.ro, hi: ch.hi || '', decomp: ch.decomp || null, ownRo: !!ch.ownRo };
           else { p.fixed = null; p.ascii = ch.a; }
           p.chosen = true; p.baseTier = p.tier; p.tier = 'you';
         }
       });
       w.out = trWordOut(w);
+      if (!w.pieces.some(function (p) { return p.chosen && p.fixed && p.fixed.ownRo; })) w.out.ro = trStyleRo(w.out.ro);
       var worst = null;
       w.pieces.forEach(function (p) {
         if (!(p.tier in TR_SEVERITY) && p.tier !== 'known' && p.tier !== 'poets') return;
@@ -22578,7 +22592,7 @@ function trText(model, script) {
 
 /* ---- view ---- */
 
-var TR = { script: 'ro', open: null, model: null, choices: {}, timer: null, msg: '', dictTarget: null };
+var TR = { script: 'ro', style: 'classical', open: null, model: null, choices: {}, timer: null, msg: '', dictTarget: null };
 
 function trSave(key, val) { try { if (typeof store !== 'undefined' && store.set) store.set(key, val); } catch (e) {} }
 function trLoad(key, def) { try { if (typeof store !== 'undefined' && store.get) { var v = store.get(key, def); return v == null ? def : v; } } catch (e) {} return def; }
@@ -23016,6 +23030,13 @@ function trRender() {
     var cls = 'tr-script-btn tr-script-btn-' + s[0] + (TR.script === s[0] ? ' on' : '');
     return '<button type="button" class="' + cls + '" data-script="' + s[0] + '" aria-pressed="' + (TR.script === s[0]) + '" onclick="trSetScript(\'' + s[0] + '\')">' + s[1] + '</button>';
   }).join('');
+  var stb = $('trStyleBtns');
+  if (stb) {
+    stb.classList.toggle('hidden', TR.script !== 'ro');
+    stb.innerHTML = TR_STYLES.map(function (st) {
+      return '<button type="button" class="tr-script-btn' + (TR.style === st[0] ? ' on' : '') + '" aria-pressed="' + (TR.style === st[0]) + '" onclick="trSetStyle(\'' + st[0] + '\')">' + st[1] + '</button>';
+    }).join('');
+  }
   var ms = $('trMsg'); if (ms) ms.textContent = TR.msg || '';
 }
 
@@ -23027,6 +23048,7 @@ function trOnInput() {
   TR.timer = setTimeout(trRender, 120);
 }
 function trSetScript(s) { TR.script = s; trSave('trScript', s); trRender(); }
+function trSetStyle(s) { TR.style = s === 'modern' ? 'modern' : 'classical'; trSave('trRomanStyle', TR.style); trRender(); }
 function trOpen(li, wi) {
   var wasClosed = !TR.open || TR.open.li !== li || TR.open.wi !== wi;
   TR.open = wasClosed ? { li: li, wi: wi } : null;
@@ -23093,6 +23115,11 @@ function trCustomChoice(v, p) {
   var a = /[\u0900-\u097F]/.test(v) ? devToAscii(v) : romanToAscii(rekhtaMarks(v.replace(/(?<=[a-zāīūñ])R/g, ';r')));
   if (!a || !/[a-z]/i.test(a)) return null;
   if (p.script) return { t: 'f', ro: asciiToScripts(a).ro || v, hi: asciiToScripts(a).hi, ur: p.src };
+  /* plain Roman that spells the word already shown (chaen for چین, woh for وہ): the word stays, and its Roman is kept as typed
+     (a spelling with diacritics is read as one: mis̤l is miṡl) */
+  var now = p.fixed || asciiToScripts(p.ascii || ''), typed = asciiToScripts(a);
+  if (/^[a-z' -]+$/i.test(v) && now.ur && typed.ur && dictFoldUr(typed.ur) === dictFoldUr(now.ur) && v !== now.ro)
+    return { t: 'f', ur: now.ur, ro: v, hi: now.hi || typed.hi || '', ownRo: true };
   return { t: 'a', a: a };
 }
 function trCustom(pi, form) {
@@ -23140,6 +23167,7 @@ function mountTranscribe(params) {
   if (!ta) return;
   TR.script = trLoad('trScript', 'ro');
   if (!TR_SCRIPTS.some(function (s) { return s[0] === TR.script; })) TR.script = 'ro';
+  TR.style = trLoad('trRomanStyle', 'classical') === 'modern' ? 'modern' : 'classical';
   var saved = trLoad('trChoices', {});
   TR.choices = (saved && typeof saved === 'object') ? saved : {};
   if (params && params.t) ta.value = params.t;
