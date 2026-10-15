@@ -535,7 +535,7 @@ var wV = TR.model.lines[0].words[0];
 var dHtmlV = trDictSectionHtml(wV, wV.pieces[0]);
 `);
 const dHtmlV = run('dHtmlV');
-ok(dHtmlV.includes('tr-dict-use') && dHtmlV.includes('Applied'), 'Active dictionary reading displays applied indicator: ' + dHtmlV.slice(0, 300));
+ok(dHtmlV.includes('tr-dict-use') && dHtmlV.includes('Use this reading'), 'Alternate dictionary reading displays "Use this reading" button: ' + dHtmlV.slice(0, 300));
 run(`
 TR.dictHitIdx = 2; // Steingass waẓū’
 var dHtmlV2 = trDictSectionHtml(wV, wV.pieces[0]);
@@ -545,8 +545,28 @@ ok(dHtmlV2.includes('Use this reading'), 'Alternate dictionary reading displays 
 run('trUseDictReading(2);');
 const chV = run('TR.choices["vazoo"]');
 ok(chV && chV.ur === 'وضؤ' && chV.ro === 'waẓū’', 'trUseDictReading applies chosen dictionary reading: ' + JSON.stringify(chV));
+run(`
+var wVAfter = trBuild("vazoo", { choices: TR.choices }).lines[0].words[0];
+var dHtmlVApplied = trDictSectionHtml(wVAfter, wVAfter.pieces[0]);
+`);
+const dHtmlVApplied = run('dHtmlVApplied');
+ok(dHtmlVApplied.includes('Applied'), 'Active dictionary reading displays applied indicator: ' + dHtmlVApplied.slice(0, 300));
 const dDefFull = run('dHtmlV2');
 ok(dDefFull.includes('washing the whole face'), 'Steingass definition is not truncated mid-sentence: ' + dDefFull.slice(dDefFull.indexOf('forehead'), dDefFull.indexOf('forehead') + 60));
+
+// 56. Inflected forms surface their lemma definitions: rahi -> rahnā (verb), baRi -> baṛā (adj)
+run(`
+var wRahi = trBuild("rahi").lines[0].words[0];
+var dRahi = trDictSectionHtml(wRahi, wRahi.pieces[0]);
+var rdsRahi = TR._curDictReadings.slice(0, 3);
+var wBari = trBuild("baRi").lines[0].words[0];
+var dBari = trDictSectionHtml(wBari, wBari.pieces[0]);
+var rdsBari = TR._curDictReadings.slice(0, 3);
+`);
+const rdsRahi = run('rdsRahi');
+ok(rdsRahi[0].ro === 'rahnā' && (rdsRahi[0].dict === 'Platts' || rdsRahi[0].dict === 'Fallon'), 'rahi leads with verb infinitive rahnā: ' + JSON.stringify(rdsRahi.map(r => r.ro + ' (' + r.dict + ')')));
+const rdsBari = run('rdsBari');
+ok(rdsBari.some(r => r.ro === 'baṛā'), 'baRi readings include adjective base baṛā: ' + JSON.stringify(rdsBari.map(r => r.ro)));
 
 console.log(bad ? `${bad} FAILED` : 'transcribe logic: all checks passed');
 process.exit(bad ? 1 : 0);

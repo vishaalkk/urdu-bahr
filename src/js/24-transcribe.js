@@ -179,6 +179,7 @@ function trCands(piece, def, lang) {
   }
   if (def.fixed) add({ ro: def.fixed.ro, hi: def.fixed.hi, ur: isFa ? trUrToFa(def.fixed.ur) : def.fixed.ur, fixed: def.fixed, tag: 'persian', isDefault: true });
   else viaAscii(def.ascii, 'now', true);
+  if (piece.chosen && piece.fixed) add({ ro: piece.fixed.ro, hi: piece.fixed.hi, ur: isFa ? trUrToFa(piece.fixed.ur) : piece.fixed.ur, fixed: piece.fixed, tag: 'you' });
   if (piece.near && piece.tier === 'guess') add({ ro: piece.near.ro, hi: piece.near.hi, ur: piece.near.ur, fixed: piece.near, tag: 'lexicon' });
 
   if (isFa) {
@@ -630,10 +631,13 @@ function trRivals(p, cands) {
   }).length;
 }
 
-/* the reading shown is a regular form of a dictionary verb (hārī of hārnā, picked or given): the drawer leads with the verb */
+/* the reading shown is a regular form of a dictionary verb (hārī of hārnā, or participle rahī of rahnā): the drawer leads with the verb */
 function trIsVerbForm(p) {
-  if (!p || !p.ascii || !p.src || typeof DICT_STORE === 'undefined' || DICT_STORE.status !== 'ready') return false;
-  return DICT_STORE.formsFor(p.src).some(function (f) { return f.ascii === p.ascii && /naa$/.test(f.base || ''); });
+  if (!p || !p.src || !p.ascii || typeof DICT_STORE === 'undefined' || DICT_STORE.status !== 'ready') return false;
+  return DICT_STORE.formsFor(p.src).some(function (f) {
+    if (f.ascii !== p.ascii) return false;
+    return /naa$/.test(f.base || '') || (f.e && f.e.def && /\bperf\.\s*part\.\s*of\s+[^\s)]+nā/i.test(f.e.def));
+  });
 }
 
 /* the entries for the first of several spellings of one word that the dictionary knows */
@@ -780,6 +784,7 @@ function trDictSectionHtml(w, activeP, script) {
   });
 
   var activeRo = (p && p.fixed && p.fixed.ro) || (p && p.ro) || (w.out && w.out.ro) || src;
+  var activeUr = (p && p.fixed && p.fixed.ur) || (p && p.ascii && typeof asciiToScripts === 'function' && asciiToScripts(p.ascii).ur) || (w.out && w.out.ur) || '';
   var cleanSrc = trFoldRo(activeRo);
   var isFaMode = (typeof TR !== 'undefined' && TR.script === 'fa') || (w && w.lang === 'fa');
 
@@ -787,10 +792,15 @@ function trDictSectionHtml(w, activeP, script) {
     if (!cleanSrc) return 0;
     var cr = trFoldRo(cand.ro);
     var nasalBonus = (/[ñṅ]/.test(cand.ro || '') === /[ñṅ]/.test(activeRo || '')) ? 5 : 0;
-    if (cr === cleanSrc) return 100 + nasalBonus;
-    if (cr.replace(/na$/, '') === cleanSrc) return 90 + nasalBonus;
-    if (cr.replace(/a$/, '') === cleanSrc) return 80 + nasalBonus;
-    return cr.startsWith(cleanSrc) ? (70 + nasalBonus) : 0;
+    var urCons = function (s) { return (typeof dictFoldUr === 'function' ? dictFoldUr(s) : (s || '')).replace(/[^ابپتٹثجچحخدڈذرڑزژسشصضطظعغفقکگلمنوہیئے]/g, '').slice(0, 2); };
+    var urBonus = (activeUr && cand.ur && urCons(activeUr) === urCons(cand.ur)) ? 10 : 0;
+    if (cr === cleanSrc) return 100 + nasalBonus + urBonus;
+    // Adjective lemma: inflected ending in -i / -e matches masculine base ending in -a (e.g. baṛī/baṛe -> baṛā)
+    if (/[ie]$/.test(cleanSrc) && /a$/.test(cr) && cr.replace(/a$/, '') === cleanSrc.replace(/[ie]$/, '')) return 95 + nasalBonus + urBonus;
+    if (cr.replace(/na$/, '') === cleanSrc) return 90 + nasalBonus + urBonus;
+    if (/na$/.test(cr) && cleanSrc.startsWith(cr.replace(/na$/, ''))) return 88 + nasalBonus + urBonus;
+    if (cr.replace(/a$/, '') === cleanSrc) return 80 + nasalBonus + urBonus;
+    return cr.startsWith(cleanSrc) ? (70 + nasalBonus + urBonus) : urBonus;
   }
 
   if (!verbForm) distinctReadings.sort(function(a, b) {
@@ -856,7 +866,9 @@ function trDictSectionHtml(w, activeP, script) {
 
   var curUr = (p && p.fixed && p.fixed.ur) || (p && p.ascii && typeof asciiToScripts === 'function' && asciiToScripts(p.ascii).ur) || '';
   var curRo = (p && p.fixed && p.fixed.ro) || (p && p.ascii && typeof asciiToScripts === 'function' && asciiToScripts(p.ascii).ro) || '';
-  var isCurReading = h && ((h.ur && curUr && typeof dictFoldUr === 'function' && dictFoldUr(h.ur) === dictFoldUr(curUr)) || (h.ro && curRo && trFoldRo(h.ro) === trFoldRo(curRo)));
+  var normHUr = (typeof dictFoldUr === 'function' && h && h.ur) ? dictFoldUr(h.ur) : ((h && h.ur) || '');
+  var normCurUr = (typeof dictFoldUr === 'function' && curUr) ? dictFoldUr(curUr) : curUr;
+  var isCurReading = h && (normHUr === normCurUr) && (h.ro === curRo);
   var useBtn = isCurReading
     ? '<button type="button" class="btn sm tr-dict-use on" disabled title="Currently applied">✓ Applied</button>'
     : '<button type="button" class="btn sm tr-dict-use" onclick="trUseDictReading(' + selIdx + ')" title="Apply ' + escapeHtml((h && (h.ur || h.ro)) || '') + ' to ' + escapeHtml(p ? p.src : '') + '">Use this reading</button>';
@@ -985,6 +997,7 @@ function trUseDictReading(idx) {
     try { ro = asciiToScripts(scholarRoToAscii(ro, ur)).ro || r.ro; } catch (e) {}
   }
   TR.choices[p.key] = { t: 'f', ur: ur, ro: ro, hi: hi };
+  TR.dictHitIdx = null;
   trSave('trChoices', TR.choices);
   trRender();
 }
