@@ -136,7 +136,7 @@ function devToAscii(str) {
    Most people type Roman without ā ī ū ḳh ġh ʿ, so a typed word is looked up by a folded key in ROMAN_CASUAL_MAP (built from
    every known ghazal word, most frequent spelling wins; see scripts/build_app.py, whose _casual_key this mirrors). Words typed
    WITH Pritchett's marks are left to the letter rules, which read them exactly. */
-const CASUAL_ALIAS = { ye: 'yih', yah: 'yih', vo: 'vuh', wo: 'vuh', na: 'nah', pe: 'pah',
+const CASUAL_ALIAS = { ye: 'yih', vo: 'vuh', wo: 'vuh', na: 'nah', pe: 'pah',
   keh: 'kih', nadan: 'naadaa;n', nadaan: 'naadaa;n', dile: 'dil-e', kahi: 'kahii;N', nahi: 'nahii;N',
   kubra: 'kubr;aa', kubraa: 'kubr;aa', sughra: '.su;Gr;aa', sughraa: '.su;Gr;aa', uzma: '((u:zm;aa', uzmaa: '((u:zm;aa',
   musa: 'muus;aa', musaa: 'muus;aa', fatwa: 'fatv;aa', fatwaa: 'fatv;aa', taqwa: 'taqv;aa', taqwaa: 'taqv;aa',
@@ -153,7 +153,6 @@ const CASUAL_ALIAS = { ye: 'yih', yah: 'yih', vo: 'vuh', wo: 'vuh', na: 'nah', p
   khoyi: 'kho))ii', khoyee: 'kho))ii',
   boye: 'bo))e', boyi: 'bo))ii', boyee: 'bo))ii',
   huyein: 'huu))ii;N', huyen: 'huu))ii;N',   // hu))ii;N parses as ہئیں
-  naye: 'na))e',
   chaaye: 'chaa))e', chaye: 'chaa))e',
   raaye: 'raa))e', raye: 'raa))e',
   bhaayi: 'bhaa))ii',
@@ -166,9 +165,7 @@ const CASUAL_ALIAS = { ye: 'yih', yah: 'yih', vo: 'vuh', wo: 'vuh', na: 'nah', p
   harchand: 'har-chand',
   garchi: 'garchih', garche: 'garchih',
   jag: 'jag',
-  pait: 'pe;t', paid: 'pe;R',
-  ghat: 'gha;t', ghaat: 'ghaa;t', nain: 'nain', naina: 'nainaa',
-  vazoo: 'vu.zuu', wazoo: 'vu.zuu', vazu: 'vu.zuu', wazu: 'vu.zuu' };
+  ghat: 'gha;t', ghaat: 'ghaa;t', nain: 'nain', naina: 'nainaa' };
 function casualKey(s, level) {   // level 0 strict (long vowels kept), 1 loose, 2 lax (also o~u, e~i): mirrors _casual_key in build_app.py
   s = s.normalize('NFC').toLowerCase().replace(/ć/g, 'ch').replace(/[āáâ]/g, 'aa').replace(/[īíî]/g, 'ii').replace(/[ūúû]/g, 'uu').replace(/ee/g, 'ii').normalize('NFD').replace(/[̀-ͯ]/g, '')
     .replace(/;g/g, 'gh').replace(/;x/g, 'kh').replace(/[;.:()'’‘ʿʾ-]/g, '').replace(/oo/g, 'uu').replace(/w/g, 'v');
@@ -224,6 +221,7 @@ const CASUAL_SCORE = {
   strong: 0.7,    // a list match as typed gives way only when what was typed contradicts it this clearly (chaand: chāñd, not chand)
   margin: 0.5,    //   and the other spelling is this much closer
   poetsN: 3, poets: 0.1,   // the poets' list has no counts: a spelling of it counts as a few uses, a little behind Pritchett's
+  rule: 0.05,     // an inflection rule's spelling (no list confirms it) is a little behind a list word as close
   skelMax: 40     // how many of one consonant skeleton's spellings are scored, commonest first
 };
 /* the sounds of an ASCII spelling, as a typist hears them: one token per letter (ḳh, ā, ṛ, ʿ ...); a final -ah is a + silent h */
@@ -294,6 +292,50 @@ function letterAdded(T, i) {
   if (ch === 'y' && prevT && /[aeiou]/.test(prevT) && T[i + 1] && /[aeiou]/.test(T[i + 1])) return 0.2;   // a glide (gaye)
   return 1;
 }
+/* What people actually type, learned from native speakers' romanizations (Google's Dakshina, scripts/learn_typing.js →
+   data/typing_costs.json): for each sound in its context (soundContext) the share of each spelling, and for each added letter
+   (letterContext) how often it is extra, as costs on the table's scale. Each cost counts above the sound's likeliest spelling, so
+   a word typed as most people type it costs nothing; typingCost takes, sound by sound, the cheaper of this and the hand-written
+   table above (which knows the notations no one in Dakshina used: Rekhta's capitals and dots). */
+const TYPING_COSTS = /*@@TYPING_COSTS@@*/;
+const LEARNED_TYPED = (() => {
+  const out = {};
+  Object.keys((TYPING_COSTS && TYPING_COSTS.real) || {}).forEach(k => {
+    const t = TYPING_COSTS.real[k], lo = Math.min(...Object.values(t));
+    out[k] = {};
+    Object.keys(t).forEach(x => { out[k][x] = t[x] - lo; });
+  });
+  return out;
+})();
+/* a sound in its context: last in the word (#), a vowel before h / ḥ / ʿ (>h), a consonant doubled (=), the v of ḳhv (<ḳh) */
+function soundContext(C, j) {
+  const c = C[j], next = C[j + 1], prev = C[j - 1];
+  if (!next) return c + '#';
+  if (SOUND_VOWEL[c] && (next === 'h' || next === 'ḥ' || next === 'ʿ')) return c + '>h';
+  if (!SOUND_VOWEL[c] && c === prev) return c + '=';
+  if (c === 'v' && prev === 'ḳh') return 'v<ḳh';
+  return c;
+}
+/* a typed letter in its context: last (#), a consonant doubled (=), between two consonants (|cc) or two vowels (|vv) */
+function letterContext(T, i) {
+  const ch = T[i], p = T[i - 1], n = T[i + 1], isV = x => /[aeiou]/.test(x || '');
+  if (i === T.length - 1) return ch + '#';
+  if (ch === p && !isV(ch)) return ch + '=';
+  if (p && n && !isV(p) && !isV(n)) return ch + '|cc';
+  if (p && n && isV(p) && isV(n)) return ch + '|vv';
+  return ch;
+}
+/* the learned cost of typing sound c (in context key) as str ('' = left out); Infinity where the data has nothing */
+function learnedTyped(key, c, str) {
+  const t = LEARNED_TYPED[key];
+  if (t && t[str] != null) return t[str];
+  const b = LEARNED_TYPED[c];
+  return b && b[str] != null ? b[str] + (key !== c ? 0.1 : 0) : Infinity;
+}
+function learnedAdded(T, i) {
+  const ins = (TYPING_COSTS && TYPING_COSTS.ins) || {}, k = letterContext(T, i);
+  return ins[k] != null ? ins[k] : ins[T[i]] != null ? ins[T[i]] + 0.1 : Infinity;
+}
 /* the cost of typing the sounds C as the letters T */
 function typingCost(T, C) {
   const n = T.length, m = C.length, W = n + 1, dp = new Array((m + 1) * W).fill(Infinity);
@@ -301,21 +343,23 @@ function typingCost(T, C) {
   for (let j = 0; j <= m; j++) for (let i = 0; i <= n; i++) {
     const d = dp[j * W + i];
     if (d === Infinity) continue;
-    if (i < n) dp[j * W + i + 1] = Math.min(dp[j * W + i + 1], d + letterAdded(T, i));
+    if (i < n) dp[j * W + i + 1] = Math.min(dp[j * W + i + 1], d + Math.min(letterAdded(T, i), learnedAdded(T, i)));
     if (j === m) continue;
-    const c = C[j], next = C[j + 1];
-    let matched = false;
+    const c = C[j], next = C[j + 1], key = soundContext(C, j), ways = new Map();
     for (const [str, w0] of SOUND_TYPED[c] || [[c, 0]]) {
-      if (!T.startsWith(str, i)) continue;
       let w = w0;
       if ((c === 'a' || c === 'i') && str === 'e' && (next === 'h' || next === 'ḥ' || next === 'ʿ')) w = 0.25;   // kehna, mehmaan, eʿtibaar
       else if (c === 'ā' && str === 'a' && j === m - 1) w = 0.1;                                                 // a final ā typed a (kya)
+      ways.set(str, w);
+    }
+    [LEARNED_TYPED[key], LEARNED_TYPED[c]].forEach(t => t && Object.keys(t).forEach(str => { if (str) ways.set(str, Math.min(ways.has(str) ? ways.get(str) : Infinity, learnedTyped(key, c, str))); }));
+    if (i < n && !ways.has(T[i])) ways.set(T[i], Math.min(1.2, learnedTyped(key, c, T[i])));   // another letter
+    ways.forEach((w, str) => {
+      if (!T.startsWith(str, i)) return;
       const at = (j + 1) * W + i + str.length;
       dp[at] = Math.min(dp[at], d + w);
-      if (str.length === 1) matched = true;
-    }
-    dp[(j + 1) * W + i] = Math.min(dp[(j + 1) * W + i], d + soundDropped(C, j));
-    if (i < n && !matched) dp[(j + 1) * W + i + 1] = Math.min(dp[(j + 1) * W + i + 1], d + 1.2);   // another letter
+    });
+    dp[(j + 1) * W + i] = Math.min(dp[(j + 1) * W + i], d + Math.min(soundDropped(C, j), learnedTyped(key, c, '')));
   }
   return dp[m * W + n];
 }
@@ -875,6 +919,9 @@ function casualPiece(piece, i, tokHasHyphen, prev, next) {
        جائے گا, where Pritchett's corpora join it, جاۓگا) */
     const ud = (typeof tryUrMorphDecompose === 'function') ? tryUrMorphDecompose(plain) : null;
     if (ud && ud.ascii && ud.ascii.replace(/\s/g, '') === best.a) return { s: ud.ascii, tier: 'derived', urDec: ud };
+    /* an inflection rule's spelling competes on the same cost: closer to what was typed than the list word, it wins (chalaye:
+       chalāʾe, not the list's chaliye) */
+    if (ud && ud.ascii && typedCost(piece, asciiSounds(ud.ascii.replace(/\s/g, ''))) + P.rule < best.tc) return { s: ud.ascii, tier: 'derived', urDec: ud };
     return { s: best.a, tier: best.src === 'poets' ? 'poets' : 'loose' };
   }
   if ((h = casualLookup(plain, 2, 2))) return { s: h, tier: 'loose' };

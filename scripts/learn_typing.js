@@ -10,11 +10,12 @@ const fs = require('fs'), path = require('path');
 const root = path.join(__dirname, '..');
 const { loadPage } = require('../tests/lib_page');
 const { urNorm } = require('../tests/lib_bench');
-const arg = (k, d) => { const a = process.argv.find(x => x.startsWith('--' + k + '=')); return a ? a.split('=').slice(1).join('=') : d; };
+const argv = process.argv.slice(2);
+const arg = (k, d) => { const a = argv.find(x => x.startsWith('--' + k + '=')); if (a) return a.split('=').slice(1).join('='); const i = argv.indexOf('--' + k); return i >= 0 ? argv[i + 1] : d; };
 const ITERS = +arg('iters', 4), OUT = arg('out', path.join(root, 'data/typing_costs.json'));
 const SRC = path.join(root, 'source_data/dakshina/dakshina_dataset_v1.0/ur/lexicons/ur.translit.sampled.train.tsv');
 if (!fs.existsSync(SRC)) { console.error('no Dakshina data at ' + SRC); process.exit(2); }
-const { run } = loadPage();
+const { ctx: page, run } = loadPage();
 const J = JSON.stringify;
 
 /* the words the lists know, Urdu → ASCII (the commonest spelling): Pritchett's word map, her spellings, the poets' list */
@@ -41,24 +42,9 @@ for (const line of fs.readFileSync(SRC, 'utf8').split('\n')) {
 console.log(`${pairs.length} romanizations of ${new Set(pairs.map(p => p.C.join(''))).size} known words`);
 
 const VOWEL = new Set(['a', 'ā', 'i', 'ī', 'u', 'ū', 'e', 'ai', 'o', 'au']);
-/* a sound in its context: last in the word (#), a short vowel before h / ḥ / ʿ (>h), a consonant doubled (=), the v of ḳhv (<ḳh) */
-function ctx(C, j) {
-  const c = C[j], next = C[j + 1], prev = C[j - 1];
-  if (!next) return c + '#';
-  if (VOWEL.has(c) && /^(h|ḥ|ʿ)$/.test(next)) return c + '>h';
-  if (!VOWEL.has(c) && c === prev) return c + '=';
-  if (c === 'v' && prev === 'ḳh') return 'v<ḳh';
-  return c;
-}
-/* a letter added, in its context: last (#), between two consonants (cc), a consonant doubled (=), between two vowels (vv) */
-function insCtx(T, i) {
-  const ch = T[i], p = T[i - 1], n = T[i + 1], isV = x => /[aeiou]/.test(x || '');
-  if (i === T.length - 1) return ch + '#';
-  if (ch === p && !isV(ch)) return ch + '=';
-  if (p && n && !isV(p) && !isV(n)) return ch + '|cc';
-  if (p && n && isV(p) && isV(n)) return ch + '|vv';
-  return ch;
-}
+/* the contexts the app scores in (soundContext, letterContext in src/js/05-translit-helpers.js): one definition for both */
+const ctx = (C, j) => page.soundContext(C, j);
+const insCtx = (T, i) => page.letterContext(T, i);
 
 /* the starting costs: the hand-written table and drop / add rules (SOUND_TYPED, soundDropped, letterAdded) */
 const init = run('SOUND_TYPED');
@@ -73,7 +59,6 @@ function realCost(key, c, str) {
 function insCost(key, ch) { return cost.ins[key] != null ? cost.ins[key] : cost.ins[ch] != null ? cost.ins[ch] + 0.1 : ADD; }
 function seedFromPage() {
   Object.keys(init).forEach(c => { cost.real[c] = {}; init[c].forEach(([s, w]) => { cost.real[c][s] = w; }); });
-  pairs.slice(0, 1).forEach(() => {});
   // drops and adds as the page prices them, read off a few contexts
   const drop = run(`(function(){ var o = {}; Object.keys(SOUND_TYPED).forEach(function (c) { o[c] = soundDropped(['b', c, 'b'], 1); o[c + '#'] = soundDropped(['b', c], 1); }); o['h̥#'] = 0.1; o['ʿ'] = 0; o['ʾ'] = 0; return o; })()`);
   Object.keys(drop).forEach(k => { const c = k.replace(/#$/, ''); (cost.real[k] = cost.real[k] || {})[''] = drop[k]; if (!cost.real[c]) cost.real[c] = {}; });
@@ -136,7 +121,7 @@ for (let it = 0; it < ITERS; it++) {
     Object.keys(base[c]).forEach(s => { if (base[c][s] >= 3) next.real[c][s] = Math.max(0, -Math.log((base[c][s] + 0.5) / (baseTot[c] + 1)) * SCALE); });
   });
   Object.keys(real).forEach(k => {
-    const c = k.replace(/(#|>h|=|<ḳh)$/, '');
+    const c = k.replace(/(#|>h|=)$/, '').replace(/<ḳh$/, '');
     if (k === c) return;
     next.real[k] = {};
     Object.keys(real[k]).forEach(s => {

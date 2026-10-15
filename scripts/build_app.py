@@ -164,6 +164,9 @@ ROMAN_CASUAL_DIGEST = _hashlib.sha1(json.dumps(ROMAN_CASUAL_MAP, sort_keys=True,
 # (data/roman_fallback.json, built by scripts/build_roman_fallback.js)
 with open('data/roman_fallback.json', 'r', encoding='utf-8') as f:
     ROMAN_FALLBACK = json.load(f)
+# How native speakers type each sound (data/typing_costs.json, learned by scripts/learn_typing.js from Google's Dakshina)
+with open('data/typing_costs.json', 'r', encoding='utf-8') as f:
+    TYPING_COSTS = json.load(f)
 _ki_next = {}
 for _g in EXERCISES + GHALIB_EXT + MIR_EXT + IQBAL + OTHERS_WORDS:
     if _g.get('source') == 'rekhta_only':
@@ -396,6 +399,7 @@ substitutions = {
     'WORD_ASCII_MAP': json.dumps(WORD_ASCII_MAP, ensure_ascii=False),
     'KI_NEXT': json.dumps(KI_NEXT, ensure_ascii=False),
     'ROMAN_FALLBACK': _dumps_json(ROMAN_FALLBACK),
+    'TYPING_COSTS': _dumps_json(TYPING_COSTS),
     'ASCII_FREQ': json.dumps(ASCII_FREQ, ensure_ascii=False, separators=(',', ':')),
     'ROMAN_CASUAL_DIGEST': json.dumps(ROMAN_CASUAL_DIGEST),
     'FAMS': fams_json,

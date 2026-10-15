@@ -41,7 +41,7 @@ const pinned = 'gaye aaye naye koyi gada ham rahguzaron baich bech mail sair kah
         'bulaayi chalaye chalaaye chalayi chalaayi jalaye jalaaye jalayi jalaayi milaye milaaye milayi milaayi samaayi ' +
         'samayi padi pada pade baDi baDa chhod chhoD chhoda chhoDa chhode chhoDe chhodi chhoDi ghadi ghaDi bichhad ' +
         'bichhaD daud dauda dauD chadh chadha chaDh chaDha badh badha baDh baDha uda uD uDa faida jaag baich daikh ' +
-        'bhaid paish').split(' '));
+        'bhaid paish yah naye pait paid vazoo wazoo vazu wazu').split(' '));
 
 const old = fs.existsSync(OUT) ? JSON.parse(fs.readFileSync(OUT, 'utf8')) : {};
 const todo = old.todo || {};

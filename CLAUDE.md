@@ -92,6 +92,12 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   scorer cannot reach the word: `tests/transcribe_golden.js` fails on an alias whose word comes out the same without it. Aliases are
   for closed-class spellings (yih, vuh, nah; un ko; gaʾe) and words no list has (peṭ, nain, vuẓū). The poets' list
   (`data/roman_fallback.json`) is verified with the aliases off (an alias answering first once let ڈ through for ڑ: pade = pa;De).
+  Typing costs are learned from real typing: `scripts/learn_typing.js` aligns native speakers' romanizations from Google's Dakshina
+  (train split, local in `source_data/dakshina`, CC BY-SA, credited on About) to the sounds of words the lists know → `data/typing_costs.json`
+  (`TYPING_COSTS`); `typingCost` takes, per sound, the cheaper of it and the hand table (`SOUND_TYPED`, which keeps the notations
+  Dakshina lacks: Rekhta's capitals and dots). Gate: `tests/benchmark_dakshina.js` (committed test split; the honest number, since the
+  Rekhta benchmarks only strip diacritics off tidy Roman). Roman style (Classical / Modern, `TR_MODERN_RO`) and a Roman typed in a word's
+  box change only the Roman shown.
 - **Collocations**: `data/collocations.json` (`scripts/build_collocations.py`) holds neighbour rules for typed Roman
   (`collocSpelling` in `05-translit-helpers.js`). Judge changes with `scripts/colloc_benchmark.py` and `scripts/casual_roman_eval.js`
   (typed Roman → right Urdu word, table mined without the test poets). `tests/benchmark.js` `typed.*` goes the other way (Urdu → Roman)

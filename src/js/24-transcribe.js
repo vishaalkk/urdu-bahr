@@ -1055,11 +1055,12 @@ function trCustomChoice(v, p) {
   var a = /[\u0900-\u097F]/.test(v) ? devToAscii(v) : romanToAscii(rekhtaMarks(v.replace(/(?<=[a-zāīūñ])R/g, ';r')));
   if (!a || !/[a-z]/i.test(a)) return null;
   if (p.script) return { t: 'f', ro: asciiToScripts(a).ro || v, hi: asciiToScripts(a).hi, ur: p.src };
-  /* plain Roman that spells the word already shown (chaen for چین, woh for وہ): the word stays, and its Roman is kept as typed
+  /* plain Roman a typist could write for the word already shown (chaen for چین, woh for وہ: the scorer's typingCost): the word stays,
+     and its Roman is kept as typed
      (a spelling with diacritics is read as one: mis̤l is miṡl) */
-  var now = p.fixed || asciiToScripts(p.ascii || ''), typed = asciiToScripts(a);
-  if (/^[a-z' -]+$/i.test(v) && now.ur && typed.ur && dictFoldUr(typed.ur) === dictFoldUr(now.ur) && v !== now.ro)
-    return { t: 'f', ur: now.ur, ro: v, hi: now.hi || typed.hi || '', ownRo: true };
+  var now = p.fixed || asciiToScripts(p.ascii || ''), nowAscii = p.fixed ? scholarRoToAscii(p.fixed.ro, p.fixed.ur) : p.ascii;
+  if (/^[a-z' -]+$/i.test(v) && now.ur && nowAscii && v !== now.ro && typedCost(v, asciiSounds(nowAscii.replace(/\s/g, ''))) <= CASUAL_SCORE.tau)
+    return { t: 'f', ur: now.ur, ro: v, hi: now.hi || '', ownRo: true };
   return { t: 'a', a: a };
 }
 function trCustom(pi, form) {
