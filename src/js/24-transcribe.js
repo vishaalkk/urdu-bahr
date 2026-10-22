@@ -191,6 +191,13 @@ function trCands(piece, def, lang) {
   if (def.fixed) add({ ro: def.fixed.ro, hi: def.fixed.hi, ur: isFa ? trUrToFa(def.fixed.ur) : def.fixed.ur, fixed: def.fixed, tag: 'persian', isDefault: true });
   else viaAscii(def.ascii, 'now', true);
   if (piece.chosen && piece.fixed) add({ ro: piece.fixed.ro, hi: piece.fixed.hi, ur: isFa ? trUrToFa(piece.fixed.ur) : piece.fixed.ur, fixed: piece.fixed, tag: 'you' });
+  /* another word typed as closely and not far rarer today (the scorer's tie: ana is آنا or انا): second, and underlined */
+  if (!isFa && !def.fixed && def.ascii && /^[a-z']+$/i.test(piece.src)) {
+    var ur0 = asciiToScripts(def.ascii).ur, u0 = fUr(ur0), m0 = wordFreqBand(ur0);
+    var tc0 = typedCost(piece.src, asciiSounds(def.ascii.replace(/[\s-]/g, '')));
+    casualCands(piece.src).filter(function (c) { return c.tc <= tc0 + CASUAL_SCORE.tie && c.m > m0 - CASUAL_SCORE.tieBands && fUr(asciiToScripts(c.a).ur) !== u0; }).slice(0, 2)
+      .forEach(function (c) { viaAscii(c.a, 'tie'); });
+  }
   if (piece.near && piece.tier === 'guess') add({ ro: piece.near.ro, hi: piece.near.hi, ur: piece.near.ur, fixed: piece.near, tag: 'lexicon' });
 
   if (isFa) {
@@ -547,7 +554,7 @@ var TR_PAIRS = [['sada', 'sadaa', ['صدا', 'ṣadā'], ['سدا', 'sadā']], [
   ['salam', 'salām', ['سلام', 'salām'], ['سالم', 'sālim']], ['nazar', 'nazr', ['نظر', 'naz̤ar'], ['نذر', 'nażr']],
   ['durud', 'durūd', ['درود', 'durūd'], ['درود', 'darūd']], ['buvad', 'buad', ['بود', 'buvad'], ['بود', 'būd']], ['bood', 'būd', ['بود', 'buvad'], ['بود', 'būd']],
   ['main', 'meen', ['میں', 'maiñ'], ['مین', 'mīn']], ['mein', 'meen', ['میں', 'meñ'], ['مین', 'mīn']], ['gaye', 'gāye', ['گئے', 'gaʾe'], ['گیے', 'gaye']], ['naye', 'nayi', ['نئے', 'naʾe'], ['نیے', 'naye']], ['aaye', 'āye', ['آئے', 'āʾe'], ['آیے', 'āye']]];
-var TR_TAG_NOTE = { now: 'as read now', list: 'Pritchett’s list', loose: 'loose match', poets: 'Rekhta poets', persian: 'Persian list', letters: 'from the letters', reading: 'same spelling, another word', lexicon: 'dictionary', pair: 'classical pair', form: 'dictionary word’s form', phonetic: 'sounds like' };
+var TR_TAG_NOTE = { now: 'as read now', list: 'Pritchett’s list', loose: 'loose match', poets: 'Rekhta poets', persian: 'Persian list', letters: 'from the letters', reading: 'same spelling, another word', lexicon: 'dictionary', pair: 'classical pair', form: 'dictionary word’s form', phonetic: 'sounds like', tie: 'typed the same way, another word' };
 
 function trScriptAttrs(script) {
   return script === 'ur' ? 'class="tr-res tr-res-ur" lang="ur" dir="rtl"' : script === 'fa' ? 'class="tr-res tr-res-ur" lang="fa" dir="rtl"' : script === 'hi' ? 'class="tr-res tr-res-hi" lang="hi" dir="ltr"' : 'class="tr-res tr-res-ro" lang="und-Latn" dir="ltr"';

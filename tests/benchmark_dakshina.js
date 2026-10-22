@@ -3,9 +3,12 @@
 // (lineScripts, no dictionary) and counts if the right Urdu word comes out.
 //   all     every romanization (Dakshina's words come from Wikipedia: many names and modern terms no list of ours has)
 //   known   romanizations of words the app's lists have (Pritchett's corpora, the poets' list): a miss here is the engine's
+//   lines, linesKnown   the same over whole typed sentences (tests/data/dakshina_ur_test_lines.tsv: the first 1500 of Dakshina's
+//           romanized test sentences with as many words in both scripts), word by word: the word list counts each word once, a
+//           rare one as much as a common one; sentences count words as often as people use them
 // The test split is committed (tests/data/dakshina_ur_test.tsv); scripts/learn_typing.js learns only from the train split, kept
 // locally with dev (source_data/dakshina). Floors: tests/dakshina_baseline.json; a fall fails, --update raises them.
-// Run: node tests/benchmark_dakshina.js [--update] [--split=dev] [--misses=N] [--known]
+// Run: node tests/benchmark_dakshina.js [--update] [--split=dev] [--misses=N] [--known]   (--split=dev: the dev sentences, local)
 const fs = require('fs'), path = require('path');
 const { loadPage } = require('./lib_page');
 const { urNorm, checkFloors } = require('./lib_bench');
@@ -31,8 +34,25 @@ for (const [ur, ro] of rows) {
   if (isKnown) { kn++; knOk += good; }
   if (!good && miss.length < MISSES && (!ONLY_KNOWN || isKnown)) miss.push(`${ro} → ${g} (want ${want}${isKnown ? '' : ', no list has it'})`);
 }
+/* whole sentences: punctuation off both sides, a word pair kept where the Urdu has letters */
+const ROM = path.join(__dirname, '..', 'source_data', 'dakshina', 'dakshina_dataset_v1.0', 'ur', 'romanized', 'ur.romanized.rejoined.');
+const sents = SPLIT === 'test' ? fs.readFileSync(path.join(__dirname, 'data', 'dakshina_ur_test_lines.tsv'), 'utf8').split('\n').filter(Boolean).map(l => l.split('\t'))
+  : (() => { const a = fs.readFileSync(ROM + SPLIT + '.native.txt', 'utf8').split('\n'), b = fs.readFileSync(ROM + SPLIT + '.roman.txt', 'utf8').split('\n');
+      return a.map((x, i) => [x.trim(), (b[i] || '').trim()]).filter(([x, y]) => x && x.split(/\s+/).length === y.split(/\s+/).length).slice(0, 1500); })();
+const pairs = sents.map(([ur, ro]) => {
+  const u = ur.split(/\s+/).map(urNorm), r = ro.split(/\s+/).map(w => w.replace(/[^a-z']/gi, '').replace(/^'+|'+$/g, ''));
+  return u.map((w, k) => [w, r[k]]).filter(([w, t]) => w && t);
+});
+const sOut = run(`(${J(pairs.map(p => p.map(x => x[1]).join(' ')))}).map(function (t) { return (lineScripts(t, { skipKnown: true }) || {}).ur || ''; })`);
+let ln = 0, lok = 0, lkn = 0, lknOk = 0;
+pairs.forEach((p, i) => {
+  const g = sOut[i].split(/\s+/).map(urNorm).filter(Boolean);
+  if (g.length !== p.length) return;
+  p.forEach(([w], k) => { const good = g[k] === w; ln++; lok += good; if (known.has(w)) { lkn++; lknOk += good; } });
+});
 const pct = (a, b) => Math.round(10000 * a / b) / 100;
-const now = { all: pct(ok, n), known: pct(knOk, kn), n };
+const now = { all: pct(ok, n), known: pct(knOk, kn), lines: pct(lok, ln), linesKnown: pct(lknOk, lkn), n };
 console.log(`Dakshina ${SPLIT} (${n} romanizations by native speakers): right Urdu word ${now.all}%, of words the lists know (${kn}) ${now.known}%`);
+console.log(`  in typed sentences (${ln} words): ${now.lines}%, of words the lists know (${lkn}) ${now.linesKnown}%`);
 miss.forEach(m => console.log('  ' + m));
-process.exit(SPLIT === 'test' ? checkFloors(path.join(__dirname, 'dakshina_baseline.json'), now, ['all', 'known']) : 0);
+process.exit(SPLIT === 'test' ? checkFloors(path.join(__dirname, 'dakshina_baseline.json'), now, ['all', 'known', 'lines', 'linesKnown']) : 0);

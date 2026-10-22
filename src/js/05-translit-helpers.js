@@ -136,16 +136,15 @@ function devToAscii(str) {
    Most people type Roman without ā ī ū ḳh ġh ʿ, so a typed word is looked up by a folded key in ROMAN_CASUAL_MAP (built from
    every known ghazal word, most frequent spelling wins; see scripts/build_app.py, whose _casual_key this mirrors). Words typed
    WITH Pritchett's marks are left to the letter rules, which read them exactly. */
-const CASUAL_ALIAS = { ye: 'yih', vo: 'vuh', wo: 'vuh', na: 'nah', pe: 'pah',
-  keh: 'kih', nadan: 'naadaa;n', nadaan: 'naadaa;n', dile: 'dil-e', kahi: 'kahii;N', nahi: 'nahii;N',
+const CASUAL_ALIAS = { ye: 'yih', vo: 'vuh', wo: 'vuh', pe: 'pah',
+  keh: 'kih', dile: 'dil-e', kahi: 'kahii;N', nahi: 'nahii;N',
   kubra: 'kubr;aa', kubraa: 'kubr;aa', sughra: '.su;Gr;aa', sughraa: '.su;Gr;aa', uzma: '((u:zm;aa', uzmaa: '((u:zm;aa',
   musa: 'muus;aa', musaa: 'muus;aa', fatwa: 'fatv;aa', fatwaa: 'fatv;aa', taqwa: 'taqv;aa', taqwaa: 'taqv;aa',
   adna: 'adn;aa', adnaa: 'adn;aa', yahya: 'ya;hy;aa', yahyaa: 'ya;hy;aa', mujtaba: 'mujtab;aa', mujtabaa: 'mujtab;aa',
   murtaza: 'murta:z;aa', murtazaa: 'murta:z;aa',
   hum: 'ham', humein: 'hame;N', humne: 'ham ne', unko: 'un ko', inko: 'in ko', usko: 'us ko', isko: 'is ko',
   aake: 'aa ke', jaake: 'jaa ke', hoke: 'ho ke', karke: 'kar ke',
-  gaye: 'ga))e', gayen: 'ga))ii;N', gayein: 'ga))ii;N',
-  aaye: 'aa))e',
+  gayen: 'ga))ii;N', gayein: 'ga))ii;N',
   gaaye: 'gaa))e', gaae: 'gaa))e', gaayi: 'gaa))ii', gaayee: 'gaa))ii',
   roye: 'ro))e',
   dhoyi: 'dho))ii', dhoyee: 'dho))ii',
@@ -160,7 +159,6 @@ const CASUAL_ALIAS = { ye: 'yih', vo: 'vuh', wo: 'vuh', na: 'nah', pe: 'pah',
   bulaayee: 'bulaa))ii',
   samaaye: 'samaa))e', samaye: 'samaa))e',
   baDe: 'ba;Re',
-  ud: 'u;R',
   faayda: 'faa))idah', faeda: 'faa))idah', fayda: 'faa))idah',
   harchand: 'har-chand',
   garchi: 'garchih', garche: 'garchih',
@@ -221,6 +219,8 @@ const CASUAL_SCORE = {
   strong: 0.7,    // a list match as typed gives way only when what was typed contradicts it this clearly (chaand: chāñd, not chand)
   margin: 0.5,    //   and the other spelling is this much closer
   poetsN: 3, poets: 0.1,   // the poets' list has no counts: a spelling of it counts as a few uses, a little behind Pritchett's
+  tie: 0.15,       // two spellings typed this nearly as closely are a tie: how common each word is today decides (WORD_FREQ,
+  tieBands: 2,    //   when one is this many log2 bands commoner: 8 times; Pritchett's counts are classical)
   rule: 0.05,     // an inflection rule's spelling (no list confirms it) is a little behind a list word as close
   skelMax: 40     // how many of one consonant skeleton's spellings are scored, commonest first
 };
@@ -386,6 +386,21 @@ function typedKeys(t) {
   alt(/(?<=.)d(?!h)/g, 'r'); alt(/(?<=.)dh/g, 'rh');
   return [...keys].slice(0, 24);
 }
+/* How common a word is today, beside Pritchett's classical counts: a log2 band of uses per 10M words of Urdu Wikipedia and the
+   Rekhta poets (scripts/build_word_freq.js → data/word_freq.json), for the words the scorer can confuse. Keyed by wordFreqKey. */
+const WORD_FREQ = /*@@WORD_FREQ@@*/;
+function wordFreqKey(w) {
+  return String(w || '').normalize('NFC').replace(/[\u064B-\u0670\u065F\u0640\u0651\u0654\u0614\u200C\u200D]/g, '')
+    .replace(/[يى]/g, 'ی').replace(/ك/g, 'ک').replace(/[ۂۀ]/g, 'ہ').replace(/[^\u0621-\u06FF]/g, '');
+}
+let _wordFreq = null;
+function wordFreqBand(ur) {
+  if (!_wordFreq) {
+    _wordFreq = new Map();
+    Object.keys(WORD_FREQ || {}).forEach(b => WORD_FREQ[b].split(' ').forEach(w => _wordFreq.set(w, +b)));
+  }
+  return _wordFreq.get(wordFreqKey(ur)) || 0;
+}
 /* the index the scorer looks in, built on first use: every spelling of Pritchett's corpora and of the poets' list, under its lax
    casual key and its consonant skeleton. A test that swaps ROMAN_FALLBACK calls casualIndexReset after it. */
 let _casualIndex = null;
@@ -405,6 +420,8 @@ function casualIndex() {
   bySkel.forEach(arr => arr.sort((a, b) => b.n - a.n));
   return (_casualIndex = { byKey, bySkel });
 }
+/* candidate x is typed as closely as y, and its word is far commoner today */
+function casualTieWins(x, y) { return x.tc <= y.tc + CASUAL_SCORE.tie && x.m >= y.m + CASUAL_SCORE.tieBands; }
 /* the typed word's candidate spellings, cheapest first: [{a: ASCII, tc: typing cost, cost: tc less its commonness, n, src}] */
 function casualCands(piece) {
   if (_casualCands.has(piece)) return _casualCands.get(piece);
@@ -412,11 +429,14 @@ function casualCands(piece) {
   const consider = e => {
     if (seen.has(e.a)) return;
     const tc = typedCost(piece, asciiSounds(e.a));
-    seen.set(e.a, { a: e.a, tc, n: e.n, src: e.src, cost: tc - P.beta * Math.log(1 + e.n) + (e.src === 'poets' ? P.poets : 0) });
+    if (e.m == null) e.m = wordFreqBand(asciiToScripts(e.a).ur);
+    seen.set(e.a, { a: e.a, tc, n: e.n, m: e.m, src: e.src, cost: tc - P.beta * Math.log(1 + e.n) + (e.src === 'poets' ? P.poets : 0) });
   };
   typedKeys(T).forEach(k => (idx.byKey.get(casualKey(k, 2)) || []).forEach(consider));
   (idx.bySkel.get(consonantSkeleton(T.toLowerCase())) || []).slice(0, P.skelMax).forEach(consider);
   const out = [...seen.values()].sort((a, b) => a.cost - b.cost);
+  /* a tie in typing goes to the word commoner today */
+  for (let k = 1; k < out.length; k++) if (casualTieWins(out[k], out[0])) { out.unshift(out.splice(k, 1)[0]); break; }
   _casualCands.set(piece, out);
   return out;
 }
@@ -906,6 +926,8 @@ function casualPiece(piece, i, tokHasHyphen, prev, next) {
   if ((h = casualLookup(plain, 0, 1))) {
     const own = cands.find(c => c.a === h), ownCost = own ? own.tc : typedCost(piece, asciiSounds(h));
     if (best && best.a !== h && ownCost >= P.strong && best.tc <= ownCost - P.margin && best.tc <= P.tau) return { s: best.a, tier: 'known' };
+    /* typed as closely, and the other word far commoner today (hazar: ہزار, not the list's classical حذر) */
+    if (best && own && best.a !== h && casualTieWins(best, own)) return { s: best.a, tier: 'known' };
     return { s: h, tier: 'known' };
   }
   if (plain.includes('eh')) {
@@ -1154,6 +1176,8 @@ function faLiaisonVariants(text) {
     const v = W.slice();
     if (/^(کہ|چہ)$/.test(W[i]) && /^[اآ]/.test(W[i + 1])) v[i] = W[i].slice(0, -1) + W[i + 1].replace(/^آ/, 'ا').replace(/^ا(?=[^ا])/, m => W[i + 1][0] === 'آ' ? m : '');
     else if (W[i + 1] === 'است' && /[اوی]$|[^\s]ہ$/.test(W[i]) && W[i].length > 1) v[i] = W[i].replace(/ہ$/, '') + 'ست';
+    /* و "and" and ز "from" before a vowel are v- and z- (Thiesen §60, §79: v-agar, v-az, z-andar), one syllable with the word */
+    else if ((W[i] === 'و' || W[i] === 'ز') && /^[اآ]/.test(W[i + 1])) v[i] = W[i] + W[i + 1].replace(/^آ/, 'ا').replace(/^ا(?=[^ا])/, m => W[i + 1][0] === 'آ' ? m : '');
     else continue;
     v.splice(i + 1, 1);
     out.push(v.join(' '));

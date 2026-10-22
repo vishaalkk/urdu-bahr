@@ -649,3 +649,37 @@ line-end bug. Fixed (text prep in `src/js/05-translit-helpers.js`, readings in `
 
   Left, by size: word-grafting (*man az*, *dar īn*, *bāz āmadam*, 1.2 each: an engine cost), *buvad* (needs a lex entry that
   keeps the line-end licence, i.e. engine work), Arabic lines, and ~128 lines with no own-meter fit at all (text variants).
+
+## Round 9 (2026-10-22): word readings and the line-end licence, from Thiesen
+
+Round 8 left ~354 Ganjoor lines missing their meter (of 2,400). Freeing one word at a time (any weight, 1-4 syllables) rescued 238
+of them; for the frequent words the weight that made the line fit was compared with a source. Sources: Thiesen, *A Manual of
+Classical Persian Prosody* (1982; full text on archive.org; Mahdavi Mazdeh's dissertation could not be downloaded).
+- **Word readings** (`buildScanLex`, `scripts/lib_fa_scan.js`; each tried alone on the Ganjoor lines first):
+  - چو *chu* short at 0, long at 1.5 (§75: lengthening "extremely rare"). It had no entry, and the builder could not see why:
+    the engine's unlisted monosyllable is a flexible `x` that matches any Roman, but scanning it short costs 2.
+  - بود also *bovad* (`sl`) at 0 beside *būd* (§107, §152 scan *bovad* as two syllables). −14 lines.
+  - ست `s` and است `s` (0.3): ast after a vowel is *-st* (§98), after a consonant the a goes (§44, §99). −12 and −2.
+  - نہ long at 1 (§65, §68: *na* "rarely lengthened"; at 1.5 the gain was lost). −7.
+- **Line-end licence for listed words** (Persian engine copy only, `cheatOK`: `build_app.py` `persian_engine` and
+  `persianEngineSource` in `lib_fa_scan.js`, each asserting the engine text is where it expects): a final one-letter short
+  consonant may go uncounted at the end of a line (ch. 6). A lex entry lost it, which is why *buvad* once flipped Hafiz 207.
+  Alone −7 lines; it is what makes the *bovad* entry safe.
+- **Liaison of و and ز** (`faLiaisonVariants`, Thiesen §60, §79): *o* "and" and *ze* "from" before a vowel are *v-* and *z-*,
+  one syllable with the word (*v-agar*, *z-andar*). −9 lines.
+- **Tried and left:** graft cost (even at 0 only 21 of 2,400 lines); pair subsets of liaison joins (3 lines); long ī/ū
+  shortened before a vowel (§89: 0 lines); -e + ast (§77-78: already covered by `faLiaisonVariants`).
+- **A caveat on the Ganjoor set.** Round 8 kept it independent of the Ganjoor misses. This round's words were found *from* those
+  misses (each then checked against Thiesen), so `ganjoor.*` is no longer a pure held-out score. `all.*` and `core.*`,
+  which moved as much, contain the Sufinama poets the words were not chosen from.
+
+  | | round 8 | now |
+  |---|---|---|
+  | Ganjoor lines fit (with marks) | 85.33% | 88.33% |
+  | Ganjoor lines fit (marks stripped) | 83.29% | 86.46% |
+  | all Persian own-meter fit ≤ 2 | 74.08% | 77.26% |
+  | core own-meter fit ≤ 2 | 78.01% | 80.85% |
+  | Ganjoor ghazal meter / gold meter | 99.58% / 98.67% | unchanged |
+
+  Left, by size: ~108 lines with no own-meter fit at all (text variants), ~99 costing over 3.2, and word-grafting (1.2 an engine
+  cost; worth little).

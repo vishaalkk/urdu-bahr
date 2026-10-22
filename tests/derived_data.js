@@ -5,6 +5,7 @@
 //   data/fa_scan.json          scripts/build_fa_scan.js          (what the Persian engine ScanFa adds)
 //   data/lang_words.json       scripts/build_lang_words.js       (line-language word weights)
 //   data/typing_costs.json     scripts/learn_typing.js           (how native speakers type each sound, from Dakshina's train split)
+//   data/word_freq.json        scripts/build_word_freq.js        (how common the words the scorer can confuse are today)
 // Builders that read the built page need it current: run after `npm run build`.   Run: node tests/derived_data.js
 const fs = require('fs'), path = require('path'), os = require('os');
 const { execFileSync } = require('child_process');
@@ -15,7 +16,8 @@ const BUILDS = [
     ['data/roman_fallback.json', 'scripts/build_roman_fallback.js', []],
     ['data/fa_scan.json', 'scripts/build_fa_scan.js', ['data/sufinama_ghazals.json']],   // the Sufinama scrape is gitignored
     ['data/lang_words.json', 'scripts/build_lang_words.js', []],
-    ['data/typing_costs.json', 'scripts/learn_typing.js', ['source_data/dakshina/dakshina_dataset_v1.0/ur/lexicons/ur.translit.sampled.train.tsv']]   // Dakshina's train split is kept locally
+    ['data/typing_costs.json', 'scripts/learn_typing.js', ['source_data/dakshina/dakshina_dataset_v1.0/ur/lexicons/ur.translit.sampled.train.tsv']],   // Dakshina's train split is kept locally
+    ['data/word_freq.json', 'scripts/build_word_freq.js', ['source_data/makhzan/wordFrequency.json']]   // Makhzan's word counts are kept locally
 ];
 let bad = 0;
 for (const [file, script, local] of BUILDS) {

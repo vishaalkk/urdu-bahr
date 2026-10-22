@@ -102,6 +102,16 @@ function buildScanLex(Scan, ghazals) {
         if (!opts.some(o => o.w.join('') === 'l')) opts.push({ w: ['l'], c: 1 });
         lex[p] = opts;
     }
+    /* Thiesen, A Manual of Classical Persian Prosody (1982), the readings Ganjoor's lines needed and the engine lacked: */
+    /* چو "as": short by default, "lengthening of co is extremely rare, the poets preferring the synonym cun" (§75) */
+    lex['چو'] = [{ w: ['s'], c: 0 }, { w: ['l'], c: 1.5 }];
+    /* بود is also bovad (the non-past "will be", §107 and §152 scan it as two syllables) beside bud; both free */
+    lex['بود'] = [{ w: ['l', 's'], c: 0 }, { w: ['s', 'l'], c: 0 }];
+    /* ast "is" after a vowel is -st (§98), a word of its own in the text: one short; after a consonant the a goes (§44, §99) */
+    lex['ست'] = [{ w: ['l'], c: 0 }, { w: ['l', 's'], c: 0 }, { w: ['s'], c: 0 }];
+    lex['است'] = [{ w: ['l', 's'], c: 0 }, { w: ['s', 'l'], c: 0 }, { w: ['s'], c: 0.3 }];
+    /* نہ na "no": short, "rarely lengthened" (§65, §68), poets wanting a long prefer ني ne; so long at a cost */
+    lex['نہ'] = [{ w: ['s'], c: 0 }, { w: ['l', 's'], c: 0 }, { w: ['l'], c: 1 }];
     return lex;
 }
 
@@ -140,12 +150,22 @@ function contractionRows(rows) {
     return out;
 }
 
+/* One change to the engine block for the Persian copy (build_app.py persian_engine makes the same replacement): the line-end licence
+   (ch.6, a final one-letter short consonant is not counted) also holds for a listed (lex) word's syllable, so a lexicon reading
+   such as بود bud (l s) does not lose it to a plain spelling. Urdu's engine is unchanged. */
+const CHEAT_OLD = "if(s.k==='C' && s.t.length===1 && s.w==='s') return true;";
+const CHEAT_NEW = "if((s.k==='C'||s.k==='LEX') && s.t.length===1 && s.w==='s') return true;";
+function persianEngineSource(src) {
+    if (!src.includes(CHEAT_OLD)) throw new Error('engine cheatOK moved: update lib_fa_scan.js and build_app.py');
+    return src.replace(CHEAT_OLD, CHEAT_NEW);
+}
+
 /* the Persian engine (ScanFa) for node: the app's engine with data/fa_scan.json spliced in, as scripts/build_app.py builds it */
 function loadFaEngine() {
     const fs = require('fs'), path = require('path');
     const { loadEngine } = require('./lib_scan');
     const fa = JSON.parse(fs.readFileSync(process.env.FA_SCAN_JSON || path.join(__dirname, '..', 'data/fa_scan.json'), 'utf8'));   // env: score another build of it
-    return loadEngine(lexLines(fa.lex), fa.meters);
+    return loadEngine(lexLines(fa.lex), fa.meters, persianEngineSource);
 }
 
 module.exports = { romanWeights, rankReadings, buildScanLex, lexLines, persianMeterRows, contractionRows, loadFaEngine };

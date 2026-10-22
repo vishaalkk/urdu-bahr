@@ -1,13 +1,13 @@
 {
-  "core.cost0": 52.3,
-  "core.fit2": 83.24,
-  "core.own2": 78.01,
-  "all.cost0": 46.87,
-  "all.fit2": 78.79,
-  "all.own2": 74.08,
+  "core.cost0": 55.76,
+  "core.fit2": 85.55,
+  "core.own2": 80.85,
+  "all.cost0": 50.52,
+  "all.fit2": 81.54,
+  "all.own2": 77.26,
   "gold.meter": 98.67,
   "translit.word": 83.74,
   "ganjoor.meter": 99.58,
-  "ganjoor.own2": 85.33,
-  "ganjoor.own2_plain": 83.29
+  "ganjoor.own2": 88.33,
+  "ganjoor.own2_plain": 86.46
 }

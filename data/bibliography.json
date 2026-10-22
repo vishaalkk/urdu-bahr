@@ -2,7 +2,7 @@
   "metadata": {
     "title": "Attributions & Scholarly Citations",
     "description": "Primary academic and computational sources powering the Urdu Meter Handbook and Interactive Studio.",
-    "entries_count": 13
+    "entries_count": 14
   },
   "entries": [
     {
@@ -119,6 +119,18 @@
       "publisher_or_affiliation": "PhD dissertation, Department of Linguistics, University of Arizona",
       "canonical_url": "https://repository.arizona.edu/handle/10150/634353",
       "summary": "The Persian prosody rules the Persian scanner follows where they differ from Urdu: ke, be and the conjunction o may scan long; a syllable holds at most three morae (an overlong syllable is long + short); and two shorts may be sung as one long (muftaʿilun as three longs), as Rumi often does."
+    },
+    {
+      "id": "thiesen_1982",
+      "tag": "Persian Prosody",
+      "authors": [
+        "Finn Thiesen"
+      ],
+      "title": "A Manual of Classical Persian Prosody (with chapters on Urdu, Karakhanidic and Ottoman prosody)",
+      "year": "1982",
+      "publisher_or_affiliation": "Otto Harrassowitz, Wiesbaden",
+      "canonical_url": "https://archive.org/details/AManualOfClassicalPersianProsody",
+      "summary": "Where Persian scansion departs from the general rules, with examples from Ferdowsi, Saadi and Nezami: chu is short and rarely lengthened (§75), na is rarely long (§68), ast after a vowel is -st and after a consonant loses its a (§98–99), bud is also bovad (§107, §152), and o and ze before a vowel become v- and z- (§60, §79)."
     },
     {
       "id": "steingass_1892",

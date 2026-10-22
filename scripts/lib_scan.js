@@ -12,7 +12,7 @@ const CONFIDENT_SHARE = 0.7;    // a ghazal gets a meter only if its meter famil
 
 /* extraLex: lex(...) lines to try out, spliced in before the syllabifier; extraMeters: [[id, raw], ...] rows appended to
    METERS_RAW (the Persian engine ScanFa: scripts/lib_fa_scan.js faEngineParts) */
-function loadEngine(extraLex = '', extraMeters = null) {
+function loadEngine(extraLex = '', extraMeters = null, patchSrc = null) {
     const html = fs.readFileSync(process.env.URDU_BAHR_HTML || path.join(root, 'index.html'), 'utf8');   // env override: score against another build
     const a = html.indexOf("(function(root){\n'use strict';\n\n/* ---------- meters");
     const e = html.indexOf('})(this);', a) + '})(this);'.length;
@@ -26,6 +26,7 @@ function loadEngine(extraLex = '', extraMeters = null) {
         const end = src.indexOf('\n];\nconst RUBAI_RAW');
         src = src.slice(0, end) + ',\n ' + extraMeters.map(r => JSON.stringify(r)).join(',') + src.slice(end);
     }
+    if (patchSrc) src = patchSrc(src);
     /* the app's engine also reads the learned iẓāfat / o hypotheses (src/js/01b-hypothesis-costs.js) from its global */
     const hyp = html.match(/var HYP_COSTS = \{[^\n]*\};?/);
     vm.runInNewContext((hyp ? hyp[0] + '\n' : '') + src, { module: mod, console });

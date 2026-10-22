@@ -95,8 +95,12 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   Typing costs are learned from real typing: `scripts/learn_typing.js` aligns native speakers' romanizations from Google's Dakshina
   (train split, local in `source_data/dakshina`, CC BY-SA, credited on About) to the sounds of words the lists know → `data/typing_costs.json`
   (`TYPING_COSTS`); `typingCost` takes, per sound, the cheaper of it and the hand table (`SOUND_TYPED`, which keeps the notations
-  Dakshina lacks: Rekhta's capitals and dots). Gate: `tests/benchmark_dakshina.js` (committed test split; the honest number, since the
-  Rekhta benchmarks only strip diacritics off tidy Roman). Roman style (Classical / Modern, `TR_MODERN_RO`) and a Roman typed in a word's
+  Dakshina lacks: Rekhta's capitals and dots). Two spellings typed about as closely (`CASUAL_SCORE.tie`) are settled by how common each word
+  is today (`WORD_FREQ`: log2 bands from the Rekhta poets without the test poets and Makhzan's word counts, MIT, local in
+  `source_data/makhzan`; `scripts/build_word_freq.js` → `data/word_freq.json`, confusable words only); Transcribe offers the other
+  word second and underlines it (tag `tie`). Gate: `tests/benchmark_dakshina.js` (committed test word list and 1500 typed
+  sentences; the honest number, since the Rekhta benchmarks only strip diacritics off tidy Roman; the word list counts a rare word
+  as much as a common one, the sentences as often as it is used). Roman style (Classical / Modern, `TR_MODERN_RO`) and a Roman typed in a word's
   box change only the Roman shown.
 - **Collocations**: `data/collocations.json` (`scripts/build_collocations.py`) holds neighbour rules for typed Roman
   (`collocSpelling` in `05-translit-helpers.js`). Judge changes with `scripts/colloc_benchmark.py` and `scripts/casual_roman_eval.js`

@@ -167,6 +167,9 @@ with open('data/roman_fallback.json', 'r', encoding='utf-8') as f:
 # How native speakers type each sound (data/typing_costs.json, learned by scripts/learn_typing.js from Google's Dakshina)
 with open('data/typing_costs.json', 'r', encoding='utf-8') as f:
     TYPING_COSTS = json.load(f)
+# How common the words the scorer can confuse are today (data/word_freq.json, scripts/build_word_freq.js: Wikipedia + the poets)
+with open('data/word_freq.json', 'r', encoding='utf-8') as f:
+    WORD_FREQ = json.load(f)['bands']
 _ki_next = {}
 for _g in EXERCISES + GHALIB_EXT + MIR_EXT + IQBAL + OTHERS_WORDS:
     if _g.get('source') == 'rekhta_only':
@@ -400,6 +403,7 @@ substitutions = {
     'KI_NEXT': json.dumps(KI_NEXT, ensure_ascii=False),
     'ROMAN_FALLBACK': _dumps_json(ROMAN_FALLBACK),
     'TYPING_COSTS': _dumps_json(TYPING_COSTS),
+    'WORD_FREQ': _dumps_json(WORD_FREQ),
     'ASCII_FREQ': json.dumps(ASCII_FREQ, ensure_ascii=False, separators=(',', ':')),
     'ROMAN_CASUAL_DIGEST': json.dumps(ROMAN_CASUAL_DIGEST),
     'FAMS': fams_json,
@@ -467,6 +471,10 @@ def persian_engine():
     block = block.replace(marker, lex + '\n' + marker, 1)
     rows = ','.join(json.dumps(r, ensure_ascii=False) for r in fa['meters'])
     block = block.replace("\n];\nconst RUBAI_RAW", ",\n " + rows + "\n];\nconst RUBAI_RAW", 1)
+    # the line-end licence for a listed word's syllable too (same replacement as scripts/lib_fa_scan.js persianEngineSource)
+    cheat_old = "if(s.k==='C' && s.t.length===1 && s.w==='s') return true;"
+    assert cheat_old in block, 'engine cheatOK moved: update build_app.py and scripts/lib_fa_scan.js'
+    block = block.replace(cheat_old, "if((s.k==='C'||s.k==='LEX') && s.t.length===1 && s.w==='s') return true;", 1)
     block = block.replace('root.Scan=API', 'root.ScanFa=API', 1)
     # no module path here: in the page `module` is undefined, so the copy always lands on window.ScanFa
     return '\n/* ===== Persian engine (ScanFa): src/js/01-engine.js + data/fa_scan.json, assembled by scripts/build_app.py ===== */\n' + block
