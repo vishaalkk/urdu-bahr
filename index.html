@@ -22286,6 +22286,14 @@ function trRomanWords(raw, o) {
   return words;
 }
 
+/* The word map is keyed without vowel marks, so اِس and اُس find one reading. A zabar, zer or pesh written on the opening alif
+   settles the first short vowel: اِس is, اُس us; اِن in, اُن un; اِدھر idhar, اُدھر udhar. ascii: the word map's reading. */
+var TR_ALIF_MARK = { 'َ': 'a', 'ِ': 'i', 'ُ': 'u' };
+function trMarkedAscii(core, ascii) {
+  var c = String(core).normalize('NFC'), v = c.charAt(0) === 'ا' && TR_ALIF_MARK[c.charAt(1)];
+  return v && /^[aiu](?![aiu])/.test(ascii) && ascii.charAt(0) !== v ? v + ascii.slice(1) : ascii;
+}
+
 /* a word typed in Urdu / Persian script: one piece carrying its scripts. A Persian line asks the Persian list first, an Urdu
    one Scan's word map first; the letter map is the last resort. A written iẓāfat (zer, ۂ) shows as -e, as in faLineScripts. */
 function trArabicWord(core, lang) {
@@ -22296,6 +22304,8 @@ function trArabicWord(core, lang) {
   else {
     var u = (typeof urduWordsToScripts === 'function') ? urduWordsToScripts(core) : null;   // Scan's per-word reading, letter map for the unknown
     r = { tier: known ? 'known' : 'guess', ro: (u && u.ro) || core, hi: (u && u.hi) || core };
+    var marked = known && literal ? trMarkedAscii(core, known) : known;
+    if (marked !== known) { var m = asciiToScripts(marked); if (m.ro) { r.ro = m.ro; r.hi = m.hi || r.hi; } }
   }
   if ((/[\u0650]$|ۂ$/.test(core)) && !/-e$/.test(r.ro)) { r.ro += '-e'; if (r.hi) r.hi += '-ए'; }
   return { tier: r.tier, fixed: { ur: trUrSpelling(core), ro: r.ro, hi: r.hi } };

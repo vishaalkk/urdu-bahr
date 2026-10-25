@@ -596,6 +596,9 @@ ok(modern.ro === 'woh kehta hai ke chaen nahin' && classical.ro === 'vuh kahtā 
 const modWords = ['ḥāṣil', 'baʿd', 'gaʾe', 'vaqt', 'ziyādah', 'pahle', 'zamīn', 'dunyā', 'kyā', "vaj'h"];
 const modGot = run(`${J(modWords)}.map(trModernWord)`);
 ok(J(modGot) === J(['hasil', 'baad', 'gaye', 'waqt', 'ziyada', 'pehle', 'zameen', 'duniya', 'kya', 'wajah']), 'Modern word rules: ' + J(modGot));
+// a zer or pesh on the opening alif settles the first vowel (the word map is keyed without marks): اِس is, اُس us; a bare اس keeps the map's
+const marks = ['اِس', 'اُس', 'اِن', 'اُن', 'اِسے', 'اُتنا', 'اس'].map(t => build(t).lines[0].out.ro);
+ok(J(marks) === J(['is', 'us', 'in', 'un', 'ise', 'utnā', 'us']), 'zer / pesh on alif: ' + J(marks));
 // a plain Roman typed in the box for the word shown keeps the word and that Roman
 const pChain = run('trBuild("chain").lines[0].words[0].pieces[0]');
 const cChaen = run(`trCustomChoice("chaen", ${J(pChain)})`);
