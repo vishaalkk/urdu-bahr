@@ -104,8 +104,8 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   tie rule gave Dakshina `all` 22.36 → 22.21, `known` 57.31 → 56.60 and Transcribe `calm` 41.66 → 41.57 for +1.1 points on typed
   sentences and +1.4 on held-out poets' words. Most of the new "misses" are the modern word winning over the list's classical one
   (hazar: ہزار, not حذر; insān: انسان, not انساں), which the word-list gold counts as wrong. No `tie` / `tieBands` setting held all
-  three floors while keeping the gain (swept 0.05–0.30 × 2–5). Raise them from here, never lower them again. Roman style (Classical / Modern, `TR_MODERN_RO`) and a Roman typed in a word's
-  box change only the Roman shown.
+  three floors while keeping the gain (swept 0.05–0.30 × 2–5). Raise them from here, never lower them again. Roman style (Classical / Modern: `trModernWord`'s rules plus a short `TR_MODERN_RO` table, gated by
+  `tests/benchmark_modern_ro.js` against Dakshina's typed sentences) and a Roman typed in a word's box change only the Roman shown.
 - **Collocations**: `data/collocations.json` (`scripts/build_collocations.py`) holds neighbour rules for typed Roman
   (`collocSpelling` in `05-translit-helpers.js`). Judge changes with `scripts/colloc_benchmark.py` and `scripts/casual_roman_eval.js`
   (typed Roman → right Urdu word, table mined without the test poets). `tests/benchmark.js` `typed.*` goes the other way (Urdu → Roman)

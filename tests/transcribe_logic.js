@@ -585,13 +585,17 @@ ok(rdsRahi[0].ro === 'rahnā' && (rdsRahi[0].dict === 'Platts' || rdsRahi[0].dic
 const rdsBari = run('rdsBari');
 ok(rdsBari.some(r => r.ro === 'baṛā'), 'baRi readings include adjective base baṛā: ' + JSON.stringify(rdsBari.map(r => r.ro)));
 
-// 56. Roman style: Modern spells the commonest words as most people do (woh, ki, chaen), Classical as Pritchett; the Urdu is the same
+// 56. Roman style: Modern spells words as most people type them (woh, kehta, ke, chaen), Classical as Pritchett; the Urdu is the same
 run('TR.style = "modern"');
 const modern = build('vo kahta hai ki chain nahin').lines[0].out;
 run('TR.style = "classical"');
 const classical = build('vo kahta hai ki chain nahin').lines[0].out;
-ok(modern.ro === 'woh kahtā hai ki chaen nahin' && classical.ro === 'vuh kahtā hai kih chain nahīñ' && modern.ur === classical.ur,
+ok(modern.ro === 'woh kehta hai ke chaen nahin' && classical.ro === 'vuh kahtā hai kih chain nahīñ' && modern.ur === classical.ur,
   'Modern / Classical Roman, same Urdu: ' + modern.ro + ' | ' + classical.ro);
+// Modern's rules: long vowels (aa inside, single at the end), marks dropped, v → w, ʾe → ye, a silent -ah → -a
+const modWords = ['ḥāṣil', 'baʿd', 'gaʾe', 'vaqt', 'ziyādah', 'pahle', 'zamīn', 'dunyā', 'kyā', "vaj'h"];
+const modGot = run(`${J(modWords)}.map(trModernWord)`);
+ok(J(modGot) === J(['hasil', 'baad', 'gaye', 'waqt', 'ziyada', 'pehle', 'zameen', 'duniya', 'kya', 'wajah']), 'Modern word rules: ' + J(modGot));
 // a plain Roman typed in the box for the word shown keeps the word and that Roman
 const pChain = run('trBuild("chain").lines[0].words[0].pieces[0]');
 const cChaen = run(`trCustomChoice("chaen", ${J(pChain)})`);

@@ -28,6 +28,7 @@ quick_suites() {
   echo "── same spelling, other reading (Platts pairs; floors tests/readings_baseline.json)"; node tests/benchmark_readings.js
   echo "── line language (held-out lines; floors tests/lang_baseline.json)"; node tests/benchmark_lang.js
   echo "── real casual typing (Dakshina test split; floors tests/dakshina_baseline.json)"; node tests/benchmark_dakshina.js
+  echo "── Modern Roman style vs real typing (Dakshina test sentences; floors tests/modern_ro_baseline.json)"; node tests/benchmark_modern_ro.js
   echo "── dictionary cache (IndexedDB keyed by the build's fingerprint)"; node tests/dictionary_cache.js
   echo "── generated data is current (roman_fallback, fa_scan, lang_words)"; node tests/derived_data.js
   echo "── learn examples";        node tests/learn_examples.js

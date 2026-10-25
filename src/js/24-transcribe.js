@@ -19,15 +19,44 @@ var TR_TRAIL = /[.,;:!?"“”‘’'«»\]}>—–…،۔؟؛]+$/;
 var TR_LETTER = /[a-zāīūñḍṭṛḥṣẓżḳġʿʾ]/i;
 var TR_SEVERITY = { guess: 4, loose: 3, derived: 3, persian: 2, form: 2, you: 1 };
 var TR_SCRIPTS = [['ro', 'Roman'], ['ur', 'اردو'], ['fa', 'فارسی'], ['hi', 'हिन्दी']];
-/* Roman style. Classical is Pritchett's own spelling (vuh, yih, kih). Modern spells the commonest words as most people write them
-   today; only the Roman changes, never the Urdu, the Devanagari or the scansion. A word's own choice (typed in its box) wins over both. */
+/* Roman style. Classical is Pritchett's own spelling (vuh, yih, kih). Modern spells words as most people type them today, by rule
+   (trModernWord) with a short table for closed-class words and words the rules cannot reach; only the Roman changes, never the
+   Urdu, the Devanagari or the scansion. A word's own choice (typed in its box) wins over both. The rules are judged against how
+   native speakers type (Dakshina): tests/benchmark_modern_ro.js. */
 var TR_STYLES = [['classical', 'Classical'], ['modern', 'Modern']];
-var TR_MODERN_RO = { vuh: 'woh', yih: 'yeh', kih: 'ki', nah: 'na', chain: 'chaen', 'meñ': 'mein', 'haiñ': 'hain', 'nahīñ': 'nahin',
-  'kyūñ': 'kyun', 'yūñ': 'yun', 'hūñ': 'hun', 'maiñ': 'main' };
+var TR_MODERN_RO = { vuh: 'woh', yih: 'yeh', kih: 'ke', nah: 'na', chain: 'chaen', 'meñ': 'mein', 'haiñ': 'hain', 'nahīñ': 'nahin',
+  'kyūñ': 'kyun', 'yūñ': 'yun', 'maiñ': 'main', 'ṣāḥib': 'sahab', saiyid: 'syed', 'shāʿir': 'shayar', 'shāʿirī': 'shayari',
+  'ḳhatm': 'khatam', 'ʿumr': 'umar', balkih: 'balke', agarchih: 'agarche', 'kyūñkih': 'kyunki' };
+var TR_V = 'aeiouāīū';
+function trModernWord(w) {
+  if (Object.prototype.hasOwnProperty.call(TR_MODERN_RO, w)) return TR_MODERN_RO[w];
+  if (!/[a-zāīūñḍṭṛḥṣẓżḳġʿʾ]/.test(w)) return w;
+  var s = w.normalize('NFC')
+    .replace(new RegExp('([' + TR_V + '].*[^' + TR_V + '])ah$'), '$1a')        // ziyādah → ziyāda (a silent final -ah, not -aḥ)
+    .replace(/āh$/, 'ah')                                                    // shāh → shah, nigāh → nigah
+    .replace(new RegExp('([' + TR_V + '][^' + TR_V + ']+)y([aā])$'), '$1iy$2')  // dunyā → duniyā (not kyā)
+    .replace(/ḳhvu/g, 'khu').replace(/ḳh/g, 'kh').replace(/ġh/g, 'gh').replace(/ḳ/g, 'q').replace(/ġ/g, 'gh')
+    .replace(/[ḥ]/g, 'h').replace(/[ṣṡ]|s̤/g, 's').replace(/[ẓż]|z̤/g, 'z').replace(/ṭ|t̤/g, 't').replace(/[ḍṛ]/g, 'd')
+    .replace(/'h$/, 'ah').replace(/'/g, '')                                   // vaj'h → vajah, mash'hūr → mashhūr
+    .replace(/([aā])ʾ([eī])/g, '$1y$2').replace(/uʾe/g, 'uye').replace(/ʾ/g, '')  // gaʾe → gaye, āʾī → āyī, huʾe → huye
+    .replace(/aʿ/g, 'aa').replace(/ʿā/g, 'aa').replace(/ʿ/g, '')               // baʿd → baad, ʿām → aam, ʿalāvah → alāvah
+    .replace(/v/g, 'w')
+    .replace(/([^aeiouāīū])ah(?=[^aeiouāīūyw])/g, '$1eh')                       // pahle → pehle, taḥrīk → tehrīk
+    .replace(/uh(?=[aā])/g, 'oh');                                              // muḥabbat → mohabbat
+  s = s.replace(/eñ$/, 'ein').replace(/āñ/g, 'an').replace(/īñ/g, 'een').replace(/ūñ/g, 'oon').replace(/ñ/g, 'n');
+  var last = s.length - 1, V = new RegExp('[' + TR_V + ']');
+  /* long vowels doubled inside a word, single at its end; ā is single in an open syllable after the first letter (jātā → jata,
+     vāle → wale) and doubled in a closed one or word-initially (kitāb → kitaab, sāth → saath, āyā → aaya) */
+  return s.replace(/[āīū]/g, function (c, i) {
+    var end = i === last && i > 0;
+    if (c === 'ā') return end || (i > 0 && V.test(s.charAt(i + 2)) && !V.test(s.charAt(i + 1))) ? 'a' : 'aa';
+    return c === 'ī' ? (end ? 'i' : 'ee') : (end ? 'u' : 'oo');
+  });
+}
 function trStyleRo(ro) {
   if (TR.style !== 'modern' || !ro) return ro;
   return String(ro).split(' ').map(function (w) {
-    return w.split('-').map(function (pc) { return Object.prototype.hasOwnProperty.call(TR_MODERN_RO, pc) ? TR_MODERN_RO[pc] : pc; }).join('-');
+    return w.split('-').map(trModernWord).join('-');
   }).join(' ');
 }
 
