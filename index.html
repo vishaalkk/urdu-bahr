@@ -2127,7 +2127,10 @@ main, .wrap { max-width: 760px; }
    never moves), and in the settings-sheet surface everywhere else. Hairlines and type only, like the rest of the page. */
 .poet-rail { display: none; }
 @media (min-width: 1260px) {
-  .poet-rail { display: block; position: fixed; top: 112px; bottom: 0; width: 210px; left: calc(50% - 360px - 250px);
+  /* only once the router has shown the tab (.on): before the script runs every section is in the page, and a fixed
+     rail would flash over Home */
+  #ghazals-section.on .poet-rail { display: block; }
+  .poet-rail { position: fixed; top: 112px; bottom: 0; width: 210px; left: calc(50% - 360px - 250px);
     overflow-y: auto; padding: 0 var(--sp-2) var(--sp-7) 0; scrollbar-width: thin; }
   .ghazal-filters .poet-sheet-btn { display: none; }   /* the rail replaces it */
 }
@@ -11312,7 +11315,7 @@ function ghazalRowHTML(e, terms) {
   const meta = [];
   if (!ghazalFilter.poet) meta.push(`<span>${escapeHtml(cs === 'ur' ? P.ur : cs === 'hi' ? (P.hi || P.name) : gzPoetName(P))}</span>`);
   if (e.ex) meta.push(`<span class="gz-ex">✎ Pritchett’s notes · exercise ${e.ex.id}</span>`);
-  if (e.lang === 'fa' && P.langs.length > 1) meta.push('<span>Fārsī</span>');
+  if (e.lang === 'fa' && P.langs.length > 1 && ghazalFilter.lang === 'all') meta.push('<span>Fārsī</span>');   // the language tab already says so
   // her number (Ghalib/Mir) or the source's (Rekhta/Sufinama), linked out; an exercise not in any collection by its number
   const num = e.col === 'handbook' ? escapeHtml('Ex ' + e.item.id)
     : isPoetCol(e.col) ? rekhtaLinkHTML(e.item, { bare: true }) : (franLinkHTML(e.col, e.item, { bare: true }) || escapeHtml('#' + e.item.id));

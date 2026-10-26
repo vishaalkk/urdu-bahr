@@ -880,7 +880,7 @@ function ghazalRowHTML(e, terms) {
   const meta = [];
   if (!ghazalFilter.poet) meta.push(`<span>${escapeHtml(cs === 'ur' ? P.ur : cs === 'hi' ? (P.hi || P.name) : gzPoetName(P))}</span>`);
   if (e.ex) meta.push(`<span class="gz-ex">✎ Pritchett’s notes · exercise ${e.ex.id}</span>`);
-  if (e.lang === 'fa' && P.langs.length > 1) meta.push('<span>Fārsī</span>');
+  if (e.lang === 'fa' && P.langs.length > 1 && ghazalFilter.lang === 'all') meta.push('<span>Fārsī</span>');   // the language tab already says so
   // her number (Ghalib/Mir) or the source's (Rekhta/Sufinama), linked out; an exercise not in any collection by its number
   const num = e.col === 'handbook' ? escapeHtml('Ex ' + e.item.id)
     : isPoetCol(e.col) ? rekhtaLinkHTML(e.item, { bare: true }) : (franLinkHTML(e.col, e.item, { bare: true }) || escapeHtml('#' + e.item.id));
