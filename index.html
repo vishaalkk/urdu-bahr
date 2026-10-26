@@ -2113,17 +2113,38 @@ main, .wrap { max-width: 760px; }
   color: var(--faint); font-family: var(--sans); font-size: 14px;
 }
 
-/* Poets ▾: a flat fold-out under the collection tabs. A filter line, then one hairline row per poet (name, count).
-   No surface, no shadow: the page head is not a menu. Script text keeps sentence case and no tracking. */
-.poet-picker { margin: calc(-1 * var(--sp-3)) 0 var(--sp-4); padding: 0 0 var(--sp-3); border-bottom: 1px solid var(--line); }
-.poet-picker-langs { display: flex; gap: var(--sp-2); margin-top: var(--sp-2); }
-.poet-opt-lang { font-family: var(--sans); font-size: 11px; letter-spacing: 0.06em; margin-left: var(--sp-2); }
-.poet-picker-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); column-gap: var(--sp-5); margin-top: var(--sp-2); }
-.poet-opt { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-3); min-height: 38px; padding: 6px 0; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: none; color: var(--dim); font-family: var(--serif); font-size: var(--fs-base); text-align: start; text-transform: none; letter-spacing: 0; }
-.poet-opt:hover, .poet-opt:focus-visible { color: var(--ink); }
-.poet-opt.on { color: var(--ink); font-weight: 500; }
-.poet-opt-count { font-family: var(--sans); font-size: var(--fs-xs); }
-.poet-opt-none { padding: var(--sp-2) 0; }
+/* Filters: language and "Poets ▾" share the tracked-caps tab row; the tab row never scrolls */
+.ghazal-filters .seg-btn { white-space: nowrap; }
+.ghazal-filters .poet-sheet-btn { margin-left: auto; }
+.ghazal-desc b { font-weight: 500; color: var(--ink); }
+.gz-clear { margin-left: var(--sp-2); }
+.gz-ex { color: var(--teal); }
+#ghazals-section.is-reading .ghazal-head { display: none; }
+#ghazals-section.is-reading .reader-nav { margin-top: var(--sp-5); }
+@media (max-width: 600px) { .ghazal-head .ghazal-filters.subtabs.seg { gap: var(--sp-4); overflow: visible; } }
+
+/* Poets: one list, shown as a rail in the left margin where the margin has room (outside the 720px column, which
+   never moves), and in the settings-sheet surface everywhere else. Hairlines and type only, like the rest of the page. */
+.poet-rail { display: none; }
+@media (min-width: 1260px) {
+  .poet-rail { display: block; position: fixed; top: 112px; bottom: 0; width: 210px; left: calc(50% - 360px - 250px);
+    overflow-y: auto; padding: 0 var(--sp-2) var(--sp-7) 0; scrollbar-width: thin; }
+  .ghazal-filters .poet-sheet-btn { display: none; }   /* the rail replaces it */
+}
+.poet-rail-label { font-family: var(--sans); font-size: var(--fs-xs); letter-spacing: 0.15em; text-transform: uppercase; color: var(--faint); margin-bottom: var(--sp-2); }
+.poet-list { display: flex; flex-direction: column; }
+.poet-opt { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-3); min-height: 0; padding: 3px 0; border: 0; border-radius: 0; background: none; color: var(--dim); font-family: var(--serif); font-size: var(--fs-sm); text-align: start; text-transform: none; letter-spacing: 0; cursor: pointer; }
+.poet-opt:hover, .poet-opt:focus-visible { color: var(--gold); }
+.poet-opt.on { color: var(--ink); }
+.poet-opt.on .pn { border-bottom: 1px solid var(--ink); }
+.poet-opt .pc { font-family: var(--sans); font-size: var(--fs-xs); color: var(--faint); }
+.poet-opt.poet-all { white-space: nowrap; font-family: var(--sans); font-size: var(--fs-xs); letter-spacing: 0.1em; text-transform: uppercase; padding: var(--sp-1) 0; }
+.poet-sub { font-family: var(--sans); font-size: var(--fs-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); margin: var(--sp-3) 0 var(--sp-1); }
+.poet-none { padding: var(--sp-2) 0; }
+.poet-sheet-in { display: flex; flex-direction: column; overflow: hidden; }
+.poet-sheet-in .poet-list { overflow-y: auto; flex: 1; padding-bottom: var(--sp-4); }
+.poet-sheet-in .poet-opt { font-size: var(--fs-base); min-height: 44px; align-items: center; border-bottom: 1px solid var(--line); }
+.poet-sheet-in .poet-opt.poet-all { font-size: var(--fs-xs); }
 .ghazal-collection-count {
   font-family: var(--sans);
   font-size: 13px;
@@ -2222,6 +2243,11 @@ main, .wrap { max-width: 760px; }
 /* Reader */
 .ghazal-reader-view { margin-bottom: var(--sp-6); }
 .reader-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--sp-4); font-family: var(--sans); font-size: 13px; }
+.crumbs { display: flex; flex-wrap: wrap; gap: var(--sp-2); align-items: baseline; font-family: var(--sans); font-size: var(--fs-xs); letter-spacing: 0.15em; text-transform: uppercase; color: var(--faint); }
+.crumbs a { color: var(--faint); text-decoration: none; }
+.crumbs a:hover, .crumbs a:focus-visible { color: var(--ink); }
+.crumbs .crumb-sep { color: var(--ghost); letter-spacing: 0; }
+.crumbs .crumb-here { color: var(--ink); }
 .reader-header { margin-bottom: var(--sp-4); text-align: center; }
 /* Reader header component (Option 2): Benchmark Card containing meter number,
    prominent melodic anchor verse, interactive pattern strip, and faint technical name. */
@@ -2298,6 +2324,7 @@ main, .wrap { max-width: 760px; }
   }
 }
 .reader-intro-note { margin: var(--sp-4) 0; max-width: 640px; margin-left: auto; margin-right: auto; }
+.reader-intro-extra { margin-top: var(--sp-2); }
 .reader-actions {
   display: flex; justify-content: center; gap: var(--sp-6);
   margin: var(--sp-5) 0 var(--sp-3);
@@ -2828,20 +2855,20 @@ html[data-script="ro"] .syl-tab, html[data-script="hi"] .syl-tab { font-family: 
 
 /* Search fields (Ghazals, Poets, Weight look-up, Feet): a faint magnifier, serif text, one hairline underneath, no focus box.
    After the Columbia Urdu Poetry Group's search. The icon is an inline SVG so nothing loads from the network. */
-.ghazal-search-input, .dict-search-input, .poet-picker-filter, .feet-search {
+.ghazal-search-input, .dict-search-input, .poet-find, .feet-search {
   min-height: auto; min-width: 140px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background-color: transparent;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
   background-repeat: no-repeat; background-position: 2px 50%; background-size: 16px;
   padding: var(--sp-2) 0 var(--sp-2) 28px; color: var(--ink); font-family: var(--serif); font-size: 17px; outline: none; box-shadow: none;
 }
 .ghazal-search-input { display: block; width: 100%; max-width: 560px; margin: 0 0 var(--sp-4); }
-.col-filter-label { margin: calc(var(--sp-2) * -1) 0 var(--sp-2); }
 .dict-search-input { width: 100%; }
-.poet-picker-filter { width: 100%; max-width: 280px; }
+.poet-find { width: 100%; min-width: 0; font-size: var(--fs-sm); margin-bottom: var(--sp-2); }
+.poet-sheet-in .poet-find { font-size: var(--fs-base); }
 .feet-search { flex: 1; }
-.ghazal-search-input::placeholder, .dict-search-input::placeholder, .poet-picker-filter::placeholder, .feet-search::placeholder { color: var(--faint); font-style: normal; }
-.ghazal-search-input:focus, .dict-search-input:focus, .poet-picker-filter:focus, .feet-search:focus,
-.ghazal-search-input:focus-visible, .dict-search-input:focus-visible, .poet-picker-filter:focus-visible, .feet-search:focus-visible { outline: none !important; box-shadow: none; border-bottom-color: var(--gold); }
+.ghazal-search-input::placeholder, .dict-search-input::placeholder, .poet-find::placeholder, .feet-search::placeholder { color: var(--faint); font-style: normal; }
+.ghazal-search-input:focus, .dict-search-input:focus, .poet-find:focus, .feet-search:focus,
+.ghazal-search-input:focus-visible, .dict-search-input:focus-visible, .poet-find:focus-visible, .feet-search:focus-visible { outline: none !important; box-shadow: none; border-bottom-color: var(--gold); }
 @media (max-width: 767px) { .ghazal-search-input { max-width: none; margin-left: 0; width: 100%; } }
 
 /* Scan: language of the verse (Auto / Urdu / Fārsī) and the Persian-meter note */
@@ -5021,38 +5048,32 @@ html[data-script="ascii"] .fa-couplet-line.fa-hi { display: none; }
 
 <!-- ===================== GHAZALS TAB ===================== -->
 <section id="ghazals-section" class="tab-view">
+  <!-- Poets rail: sits in the left margin on wide screens (CSS shows it only where the margin has room);
+       elsewhere the "Poets ▾" tab opens the same list in #poetSheet. Inside the section, so it hides with it. -->
+  <aside id="poetRail" class="poet-rail" aria-label="Poets">
+    <div class="poet-rail-label">Poets</div>
+    <input type="search" id="poetRailFilter" class="poet-find" aria-label="Find a poet" placeholder="Find a poet…" autocomplete="off" oninput="renderPoetLists()">
+    <div id="poetRailList" class="poet-list"></div>
+  </aside>
+
   <div class="page-head ghazal-head">
     <div class="eyebrow sr-only" id="ghazalEyebrow">Ghazals</div>
     <h1 class="page-title sr-only">Ghazals</h1>
-    <div class="lede dim small">Explore classical and modern ghazals grouped by bahr. Tap a group to open it.</div>
+    <div class="lede dim small">Ghazals grouped by bahr, each under a famous verse in it. Tap a group to open it; narrow by language or poet.</div>
 
-    <!-- Collection segmented control -->
-    <div class="subtabs seg" role="tablist" aria-label="Collections">
-      <button class="seg-btn on" id="colBtnHandbook" onclick="switchCollection('handbook')">Handbook</button>
-      <button class="seg-btn" id="colBtnGhalib" onclick="switchCollection('ghalib')">Ghalib</button>
-      <button class="seg-btn" id="colBtnMir" onclick="switchCollection('mir')">Mir</button>
-      <button class="seg-btn" id="colBtnPoets" aria-haspopup="true" aria-expanded="false" aria-controls="poetPicker" onclick="togglePoetPicker()">Poets ▾</button>
-    </div>
-    <div id="poetPicker" class="poet-picker hidden">
-      <input type="search" id="poetPickerFilter" class="poet-picker-filter" aria-label="Find a poet" placeholder="Filter poets by name…" autocomplete="off" oninput="renderPoetPickerList()">
-      <div id="poetPickerLangs" class="poet-picker-langs" role="group" aria-label="Language"></div>
-      <div id="poetPickerList" class="poet-picker-list"></div>
-    </div>
+    <!-- Filters: language, and (where there is no rail) the poet sheet -->
+    <div class="subtabs seg ghazal-filters" id="ghazalFilters" role="group" aria-label="Filter ghazals"></div>
 
-    <!-- One search for the whole tab: it covers every collection -->
+    <!-- One search for the whole tab; the filters above narrow it too -->
     <input type="search" id="ghazalSearchInput" class="ghazal-search-input" aria-label="Search all ghazals" placeholder="Search ghazals or verses across all poets…" autocomplete="off" oninput="onGhazalSearch()">
-    <div class="tiny dim col-filter-label" id="colFilterLabel" hidden>Showing matches from all collections. Pick one to narrow them.</div>
 
-    <!-- Unified single meta bar for the active tab -->
-    <div class="row ghazal-controls">
-      <div id="colDesc" class="dim ghazal-desc"><span id="ghazalCollectionCount" class="ghazal-collection-count">24 ghazals</span> · <span id="colDescText">The handbook's exercise ghazals, with Frances Pritchett's notes. <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/10_ex_01_06.html" target="_blank" rel="noopener">Her exercises<span class="ext">↗</span></a> · <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/11_exnotes.html" target="_blank" rel="noopener">answers &amp; notes<span class="ext">↗</span></a></span></div>
-    </div>
+    <div id="ghazalStatus" class="dim ghazal-desc small"></div>
   </div>
 
   <!-- Ghazal Reader View (when viewing a specific ghazal) -->
   <div id="ghazalReaderView" class="ghazal-reader-view hidden">
     <div class="row reader-nav">
-      <button class="btn link sm" onclick="navigate('/ghazals/' + (typeof activeCollection !== 'undefined' ? activeCollection : 'handbook'))">← Ghazals</button>
+      <nav id="readerCrumbs" class="crumbs" aria-label="Breadcrumb"></nav>
       <span id="readerTitle" class="small dim"></span>
     </div>
     <div id="readerHeader" class="reader-header"></div>
@@ -5061,35 +5082,20 @@ html[data-script="ascii"] .fa-couplet-line.fa-hi { display: none; }
     <div id="readerFooterNav" class="reader-footer-nav row"></div>
   </div>
 
-  <!-- Ghazal List View -->
+  <!-- Ghazal List View: every poet's ghazals under their bahr, narrowed by the filters and the search -->
   <div id="ghazalListView">
-    <!-- Universal search results (all collections, tagged); shown instead of
-         the three containers below whenever the search box has a query. -->
-    <div id="ghazalUniversalResults" class="verses hidden"></div>
-    <button id="ghazalUniversalMore" class="btn ghost sm ghazal-more-btn hidden" onclick="showMoreUniversal()">Show 30 more</button>
+    <div id="ghazalList" class="verses"></div>
+  </div>
 
-    <!-- Handbook exercises list -->
-    <div id="handbookExContainer">
-      <div class="row hidden" id="exPoetChips"></div>
-      <div id="exDetailView" class="verses"></div>
-    </div>
-
-    <!-- Ghalib container -->
-    <div id="ghalibContainer" class="hidden">
-      <div id="ghalibExtList" class="verses"></div>
-      <button id="ghalibExtMore" class="btn ghost sm ghazal-more-btn hidden" onclick="showMoreGhalibExt()">Show 30 more</button>
-    </div>
-
-    <!-- Mir container -->
-    <div id="mirContainer" class="hidden">
-      <div id="mirExtList" class="verses"></div>
-      <button id="mirExtMore" class="btn ghost sm ghazal-more-btn hidden" onclick="showMoreMirExt()">Show 30 more</button>
-    </div>
-
-    <!-- Poet container: one poet at a time, chosen from the Poets picker (Rekhta; the six hand-checked keep their verified Roman) -->
-    <div id="poetsContainer" class="hidden">
-      <div id="poetExtList" class="verses"></div>
-      <button id="poetExtMore" class="btn ghost sm ghazal-more-btn hidden" onclick="showMorePoetExt()">Show 30 more</button>
+  <!-- Poet sheet (phones and narrow screens): the settings-sheet surface -->
+  <div class="sheet" id="poetSheet" role="dialog" aria-modal="true" aria-labelledby="poetSheetTitle" onclick="if(event.target===this)togglePoetSheet(false)">
+    <div class="in poet-sheet-in">
+      <div class="settings-head">
+        <h3 id="poetSheetTitle">Poets</h3>
+        <button class="icon-btn" onclick="togglePoetSheet(false)" aria-label="Close poets">✕</button>
+      </div>
+      <input type="search" id="poetSheetFilter" class="poet-find" aria-label="Find a poet" placeholder="Find a poet…" autocomplete="off" oninput="renderPoetLists()">
+      <div id="poetSheetList" class="poet-list"></div>
     </div>
   </div>
 </section>
@@ -7007,6 +7013,12 @@ function wordRomanMap(lineObj,r){
     }
     romanTokens.push(cur);
   }
+  const uWords=r.words.map(w=>(w.raw||'').trim().split(/\s+/).filter(Boolean));
+  const uCount=uWords.reduce((n,t)=>n+Math.max(1,t.length),0);
+  if(uCount!==romanTokens.length && uWords.every(t=>t.length<=1)){
+    const al=alignRomanByConsonants(r.words.map(w=>w.raw||''),romanTokens);
+    if(al) return al;
+  }
   let ptr=0; const map=[];
   for(let wi=0; wi<r.words.length; wi++){
     const urduTokens=(r.words[wi].raw||'').trim().split(/\s+/).filter(Boolean);
@@ -7017,6 +7029,54 @@ function wordRomanMap(lineObj,r){
     ptr+=k;
   }
   // Fix A: always return the map (per-word failures are already null in map[wi])
+  return map;
+}
+/* When the Urdu and the Roman divide a line into different numbers of words (کہیں گے / kaheñge, بوقت / bah vaqt),
+   pair them by consonant count: one to one, two Urdu words to one Roman word (cut where the first Urdu word's
+   consonants end), or one Urdu word to two Roman words. Returns null if no pairing uses every word. */
+function urConsonants(w){   // و / ی count as v / y at the start of a word or before a vowel letter (فرماویں, پیار)
+  let b=String(w).replace(/[ً-ٰٟھںءٔ]/g,''); if(b.length>2) b=b.replace(/[ہۂ]$/,'');
+  return b.replace(/^[وی]/,'C').replace(/[وی](?=[اآیےو])/g,'C').replace(/[اآویےۓئ]/g,'').length; }
+const RO_CONS=/(?:chh|ḳh|[kgcjṭtḍdpbsz]h|ġh|[bcdfghjklmnpqrstvwyzḍḥṛṣṭẓżẕġḳʿ])/gi;
+function roConsonants(w){ return (String(w).replace(/ñ/g,'').replace(/-[aeiouāīū]{1,2}$/,'').match(RO_CONS)||[]).length; }
+/* cut one Roman word between two Urdu words: at an apostrophe if it has one (nusḳhah'hā-e), else before the second
+   word's consonants counted from the end (kaheñ|ge, dikhāven|ge, gunāh|gāroñ), backing over vowels when the second
+   word opens with a vowel letter (jahān|ābād) */
+function splitRomanAt(tok,urB){
+  const ap=tok.indexOf("'"); if(ap>0 && ap<tok.length-1) return [tok.slice(0,ap),tok.slice(ap+1)];
+  const n=urConsonants(urB), starts=[]; let m;
+  RO_CONS.lastIndex=0; while((m=RO_CONS.exec(tok))) starts.push(m.index);
+  if(n<1 || n>starts.length) return null;
+  let c=starts[starts.length-n];
+  if(/^[اآع]/.test(urB)) while(c>1 && /[aeiouāīū]/i.test(tok.charAt(c-1))) c--;
+  return c>0 ? [tok.slice(0,c),tok.slice(c)] : null;
+}
+const UR_INITIAL={'ب':'b','پ':'p','ت':'t','ٹ':'t','ث':'s','ج':'j','چ':'c','ح':'h','خ':'k','د':'d','ڈ':'d','ذ':'z','ر':'r','ڑ':'r','ز':'z','ژ':'z','س':'s','ش':'s','ص':'s','ض':'z','ط':'t','ظ':'z','غ':'g','ف':'f','ق':'q','ک':'k','گ':'g','ل':'l','م':'m','ن':'n','و':'vou','ہ':'h','ھ':'h','ی':'yie','ے':'e','ع':'ʿaeiou','ا':'aiueo','آ':'a'};
+function sameInitial(urw,row){
+  const u=UR_INITIAL[String(urw).charAt(0)], r=String(row).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().charAt(0);
+  return !u || !r || u.includes(r);
+}
+function alignRomanByConsonants(ur,ro){
+  const U=ur.length, R=ro.length, uc=ur.map(urConsonants), rc=ro.map(roConsonants);
+  const best=Array.from({length:U+1},()=>Array(R+1).fill(Infinity)), how=Array.from({length:U+1},()=>Array(R+1).fill(null));
+  best[0][0]=0;
+  for(let i=0;i<=U;i++) for(let j=0;j<=R;j++){
+    const b=best[i][j]; if(b===Infinity) continue;
+    const step=(ni,nj,cost,h)=>{ if(ni<=U&&nj<=R&&b+cost<best[ni][nj]){ best[ni][nj]=b+cost; how[ni][nj]=h; } };
+    if(i<U&&j<R) step(i+1,j+1,Math.abs(uc[i]-rc[j]),'11');
+    if(i+1<U&&j<R){ const p=splitRomanAt(ro[j],ur[i+1]); step(i+2,j+1,Math.abs(uc[i]+uc[i+1]-rc[j])+1+(p&&sameInitial(ur[i+1],p[1])?0:2),'21'); }
+    if(i<U&&j+1<R) step(i+1,j+2,Math.abs(uc[i]-rc[j]-rc[j+1])+1,'12');
+    if(i<U&&j+2<R) step(i+1,j+3,Math.abs(uc[i]-rc[j]-rc[j+1]-rc[j+2])+2,'13');
+  }
+  if(best[U][R]===Infinity) return null;
+  const map=[]; let i=U, j=R;
+  while(i>0||j>0){
+    const h=how[i][j];
+    if(h==='11'){ map[i-1]=ro[j-1]; i--; j--; }
+    else if(h==='21'){ const p=splitRomanAt(ro[j-1],ur[i-1]); map[i-2]=p?p[0]:null; map[i-1]=p?p[1]:null; i-=2; j--; }
+    else if(h==='12'){ map[i-1]=ro[j-2]+ro[j-1]; i--; j-=2; }
+    else { map[i-1]=ro[j-3]+ro[j-2]+ro[j-1]; i--; j-=3; }
+  }
   return map;
 }
 /* per-syllable Roman labels (parallel to e.syl): each word — or grafted run of words —
@@ -8339,75 +8399,46 @@ function onHandbookBack() {
   }
 }
 
+/* #/ghazals: one list of every poet's ghazals by bahr, narrowed by ?poet= &lang= &notes=1 &q= (and ?meter= opens
+   that bahr's group). The reader keeps its address, #/ghazals/<collection>/<id>. Old collection links
+   (#/ghazals/ghalib, #/ghazals/handbook, #/ghazals/others) become those filters. */
 function handleGhazalsRoute(parts, params) {
-  let sub = parts[1] || 'handbook';
+  let sub = parts[1] || '';
   let ghazalId = parts[2] || null;
+  params = params || {};
   // the old "More Poets" collection (#/ghazals/others[/N]) now lives under each poet
   if (sub === 'others') {
     const moved = ghazalId && POETS_DATA.legacy && POETS_DATA.legacy['others/' + ghazalId];
     if (moved) { setHashQuiet('/ghazals/' + moved); [sub, ghazalId] = moved.split('/'); }
-    else { sub = 'faiz'; ghazalId = null; setHashQuiet('/ghazals/faiz'); }
-  } else if (!GHAZAL_COLS.includes(sub)) {
-    sub = 'handbook'; ghazalId = null;
+    else { sub = 'faiz'; ghazalId = null; }
   }
 
-  if (ghazalId) {
+  if (ghazalId && GHAZAL_COLS.includes(sub)) {
+    activeCollection = sub;
     openGhazalReader(sub, ghazalId);
     return;
   }
 
   closeGhazalReader();
-  switchCollection(sub);
-
-  if (params && params.meter && typeof openMeterGroupFor === 'function') openMeterGroupFor(params.meter);
-  if (params && params.q && $('ghazalSearchInput')) {
-    $('ghazalSearchInput').value = params.q;
-    onGhazalSearch();
-  }
+  activeCollection = '';
+  // the address is the list's state; only the language is remembered between visits
+  const L = gzLibrary();
+  const before = ghazalListHash();
+  ghazalFilter.poet = '';
+  ghazalFilter.notes = sub === 'handbook' || params.notes === '1';
+  const key = GZ_FOLD[sub] || sub;
+  if (key && L.poets[key]) ghazalFilter.poet = key;
+  if (params.poet && L.poets[params.poet]) ghazalFilter.poet = params.poet;
+  if (['all', 'ur', 'fa'].includes(params.lang)) { ghazalFilter.lang = params.lang; store.set('poetLang', params.lang); }
+  if ($('ghazalSearchInput')) $('ghazalSearchInput').value = params.q || '';
+  if (ghazalListHash() !== before) { openMeterGroups.clear(); fullMeterGroups.clear(); }   // Back from a ghazal keeps the groups open
+  if (sub) setHashQuiet(ghazalListHash() + (params.meter ? (/\?/.test(ghazalListHash()) ? '&' : '?') + 'meter=' + params.meter : ''));
+  renderGhazalsList();
+  if (params.meter && typeof openMeterGroupFor === 'function') openMeterGroupFor(params.meter);
 }
 
-let activeCollection = 'handbook';
-// switchCollection lives in 09-exercises-module.js
-function populateGhazalMeterFilter(col) {
-  const sel = $('ghazalMeterFilter');
-  if (!sel) return;
-  sel.innerHTML = '<option value="all">All meters</option>';
-}
-
-function onGhazalFilterChange() {
-  const val = $('ghazalMeterFilter') ? $('ghazalMeterFilter').value : 'all';
-  if (activeCollection === 'ghalib' && $('ghalibExtMeterFilter')) {
-    $('ghalibExtMeterFilter').value = val;
-    if (typeof renderGhalibExt === 'function') renderGhalibExt();
-  } else if (activeCollection === 'mir' && $('mirExtMeterFilter')) {
-    $('mirExtMeterFilter').value = val;
-    if (typeof renderMirExt === 'function') renderMirExt();
-  }
-}
-
-function onGhazalSearch() {
-  const q = $('ghazalSearchInput') ? $('ghazalSearchInput').value.toLowerCase().trim() : '';
-  if (activeCollection === 'ghalib') {
-    if (typeof renderGhalibExt === 'function') renderGhalibExt();
-  } else if (activeCollection === 'mir') {
-    if (typeof renderMirExt === 'function') renderMirExt();
-  }
-}
-
-function openGhazalReader(col, id) {
-  const rView = $('ghazalReaderView');
-  const lView = $('ghazalListView');
-  if (rView) rView.style.display = 'block';
-  if (lView) lView.style.display = 'none';
-  if ($('readerTitle')) $('readerTitle').textContent = `${col.toUpperCase()} ${id}`;
-}
-
-function closeGhazalReader() {
-  const rView = $('ghazalReaderView');
-  const lView = $('ghazalListView');
-  if (rView) rView.style.display = 'none';
-  if (lView) lView.style.display = 'block';
-}
+/* the collection of the ghazal open in the reader ('' on the list); the reader header reads it */
+let activeCollection = '';
 
 function initScanEmptyState() {
   const host = $('samples');
@@ -10279,6 +10310,7 @@ function urduToRoman(str) {
   return out;
 }
 
+const FA_LINE_SCRIPTS = new WeakMap();
 function getLineDisplay(lineObj, script) {
   if(!lineObj) return '';
   const approxBadge = ' <span class="pill faint tiny" style="font-size:10.5px;padding:2px 6px;margin-inline-start:6px;vertical-align:middle;font-weight:normal;" title="Urdu script does not write short vowels; transliteration is approximate">approximate</span>';
@@ -10289,6 +10321,14 @@ function getLineDisplay(lineObj, script) {
     if(script === 'hi') return urduToDevanagari(lineObj) + approxBadge;
     if(script === 'ro') return urduToRoman(lineObj) + approxBadge;
     return lineObj;
+  }
+  /* A Persian line Sufinama gave no Roman for: read it with the Persian word list (once per line), not the letter map */
+  if(lineObj.lang === 'fa' && lineObj.ur && (!lineObj.ro || !lineObj.hi) && (script === 'ro' || script === 'hi') && typeof faLineScripts === 'function') {
+    let fa = FA_LINE_SCRIPTS.get(lineObj);
+    if(!fa) { fa = faLineScripts(lineObj.ur); FA_LINE_SCRIPTS.set(lineObj, fa); }
+    const ro = lineObj.ro || fa.ro, hi = lineObj.hi || fa.hi;
+    const approx = lineObj.isApprox || fa.known < fa.words;
+    return (script === 'hi' ? hi : ro) + (approx ? approxBadge : '');
   }
   const isNovelUr = lineObj.isApprox;
   if(script === 'ascii') return (lineObj.ascii || lineObj.ro || lineObj.ur || '') + (isNovelUr ? approxBadge : '');
@@ -10344,9 +10384,7 @@ function setScriptMode(mode) {
   if(typeof renderEar === 'function') renderEar();
   if(typeof renderWeak === 'function') renderWeak();
   if(typeof renderHandbook === 'function') renderHandbook();
-  if(typeof renderExercises === 'function') renderExercises();
-  if(typeof renderGhalibExt === 'function') renderGhalibExt();
-  if(typeof renderMirExt === 'function') renderMirExt();
+  if(typeof renderGhazalsList === 'function') renderGhazalsList();   // the Ghazals list, its poet rail/sheet, or the open reader
   if(typeof renderDictionary === 'function') renderDictionary();
   if(typeof renderFams === 'function') renderFams();
   if(typeof renderFeetCatalog === 'function') renderFeetCatalog();
@@ -10393,16 +10431,10 @@ function initTheme() {
 }
 
 /* ================= GHAZALS LIBRARY & READER MODULE (§5.7, §5.8) ================= */
-let ghazalShownCount = 30;
 let curReaderCol = null;
 let curReaderId = null;
 let curReaderItem = null;
 
-/* Universal search (round 2): while the box has a query, results merge all
-   three collections; the collection segmented buttons then act as a filter
-   on those merged results instead of switching which corpus is browsed.
-   'all' = no filter. Reset to 'all' whenever the search box is cleared. */
-let searchCollectionFilter = 'all';
 let ghazalSearchDebounce = null;
 
 // Scans are shown by default; only an explicit "Hide all scans" turns them off.
@@ -11098,611 +11130,359 @@ function meterGroupHeaderHTML(key, count, open) {
   `;
 }
 
-/* Renders as many whole/partial groups as fit in `shownCount` rows (largest
-   groups first, per buildMeterGroups), so "Show N more" always continues
-   from exactly where the last render left off — including mid-group. */
-/* Every meter group is listed up front as one collapsed line; tap to open its ghazals.
-   A search or meter filter (or a single group) opens everything that matches. */
+/* ================= ONE LIBRARY: every poet's ghazals under their bahr =================
+   The Ghazals tab is a single list of every collection (Ghalib, Mir, the Rekhta/Sufinama poets and the
+   Handbook's exercises), grouped by bahr as before, and narrowed by language, poet and Pritchett's notes.
+   One poet is one entry: Ghalib's and Mir's Persian collections fold into them, and a Handbook exercise
+   that is a poem already in its poet's collection is not listed twice; her notes go onto that ghazal
+   (gzExerciseOf) and show in its reader. Exercises not in any collection are listed under their poet. */
+const GZ_FOLD = { ghalib_farsi: 'ghalib', mir_farsi: 'mir' };
+const HB_POET_KEY = { 'Vali Dakhani': 'vali', 'Khvajah Mir Dard': 'dard', 'Mir': 'mir', "Mus'hafi": 'mushafi', "Jur'at": 'jurat',
+  'Atish': 'atish', 'Zauq': 'zauq', 'Momin': 'momin', 'Ghalib': 'ghalib', 'Dagh': 'dagh', 'Akbar Ilahabadi': 'akbar', 'Iqbal': 'iqbal' };
+/* Handbook poets with no collection of their own */
+const HB_ONLY_POETS = [
+  { key: 'vali', name: 'Vali', full: 'Vali Dakhani', ur: 'ولی دکنی', hi: 'वली दकनी' },
+  { key: 'mushafi', name: "Mus'hafi", full: "Ghulam Hamdani Mus'hafi", ur: 'مصحفی', hi: 'मुसहफ़ी' },
+  { key: 'jurat', name: "Jur'at", full: "Qalandar Bakhsh Jur'at", ur: 'جرأت', hi: 'जुरअत' },
+];
+/* Poets known by the pen name alone keep it in lists; everyone else is listed by full name (Qamar Jalalvi, not Qamar) */
+const PEN_NAME_POETS = new Set(['ghalib', 'mir', 'iqbal', 'faiz', 'faraz', 'rumi', 'hafiz', 'saadi', 'jami', 'khusrau', 'atish',
+  'dard', 'sauda', 'zauq', 'momin', 'anees', 'hali', 'insha', 'nasikh', 'zafar', 'iraqi']);
+const gzPoetName = p => PEN_NAME_POETS.has(p.key) ? p.name : (p.full || p.name);
+const gzLangOf = (col, item) => (GZ_FOLD[col] || (item && item.lang === 'fa')) ? 'fa' : 'ur';
+/* a line's letters for matching across sources: no vowel marks or tashdid, ئ / ی and ۂ / ہ folded (لئے = لیے, ذمّے = ذمے) */
+const gzWords = s => String(s || '').normalize('NFC').replace(/[\u064B-\u065F\u0670]/g, '').replace(/[يىئ]/g, 'ی').replace(/[ۂۀه]/g, 'ہ').replace(/ك/g, 'ک')
+  .replace(/[^\u0600-\u06FF\s]/g, '').split(/\s+/).filter(Boolean);
+const gzKey = s => gzWords(s).join('');
+const gzUr = l => typeof l === 'string' ? l : (l && l.ur) || '';
+/* share of her couplet's words found in a couplet of the ghazal (0–1) */
+function gzOverlap(mine, theirs) {
+  if (!mine.length) return 0;
+  const t = new Set(theirs);
+  return mine.filter(w => t.has(w)).length / mine.length;
+}
+let GZ = null;
+function gzLibrary() {
+  if (GZ) return GZ;
+  const poets = {};
+  const add = m => { poets[m.key] = Object.assign({ entries: [], ex: 0, langs: ['ur'] }, m); };
+  add({ key: 'ghalib', name: 'Ghalib', full: 'Mirza Ghalib', ur: 'غالب', hi: 'ग़ालिब' });
+  add({ key: 'mir', name: 'Mir', full: 'Mir Taqi Mir', ur: 'میر', hi: 'मीर' });
+  POET_LIST.forEach(p => { if (!GZ_FOLD[p.key]) add({ key: p.key, name: p.name, full: p.full || p.name, ur: p.ur, hi: p.hi, aliases: p.aliases, langs: (p.langs || ['ur']).slice() }); });
+  HB_ONLY_POETS.forEach(add);
+  ['ghalib', 'mir'].concat(POET_LIST.map(p => p.key)).forEach(col => {
+    const key = GZ_FOLD[col] || col;
+    collectionData(col).forEach(item => poets[key].entries.push({ col, item, p: key, lang: gzLangOf(col, item) }));
+    if (GZ_FOLD[col] && !poets[key].langs.includes('fa')) poets[key].langs.push('fa');
+  });
+  const exOf = {};   // 'col/id' → the Handbook exercise that is this ghazal
+  collectionData('handbook').forEach(ex => {
+    const P = poets[HB_POET_KEY[ex.poet]];
+    if (!P) return;
+    const heads = new Set((ex.lines || []).slice(0, 4).map(l => gzKey(l.ur)));
+    const hit = P.entries.find(e => (e.item.lines || []).slice(0, 4).some(l => heads.has(gzKey(l.ur))));
+    if (hit) { hit.ex = ex; exOf[hit.col + '/' + hit.item.id] = ex; }
+    else P.entries.unshift({ col: 'handbook', item: ex, ex, p: P.key, lang: 'ur' });
+    P.ex++;
+  });
+  const list = Object.values(poets).filter(p => p.entries.length);
+  list.forEach(p => { p.count = p.entries.length; });
+  /* rows inside a bahr: Pritchett's exercises first, then Ghalib, Mir and the rest by collection size */
+  const rank = {};
+  list.slice().sort((a, b) => (b.key === 'ghalib') - (a.key === 'ghalib') || (b.key === 'mir') - (a.key === 'mir') || b.count - a.count)
+    .forEach((p, i) => { rank[p.key] = i; });
+  GZ = { poets, list, all: list.flatMap(p => p.entries), exOf, rank };
+  return GZ;
+}
+window.gzLibrary = gzLibrary;
+function gzExerciseOf(col, id) { return gzLibrary().exOf[col + '/' + id] || null; }
+/* the library entry a reader route shows (a Handbook route finds its exercise wherever it is listed) */
+function gzEntryOf(col, id) {
+  const L = gzLibrary();
+  if (col === 'handbook') return L.all.find(e => e.ex && String(e.ex.id) === String(id)) || null;
+  return L.all.find(e => e.col === col && String(e.item.id) === String(id)) || null;
+}
+const gzSortId = e => (e.ex ? '0' : '1') + String(gzLibrary().rank[e.p]).padStart(4, '0') + String(e.item.id).replace(/\D/g, '').padStart(5, '0');
+
+/* Filters. The language choice is remembered (store key poetLang); poet and notes are part of the address. */
+const ghazalFilter = { poet: '', lang: (typeof store !== 'undefined' && store.get) ? store.get('poetLang', 'all') : 'all', notes: false };
+function gzPass(e, ignorePoet) {
+  const f = ghazalFilter;
+  return (f.lang === 'all' || e.lang === f.lang) && (!f.notes || !!e.ex) && (ignorePoet || !f.poet || e.p === f.poet);
+}
+/* kept for callers and tests: does this ghazal pass the language filter? */
+function poetLangMatch(col, g) { return ghazalFilter.lang === 'all' || gzLangOf(col, g) === ghazalFilter.lang; }
+function setPoetLang(lang) { setGhazalFilter('lang', lang); }
+window.setPoetLang = setPoetLang;
+function ghazalListHash() {
+  const q = [];
+  if (ghazalFilter.poet) q.push('poet=' + ghazalFilter.poet);
+  if (ghazalFilter.lang !== 'all') q.push('lang=' + ghazalFilter.lang);
+  if (ghazalFilter.notes) q.push('notes=1');
+  const s = $('ghazalSearchInput') && $('ghazalSearchInput').value.trim();
+  if (s) q.push('q=' + encodeURIComponent(s));
+  return '/ghazals' + (q.length ? '?' + q.join('&') : '');
+}
+function setGhazalFilter(k, v) {
+  ghazalFilter[k] = v;
+  if (k === 'lang' && typeof store !== 'undefined' && store.set) store.set('poetLang', v);
+  openMeterGroups.clear(); fullMeterGroups.clear();
+  if (typeof setHashQuiet === 'function' && !curReaderCol) setHashQuiet(ghazalListHash());
+  renderGhazalsList();
+}
+function clearGhazalFilters() {
+  ghazalFilter.poet = ''; ghazalFilter.notes = false;
+  setGhazalFilter('lang', 'all');
+}
+function pickPoet(key) {
+  togglePoetSheet(false);
+  if (curReaderCol) {   // from the reader (the rail stays beside it on wide screens): back to the list, filtered
+    ghazalFilter.poet = key; openMeterGroups.clear(); fullMeterGroups.clear();
+    navigate(ghazalListHash());
+    return;
+  }
+  setGhazalFilter('poet', key);
+  if (typeof window !== 'undefined' && window.scrollTo) window.scrollTo(0, 0);
+}
+window.setGhazalFilter = setGhazalFilter;
+window.clearGhazalFilters = clearGhazalFilters;
+window.pickPoet = pickPoet;
+
+/* the filtered (and searched) library */
+function ghazalRows() {
+  const q = $('ghazalSearchInput') ? $('ghazalSearchInput').value.trim() : '';
+  const idx = q ? searchGhazalIndex(q) : null;
+  return gzLibrary().all.filter(e => gzPass(e) && (!idx || (idx[e.col] && idx[e.col].has(String(e.item.id)))));
+}
+const ghazalGroups = rows => buildMeterGroups(rows, e => mListOf(e.item)[0], gzSortId);
+
+/* Every meter group is listed up front as one collapsed line; tap to open its ghazals. A search, a single group,
+   a small poet or the short notes list opens everything; a big group shows its first GZ_GROUP_CAP rows. */
 const openMeterGroups = new Set();
+const fullMeterGroups = new Set();
+const GZ_GROUP_CAP = 40;
 function toggleMeterGroup(key) {
   if (openMeterGroups.has(key)) openMeterGroups.delete(key); else openMeterGroups.add(key);
-  if (typeof renderGhazalsList === 'function') renderGhazalsList();
+  renderGhazalsList();
 }
 window.toggleMeterGroup = toggleMeterGroup;
-/* #/ghazals/<col>?meter=15 (e.g. from Meter › Look up): open that meter's group and bring it into view.
+function showFullMeterGroup(key) { fullMeterGroups.add(key); renderGhazalsList(); }
+window.showFullMeterGroup = showFullMeterGroup;
+/* #/ghazals?meter=15 (e.g. from Meter › Look up): open that meter's group and bring it into view.
    Paired meters are grouped under the first of the pair. */
 const METER_PAIR_HEAD = { 15: 14, 17: 16, 19: 18, 34: 33 };
 function openMeterGroupFor(id) {
   const key = String(METER_PAIR_HEAD[id] || id);
   openMeterGroups.add(key);
-  if (typeof renderGhazalsList === 'function') renderGhazalsList();
-  // each collection's list has its own groups (the hidden ones too), so scroll to the visible one
+  renderGhazalsList();
   if (typeof setTimeout === 'function') setTimeout(() => {
-    const el = [...document.querySelectorAll('[data-mgroup="' + key + '"]')].find(n => n.offsetParent !== null || n.getClientRects().length);
+    const el = document.querySelector('#ghazalList [data-mgroup="' + key + '"]');
     if (el && el.scrollIntoView) el.scrollIntoView({ block: 'start', behavior: 'smooth' });
   }, 80);
 }
 window.openMeterGroupFor = openMeterGroupFor;
-function renderGroupedRows(groups, shownCount, rowRenderer) {
-  const mf = $('ghazalMeterFilter');
-  const filtering = !!(($('ghazalSearchInput') && $('ghazalSearchInput').value.trim()) || (mf && mf.value && mf.value !== 'all'));
-  let html = '';
-  groups.forEach(g => {
-    const open = filtering || groups.length === 1 || openMeterGroups.has(g.key);
-    html += `<div class="meter-group${open ? ' open' : ''}" data-mgroup="${escapeHtml(g.key)}">` + meterGroupHeaderHTML(g.key, g.rows.length, open);
-    if (open) html += `<div class="meter-group-rows">${g.rows.map((r, i) => rowRenderer(r, i, g.rows.length)).join('')}</div>`;
-    html += `</div>`;
-  });
-  const totalRows = groups.reduce((s, g) => s + g.rows.length, 0);
-  return { html, shownRows: totalRows, totalRows };   // no "show more": groups are the pagination
-}
 
 function getGhazalNavLabel(col, item) {
   if (!item) return '';
-  if (col === 'handbook') return item.poet || 'Handbook';
+  if (col === 'handbook') return (item.poet || 'Handbook') + ' · exercise ' + item.id;
   const n = franNum(col, item);
-  if (col === 'ghalib') return `Ghalib ${n}`;
-  if (col === 'mir') return `Mir ${n}`;
+  if (col === 'ghalib' || col === 'ghalib_farsi') return `Ghalib ${n}`;
+  if (col === 'mir' || col === 'mir_farsi') return `Mir ${n}`;
   if (isPoetCol(col)) return `${item.poet} ${item.id}`;
   return `${col} ${item.id}`;
 }
 
-function updateCollectionCounts() {
-  const col = (typeof activeCollection !== 'undefined') ? activeCollection : 'handbook';
-  const host = $('ghazalCollectionCount');
-  if (host) {
-    const all = collectionData(col), shown = all.filter(g => poetLangMatch(col, g));
-    if (shown.length === all.length) host.textContent = all.length + ' ghazals';
-    else host.innerHTML = `${shown.length} ${poetLangFilter === 'fa' ? 'Fārsī' : 'Urdu'} of ${all.length} ghazals · <button type="button" class="btn link" onclick="setPoetLang('all')">show all</button>`;
-  }
-  renderPoetPickerButton();
-}
-
-function populateGhazalMeterFilter(col) {
-  const sel = $('ghazalMeterFilter');
-  if (!sel) return;
-
-  const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
-  const corpus = collectionData(col);
-
-  const meterCounts = {};
-  corpus.forEach(item => {
-    const dedup = [...new Set(mListOf(item).map(x => String(x)))];
-    dedup.forEach(id => {
-      meterCounts[id] = (meterCounts[id] || 0) + 1;
-    });
-  });
-
-  const sortedIds = Object.keys(meterCounts).sort((a, b) => {
-    if (meterCounts[b] !== meterCounts[a]) return meterCounts[b] - meterCounts[a];
-    return a.localeCompare(b, undefined, { numeric: true });
-  });
-
-  const currentVal = sel.value;
-  let optsHtml = `<option value="all">All meters (${corpus.length})</option>`;
-  sortedIds.forEach(id => {
-    let preview = '';
-    const info = (typeof meterLabelInfo === 'function') ? meterLabelInfo(id) : null;
-    if (info && info.verse) {
-      const vText = (typeof getLineDisplay === 'function') ? getLineDisplay(info.verse, cs) : (info.verse[cs] || info.verse.ur);
-      preview = vText ? (vText.slice(0, 28) + (vText.length > 28 ? '…' : '')) : (info.pattern || '');
-    } else if (info && info.pattern) {
-      preview = info.pattern;
-    }
-    const label = preview ? `${preview} — #${id} (${meterCounts[id]})` : `Meter #${id} (${meterCounts[id]})`;
-    optsHtml += `<option value="${id}">${label}</option>`;
-  });
-
-  sel.innerHTML = optsHtml;
-  if (currentVal && (currentVal === 'all' || sortedIds.includes(currentVal))) {
-    sel.value = currentVal;
-  } else {
-    sel.value = 'all';
-  }
-}
-
-function onGhazalFilterChange() {
-  ghazalShownCount = 30;
-  renderGhazalsList();
-}
-window.onGhazalFilterChange = onGhazalFilterChange;
-
-function onGhazalSearch() {
-  ghazalShownCount = 30;
-  clearTimeout(ghazalSearchDebounce);
-  ghazalSearchDebounce = setTimeout(() => {
-    const q = ($('ghazalSearchInput') && $('ghazalSearchInput').value.trim()) || '';
-    if (!q) {
-      searchCollectionFilter = 'all';
-      const col = (typeof activeCollection !== 'undefined') ? activeCollection : 'handbook';
-      const count = collectionData(col).length;
-      const countText = count.toLocaleString() + ' ghazals';
-      const descs = {
-        'handbook': 'The handbook\'s exercise ghazals, with Frances Pritchett\'s notes. <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/10_ex_01_06.html" target="_blank" rel="noopener">Her exercises<span class="ext">↗</span></a> · <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/11_exnotes.html" target="_blank" rel="noopener">answers &amp; notes<span class="ext">↗</span></a>',
-        'ghalib': "Ghalib's divan, scanned and meter-checked by the engine.",
-        'mir': "Mir Taqi Mir, scanned and meter-checked by the engine.",
-      };
-      const descText = descs[col] || (isPoetCol(col) ? 'Rekhta corpus' : '');
-      if ($('colDesc')) {
-        $('colDesc').innerHTML = `<span id="ghazalCollectionCount" class="ghazal-collection-count">${countText}</span>${descText ? ' · <span id="colDescText">' + descText + '</span>' : ''}`;
-      } else if ($('ghazalCollectionCount')) {
-        $('ghazalCollectionCount').textContent = countText;
-      }
-    }
-    renderGhazalsList();
-    // shareable: the address bar carries the search
-    if (typeof setHashQuiet === 'function') setHashQuiet(q ? '/ghazals?q=' + encodeURIComponent(q) : '/ghazals/' + (typeof activeCollection !== 'undefined' ? activeCollection : 'handbook'));
-  }, 150);
-}
-window.onGhazalSearch = onGhazalSearch;
-
-/* Highlight the segmented buttons for whichever meaning currently applies:
-   collection switch (normal browsing) or result filter (search active). */
-function syncCollectionButtons() {
-  const searchActive = !!($('ghazalSearchInput') && $('ghazalSearchInput').value.trim());
-  const on = searchActive ? searchCollectionFilter : activeCollection;
-  if ($('colFilterLabel')) $('colFilterLabel').hidden = !searchActive;   // while searching, the tabs narrow the results
-  const btns = { handbook: 'colBtnHandbook', ghalib: 'colBtnGhalib', mir: 'colBtnMir' };
-  Object.keys(btns).forEach(k => {
-    const el = $(btns[k]);
-    if (el) el.classList.toggle('on', k === on);
-  });
-  const pb = $('colBtnPoets');
-  if (pb) pb.classList.toggle('on', isPoetCol(on));
-  renderPoetPickerButton();
-}
-
-function switchCollection(col) {
-  if (typeof closeGhazalReader === 'function') closeGhazalReader();   // on mobile the reader covers the tabs
-  const searchActive = !!($('ghazalSearchInput') && $('ghazalSearchInput').value.trim());
-  if (searchActive) {
-    // While a query is active, the segmented control filters the merged
-    // cross-collection results instead of switching pages; click the same
-    // one again to go back to "all collections".
-    searchCollectionFilter = (searchCollectionFilter === col) ? 'all' : col;
-    syncCollectionButtons();
-    renderGhazalsList();
-    return;
-  }
-
-  activeCollection = col;
-  searchCollectionFilter = 'all';
-  syncCollectionButtons();
-  if (typeof setHashQuiet === 'function') setHashQuiet(`/ghazals/${col}`);
-
-  const descs = {
-    'handbook': 'The handbook\'s exercise ghazals, with Frances Pritchett\'s notes. <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/10_ex_01_06.html" target="_blank" rel="noopener">Her exercises<span class="ext">↗</span></a> · <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/11_exnotes.html" target="_blank" rel="noopener">answers &amp; notes<span class="ext">↗</span></a>',
-    'ghalib': "Ghalib's divan, scanned and meter-checked by the engine.",
-    'mir': "Mir Taqi Mir, scanned and meter-checked by the engine.",
-  };
-  const count = collectionData(col).length;
-  const countText = count.toLocaleString() + ' ghazals';
-  const descText = descs[col] || (isPoetCol(col) ? 'Rekhta corpus' : '');
-
-  if ($('colDesc')) {
-    $('colDesc').innerHTML = `<span id="ghazalCollectionCount" class="ghazal-collection-count">${countText}</span>${descText ? ' · <span id="colDescText">' + descText + '</span>' : ''}`;
-  } else if ($('ghazalCollectionCount')) {
-    $('ghazalCollectionCount').textContent = countText;
-  }
-  if ($('ghazalEyebrow')) $('ghazalEyebrow').textContent = '';
-
-  const cHandbook = $('handbookExContainer');
-  const cGhalib = $('ghalibContainer');
-  const cMir = $('mirContainer');
-  const cPoets = $('poetsContainer');
-  if (cPoets) { cPoets.classList.toggle('hidden', !isPoetCol(col)); cPoets.style.display = ''; }
-
-  if (cHandbook) { cHandbook.classList.toggle('hidden', col !== 'handbook'); cHandbook.style.display = ''; }
-  if (cGhalib) { cGhalib.classList.toggle('hidden', col !== 'ghalib'); cGhalib.style.display = ''; }
-  if (cMir) { cMir.classList.toggle('hidden', col !== 'mir'); cMir.style.display = ''; }
-
-  ghazalShownCount = 30;
-  populateGhazalMeterFilter(col);
-  renderGhazalsList();
-}
-window.switchCollection = switchCollection;
-
-/* ---- Poets ▾: one tab for every poet beyond Handbook/Ghalib/Mir. It opens a flat fold-out under the tabs
-   (a filter box and one hairline row per poet with its count), never a floating menu. */
-function renderPoetPickerButton() {
-  const b = $('colBtnPoets');
-  if (!b) return;
-  const box = $('poetPicker');
-  const open = !!(box && box.classList && typeof box.classList.contains === 'function' && !box.classList.contains('hidden'));
-  const cur = (typeof activeCollection !== 'undefined' && isPoetCol(activeCollection)) ? poetMeta(activeCollection) : null;
-  b.textContent = (cur ? cur.name : 'Poets') + (open ? ' ▴' : ' ▾');
-  if (typeof b.setAttribute === 'function') b.setAttribute('aria-expanded', open ? 'true' : 'false');
-}
-/* Language filter (All / Urdu / Fārsī): a poet who wrote in both (Khusrau, Jigar, Shah Niyaz) is one poet and shows under both */
-const POET_LANGS = [['all', 'All'], ['ur', 'Urdu'], ['fa', 'Fārsī']];
-let poetLangFilter = (typeof store !== 'undefined' && store.get) ? store.get('poetLang', 'all') : 'all';
-const poetLangs = p => p.langs || ['ur'];
-/* a ghazal of a two-language poet (Jigar, Khusrau, Shah Niyaz) passes the language filter only in its own language */
-function poetLangMatch(col, g) {
-  if (poetLangFilter === 'all' || !isPoetCol(col)) return true;
-  const meta = poetMeta(col);
-  if (!meta || poetLangs(meta).length < 2) return true;
-  return (g.lang || 'ur') === poetLangFilter;
-}
-function setPoetLang(lang) {
-  poetLangFilter = lang;
-  if (typeof store !== 'undefined' && store.set) store.set('poetLang', lang);
-  renderPoetPickerList();
-  if (typeof activeCollection !== 'undefined' && isPoetCol(activeCollection)) { ghazalShownCount = 30; renderGhazalsList(); }
-}
-function renderPoetPickerList() {
-  const host = $('poetPickerList'), f = $('poetPickerFilter'), langs = $('poetPickerLangs');
+/* tabs: language and "Poets ▾" (hidden by CSS where the rail shows). Pritchett's notes are not a filter here: each
+   ghazal with them carries the ✎ tag, and they open in its reader. An old #/ghazals/handbook link still narrows to them. */
+function renderGhazalFilters() {
+  const host = $('ghazalFilters');
   if (!host) return;
-  if (langs) langs.innerHTML = POET_LANGS.map(([k, label]) =>
-    `<button type="button" class="btn sm${poetLangFilter === k ? ' on' : ''}" aria-pressed="${poetLangFilter === k}" onclick="setPoetLang('${k}')">${label}</button>`).join('');
-  const q = searchNorm((f && f.value) || '');
-  /* full names, in Roman whatever the script, in pen-name order (how poets are looked up); the filter matches any form of the name */
-  const rows = POET_LIST.filter(p => (poetLangFilter === 'all' || poetLangs(p).includes(poetLangFilter)) &&
-    (!q || searchNorm([p.name, p.full, p.ur, p.hi].concat(p.aliases || []).join(' ')).includes(q)));
-  host.innerHTML = rows.length ? rows.map(p => {
-    const fa = poetLangs(p).includes('fa') ? `<span class="poet-opt-lang faint">${poetLangs(p).includes('ur') ? 'Urdu · Fārsī' : 'Fārsī'}</span>` : '';
-    return `<button type="button" class="poet-opt${p.key === activeCollection ? ' on' : ''}" data-poet="${p.key}" onclick="pickPoet('${p.key}')"><span class="poet-opt-name">${escapeHtml(p.full || p.name)}${fa}</span><span class="poet-opt-count faint">${p.count}</span></button>`;
-  }).join('') : '<div class="poet-opt-none faint small">No poet matches.</div>';
+  const f = ghazalFilter, P = f.poet && gzLibrary().poets[f.poet];
+  const tab = (on, label, js, cls) => `<button type="button" class="seg-btn${cls ? ' ' + cls : ''}${on ? ' on' : ''}" aria-pressed="${on}" onclick="${js}">${label}</button>`;
+  host.innerHTML = tab(f.lang === 'all', 'All', "setGhazalFilter('lang','all')") + tab(f.lang === 'ur', 'Urdu', "setGhazalFilter('lang','ur')") + tab(f.lang === 'fa', 'Fārsī', "setGhazalFilter('lang','fa')")
+
+    + `<button type="button" class="seg-btn poet-sheet-btn${P ? ' on' : ''}" id="poetSheetBtn" aria-haspopup="dialog" onclick="togglePoetSheet(true)">${P ? escapeHtml(gzPoetName(P)) : 'Poets'}${f.notes ? ' · ✎' : ''} ▾</button>`;
 }
-window.setPoetLang = setPoetLang;
-function togglePoetPicker(force) {
-  const box = $('poetPicker');
-  if (!box) return;
-  const open = typeof force === 'boolean' ? force : box.classList.contains('hidden');
-  box.classList.toggle('hidden', !open);
-  if (open) { renderPoetPickerList(); const f = $('poetPickerFilter'); if (f && typeof f.focus === 'function') f.focus(); }
-  renderPoetPickerButton();
-}
-function pickPoet(key) {
-  togglePoetPicker(false);
-  if (typeof navigate === 'function') navigate('/ghazals/' + key); else switchCollection(key);
-}
-window.renderPoetPickerButton = renderPoetPickerButton;
-window.renderPoetPickerList = renderPoetPickerList;
-window.togglePoetPicker = togglePoetPicker;
-window.pickPoet = pickPoet;
 
-function renderZeroResults(col, selFilter, searchQ) {
-  const colNames = COL_NAMES;
-  const colName = colNames[col] || col;
-
-  let msg = '';
-  let suggestionsHtml = '';
-
-  if (selFilter !== 'all') {
-    msg = `No ${colName.toLowerCase()} ghazals in this meter.`;
-    const otherCols = GHAZAL_COLS.filter(c => c !== col);
-    const suggestions = [];
-
-    otherCols.forEach(otherCol => {
-      const corpus = collectionData(otherCol);
-
-      const count = corpus.filter(item => {
-        const mList = mListOf(item).map(String);
-        return mList.includes(selFilter);
-      }).length;
-
-      if (count > 0) {
-        suggestions.push({
-          col: otherCol,
-          name: colNames[otherCol],
-          count: count
-        });
-      }
-    });
-
-    if (suggestions.length > 0) {
-      suggestionsHtml = `<div class="zero-suggestions">` + suggestions.map(s => {
-        return `<a href="#/ghazals/${s.col}?meter=${selFilter}">${s.name} has ${s.count} ›</a>`;
-      }).join('') + `</div>`;
-    }
-  } else if (searchQ) {
-    msg = `No ${colName.toLowerCase()} ghazals match “${escapeHtml(searchQ)}”.`;
-  } else {
-    msg = `No ${colName.toLowerCase()} ghazals found.`;
-  }
-
+function ghazalRowHTML(e, terms) {
+  const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
+  const P = gzLibrary().poets[e.p];
+  const line = (terms && findMatchingLine(e.item, terms)) || (e.item.lines && e.item.lines[0]);
+  const disp = line ? ((typeof getLineDisplay === 'function') ? getLineDisplay(line, cs) : (line[cs] || line.ur)) : '';
+  const meta = [];
+  if (!ghazalFilter.poet) meta.push(`<span>${escapeHtml(cs === 'ur' ? P.ur : cs === 'hi' ? (P.hi || P.name) : gzPoetName(P))}</span>`);
+  if (e.ex) meta.push(`<span class="gz-ex">✎ Pritchett’s notes · exercise ${e.ex.id}</span>`);
+  if (e.lang === 'fa' && P.langs.length > 1) meta.push('<span>Fārsī</span>');
+  // her number (Ghalib/Mir) or the source's (Rekhta/Sufinama), linked out; an exercise not in any collection by its number
+  const num = e.col === 'handbook' ? escapeHtml('Ex ' + e.item.id)
+    : isPoetCol(e.col) ? rekhtaLinkHTML(e.item, { bare: true }) : (franLinkHTML(e.col, e.item, { bare: true }) || escapeHtml('#' + e.item.id));
   return `
-    <div class="zero-state">
-      <p>${msg}</p>
-      ${suggestionsHtml}
-    </div>
-  `;
-}
-
-function getFilteredGhazals(col) {
-  const selVal = $('ghazalMeterFilter') ? $('ghazalMeterFilter').value : 'all';
-  const selFilter = (selVal && selVal.trim()) ? selVal.trim() : 'all';
-  const searchQ = $('ghazalSearchInput') ? $('ghazalSearchInput').value.trim() : '';
-  // Universal search (searchGhazalIndex) covers all scripts + poet + number,
-  // diacritic-insensitively; the list views normally don't reach this branch
-  // with a query (renderGhazalsList routes those to the merged results
-  // instead), but keep it correct for direct callers (e.g. reader prev/next).
-  const searchIds = searchQ ? searchGhazalIndex(searchQ) : null;
-
-  if (col === 'handbook') {
-    if (typeof EXERCISES_DATA === 'undefined') return [];
-    return EXERCISES_DATA.filter(ex => {
-      if (selFilter !== 'all') {
-        const mList = mListOf(ex).map(String);
-        if (!mList.includes(selFilter)) return false;
-      }
-      if (searchIds && !searchIds.handbook.has(String(ex.id))) return false;
-      return true;
-    });
-  } else {
-    const corpus = collectionData(col);
-    return corpus.filter(g => {
-      if (selFilter !== 'all') {
-        const mList = mListOf(g).map(String);
-        if (!mList.includes(selFilter)) return false;
-      }
-      if (searchIds && !searchIds[col].has(String(g.id))) return false;
-      if (!poetLangMatch(col, g)) return false;
-      return true;
-    });
-  }
+      <div class="vrow" role="link" tabindex="0" onclick="navigate('/ghazals/${e.col}/${e.item.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}">
+        <span class="vnum">${num}</span>
+        <div class="vtext">
+          <div class="vline" ${getLangDir(cs)}>${disp}</div>
+          ${meta.length ? `<div class="vmeta">${meta.join('')}</div>` : ''}
+        </div>
+        <div class="vact"><span class="chevron">›</span></div>
+      </div>`;
 }
 
 function renderGhazalsList() {
-  updateCollectionCounts();
-
   // If reader is currently active, re-render it (e.g. on script change)
   const rView = $('ghazalReaderView');
   if (curReaderCol && curReaderId && rView && !rView.classList.contains('hidden') && rView.style.display !== 'none') {
     openGhazalReader(curReaderCol, curReaderId);
+    renderPoetLists();
     return;
   }
-
+  renderGhazalFilters();
   const q = $('ghazalSearchInput') ? $('ghazalSearchInput').value.trim() : '';
-  if (q) {
-    renderUniversalSearchResults(q);
+  const terms = q ? searchNorm(q).split(' ').filter(Boolean) : null;
+  const rows = ghazalRows(), groups = ghazalGroups(rows);
+  const L = gzLibrary(), f = ghazalFilter, P = f.poet && L.poets[f.poet];
+
+  const status = $('ghazalStatus');
+  if (status) {
+    const n = rows.length, g = groups.length;
+    const filtered = !!(P || f.lang !== 'all' || f.notes);
+    status.innerHTML = (P ? `<b>${escapeHtml(P.full)}</b> · ` : '')
+      + `<span id="ghazalCollectionCount">${n.toLocaleString()} ${q ? 'match' + (n === 1 ? '' : 'es') : 'ghazal' + (n === 1 ? '' : 's')}</span>`
+      + ` in ${g} bahr${g === 1 ? '' : 's'}`
+      + (!filtered && !q ? `, by ${L.list.length} poets` : '')
+      + (f.notes ? ' with Pritchett’s notes' : '')
+      + (q ? ` for &ldquo;${escapeHtml(q)}&rdquo;` : '')
+      + (filtered ? ' <button type="button" class="btn link sm gz-clear" onclick="clearGhazalFilters()">Clear filters</button>' : '');
+  }
+
+  const host = $('ghazalList');
+  if (!host) { renderPoetLists(); return; }
+  if (!rows.length) {
+    host.innerHTML = `<div class="zero-state"><p>No ghazals match${q ? ` &ldquo;${escapeHtml(q)}&rdquo;` : ''}${P ? ' for ' + escapeHtml(gzPoetName(P)) : ''}${f.lang !== 'all' ? (f.lang === 'fa' ? ' in Fārsī' : ' in Urdu') : ''}.</p>`
+      + (P || f.lang !== 'all' || f.notes ? '<button type="button" class="btn ghost sm" onclick="clearGhazalFilters()">Clear filters</button>' : '') + '</div>';
+    renderPoetLists();
     return;
   }
-
-  const uHost = $('ghazalUniversalResults');
-  if (uHost) { uHost.classList.add('hidden'); uHost.style.display = 'none'; }
-  const cHandbook = $('handbookExContainer'), cGhalib = $('ghalibContainer'), cMir = $('mirContainer'), cPoets = $('poetsContainer');
-  if (cPoets) { cPoets.classList.toggle('hidden', !isPoetCol(activeCollection)); cPoets.style.display = ''; }
-  if (cHandbook) { cHandbook.classList.toggle('hidden', activeCollection !== 'handbook'); cHandbook.style.display = ''; }
-  if (cGhalib) { cGhalib.classList.toggle('hidden', activeCollection !== 'ghalib'); cGhalib.style.display = ''; }
-  if (cMir) { cMir.classList.toggle('hidden', activeCollection !== 'mir'); cMir.style.display = ''; }
-
-  if (activeCollection === 'handbook') {
-    renderHandbookList();
-  } else if (activeCollection === 'ghalib') {
-    renderCorpusList('ghalib');
-  } else if (activeCollection === 'mir') {
-    renderCorpusList('mir');
-  } else if (isPoetCol(activeCollection)) {
-    renderCorpusList(activeCollection);
-  }
+  const openAll = !!q || groups.length === 1 || (P && rows.length <= 12) || (f.notes && rows.length <= 30);
+  let html = '';
+  groups.forEach(g => {
+    const open = openAll || openMeterGroups.has(g.key);
+    html += `<div class="meter-group${open ? ' open' : ''}" data-mgroup="${escapeHtml(g.key)}">` + meterGroupHeaderHTML(g.key, g.rows.length, open);
+    if (open) {
+      const shown = (fullMeterGroups.has(g.key) || q) ? g.rows : g.rows.slice(0, GZ_GROUP_CAP);
+      html += `<div class="meter-group-rows">${shown.map((e, i) => ghazalRowHTML(e, terms) + (i < shown.length - 1 ? '<div class="vrule"></div>' : '')).join('')}</div>`;
+      if (shown.length < g.rows.length) html += `<button type="button" class="btn ghost sm ghazal-more-btn" onclick="showFullMeterGroup('${escapeHtml(g.key)}')">Show all ${g.rows.length}</button>`;
+    }
+    html += '</div>';
+  });
+  host.innerHTML = html;
+  renderPoetLists();
 }
 window.renderGhazalsList = renderGhazalsList;
 
-/* Merged, tagged results across Handbook/Ghalib/Mir for the universal
-   search box; searchCollectionFilter (driven by the segmented control)
-   narrows this to one collection. */
-function renderUniversalSearchResults(q) {
-  const uHost = $('ghazalUniversalResults');
-  const cHandbook = $('handbookExContainer'), cGhalib = $('ghalibContainer'), cMir = $('mirContainer'), cPoets = $('poetsContainer');
-  [cHandbook, cGhalib, cMir, cPoets].forEach(el => { if (el) { el.classList.add('hidden'); el.style.display = 'none'; } });
-  if (!uHost) return;
-  uHost.classList.remove('hidden');
-  uHost.style.display = 'block';
-  syncCollectionButtons();
-
-  const idx = searchGhazalIndex(q);
-  const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
-  const langDir = getLangDir(cs);
-  const colNames = COL_NAMES;
-  const cols = (searchCollectionFilter === 'all') ? GHAZAL_COLS : [searchCollectionFilter];
-
-  const rows = [];
-  if (idx) {
-    cols.forEach(col => {
-      const ids = idx[col];
-      if (!ids || !ids.size) return;
-      collectionData(col).forEach(item => { if (ids.has(String(item.id))) rows.push({ col, item }); });
-    });
-  }
-
-  const nq = searchNorm(q);
-  const terms = nq.split(' ').filter(Boolean);
-
-  if ($('ghazalEyebrow')) $('ghazalEyebrow').textContent = '';
-  const scope = searchCollectionFilter !== 'all' ? 'in ' + colNames[searchCollectionFilter] : 'across all collections';
-  const countText = `${rows.length} match${rows.length === 1 ? '' : 'es'} ${scope}`;
-  if ($('colDesc')) {
-    $('colDesc').innerHTML = `<span id="ghazalCollectionCount" class="ghazal-collection-count">${countText}</span>${q ? ' · <span id="colDescText" class="faint">for &ldquo;' + escapeHtml(q) + '&rdquo;</span>' : ''}`;
-  } else if ($('ghazalCollectionCount')) {
-    $('ghazalCollectionCount').textContent = countText;
-  }
-
-  if (!rows.length) {
-    const where = searchCollectionFilter !== 'all' ? ` in ${colNames[searchCollectionFilter]}` : '';
-    uHost.innerHTML = `<div class="zero-state"><p>No ghazals match &ldquo;${escapeHtml(q)}&rdquo;${where}.</p></div>`;
-    return;
-  }
-
-  const groups = buildMeterGroups(rows, r => mListOf(r.item)[0], r => r.item.id);
-  const { html, shownRows, totalRows } = renderGroupedRows(groups, ghazalShownCount, (r, i, arrLen) => {
-    const { col, item } = r;
-    const matchedLine = findMatchingLine(item, terms) || (item.lines && item.lines[0]);
-    const disp1 = matchedLine ? ((typeof getLineDisplay === 'function') ? getLineDisplay(matchedLine, cs) : (matchedLine[cs] || matchedLine.ur)) : '';
-    const who = (col === 'handbook' || isPoetCol(col)) ? (item.poet || colNames[col]) : colNames[col];
-    const isHb = (col === 'handbook');
-    const mId = mListOf(item)[0];
-    const metaParts = [];
-    if (who) metaParts.push(escapeHtml(who));
-    if (isHb) metaParts.push('Handbook');
-    if (mId != null && typeof meterBenchmarkFor === 'function') {
-      const bm = meterBenchmarkFor(mId);
-      if (bm && bm.p) metaParts.push(`Bahr ${mId} (${escapeHtml(bm.p)})`);
-      else if (mId != null) metaParts.push(`Bahr ${mId}`);
-    }
-    const metaHtml = metaParts.length
-      ? `<div class="vmeta">${metaParts.map(p => `<span>${p}</span>`).join('<span>·</span>')}</div>`
-      : '';
-    return `
-      <div class="vrow" role="link" tabindex="0" onclick="navigate('/ghazals/${col}/${item.id}')">
-        <span class="vnum">${col === 'handbook' ? escapeHtml(getGhazalNavLabel(col, item)) : isPoetCol(col) ? rekhtaLinkHTML(item) : franLinkHTML(col, item)}</span>
-        <div class="vtext">
-          <div class="vline" ${langDir}>${disp1}</div>
-          ${metaHtml}
-        </div>
-        <div class="vact"><span class="chevron">›</span></div>
-      </div>
-      ${i < arrLen - 1 ? '<div class="vrule"></div>' : ''}
-    `;
+/* ---- Poets: the rail (wide screens) and the sheet (everywhere else) show the same list. Counts follow the
+   language filter; poets with 1–3 ghazals come after the rest; the filter box matches any form of the name. */
+function poetListHTML(q) {
+  const L = gzLibrary(), f = ghazalFilter;
+  const counts = {};
+  L.all.forEach(e => { if (gzPass(e, true)) counts[e.p] = (counts[e.p] || 0) + 1; });
+  const nq = searchNorm(q || '');
+  const list = L.list.filter(p => counts[p.key] && (!nq || searchNorm([p.name, p.full, p.ur, p.hi].concat(p.aliases || []).join(' ')).includes(nq)));
+  const byName = (a, b) => gzPoetName(a).localeCompare(gzPoetName(b));
+  const label = p => `<span class="pn">${escapeHtml(gzPoetName(p))}</span>`;   // Roman in every script; the find box still takes Urdu and Hindi names
+  const btn = p => `<button type="button" class="poet-opt${f.poet === p.key ? ' on' : ''}" data-poet="${p.key}" aria-pressed="${f.poet === p.key}" onclick="pickPoet('${p.key}')">${label(p)}<span class="pc">${counts[p.key]}</span></button>`;
+  const big = list.filter(p => counts[p.key] > 3).sort(byName), small = list.filter(p => counts[p.key] <= 3).sort(byName);
+  const total = Object.values(counts).reduce((a, b) => a + b, 0);
+  return `<button type="button" class="poet-opt poet-all${!f.poet ? ' on' : ''}" aria-pressed="${!f.poet}" onclick="pickPoet('')"><span class="pn">All poets</span><span class="pc">${total.toLocaleString()}</span></button>`
+    + (big.map(btn).join('') + (small.length ? `<div class="poet-sub">1–3 ghazals</div>` + small.map(btn).join('') : '') || '<div class="poet-none faint small">No poet matches.</div>');
+}
+function renderPoetLists() {
+  [['poetRailList', 'poetRailFilter'], ['poetSheetList', 'poetSheetFilter']].forEach(([listId, findId]) => {
+    const host = $(listId), find = $(findId);
+    if (host) host.innerHTML = poetListHTML(find ? find.value : '');
   });
-  uHost.innerHTML = html;
-
-  const moreBtn = $('ghazalUniversalMore');
-  if (moreBtn) {
-    if (totalRows > shownRows) {
-      moreBtn.classList.remove('hidden');
-      moreBtn.style.display = 'inline-flex';
-      moreBtn.textContent = `Show 30 more (${totalRows - shownRows} remaining)`;
-      moreBtn.onclick = () => { ghazalShownCount += 30; renderUniversalSearchResults(q); };
-    } else {
-      moreBtn.classList.add('hidden');
-      moreBtn.style.display = 'none';
-    }
-  }
 }
-window.renderUniversalSearchResults = renderUniversalSearchResults;
-
-function renderHandbookList() {
-  const container = $('exDetailView');
-  const chips = $('exPoetChips');
-  if (!container) return;
-  if (chips) { chips.classList.add('hidden'); chips.style.display = 'none'; }
-
-  const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
-  const langDir = getLangDir(cs);
-  const selFilter = $('ghazalMeterFilter') ? $('ghazalMeterFilter').value : 'all';
-  const searchQ = $('ghazalSearchInput') ? $('ghazalSearchInput').value.toLowerCase().trim() : '';
-
-  const filtered = getFilteredGhazals('handbook');
-
-  if (!filtered.length) {
-    container.innerHTML = renderZeroResults('handbook', selFilter, searchQ);
-    return;
-  }
-
-  // Only 24 exercises total — small enough to group and show in full,
-  // no "load more" needed.
-  const groups = buildMeterGroups(filtered, ex => mListOf(ex)[0], ex => ex.id);
-  const { html } = renderGroupedRows(groups, filtered.length, (ex, idx, arrLen) => {
-    const l1 = ex.lines && ex.lines[0];
-    const disp1 = l1 ? ((typeof getLineDisplay === 'function') ? getLineDisplay(l1, cs) : (l1[cs] || l1.ur)) : '';
-
-    return `
-      <div class="vrow" role="link" tabindex="0" onclick="navigate('/ghazals/handbook/${ex.id}')">
-        <span class="vnum vpoet">${escapeHtml(ex.poet || 'Handbook')}</span>
-        <div class="vtext">
-          <div class="vline" ${langDir}>${disp1}</div>
-        </div>
-        <div class="vact">
-          <span class="chevron">›</span>
-        </div>
-      </div>
-      ${idx < arrLen - 1 ? '<div class="vrule"></div>' : ''}
-    `;
-  });
-  container.innerHTML = html;
+function togglePoetSheet(open) {
+  const s = $('poetSheet');
+  if (!s) return;
+  const was = s.classList.contains('on');
+  s.classList.toggle('on', !!open);
+  if (!open) { const b = $('poetSheetBtn'); if (was && b && typeof b.focus === 'function') b.focus(); return; }
+  renderPoetLists();
+  // with a mouse, type to filter at once; on a touch screen focusing would pop the keyboard over the list
+  const fine = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(pointer: fine)').matches;
+  const f = $('poetSheetFilter');
+  if (fine && f && typeof f.focus === 'function') f.focus();
 }
-window.renderHandbookList = renderHandbookList;
+window.renderPoetLists = renderPoetLists;
+window.togglePoetSheet = togglePoetSheet;
+if (typeof document !== 'undefined' && document.addEventListener) document.addEventListener('keydown', ev => {
+  const s = $('poetSheet');
+  if (ev.key === 'Escape' && s && s.classList.contains('on')) togglePoetSheet(false);
+});
 
-function renderCorpusList(col) {
-  const listEl = $(col === 'ghalib' ? 'ghalibExtList' : isPoetCol(col) ? 'poetExtList' : 'mirExtList');
-  const moreBtn = $(col === 'ghalib' ? 'ghalibExtMore' : isPoetCol(col) ? 'poetExtMore' : 'mirExtMore');
-  if (!listEl) return;
-
-  const cs = (typeof currentScript !== 'undefined') ? currentScript : 'ur';
-  const langDir = getLangDir(cs);
-  const selFilter = $('ghazalMeterFilter') ? $('ghazalMeterFilter').value : 'all';
-  const searchQ = $('ghazalSearchInput') ? $('ghazalSearchInput').value.toLowerCase().trim() : '';
-
-  const filtered = getFilteredGhazals(col);
-
-  if (!filtered.length) {
-    listEl.innerHTML = renderZeroResults(col, selFilter, searchQ);
-    if (moreBtn) { moreBtn.classList.add('hidden'); moreBtn.style.display = 'none'; }
-    return;
-  }
-
-  const groups = buildMeterGroups(filtered, g => mListOf(g)[0], g => g.id);
-  const { html, shownRows, totalRows } = renderGroupedRows(groups, ghazalShownCount, (g, gi, arrLen) => {
-    const l1 = g.lines && g.lines[0];
-    const disp1 = l1 ? ((typeof getLineDisplay === 'function') ? getLineDisplay(l1, cs) : (l1[cs] || l1.ur)) : '';
-    // Single-collection list: the group header already carries the meter,
-    // and the collection is obvious from the tab, so the row is just her
-    // number (bare, e.g. "12 ↗") — no "Ghalib"/"Mir" prefix (round 3).
-    return `
-      <div class="vrow" role="link" tabindex="0" onclick="navigate('/ghazals/${col}/${g.id}')">
-        <span class="vnum">${isPoetCol(col) ? rekhtaLinkHTML(g, { bare: true }) : (franLinkHTML(col, g, { bare: true }) || escapeHtml('#' + g.id))}</span>
-        <div class="vtext">
-          <div class="vline" ${langDir}>${disp1}</div>
-          ${g.lang === 'fa' && isPoetCol(col) && poetLangs(poetMeta(col) || {}).length > 1 ? '<div class="vmeta"><span>Fārsī</span></div>' : ''}
-        </div>
-        <div class="vact">
-          <span class="chevron">›</span>
-        </div>
-      </div>
-      ${gi < arrLen - 1 ? '<div class="vrule"></div>' : ''}
-    `;
-  });
-  listEl.innerHTML = html;
-
-  if (moreBtn) {
-    if (totalRows > shownRows) {
-      moreBtn.classList.remove('hidden');
-      moreBtn.style.display = 'inline-flex';
-      moreBtn.textContent = `Show 30 more (${totalRows - shownRows} remaining)`;
-      moreBtn.onclick = () => {
-        ghazalShownCount += 30;
-        renderCorpusList(col);
-      };
-    } else {
-      moreBtn.classList.add('hidden');
-      moreBtn.style.display = 'none';
-    }
-  }
+/* previous / next in the reader follow the list the reader came from (filters, bahr order); a ghazal
+   outside the current filters steps through its own poet instead */
+function ghazalNeighbours(col, id) {
+  const own = gzEntryOf(col, id);
+  if (!own) return { prev: null, next: null };
+  let flat = ghazalGroups(ghazalRows()).flatMap(g => g.rows);
+  if (!flat.includes(own)) flat = ghazalGroups(gzLibrary().poets[own.p].entries).flatMap(g => g.rows);
+  const i = flat.indexOf(own);
+  return { prev: i > 0 ? flat[i - 1] : null, next: i >= 0 && i < flat.length - 1 ? flat[i + 1] : null };
 }
-window.renderCorpusList = renderCorpusList;
 
-function showMoreGhalibExt() {
-  ghazalShownCount += 30;
-  renderCorpusList('ghalib');
+function onGhazalSearch() {
+  clearTimeout(ghazalSearchDebounce);
+  ghazalSearchDebounce = setTimeout(() => {
+    renderGhazalsList();
+    // shareable: the address bar carries the search and the filters
+    if (typeof setHashQuiet === 'function') setHashQuiet(ghazalListHash());
+  }, 150);
 }
-window.showMoreGhalibExt = showMoreGhalibExt;
-
-function showMoreMirExt() {
-  ghazalShownCount += 30;
-  renderCorpusList('mir');
-}
-window.showMoreMirExt = showMoreMirExt;
-
-function showMorePoetExt() {
-  ghazalShownCount += 30;
-  renderCorpusList(activeCollection);
-}
-window.showMorePoetExt = showMorePoetExt;
-
-function showMoreUniversal() {
-  ghazalShownCount += 30;
-  const q = $('ghazalSearchInput') ? $('ghazalSearchInput').value.trim() : '';
-  renderUniversalSearchResults(q);
-}
-window.showMoreUniversal = showMoreUniversal;
+window.onGhazalSearch = onGhazalSearch;
 
 /* ================= IN-PLACE GHAZAL READER (§5.8) ================= */
+
+/* Pritchett's notes are in her ASCII scheme (;xvushii [;xu-shii], i.zaafat). Her words and bracketed scansions are shown
+   in diacritic Roman through her own parser (p_di); a bracket that only repeats an unsyllabified word is dropped. */
+const PR_ASCII_WORD = /;[a-zA-Z]|[a-z]:[a-z]|^:[a-z]|\(\(|\)\)|[a-z]\.[a-z]|^\.[a-z]|aa|ii|uu/;
+function prAsciiRo(w) {
+  if (typeof p_di === 'undefined' || !p_di || typeof p_di.parse !== 'function') return w;
+  try { return p_di.parse(w.replace(/(^|[^;])x/g, '$1;x')) || w; } catch (e) { return w; }   // a bare x is her ;x missing its mark
+}
+function prSplitPunct(s) {
+  const m = s.match(/^((?:\((?!\())?["']?)(.*?)([,.;:!?"']*(?:(?<!\))\))?[,.;:!?"']*)$/);
+  return m ? [m[1], m[2], m[3]] : ['', s, ''];
+}
+function prNoteHTML(text) {
+  const parts = String(text || '').split(/(\[[^\]]*\]|\s+)/).filter(s => s !== '');
+  const isWord = s => !/^\s/.test(s) && s[0] !== '[';
+  const flat = s => s.replace(/[-\s]/g, '');
+  const conv = new Set(), drop = new Set();
+  parts.forEach((s, j) => {
+    if (s[0] !== '[') return;
+    const inner = s.slice(1, -1), n = inner.split(/\s+/).filter(Boolean).length, idx = [];
+    for (let k = j - 1; k >= 0 && idx.length < n; k--) if (isWord(parts[k])) idx.unshift(k); else if (!/^\s+$/.test(parts[k])) break;
+    if (idx.length !== n || flat(idx.map(k => prSplitPunct(parts[k])[1]).join('')) !== flat(inner)) return;
+    idx.forEach(k => conv.add(k));
+    if (!inner.includes('-')) { drop.add(j); if (/^\s+$/.test(parts[j - 1] || '')) drop.add(j - 1); }
+  });
+  return parts.map((s, j) => {
+    if (drop.has(j)) return '';
+    if (s[0] === '[') return '[' + escapeHtml(s.slice(1, -1).split(/(\s+)/).map(w => /^\s*$/.test(w) ? w : prAsciiRo(w)).join('')) + ']';
+    if (!isWord(s)) return s;
+    const [a, core, z] = prSplitPunct(s);
+    const english = /\d/.test(core) || /(^|[^;])[A-Z]/.test(core) || /^[ivxlc]+(-[ivxlc]+)?$/.test(core) || /^Section$/.test(parts[j - 2] || '');   // pp. xxiii-lxiv; "Section l.l"
+    const ascii = conv.has(j) || (PR_ASCII_WORD.test(core) && !english);
+    return escapeHtml(a + (ascii ? prAsciiRo(core) : core) + z);
+  }).join('');
+}
 
 function openGhazalReader(col, id) {
   curReaderCol = col;
   curReaderId = id;
+  const sec = $('ghazals-section');
+  if (sec && sec.classList) sec.classList.add('is-reading');   // the breadcrumb replaces the list's head
 
   const rView = $('ghazalReaderView');
   const lView = $('ghazalListView');
@@ -11738,6 +11518,37 @@ function openGhazalReader(col, id) {
     }
   }
 
+  // Ghazals › Poet › number: back to the list as it was filtered, or to the poet's ghazals
+  const crumbs = $('readerCrumbs');
+  const own = gzEntryOf(col, id);
+  if (crumbs) {
+    const P = own ? gzLibrary().poets[own.p] : null;
+    const here = col === 'handbook' ? 'Exercise ' + item.id : String((franNum(col, item)) || item.id);
+    crumbs.innerHTML = `<a href="#${ghazalListHash()}">Ghazals</a><span class="crumb-sep" aria-hidden="true">›</span>`
+      + (P ? `<a href="#/ghazals?poet=${P.key}${ghazalFilter.lang !== 'all' ? '&lang=' + ghazalFilter.lang : ''}">${escapeHtml(gzPoetName(P))}</a><span class="crumb-sep" aria-hidden="true">›</span>` : '')
+      + `<span class="crumb-here" aria-current="page">${escapeHtml(here)}</span>`;
+  }
+  // Pritchett's notes: the exercise itself, or the exercise that is this ghazal (her notes merged onto it)
+  const ex = col === 'handbook' ? item : gzExerciseOf(col, item.id);
+  const exNotes = (ex && ex.notes) || null;
+
+  // her couplet numbers follow the exercise's text, which can be a selection of the ghazal and spell a word its own way
+  // (تہمتیں / تہمت): a merged note goes to the couplet sharing most of its words; one with no clear match joins the intro
+  const noteAt = {}, unplaced = [];
+  if (exNotes && exNotes.verses && col !== 'handbook') {
+    const its = item.lines || [];
+    Object.keys(exNotes.verses).sort((a, b) => a - b).forEach(k => {
+      const n = Number(k), mine = gzWords(gzUr(ex.lines[2 * n - 2]) + ' ' + gzUr(ex.lines[2 * n - 1]));
+      let best = -1, score = 0;
+      for (let c = 0; 2 * c + 1 < its.length; c++) {
+        const sc = gzOverlap(mine, gzWords(gzUr(its[2 * c]) + ' ' + gzUr(its[2 * c + 1])));
+        if (sc > score) { score = sc; best = c; }
+      }
+      if (best >= 0 && score >= 0.6 && !noteAt[best]) noteAt[best] = exNotes.verses[k];
+      else unplaced.push({ n, text: exNotes.verses[k] });
+    });
+  }
+
   const mId = mListOf(item)[0];
   const rHeader = $('readerHeader');
   if (rHeader) rHeader.innerHTML = renderGhazalReaderHeader(mId, item);
@@ -11745,11 +11556,14 @@ function openGhazalReader(col, id) {
   // Intro note (Handbook only per §5.8)
   const introDiv = $('readerIntroNote');
   if (introDiv) {
-    const introNote = (col === 'handbook' && item.notes && item.notes.intro) ? item.notes.intro : '';
-    if (introNote) {
+    const introNote = (exNotes && exNotes.intro) ? exNotes.intro : '';
+    const merged = ex && col !== 'handbook';
+    if (introNote || merged || unplaced.length) {
       introDiv.classList.remove('hidden');
       introDiv.style.display = 'block';
-      introDiv.innerHTML = `<strong>Pritchett's note:</strong> <span>${escapeHtml(introNote)}</span>`;
+      introDiv.innerHTML = (merged ? `<strong>Pritchett’s handbook, exercise ${escapeHtml(ex.id)}.</strong> <span>Her notes are with the couplets they discuss.</span> ` : '')
+        + (introNote ? `<strong>Pritchett's note:</strong> <span>${prNoteHTML(introNote)}</span>` : '')
+        + unplaced.map(u => `<div class="reader-intro-extra"><strong>Her note on verse ${u.n} of the exercise:</strong> <span>${prNoteHTML(u.text)}</span></div>`).join('');
     } else {
       introDiv.classList.add('hidden');
       introDiv.style.display = 'none';
@@ -11783,7 +11597,7 @@ function openGhazalReader(col, id) {
     const vNum = c + 1;
     const disp1 = (typeof getLineDisplay === 'function') ? getLineDisplay(l1, cs) : (l1[cs] || l1.ur);
     const disp2 = (typeof getLineDisplay === 'function') ? getLineDisplay(l2, cs) : (l2[cs] || l2.ur);
-    const vNote = (col === 'handbook' && item.notes && item.notes.verses && item.notes.verses[vNum]) ? item.notes.verses[vNum] : '';
+    const vNote = (col === 'handbook' && exNotes && exNotes.verses && exNotes.verses[vNum]) ? exNotes.verses[vNum] : (noteAt[c] || '');
 
     let pairBadge = '';
     if (isPairGh && typeof Scan !== 'undefined' && typeof lineScanText === 'function') {
@@ -11826,7 +11640,7 @@ function openGhazalReader(col, id) {
         ${vNote ? `
           <div class="note couplet-note">
             <strong>Pritchett's note (verse ${vNum}):</strong>
-            <span>${escapeHtml(vNote)}</span>
+            <span>${prNoteHTML(vNote)}</span>
           </div>
         ` : ''}
       </div>
@@ -11847,20 +11661,13 @@ function openGhazalReader(col, id) {
   }
 
   // Footer nav with Prev / Next ghazal links (§5.8)
-  let filtered = getFilteredGhazals(col);
-  let curIdx = filtered.findIndex(x => String(x.id) === String(id));
-  if (curIdx === -1) {
-    filtered = collectionData(col);
-    curIdx = filtered.findIndex(x => String(x.id) === String(id));
-  }
-  const prevGhazal = (curIdx > 0) ? filtered[curIdx - 1] : null;
-  const nextGhazal = (curIdx >= 0 && curIdx < filtered.length - 1) ? filtered[curIdx + 1] : null;
+  const { prev: prevGhazal, next: nextGhazal } = ghazalNeighbours(col, id);
 
   cHtml += `
     <div class="reader-footer-nav row">
-      ${prevGhazal ? `<button class="btn ghost sm" onclick="navigate('/ghazals/${col}/${prevGhazal.id}')">← ${getGhazalNavLabel(col, prevGhazal)}</button>` : '<span></span>'}
+      ${prevGhazal ? `<button class="btn ghost sm" onclick="navigate('/ghazals/${prevGhazal.col}/${prevGhazal.item.id}')">← ${escapeHtml(getGhazalNavLabel(prevGhazal.col, prevGhazal.item))}</button>` : '<span></span>'}
       <button class="btn link sm faint" onclick="editCurrentInScan('${col}', '${item.id}')">Edit in Scan ›</button>
-      ${nextGhazal ? `<button class="btn ghost sm" onclick="navigate('/ghazals/${col}/${nextGhazal.id}')">${getGhazalNavLabel(col, nextGhazal)} →</button>` : '<span></span>'}
+      ${nextGhazal ? `<button class="btn ghost sm" onclick="navigate('/ghazals/${nextGhazal.col}/${nextGhazal.item.id}')">${escapeHtml(getGhazalNavLabel(nextGhazal.col, nextGhazal.item))} →</button>` : '<span></span>'}
     </div>
   `;
 
@@ -11887,6 +11694,8 @@ function closeGhazalReader() {
   curReaderCol = null;
   curReaderId = null;
   curReaderItem = null;
+  const sec = $('ghazals-section');
+  if (sec && sec.classList) sec.classList.remove('is-reading');
 
   const rView = $('ghazalReaderView');
   const lView = $('ghazalListView');
@@ -12026,16 +11835,6 @@ function renderExercises() {
   renderGhazalsList();
 }
 window.renderExercises = renderExercises;
-
-function renderGhalibExt() {
-  renderGhazalsList();
-}
-window.renderGhalibExt = renderGhalibExt;
-
-function renderMirExt() {
-  renderGhazalsList();
-}
-window.renderMirExt = renderMirExt;
 
 /* ================= DICTIONARY MODULE ================= */
 let currentDictTag = 'all';

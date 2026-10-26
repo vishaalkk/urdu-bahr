@@ -33,9 +33,7 @@ function setScriptMode(mode) {
   if(typeof renderEar === 'function') renderEar();
   if(typeof renderWeak === 'function') renderWeak();
   if(typeof renderHandbook === 'function') renderHandbook();
-  if(typeof renderExercises === 'function') renderExercises();
-  if(typeof renderGhalibExt === 'function') renderGhalibExt();
-  if(typeof renderMirExt === 'function') renderMirExt();
+  if(typeof renderGhazalsList === 'function') renderGhazalsList();   // the Ghazals list, its poet rail/sheet, or the open reader
   if(typeof renderDictionary === 'function') renderDictionary();
   if(typeof renderFams === 'function') renderFams();
   if(typeof renderFeetCatalog === 'function') renderFeetCatalog();

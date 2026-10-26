@@ -1,37 +1,31 @@
 <!-- ===================== GHAZALS TAB ===================== -->
 <section id="ghazals-section" class="tab-view">
+  <!-- Poets rail: sits in the left margin on wide screens (CSS shows it only where the margin has room);
+       elsewhere the "Poets ▾" tab opens the same list in #poetSheet. Inside the section, so it hides with it. -->
+  <aside id="poetRail" class="poet-rail" aria-label="Poets">
+    <div class="poet-rail-label">Poets</div>
+    <input type="search" id="poetRailFilter" class="poet-find" aria-label="Find a poet" placeholder="Find a poet…" autocomplete="off" oninput="renderPoetLists()">
+    <div id="poetRailList" class="poet-list"></div>
+  </aside>
+
   <div class="page-head ghazal-head">
     <div class="eyebrow sr-only" id="ghazalEyebrow">Ghazals</div>
     <h1 class="page-title sr-only">Ghazals</h1>
-    <div class="lede dim small">Explore classical and modern ghazals grouped by bahr. Tap a group to open it.</div>
+    <div class="lede dim small">Ghazals grouped by bahr, each under a famous verse in it. Tap a group to open it; narrow by language or poet.</div>
 
-    <!-- Collection segmented control -->
-    <div class="subtabs seg" role="tablist" aria-label="Collections">
-      <button class="seg-btn on" id="colBtnHandbook" onclick="switchCollection('handbook')">Handbook</button>
-      <button class="seg-btn" id="colBtnGhalib" onclick="switchCollection('ghalib')">Ghalib</button>
-      <button class="seg-btn" id="colBtnMir" onclick="switchCollection('mir')">Mir</button>
-      <button class="seg-btn" id="colBtnPoets" aria-haspopup="true" aria-expanded="false" aria-controls="poetPicker" onclick="togglePoetPicker()">Poets ▾</button>
-    </div>
-    <div id="poetPicker" class="poet-picker hidden">
-      <input type="search" id="poetPickerFilter" class="poet-picker-filter" aria-label="Find a poet" placeholder="Filter poets by name…" autocomplete="off" oninput="renderPoetPickerList()">
-      <div id="poetPickerLangs" class="poet-picker-langs" role="group" aria-label="Language"></div>
-      <div id="poetPickerList" class="poet-picker-list"></div>
-    </div>
+    <!-- Filters: language, and (where there is no rail) the poet sheet -->
+    <div class="subtabs seg ghazal-filters" id="ghazalFilters" role="group" aria-label="Filter ghazals"></div>
 
-    <!-- One search for the whole tab: it covers every collection -->
+    <!-- One search for the whole tab; the filters above narrow it too -->
     <input type="search" id="ghazalSearchInput" class="ghazal-search-input" aria-label="Search all ghazals" placeholder="Search ghazals or verses across all poets…" autocomplete="off" oninput="onGhazalSearch()">
-    <div class="tiny dim col-filter-label" id="colFilterLabel" hidden>Showing matches from all collections. Pick one to narrow them.</div>
 
-    <!-- Unified single meta bar for the active tab -->
-    <div class="row ghazal-controls">
-      <div id="colDesc" class="dim ghazal-desc"><span id="ghazalCollectionCount" class="ghazal-collection-count">24 ghazals</span> · <span id="colDescText">The handbook's exercise ghazals, with Frances Pritchett's notes. <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/10_ex_01_06.html" target="_blank" rel="noopener">Her exercises<span class="ext">↗</span></a> · <a class="fran-link" href="https://franpritchett.com/00ghalib/meterbk/11_exnotes.html" target="_blank" rel="noopener">answers &amp; notes<span class="ext">↗</span></a></span></div>
-    </div>
+    <div id="ghazalStatus" class="dim ghazal-desc small"></div>
   </div>
 
   <!-- Ghazal Reader View (when viewing a specific ghazal) -->
   <div id="ghazalReaderView" class="ghazal-reader-view hidden">
     <div class="row reader-nav">
-      <button class="btn link sm" onclick="navigate('/ghazals/' + (typeof activeCollection !== 'undefined' ? activeCollection : 'handbook'))">← Ghazals</button>
+      <nav id="readerCrumbs" class="crumbs" aria-label="Breadcrumb"></nav>
       <span id="readerTitle" class="small dim"></span>
     </div>
     <div id="readerHeader" class="reader-header"></div>
@@ -40,35 +34,20 @@
     <div id="readerFooterNav" class="reader-footer-nav row"></div>
   </div>
 
-  <!-- Ghazal List View -->
+  <!-- Ghazal List View: every poet's ghazals under their bahr, narrowed by the filters and the search -->
   <div id="ghazalListView">
-    <!-- Universal search results (all collections, tagged); shown instead of
-         the three containers below whenever the search box has a query. -->
-    <div id="ghazalUniversalResults" class="verses hidden"></div>
-    <button id="ghazalUniversalMore" class="btn ghost sm ghazal-more-btn hidden" onclick="showMoreUniversal()">Show 30 more</button>
+    <div id="ghazalList" class="verses"></div>
+  </div>
 
-    <!-- Handbook exercises list -->
-    <div id="handbookExContainer">
-      <div class="row hidden" id="exPoetChips"></div>
-      <div id="exDetailView" class="verses"></div>
-    </div>
-
-    <!-- Ghalib container -->
-    <div id="ghalibContainer" class="hidden">
-      <div id="ghalibExtList" class="verses"></div>
-      <button id="ghalibExtMore" class="btn ghost sm ghazal-more-btn hidden" onclick="showMoreGhalibExt()">Show 30 more</button>
-    </div>
-
-    <!-- Mir container -->
-    <div id="mirContainer" class="hidden">
-      <div id="mirExtList" class="verses"></div>
-      <button id="mirExtMore" class="btn ghost sm ghazal-more-btn hidden" onclick="showMoreMirExt()">Show 30 more</button>
-    </div>
-
-    <!-- Poet container: one poet at a time, chosen from the Poets picker (Rekhta; the six hand-checked keep their verified Roman) -->
-    <div id="poetsContainer" class="hidden">
-      <div id="poetExtList" class="verses"></div>
-      <button id="poetExtMore" class="btn ghost sm ghazal-more-btn hidden" onclick="showMorePoetExt()">Show 30 more</button>
+  <!-- Poet sheet (phones and narrow screens): the settings-sheet surface -->
+  <div class="sheet" id="poetSheet" role="dialog" aria-modal="true" aria-labelledby="poetSheetTitle" onclick="if(event.target===this)togglePoetSheet(false)">
+    <div class="in poet-sheet-in">
+      <div class="settings-head">
+        <h3 id="poetSheetTitle">Poets</h3>
+        <button class="icon-btn" onclick="togglePoetSheet(false)" aria-label="Close poets">✕</button>
+      </div>
+      <input type="search" id="poetSheetFilter" class="poet-find" aria-label="Find a poet" placeholder="Find a poet…" autocomplete="off" oninput="renderPoetLists()">
+      <div id="poetSheetList" class="poet-list"></div>
     </div>
   </div>
 </section>

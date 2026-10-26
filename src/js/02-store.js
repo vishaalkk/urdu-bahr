@@ -335,75 +335,46 @@ function onHandbookBack() {
   }
 }
 
+/* #/ghazals: one list of every poet's ghazals by bahr, narrowed by ?poet= &lang= &notes=1 &q= (and ?meter= opens
+   that bahr's group). The reader keeps its address, #/ghazals/<collection>/<id>. Old collection links
+   (#/ghazals/ghalib, #/ghazals/handbook, #/ghazals/others) become those filters. */
 function handleGhazalsRoute(parts, params) {
-  let sub = parts[1] || 'handbook';
+  let sub = parts[1] || '';
   let ghazalId = parts[2] || null;
+  params = params || {};
   // the old "More Poets" collection (#/ghazals/others[/N]) now lives under each poet
   if (sub === 'others') {
     const moved = ghazalId && POETS_DATA.legacy && POETS_DATA.legacy['others/' + ghazalId];
     if (moved) { setHashQuiet('/ghazals/' + moved); [sub, ghazalId] = moved.split('/'); }
-    else { sub = 'faiz'; ghazalId = null; setHashQuiet('/ghazals/faiz'); }
-  } else if (!GHAZAL_COLS.includes(sub)) {
-    sub = 'handbook'; ghazalId = null;
+    else { sub = 'faiz'; ghazalId = null; }
   }
 
-  if (ghazalId) {
+  if (ghazalId && GHAZAL_COLS.includes(sub)) {
+    activeCollection = sub;
     openGhazalReader(sub, ghazalId);
     return;
   }
 
   closeGhazalReader();
-  switchCollection(sub);
-
-  if (params && params.meter && typeof openMeterGroupFor === 'function') openMeterGroupFor(params.meter);
-  if (params && params.q && $('ghazalSearchInput')) {
-    $('ghazalSearchInput').value = params.q;
-    onGhazalSearch();
-  }
+  activeCollection = '';
+  // the address is the list's state; only the language is remembered between visits
+  const L = gzLibrary();
+  const before = ghazalListHash();
+  ghazalFilter.poet = '';
+  ghazalFilter.notes = sub === 'handbook' || params.notes === '1';
+  const key = GZ_FOLD[sub] || sub;
+  if (key && L.poets[key]) ghazalFilter.poet = key;
+  if (params.poet && L.poets[params.poet]) ghazalFilter.poet = params.poet;
+  if (['all', 'ur', 'fa'].includes(params.lang)) { ghazalFilter.lang = params.lang; store.set('poetLang', params.lang); }
+  if ($('ghazalSearchInput')) $('ghazalSearchInput').value = params.q || '';
+  if (ghazalListHash() !== before) { openMeterGroups.clear(); fullMeterGroups.clear(); }   // Back from a ghazal keeps the groups open
+  if (sub) setHashQuiet(ghazalListHash() + (params.meter ? (/\?/.test(ghazalListHash()) ? '&' : '?') + 'meter=' + params.meter : ''));
+  renderGhazalsList();
+  if (params.meter && typeof openMeterGroupFor === 'function') openMeterGroupFor(params.meter);
 }
 
-let activeCollection = 'handbook';
-// switchCollection lives in 09-exercises-module.js
-function populateGhazalMeterFilter(col) {
-  const sel = $('ghazalMeterFilter');
-  if (!sel) return;
-  sel.innerHTML = '<option value="all">All meters</option>';
-}
-
-function onGhazalFilterChange() {
-  const val = $('ghazalMeterFilter') ? $('ghazalMeterFilter').value : 'all';
-  if (activeCollection === 'ghalib' && $('ghalibExtMeterFilter')) {
-    $('ghalibExtMeterFilter').value = val;
-    if (typeof renderGhalibExt === 'function') renderGhalibExt();
-  } else if (activeCollection === 'mir' && $('mirExtMeterFilter')) {
-    $('mirExtMeterFilter').value = val;
-    if (typeof renderMirExt === 'function') renderMirExt();
-  }
-}
-
-function onGhazalSearch() {
-  const q = $('ghazalSearchInput') ? $('ghazalSearchInput').value.toLowerCase().trim() : '';
-  if (activeCollection === 'ghalib') {
-    if (typeof renderGhalibExt === 'function') renderGhalibExt();
-  } else if (activeCollection === 'mir') {
-    if (typeof renderMirExt === 'function') renderMirExt();
-  }
-}
-
-function openGhazalReader(col, id) {
-  const rView = $('ghazalReaderView');
-  const lView = $('ghazalListView');
-  if (rView) rView.style.display = 'block';
-  if (lView) lView.style.display = 'none';
-  if ($('readerTitle')) $('readerTitle').textContent = `${col.toUpperCase()} ${id}`;
-}
-
-function closeGhazalReader() {
-  const rView = $('ghazalReaderView');
-  const lView = $('ghazalListView');
-  if (rView) rView.style.display = 'none';
-  if (lView) lView.style.display = 'block';
-}
+/* the collection of the ghazal open in the reader ('' on the list); the reader header reads it */
+let activeCollection = '';
 
 function initScanEmptyState() {
   const host = $('samples');

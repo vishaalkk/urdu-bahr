@@ -1710,6 +1710,7 @@ function urduToRoman(str) {
   return out;
 }
 
+const FA_LINE_SCRIPTS = new WeakMap();
 function getLineDisplay(lineObj, script) {
   if(!lineObj) return '';
   const approxBadge = ' <span class="pill faint tiny" style="font-size:10.5px;padding:2px 6px;margin-inline-start:6px;vertical-align:middle;font-weight:normal;" title="Urdu script does not write short vowels; transliteration is approximate">approximate</span>';
@@ -1720,6 +1721,14 @@ function getLineDisplay(lineObj, script) {
     if(script === 'hi') return urduToDevanagari(lineObj) + approxBadge;
     if(script === 'ro') return urduToRoman(lineObj) + approxBadge;
     return lineObj;
+  }
+  /* A Persian line Sufinama gave no Roman for: read it with the Persian word list (once per line), not the letter map */
+  if(lineObj.lang === 'fa' && lineObj.ur && (!lineObj.ro || !lineObj.hi) && (script === 'ro' || script === 'hi') && typeof faLineScripts === 'function') {
+    let fa = FA_LINE_SCRIPTS.get(lineObj);
+    if(!fa) { fa = faLineScripts(lineObj.ur); FA_LINE_SCRIPTS.set(lineObj, fa); }
+    const ro = lineObj.ro || fa.ro, hi = lineObj.hi || fa.hi;
+    const approx = lineObj.isApprox || fa.known < fa.words;
+    return (script === 'hi' ? hi : ro) + (approx ? approxBadge : '');
   }
   const isNovelUr = lineObj.isApprox;
   if(script === 'ascii') return (lineObj.ascii || lineObj.ro || lineObj.ur || '') + (isNovelUr ? approxBadge : '');

@@ -1160,6 +1160,12 @@ function wordRomanMap(lineObj,r){
     }
     romanTokens.push(cur);
   }
+  const uWords=r.words.map(w=>(w.raw||'').trim().split(/\s+/).filter(Boolean));
+  const uCount=uWords.reduce((n,t)=>n+Math.max(1,t.length),0);
+  if(uCount!==romanTokens.length && uWords.every(t=>t.length<=1)){
+    const al=alignRomanByConsonants(r.words.map(w=>w.raw||''),romanTokens);
+    if(al) return al;
+  }
   let ptr=0; const map=[];
   for(let wi=0; wi<r.words.length; wi++){
     const urduTokens=(r.words[wi].raw||'').trim().split(/\s+/).filter(Boolean);
@@ -1170,6 +1176,54 @@ function wordRomanMap(lineObj,r){
     ptr+=k;
   }
   // Fix A: always return the map (per-word failures are already null in map[wi])
+  return map;
+}
+/* When the Urdu and the Roman divide a line into different numbers of words (کہیں گے / kaheñge, بوقت / bah vaqt),
+   pair them by consonant count: one to one, two Urdu words to one Roman word (cut where the first Urdu word's
+   consonants end), or one Urdu word to two Roman words. Returns null if no pairing uses every word. */
+function urConsonants(w){   // و / ی count as v / y at the start of a word or before a vowel letter (فرماویں, پیار)
+  let b=String(w).replace(/[ً-ٰٟھںءٔ]/g,''); if(b.length>2) b=b.replace(/[ہۂ]$/,'');
+  return b.replace(/^[وی]/,'C').replace(/[وی](?=[اآیےو])/g,'C').replace(/[اآویےۓئ]/g,'').length; }
+const RO_CONS=/(?:chh|ḳh|[kgcjṭtḍdpbsz]h|ġh|[bcdfghjklmnpqrstvwyzḍḥṛṣṭẓżẕġḳʿ])/gi;
+function roConsonants(w){ return (String(w).replace(/ñ/g,'').replace(/-[aeiouāīū]{1,2}$/,'').match(RO_CONS)||[]).length; }
+/* cut one Roman word between two Urdu words: at an apostrophe if it has one (nusḳhah'hā-e), else before the second
+   word's consonants counted from the end (kaheñ|ge, dikhāven|ge, gunāh|gāroñ), backing over vowels when the second
+   word opens with a vowel letter (jahān|ābād) */
+function splitRomanAt(tok,urB){
+  const ap=tok.indexOf("'"); if(ap>0 && ap<tok.length-1) return [tok.slice(0,ap),tok.slice(ap+1)];
+  const n=urConsonants(urB), starts=[]; let m;
+  RO_CONS.lastIndex=0; while((m=RO_CONS.exec(tok))) starts.push(m.index);
+  if(n<1 || n>starts.length) return null;
+  let c=starts[starts.length-n];
+  if(/^[اآع]/.test(urB)) while(c>1 && /[aeiouāīū]/i.test(tok.charAt(c-1))) c--;
+  return c>0 ? [tok.slice(0,c),tok.slice(c)] : null;
+}
+const UR_INITIAL={'ب':'b','پ':'p','ت':'t','ٹ':'t','ث':'s','ج':'j','چ':'c','ح':'h','خ':'k','د':'d','ڈ':'d','ذ':'z','ر':'r','ڑ':'r','ز':'z','ژ':'z','س':'s','ش':'s','ص':'s','ض':'z','ط':'t','ظ':'z','غ':'g','ف':'f','ق':'q','ک':'k','گ':'g','ل':'l','م':'m','ن':'n','و':'vou','ہ':'h','ھ':'h','ی':'yie','ے':'e','ع':'ʿaeiou','ا':'aiueo','آ':'a'};
+function sameInitial(urw,row){
+  const u=UR_INITIAL[String(urw).charAt(0)], r=String(row).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().charAt(0);
+  return !u || !r || u.includes(r);
+}
+function alignRomanByConsonants(ur,ro){
+  const U=ur.length, R=ro.length, uc=ur.map(urConsonants), rc=ro.map(roConsonants);
+  const best=Array.from({length:U+1},()=>Array(R+1).fill(Infinity)), how=Array.from({length:U+1},()=>Array(R+1).fill(null));
+  best[0][0]=0;
+  for(let i=0;i<=U;i++) for(let j=0;j<=R;j++){
+    const b=best[i][j]; if(b===Infinity) continue;
+    const step=(ni,nj,cost,h)=>{ if(ni<=U&&nj<=R&&b+cost<best[ni][nj]){ best[ni][nj]=b+cost; how[ni][nj]=h; } };
+    if(i<U&&j<R) step(i+1,j+1,Math.abs(uc[i]-rc[j]),'11');
+    if(i+1<U&&j<R){ const p=splitRomanAt(ro[j],ur[i+1]); step(i+2,j+1,Math.abs(uc[i]+uc[i+1]-rc[j])+1+(p&&sameInitial(ur[i+1],p[1])?0:2),'21'); }
+    if(i<U&&j+1<R) step(i+1,j+2,Math.abs(uc[i]-rc[j]-rc[j+1])+1,'12');
+    if(i<U&&j+2<R) step(i+1,j+3,Math.abs(uc[i]-rc[j]-rc[j+1]-rc[j+2])+2,'13');
+  }
+  if(best[U][R]===Infinity) return null;
+  const map=[]; let i=U, j=R;
+  while(i>0||j>0){
+    const h=how[i][j];
+    if(h==='11'){ map[i-1]=ro[j-1]; i--; j--; }
+    else if(h==='21'){ const p=splitRomanAt(ro[j-1],ur[i-1]); map[i-2]=p?p[0]:null; map[i-1]=p?p[1]:null; i-=2; j--; }
+    else if(h==='12'){ map[i-1]=ro[j-2]+ro[j-1]; i--; j-=2; }
+    else { map[i-1]=ro[j-3]+ro[j-2]+ro[j-1]; i--; j-=3; }
+  }
   return map;
 }
 /* per-syllable Roman labels (parallel to e.syl): each word — or grafted run of words —

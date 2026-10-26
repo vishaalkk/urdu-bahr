@@ -656,17 +656,38 @@ main, .wrap { max-width: 760px; }
   color: var(--faint); font-family: var(--sans); font-size: 14px;
 }
 
-/* Poets ▾: a flat fold-out under the collection tabs. A filter line, then one hairline row per poet (name, count).
-   No surface, no shadow: the page head is not a menu. Script text keeps sentence case and no tracking. */
-.poet-picker { margin: calc(-1 * var(--sp-3)) 0 var(--sp-4); padding: 0 0 var(--sp-3); border-bottom: 1px solid var(--line); }
-.poet-picker-langs { display: flex; gap: var(--sp-2); margin-top: var(--sp-2); }
-.poet-opt-lang { font-family: var(--sans); font-size: 11px; letter-spacing: 0.06em; margin-left: var(--sp-2); }
-.poet-picker-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); column-gap: var(--sp-5); margin-top: var(--sp-2); }
-.poet-opt { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-3); min-height: 38px; padding: 6px 0; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: none; color: var(--dim); font-family: var(--serif); font-size: var(--fs-base); text-align: start; text-transform: none; letter-spacing: 0; }
-.poet-opt:hover, .poet-opt:focus-visible { color: var(--ink); }
-.poet-opt.on { color: var(--ink); font-weight: 500; }
-.poet-opt-count { font-family: var(--sans); font-size: var(--fs-xs); }
-.poet-opt-none { padding: var(--sp-2) 0; }
+/* Filters: language and "Poets ▾" share the tracked-caps tab row; the tab row never scrolls */
+.ghazal-filters .seg-btn { white-space: nowrap; }
+.ghazal-filters .poet-sheet-btn { margin-left: auto; }
+.ghazal-desc b { font-weight: 500; color: var(--ink); }
+.gz-clear { margin-left: var(--sp-2); }
+.gz-ex { color: var(--teal); }
+#ghazals-section.is-reading .ghazal-head { display: none; }
+#ghazals-section.is-reading .reader-nav { margin-top: var(--sp-5); }
+@media (max-width: 600px) { .ghazal-head .ghazal-filters.subtabs.seg { gap: var(--sp-4); overflow: visible; } }
+
+/* Poets: one list, shown as a rail in the left margin where the margin has room (outside the 720px column, which
+   never moves), and in the settings-sheet surface everywhere else. Hairlines and type only, like the rest of the page. */
+.poet-rail { display: none; }
+@media (min-width: 1260px) {
+  .poet-rail { display: block; position: fixed; top: 112px; bottom: 0; width: 210px; left: calc(50% - 360px - 250px);
+    overflow-y: auto; padding: 0 var(--sp-2) var(--sp-7) 0; scrollbar-width: thin; }
+  .ghazal-filters .poet-sheet-btn { display: none; }   /* the rail replaces it */
+}
+.poet-rail-label { font-family: var(--sans); font-size: var(--fs-xs); letter-spacing: 0.15em; text-transform: uppercase; color: var(--faint); margin-bottom: var(--sp-2); }
+.poet-list { display: flex; flex-direction: column; }
+.poet-opt { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-3); min-height: 0; padding: 3px 0; border: 0; border-radius: 0; background: none; color: var(--dim); font-family: var(--serif); font-size: var(--fs-sm); text-align: start; text-transform: none; letter-spacing: 0; cursor: pointer; }
+.poet-opt:hover, .poet-opt:focus-visible { color: var(--gold); }
+.poet-opt.on { color: var(--ink); }
+.poet-opt.on .pn { border-bottom: 1px solid var(--ink); }
+.poet-opt .pc { font-family: var(--sans); font-size: var(--fs-xs); color: var(--faint); }
+.poet-opt.poet-all { white-space: nowrap; font-family: var(--sans); font-size: var(--fs-xs); letter-spacing: 0.1em; text-transform: uppercase; padding: var(--sp-1) 0; }
+.poet-sub { font-family: var(--sans); font-size: var(--fs-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); margin: var(--sp-3) 0 var(--sp-1); }
+.poet-none { padding: var(--sp-2) 0; }
+.poet-sheet-in { display: flex; flex-direction: column; overflow: hidden; }
+.poet-sheet-in .poet-list { overflow-y: auto; flex: 1; padding-bottom: var(--sp-4); }
+.poet-sheet-in .poet-opt { font-size: var(--fs-base); min-height: 44px; align-items: center; border-bottom: 1px solid var(--line); }
+.poet-sheet-in .poet-opt.poet-all { font-size: var(--fs-xs); }
 .ghazal-collection-count {
   font-family: var(--sans);
   font-size: 13px;
@@ -765,6 +786,11 @@ main, .wrap { max-width: 760px; }
 /* Reader */
 .ghazal-reader-view { margin-bottom: var(--sp-6); }
 .reader-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--sp-4); font-family: var(--sans); font-size: 13px; }
+.crumbs { display: flex; flex-wrap: wrap; gap: var(--sp-2); align-items: baseline; font-family: var(--sans); font-size: var(--fs-xs); letter-spacing: 0.15em; text-transform: uppercase; color: var(--faint); }
+.crumbs a { color: var(--faint); text-decoration: none; }
+.crumbs a:hover, .crumbs a:focus-visible { color: var(--ink); }
+.crumbs .crumb-sep { color: var(--ghost); letter-spacing: 0; }
+.crumbs .crumb-here { color: var(--ink); }
 .reader-header { margin-bottom: var(--sp-4); text-align: center; }
 /* Reader header component (Option 2): Benchmark Card containing meter number,
    prominent melodic anchor verse, interactive pattern strip, and faint technical name. */
@@ -841,6 +867,7 @@ main, .wrap { max-width: 760px; }
   }
 }
 .reader-intro-note { margin: var(--sp-4) 0; max-width: 640px; margin-left: auto; margin-right: auto; }
+.reader-intro-extra { margin-top: var(--sp-2); }
 .reader-actions {
   display: flex; justify-content: center; gap: var(--sp-6);
   margin: var(--sp-5) 0 var(--sp-3);
@@ -1371,20 +1398,20 @@ html[data-script="ro"] .syl-tab, html[data-script="hi"] .syl-tab { font-family: 
 
 /* Search fields (Ghazals, Poets, Weight look-up, Feet): a faint magnifier, serif text, one hairline underneath, no focus box.
    After the Columbia Urdu Poetry Group's search. The icon is an inline SVG so nothing loads from the network. */
-.ghazal-search-input, .dict-search-input, .poet-picker-filter, .feet-search {
+.ghazal-search-input, .dict-search-input, .poet-find, .feet-search {
   min-height: auto; min-width: 140px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background-color: transparent;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
   background-repeat: no-repeat; background-position: 2px 50%; background-size: 16px;
   padding: var(--sp-2) 0 var(--sp-2) 28px; color: var(--ink); font-family: var(--serif); font-size: 17px; outline: none; box-shadow: none;
 }
 .ghazal-search-input { display: block; width: 100%; max-width: 560px; margin: 0 0 var(--sp-4); }
-.col-filter-label { margin: calc(var(--sp-2) * -1) 0 var(--sp-2); }
 .dict-search-input { width: 100%; }
-.poet-picker-filter { width: 100%; max-width: 280px; }
+.poet-find { width: 100%; min-width: 0; font-size: var(--fs-sm); margin-bottom: var(--sp-2); }
+.poet-sheet-in .poet-find { font-size: var(--fs-base); }
 .feet-search { flex: 1; }
-.ghazal-search-input::placeholder, .dict-search-input::placeholder, .poet-picker-filter::placeholder, .feet-search::placeholder { color: var(--faint); font-style: normal; }
-.ghazal-search-input:focus, .dict-search-input:focus, .poet-picker-filter:focus, .feet-search:focus,
-.ghazal-search-input:focus-visible, .dict-search-input:focus-visible, .poet-picker-filter:focus-visible, .feet-search:focus-visible { outline: none !important; box-shadow: none; border-bottom-color: var(--gold); }
+.ghazal-search-input::placeholder, .dict-search-input::placeholder, .poet-find::placeholder, .feet-search::placeholder { color: var(--faint); font-style: normal; }
+.ghazal-search-input:focus, .dict-search-input:focus, .poet-find:focus, .feet-search:focus,
+.ghazal-search-input:focus-visible, .dict-search-input:focus-visible, .poet-find:focus-visible, .feet-search:focus-visible { outline: none !important; box-shadow: none; border-bottom-color: var(--gold); }
 @media (max-width: 767px) { .ghazal-search-input { max-width: none; margin-left: 0; width: 100%; } }
 
 /* Scan: language of the verse (Auto / Urdu / Fārsī) and the Persian-meter note */

@@ -35,7 +35,8 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
 | `#/weight/{learn\|drill\|lookup}` | Weight |
 | `#/meter/{learn\|drill\|lookup}` | Meter (`?open=<famId>`, `?meter=<id>`) |
 | `#/scan` | Scan (`?g=ghalib/21` scans a ghazal by reference) |
-| `#/ghazals/{collection}[/{id}]` | List and reader; collection = `handbook`, `ghalib`, `mir` or a poet key (`jaun`, `faiz`, …; the Poets ▾ picker). `#/ghazals/others[/N]` redirects. Query: `?meter=<id>&q=<text>` |
+| `#/ghazals` | One list of every poet's ghazals by bahr (`gzLibrary`, `09-exercises-module.js`), filtered by `?poet=<key>&lang=ur\|fa&notes=1&q=<text>`; `?meter=<id>` opens that group. Poets rail (≥1260px) / Poets ▾ sheet. Old `#/ghazals/{handbook\|ghalib\|<poet>\|others}` become filters |
+| `#/ghazals/{collection}/{id}` | Reader (unchanged addresses: `handbook`, `ghalib`, `mir`, a poet key). A Handbook exercise that is a poem already in its poet's collection is listed once; her notes show in that ghazal's reader (`gzExerciseOf`, matched by line text) |
 | `#/guide`, `#/about` | How to use; sources and scanner accuracy |
 | `#/lab/tap`, `#/lab/practice`, `#/lab/transcribe` | Unlinked/experimental (`?t=<text>` pre-fills the Transliterator) |
 | `#/handbook/chN` | Redirects to that chapter on Pritchett's site (no in-app reader) |
@@ -122,7 +123,7 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
 - Navigating away stops playback (`pbCancel`). Last route is stored under `lastRoute`.
 - Persistence is `store` / `localStorage`: script, theme, settings (voice, tempo, foot gap, drum, ASCII; the sound layers
   `voiceOn`/`melodyOn`/`tabla`/`drone`/`pulse`, `gapOn`, `taal`, `taalEnd`, `ball`; Tarannum's options, `src/js/15b-tarannum.js`), `lastRoute`,
-  per-tab last sub-tab, `stats`, `poetLang` (Poets picker language).
+  per-tab last sub-tab, `stats`, `poetLang` (Ghazals language filter).
 
 ## Gotchas
 

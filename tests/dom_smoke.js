@@ -196,10 +196,10 @@ const ROUTES = [
     items.length === 7 && items.every(i => (i.getAttribute('data-tip') || '').length > 20) && /extra/.test(labels) && !/cheat/.test(labels)
       ? ok('legend: 7 items, each with an explanation; uses "extra"') : fail('legend items: ' + labels);
     w.setScriptMode('ro'); await wait(200);
-    const head = d.querySelector('#handbookExContainer .meter-group-head'); if (head) head.click(); await wait(100);   // groups start collapsed
-    const gv = d.querySelector('#handbookExContainer .meter-group-verse');
+    // #/ghazals/handbook is the Pritchett's-notes filter: 24 ghazals, short enough that every group is open
+    const gv = d.querySelector('#ghazalList .meter-group-verse');
     if (!(gv && gv.getAttribute('lang') === 'ur-Latn' && / /.test(gv.textContent))) fail('Roman group header: ' + (gv ? gv.outerHTML.slice(0, 90) : 'none'));
-    const rows = [...d.querySelectorAll('#handbookExContainer .vline')];
+    const rows = [...d.querySelectorAll('#ghazalList .vline')];
     d.documentElement.getAttribute('data-script') === 'ro' && rows.length && rows.every(r => r.getAttribute('lang') === 'ur-Latn' && r.getAttribute('dir') === 'ltr' && / /.test(r.textContent.trim()))
       ? ok(`Roman mode: <html data-script="ro">, ${rows.length} rows tagged Roman/LTR with spaces`) : fail('Roman rows: ' + rows.slice(0, 2).map(r => r.outerHTML.slice(0, 90)).join(' || '));
     w.setScriptMode('ur'); await wait(200);
@@ -227,7 +227,13 @@ const ROUTES = [
     await check('#/meter/buhur?open=' + 'hazaron', (w, d) => { const r = d.getElementById('fam-hazaron'); return r && r.querySelector('.couplet-card') ? true : 'family not expanded'; }, 'Buḥūr opens a specific family');
     await check('#/scan?t=' + encodeURIComponent('دلِ ناداں تجھے ہوا کیا ہے\nآخر اس درد کی دوا کیا ہے'), (w, d) => d.querySelectorAll('#scanOut .chip').length > 10 ? true : 'verse not scanned', 'Scan link scans the shared verse');
     await check('#/ghazals?q=' + encodeURIComponent('ghalib'), (w, d) => (d.getElementById('ghazalSearchInput').value === 'ghalib' && /Ghalib/.test(d.getElementById('ghazals-section').textContent)) ? true : 'search not applied', 'Ghazals search link fills and runs the search');
-    await check('#/ghazals/ghalib', (w, d) => (w.eval('GHALIB_EXT_DATA.length') === 234 && /^Ghalib$/.test(d.getElementById('colBtnGhalib').textContent.trim()) && /234 ghazals/.test(d.getElementById('ghazalCollectionCount').textContent)) ? true : 'Ghalib count ' + w.eval('GHALIB_EXT_DATA.length') + ' / label ' + d.getElementById('colBtnGhalib').textContent + ' / count ' + (d.getElementById('ghazalCollectionCount') || {}).textContent, 'all 234 Ghalib ghazals present and labelled');
+    // Ghalib's 234 Urdu ghazals + 1 Persian (folded in from ghalib_farsi) + 1 Handbook exercise not in the divan = 236;
+    // his other 5 exercises are poems already in the divan and are not listed twice
+    await check('#/ghazals/ghalib', (w, d) => {
+      const st = (d.getElementById('ghazalStatus') || {}).textContent || '', on = d.querySelector('#poetRailList .poet-opt.on');
+      return w.eval('GHALIB_EXT_DATA.length') === 234 && w.location.hash === '#/ghazals?poet=ghalib' && /Mirza Ghalib/.test(st) && /\b236 ghazals/.test(st) && on && on.dataset.poet === 'ghalib'
+        ? true : `hash ${w.location.hash} / status ${st} / rail ${on && on.dataset.poet}`;
+    }, 'the old Ghalib link filters to Ghalib: 236 ghazals, Persian folded in, Handbook not duplicated');
     const PR_LINE = 'دلِ ناداں تجھے ہوا کیا ہے';
     await check('#/lab/practice', (w, d) => d.getElementById('practicePanelTap').style.display !== 'none' && d.getElementById('practicePanelMatch').style.display === 'none' && d.querySelectorAll('#practiceChips .chip').length > 5 ? true : 'Practice should open on the tapper', 'Practice opens on Tap a line');
     await check('#/lab/practice?t=' + encodeURIComponent(PR_LINE), (w, d) => d.getElementById('practiceLine').textContent.trim() === PR_LINE ? true : 'line was ' + d.getElementById('practiceLine').textContent, 'Practice this line loads the given line into the tapper');
@@ -312,39 +318,68 @@ const ROUTES = [
     }, 'Typed Roman without diacritics (ye vo na pe ishq gham aaj, Rekhta marks) reads as the right Urdu');
     // Poets (Rekhta; the six hand-checked keep their verified Roman): one named collection per poet, chosen from Poets ▾
     await check('#/ghazals/jaun', (w, d) => {
-      const tab = d.getElementById('colBtnPoets');
-      if (!tab.classList.contains('on')) return 'Poets tab not on';
-      if (!/Jaun/.test(tab.textContent)) return 'the tab should name the poet: ' + tab.textContent;
+      const tab = d.getElementById('poetSheetBtn');
+      if (!tab || !tab.classList.contains('on') || !/Jaun/.test(tab.textContent)) return 'the Poets tab should name the poet: ' + (tab && tab.textContent);
       const n = w.collectionData('jaun').length;
-      if (n < 100 || !new RegExp(n + ' ghazals').test(d.getElementById('ghazalCollectionCount').textContent)) return 'count: ' + d.getElementById('ghazalCollectionCount').textContent + ' vs ' + n;
-      const heads = d.querySelectorAll('#poetExtList .meter-group-head'); if (!heads.length) return 'no meter groups';
-      heads.forEach(h => h.click());
-      const rows = [...d.querySelectorAll('#poetExtList .vrow')]; if (rows.length !== n) return rows.length + ' of ' + n + ' rows';
+      if (n < 100 || !new RegExp(n + ' ghazals').test(d.getElementById('ghazalStatus').textContent)) return 'count: ' + d.getElementById('ghazalStatus').textContent + ' vs ' + n;
+      const heads = d.querySelectorAll('#ghazalList .meter-group-head'); if (!heads.length) return 'no meter groups';
+      if (d.querySelector('#ghazalList .vrow')) return 'groups should start collapsed';
+      [...heads].forEach(h => d.querySelector(`#ghazalList [data-mgroup="${h.parentNode.dataset.mgroup}"] .meter-group-head`).click());
+      [...d.querySelectorAll('#ghazalList .ghazal-more-btn')].forEach(b => b.click());   // big groups show their first 40
+      const rows = [...d.querySelectorAll('#ghazalList .vrow')]; if (rows.length !== n) return rows.length + ' of ' + n + ' rows';
+      if (rows.some(r => r.querySelector('.vmeta') && /Jaun|جون/.test(r.querySelector('.vmeta').textContent))) return 'rows repeat the poet while filtered to one';
       const a = rows[0].querySelector('a.fran-link');
       return a && /rekhta\.org\/ghazals\//.test(a.href) ? true : 'rows should link to the ghazal on Rekhta';
-    }, 'Ghazals › a poet (Jaun) lists their ghazals by bahr, each linked to Rekhta');
+    }, 'Ghazals › a poet (Jaun) lists only their ghazals by bahr, each linked to Rekhta');
     await check('#/ghazals/mir', (w, d) => {
-      w.togglePoetPicker(true);
-      const box = d.getElementById('poetPicker'); if (box.classList.contains('hidden')) return 'picker did not open';
-      const names = [...d.querySelectorAll('#poetPickerList .poet-opt')].map(b => b.dataset.poet);
-      if (names.length !== w.eval('POET_LIST').length || names.length < 10) return 'picker lists ' + names.length + ' poets';
-      d.getElementById('poetPickerFilter').value = 'jau'; w.renderPoetPickerList();
-      const f = [...d.querySelectorAll('#poetPickerList .poet-opt')].map(b => b.dataset.poet);
+      w.togglePoetSheet(true);
+      const box = d.getElementById('poetSheet'); if (!box.classList.contains('on')) return 'poet sheet did not open';
+      const poets = d => [...d.querySelectorAll('#poetSheetList .poet-opt[data-poet]')].map(b => b.dataset.poet);
+      const names = poets(d), all = w.eval('gzLibrary().list.length');
+      if (names.length !== all || names.length < 10) return 'sheet lists ' + names.length + ' of ' + all + ' poets';
+      if (!names.includes('vali') || names.includes('ghalib_farsi')) return 'Handbook-only poets should be listed and Persian collections folded: ' + names.slice(0, 8).join();
+      d.getElementById('poetSheetFilter').value = 'jau'; w.renderPoetLists();
+      const f = poets(d);
       if (!f.includes('jaun') || f.length > 3) return 'filter "jau" gives ' + f.join();   // Jaun, and any other "jau…" poet (Fidai Jaunpuri)
-      d.getElementById('poetPickerFilter').value = 'جون'; w.renderPoetPickerList();
-      const fu = [...d.querySelectorAll('#poetPickerList .poet-opt')].map(b => b.dataset.poet);
+      d.getElementById('poetSheetFilter').value = 'جون'; w.renderPoetLists();
+      const fu = poets(d);
       if (!fu.includes('jaun') || fu.length > 3) return 'Urdu name does not filter: ' + fu.join();
-      w.togglePoetPicker(false);
-      return box.classList.contains('hidden') ? true : 'picker did not close';
-    }, 'Poets ▾ opens a list of every poet, filters by Roman or Urdu name, and closes');
+      d.querySelector('#poetSheetList .poet-opt[data-poet="jaun"]').click();
+      if (box.classList.contains('on')) return 'picking a poet should close the sheet';
+      return w.location.hash === '#/ghazals?poet=jaun' && /Jaun Elia/.test(d.getElementById('ghazalStatus').textContent) ? true : 'picking Jaun gave ' + w.location.hash;
+    }, 'Poets ▾ opens a list of every poet, filters by Roman or Urdu name, and picking one filters the list');
+    await check('#/ghazals?lang=fa', (w, d) => {
+      const n = w.eval("gzLibrary().all.filter(e => e.lang === 'fa').length");
+      if (!(n > 300) || !new RegExp(n.toLocaleString() + ' ghazals').test(d.getElementById('ghazalStatus').textContent)) return 'Fārsī count: ' + d.getElementById('ghazalStatus').textContent + ' vs ' + n;
+      const counts = Object.fromEntries([...d.querySelectorAll('#poetRailList .poet-opt[data-poet]')].map(b => [b.dataset.poet, +b.querySelector('.pc').textContent]));
+      return counts.hafiz === 123 && !('faiz' in counts) && counts.ghalib === 1 ? true : 'rail under Fārsī: hafiz ' + counts.hafiz + ', faiz ' + counts.faiz + ', ghalib ' + counts.ghalib;
+    }, 'The Fārsī filter narrows the list and the poet counts (Hafiz in, Faiz out, Ghalib by his one Persian ghazal)');
+    await check('#/ghazals/ghalib/17', (w, d) => {
+      const intro = (d.getElementById('readerIntroNote') || {}).textContent || '', notes = d.querySelectorAll('#readerCouplets .couplet-note').length;
+      const crumbs = (d.getElementById('readerCrumbs') || {}).textContent || '';
+      return /exercise 15/.test(intro) && notes >= 1 && /Ghazals.*Ghalib.*17/.test(crumbs) ? true : `intro "${intro.slice(0, 60)}" / ${notes} couplet notes / crumbs ${crumbs}`;
+    }, "A Handbook exercise merged into Ghalib's divan shows Pritchett's notes in that ghazal's own reader");
+    await check('#/ghazals/ghalib/17', (w, d) => {
+      const exOf = w.eval('gzLibrary().exOf'), bad = [];
+      let placed = 0, all = 0;
+      Object.keys(exOf).forEach(ref => {
+        const [col, id] = ref.split('/'), want = Object.keys((exOf[ref].notes || {}).verses || {}).length;
+        w.openGhazalReader(col, id);
+        const onCouplets = d.querySelectorAll('#readerCouplets .couplet-note').length, inIntro = d.querySelectorAll('#readerIntroNote .reader-intro-extra').length;
+        placed += onCouplets; all += want;
+        if (onCouplets + inIntro !== want) bad.push(`${ref}: ${onCouplets}+${inIntro} of ${want}`);
+      });
+      if (bad.length) return 'notes lost: ' + bad.join('; ');
+      return placed >= all * 0.9 ? true : `only ${placed} of ${all} notes sit on their couplets`;
+    }, "Every merged exercise shows all of Pritchett's verse notes (on their couplets, or in the intro when no couplet matches)");
     await check('#/ghazals/others/1', (w, d) => {
       if (w.location.hash !== '#/ghazals/faiz/18') return 'old More Poets link went to ' + w.location.hash;
       const t = d.getElementById('readerTitle');
       return /Faiz/.test(t.textContent) && t.querySelector('a[href*="rekhta.org"]') && d.querySelectorAll('#readerCouplets .couplet-card').length === 7 ? true : 'reader: ' + t.textContent + ' / ' + d.querySelectorAll('#readerCouplets .couplet-card').length;
     }, 'The old #/ghazals/others/1 link lands on Faiz in the reader, linked to Rekhta');
-    await check('#/ghazals/others', (w) => w.location.hash === '#/ghazals/faiz' ? true : 'old collection link went to ' + w.location.hash, 'The old #/ghazals/others link lands on a poet, not a blank page');
-    await check('#/ghazals?q=faiz', (w, d) => /Faiz/.test(d.getElementById('ghazalUniversalResults').textContent) ? true : 'search for Faiz finds nothing', 'Search finds a poet by name');
-    await check('#/ghazals?q=%D8%AC%D9%88%D9%86', (w, d) => /Jaun/.test(d.getElementById('ghazalUniversalResults').textContent) ? true : 'search for جون finds nothing', 'Search finds a poet by their Urdu name');
+    await check('#/ghazals/others', (w) => w.location.hash === '#/ghazals?poet=faiz' ? true : 'old collection link went to ' + w.location.hash, 'The old #/ghazals/others link lands on a poet, not a blank page');
+    await check('#/ghazals?q=faiz', (w, d) => /Faiz/.test(d.getElementById('ghazalList').textContent) ? true : 'search for Faiz finds nothing', 'Search finds a poet by name');
+    await check('#/ghazals?q=%D8%AC%D9%88%D9%86', (w, d) => /Jaun|جون/.test([...d.querySelectorAll('#ghazalList .vmeta')].map(m => m.textContent).join(' ')) ? true : 'search for جون finds nothing', 'Search finds a poet by their Urdu name');
     await check('#/home', (w) => {
       const bad = [];
       if (w.bestGhazalLinkForMeter(34).count < 1) bad.push('meter 34 counts no poet ghazal');
@@ -413,8 +448,8 @@ const ROUTES = [
     // meter and poet, so the row's own link is bare — just her number, e.g. "19↗" —
     // not "Mir 19"; the "Mir …" form is reserved for places that mix collections
     // (universal search results, the reader title).
-    await check('#/ghazals/mir', (w, d) => { if (d.querySelector('#mirExtList .vrow')) return 'groups should start collapsed'; const h = d.querySelector('#mirExtList .meter-group-head'); if (!h) return 'no group headers'; h.click(); const a = d.querySelector('#mirExtList .vrow .fran-link'); return a && /franpritchett\.com/.test(a.href) && /^\d+↗$/.test(a.textContent) ? true : 'first Mir row: ' + (a ? a.textContent + ' ' + a.href : 'no link'); }, "Mir rows show Fran's number (bare), linked to her page");
-    await check('#/ghazals/ghalib?meter=15', (w, d) => { const g = d.querySelector('#ghalibExtList [data-mgroup="14"]'); return g && g.classList.contains('open') && g.querySelector('.vrow') ? true : 'group #14 not opened for ?meter=15'; }, 'a ?meter= link opens that meter group (pairs → first of pair)');
+    await check('#/ghazals/mir', (w, d) => { if (d.querySelector('#ghazalList .vrow')) return 'groups should start collapsed'; const h = d.querySelector('#ghazalList .meter-group-head'); if (!h) return 'no group headers'; h.click(); const a = d.querySelector('#ghazalList .vrow .fran-link'); return a && /franpritchett\.com/.test(a.href) && /^\d+↗$/.test(a.textContent) ? true : 'first Mir row: ' + (a ? a.textContent + ' ' + a.href : 'no link'); }, "Mir rows show Fran's number (bare), linked to her page");
+    await check('#/ghazals/ghalib?meter=15', (w, d) => { const g = d.querySelector('#ghazalList [data-mgroup="14"]'); return g && g.classList.contains('open') && g.querySelector('.vrow') ? true : 'group #14 not opened for ?meter=15'; }, 'a ?meter= link opens that meter group (pairs → first of pair)');
     await check('#/weight', (w) => /^#\/weight\/(learn|drill|lookup)$/.test(w.location.hash) ? true : 'address stayed ' + w.location.hash, 'bare #/weight becomes an explicit sub-tab link');
   }
 
