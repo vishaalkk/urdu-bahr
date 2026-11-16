@@ -9956,6 +9956,285 @@ function faRefrainVariants(text) {
 }
 window.faRefrainVariants = faRefrainVariants;
 
+/* ---- A Persian line read by its own Roman ----
+   Urdu script hides the short vowels, so the engine guesses a word's syllables from its letters and its word list; Sufinama's
+   Roman writes every vowel. For a line that misses its ghazal's meter as the script reads it, the syllable weights are taken
+   from the line's own Roman instead, word by word, and matched by the engine's own matcher (matchMeter), so the fit explains
+   and plays like any other. Only the ghazal's meters are tried: read this way a line fits a meter that is not its own about
+   one time in a hundred (the script engine: one in seven).
+
+   faRomanWeights: Roman (Sufinama spelling) → weights, the same reading scripts/lib_fa_scan.js romanWeights gives the word list
+   (tests/persian_helpers.js holds the two together). Long vowel or closed syllable = l, open short = s; a consonant left over
+   after a syllable that already closed (jān, dast, dōst) is an extra short; the nasal ñ is not counted. */
+const FA_RO_LONG = /^(aa|ā|ii|ī|uu|ū|ai|au|e|ē|o|ō)/, FA_RO_SHORT = /^(a|i|u)/;
+const FA_RO_CONS2 = /^(ḳh|kh|ġh|gh|sh|ch|zh|th|ph|bh|dh|jh|ṭh|ḍh|ṛh)/;
+function faRomanWeights(word) { const r = faRomanSyllables(word); return r ? r.ws : null; }
+/* -> {ws, lc}: the weights, and for the chips how many of the word's letters each syllable takes: one for a consonant, a long
+   vowel or the nasal, none for a short vowel but the one that opens the word (alif) or closes it (the silent h) */
+function faRomanSyllables(word) {
+  let s = String(word || '').toLowerCase().normalize('NFC').replace(/['’‘ʿʾ"]/g, '').replace(/\./g, '');
+  if (!s || /[^a-zāīūēōḳġṭḍṛñṣẓḥʔ-]/.test(s)) return null;
+  s = s.replace(/-/g, '');
+  const units = [];   // [kind, letters]
+  while (s) {
+    let m;
+    if ((m = s.match(FA_RO_LONG))) { units.push(['L', 1]); s = s.slice(m[0].length); }
+    else if ((m = s.match(FA_RO_SHORT))) { units.push(['S', (!units.length || s.length === m[0].length) ? 1 : 0]); s = s.slice(m[0].length); }
+    else if (s[0] === 'ñ') { if (units.length) units[units.length - 1][1]++; s = s.slice(1); }
+    else if ((m = s.match(FA_RO_CONS2))) { units.push(['C', 1]); s = s.slice(m[0].length); }
+    else { units.push(['C', 1]); s = s.slice(1); }
+  }
+  const ws = [], lc = [];
+  let i = 0, onset = 0;
+  while (i < units.length && units[i][0] === 'C') { onset += units[i][1]; i++; }
+  if (i === units.length) return null;
+  while (i < units.length) {
+    const v = units[i++];
+    let codas = 0;
+    while (i < units.length && units[i][0] === 'C') { codas++; i++; }
+    const last = i >= units.length, keep = last ? codas : Math.max(0, codas - 1);   // between vowels the last consonant opens the next syllable
+    if (v[0] === 'L') { ws.push('l'); lc.push(onset + v[1]); if (keep >= 1) { ws.push('s'); lc.push(keep); } }
+    else if (keep === 0) { ws.push('s'); lc.push(onset + v[1]); }
+    else { ws.push('l'); lc.push(onset + v[1] + 1); if (keep >= 2) { ws.push('s'); lc.push(keep - 1); } }
+    onset = last ? 0 : codas - keep;
+  }
+  return { ws, lc };
+}
+window.faRomanWeights = faRomanWeights;
+
+/* The Roman's words: an iẓāfat (-e, -ye) and the conjunction (-o, va) belong to the word before them, as the engine's own
+   tokenizer hangs و on the word before it. -> [{ro, sc, iz, o}] ('o': written -o, 'va': a word of its own). `ro` is the word
+   for pairing with the script; `sc` the word as it scans, with what Sufinama's notation marks kept as a consonant (ʔ): the
+   ʿain or hamza inside a word (vus'at, ma'akum, sham', mir.āt), and the dot that keeps two letters apart (sub.h, maz.har:
+   not bh, zh). A pen name's quotes and a word's opening ʿain weigh nothing. */
+const FA_RO_VOWEL_END = /[aiuāīūeoēō]$/, FA_RO_VOWEL_START = /^[aiuāīūeoēō]/;
+const FA_RO_V = 'aiuāīūeoēō', FA_RO_C = 'b-df-hj-np-tv-zḳġṭḍṛṣẓḥʔ';
+function faRomanAtoms(ro) {
+  const t = String(ro || '').toLowerCase().normalize('NFC').replace(/["“”,!?;:()]/g, '')
+    .replace(/(^|[\s-])['’‘]([^\s'’‘]+)['’‘](?=$|[\s-])/g, '$1$2')
+    .replace(/(^|[\s-])['’‘ʿʾ]+/g, '$1').replace(/['’‘ʿʾ]+(?=-)/g, 'ʔ').replace(/['’‘ʿʾ]/g, 'ʔ')
+    .replace(/o\.a/g, 'uʔ').replace(/e\.a/g, 'iʔ').replace(new RegExp('([' + FA_RO_C + '])\\.a(?=$|[\\s-])', 'g'), '$1ʔ')   // sho.ala, mo.ajiz, daf.a: shuʿla, muʿjiz, dafʿ
+    .replace(new RegExp('([' + FA_RO_C + '])\\.h', 'g'), '$1ḥ').replace(new RegExp('([' + FA_RO_C + '])\\.(?=[' + FA_RO_V + '])', 'g'), '$1ʔ')
+    .replace(/\./g, '')
+    .replace(/aa/g, 'ā').replace(/ii/g, 'ī').replace(/uu/g, 'ū').replace(/\s+e(?=\s|$)/g, '-e');
+  const atoms = [];
+  t.split(/\s+/).filter(Boolean).forEach(tok => tok.split('-').filter(Boolean).forEach((p, i) => {
+    const last = atoms[atoms.length - 1], plain = p.replace(/ʔ/g, '').replace(/ḥ/g, 'h');
+    if (!plain) return;
+    if (last && i > 0 && /^(e|ye)$/.test(plain)) last.iz = true;
+    else if (last && i > 0 && plain === 'o') last.o = 'o';
+    else if (last && i === 0 && /^(o|va|vo)$/.test(plain) && tok === p) last.o = 'va';
+    else atoms.push({ ro: plain, sc: p });
+  }));
+  return atoms;
+}
+/* Sufinama's spelling → the sounds the meter counts. ñ after a short vowel is the n of rang, chun (after a long vowel it is
+   the nasal, not counted); e and o before h are the short i and u of mihr, dihad, muḥammad (not kōh, andōh, gurōh); a word
+   cannot open on two consonants (pyāla, frā, drāz: piyāla, firā, dirāz; ḳhv- is ḳh); the ā written before a closing ʿain is
+   short (vā'da, kā'ba: vaʿda, kaʿba); dariyā is daryā and torā turā. */
+const FA_RO_OH_LONG = /^(k|and|gir|gur|shik|shuk|anb|sut)oh/;
+function faRomanScanWord(w) {
+  let s = String(w || '').replace(/(^|[^a])([aiu])ñ/g, '$1$2n').replace(/eh/g, 'ih');
+  if (!FA_RO_OH_LONG.test(s)) s = s.replace(/oh/g, 'uh');
+  if (!/^(ḳhv|khv)/.test(s) && !FA_RO_CONS2.test(s) && new RegExp('^[' + FA_RO_C + ']{2}').test(s)) s = s[0] + 'i' + s.slice(1);
+  else if (FA_RO_CONS2.test(s) && !/^(ḳhv|khv)/.test(s) && new RegExp('^..[' + FA_RO_C + ']').test(s) && !FA_RO_CONS2.test(s.slice(1))) s = s.slice(0, 2) + 'i' + s.slice(2);
+  return s.replace(new RegExp('āʔ(?=[' + FA_RO_C + '])', 'g'), 'aʔ').replace(/^dariy/, 'dary').replace(/^torā$/, 'turā');
+}
+/* One Roman word → its weights with what verse leaves open marked x (long or short): the iẓāfat and the conjunction, a final
+   long vowel other than ā (Thiesen §89), the word's final -a (the silent h: ḳhāna, hama), and the particles that scan either
+   way. A diphthong before the iẓāfat or the conjunction opens (mai-e: ma-ye, ḳhusrau-e: ḳhus-ra-ve).
+   -> {ws, lc, cons (ends in a consonant, nothing hung on it), base} or null */
+const FA_RO_PARTICLE = /^(ki|ke|ba|bi|be|za|ze|na|tu|to|do|chu|cho|va)$/;
+function faRomanAtomWeights(a, sep) {
+  let base = faRomanScanWord(a.sc || a.ro), flex = false;
+  const extra = [];
+  if ((a.iz || a.o) && /a[iu]$/.test(base)) base = base.slice(0, -1) + (/i$/.test(base) ? 'y' : 'v');
+  const openA = !a.iz && !a.o && new RegExp('[' + FA_RO_C + ']a$').test(base);
+  if (a.iz) { if (FA_RO_VOWEL_END.test(base)) extra.push('x'); else { base = base.replace(/ñ$/, 'n') + 'e'; flex = true; } }
+  if (a.o) {
+    if (extra.length || FA_RO_VOWEL_END.test(base) || (sep && a.o === 'va')) extra.push('x');
+    else { base = base.replace(/ñ$/, 'n') + 'o'; flex = true; }
+  }
+  const r = faRomanSyllables(base);
+  if (!r) return null;
+  const ws = r.ws, lc = r.lc;
+  if (flex) lc[lc.length - 1] = Math.max(1, lc[lc.length - 1] - 1);   // the iẓāfat and the hung conjunction have no letter in the word
+  if (flex || openA || /[īūeoēō]$/.test(base) || FA_RO_PARTICLE.test(base)) ws[ws.length - 1] = 'x';
+  return { ws: ws.concat(extra), lc: lc.concat(extra.map(() => 1)), cons: !extra.length && !FA_RO_VOWEL_END.test(base), base };
+}
+/* The word's readings: as written, and the short forms verse uses (Thiesen ch. XII): dīgar as digar, ummīd as umīd, a final
+   -āh as -ah (gunāh, rāh, siyāh). -> [{ws, lc, cons}], the written one first */
+function faRomanAtomAlts(a, sep) {
+  const sc = a.sc || a.ro, forms = [sc];
+  if (/^dīgar/.test(sc)) forms.push(sc.replace(/^dī/, 'di'));
+  if (/^ummīd/.test(sc)) forms.push(sc.replace(/^umm/, 'um'));
+  if (/.āh$/.test(sc)) forms.push(sc.replace(/āh$/, 'ah'));
+  const out = [], seen = new Set();
+  forms.forEach(f => {
+    const w = faRomanAtomWeights(f === sc ? a : Object.assign({}, a, { sc: f }), sep);
+    if (!w || seen.has(w.ws.join(''))) return;
+    seen.add(w.ws.join(''));
+    out.push(w);
+  });
+  return out;
+}
+/* Two Roman words run into one, where verse does: a particle before a vowel loses its own (ki az: kaz, na az: naz, ki ū: kū);
+   ast after a vowel loses its a (jādū ast: jādūst); the verb prefix closes on the stem's first consonant (ba-shikast:
+   bishkast, ma-pasand: mapsand); and inside one written word a consonant opens the next vowel (nihān-ast: nihā-nast). */
+function faRomanJoins(A, B, sameWord) {
+  const out = [];
+  if (A.iz || A.o) return out;
+  const a = A.sc || A.ro, b = B.sc || B.ro;
+  if (sameWord && !FA_RO_VOWEL_END.test(a) && FA_RO_VOWEL_START.test(b)) out.push(a.replace(/ñ$/, 'n') + b);
+  if (/^(ki|ke|na|chu|cho|ma|ba|za|ze)$/.test(a) && FA_RO_VOWEL_START.test(b)) out.push(a.slice(0, -1) + b);
+  if (b === 'ast' && FA_RO_VOWEL_END.test(a)) out.push(a + 'st');
+  const m = /^(ba|bi|be|na|ma)$/.test(a) && b.match(new RegExp('^((?:ḳh|kh|ġh|gh|sh|ch|zh)|[' + FA_RO_C + '])[aiu]((?:ḳh|kh|ġh|gh|sh|ch|zh)|[' + FA_RO_C + '])(?=[' + FA_RO_V + '])'));
+  if (m) out.push(a + m[1] + m[2] + b.slice(m[0].length));
+  return out;
+}
+/* the word's letters shared out over its syllables for the chips: `lc` letters each (faRomanSyllables), any difference from
+   the letters there are made up on the long syllables, from the end */
+function faRomanLetters(letters, ws, lc) {
+  const m = ws.length, want = ws.map((w, i) => Math.max(1, (lc && lc[i]) || (w === 's' ? 1 : 2)));
+  let diff = letters.length - want.reduce((x, y) => x + y, 0);
+  for (let i = m - 1; i >= 0 && diff > 0; i--) if (ws[i] !== 's') { want[i]++; diff--; }
+  if (diff > 0) want[m - 1] += diff;
+  for (let pass = 0; pass < 3 && diff < 0; pass++) for (let i = m - 1; i >= 0 && diff < 0; i--) if (want[i] > 1) { want[i]--; diff++; }
+  const out = [];
+  let at = 0;
+  want.forEach(k => { out.push(letters.slice(at, at + k)); at += k; });
+  return out;
+}
+/* The line's written words paired with its Roman words -> [[u0, u1, p0, p1]] (words u0..u1-1 are atoms p0..p1-1) or null.
+   Word for word when the counts agree; else rkAlignWords, and if the Roman has too many words for it, with the prefixes it
+   writes apart (na-shanāsī, ba-ḳhudā) joined to their word first. The line's last word may have lost its closing consonants
+   to faProsodyText (چیست scanned as چی), so there the Roman need only begin as the script does. */
+const FA_RO_PREFIX = /^(ba|bi|be|na|ma|mī|za|ze|dar|bar)$/;
+function faRomanPair(raw, atoms) {
+  const n = raw.length, m = atoms.length;
+  const like = (u, r) => { const a = rkSkelUr(u), b = rkSkelRo(r); return (!a && !b) || rkSim(a, b) >= 0.34; };
+  const lastOk = (u, r) => { const a = rkSkelUr(u), b = rkSkelRo(r); return like(u, r) || (!!a && b.indexOf(a) === 0); };
+  if (n === m && raw.every((w, i) => (i === n - 1 ? lastOk : like)(w, atoms[i].ro))) return raw.map((_, i) => [i, i + 1, i, i + 1]);
+  const align = (uw, list) => {   // list: [{ro, p0, p1}]
+    const g = rkAlignWords(uw, list.map(x => x.ro));
+    return g && g.map(([u0, u1, q0, q1]) => [u0, u1, list[q0].p0, list[q1 - 1].p1]);
+  };
+  const plain = atoms.map((a, p) => ({ ro: a.ro, p0: p, p1: p + 1 })), merged = [];
+  atoms.forEach((a, p) => {
+    const prev = merged[merged.length - 1];
+    if (prev && prev.open) { prev.ro += a.ro; prev.p1 = p + 1; prev.open = FA_RO_PREFIX.test(a.ro) && !a.iz && !a.o; }
+    else merged.push({ ro: a.ro, p0: p, p1: p + 1, open: FA_RO_PREFIX.test(a.ro) && !a.iz && !a.o });
+  });
+  for (const list of m > n ? [plain, merged] : [plain]) {
+    const g = align(raw, list);
+    if (g) return g;
+    /* the last word apart */
+    const L = list[list.length - 1];
+    if (n > 1 && list.length > 1 && lastOk(raw[n - 1], L.ro)) {
+      const h = align(raw.slice(0, -1), list.slice(0, -1));
+      if (h) return h.concat([[n - 1, n, L.p0, L.p1]]);
+    }
+  }
+  return null;
+}
+/* res: the line's scan (its words, as the engine tokenized them); ro: its Roman; want: a Set of meter ids.
+   -> the fits of those meters by the Roman's reading ([{meter, c, path, seq, roman: true}], cheapest first), [] when the Roman
+   cannot be paired with the words or does not fit. The words keep their places: a group of words the Roman writes as one
+   (or one word it writes as two) is a single unit, and so is a liaison across two or three. */
+function faRomanFits(S, res, ro, want) {
+  if (!res || !res.words || !ro || RK_NON_LATIN.test(ro) || !want || !want.size) return [];
+  const words = res.words, n = words.length, atoms = faRomanAtoms(ro);
+  if (!n || !atoms.length) return [];
+  const groups = faRomanPair(words.map(w => w.raw), atoms);
+  if (!groups) return [];
+  const lettersOf = (u0, u1) => [].concat(...words.slice(u0, u1).map(w => w.letters || []));
+  /* the weights of atoms p0..p1-1 run together, each `sep` choice of a free-standing va (hung on the word, or its own syllable) */
+  const run = (p0, p1, sep) => {
+    let acc = [{ ws: [], lc: [], cons: false }];
+    for (let p = p0; p < p1; p++) {
+      const alts = faRomanAtomAlts(atoms[p], sep), next = [];
+      if (!alts.length) return [];
+      for (const x of acc) for (const y of alts) if (next.length < 12) next.push({ ws: x.ws.concat(y.ws), lc: x.lc.concat(y.lc), cons: y.cons });
+      acc = next;
+    }
+    return acc;
+  };
+  const units = words.map(() => []);
+  const end = (x, u1) => {   // the line's last syllable counts long whatever it holds; a consonant left over there is not counted
+    const ws = x.ws.slice(), lc = x.lc.slice();
+    if (u1 === n) {
+      if (x.cons && ws.length > 1 && ws[ws.length - 1] === 's') { ws.pop(); lc[lc.length - 2] += lc.pop(); }
+      ws[ws.length - 1] = 'x';
+    }
+    return { ws, lc };
+  };
+  const unit = (u0, u1, list, graft) => {
+    const seen = new Set(), opts = [];
+    list.forEach(x => {
+      if (!x) return;
+      const { ws, lc } = end(x, u1), key = ws.join('');
+      if (seen.has(key)) return;
+      seen.add(key);
+      const parts = faRomanLetters(lettersOf(u0, u1), ws, lc);
+      const syl = ws.map((w, j) => ({ k: 'LEX', t: parts[j] || [], w, xs: 0 }));
+      if (words[u1 - 1].suffix === 'o') syl[syl.length - 1].suf = 'o';
+      opts.push({ syl, c: 0, n: '', _oi: opts.length });
+    });
+    if (!opts.length) return;
+    const have = units[u0].find(x => x.to === u1 - 1);
+    if (!have) { units[u0].push({ from: u0, to: u1 - 1, opts, graft: !!graft }); return; }
+    opts.forEach(o => { if (!have.opts.some(h => h.syl.map(y => y.w).join('') === o.syl.map(y => y.w).join(''))) { o._oi = have.opts.length; have.opts.push(o); } });
+  };
+  const vowelWord = i => /^[اآ]/.test(words[i].raw);
+  for (let g = 0; g < groups.length; g++) {
+    const [u0, u1, p0, p1] = groups[g];
+    const a = run(p0, p1, false);
+    if (!a.length) return [];
+    unit(u0, u1, a.concat(run(p0, p1, true)), u1 - u0 > 1);
+    /* liaison: this group's last consonant opens the next word, which begins with a vowel (alif; not ʿain, a consonant) */
+    for (let h = g + 1; h < groups.length && h <= g + 2; h++) {
+      const v1 = groups[h][1];
+      let ok = true, joined = '';
+      for (let k = g; k < h && ok; k++) {
+        const lastAtom = atoms[groups[k][3] - 1], w = faRomanAtomWeights(lastAtom, false);
+        ok = !!w && w.cons && !lastAtom.iz && !lastAtom.o && vowelWord(groups[k + 1][0]) && FA_RO_VOWEL_START.test(atoms[groups[k + 1][2]].ro)
+          && (k === g || groups[k][3] - groups[k][2] === 1);
+      }
+      if (!ok) break;
+      /* the joined words as one Roman word; atoms before the first and after the last keep their own weights */
+      const firstG = groups[g], lastG = groups[h];
+      for (let k = g; k <= h; k++) joined += atoms[k === g ? groups[k][3] - 1 : groups[k][2]].ro.replace(/ñ$/, k < h ? 'n' : 'ñ');
+      const head = run(firstG[2], firstG[3] - 1, false)[0];
+      const mid = faRomanAtomWeights(Object.assign({}, atoms[lastG[2]], { ro: joined, sc: joined }), false);
+      const tail = lastG[3] > lastG[2] + 1 ? run(lastG[2] + 1, lastG[3], false)[0] : null;
+      if (!head || !mid || (lastG[3] > lastG[2] + 1 && !tail)) continue;
+      unit(u0, v1, [{ ws: head.ws.concat(mid.ws, tail ? tail.ws : []), lc: head.lc.concat(mid.lc, tail ? tail.lc : []), cons: tail ? tail.cons : mid.cons }], true);
+    }
+  }
+  /* two neighbouring Roman words run into one (faRomanJoins), in one written word or across two */
+  const groupOf = [];
+  groups.forEach((g, gi) => { for (let p = g[2]; p < g[3]; p++) groupOf[p] = gi; });
+  for (let p = 0; p + 1 < atoms.length; p++) {
+    const gp = groupOf[p], gq = groupOf[p + 1];
+    if (gp === undefined || gq === undefined) continue;
+    faRomanJoins(atoms[p], atoms[p + 1], gp === gq).forEach(j => {
+      const head = run(groups[gp][2], p, false)[0], tail = run(p + 2, groups[gq][3], false)[0];
+      if (!head || !tail) return;
+      const mids = faRomanAtomAlts(Object.assign({}, atoms[p + 1], { ro: j, sc: j }), false);
+      unit(groups[gp][0], groups[gq][1], mids.map(m => ({ ws: head.ws.concat(m.ws, tail.ws), lc: head.lc.concat(m.lc, tail.lc), cons: tail.ws.length ? tail.cons : m.cons })), true);
+    });
+  }
+  const fits = [];
+  S.METERS.forEach(m => {
+    if (!want.has(String(m.id)) || !m.vars) return;
+    let r = null;
+    try { r = S.matchMeter(units, n, m); } catch (e) { r = null; }
+    if (r) fits.push({ meter: m, c: r.c, path: r.path, seq: r.seq, roman: true });
+  });
+  return fits.sort((x, y) => x.c - y.c);
+}
+window.faRomanFits = faRomanFits;
+
 
 /* Which language a line is: Iranian letters (ي ك ۀ, final ه) say Persian outright; otherwise each word's log-odds of Persian
    over Urdu (LANG_WORDS, data/lang_words.json, mined by scripts/build_lang_words.js from the line languages of the shipped
@@ -10210,22 +10489,63 @@ function lineMustazadIds(l) {
   if (!FA_MUSTAZAD_OF.has(g)) FA_MUSTAZAD_OF.set(g, faMustazadGhazal(ScanFa, g.lines.filter(x => x.lang === 'fa').map(x => faProsodyText(lineScanText(x))), g.meters));
   return FA_MUSTAZAD_OF.get(g) ? g.meters : null;
 }
-/* ids (optional): the meters to judge the line by, by default its ghazal's. A Persian line that misses them as a whole (no fit at
-   cost ≤ 2) is, in a mustazād ghazal, also scanned as meter + tail (faMustazadScan: one fit running through the whole line,
-   `mustazad` set). One that still misses is scanned without a sung refrain (faRefrainVariants) when that gives it a fit in its
-   meter, cheaper than any it has as written (and ≤ 5, a line that scans): the result then covers the words before the refrain,
-   and r.refrain is the number of words left out. */
+/* ids (optional): the meters to judge the line by, by default its ghazal's. A Persian line that misses them as the script reads
+   it (no fit at cost ≤ 2) is read again, each step only if the one before still misses (faCorpusScan). */
 function scanCorpusLine(l, ids) {
   const eng = engineForLine(l), fa = !!(l && l.lang === 'fa');
-  const scan = t => { const r = eng.scanLine(t); if (fa) { r.fits = r.fits.filter(f => f.meter.id !== 'H'); r.__fa = 1; } return r; };
-  const text = fa ? faProsodyText(lineScanText(l)) : lineScanText(l), r = scan(text);
-  const own = (ids && ids.length) ? ids : (fa && l.faG && l.faG.meters) || [];
-  if (!fa || !own.length) return r;
-  const want = new Set(own.map(String)), cost = x => Math.min(Infinity, ...x.fits.filter(f => want.has(String(f.meter.id))).map(f => f.c));
+  if (!fa) return eng.scanLine(lineScanText(l));
+  const own = (ids && ids.length) ? ids : (l.faG && l.faG.meters) || [];
+  return faCorpusScan(eng, faProsodyText(lineScanText(l)), l.ro || '', own, () => lineMustazadIds(l));
+}
+/* A Persian corpus line against its ghazal's meters `own` (S: the Persian engine; text: the line as the engine reads it,
+   faProsodyText of its hinted text; ro: its Roman; mzOf: () => the ghazal's meters when it is a mustazād). -> a scanLine result,
+   never with the Hindi meter. The steps, each only while the line still has no fit in its meter at cost ≤ 2:
+     1. as written;
+     2. in a mustazād ghazal, as meter + tail (faMustazadScan: one fit running through the whole line, `mustazad` set);
+     3. by its own Roman (faRomanFits): the words stay, the fit carries `roman`;
+     4. respelt and with liaison, as pasted Persian is read (faScanSpelling, faLiaisonVariants): the result is the respelt
+        line's, `r.respelt` set;
+     5. with no Roman to say where the iẓāfat goes, with up to three guessed where grammar allows one (faIzafatSlots; the
+        guess is left to lines without Roman: on a line whose Roman marks them it only finds wrong meters): `r.izGuess`;
+     6. without a sung refrain (faRefrainVariants), when that gives a fit cheaper than any the line has as written (and ≤ 5,
+        a line that scans): the result covers the words before the refrain, r.refrain is the number of words left out.
+   opts.basic: steps 1, 2 and 6 only (the reader before 2026-11; tests/benchmark_fa.js measures the others against it). */
+function faCorpusScan(S, text, ro, own, mzOf, opts) {
+  const scan = t => { const r = S.scanLine(t); r.fits = r.fits.filter(f => f.meter.id !== 'H'); r.__fa = 1; return r; };
+  const r = scan(text);
+  if (!own || !own.length) return r;
+  const want = new Set([...own].map(String)), cost = x => Math.min(Infinity, ...x.fits.filter(f => want.has(String(f.meter.id))).map(f => f.c));
   if (cost(r) <= 2) return r;
-  const mz = lineMustazadIds(l);
-  const withTail = (x, t) => { if (mz) x.fits = x.fits.concat(faMustazadScan(eng, t, mz).fits).sort((a, b) => a.c - b.c); return x; };
+  const mz = mzOf ? mzOf() : null;
+  const withTail = (x, t) => { if (mz) x.fits = x.fits.concat(faMustazadScan(S, t, mz).fits).sort((a, b) => a.c - b.c); return x; };
   if (cost(withTail(r, text)) <= 2) return r;
+  const hasRoman = !!ro && !RK_NON_LATIN.test(ro);
+  if (!(opts && opts.basic)) {
+    const rf = faRomanFits(S, r, ro, want);
+    if (rf.length && rf[0].c <= 2) { r.fits = rf.concat(r.fits).sort((a, b) => a.c - b.c); return r; }
+    const tryText = (v, mark) => {
+      let r2;
+      try { r2 = withTail(scan(v), v); } catch (e) { return null; }   // a variant the engine cannot read
+      return cost(r2) <= 2 ? Object.assign(r2, mark) : null;
+    };
+    const sp = faProsodyText(faScanSpelling(text)), seen = new Set([text]);
+    for (const v of [sp].concat(faLiaisonVariants(text), sp === text ? [] : faLiaisonVariants(sp))) {
+      if (seen.has(v)) continue;
+      seen.add(v);
+      const r2 = tryText(v, { respelt: true });
+      if (r2) return r2;
+    }
+    if (!hasRoman) {
+      const W = sp.split(' '), at = faIzafatSlots(W);
+      const iz = w => /[ہ]$/.test(w) ? w.replace(/ہ$/, 'ۂ') : w.replace(/ں$/, 'ن') + 'ِ';
+      let sets = [[]];
+      for (const i of at) sets = sets.concat(sets.filter(x => x.length < 3).map(x => x.concat(i)));
+      for (const idx of sets.slice(1).sort((a, b) => a.length - b.length)) {
+        const r2 = tryText(W.map((w, i) => idx.includes(i) ? iz(w) : w).join(' '), { izGuess: idx.length });
+        if (r2) return r2;
+      }
+    }
+  }
   const n = text.split(' ').filter(Boolean).length;
   for (const v of faRefrainVariants(text)) {
     const r2 = withTail(scan(v), v), c = cost(r2);
@@ -10233,6 +10553,7 @@ function scanCorpusLine(l, ids) {
   }
   return r;
 }
+window.faCorpusScan = faCorpusScan;
 function engineOf(r) { return (r && r.__fa && typeof ScanFa !== 'undefined') ? ScanFa : Scan; }
 window.engineForLine = engineForLine;
 window.scanCorpusLine = scanCorpusLine;
@@ -19803,6 +20124,9 @@ function renderLineScan(text, container, lineObjIn, meterId) {
     const notes = [...new Set(e.notes.map(n => `${n.word}: ${n.note}`))].filter(n => !/: $/.test(n));
     if (f.mustazad) notes.push('Mustazād: after the // comes the added phrase, the meter’s first and last feet');
     if (r.refrain) notes.push(`Refrain: the last ${r.refrain} words repeat as sung and are left out of the scan`);
+    if (f.roman) notes.push('Read by the line’s Roman, which writes the vowels the script leaves out');
+    if (r.respelt) notes.push('Read with its words run together where the meter joins them');
+    if (r.izGuess) notes.push('No Roman for this line: the iẓāfat is guessed');
     if (notes.length) {
       h += `<p class="scan-notes">${notes.join(' · ')}</p>`;
     }

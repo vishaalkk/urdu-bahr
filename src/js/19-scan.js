@@ -1134,6 +1134,9 @@ function renderLineScan(text, container, lineObjIn, meterId) {
     const notes = [...new Set(e.notes.map(n => `${n.word}: ${n.note}`))].filter(n => !/: $/.test(n));
     if (f.mustazad) notes.push('Mustazād: after the // comes the added phrase, the meter’s first and last feet');
     if (r.refrain) notes.push(`Refrain: the last ${r.refrain} words repeat as sung and are left out of the scan`);
+    if (f.roman) notes.push('Read by the line’s Roman, which writes the vowels the script leaves out');
+    if (r.respelt) notes.push('Read with its words run together where the meter joins them');
+    if (r.izGuess) notes.push('No Roman for this line: the iẓāfat is guessed');
     if (notes.length) {
       h += `<p class="scan-notes">${notes.join(' · ')}</p>`;
     }

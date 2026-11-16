@@ -127,6 +127,60 @@ const rf = FA.ctx.faScanFits(FA.Scan, jami, { target: new Set(['8']), refrain: t
 check(rf && /نازک بدنی را$/.test(rf.refrain) && !/بدنی را بدنی/.test(rf.refrain), 'refrain: Jami\'s line fits #8 without its sung repeats (with liaison: ruḳha-tāmoḳhta)');
 check(!FA.ctx.faScanFits(FA.Scan, jami, { refrain: true }).some(f => f.refrain), 'refrain: never without a target meter');
 
+/* 3c-2. a line read by its own Roman (faRomanFits), and the steps the reader takes for a line that misses its meter (faCorpusScan) */
+{
+  const lib = require('../scripts/lib_fa_scan');
+  const sample = ['dil', 'jān', 'jāñ', 'dost', 'mustaġhnīst', 'shahanshāh', 'ḳhvāb', 'namī-arzad', 'aayad', 'iiñ', 'tuī', 'be-navā.e', "'ishq", 'kudāmast', 'x9'];
+  check(sample.every(w => JSON.stringify(FA.ctx.faRomanWeights(w)) === JSON.stringify(lib.romanWeights(w))),
+    'faRomanWeights reads a Roman word as the word-list builder does (scripts/lib_fa_scan.js romanWeights)');
+  check(FA.ctx.faRomanAtoms("jān-o-dil-e-man va 'ishq").map(a => a.ro + (a.iz ? '+e' : '') + (a.o ? '+' + a.o : '')).join(' ') === 'jān+o dil+e man+va ishq',
+    'faRomanAtoms: the iẓāfat and the conjunction hang on the word before them');
+  const corpus = (ur, ro, own, opts) => FA.ctx.faCorpusScan(FA.Scan, FA.ctx.faProsodyText(FA.ctx.urPluralHa(FA.ctx.rekhtaScanText(ur, ro))), ro, own, null, opts);
+  const fit = (r, own) => r.fits.find(f => own.includes(String(f.meter.id)) && f.c <= 2);
+  /* Shah Niyaz, hazaj #26: the script engine has no reading of the line; its Roman has */
+  const ur = 'شہنشاہ علی جاہے نبی شانے حق آگاہے', ro = 'shahanshāh-e-alī jaahe nabī shāne haq-āgāhe';
+  const before = corpus(ur, ro, ['26'], { basic: true }), now = corpus(ur, ro, ['26']), f = fit(now, ['26']);
+  check(!fit(before, ['26']) && f && f.roman, 'faCorpusScan: a line the script misses fits its meter by its Roman (fit.roman)');
+  const e = f && FA.Scan.explain(now, f);
+  check(e && e.syl.filter(x => !x.cheat).length === 16 && e.syl.map(x => x.resolved).join('') === 'slllslllslllslll' && e.syl[e.syl.length - 1].wordTo === now.words.length - 1,
+    'faRomanFits: explain() gives the meter\'s sixteen syllables over the line\'s own words');
+  check(!fit(corpus(ur, ro, ['10']), ['10']) && !fit(corpus(ur, ro, ['8']), ['8']), 'faRomanFits: only where the Roman fits (not ramal #10, not hazaj #8)');
+  check(FA.ctx.faRomanFits(FA.Scan, now, 'ایں رومن نہیں', new Set(['26'])).length === 0 && FA.ctx.faRomanFits(FA.Scan, now, 'dil', new Set(['26'])).length === 0,
+    'faRomanFits: nothing from a Roman column in Urdu script, or one that cannot be paired with the words');
+  /* respelt with liaison: az ū → a-zū */
+  const lz = corpus('حیاتے تازہ بگرفتہ از او دین مسلمانی', 'hayāte taaza ba-girifta az o diin musalmānī', ['26']);
+  check(fit(lz, ['26']) && (lz.respelt || fit(lz, ['26']).roman), 'faCorpusScan: a line that needs liaison fits its meter');
+  /* no Roman: the iẓāfat is guessed where grammar allows one; with Roman it never is */
+  const ng = corpus('امیرِ عالم آرائے ظہیر دین و دنیائے', '', ['26']);
+  check(fit(ng, ['26']) && ng.izGuess >= 1 && !fit(corpus('امیرِ عالم آرائے ظہیر دین و دنیائے', '', ['26'], { basic: true }), ['26']),
+    'faCorpusScan: a line with no Roman fits with a guessed iẓāfat (r.izGuess)');
+  check(!corpus(ur, ro, ['10']).izGuess, 'faCorpusScan: no iẓāfat is guessed for a line that has Roman');
+  /* Sufinama's notation as the meter counts it, and what verse leaves open */
+  const wts = r => FA.ctx.faRomanAtoms(r).map(a => FA.ctx.faRomanAtomWeights(a, false).ws.join('')).join(' ');
+  check(wts("sub.h maz.har vus'at ma'akum sham' 'hāfiz' 'ishq") === 'ls ll ll ssl ls ll ls',
+    'faRomanAtoms: a dot keeps two letters apart (sub.h, maz.har), the ʿain inside a word is a consonant, a pen name\'s quotes weigh nothing');
+  check(wts('rañg jāñ mohammad dehad koh pyāla dariyā') === 'ls l sll sl ls slx ll' && wts("sho.ala vā'da") === 'lx lx',
+    'faRomanScanWord: rañg has an n, mohammad and dehad a short vowel, pyāla is piyāla, dariyā daryā, sho.ala shuʿla');
+  check(wts('ḳhāna hama mai-e ḳhusrau-o') === 'lx sx sx lsx', 'faRomanAtomWeights: a final -a is open; a diphthong opens before the iẓāfat');
+  check(FA.ctx.faRomanAtomAlts({ ro: 'dīgar', sc: 'dīgar' }, false).map(x => x.ws.join('')).join(' ') === 'll sl'
+    && FA.ctx.faRomanAtomAlts({ ro: 'gunāh', sc: 'gunāh' }, false).map(x => x.ws.join('')).join(' ') === 'sls sl',
+    'faRomanAtomAlts: dīgar also as digar, gunāh also as gunah');
+  const J = (a, b, same) => FA.ctx.faRomanJoins({ ro: a, sc: a }, { ro: b, sc: b }, same).join(' ');
+  check(J('ki', 'az') === 'kaz' && J('jādū', 'ast') === 'jādūst' && J('ba', 'shikast') === 'bashkast' && J('nihān', 'ast', true) === 'nihānast' && J('nihān', 'ast') === '',
+    'faRomanJoins: ki az → kaz, jādū ast → jādūst, ba-shikast → bishkast, and liaison inside one written word');
+  check(JSON.stringify(FA.ctx.faRomanPair(['ذوق', 'ایں', 'مے', 'نشناسی', 'بخدا', 'تا', 'نچشی'], FA.ctx.faRomanAtoms('zauq-e-īñ mai na-shanāsī ba-ḳhudā tā na-chashī')).map(g => g[3] - g[2])) === '[1,1,1,2,2,1,2]',
+    'faRomanPair: prefixes the Roman writes apart are paired with the one word the script writes');
+  /* lines the reader missed before these: a verb prefix closing on its stem; a last word faProsodyText cut (چیست) */
+  const pv = corpus('نقطۂ تحقیق بہ شنو از نیاز بے نیاز', 'nuqta-e-tahqīq ba-shino az niyāz-e-be-niyāz', ['10']);
+  check(fit(pv, ['10']) && fit(pv, ['10']).roman, 'faRomanFits: ba-shino read bishno (ramal #10)');
+  const cut = FA.ctx.faProsodyText(FA.ctx.rekhtaScanText('اے ترک شوخ ایں ہمہ ناز و عتاب چیست', "ai turk-e-shoḳh iiñ hama nāz-o-'itāb chīst"));
+  check(FA.ctx.faRomanFits(FA.Scan, FA.Scan.scanLine(cut), "ai turk-e-shoḳh iiñ hama nāz-o-'itāb chīst", new Set(['5'])).some(x => x.c <= 2),
+    'faRomanFits: the Roman pairs with a line whose last word lost its closing consonants');
+  /* a line that fits as written is returned as the engine scanned it */
+  const plain = corpus('اگر آں ترک شیرازی بدست آرد دل ما را', 'agar aañ turk-e-shīrāzī ba-dast aarad dil-e-mā rā', ['26']);
+  check(fit(plain, ['26']) && !fit(plain, ['26']).roman && !plain.respelt && !plain.izGuess, 'faCorpusScan: a line that fits as written is left alone');
+}
+
 /* 3d. drift: data/fa_scan.json is keyed by the engine's own spelling rules; if the engine's normalisation changes, every
    Persian reading must still be found (else ScanFa silently loses them). Same for the Persian-only meters. */
 const FA_DATA = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data/fa_scan.json'), 'utf8'));
@@ -202,6 +256,16 @@ setTimeout(() => {
   const jamiR = jamiG && w.scanCorpusLine(jamiG.lines[0], jamiG.meters);
   check(jamiR && jamiR.refrain === 4 && jamiR.fits.some(f => jamiG.meters.map(String).includes(String(f.meter.id))), 'reader: Jami\'s refrain line fits its meter without the repeats');
   check(jamiG && !w.scanCorpusLine(jamiG.lines[4], jamiG.meters).refrain, 'reader: a line with no repeat scans whole');
+  /* a line the script engine misses is read by its Roman, with a note; the chips still carry the line's own words */
+  const rmG = w.eval("poetItems('shah_niyaz').find(g => g.lines.some(l => /^shahanshāh-e-alī jaahe/.test(l.ro || '')))");
+  const rmL = rmG && rmG.lines.find(l => /^shahanshāh-e-alī jaahe/.test(l.ro || ''));
+  check(!!rmL, 'Shah Niyaz\'s "shahanshāh-e ʿalī-jāhe" is in the corpus');
+  if (rmL) {
+    const box = d.createElement('div');
+    w.renderLineScan(rmL.ur, box, rmL, rmG.meters);
+    check(/Read by the line’s Roman/.test(box.textContent) && !/No meter fits/.test(box.textContent) && box.querySelectorAll('.chip').length >= 16,
+      'reader: a line read by its Roman is scanned in its meter, with a note');
+  }
   d.getElementById('scanIn').value = 'ہزاروں خواہشیں ایسی کہ ہر خواہش پہ دم نکلے';
   w.runScan();
   check(/Urdu/.test(d.getElementById('scanLangDetected').textContent), 'Scan: Ghalib detected as Urdu');

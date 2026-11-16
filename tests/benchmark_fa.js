@@ -10,6 +10,13 @@
      *.fit2          best regular-meter fit costs ≤ 2
      *.own2          the ghazal's own meter fits the line at ≤ 2 (a mustazād ghazal's line also as meter + tail; a line that misses
                      also without a sung refrain: faMustazadScan, faRefrainVariants, as the reader scans it)
+     *.read2         the ghazal's own meter fits the line at ≤ 2 as the READER reads it (faCorpusScan, the function behind
+                     scanCorpusLine): own2's reading, then by the line's own Roman, respelt with liaison, and (no Roman) with a
+                     guessed iẓāfat. own2 stays as it was, the script engine alone. FA_READ_BASIC=1 scores the reader before
+                     those steps (how the floor was first set).
+     roman.wrong     the control for reading by the Roman: of the core lines that fit their own meter as written, the share
+                     the Roman also fits to one of twelve common meters that is NOT theirs. Printed, not a floor (lower is better);
+                     fails above 2%.
      gold.meter      shipped ghazal meter = Ganjoor's (where Ganjoor's meter is one of ours), sure matches only
      ganjoor.meter   independent: 240 well-known ghazals of Hafiz, Saadi, Rumi and Jami straight from Ganjoor in Iranian spelling
                      (those Sufinama lists as sung first, then the most recited on Ganjoor; Arabic ghazals left out)
@@ -43,7 +50,10 @@ const PAIRED = new Map(JSON.parse(fs.readFileSync(path.join(ROOT, 'data/meters.j
 const pct = (a, b) => b ? +(100 * a / b).toFixed(2) : 0;
 
 const CORE = new Set(JSON.parse(fs.readFileSync(path.join(__dirname, 'data/persian_core_urls.json'), 'utf8')));
-const tally = { core: { n: 0, c0: 0, f2: 0, o2: 0 }, all: { n: 0, c0: 0, f2: 0, o2: 0 } };
+const tally = { core: { n: 0, c0: 0, f2: 0, o2: 0, r2: 0 }, all: { n: 0, c0: 0, f2: 0, o2: 0, r2: 0 } };
+const READ_BASIC = !!process.env.FA_READ_BASIC;
+const COMMON = ['26', '10', '8', '5', '3', '11', '4', '33', '27', '14', '1', '22'];
+let roN = 0, roWrong = 0;
 let hindi = 0;
 const byUrl = new Map();
 for (const gs of Object.values(poets.ghazals)) for (const g of gs) {
@@ -63,8 +73,20 @@ for (const gs of Object.values(poets.ghazals)) for (const g of gs) {
     const fits = (Scan.scanLine(text).fits || []).filter(f => f.meter.id !== 'H');
     const best = fits.length ? fits[0].c : Infinity;
     const ownFit = fits.some(f => own.has(String(f.meter.id)) && f.c <= 2) || (mz && ownIn(text)) || ctx.faRefrainVariants(text).some(ownIn);
+    /* the reader's reading (scanCorpusLine → faCorpusScan), on the text the reader scans */
+    const asRead = fits.some(f => own.has(String(f.meter.id)) && f.c <= 2), readText = ctx.faProsodyText(ctx.urPluralHa(text));
+    let readFit = asRead;
+    if (!readFit) try {
+      readFit = ctx.faCorpusScan(Scan, readText, l.ro || '', [...own], () => (mz ? [...own] : null), READ_BASIC ? { basic: true } : null)
+        .fits.some(f => own.has(String(f.meter.id)) && f.c <= 2);
+    } catch (e) { readFit = false; }
+    if (asRead && l.ro && CORE.has(g.url)) {
+      roN++;
+      const not = new Set(COMMON.filter(m => !own.has(m)));
+      if (ctx.faRomanFits(Scan, Scan.scanLine(readText), l.ro, not).some(f => f.c <= 2)) roWrong++;
+    }
     [tally.all].concat(CORE.has(g.url) ? [tally.core] : []).forEach(t => {
-      t.n++; if (best === 0) t.c0++; if (best <= 2) t.f2++; if (ownFit) t.o2++;
+      t.n++; if (best === 0) t.c0++; if (best <= 2) t.f2++; if (ownFit) t.o2++; if (readFit) t.r2++;
     });
   });
 }
@@ -138,7 +160,7 @@ console.log(`ganjoor: ${gJudged} ghazals judged (${testset.length - gJudged} in 
 Object.entries(gMiss).sort((a, b) => b[1] - a[1]).slice(0, 8).forEach(([k, n]) => console.log(`    ganjoor miss ×${n}: ${k}`));
 
 const scores = {};
-for (const [set, t] of Object.entries(tally)) if (!(QUICK && set === 'all')) Object.assign(scores, { [set + '.cost0']: pct(t.c0, t.n), [set + '.fit2']: pct(t.f2, t.n), [set + '.own2']: pct(t.o2, t.n) });
+for (const [set, t] of Object.entries(tally)) if (!(QUICK && set === 'all')) Object.assign(scores, { [set + '.cost0']: pct(t.c0, t.n), [set + '.fit2']: pct(t.f2, t.n), [set + '.own2']: pct(t.o2, t.n), [set + '.read2']: pct(t.r2, t.n) });
 scores['gold.meter'] = pct(right, judged);
 scores['translit.word'] = pct(tOk, tw);
 scores['ganjoor.meter'] = pct(gRight, gJudged);
@@ -154,6 +176,9 @@ for (const [k, v] of Object.entries(scores)) {
   console.log(`  ${bad ? '✗' : '✓'} ${k.padEnd(12)} ${v.toFixed(2).padStart(6)}%   (floor ${floor === undefined ? '—' : floor.toFixed(2)})`);
 }
 wrong.forEach(w => console.log('    gold miss: ' + w));
+{ const w = pct(roWrong, roN), bad = w > 2;
+  console.log(`  ${bad ? '✗' : '✓'} roman.wrong  ${w.toFixed(2).padStart(6)}%   (${roWrong} of ${roN} core lines fit a meter not theirs by the Roman; must stay ≤ 2%)`);
+  if (bad) fails++; }
 if (hindi) { console.log(`  ✗ ${hindi} Persian ghazal(s) shipped with the Hindi meter`); fails++; }
 if (UPDATE) {
   if (fails) { console.log(`BENCHMARK_FA: ${fails} regressed — floor NOT updated`); process.exit(1); }

@@ -54,6 +54,14 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   `scripts/build_fa_meters.py` → `data/persian_meters.json` (the circles' Persian status; key rule mirrored in `faMeterKey`).
   Persian engine `window.ScanFa`: `build_app.py` splices `data/fa_scan.json` (`scripts/build_fa_scan.js`) into a second copy of the
   engine block; Persian lines (`l.lang === 'fa'`) scan on it via `scanCorpusLine` / `engineOf`. Persian-only meter ids are `F<Ganjoor id>`.
+  A Persian corpus line that misses its ghazal's meter as the script reads it is read again by `faCorpusScan` (`05-translit-helpers.js`,
+  the one function behind `scanCorpusLine` and the benchmark's `*.read2`), each step only while it still misses: by its own Roman
+  (`faRomanFits`: Sufinama's Roman writes every vowel, so its weights go to the engine's `matchMeter` as the words' readings; only the
+  ghazal's meters are tried, and `roman.wrong` in `tests/benchmark_fa.js` keeps its false fits under 2%; Sufinama's notation is turned into sounds by `faRomanAtoms` /
+  `faRomanScanWord`, verse's short forms and run-together words by `faRomanAtomAlts` / `faRomanJoins`, each licence judged by lines
+  gained against `roman.wrong`), respelt with liaison
+  (`faScanSpelling`, `faLiaisonVariants`), and, only for a line with no Roman, with a guessed iẓāfat. `*.own2` stays the script engine
+  alone. `faRomanWeights` must read a word as `scripts/lib_fa_scan.js` `romanWeights` does (`tests/persian_helpers.js`).
   Persian word list `data/fa_lexicon.json` (`scripts/build_fa_lexicon.js`) for Fārsī Roman/Devanagari only.
   Steingass, Platts and Fallon (1879, Hindustani; stress apostrophes dropped from his Roman) live in ONE place,
   `data/dictionary_bundle.json.gz` (`scripts/import_steingass.py`, `scripts/import_platts.py`, `scripts/import_fallon.py`

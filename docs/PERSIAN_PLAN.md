@@ -683,3 +683,90 @@ Classical Persian Prosody* (1982; full text on archive.org; Mahdavi Mazdeh's dis
 
   Left, by size: ~108 lines with no own-meter fit at all (text variants), ~99 costing over 3.2, and word-grafting (1.2 an engine
   cost; worth little).
+
+## Round 10 (2026-11-10): a line read by its own Roman
+
+Where the 1,903 lines that missed their own meter (of 8,106; `all.own2` 77.26%) came from, measured step by step:
+- **Three readers, three readings.** The ghazal meter vote read a Persian line with line-end prosody and liaison; the reader
+  (`scanCorpusLine`) with prosody only; `*.own2` with neither. The rules of rounds 5-9 (liaison, Iranian spelling, the grammar
+  iẓāfat) reached pasted and Ganjoor text, not the corpus lines.
+- **Missing Roman is a small part**: 261 lines (3%) have none; 127 of them missed.
+- **The script hides what the Roman writes.** Sufinama's Roman gives every vowel; it was used only for iẓāfat and tashdīd hints.
+
+Built (text prep and matching in `src/js/05-translit-helpers.js`; the engine block is untouched):
+- **`faRomanFits`**: the line's syllable weights straight from its own Roman, word by word (`faRomanWeights`, the reading
+  `scripts/lib_fa_scan.js` `romanWeights` gives the word list; iẓāfat, the conjunction, a final long vowel but ā, and the particles
+  are left open; liaison across two or three words; the line's last syllable long), handed to the engine's `matchMeter` as the
+  words' only readings, so `explain`, the chips and playback work as for any fit (`fit.roman`). Words and Roman are paired by
+  `rkAlignWords`; a line whose Roman cannot be paired is not read this way. Only the ghazal's meters are tried.
+- **`faCorpusScan`**, the one function behind `scanCorpusLine` and the benchmark: as written → mustazād → by the Roman → respelt with
+  liaison (`faScanSpelling`, `faLiaisonVariants`; `r.respelt`) → a guessed iẓāfat, only for a line with no Roman (`r.izGuess`) →
+  without a sung refrain. Each step only while the line still misses. The reader says which one it took.
+- **Why the iẓāfat guess stays with lines that have no Roman.** Control, 564 lines that fit their own meter: the share that also
+  fit a wrong common meter at ≤ 2 was 14.2% as written, 15.2% with liaison and spelling, 20.9% with the guess. By the Roman
+  alone: 0.7% (11 of 1,518).
+- **Benchmark.** `*.own2` is unchanged (the script engine alone). New: `core.read2` / `all.read2`, the reader's reading, their
+  floors first set to what the reader scored before (`FA_READ_BASIC=1`), and `roman.wrong`, the false-fit control (fails above 2%).
+
+  | | before | now |
+  |---|---|---|
+  | all Persian lines in their own meter, as the reader reads them | 81.95% | 89.44% |
+  | core | 83.87% | 91.67% |
+  | by step (all): Roman / liaison and spelling / guessed iẓāfat | | +400 / +171 / +36 lines |
+  | `roman.wrong` (core) | | 0.56% |
+
+  Every other score, the shipped meters and Ghalib/Mir are identical. No line that fit before stopped fitting.
+
+**Looked at and left** (web research, 2026-11-10): no open rule-based Persian scanner or per-line weight data to borrow; Ganjoor's
+meters are per poem; the neural iẓāfat taggers (95-96% in papers) need a model at runtime; no published rule for scanning Arabic
+phrases inside a Persian meter.
+
+**Still open (~850 lines):**
+- Tested on the lines the steps above do not rescue, not built: the verb prefix written apart joined (بہ گذشت → بگذشت; 50 of 176),
+  ست joined to its word (خوش ست; 24 of 34), -āh read -ah (گناہ as *gunah*; 14 of 65; Thiesen ch. XII, to be checked against the
+  text), دیگر as *digar* (7 of 16). The Roman reading already takes some of these.
+- Word readings learned from the meter: where the Roman fits and the script does not, the difference names the word and reading
+  the engine lacks (forced alignment); the frequent ones belong in `buildScanLex`.
+- 21 ghazals with half or more of their lines missing (wrong meter or form: Rumi 64 prints a couplet per line); lines that fit
+  another meter (a girah, or a wrong stored meter); text that fits nothing (Sufinama's Urdu and Roman disagree; try Ganjoor's
+  reading of that one line and keep it only if it fits the meter).
+- The Scan tab still reads pasted Persian without liaison or the grammar iẓāfat.
+
+## Round 11 (2026-11-15): the Roman read as the meter counts it
+
+The Roman reading of round 10 agreed with the script engine on only 67.1% of the lines the engine fits to their own meter
+(control: every third line with a Roman, 2,141 lines). Where it disagreed, the cause was mostly how Sufinama spells, not the verse.
+
+Built, all in `faRomanFits` and its helpers (`src/js/05-translit-helpers.js`; engine block and word list untouched):
+- **Notation** (`faRomanAtoms`, `faRomanScanWord`): ñ after a short vowel is an n (rañg); e and o before h are short (mehr, dehad,
+  mohammad; not kōh, andōh); the ʿain or hamza inside a word is a consonant (vus'at, ma'akum, sham', mir.āt, sho.ala = shuʿla);
+  a dot keeps two letters apart (sub.h, maz.har); no word opens on two consonants (pyāla = piyāla); vā'da = vaʿda; dariyā = daryā.
+- **Licences**: a final -a long or short (ḳhāna, hama); a diphthong opening before the iẓāfat (mai-e = ma-ye); dīgar / digar,
+  ummīd / umīd, -āh / -ah (`faRomanAtomAlts`); two words run into one (`faRomanJoins`): ki az = kaz, jādū ast = jādūst, the
+  verb prefix closing on its stem (ba-shikast = bishkast), liaison inside one written word (nihān-ast).
+- **Pairing** (`faRomanPair`): a last word `faProsodyText` cut (چیست scanned as چی) still pairs; prefixes the Roman writes apart
+  (na-shanāsī, ba-ḳhudā) are joined before `rkAlignWords` when the Roman has too many words for it.
+
+| | round 10 | now |
+|---|---|---|
+| `all.read2` | 89.44% | 91.78% |
+| `core.read2` | 91.67% | 93.79% |
+| Roman agrees on lines the engine fits (control, 2,141) | 67.1% | 86.5% |
+| `roman.wrong` (core) | 0.56% | 1.00% |
+
+Every other floor identical. By licence, switched off one at a time (lines rescued of the 190 the first pass took / false fits on
+the control): final -a 51 / 11; verb prefix 47 / 3; -āh 16 / 3; dīgar, ummīd 12 / 1; in-word liaison 7 / 0; ast 7 / 0; elision 4 / 2.
+
+**Tried and put back.** The same notation rules in the word-list builder (`buildScanLex`): 97 wrong readings go (محمد as three
+longs, صبح as one, شعلہ as l-s-s), 27 are corrected, 7 added. `core.own2`, `core.read2`, `gold.meter` unchanged; `core.fit2`
+85.55 → 85.46, because a wrong reading sometimes lets a line fit *some* meter. That is a floor, so the list stays as it was;
+it is the cleaner list if that floor is ever redefined.
+
+**Not built.** A generated Roman for the 261 lines without one: it would come from the word list the engine already reads and
+cannot supply the iẓāfat.
+
+**Still open (~670 lines).** What the last pass showed them to be: Roman and script that are different text (a word missing or
+swapped, a line's Roman belonging to another line); a stored meter the ghazal is not in (57 lines in ghazals more than half
+missing; 62 lines whose Roman fits another meter); Arabic phrases; Sufinama's own inconsistencies (ahad for ʿahd, talat for
+ṭalʿat, where the ʿain is not marked); az where the meter needs ze. These need the text checked against another edition
+(Ganjoor's reading of that line, kept only if it fits), not more rules.
