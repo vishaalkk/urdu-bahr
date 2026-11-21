@@ -514,8 +514,16 @@ function runScan(){
   /* The bahr is decided on the text as written; a learner's edits are then judged only
      against that original bahr, even when the edited line happens to fit another one. */
   const base=lines.map(l=>scanL(l));
+  /* pasted Fārsī: a line that misses the meter the others share is read again with liaison and the iẓāfat grammar allows
+     (faPastedRescue); the line is then scanned, and edited, as that text */
+  const faHow = {};
+  if (lang === 'fa' && eng !== Scan && typeof faPastedRescue === 'function') {
+    const inP = new Set(SCAN_PAIRS.flat());
+    const gs = eng.METERS.map(m => m.id).filter(id => !inP.has(id) && id !== 'H').map(id => [id]).concat(SCAN_PAIRS);
+    faPastedRescue(eng, lines, base, gs).forEach(x => { lines[x.i] = x.text; base[x.i] = x.r; faHow[x.i] = x.r.izGuess ? 'iz' : 'join'; });
+  }
   const results=lines.map((l,i)=>hasEdits(i)?scanL(l,ovr[i]):base[i]);
-  lastScan={lines,rawLines,lineObjs,results,base,lang};
+  lastScan={lines,rawLines,lineObjs,results,base,lang,faHow};
   let h='';
   /* stacking / multi-line harmony */
   let common=null;
@@ -842,6 +850,9 @@ function misraScan(r,li,forced){
   if(hasEdits(li)) h+=`<p class="tiny muted mt-note">Your edit still scans in the original bahr: the flexibility rules absorb it.</p>`;
   if(selWord&&selWord[0]===li) h+=wordPanel(r,li,selWord[1]);
   const notes=[...new Set(e.notes.map(n=>`${n.word}: ${n.note}`))].filter(n=>!/: $/.test(n));
+  const how = lastScan && lastScan.faHow && lastScan.faHow[li];
+  if (how === 'iz') notes.push('The iẓāfat is guessed where the other lines’ meter needs one');
+  if (how === 'join') notes.push('Read with its words run together where the other lines’ meter joins them');
   if(notes.length) h+=`<p class="scan-notes">${notes.join(' · ')}</p>`;
   return h;
 }
@@ -1137,6 +1148,7 @@ function renderLineScan(text, container, lineObjIn, meterId) {
     if (f.roman) notes.push('Read by the line’s Roman, which writes the vowels the script leaves out');
     if (r.respelt) notes.push('Read with its words run together where the meter joins them');
     if (r.izGuess) notes.push('No Roman for this line: the iẓāfat is guessed');
+    if (r.gv) notes.push('This text of the line misses the meter. Read as Ganjoor has it: ' + r.gv);
     if (notes.length) {
       h += `<p class="scan-notes">${notes.join(' · ')}</p>`;
     }

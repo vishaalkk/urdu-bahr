@@ -60,7 +60,11 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   ghazal's meters are tried, and `roman.wrong` in `tests/benchmark_fa.js` keeps its false fits under 2%; Sufinama's notation is turned into sounds by `faRomanAtoms` /
   `faRomanScanWord`, verse's short forms and run-together words by `faRomanAtomAlts` / `faRomanJoins`, each licence judged by lines
   gained against `roman.wrong`), respelt with liaison
-  (`faScanSpelling`, `faLiaisonVariants`), and, only for a line with no Roman, with a guessed iẓāfat. `*.own2` stays the script engine
+  (`faScanSpelling`, `faLiaisonVariants`), and, only for a line with no Roman, with a guessed iẓāfat. Last, in Ganjoor's text of the line where
+  it differs from ours and fits (`gv`, from `data/ganjoor_lines.json`: `node scripts/build_ganjoor_lines.js`, then `build_poets.py`; rerun it when
+  the reader's steps or the shipped meters change); our text is never replaced, the reader says whose words it scanned. `read.wrong` is the false-fit control for all of these steps.
+  A hand-corrected ghazal meter goes in `data/meter_fixes.json` with its reason (`build_poets.py --accept-meter-changes`). Pasted Persian in the
+  Scan tab: a line that misses the meter most lines share is re-read the same way (`faPastedRescue`, scored by `ganjoor.scan2`). `*.own2` stays the script engine
   alone. `faRomanWeights` must read a word as `scripts/lib_fa_scan.js` `romanWeights` does (`tests/persian_helpers.js`).
   Persian word list `data/fa_lexicon.json` (`scripts/build_fa_lexicon.js`) for Fārsī Roman/Devanagari only.
   Steingass, Platts and Fallon (1879, Hindustani; stress apostrophes dropped from his Roman) live in ONE place,

@@ -1892,7 +1892,7 @@ function scanCorpusLine(l, ids) {
   const eng = engineForLine(l), fa = !!(l && l.lang === 'fa');
   if (!fa) return eng.scanLine(lineScanText(l));
   const own = (ids && ids.length) ? ids : (l.faG && l.faG.meters) || [];
-  return faCorpusScan(eng, faProsodyText(lineScanText(l)), l.ro || '', own, () => lineMustazadIds(l));
+  return faCorpusScan(eng, faProsodyText(lineScanText(l)), l.ro || '', own, () => lineMustazadIds(l), l.gv ? { alt: l.gv } : null);
 }
 /* A Persian corpus line against its ghazal's meters `own` (S: the Persian engine; text: the line as the engine reads it,
    faProsodyText of its hinted text; ro: its Roman; mzOf: () => the ghazal's meters when it is a mustazād). -> a scanLine result,
@@ -1923,24 +1923,35 @@ function faCorpusScan(S, text, ro, own, mzOf, opts) {
     const tryText = (v, mark) => {
       let r2;
       try { r2 = withTail(scan(v), v); } catch (e) { return null; }   // a variant the engine cannot read
-      return cost(r2) <= 2 ? Object.assign(r2, mark) : null;
+      return cost(r2) <= 2 ? Object.assign(r2, mark, { text: v }) : null;
     };
-    const sp = faProsodyText(faScanSpelling(text)), seen = new Set([text]);
-    for (const v of [sp].concat(faLiaisonVariants(text), sp === text ? [] : faLiaisonVariants(sp))) {
-      if (seen.has(v)) continue;
-      seen.add(v);
-      const r2 = tryText(v, { respelt: true });
-      if (r2) return r2;
-    }
-    if (!hasRoman) {
+    /* respelt with liaison; `guess`: also with up to three iẓāfats where grammar allows one. `mark`: what the scan is tagged with */
+    const respell = (t, first, guess, mark) => {
+      const sp = faProsodyText(faScanSpelling(t)), seen = new Set(first ? [] : [t]);
+      for (const v of (first ? [t] : []).concat([sp], faLiaisonVariants(t), sp === t ? [] : faLiaisonVariants(sp))) {
+        if (seen.has(v)) continue;
+        seen.add(v);
+        const r2 = tryText(v, mark || { respelt: true });
+        if (r2) return r2;
+      }
+      if (!guess) return null;
       const W = sp.split(' '), at = faIzafatSlots(W);
       const iz = w => /[ہ]$/.test(w) ? w.replace(/ہ$/, 'ۂ') : w.replace(/ں$/, 'ن') + 'ِ';
       let sets = [[]];
       for (const i of at) sets = sets.concat(sets.filter(x => x.length < 3).map(x => x.concat(i)));
       for (const idx of sets.slice(1).sort((a, b) => a.length - b.length)) {
-        const r2 = tryText(W.map((w, i) => idx.includes(i) ? iz(w) : w).join(' '), { izGuess: idx.length });
+        const r2 = tryText(W.map((w, i) => idx.includes(i) ? iz(w) : w).join(' '), mark || { izGuess: idx.length });
         if (r2) return r2;
       }
+      return null;
+    };
+    const r1 = respell(text, false, !hasRoman);
+    if (r1) return r1;
+    /* the line as Ganjoor's edition has it (opts.alt; scripts/build_ganjoor_lines.js keeps it only where it fits): other
+       words than ours, so the scan says whose text it read (r.gv) */
+    if (opts && opts.alt) {
+      const r2 = respell(faProsodyText(faScanText(opts.alt)), true, true, { gv: opts.alt });
+      if (r2) return r2;
     }
   }
   const n = text.split(' ').filter(Boolean).length;
@@ -1951,6 +1962,31 @@ function faCorpusScan(S, text, ro, own, mzOf, opts) {
   return r;
 }
 window.faCorpusScan = faCorpusScan;
+/* Pasted Persian verse (the Scan tab; no Roman, no stored meter): once most of the lines agree on a meter, a line that misses
+   it is read again as faCorpusScan reads a corpus line with no Roman, respelt with liaison and with up to three iẓāfats where
+   grammar allows one, for that meter only. lines: the texts as scanned; base: their scans; groups: meter ids that count as one
+   bahr ([[1, 9], [26], …]). -> [{i, text, r}]: the lines to scan as `text` instead (r.respelt / r.izGuess say how). Nothing for
+   a single line, or when fewer than half the lines (or fewer than two) share a meter: then there is no meter to hold a line to. */
+function faPastedRescue(S, lines, base, groups) {
+  if (!lines || lines.length < 2) return [];
+  const fitsG = (r, g) => { const f = r.fits.filter(x => g.includes(x.meter.id) && x.c <= 2).sort((a, b) => a.c - b.c)[0]; return f || null; };
+  let best = null;
+  groups.forEach(g => {
+    let n = 0, c = 0;
+    base.forEach(r => { const f = fitsG(r, g); if (f) { n++; c += f.c; } });
+    if (n && (!best || n > best.n || (n === best.n && c < best.c))) best = { g, n, c };
+  });
+  if (!best || best.n < 2 || best.n * 2 < lines.length || best.n === lines.length) return [];
+  const out = [];
+  lines.forEach((t, i) => {
+    if (fitsG(base[i], best.g)) return;
+    let r = null;
+    try { r = faCorpusScan(S, t, '', best.g.map(String), null); } catch (e) { r = null; }
+    if (r && (r.respelt || r.izGuess) && r.text && fitsG(r, best.g)) out.push({ i, text: r.text, r });
+  });
+  return out;
+}
+window.faPastedRescue = faPastedRescue;
 function engineOf(r) { return (r && r.__fa && typeof ScanFa !== 'undefined') ? ScanFa : Scan; }
 window.engineForLine = engineForLine;
 window.scanCorpusLine = scanCorpusLine;

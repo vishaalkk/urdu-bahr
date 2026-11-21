@@ -176,6 +176,12 @@ check(!FA.ctx.faScanFits(FA.Scan, jami, { refrain: true }).some(f => f.refrain),
   const cut = FA.ctx.faProsodyText(FA.ctx.rekhtaScanText('اے ترک شوخ ایں ہمہ ناز و عتاب چیست', "ai turk-e-shoḳh iiñ hama nāz-o-'itāb chīst"));
   check(FA.ctx.faRomanFits(FA.Scan, FA.Scan.scanLine(cut), "ai turk-e-shoḳh iiñ hama nāz-o-'itāb chīst", new Set(['5'])).some(x => x.c <= 2),
     'faRomanFits: the Roman pairs with a line whose last word lost its closing consonants');
+  /* Ganjoor's text of the line (opts.alt), only once ours has missed; the scan says whose words it read */
+  const gU = 'گہ بہ مکہ منزل و گہ مدینہ جا کنم', gR = 'gah ba-makka manzil-o-gah madīna jā kunam', gA = 'گه به مکه منزل و گه در مدینه جا کنم';
+  const gText = FA.ctx.faProsodyText(FA.ctx.urPluralHa(FA.ctx.rekhtaScanText(gU, gR)));
+  const gv = FA.ctx.faCorpusScan(FA.Scan, gText, gR, ['10'], null, { alt: gA });
+  check(!fit(corpus(gU, gR, ['10']), ['10']) && fit(gv, ['10']) && gv.gv === gA, 'faCorpusScan: a line that misses in our text is read in Ganjoor\'s (r.gv)');
+  check(!FA.ctx.faCorpusScan(FA.Scan, FA.ctx.faProsodyText(FA.ctx.rekhtaScanText(ur, ro)), ro, ['26'], null, { alt: gA }).gv, 'faCorpusScan: Ganjoor\'s text is not read for a line ours fits');
   /* a line that fits as written is returned as the engine scanned it */
   const plain = corpus('اگر آں ترک شیرازی بدست آرد دل ما را', 'agar aañ turk-e-shīrāzī ba-dast aarad dil-e-mā rā', ['26']);
   check(fit(plain, ['26']) && !fit(plain, ['26']).roman && !plain.respelt && !plain.izGuess, 'faCorpusScan: a line that fits as written is left alone');

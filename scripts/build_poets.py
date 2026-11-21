@@ -282,6 +282,12 @@ def main():
     sufinama_file = os.path.join(DATA, 'sufinama_scanned.json')
     # Ganjoor matches (scripts/match_ganjoor.py): Ganjoor's link and its Iranian-orthography lines, kept only where the match is
     # sure (three or more lines) — two-line matches are often anthologies quoting the poem
+    # a ghazal whose voted meter is wrong, corrected by hand with the reason (data/meter_fixes.json). Applied here, not in
+    # the scan: the scan folder is local and a fresh scan drifts from what is shipped
+    mf_file = os.path.join(DATA, 'meter_fixes.json')
+    meter_fixes = load(mf_file) if os.path.exists(mf_file) else {}
+    gl_file = os.path.join(DATA, 'ganjoor_lines.json')
+    ganjoor_lines = load(gl_file) if os.path.exists(gl_file) else {}
     gold_file = os.path.join(os.path.dirname(__file__), '..', 'tests', 'data', 'persian_gold.json')
     ganjoor = {g['url']: g for g in (load(gold_file) if os.path.exists(gold_file) else [])
                if g.get('ganjoor') and g['ganjoor']['hits'] >= 3}
@@ -321,6 +327,8 @@ def main():
             xl = [i for i, l in enumerate(g['lines']) if l.get('lang', lang) != lang]
             if xl:
                 entry['xl'] = xl
+            if g['url'] in meter_fixes:
+                entry['meters'] = meter_fixes[g['url']]['meters']
             if g.get('rf'):
                 entry['rf'] = g['rf']   # lines whose Roman scan_sufinama.js repaired (data/sufinama_repairs.json)
             gj = ganjoor.get(g['url'])
@@ -336,6 +344,10 @@ def main():
                 fa = [f if f and fa_fold(f) == fa_fold(l['ur']) else '' for f, l in zip(gj.get('fa') or [], g['lines'])]
                 if any(fa):
                     entry['fa'] = fa
+            # gv: Ganjoor's text of a line that misses the ghazal's meter in our text and fits it in theirs
+            # (data/ganjoor_lines.json, scripts/build_ganjoor_lines.js). Never shown as the line: the reader scans it and says so
+            if g['url'] in ganjoor_lines:
+                entry['gv'] = ganjoor_lines[g['url']]
             out[key].append(entry)
 
     # 3. ids: keep any id a previous build gave; new ghazals get max+1, in a stable (URL) order

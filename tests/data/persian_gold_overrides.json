@@ -17,5 +17,17 @@
       10
     ],
     "why": "Ganjoor (Shams, ghazal 2086) reads 'man kuja budam 'ajab bi tu in chandin zaman', fa'ilatun fa'ilun x2 (F33). Sufinama's text has one more syllable in each line ('be-tu darin chandin zaman'), which makes it ramal musamman mahzuf (#10): all 14 of its lines scan there."
+  },
+  "https://sufinama.org/persian-sufi-poetry/baa-muddaii-ma-goed-asraar-e-ishq-o-mastii-hafiz-persian-sufi-poetry-27": {
+    "meter": [
+      4
+    ],
+    "why": "The Ganjoor match is Shaikh Baha'i's Kashkul (daftar 5, part 1, section 8), an anthology that quotes this Hafiz ghazal; Ganjoor gives the section one meter (khafif musaddas makhbun). The ghazal itself is muzari' musamman akhrab (maf'ulu fa'ilatun x2, #4): 15 of its 16 lines scan there as the reader reads them, none in khafif."
+  },
+  "https://sufinama.org/persian-sufi-poetry/haatife-az-gosha-e-mai-khaana-dosh-hafiz-persian-sufi-poetry-52": {
+    "meter": [
+      24
+    ],
+    "why": "The Ganjoor match is Shaikh Baha'i's Kashkul (daftar 5, part 2, section 1), an anthology that quotes this Hafiz ghazal; Ganjoor gives the section one meter (ramal musaddas makhbun mahzuf). The ghazal itself is sari' musaddas matvi makshuf (mufta'ilun mufta'ilun fa'ilun, #24): all 18 of its lines scan there, 3 in the ramal."
   }
 }

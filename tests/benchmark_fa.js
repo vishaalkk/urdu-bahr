@@ -17,6 +17,11 @@
      roman.wrong     the control for reading by the Roman: of the core lines that fit their own meter as written, the share
                      the Roman also fits to one of twelve common meters that is NOT theirs. Printed, not a floor (lower is better);
                      fails above 2%.
+     read.wrong      the control for the whole reader: each core line that fits its own meter as written is offered ONE meter
+                     that is not its own (the common meter nearest it in length) as if it were its ghazal's. written: the
+                     script engine alone already fits it (the baseline). steps: the reader's steps make it fit where the
+                     script did not (by the Roman, respelt); fails above 1%. guess: the same with the Roman withheld, the
+                     path of a line with no Roman and of Ganjoor's text (respelt, guessed iẓāfat); fails above 3%.
      gold.meter      shipped ghazal meter = Ganjoor's (where Ganjoor's meter is one of ours), sure matches only
      ganjoor.meter   independent: 240 well-known ghazals of Hafiz, Saadi, Rumi and Jami straight from Ganjoor in Iranian spelling
                      (those Sufinama lists as sung first, then the most recited on Ganjoor; Arabic ghazals left out)
@@ -24,6 +29,9 @@
                      the ghazal's meter = Ganjoor's, where Ganjoor's meter is one of ours
      ganjoor.own2    their lines that fit Ganjoor's meter at cost ≤ 2, as Ganjoor prints them (zer and iẓāfat marked)
      ganjoor.own2_plain  the same lines with every mark stripped: what people usually paste
+     ganjoor.scan2   those stripped lines as the Scan tab reads a pasted ghazal, with NO meter given: scanned, then a line that
+                     misses the meter most lines share is read again (faPastedRescue). Its floor was first set with
+                     FA_READ_BASIC=1, the Scan tab before that step (62.92)
      translit.word   held out: a Persian word list learned WITHOUT six poets (Hafiz, Rumi, Saadi, ʿIrāqī, Bedil, Fard Phulwarwi)
                      gives their words the Roman Sufinama gives them (the app's faWordScripts, letter map when unknown)
    And always: no Persian ghazal or line is given the Hindi meter. */
@@ -54,6 +62,8 @@ const tally = { core: { n: 0, c0: 0, f2: 0, o2: 0, r2: 0 }, all: { n: 0, c0: 0, 
 const READ_BASIC = !!process.env.FA_READ_BASIC;
 const COMMON = ['26', '10', '8', '5', '3', '11', '4', '33', '27', '14', '1', '22'];
 let roN = 0, roWrong = 0;
+const rw = { n: 0, written: 0, steps: 0, guess: 0 };
+const meterLen = id => { const m = Scan.METERS.find(x => String(x.id) === id); return m && m.vars ? m.vars[0].seq.length : 99; };
 let hindi = 0;
 const byUrl = new Map();
 for (const gs of Object.values(poets.ghazals)) for (const g of gs) {
@@ -77,13 +87,20 @@ for (const gs of Object.values(poets.ghazals)) for (const g of gs) {
     const asRead = fits.some(f => own.has(String(f.meter.id)) && f.c <= 2), readText = ctx.faProsodyText(ctx.urPluralHa(text));
     let readFit = asRead;
     if (!readFit) try {
-      readFit = ctx.faCorpusScan(Scan, readText, l.ro || '', [...own], () => (mz ? [...own] : null), READ_BASIC ? { basic: true } : null)
+      readFit = ctx.faCorpusScan(Scan, readText, l.ro || '', [...own], () => (mz ? [...own] : null), READ_BASIC ? { basic: true } : (g.gv && g.gv[i] ? { alt: g.gv[i] } : null))
         .fits.some(f => own.has(String(f.meter.id)) && f.c <= 2);
     } catch (e) { readFit = false; }
     if (asRead && l.ro && CORE.has(g.url)) {
       roN++;
       const not = new Set(COMMON.filter(m => !own.has(m)));
       if (ctx.faRomanFits(Scan, Scan.scanLine(readText), l.ro, not).some(f => f.c <= 2)) roWrong++;
+      /* read.wrong: one wrong meter, the nearest in length, offered as the ghazal's */
+      const L = Math.min(...[...own].map(meterLen)), M = [...not].sort((x, y) => Math.abs(meterLen(x) - L) - Math.abs(meterLen(y) - L))[0];
+      const fam = [M, ...(PAIRED.get(M) || [])], hit = x => !!x && !x.refrain && x.fits.some(f => fam.includes(String(f.meter.id)) && f.c <= 2);
+      const reads = ro => { try { return ctx.faCorpusScan(Scan, readText, ro, fam, null); } catch (e) { return null; } };
+      rw.n++;
+      if (hit(Object.assign(Scan.scanLine(readText), { refrain: 0 }))) rw.written++;
+      else { if (hit(reads(l.ro))) rw.steps++; if (hit(reads(''))) rw.guess++; }
     }
     [tally.all].concat(CORE.has(g.url) ? [tally.core] : []).forEach(t => {
       t.n++; if (best === 0) t.c0++; if (best <= 2) t.f2++; if (ownFit) t.o2++; if (readFit) t.r2++;
@@ -130,6 +147,9 @@ const { scanGhazal } = require('../scripts/lib_scan');
 const FAE = require('../scripts/lib_fa_scan').loadFaEngine();
 const testset = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/ganjoor_testset.json'), 'utf8'));
 let gRight = 0, gJudged = 0, gLines = 0, gOwn = 0, gOwnPlain = 0;
+let gScan = 0;
+const SCAN_PAIRS = [[1, 9], [14, 15], [16, 17], [18, 19], [33, 34]], inPair = new Set(SCAN_PAIRS.flat());   // as src/js/19-scan.js
+const SCAN_GROUPS = FAE.Scan.METERS.map(m => m.id).filter(id => !inPair.has(id) && id !== 'H').map(id => [id]).concat(SCAN_PAIRS);
 const gMiss = {};
 // Ganjoor's editors mark iẓāfat and many short vowels (محبتِ, سراپردهٔ); text pasted from elsewhere usually has none
 const unmarked = l => l.replace(/[\u064B-\u0655]/g, '').replace(/ۀ/g, 'ه');
@@ -155,6 +175,14 @@ testset.forEach((t, i) => {
     if (fitsOwn(l, fam)) gOwn++;
     if (fitsOwn(unmarked(l), fam)) gOwnPlain++;
   });
+  /* ganjoor.scan2: the ghazal pasted into the Scan tab without vowel marks. No meter is given: the lines are scanned, and one
+     that misses the meter most of them share is read again (faPastedRescue). Counted: lines that fit Ganjoor's meter at ≤ 2 */
+  if (!QUICK) {
+    const texts = t.lines.map(l => FAE.ctx.faScanText(unmarked(l)));
+    const scans = texts.map(x => { try { const r = FAE.Scan.scanLine(x); r.fits = r.fits.filter(f => f.meter.id !== 'H'); return r; } catch (e) { return { fits: [] }; } });
+    if (!READ_BASIC) FAE.ctx.faPastedRescue(FAE.Scan, texts, scans, SCAN_GROUPS).forEach(x => { scans[x.i] = x.r; });
+    scans.forEach(r => { if (r.fits.some(f => fam.has(String(f.meter.id)) && f.c <= 2)) gScan++; });
+  }
 });
 console.log(`ganjoor: ${gJudged} ghazals judged (${testset.length - gJudged} in a meter we do not have), ${gLines} lines`);
 Object.entries(gMiss).sort((a, b) => b[1] - a[1]).slice(0, 8).forEach(([k, n]) => console.log(`    ganjoor miss ×${n}: ${k}`));
@@ -164,7 +192,7 @@ for (const [set, t] of Object.entries(tally)) if (!(QUICK && set === 'all')) Obj
 scores['gold.meter'] = pct(right, judged);
 scores['translit.word'] = pct(tOk, tw);
 scores['ganjoor.meter'] = pct(gRight, gJudged);
-if (!QUICK) { scores['ganjoor.own2'] = pct(gOwn, gLines); scores['ganjoor.own2_plain'] = pct(gOwnPlain, gLines); }
+if (!QUICK) { scores['ganjoor.own2'] = pct(gOwn, gLines); scores['ganjoor.own2_plain'] = pct(gOwnPlain, gLines); scores['ganjoor.scan2'] = pct(gScan, gLines); }
 const n = tally.all.n;
 const base = fs.existsSync(BASE_FILE) ? JSON.parse(fs.readFileSync(BASE_FILE, 'utf8')) : {};
 console.log(`persian${QUICK ? ' --quick (core set only)' : ''} (${n} lines, ${byUrl.size} ghazals; gold ${judged} ghazals + ${persianOnly} in a Persian-only meter)`);
@@ -178,6 +206,9 @@ for (const [k, v] of Object.entries(scores)) {
 wrong.forEach(w => console.log('    gold miss: ' + w));
 { const w = pct(roWrong, roN), bad = w > 2;
   console.log(`  ${bad ? '✗' : '✓'} roman.wrong  ${w.toFixed(2).padStart(6)}%   (${roWrong} of ${roN} core lines fit a meter not theirs by the Roman; must stay ≤ 2%)`);
+  if (bad) fails++; }
+{ const w = pct(rw.steps, rw.n), g = pct(rw.guess, rw.n), bad = w > 1 || g > 3;
+  console.log(`  ${bad ? '✗' : '✓'} read.wrong   ${w.toFixed(2).padStart(6)}%   (of ${rw.n} core lines offered one wrong meter: the reader's steps fit ${rw.steps}, must stay ≤ 1%; with the Roman withheld ${rw.guess} = ${g.toFixed(2)}%, ≤ 3%; the script alone already fits ${rw.written} = ${pct(rw.written, rw.n).toFixed(2)}%)`);
   if (bad) fails++; }
 if (hindi) { console.log(`  ✗ ${hindi} Persian ghazal(s) shipped with the Hindi meter`); fails++; }
 if (UPDATE) {

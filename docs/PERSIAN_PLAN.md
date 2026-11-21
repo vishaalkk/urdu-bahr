@@ -770,3 +770,65 @@ swapped, a line's Roman belonging to another line); a stored meter the ghazal is
 missing; 62 lines whose Roman fits another meter); Arabic phrases; Sufinama's own inconsistencies (ahad for ʿahd, talat for
 ṭalʿat, where the ʿain is not marked); az where the meter needs ze. These need the text checked against another edition
 (Ganjoor's reading of that line, kept only if it fits), not more rules.
+
+## Round 12 (2026-11-15): Ganjoor's text for a line ours gets wrong
+
+Many of the lines still missing are not misread: Sufinama's text has a word dropped, added or swapped (گہ مدینہ for گه در مدینه).
+For the 225 ghazals matched on Ganjoor (three or more lines), `tests/data/persian_gold.json` already pairs each of our lines
+with Ganjoor's.
+
+- **`scripts/build_ganjoor_lines.js` → `data/ganjoor_lines.json`**: every line of a matched ghazal is read as the reader reads it;
+  one that misses the meter and whose Ganjoor text differs is read again in Ganjoor's words (the same `faCorpusScan`, `opts.alt`:
+  as written, respelt with liaison, a guessed iẓāfat) and kept only if that fits the ghazal's own meter. 164 such lines, 114 kept
+  (81 ghazals). Reads the shipped meters, so: `node scripts/build_ganjoor_lines.js && python3 scripts/build_poets.py && npm run build`.
+- **Shipped as `gv`** on the ghazal (`build_poets.py`), set on the line at load. Our text, Roman and Devanagari are never replaced
+  (the rule of round 4 stands): the reader scans Ganjoor's words only after ours have missed and says so under the line, with
+  Ganjoor's text (`r.gv`).
+
+| | round 11 | now |
+|---|---|---|
+| `all.read2` | 91.78% | 93.17% |
+| `core.read2` | 93.79% | 94.86% |
+
+Every other floor identical; the page grew by 16 KB.
+
+**"Wrong stored meter", checked.** Of the 60 ghazals holding the lines that miss everything or fit another meter by their Roman,
+only `rumi/37` is plainly in the wrong meter (10 of 14 lines miss F39; 8 fit hazaj #27, which is also Ganjoor's). `rumi/64` (a
+couplet per line) and `pir_naseeruddin_naseer/3` miss nearly every line and fit nothing else: layout, not meter. The rest are
+single lines (23 ghazals have just one).
+
+**Next, in this order (trust in the number before a higher number):**
+1. ~~A false-fit control for the whole reader~~ Done, `read.wrong` in `tests/benchmark_fa.js`: each core line that fits its
+   own meter as written (900) is offered one wrong meter, the common one nearest it in length, as if it were its ghazal's.
+   The script engine alone already fits it for 3.89% of lines; the reader's steps add 0.44% (4 lines; fails above 1%); with
+   the Roman withheld, the path of a no-Roman line and of Ganjoor's text, 1.78% (fails above 3%). So the steps of rounds
+   10-12, the final -a licence included, add about a tenth of what the script engine lets through by itself; the licence stays free.
+
+## Round 13 (2026-11-15): the answers judged against, and pasted Persian in the Scan tab
+
+**The answers.** The five suspect ghazals, each line read against every candidate meter as the reader reads it:
+- `rumi/37` shipped as F39 by the meter vote; 11 of 14 lines are hazaj #27 (4 fit F39), and #27 is Ganjoor's meter. Corrected in
+  `data/meter_fixes.json` (url → meters, why), applied by `build_poets.py`, which still refuses any meter change without
+  `--accept-meter-changes`. Applied there and not in the scan: a fresh `scan_sufinama.js` no longer reproduces the shipped
+  scan (3 other ghazal meters and the Roman repairs drift), so the scan was not rerun.
+- Two Hafiz ghazals (`hafiz/52` #4, `hafiz/75` #24) were right and the gold was wrong: the Ganjoor match is Shaikh Bahāʾī's
+  Kashkūl, an anthology quoting them, and Ganjoor gives the anthology section one meter. 15 of 16 and 18 of 18 lines fit ours,
+  0 and 3 fit Ganjoor's. Recorded in `tests/data/persian_gold_overrides.json`. `gold.meter` 98.67 → 100: one fix of ours, two
+  corrections of the gold. (Their reader pages still link the Kashkūl page and name Bahāʾī as Ganjoor's poet: the match itself
+  wants redoing in `match_ganjoor.py`.)
+- `rumi/64` is rajaz musaddas printed a bayt per line with sung repeats; `pir_naseeruddin_naseer/3` (no Roman) fits no meter
+  we have on more than 3 of 16 lines. Left as they are: no fix to make without the meter.
+
+**Pasted Persian** (`faPastedRescue`, `05-translit-helpers.js`; Scan tab, `19-scan.js`). The Scan tab read each pasted line
+as written. Now, when at least half the lines (and two) share a meter, a line that misses it is read again for that meter only,
+as a corpus line with no Roman is: respelt with liaison, then up to three iẓāfats where grammar allows. The line is shown,
+edited and played as the text that fit, with a note. A single line, or a poem with no shared meter, is read as before.
+New score `ganjoor.scan2`: the 240 Ganjoor ghazals, marks stripped, no meter given, lines that fit Ganjoor's meter at ≤ 2:
+62.92% before (`FA_READ_BASIC=1`), 78.58% now. 379 lines are re-read; 3 of them into a meter that is not Ganjoor's (the
+ghazal's shared meter was itself wrong).
+
+**Next:**
+1. The cleaner word list of round 11 (`core.fit2` counts fits to any meter, right or wrong).
+2. `match_ganjoor.py`: prefer the poet's own dīvān over an anthology that quotes the poem.
+3. The scan pipeline's drift: find why a fresh `scan_sufinama.js` differs from the shipped scan before anyone reruns it.
+4. The ~550 lines left, only against another edition.
