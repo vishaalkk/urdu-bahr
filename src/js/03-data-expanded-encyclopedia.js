@@ -62,6 +62,7 @@ function poetCollections() { return POET_LIST.map(p => [p.key, poetItems(p.key)]
 const URDUPOETRY_DATA = /*@@URDUPOETRY_DATA@@*/;
 const WORD_ASCII_MAP = /*@@WORD_ASCII_MAP@@*/;
 const KI_NEXT = /*@@KI_NEXT@@*/;
+const HOMOGRAPH_CTX = /*@@HOMOGRAPH_CTX@@*/;   // a spelling read two ways and the neighbour that settles it (scripts/build_app.py)
 const ROMAN_FALLBACK = /*@@ROMAN_FALLBACK@@*/;
 const COLLOCATIONS = /*@@COLLOCATIONS@@*/;
 /* Persian words (scripts/build_fa_lexicon.js): {key: [Roman, Devanagari, times seen]}, for Fārsī lines only (faWordScripts) */

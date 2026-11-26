@@ -343,5 +343,12 @@ Parser = (function() {
 })();
 
 window.p_hi = new Parser('devanagari', devanagari_tokens, devanagari_token_regex, devanagari_graph, devanagari_onmatch);
+/* urdu-bahr patch: a word that opens with ʿain and a vowel ((ishq, ((ajab) came out as a bare vowel sign or lost its vowel
+   (िश्क़, जब). Devanagari writes no ʿain there, so the parser reads the word without it: इश्क़, अजब. Word starts: line start,
+   a space or a hyphen (-o-((aql). A medial ʿain (ba((d बाद) is untouched. */
+(function () {
+  var parseHi = window.p_hi.parse.bind(window.p_hi);
+  window.p_hi.parse = function (s) { return parseHi(typeof s === 'string' ? s.replace(/(^|[\s\-])\(\((?=[aeiou])/g, '$1') : s); };
+})();
 
 window.p_ur = new Parser('urdu', urdu_tokens, urdu_token_regex, urdu_graph, urdu_onmatch);

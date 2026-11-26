@@ -55,7 +55,7 @@
       {
         "ascii": "mudda((aa ((anqaa hai apne ((aalam-e taqriir kaa",
         "ur": "مدّعا عنقا ہے اپنے عالمِ تقریر کا",
-        "hi": "मुद््दा ंक़ा है अपने ालम-ए तक़रीर का",
+        "hi": "मुद््दा अंक़ा है अपने आलम-ए तक़रीर का",
         "ro": "muddaʿā ʿanqā hai apne ʿālam-e taqrīr kā"
       },
       {
@@ -73,7 +73,7 @@
       {
         "ascii": ";xisht pusht-e dast-e ((ajz-o-qaalib aa;Gosh-e vidaa((",
         "ur": "خشت پشتِ دستِ عجز و قالب آغوشِ وداع",
-        "hi": "ख़िश्त पुश्त-ए दस्त-ए जज़-ओ-क़ालिब आग़ोश-ए विदा",
+        "hi": "ख़िश्त पुश्त-ए दस्त-ए अज्ज़-ओ-क़ालिब आग़ोश-ए विदा",
         "ro": "ḳhisht pusht-e dast-e ʿajz-o-qālib āġhosh-e vidāʿ"
       },
       {
@@ -85,7 +85,7 @@
       {
         "ascii": "va;hshat-e ;xvaab-e ((adam shor-e tamaashaa hai asad",
         "ur": "وحشتِ خوابِ عدم شورِ تماشا ہے اسد",
-        "hi": "वहशत-ए ख़्वाब-ए दम शोर-ए तमाशा है असद",
+        "hi": "वहशत-ए ख़्वाब-ए अदम शोर-ए तमाशा है असद",
         "ro": "vaḥshat-e ḳhvāb-e ʿadam shor-e tamāshā hai asad"
       },
       {
@@ -137,7 +137,7 @@
       {
         "ascii": "fa.zaa-e ;xandah-e gul tang-o-;zauq-e ((aish be-parvaa",
         "ur": "فضائے خندۂ گل تنگ و ذوقِ عیش بے پروا",
-        "hi": "फ़ज़ा-ए ख़ंदा-ए गुल तंग-ओ-ज़ौक़-ए ैश बे-परवा",
+        "hi": "फ़ज़ा-ए ख़ंदा-ए गुल तंग-ओ-ज़ौक़-ए ऐश बे-परवा",
         "ro": "faẓā-e ḳhandah-e gul tang-o-żauq-e ʿaish be-parvā"
       },
       {
@@ -213,7 +213,7 @@
       {
         "ascii": ";Dhaa;Npaa kafan ne daa;G-e ((uyuub-e barahnagii",
         "ur": "ڈھانپا کفن نے داغِ عیوبِ برہنگی",
-        "hi": "ढांपा कफ़न ने दाग़-ए ुयूब-ए बरहनगी",
+        "hi": "ढांपा कफ़न ने दाग़-ए उयूब-ए बरहनगी",
         "ro": "ḍhāñpā kafan ne dāġh-e ʿuyūb-e barahnagī"
       },
       {
@@ -237,7 +237,7 @@
       {
         "ascii": "((aalam jahaa;N bah ((ar.z-e bisaa:t-e vujuud thaa",
         "ur": "عالم جہاں بہ عرضِ بساطِ وجود تھا",
-        "hi": "ालम जहाँ ब र्ज़-ए बिसात-ए वुजूद था",
+        "hi": "आलम जहाँ ब अर्ज़-ए बिसात-ए वुजूद था",
         "ro": "ʿālam jahāñ bah ʿarẓ-e bisāt̤-e vujūd thā"
       },
       {
@@ -261,7 +261,7 @@
       {
         "ascii": "((aalam :tilism-e shahr-e ;xamoshaa;N hai sar-basar",
         "ur": "عالم طلسمِ شہرِ خموشاں ہے سر بسر",
-        "hi": "ालम तिलिस्म-ए शहर-ए ख़मोशाँ है सर-बसर",
+        "hi": "आलम तिलिस्म-ए शहर-ए ख़मोशाँ है सर-बसर",
         "ro": "ʿālam t̤ilism-e shahr-e ḳhamoshāñ hai sar-basar"
       },
       {
@@ -273,7 +273,7 @@
       {
         "ascii": "tangii rafiiq-e rah thii ((adam yaa vujuud thaa",
         "ur": "تنگی رفیقِ رہ تھی عدم یا وجود تھا",
-        "hi": "तंगी रफ़ीक़-ए रह थी दम या वुजूद था",
+        "hi": "तंगी रफ़ीक़-ए रह थी अदम या वुजूद था",
         "ro": "tangī rafīq-e rah thī ʿadam yā vujūd thā"
       },
       {
@@ -291,7 +291,7 @@
       {
         "ascii": ";hairat-mataa((-e ((aalam-e nuq.saan-o-suud thaa",
         "ur": "حیرت متاعِ عالمِ نقصان و سود تھا",
-        "hi": "हैरत-मता-ए ालम-ए नुक़सान-ओ-सूद था",
+        "hi": "हैरत-मता-ए आलम-ए नुक़सान-ओ-सूद था",
         "ro": "ḥairat-matāʿ-e ʿālam-e nuqṣān-o-sūd thā"
       },
       {
@@ -361,7 +361,7 @@
       {
         "ascii": "((ishq se :tabii((at ne ziist kaa mazaa paayaa",
         "ur": "عشق سے طبیعت نے زیست کا مزا پایا",
-        "hi": "िश्क़ से तबीत ने ज़ीस्त का मज़ा पाया",
+        "hi": "इश्क़ से तबीत ने ज़ीस्त का मज़ा पाया",
         "ro": "ʿishq se t̤abīʿat ne zīst kā mazā pāyā"
       },
       {
@@ -451,7 +451,7 @@
       {
         "ascii": "ek be-kasii tujh ko ((aalam-aashnaa paayaa",
         "ur": "ایک بے کسی تجھ کو عالم آشنا پایا",
-        "hi": "एक बे-कसी तुझ को ालम-आशना पाया",
+        "hi": "एक बे-कसी तुझ को आलम-आशना पाया",
         "ro": "ek be-kasī tujh ko ʿālam-āshnā pāyā"
       },
       {
@@ -463,7 +463,7 @@
       {
         "ascii": "yaas ko do-((aalam se lab bah ;xandah vaa paayaa",
         "ur": "یاس کو دو عالم سے لب بہ خندہ وا پایا",
-        "hi": "यास को दो-ालम से लब ब ख़ंदा वा पाया",
+        "hi": "यास को दो-आलम से लब ब ख़ंदा वा पाया",
         "ro": "yās ko do-ʿālam se lab bah ḳhandah vā pāyā"
       },
       {
@@ -487,7 +487,7 @@
       {
         "ascii": "((u.zv ((u.zv juu;N zanjiir yak-dil-e .sadaa paayaa",
         "ur": "عضو عضو جوں زنجیر یک دلِ صدا پایا",
-        "hi": "ुज़्व ुज़्व जूँ ज़ंजीर यक-दिल-ए सदा पाया",
+        "hi": "उज़्व उज़्व जूँ ज़ंजीर यक-दिल-ए सदा पाया",
         "ro": "ʿuẓv ʿuẓv jūñ zanjīr yak-dil-e ṣadā pāyā"
       },
       {
@@ -557,19 +557,19 @@
       {
         "ascii": "mai;N ((adam se bhii pare huu;N varnah ;Gaafil baar-haa",
         "ur": "میں عدم سے بھی پرے ہوں ورنہ غافل بار ہا",
-        "hi": "मैं दम से भी परे हूँ वरना ग़ाफ़िल बार-हा",
+        "hi": "मैं अदम से भी परे हूँ वरना ग़ाफ़िल बार-हा",
         "ro": "maiñ ʿadam se bhī pare hūñ varnah ġhāfil bār-hā"
       },
       {
         "ascii": "merii aah-e aatishii;N se baal-e ((anqaa jal gayaa",
         "ur": "میری آہِ آتشیں سے بالِ عنقا جل گیا",
-        "hi": "मेरी आह-ए आतिशीं से बाल-ए ंक़ा जल गया",
+        "hi": "मेरी आह-ए आतिशीं से बाल-ए अंक़ा जल गया",
         "ro": "merī āh-e ātishīñ se bāl-e ʿanqā jal gayā"
       },
       {
         "ascii": "((ar.z kiije jauhar-e andeshah kii garmii kahaa;N",
         "ur": "عرض کیجے جوہرِ اندیشہ کی گرمی کہاں",
-        "hi": "र्ज़ कीजे जौहर-ए अंदेशा की गर्मी कहाँ",
+        "hi": "अर्ज़ कीजे जौहर-ए अंदेशा की गर्मी कहाँ",
         "ro": "ʿarẓ kīje jauhar-e andeshah kī garmī kahāñ"
       },
       {
@@ -605,7 +605,7 @@
       {
         "ascii": ";xaan-maan-e ((aashiqaa;N duukaan-e aatish-baaz hai",
         "ur": "خان مانِ عاشقاں دوکانِ آتش باز ہے",
-        "hi": "ख़ान-मान-ए ाशिक़ाँ दूकान-ए आतिश-बाज़ है",
+        "hi": "ख़ान-मान-ए आशिक़ाँ दूकान-ए आतिश-बाज़ है",
         "ro": "ḳhān-mān-e ʿāshiqāñ dūkān-e ātish-bāz hai"
       },
       {
@@ -664,7 +664,7 @@
       {
         "ascii": "qais ta.sviir ke parde me;N bhii ((uryaa;N niklaa",
         "ur": "قیس تصویر کے پردے میں بھی عریاں نکلا",
-        "hi": "क़ैस तस्वीर के पर्दे में भी ुर्याँ निकला",
+        "hi": "क़ैस तस्वीर के पर्दे में भी उरयाँ निकला",
         "ro": "qais taṣvīr ke parde meñ bhī ʿuryāñ niklā"
       },
       {
@@ -730,7 +730,7 @@
       {
         "ascii": "kaar-;xaane se junuu;N ke bhii mai;N ((uryaa;N niklaa",
         "ur": "کار خانے سے جنوں کے بھی میں عریاں نکلا",
-        "hi": "कार-ख़ाने से जुनूँ के भी मैं ुर्याँ निकला",
+        "hi": "कार-ख़ाने से जुनूँ के भी मैं उरयाँ निकला",
         "ro": "kār-ḳhāne se junūñ ke bhī maiñ ʿuryāñ niklā"
       },
       {
@@ -784,7 +784,7 @@
       {
         "ascii": "laakh parde me;N chhupaa par vuhii ((uryaa;N niklaa",
         "ur": "لاکھ پردے میں چھپا پر وہی عریاں نکلا",
-        "hi": "लाख पर्दे में छुपा पर वही ुर्याँ निकला",
+        "hi": "लाख पर्दे में छुपा पर वही उरयाँ निकला",
         "ro": "lākh parde meñ chhupā par vuhī ʿuryāñ niklā"
       },
       {
@@ -796,7 +796,7 @@
       {
         "ascii": "aa;xir ai ((ahd-shikan tuu bhii pashemaa;N niklaa",
         "ur": "آخر اے عہد شکن تو بھی پشیماں نکلا",
-        "hi": "आख़िर ऐ हद-शिकन तू भी पशेमाँ निकला",
+        "hi": "आख़िर ऐ अह्द-शिकन तू भी पशेमाँ निकला",
         "ro": "āḳhir ai ʿahd-shikan tū bhī pashemāñ niklā"
       },
       {
@@ -836,7 +836,7 @@
       {
         "ascii": "((ishq-e nabard-peshah :talabgaar-e mard thaa",
         "ur": "عشقِ نبرد پیشہ طلبگارِ مرد تھا",
-        "hi": "िश्क़-ए नबर्द-पेशा तलबगार-ए मर्द था",
+        "hi": "इश्क़-ए नबर्द-पेशा तलबगार-ए मर्द था",
         "ro": "ʿishq-e nabard-peshah t̤alabgār-e mard thā"
       },
       {
@@ -878,7 +878,7 @@
       {
         "ascii": "jaatii hai ko))ii kashmakash andoh-e ((ishq kii",
         "ur": "جاتی ہے کوئی کشمکش اندوۂ عشق کی",
-        "hi": "जाती है कोई कशमकश अंदोह-ए िश्क़ की",
+        "hi": "जाती है कोई कशमकश अंदोह-ए इश्क़ की",
         "ro": "jātī hai koʾī kashmakash andoh-e ʿishq kī"
       },
       {
@@ -908,7 +908,7 @@
       {
         "ascii": ";haq ma;Gfarat kare ((ajab aazaad mard thaa",
         "ur": "حق مغفرت کرے عجب آزاد مرد تھا",
-        "hi": "हक़ मग़फ़रत करे जब आज़ाद मर्द था",
+        "hi": "हक़ मग़फ़रत करे अजब आज़ाद मर्द था",
         "ro": "ḥaq maġhfarat kare ʿajab āzād mard thā"
       }
     ],
@@ -948,7 +948,7 @@
       {
         "ascii": "kushaayish ko hamaaraa ((uqdah-e mushkil pasand aayaa",
         "ur": "کشایش کو ہمارا عقدۂ مشکل پسند آیا",
-        "hi": "कुशायिश को हमारा ुक़दा-ए मुशकिल पसंद आया",
+        "hi": "कुशायिश को हमारा उक़दा-ए मुशकिल पसंद आया",
         "ro": "kushāyish ko hamārā ʿuqdah-e mushkil pasand āyā"
       },
       {
@@ -1109,7 +1109,7 @@
       {
         "ascii": "naa-tavaanii se ;hariif-e dam-e ((iisii nah hu))aa",
         "ur": "نا توانی سے حریفِ دمِ عیسی نہ ہوا",
-        "hi": "ना-तवानी से हरीफ़-ए दम-ए ीसी न हुआ",
+        "hi": "ना-तवानी से हरीफ़-ए दम-ए ईसी न हुआ",
         "ro": "nā-tavānī se ḥarīf-e dam-e ʿīsī nah huʾā"
       },
       {
@@ -1209,7 +1209,7 @@
       {
         "ascii": "kare jo partav-e ;xvurshiid ((aalam shabnamistaa;N kaa",
         "ur": "کرے جو پرتوِ خورشید عالم شبنمستاں کا",
-        "hi": "करे जो परतव-ए ख़्वुरशीद ालम शबनमिस्ताँ का",
+        "hi": "करे जो परतव-ए ख़्वुरशीद आलम शबनमिस्ताँ का",
         "ro": "kare jo partav-e ḳhvurshīd ʿālam shabnamistāñ kā"
       },
       {
@@ -1293,7 +1293,7 @@
       {
         "ascii": "kih yih shiiraazah hai ((aalam ke ajzaa-e pareshaa;N kaa",
         "ur": "کہ یہ شیرازہ ہے عالم کے اجزائے پریشاں کا",
-        "hi": "कि ये शीराज़ा है ालम के अजज़ा-ए परेशाँ का",
+        "hi": "कि ये शीराज़ा है आलम के अजज़ा-ए परेशाँ का",
         "ro": "kih yih shīrāzah hai ʿālam ke ajzā-e pareshāñ kā"
       }
     ],
@@ -1351,19 +1351,19 @@
       {
         "ascii": "suraa;G-aavaarah-e ((ar.z-e do-((aalam shor-e ma;hshar huu;N",
         "ur": "سراغ آوارۂ عرضِ دو عالم شورِ محشر ہوں",
-        "hi": "सुराग़-आवारा-ए र्ज़-ए दो-ालम शोर-ए महशर हूँ",
+        "hi": "सुराग़-आवारा-ए अर्ज़-ए दो-आलम शोर-ए महशर हूँ",
         "ro": "surāġh-āvārah-e ʿarẓ-e do-ʿālam shor-e maḥshar hūñ"
       },
       {
         "ascii": "par-afshaa;N hai ;Gubaar-aa;Nsuu-e .sa;hraa-e ((adam meraa",
         "ur": "پر افشاں ہے غبار آنسوئے صحرائے عدم میرا",
-        "hi": "पर-अफ़शाँ है ग़ुबार-आंसू-ए सहरा-ए दम मेरा",
+        "hi": "पर-अफ़शाँ है ग़ुबार-आंसू-ए सहरा-ए अदम मेरा",
         "ro": "par-afshāñ hai ġhubār-āñsū-e ṣaḥrā-e ʿadam merā"
       },
       {
         "ascii": "havaa-e .sub;h yak-((aalam garebaa;N-chaakii-e gul hai",
         "ur": "ہوائے صبح یک عالم گریباں چاکیِ گل ہے",
-        "hi": "हवा-ए सुबह यक-ालम गरेबाँ-चाकी-ए गुल है",
+        "hi": "हवा-ए सुबह यक-आलम गरेबाँ-चाकी-ए गुल है",
         "ro": "havā-e ṣubḥ yak-ʿālam garebāñ-chākī-e gul hai"
       },
       {
@@ -1391,13 +1391,13 @@
       {
         "ascii": "saraapaa rahn-e ((ishq-o-naa-guziir-e ulfat-e hastii",
         "ur": "سراپا رہنِ عشق و نا گزیرِ الفتِ ہستی",
-        "hi": "सरापा रहन-ए िश्क़-ओ-ना-गुज़ीर-ए उलफ़त-ए हस्ती",
+        "hi": "सरापा रहन-ए इश्क़-ओ-ना-गुज़ीर-ए उलफ़त-ए हस्ती",
         "ro": "sarāpā rahn-e ʿishq-o-nā-guzīr-e ulfat-e hastī"
       },
       {
         "ascii": "((ibaadat barq kii kartaa huu;N aur afsos ;haa.sil kaa",
         "ur": "عبادت برق کی کرتا ہوں اور افسوس حاصل کا",
-        "hi": "िबादत बरक़ की करता हूँ और अफ़सोस हासिल का",
+        "hi": "इबादत बरक़ की करता हूँ और अफ़सोस हासिल का",
         "ro": "ʿibādat barq kī kartā hūñ aur afsos ḥāṣil kā"
       },
       {
@@ -1439,7 +1439,7 @@
       {
         "ascii": "sharar-fur.sat nigah saamaan-e yak-((aalam chiraa;Gaa;N hai",
         "ur": "شرر فرصت نگہ سامانِ یک عالم چراغاں ہے",
-        "hi": "शरर-फ़ुरसत निगह सामान-ए यक-ालम चिराग़ाँ है",
+        "hi": "शरर-फ़ुरसत निगह सामान-ए यक-आलम चिराग़ाँ है",
         "ro": "sharar-furṣat nigah sāmān-e yak-ʿālam chirāġhāñ hai"
       },
       {
@@ -1451,7 +1451,7 @@
       {
         "ascii": "saraasar taa;xtan ko shash-jihat yak-((ar.sah jaulaa;N thaa",
         "ur": "سراسر تاختن کو شش جہت یک عرصہ جولاں تھا",
-        "hi": "सरासर ताख़्तन को शश-जिहत यक-रसा जौलाँ था",
+        "hi": "सरासर ताख़्तन को शश-जिहत यक-अरसा जौलाँ था",
         "ro": "sarāsar tāḳhtan ko shash-jihat yak-ʿarṣah jaulāñ thā"
       },
       {
@@ -1469,7 +1469,7 @@
       {
         "ascii": "((a.saa-e ;xi.zr-e .sa;hraa-e su;xan hai ;xaamah bedil kaa",
         "ur": "عصائے خضرِ صحرائے سخن ہے خامہ بیدل کا",
-        "hi": "सा-ए ख़िज़्र-ए सहरा-ए सुख़न है ख़ामा बेदिल का",
+        "hi": "असा-ए ख़िज़्र-ए सहरा-ए सुख़न है ख़ामा बेदिल का",
         "ro": "ʿaṣā-e ḳhiẓr-e ṣaḥrā-e suḳhan hai ḳhāmah bedil kā"
       }
     ],
@@ -1639,7 +1639,7 @@
       {
         "ascii": "hai ;xayaal-e ;husn me;N ;husn-e ((amal kaa saa ;xayaal",
         "ur": "ہے خیالِ حسن میں حسنِ عمل کا سا خیال",
-        "hi": "है ख़याल-ए हुस्न में हुस्न-ए मल का सा ख़याल",
+        "hi": "है ख़याल-ए हुस्न में हुस्न-ए अमल का सा ख़याल",
         "ro": "hai ḳhayāl-e ḥusn meñ ḥusn-e ʿamal kā sā ḳhayāl"
       },
       {
@@ -1651,7 +1651,7 @@
       {
         "ascii": "mu;Nh nah khulne par vuh ((aalam hai kih dekhaa hii nahii;N",
         "ur": "منہ نہ کھلنے پر وہ عالم ہے کہ دیکھا ہی نہیں",
-        "hi": "मुंह न खुलने पर वो ालम है कि देखा ही नहीं",
+        "hi": "मुंह न खुलने पर वो आलम है कि देखा ही नहीं",
         "ro": "muñh nah khulne par vuh ʿālam hai kih dekhā hī nahīñ"
       },
       {
@@ -1669,7 +1669,7 @@
       {
         "ascii": "jitne ((ar.se me;N miraa lip;Taa hu))aa bistar khulaa",
         "ur": "جتنے عرصے میں مرا لپٹا ہوا بستر کھلا",
-        "hi": "जितने रसे में मिरा लिपटा हुआ बिसतर खुला",
+        "hi": "जितने अरसे में मिरा लिपटा हुआ बिसतर खुला",
         "ro": "jitne ʿarṣe meñ mirā lipṭā huʾā bistar khulā"
       },
       {
@@ -1739,7 +1739,7 @@
       {
         "ascii": "vaa;N karam ko ((u;zr-e baarish thaa ((inaa;N-giir-e ;xiraam",
         "ur": "واں کرم کو عذرِ بارش تھا عناں گیرِ خرام",
-        "hi": "वाँ करम को ुज़्र-ए बारिश था िनाँ-गीर-ए ख़िराम",
+        "hi": "वाँ करम को उज़्र-ए बारिश था इनाँ-गीर-ए ख़िराम",
         "ro": "vāñ karam ko ʿużr-e bārish thā ʿināñ-gīr-e ḳhirām"
       },
       {
@@ -1799,7 +1799,7 @@
       {
         "ascii": "farsh se taa ((arsh vaa;N :tuufaa;N thaa mauj-e rang kaa",
         "ur": "فرش سے تا عرش واں طوفاں تھا موجِ رنگ کا",
-        "hi": "फ़रश से ता रश वाँ तूफ़ाँ था मौज-ए रंग का",
+        "hi": "फ़रश से ता अर्श वाँ तूफ़ाँ था मौज-ए रंग का",
         "ro": "farsh se tā ʿarsh vāñ t̤ūfāñ thā mauj-e rang kā"
       },
       {
@@ -1841,7 +1841,7 @@
       {
         "ascii": ";xaanah-e ((aashiq magar saaz-e .sadaa-e aab thaa",
         "ur": "خانۂ عاشق مگر سازِ صدائے آب تھا",
-        "hi": "ख़ाना-ए ाशिक़ मगर साज़-ए सदा-ए आब था",
+        "hi": "ख़ाना-ए आशिक़ मगर साज़-ए सदा-ए आब था",
         "ro": "ḳhānah-e ʿāshiq magar sāz-e ṣadā-e āb thā"
       },
       {
@@ -1865,7 +1865,7 @@
       {
         "ascii": ";zarrah ;zarrah ruu-kash-e ;xvurshiid-e ((aalam-taab thaa",
         "ur": "ذرّہ ذرّہ رو کشِ خورشیدِ عالم تاب تھا",
-        "hi": "ज़र्रा ज़र्रा रू-कश-ए ख़्वुरशीद-ए ालम-ताब था",
+        "hi": "ज़र्रा ज़र्रा रू-कश-ए ख़्वुरशीद-ए आलम-ताब था",
         "ro": "żarrah żarrah rū-kash-e ḳhvurshīd-e ʿālam-tāb thā"
       },
       {
@@ -1943,7 +1943,7 @@
       {
         "ascii": "vaa;N hujuum-e na;Gmah'haa-e saaz-e ((ishrat thaa asad",
         "ur": "واں ہجومِ نغمہہائے سازِ عشرت تھا اسد",
-        "hi": "वाँ हुजूम-ए नग़महहा-ए साज़-ए िशरत था असद",
+        "hi": "वाँ हुजूम-ए नग़महहा-ए साज़-ए इशरत था असद",
         "ro": "vāñ hujūm-e naġhmah'hā-e sāz-e ʿishrat thā asad"
       },
       {
@@ -2019,7 +2019,7 @@
       {
         "ascii": "kam jaante the ham bhii ;Gam-e ((ishq ko par ab",
         "ur": "کم جانتے تھے ہم بھی غمِ عشق کو پر اب",
-        "hi": "कम जांते थे हम भी ग़म-ए िश्क़ को पर अब",
+        "hi": "कम जांते थे हम भी ग़म-ए इश्क़ को पर अब",
         "ro": "kam jānte the ham bhī ġham-e ʿishq ko par ab"
       },
       {
@@ -2073,7 +2073,7 @@
       {
         "ascii": ";xamyaazah yak daraazii-e ((umr-e ;xumaar thaa",
         "ur": "خمیازہ یک درازیِ عمرِ خمار تھا",
-        "hi": "ख़मयाज़ा यक दराज़ी-ए ुमर-ए ख़ुमार था",
+        "hi": "ख़मयाज़ा यक दराज़ी-ए उम्र-ए ख़ुमार था",
         "ro": "ḳhamyāzah yak darāzī-e ʿumr-e ḳhumār thā"
       },
       {
@@ -2085,7 +2085,7 @@
       {
         "ascii": "jis dasht me;N vuh sho;x-e do-((aalam-shikaar thaa",
         "ur": "جس دشت میں وہ شوخِ دو عالم شکار تھا",
-        "hi": "जिस दश्त में वो शोख़-ए दो-ालम-शिकार था",
+        "hi": "जिस दश्त में वो शोख़-ए दो-आलम-शिकार था",
         "ro": "jis dasht meñ vuh shoḳh-e do-ʿālam-shikār thā"
       }
     ],
@@ -2156,13 +2156,13 @@
       {
         "ascii": "((ishrat-e qatl-gah-e ahl-e tamannaa mat puuchh",
         "ur": "عشرتِ قتل گۂ اہلِ تمنّا مت پوچھ",
-        "hi": "िशरत-ए क़तल-गह-ए अहल-ए तमंना मत पूछ",
+        "hi": "इशरत-ए क़तल-गह-ए अहल-ए तमंना मत पूछ",
         "ro": "ʿishrat-e qatl-gah-e ahl-e tamannā mat pūchh"
       },
       {
         "ascii": "((iid-e na:z:zaarah hai shamshiir kaa ((uryaa;N honaa",
         "ur": "عیدِ نظّارہ ہے شمشیر کا عریاں ہونا",
-        "hi": "ीद-ए नज़्ज़ारा है शमशीर का ुर्याँ होना",
+        "hi": "ईद-ए नज़्ज़ारा है शमशीर का उरयाँ होना",
         "ro": "ʿīd-e naz̤z̤ārah hai shamshīr kā ʿuryāñ honā"
       },
       {
@@ -2180,7 +2180,7 @@
       {
         "ascii": "((ishrat-e paarah-e dil za;xm-e tamannaa khaanaa",
         "ur": "عشرتِ پارۂ دل زخمِ تمنّا کھانا",
-        "hi": "िशरत-ए पारा-ए दिल ज़ख़्म-ए तमंना खाना",
+        "hi": "इशरत-ए पारा-ए दिल ज़ख़्म-ए तमंना खाना",
         "ro": "ʿishrat-e pārah-e dil zaḳhm-e tamannā khānā"
       },
       {
@@ -2210,7 +2210,7 @@
       {
         "ascii": "jis kii qismat me;N ho ((aashiq kaa garebaa;N honaa",
         "ur": "جس کی قسمت میں ہو عاشق کا گریباں ہونا",
-        "hi": "जिस की क़िस्मत में हो ाशिक़ का गरेबाँ होना",
+        "hi": "जिस की क़िस्मत में हो आशिक़ का गरेबाँ होना",
         "ro": "jis kī qismat meñ ho ʿāshiq kā garebāñ honā"
       }
     ],
@@ -2250,7 +2250,7 @@
       {
         "ascii": "jaadah ajzaa-e do-((aalam-dasht kaa shiiraazah thaa",
         "ur": "جادہ اجزائے دو عالم دشت کا شیرازہ تھا",
-        "hi": "जादा अजज़ा-ए दो-ालम-दश्त का शीराज़ा था",
+        "hi": "जादा अजज़ा-ए दो-आलम-दश्त का शीराज़ा था",
         "ro": "jādah ajzā-e do-ʿālam-dasht kā shīrāzah thā"
       },
       {
@@ -2310,7 +2310,7 @@
       {
         "ascii": "boriyaa yak naisitaa;N-((aalam buland aavaazah thaa",
         "ur": "بوریا یک نیستاں عالم بلند آوازہ تھا",
-        "hi": "बोरिया यक नैसिताँ-ालम बुलंद आवाज़ा था",
+        "hi": "बोरिया यक नैसिताँ-आलम बुलंद आवाज़ा था",
         "ro": "boriyā yak naisitāñ-ʿālam buland āvāzah thā"
       }
     ],
@@ -2374,7 +2374,7 @@
       {
         "ascii": "((u;zr mere qatl karne me;N vuh ab laave;Nge kyaa",
         "ur": "عذر میرے قتل کرنے میں وہ اب لاویں گے کیا",
-        "hi": "ुज़्र मेरे क़तल करने में वो अब लावेंगे क्या",
+        "hi": "उज़्र मेरे क़तल करने में वो अब लावेंगे क्या",
         "ro": "ʿużr mere qatl karne meñ vuh ab lāveñge kyā"
       },
       {
@@ -2386,7 +2386,7 @@
       {
         "ascii": "yih junuun-e ((ishq ke andaaz chhu;T jaave;Nge kyaa",
         "ur": "یہ جنونِ عشق کے انداز چھٹ جاویں گے کیا",
-        "hi": "ये जुनून-ए िश्क़ के अंदाज़ छुट जावेंगे क्या",
+        "hi": "ये जुनून-ए इश्क़ के अंदाज़ छुट जावेंगे क्या",
         "ro": "yih junūn-e ʿishq ke andāz chhuṭ jāveñge kyā"
       },
       {
@@ -2456,7 +2456,7 @@
       {
         "ascii": "tirii naazukii se jaanaa kih ba;Ndhaa thaa ((ahd bodaa",
         "ur": "تری نازکی سے جانا کہ بندھا تھا عہد بودا",
-        "hi": "तिरी नाज़ुकी से जाना कि बंधा था हद बोदा",
+        "hi": "तिरी नाज़ुकी से जाना कि बंधा था अह्द बोदा",
         "ro": "tirī nāzukī se jānā kih bañdhā thā ʿahd bodā"
       },
       {
@@ -2510,7 +2510,7 @@
       {
         "ascii": ";Gam-e ((ishq gar nah hotaa ;Gam-e rozgaar hotaa",
         "ur": "غمِ عشق گر نہ ہوتا غمِ روزگار ہوتا",
-        "hi": "ग़म-ए िश्क़ गर न होता ग़म-ए रोज़गार होता",
+        "hi": "ग़म-ए इश्क़ गर न होता ग़म-ए रोज़गार होता",
         "ro": "ġham-e ʿishq gar nah hotā ġham-e rozgār hotā"
       },
       {
@@ -2652,7 +2652,7 @@
       {
         "ascii": "dimaa;G-e ((i:tr-e pairaahan nahii;N hai",
         "ur": "دماغِ عطرِ پیراہن نہیں ہے",
-        "hi": "दिमाग़-ए ितर-ए पैराहन नहीं है",
+        "hi": "दिमाग़-ए इत्र-ए पैराहन नहीं है",
         "ro": "dimāġh-e ʿit̤r-e pairāhan nahīñ hai"
       },
       {
@@ -2706,7 +2706,7 @@
       {
         "ascii": "shikeb-e ;xaa:tir-e ((aashiq bhalaa kyaa",
         "ur": "شکیبِ خاطرِ عاشق بھلا کیا",
-        "hi": "शिकेब-ए ख़ातिर-ए ाशिक़ भला क्या",
+        "hi": "शिकेब-ए ख़ातिर-ए आशिक़ भला क्या",
         "ro": "shikeb-e ḳhāt̤ir-e ʿāshiq bhalā kyā"
       },
       {
@@ -2730,7 +2730,7 @@
       {
         "ascii": "((ibaarat kyaa ishaarat kyaa adaa kyaa",
         "ur": "عبارت کیا اشارت کیا ادا کیا",
-        "hi": "िबारत क्या इशारत क्या अदा क्या",
+        "hi": "इबारत क्या इशारत क्या अदा क्या",
         "ro": "ʿibārat kyā ishārat kyā adā kyā"
       }
     ],
@@ -2831,7 +2831,7 @@
       {
         "ascii": ";hamzah kaa qi.s.sah hu))aa ((ishq kaa charchaa nah hu))aa",
         "ur": "حمزہ کا قصّہ ہوا عشق کا چرچا نہ ہوا",
-        "hi": "हमज़ा का क़िससा हुआ िश्क़ का चरचा न हुआ",
+        "hi": "हमज़ा का क़िससा हुआ इश्क़ का चरचा न हुआ",
         "ro": "ḥamzah kā qiṣṣah huʾā ʿishq kā charchā nah huʾā"
       },
       {
@@ -3019,7 +3019,7 @@
       {
         "ascii": "((adam tak be-vafaa charchaa hai terii be-vafaa))ii kaa",
         "ur": "عدم تک بے وفا چرچا ہے تیری بے وفائی کا",
-        "hi": "दम तक बे-वफ़ा चरचा है तेरी बे-वफ़ाई का",
+        "hi": "अदम तक बे-वफ़ा चरचा है तेरी बे-वफ़ाई का",
         "ro": "ʿadam tak be-vafā charchā hai terī be-vafāʾī kā"
       },
       {
@@ -3031,7 +3031,7 @@
       {
         "ascii": "kih ;hasrat-sanj huu;N ((ar.z-e sitamhaa-e judaa))ii kaa",
         "ur": "کہ حسرت سنج ہوں عرضِ ستمہائے جدائی کا",
-        "hi": "कि हसरत-संज हूँ र्ज़-ए सितम्हा-ए जुदाई का",
+        "hi": "कि हसरत-संज हूँ अर्ज़-ए सितम्हा-ए जुदाई का",
         "ro": "kih ḥasrat-sanj hūñ ʿarẓ-e sitamhā-e judāʾī kā"
       },
       {
@@ -3185,7 +3185,7 @@
       {
         "ascii": "gar vuh mast-e naaz devegaa .salaa-e ((ar.z-e ;haal",
         "ur": "گر وہ مستِ ناز دیوےگا صلائے عرضِ حال",
-        "hi": "गर वो मस्त-ए नाज़ देवेगा सला-ए र्ज़-ए हाल",
+        "hi": "गर वो मस्त-ए नाज़ देवेगा सला-ए अर्ज़-ए हाल",
         "ro": "gar vuh mast-e nāz devegā ṣalā-e ʿarẓ-e ḥāl"
       },
       {
@@ -3393,7 +3393,7 @@
       {
         "ascii": "davaam kulfat-e ;xaa:tir hai ((aish dunyaa kaa",
         "ur": "دوام کلفتِ خاطر ہے عیش دنیا کا",
-        "hi": "दवाम कुलफ़त-ए ख़ातिर है ैश दुनिया का",
+        "hi": "दवाम कुलफ़त-ए ख़ातिर है ऐश दुनिया का",
         "ro": "davām kulfat-e ḳhāt̤ir hai ʿaish dunyā kā"
       },
       {
@@ -3477,7 +3477,7 @@
       {
         "ascii": "((adam ko le ga))e dil me;N ;Gubaar .sa;hraa kaa",
         "ur": "عدم کو لے گئے دل میں غبار صحرا کا",
-        "hi": "दम को ले गए दिल में ग़ुबार सहरा का",
+        "hi": "अदम को ले गए दिल में ग़ुबार सहरा का",
         "ro": "ʿadam ko le gaʾe dil meñ ġhubār ṣaḥrā kā"
       }
     ],
@@ -3511,7 +3511,7 @@
       {
         "ascii": "i((tibaar-e ((ishq kii ;xaanah-;xaraabii dekhnaa",
         "ur": "اعتبارِ عشق کی خانہ خرابی دیکھنا",
-        "hi": "इतिबार-ए िश्क़ की ख़ाना-ख़राबी देखना",
+        "hi": "इतिबार-ए इश्क़ की ख़ाना-ख़राबी देखना",
         "ro": "ětibār-e ʿishq kī ḳhānah-ḳharābī dekhnā"
       },
       {
@@ -3600,13 +3600,13 @@
       {
         "ascii": "yaas-o-ummiid ne yak ((arbadah-maidaa;N maa;Ngaa",
         "ur": "یاس و امّید نے یک عربدہ میداں مانگا",
-        "hi": "यास-ओ-उममीद ने यक रबदा-मैदाँ मांगा",
+        "hi": "यास-ओ-उममीद ने यक अरबदा-मैदाँ मांगा",
         "ro": "yās-o-ummīd ne yak ʿarbadah-maidāñ māñgā"
       },
       {
         "ascii": "((ajz-e himmat ne :tilism-e dil-e saa))il baa;Ndhaa",
         "ur": "عجزِ ہمّت نے طلسمِ دلِ سائل باندھا",
-        "hi": "जज़-ए हिममत ने तिलिस्म-ए दिल-ए साइल बांधा",
+        "hi": "अज्ज़-ए हिममत ने तिलिस्म-ए दिल-ए साइल बांधा",
         "ro": "ʿajz-e himmat ne t̤ilism-e dil-e sāʾil bāñdhā"
       },
       {
@@ -3789,7 +3789,7 @@
       {
         "ascii": "ba((d-e yak ((umr-e vara(( baar to detaa baare",
         "ur": "بعدِ یک عمرِ ورع بار تو دیتا بارے",
-        "hi": "बाद-ए यक ुमर-ए वरा बार तो देता बारे",
+        "hi": "बाद-ए यक उम्र-ए वरा बार तो देता बारे",
         "ro": "baʿd-e yak ʿumr-e varaʿ bār to detā bāre"
       },
       {
@@ -3887,7 +3887,7 @@
       {
         "ascii": "khe;Nchaa hai ((ajz-e ;hau.salah ne ;xa:t:t ayaa;G kaa",
         "ur": "کھینچا ہے عجزِ حوصلہ نے خطّ ایاغ کا",
-        "hi": "खेंचा है जज़-ए हौसला ने ख़तत अयाग़ का",
+        "hi": "खेंचा है अज्ज़-ए हौसला ने ख़तत अयाग़ का",
         "ro": "kheñchā hai ʿajz-e ḥauṣalah ne ḳhat̤t̤ ayāġh kā"
       },
       {
@@ -3899,7 +3899,7 @@
       {
         "ascii": "kahte hai;N jis ko ((ishq ;xalal hai dimaa;G kaa",
         "ur": "کہتے ہیں جس کو عشق خلل ہے دماغ کا",
-        "hi": "कहते हैं जिस को िश्क़ ख़लल है दिमाग़ का",
+        "hi": "कहते हैं जिस को इश्क़ ख़लल है दिमाग़ का",
         "ro": "kahte haiñ jis ko ʿishq ḳhalal hai dimāġh kā"
       },
       {
@@ -3917,13 +3917,13 @@
       {
         "ascii": "sau baar band-e ((ishq se aazaad ham hu))e",
         "ur": "سو بار بندِ عشق سے آزاد ہم ہوئے",
-        "hi": "सौ बार बंद-ए िश्क़ से आज़ाद हम हुए",
+        "hi": "सौ बार बंद-ए इश्क़ से आज़ाद हम हुए",
         "ro": "sau bār band-e ʿishq se āzād ham huʾe"
       },
       {
         "ascii": "par kyaa kare;N kih dil hii ((aduu hai faraa;G kaa",
         "ur": "پر کیا کریں کہ دل ہی عدو ہے فراغ کا",
-        "hi": "पर क्या करें कि दिल ही दू है फ़राग़ का",
+        "hi": "पर क्या करें कि दिल ही अदू है फ़राग़ का",
         "ro": "par kyā kareñ kih dil hī ʿadū hai farāġh kā"
       },
       {
@@ -3988,7 +3988,7 @@
       {
         "ascii": "raaz-e maktuub bah be-rab:tii-e ((unvaa;N samjhaa",
         "ur": "رازِ مکتوب بہ بے ربطیِ عنواں سمجھا",
-        "hi": "राज़-ए मकतूब ब बे-रबती-ए ुंवाँ समझा",
+        "hi": "राज़-ए मकतूब ब बे-रबती-ए उंवाँ समझा",
         "ro": "rāz-e maktūb bah be-rabt̤ī-e ʿunvāñ samjhā"
       },
       {
@@ -4024,13 +4024,13 @@
       {
         "ascii": "ru;x pah har qa:trah ((araq diidah-e ;hairaa;N samjhaa",
         "ur": "رخ پہ ہر قطرہ عرق دیدۂ حیراں سمجھا",
-        "hi": "रुख़ पे हर क़तरा रक़ दीदा-ए हैराँ समझा",
+        "hi": "रुख़ पे हर क़तरा अरक़ दीदा-ए हैराँ समझा",
         "ro": "ruḳh pah har qat̤rah ʿaraq dīdah-e ḥairāñ samjhā"
       },
       {
         "ascii": "((ajz se apne yih jaanaa kih vuh bad-;xuu hogaa",
         "ur": "عجز سے اپنے یہ جانا کہ وہ بد خو ہوگا",
-        "hi": "जज़ से अपने ये जाना कि वो बद-ख़ू होगा",
+        "hi": "अज्ज़ से अपने ये जाना कि वो बद-ख़ू होगा",
         "ro": "ʿajz se apne yih jānā kih vuh bad-ḳhū hogā"
       },
       {
@@ -4042,7 +4042,7 @@
       {
         "ascii": "safar-e ((ishq me;N kii .zu((f ne raa;hat-:talabii",
         "ur": "سفرِ عشق میں کی ضعف نے راحت طلبی",
-        "hi": "सफ़र-ए िश्क़ में की ज़ुफ़ ने राहत-तलबी",
+        "hi": "सफ़र-ए इश्क़ में की ज़ुफ़ ने राहत-तलबी",
         "ro": "safar-e ʿishq meñ kī ẓuʿf ne rāḥat-t̤alabī"
       },
       {
@@ -4084,7 +4084,7 @@
       {
         "ascii": "shulah-e ((ishq ko apnaa sar-o-saamaa;N samjhaa",
         "ur": "شلۂ عشق کو اپنا سر و ساماں سمجھا",
-        "hi": "शुला-ए िश्क़ को अपना सर-ओ-सामाँ समझा",
+        "hi": "शुला-ए इश्क़ को अपना सर-ओ-सामाँ समझा",
         "ro": "shulah-e ʿishq ko apnā sar-o-sāmāñ samjhā"
       }
     ],
@@ -4143,7 +4143,7 @@
       {
         "ascii": "((u;zr-e vaa-maa;Ndagii ai ;hasrat-e dil",
         "ur": "عذرِ وا ماندگی اے حسرتِ دل",
-        "hi": "ुज़्र-ए वा-मांदगी ऐ हसरत-ए दिल",
+        "hi": "उज़्र-ए वा-मांदगी ऐ हसरत-ए दिल",
         "ro": "ʿużr-e vā-māñdagī ai ḥasrat-e dil"
       },
       {
@@ -4250,7 +4250,7 @@
       {
         "ascii": "aap aate the magar ko))ii ((inaa;N-giir bhii thaa",
         "ur": "آپ آتے تھے مگر کوئی عناں گیر بھی تھا",
-        "hi": "आप आते थे मगर कोई िनाँ-गीर भी था",
+        "hi": "आप आते थे मगर कोई इनाँ-गीर भी था",
         "ro": "āp āte the magar koʾī ʿināñ-gīr bhī thā"
       },
       {
@@ -4328,7 +4328,7 @@
       {
         "ascii": "peshe me;N ((aib nahii;N rakhye nah farhaad ko naam",
         "ur": "پیشے میں عیب نہیں رکھیے نہ فرہاد کو نام",
-        "hi": "पेशे में ैब नहीं रखये न फ़रहाद को नाम",
+        "hi": "पेशे में ऐब नहीं रखये न फ़रहाद को नाम",
         "ro": "peshe meñ ʿaib nahīñ rakhye nah farhād ko nām"
       },
       {
@@ -4446,7 +4446,7 @@
       {
         "ascii": "iraadah huu;N yak-((aalam-afsurdagaa;N kaa",
         "ur": "ارادہ ہوں یک عالم افسردگاں کا",
-        "hi": "इरादा हूँ यक-ालम-अफ़सुर्दगाँ का",
+        "hi": "इरादा हूँ यक-आलम-अफ़सुर्दगाँ का",
         "ro": "irādah hūñ yak-ʿālam-afsurdagāñ kā"
       },
       {
@@ -4516,7 +4516,7 @@
       {
         "ascii": "jab tak kih nah dekhaa thaa qad-e yaar kaa ((aalam",
         "ur": "جب تک کہ نہ دیکھا تھا قدِ یار کا عالم",
-        "hi": "जब तक कि न देखा था क़द-ए यार का ालम",
+        "hi": "जब तक कि न देखा था क़द-ए यार का आलम",
         "ro": "jab tak kih nah dekhā thā qad-e yār kā ʿālam"
       },
       {
@@ -4592,7 +4592,7 @@
       {
         "ascii": "mashhad-e ((aashiq se koso;N tak jo ugtii hai ;hinaa",
         "ur": "مشہدِ عاشق سے کوسوں تک جو اگتی ہے حنا",
-        "hi": "मशहद-ए ाशिक़ से कोसों तक जो उगती है हिना",
+        "hi": "मशहद-ए आशिक़ से कोसों तक जो उगती है हिना",
         "ro": "mashhad-e ʿāshiq se kosoñ tak jo ugtī hai ḥinā"
       },
       {
@@ -4768,7 +4768,7 @@
       {
         "ascii": "((ar.z-e niyaaz-e ((ishq ke qaabil nahii;N rahaa",
         "ur": "عرضِ نیازِ عشق کے قابل نہیں رہا",
-        "hi": "र्ज़-ए नियाज़-ए िश्क़ के क़ाबिल नहीं रहा",
+        "hi": "अर्ज़-ए नियाज़-ए इश्क़ के क़ाबिल नहीं रहा",
         "ro": "ʿarẓ-e niyāz-e ʿishq ke qābil nahīñ rahā"
       },
       {
@@ -4852,7 +4852,7 @@
       {
         "ascii": "bedaad-e ((ishq se nahii;N ;Dartaa magar asad",
         "ur": "بیدادِ عشق سے نہیں ڈرتا مگر اسد",
-        "hi": "बेदाद-ए िश्क़ से नहीं डरता मगर असद",
+        "hi": "बेदाद-ए इश्क़ से नहीं डरता मगर असद",
         "ro": "bedād-e ʿishq se nahīñ ḍartā magar asad"
       },
       {
@@ -4910,7 +4910,7 @@
       {
         "ascii": "((aql kahtii hai kih vuh be-mihr kis kaa aashnaa",
         "ur": "عقل کہتی ہے کہ وہ بے مہر کس کا آشنا",
-        "hi": "क़ल कहती है कि वो बे-मिहर किस का आशना",
+        "hi": "अक़्ल कहती है कि वो बे-मिहर किस का आशना",
         "ro": "ʿaql kahtī hai kih vuh be-mihr kis kā āshnā"
       },
       {
@@ -4928,7 +4928,7 @@
       {
         "ascii": "shauq hai saamaa;N-:taraaz-e naazish-e arbaab-e ((ajz",
         "ur": "شوق ہے ساماں طرازِ نازشِ اربابِ عجز",
-        "hi": "शौक़ है सामाँ-तराज़-ए नाज़िश-ए अरबाब-ए जज़",
+        "hi": "शौक़ है सामाँ-तराज़-ए नाज़िश-ए अरबाब-ए अज्ज़",
         "ro": "shauq hai sāmāñ-t̤arāz-e nāzish-e arbāb-e ʿajz"
       },
       {
@@ -4946,7 +4946,7 @@
       {
         "ascii": "((aafiyat kaa dushman aur aavaaragii kaa aashnaa",
         "ur": "عافیت کا دشمن اور آوارگی کا آشنا",
-        "hi": "ाफ़ियत का दुशमन और आवारगी का आशना",
+        "hi": "आफ़ियत का दुशमन और आवारगी का आशना",
         "ro": "ʿāfiyat kā dushman aur āvāragī kā āshnā"
       },
       {
@@ -5082,7 +5082,7 @@
       {
         "ascii": "((arsh se idhar hotaa kaash-ke makaa;N apnaa",
         "ur": "عرش سے ادھر ہوتا کاش کے مکاں اپنا",
-        "hi": "रश से इधर होता काश-के मकाँ अपना",
+        "hi": "अर्श से इधर होता काश-के मकाँ अपना",
         "ro": "ʿarsh se idhar hotā kāsh-ke makāñ apnā"
       },
       {
@@ -5112,7 +5112,7 @@
       {
         "ascii": "ghiste ghiste mi;T jaataa aap ne ((aba;s badlaa",
         "ur": "گھستے گھستے مٹ جاتا آپ نے عبث بدلا",
-        "hi": "घिस्ते घिस्ते मिट जाता आप ने बस बदला",
+        "hi": "घिस्ते घिस्ते मिट जाता आप ने अबस बदला",
         "ro": "ghiste ghiste miṭ jātā āp ne ʿabaṡ badlā"
       },
       {
@@ -5207,7 +5207,7 @@
       {
         "ascii": "((ar.z-e ;xamyaazah-e majnuu;N hai garebaa;N meraa",
         "ur": "عرضِ خمیازۂ مجنوں ہے گریباں میرا",
-        "hi": "र्ज़-ए ख़मयाज़ा-ए मज्नूँ है गरेबाँ मेरा",
+        "hi": "अर्ज़-ए ख़मयाज़ा-ए मज्नूँ है गरेबाँ मेरा",
         "ro": "ʿarẓ-e ḳhamyāzah-e majnūñ hai garebāñ merā"
       },
       {
@@ -5253,7 +5253,7 @@
       {
         "ascii": "bazm-e qada;h se ((aish tamannaa nah rakh kih rang",
         "ur": "بزمِ قدح سے عیش تمنّا نہ رکھ کہ رنگ",
-        "hi": "बज़्म-ए क़दह से ैश तमंना न रख कि रंग",
+        "hi": "बज़्म-ए क़दह से ऐश तमंना न रख कि रंग",
         "ro": "bazm-e qadaḥ se ʿaish tamannā nah rakh kih rang"
       },
       {
@@ -5271,7 +5271,7 @@
       {
         "ascii": "sharmindagii se ((u;zr nah karnaa gunaah kaa",
         "ur": "شرمندگی سے عذر نہ کرنا گناہ کا",
-        "hi": "शर्मिंदगी से ुज़्र न करना गुनाह का",
+        "hi": "शर्मिंदगी से उज़्र न करना गुनाह का",
         "ro": "sharmindagī se ʿużr nah karnā gunāh kā"
       },
       {
@@ -5301,7 +5301,7 @@
       {
         "ascii": "((uzlat-guziin-e bazm hai;N vaamaa;Ndagaan-e diid",
         "ur": "عزلت گزینِ بزم ہیں واماندگانِ دید",
-        "hi": "ुज़लत-गुज़ीन-ए बज़्म हैं वामांदगान-ए दीद",
+        "hi": "उज़लत-गुज़ीन-ए बज़्म हैं वामांदगान-ए दीद",
         "ro": "ʿuzlat-guzīn-e bazm haiñ vāmāñdagān-e dīd"
       },
       {
@@ -5401,7 +5401,7 @@
       {
         "ascii": "((umr bhar dekhaa kiyaa marne kii raah",
         "ur": "عمر بھر دیکھا کیا مرنے کی راہ",
-        "hi": "ुमर भर देखा किया मरने की राह",
+        "hi": "उम्र भर देखा किया मरने की राह",
         "ro": "ʿumr bhar dekhā kiyā marne kī rāh"
       },
       {
@@ -5506,7 +5506,7 @@
       {
         "ascii": "((ishrat-e qa:trah hai daryaa me;N fanaa ho jaanaa",
         "ur": "عشرتِ قطرہ ہے دریا میں فنا ہو جانا",
-        "hi": "िशरत-ए क़तरा है दरया में फ़ना हो जाना",
+        "hi": "इशरत-ए क़तरा है दरया में फ़ना हो जाना",
         "ro": "ʿishrat-e qat̤rah hai daryā meñ fanā ho jānā"
       },
       {
@@ -5536,7 +5536,7 @@
       {
         "ascii": "mi;T gayaa ghisne me;N is ((uqde kaa vaa ho jaanaa",
         "ur": "مٹ گیا گھسنے میں اس عقدے کا وا ہو جانا",
-        "hi": "मिट गया घिस्ने में इस ुक़दे का वा हो जाना",
+        "hi": "मिट गया घिस्ने में इस उक़दे का वा हो जाना",
         "ro": "miṭ gayā ghisne meñ is ʿuqde kā vā ho jānā"
       },
       {
@@ -5679,7 +5679,7 @@
       {
         "ascii": "hai yih barsaat vuh mausam kih ((ajab kyaa hai agar",
         "ur": "ہے یہ برسات وہ موسم کہ عجب کیا ہے اگر",
-        "hi": "है ये बरसात वो मौसम कि जब क्या है अगर",
+        "hi": "है ये बरसात वो मौसम कि अजब क्या है अगर",
         "ro": "hai yih barsāt vuh mausam kih ʿajab kyā hai agar"
       },
       {
@@ -5751,7 +5751,7 @@
       {
         "ascii": "ek ((aalam pah hai;N :tuufaanii-e kaifiiyat-e fa.sl",
         "ur": "ایک عالم پہ ہیں طوفانیِ کیفییتِ فصل",
-        "hi": "एक ालम पे हैं तूफ़ानी-ए कैफ़ीयत-ए फ़सल",
+        "hi": "एक आलम पे हैं तूफ़ानी-ए कैफ़ीयत-ए फ़सल",
         "ro": "ek ʿālam pah haiñ t̤ūfānī-e kaifīyat-e faṣl"
       },
       {
@@ -5809,7 +5809,7 @@
       {
         "ascii": "jin logo;N kii thii dar-;xvur-e ((aqd-e guhar angusht",
         "ur": "جن لوگوں کی تھی در خورِ عقدِ گہر انگشت",
-        "hi": "जिन लोगों की थी दर-ख़्वुर-ए क़द-ए गुहर अंगुश्त",
+        "hi": "जिन लोगों की थी दर-ख़्वुर-ए अक़्द-ए गुहर अंगुश्त",
         "ro": "jin logoñ kī thī dar-ḳhvur-e ʿaqd-e guhar angusht"
       },
       {
@@ -5927,7 +5927,7 @@
       {
         "ascii": "jigar ko mire ((ishq-e ;xuu;N-naabah-mashrab",
         "ur": "جگر کو مرے عشقِ خوں نابہ مشرب",
-        "hi": "जिगर को मिरे िश्क़-ए ख़ूँ-नाबा-मशरब",
+        "hi": "जिगर को मिरे इश्क़-ए ख़ूँ-नाबा-मशरब",
         "ro": "jigar ko mire ʿishq-e ḳhūñ-nābah-mashrab"
       },
       {
@@ -5939,7 +5939,7 @@
       {
         "ascii": "((alii al-ra;Gm-e dushman shahiid-e vafaa huu;N",
         "ur": "علی الرغمِ دشمن شہیدِ وفا ہوں",
-        "hi": "ली अल-रग़म-ए दुशमन शहीद-ए वफ़ा हूँ",
+        "hi": "अली अल-रग़म-ए दुशमन शहीद-ए वफ़ा हूँ",
         "ro": "ʿalī al-raġhm-e dushman shahīd-e vafā hūñ"
       },
       {
@@ -5963,7 +5963,7 @@
       {
         "ascii": "do ((aalam kii hastii pah ;xa:t:t-e fanaa khe;Nch",
         "ur": "دو عالم کی ہستی پہ خطِّ فنا کھینچ",
-        "hi": "दो ालम की हस्ती पे ख़तत-ए फ़ना खेंच",
+        "hi": "दो आलम की हस्ती पे ख़तत-ए फ़ना खेंच",
         "ro": "do ʿālam kī hastī pah ḳhat̤t̤-e fanā kheñch"
       },
       {
@@ -6092,7 +6092,7 @@
       {
         "ascii": "ai dil-e naa-((aaqibat-andesh .zab:t-e shauq kar",
         "ur": "اے دلِ نا عاقبت اندیش ضبطِ شوق کر",
-        "hi": "ऐ दिल-ए ना-ाक़िबत-अंदेश ज़बत-ए शौक़ कर",
+        "hi": "ऐ दिल-ए ना-आक़िबत-अंदेश ज़बत-ए शौक़ कर",
         "ro": "ai dil-e nā-ʿāqibat-andesh ẓabt̤-e shauq kar"
       },
       {
@@ -6116,7 +6116,7 @@
       {
         "ascii": "((ishq me;N bedaad-e rashk-e ;Gair ne maaraa mujhe",
         "ur": "عشق میں بیدادِ رشکِ غیر نے مارا مجھے",
-        "hi": "िश्क़ में बेदाद-ए रश्क-ए ग़ैर ने मारा मुझे",
+        "hi": "इश्क़ में बेदाद-ए रश्क-ए ग़ैर ने मारा मुझे",
         "ro": "ʿishq meñ bedād-e rashk-e ġhair ne mārā mujhe"
       },
       {
@@ -6170,7 +6170,7 @@
       {
         "ascii": "sar kare hai vuh ;hadii;s-e zulf-e ((anbar-baar-e dost",
         "ur": "سر کرے ہے وہ حدیثِ زلفِ عنبر بارِ دوست",
-        "hi": "सर करे है वो हदीस-ए ज़ुलफ़-ए ंबर-बार-ए दोस्त",
+        "hi": "सर करे है वो हदीस-ए ज़ुलफ़-ए अंबर-बार-ए दोस्त",
         "ro": "sar kare hai vuh ḥadīṡ-e zulf-e ʿanbar-bār-e dost"
       },
       {
@@ -6276,7 +6276,7 @@
       {
         "ascii": "ai ((aafiyat kinaarah kar ai inti:zaam chal",
         "ur": "اے عافیت کنارہ کر اے انتظام چل",
-        "hi": "ऐ ाफ़ियत किनारा कर ऐ इंतिज़ाम चल",
+        "hi": "ऐ आफ़ियत किनारा कर ऐ इंतिज़ाम चल",
         "ro": "ai ʿāfiyat kinārah kar ai intiz̤ām chal"
       },
       {
@@ -6340,13 +6340,13 @@
       {
         "ascii": "lo ham marii.z-e ((ishq ke biimaar-daar hai;N",
         "ur": "لو ہم مریضِ عشق کے بیمار دار ہیں",
-        "hi": "लो हम मरीज़-ए िश्क़ के बीमार-दार हैं",
+        "hi": "लो हम मरीज़-ए इश्क़ के बीमार-दार हैं",
         "ro": "lo ham marīẓ-e ʿishq ke bīmār-dār haiñ"
       },
       {
         "ascii": "achchhaa agar nah ho to masii;haa kaa kyaa ((ilaaj",
         "ur": "اچّھا اگر نہ ہو تو مسیحا کا کیا علاج",
-        "hi": "अचछा अगर न हो तो मसीहा का क्या िलाज",
+        "hi": "अचछा अगर न हो तो मसीहा का क्या इलाज",
         "ro": "achchhā agar nah ho to masīḥā kā kyā ʿilāj"
       }
     ],
@@ -6500,7 +6500,7 @@
       {
         "ascii": "shu((lah-e ((ishq siyah-posh hu))aa mere ba((d",
         "ur": "شعلۂ عشق سیہ پوش ہوا میرے بعد",
-        "hi": "शुला-ए िश्क़ सिया-पोश हुआ मेरे बाद",
+        "hi": "शुला-ए इश्क़ सिया-पोश हुआ मेरे बाद",
         "ro": "shuʿlah-e ʿishq siyah-posh huʾā mere baʿd"
       },
       {
@@ -6518,7 +6518,7 @@
       {
         "ascii": "dar-;xvur-e ((ar.z nahii;N jauhar-e bedaad ko jaa",
         "ur": "در خورِ عرض نہیں جوہرِ بیداد کو جا",
-        "hi": "दर-ख़्वुर-ए र्ज़ नहीं जौहर-ए बेदाद को जा",
+        "hi": "दर-ख़्वुर-ए अर्ज़ नहीं जौहर-ए बेदाद को जा",
         "ro": "dar-ḳhvur-e ʿarẓ nahīñ jauhar-e bedād ko jā"
       },
       {
@@ -6542,7 +6542,7 @@
       {
         "ascii": "kaun hotaa hai ;hariif-e mai-e mard-afgan-e ((ishq",
         "ur": "کون ہوتا ہے حریفِ مےِ مرد افگنِ عشق",
-        "hi": "कौन होता है हरीफ़-ए मै-ए मर्द-अफ़गन-ए िश्क़",
+        "hi": "कौन होता है हरीफ़-ए मै-ए मर्द-अफ़गन-ए इश्क़",
         "ro": "kaun hotā hai ḥarīf-e mai-e mard-afgan-e ʿishq"
       },
       {
@@ -6566,7 +6566,7 @@
       {
         "ascii": "aa))e hai bekasii-e ((ishq pah ronaa ;Gaalib",
         "ur": "آئے ہے بیکسیِ عشق پہ رونا غالب",
-        "hi": "आए है बेकसी-ए िश्क़ पे रोना ग़ालिब",
+        "hi": "आए है बेकसी-ए इश्क़ पे रोना ग़ालिब",
         "ro": "āʾe hai bekasī-e ʿishq pah ronā ġhālib"
       },
       {
@@ -6715,7 +6715,7 @@
       {
         "ascii": "nah puuchh be-;xvudii-e ((aish-e maqdam-e sailaab",
         "ur": "نہ پوچھ بے خودیِ عیشِ مقدمِ سیلاب",
-        "hi": "न पूछ बे-ख़्वुदी-ए ैश-ए मक़दम-ए सैलाब",
+        "hi": "न पूछ बे-ख़्वुदी-ए ऐश-ए मक़दम-ए सैलाब",
         "ro": "nah pūchh be-ḳhvudī-e ʿaish-e maqdam-e sailāb"
       },
       {
@@ -6851,7 +6851,7 @@
       {
         "ascii": ";Gaalib nah kar ;hu.zuur me;N tuu baar baar ((ar.z",
         "ur": "غالب نہ کر حضور میں تو بار بار عرض",
-        "hi": "ग़ालिब न कर हुज़ूर में तू बार बार र्ज़",
+        "hi": "ग़ालिब न कर हुज़ूर में तू बार बार अर्ज़",
         "ro": "ġhālib nah kar ḥuẓūr meñ tū bār bār ʿarẓ"
       },
       {
@@ -6903,7 +6903,7 @@
       {
         "ascii": "kyaa aabruu-e ((ishq jahaa;N ((aam ho jafaa",
         "ur": "کیا آبروئے عشق جہاں عام ہو جفا",
-        "hi": "क्या आबरू-ए िश्क़ जहाँ ाम हो जफ़ा",
+        "hi": "क्या आबरू-ए इश्क़ जहाँ आम हो जफ़ा",
         "ro": "kyā ābrū-e ʿishq jahāñ ʿām ho jafā"
       },
       {
@@ -6957,7 +6957,7 @@
       {
         "ascii": "lekin ((ayaar-e :tab((-e ;xariidaar dekh kar",
         "ur": "لیکن عیارِ طبعِ خریدار دیکھ کر",
-        "hi": "लेकिन यार-ए तब-ए ख़रीदार देख कर",
+        "hi": "लेकिन अयार-ए तब-ए ख़रीदार देख कर",
         "ro": "lekin ʿayār-e t̤abʿ-e ḳharīdār dekh kar"
       },
       {
@@ -6993,7 +6993,7 @@
       {
         "ascii": ":tuu:tii kaa ((aks samjhe hai zangaar dekh kar",
         "ur": "طوطی کا عکس سمجھے ہے زنگار دیکھ کر",
-        "hi": "तूती का कस समझे है ज़ंगार देख कर",
+        "hi": "तूती का अक्स समझे है ज़ंगार देख कर",
         "ro": "t̤ūt̤ī kā ʿaks samjhe hai zangār dekh kar"
       },
       {
@@ -7093,7 +7093,7 @@
       {
         "ascii": "kih pusht-e chashm se jis ke nah hove muhr ((unvaa;N par",
         "ur": "کہ پشتِ چشم سے جس کے نہ ہووے مہر عنواں پر",
-        "hi": "कि पुश्त-ए चश्म से जिस के न होवे मुहर ुंवाँ पर",
+        "hi": "कि पुश्त-ए चश्म से जिस के न होवे मुहर उंवाँ पर",
         "ro": "kih pusht-e chashm se jis ke nah hove muhr ʿunvāñ par"
       },
       {
@@ -7135,7 +7135,7 @@
       {
         "ascii": "dil-e ;xuunii;N-jigar be-.sabr-o-fai.z-e ((ishq musta;Gnii",
         "ur": "دلِ خونیں جگر بے صبر و فیضِ عشق مستغنی",
-        "hi": "दिल-ए ख़ूनीं-जिगर बे-सबर-ओ-फ़ैज़-ए िश्क़ मुसतग़नी",
+        "hi": "दिल-ए ख़ूनीं-जिगर बे-सबर-ओ-फ़ैज़-ए इश्क़ मुसतग़नी",
         "ro": "dil-e ḳhūnīñ-jigar be-ṣabr-o-faiẓ-e ʿishq mustaġhnī"
       },
       {
@@ -7323,7 +7323,7 @@
       {
         "ascii": "nah kii saamaan-e ((aish-o-jaah ne tadbiir va;hshat kii",
         "ur": "نہ کی سامانِ عیش و جاہ نے تدبیر وحشت کی",
-        "hi": "न की सामान-ए ैश-ओ-जाह ने तदबीर वहशत की",
+        "hi": "न की सामान-ए ऐश-ओ-जाह ने तदबीर वहशत की",
         "ro": "nah kī sāmān-e ʿaish-o-jāh ne tadbīr vaḥshat kī"
       },
       {
@@ -7375,7 +7375,7 @@
       {
         "ascii": "junuu;N kii dast-giirii kis se ho gar ho nah ((uryaanii",
         "ur": "جنوں کی دست گیری کس سے ہو گر ہو نہ عریانی",
-        "hi": "जुनूँ की दस्त-गीरी किस से हो गर हो न ुरयानी",
+        "hi": "जुनूँ की दस्त-गीरी किस से हो गर हो न उरयानी",
         "ro": "junūñ kī dast-gīrī kis se ho gar ho nah ʿuryānī"
       },
       {
@@ -7399,7 +7399,7 @@
       {
         "ascii": "falak se ham ko ((aish-e raftah kaa kyaa kyaa taqaa.zaa hai",
         "ur": "فلک سے ہم کو عیشِ رفتہ کا کیا کیا تقاضا ہے",
-        "hi": "फ़लक से हम को ैश-ए रफ़ता का क्या क्या तक़ाज़ा है",
+        "hi": "फ़लक से हम को ऐश-ए रफ़ता का क्या क्या तक़ाज़ा है",
         "ro": "falak se ham ko ʿaish-e raftah kā kyā kyā taqāẓā hai"
       },
       {
@@ -7441,7 +7441,7 @@
       {
         "ascii": "kih mashq-e naaz kar ;xuun-e do-((aalam merii gardan par",
         "ur": "کہ مشقِ ناز کر خونِ دو عالم میری گردن پر",
-        "hi": "कि मश्क़-ए नाज़ कर ख़ून-ए दो-ालम मेरी गर्दन पर",
+        "hi": "कि मश्क़-ए नाज़ कर ख़ून-ए दो-आलम मेरी गर्दन पर",
         "ro": "kih mashq-e nāz kar ḳhūn-e do-ʿālam merī gardan par"
       },
       {
@@ -7499,7 +7499,7 @@
       {
         "ascii": "sitam-kash ma.sla;hat se huu;N kih ;xuubaa;N tujh pah ((aashiq hai;N",
         "ur": "ستم کش مصلحت سے ہوں کہ خوباں تجھ پہ عاشق ہیں",
-        "hi": "सितम-कश मसलहत से हूँ कि ख़ूबाँ तुझ पे ाशिक़ हैं",
+        "hi": "सितम-कश मसलहत से हूँ कि ख़ूबाँ तुझ पे आशिक़ हैं",
         "ro": "sitam-kash maṣlaḥat se hūñ kih ḳhūbāñ tujh pah ʿāshiq haiñ"
       },
       {
@@ -7517,7 +7517,7 @@
       {
         "ascii": "mile;Nge manzil-e ulfat me;N ham aur ((andaliib aa;xir",
         "ur": "ملیں گے منزلِ الفت میں ہم اور عندلیب آخر",
-        "hi": "मिलेंगे मंज़िल-ए उलफ़त में हम और ंदलीब आख़िर",
+        "hi": "मिलेंगे मंज़िल-ए उलफ़त में हम और अंदलीब आख़िर",
         "ro": "mileñge manzil-e ulfat meñ ham aur ʿandalīb āḳhir"
       },
       {
@@ -7599,7 +7599,7 @@
       {
         "ascii": "haa;N ai falak-e piir javaa;N thaa abhii ((aarif",
         "ur": "ہاں اے فلکِ پیر جواں تھا ابھی عارف",
-        "hi": "हाँ ऐ फ़लक-ए पीर जवाँ था अभी ारिफ़",
+        "hi": "हाँ ऐ फ़लक-ए पीर जवाँ था अभी आरिफ़",
         "ro": "hāñ ai falak-e pīr javāñ thā abhī ʿārif"
       },
       {
@@ -7693,7 +7693,7 @@
       {
         "ascii": "hai daa;G-e ((ishq ziinat-e jeb-e kafan hanuuz",
         "ur": "ہے داغِ عشق زینتِ جیبِ کفن ہنوز",
-        "hi": "है दाग़-ए िश्क़ ज़ीनत-ए जेब-ए कफ़न हनूज़",
+        "hi": "है दाग़-ए इश्क़ ज़ीनत-ए जेब-ए कफ़न हनूज़",
         "ro": "hai dāġh-e ʿishq zīnat-e jeb-e kafan hanūz"
       },
       {
@@ -7782,7 +7782,7 @@
       {
         "ascii": "du((aa qabuul ho yaa rab kih ((umr-e ;xi.zr daraaz",
         "ur": "دعا قبول ہو یا رب کہ عمرِ خضر دراز",
-        "hi": "दुआ क़बूल हो या रब कि ुमर-ए ख़िज़्र दराज़",
+        "hi": "दुआ क़बूल हो या रब कि उम्र-ए ख़िज़्र दराज़",
         "ro": "duʿā qabūl ho yā rab kih ʿumr-e ḳhiẓr darāz"
       },
       {
@@ -7812,7 +7812,7 @@
       {
         "ascii": "har ek ;zarrah-e ((aashiq hai aaftaab-parast",
         "ur": "ہر ایک ذرّۂ عاشق ہے آفتاب پرست",
-        "hi": "हर एक ज़र्रा-ए ाशिक़ है आफ़ताब-परस्त",
+        "hi": "हर एक ज़र्रा-ए आशिक़ है आफ़ताब-परस्त",
         "ro": "har ek żarrah-e ʿāshiq hai āftāb-parast"
       },
       {
@@ -7842,7 +7842,7 @@
       {
         "ascii": "nigaah ((aks-farosh-o-;xayaal aa))inah-saaz",
         "ur": "نگاہ عکس فروش و خیال آئنہ ساز",
-        "hi": "निगाह कस-फ़रोश-ओ-ख़याल आइना-साज़",
+        "hi": "निगाह अक्स-फ़रोश-ओ-ख़याल आइना-साज़",
         "ro": "nigāh ʿaks-farosh-o-ḳhayāl āʾinah-sāz"
       },
       {
@@ -7890,7 +7890,7 @@
       {
         "ascii": "nigaah fitnah-;xiraam-o-dar-e do-((aalam baaz",
         "ur": "نگاہ فتنہ خرام و درِ دو عالم باز",
-        "hi": "निगाह फ़ितना-ख़िराम-ओ-दर-ए दो-ालम बाज़",
+        "hi": "निगाह फ़ितना-ख़िराम-ओ-दर-ए दो-आलम बाज़",
         "ro": "nigāh fitnah-ḳhirām-o-dar-e do-ʿālam bāz"
       }
     ],
@@ -7978,13 +7978,13 @@
       {
         "ascii": "kyuu;Nkar us but se rakhuu;N jaan ((aziiz",
         "ur": "کیونکر اس بت سے رکھوں جان عزیز",
-        "hi": "क्यूंकर उस बुत से रखूँ जान ज़ीज़",
+        "hi": "क्यूंकर उस बुत से रखूँ जान अज़ीज़",
         "ro": "kyūñkar us but se rakhūñ jān ʿazīz"
       },
       {
         "ascii": "kyaa nahii;N hai mujhe iimaan ((aziiz",
         "ur": "کیا نہیں ہے مجھے ایمان عزیز",
-        "hi": "क्या नहीं है मुझे ईमान ज़ीज़",
+        "hi": "क्या नहीं है मुझे ईमान अज़ीज़",
         "ro": "kyā nahīñ hai mujhe īmān ʿazīz"
       },
       {
@@ -7996,7 +7996,7 @@
       {
         "ascii": "hai tire tiir kaa paikaan ((aziiz",
         "ur": "ہے ترے تیر کا پیکان عزیز",
-        "hi": "है तिरे तीर का पैकान ज़ीज़",
+        "hi": "है तिरे तीर का पैकान अज़ीज़",
         "ro": "hai tire tīr kā paikān ʿazīz"
       },
       {
@@ -8008,7 +8008,7 @@
       {
         "ascii": "vaaqi((ah sa;xt hai aur jaan ((aziiz",
         "ur": "واقعہ سخت ہے اور جان عزیز",
-        "hi": "वाक़िा सख़्त है और जान ज़ीज़",
+        "hi": "वाक़िा सख़्त है और जान अज़ीज़",
         "ro": "vāqiʿah saḳht hai aur jān ʿazīz"
       }
     ],
@@ -8198,7 +8198,7 @@
       {
         "ascii": ";xuub vaqt aaye tum is ((aashiq-e biimaar ke paas",
         "ur": "خوب وقت آیے تم اس عاشقِ بیمار کے پاس",
-        "hi": "ख़ूब वक़त आये तुम इस ाशिक़-ए बीमार के पास",
+        "hi": "ख़ूब वक़त आये तुम इस आशिक़-ए बीमार के पास",
         "ro": "ḳhūb vaqt āye tum is ʿāshiq-e bīmār ke pās"
       },
       {
@@ -8292,7 +8292,7 @@
       {
         "ascii": "furo;G-e ;husn se hotii hai ;hall-e mushkil-e ((aashiq",
         "ur": "فروغِ حسن سے ہوتی ہے حلِ مشکلِ عاشق",
-        "hi": "फ़ुरोग़-ए हुस्न से होती है हल्ल-ए मुशकिल-ए ाशिक़",
+        "hi": "फ़ुरोग़-ए हुस्न से होती है हल्ल-ए मुशकिल-ए आशिक़",
         "ro": "furoġh-e ḥusn se hotī hai ḥall-e mushkil-e ʿāshiq"
       },
       {
@@ -8386,7 +8386,7 @@
       {
         "ascii": "((aql ke nuqsaa;N se u;Thtaa hai ;xayaal-e intifaa((",
         "ur": "عقل کے نقساں سے اٹھتا ہے خیالِ انتفاع",
-        "hi": "क़ल के नुक़्साँ से उठता है ख़याल-ए इंतिफ़ा",
+        "hi": "अक़्ल के नुक़्साँ से उठता है ख़याल-ए इंतिफ़ा",
         "ro": "ʿaql ke nuqsāñ se uṭhtā hai ḳhayāl-e intifāʿ"
       }
     ],
@@ -8469,7 +8469,7 @@
       {
         "ascii": "nashaa:t-e daa;G-e ;Gam-e ((ishq kii bahaar nah puuchh",
         "ur": "نشاطِ داغِ غمِ عشق کی بہار نہ پوچھ",
-        "hi": "नशात-ए दाग़-ए ग़म-ए िश्क़ की बहार न पूछ",
+        "hi": "नशात-ए दाग़-ए ग़म-ए इश्क़ की बहार न पूछ",
         "ro": "nashāt̤-e dāġh-e ġham-e ʿishq kī bahār nah pūchh"
       },
       {
@@ -8657,7 +8657,7 @@
       {
         "ascii": "chho;R kar jaanaa tan-e majruu;h-e ((aashiq ;haif hai",
         "ur": "چھوڑ کر جانا تنِ مجروحِ عاشق حیف ہے",
-        "hi": "छोड़ कर जाना तन-ए मजरूह-ए ाशिक़ हैफ़ है",
+        "hi": "छोड़ कर जाना तन-ए मजरूह-ए आशिक़ हैफ़ है",
         "ro": "chhoṛ kar jānā tan-e majrūḥ-e ʿāshiq ḥaif hai"
       },
       {
@@ -8693,7 +8693,7 @@
       {
         "ascii": "us ((amal me;N ((aish kii la;z;zat nahii;N miltii asad",
         "ur": "اس عمل میں عیش کی لذّت نہیں ملتی اسد",
-        "hi": "उस मल में ैश की लज़्ज़त नहीं मिलती असद",
+        "hi": "उस अमल में ऐश की लज़्ज़त नहीं मिलती असद",
         "ro": "us ʿamal meñ ʿaish kī lażżat nahīñ miltī asad"
       },
       {
@@ -8722,7 +8722,7 @@
       {
         "ascii": "aah ko chaahiye ik ((umr a;sar hote tak",
         "ur": "آہ کو چاہیے اک عمر اثر ہوتے تک",
-        "hi": "आह को चाहिये इक ुमर असर होते तक",
+        "hi": "आह को चाहिये इक उम्र असर होते तक",
         "ro": "āh ko chāhiye ik ʿumr aṡar hote tak"
       },
       {
@@ -8746,7 +8746,7 @@
       {
         "ascii": "((aashiqii .sabr-:talab aur tamannaa betaab",
         "ur": "عاشقی صبر طلب اور تمنّا بیتاب",
-        "hi": "ाशिक़ी सबर-तलब और तमंना बेताब",
+        "hi": "आशिक़ी सबर-तलब और तमंना बेताब",
         "ro": "ʿāshiqī ṣabr-t̤alab aur tamannā betāb"
       },
       {
@@ -8776,7 +8776,7 @@
       {
         "ascii": "mai;N bhii huu;N ek ((inaayat kii na:zar hote tak",
         "ur": "میں بھی ہوں ایک عنایت کی نظر ہوتے تک",
-        "hi": "मैं भी हूँ एक िनायत की नज़र होते तक",
+        "hi": "मैं भी हूँ एक इनायत की नज़र होते तक",
         "ro": "maiñ bhī hūñ ek ʿināyat kī naz̤ar hote tak"
       },
       {
@@ -8794,7 +8794,7 @@
       {
         "ascii": ";Gam-e hastii kaa asad kis se ho juz marg ((ilaaj",
         "ur": "غمِ ہستی کا اسد کس سے ہو جز مرگ علاج",
-        "hi": "ग़म-ए हस्ती का असद किस से हो जुज़ मरग िलाज",
+        "hi": "ग़म-ए हस्ती का असद किस से हो जुज़ मरग इलाज",
         "ro": "ġham-e hastī kā asad kis se ho juz marg ʿilāj"
       },
       {
@@ -8806,7 +8806,7 @@
       {
         "ascii": "taa qiyaamat shab-e furqat me;N guzar jaa))egii ((umr",
         "ur": "تا قیامت شبِ فرقت میں گزر جاۓگی عمر",
-        "hi": "ता क़ियामत शब-ए फ़ुरक़त में गुज़र जाएगी ुमर",
+        "hi": "ता क़ियामत शब-ए फ़ुरक़त में गुज़र जाएगी उम्र",
         "ro": "tā qiyāmat shab-e furqat meñ guzar jāʾegī ʿumr"
       },
       {
@@ -8882,7 +8882,7 @@
       {
         "ascii": "mai;N duur-gard-e ((ar.z-e rusuum-e niyaaz huu;N",
         "ur": "میں دور گردِ عرضِ رسومِ نیاز ہوں",
-        "hi": "मैं दूर-गर्द-ए र्ज़-ए रुसूम-ए नियाज़ हूँ",
+        "hi": "मैं दूर-गर्द-ए अर्ज़-ए रुसूम-ए नियाज़ हूँ",
         "ro": "maiñ dūr-gard-e ʿarẓ-e rusūm-e niyāz hūñ"
       },
       {
@@ -8976,7 +8976,7 @@
       {
         "ascii": "meraa raqiib hai nafas-e ((i:tr-saa-e gul",
         "ur": "میرا رقیب ہے نفسِ عطر سائے گل",
-        "hi": "मेरा रक़ीब है नफ़स-ए ितर-सा-ए गुल",
+        "hi": "मेरा रक़ीब है नफ़स-ए इत्र-सा-ए गुल",
         "ro": "merā raqīb hai nafas-e ʿit̤r-sā-e gul"
       },
       {
@@ -9178,7 +9178,7 @@
       {
         "ascii": "shaam-e ;Gam me;N soz-e ((ishq-e aatish-e ru;xsaar se",
         "ur": "شامِ غم میں سوزِ عشقِ آتشِ رخسار سے",
-        "hi": "शाम-ए ग़म में सोज़-ए िश्क़-ए आतिश-ए रुख़सार से",
+        "hi": "शाम-ए ग़म में सोज़-ए इश्क़-ए आतिश-ए रुख़सार से",
         "ro": "shām-e ġham meñ soz-e ʿishq-e ātish-e ruḳhsār se"
       },
       {
@@ -9190,7 +9190,7 @@
       {
         "ascii": ";hasrat-e ((ar.z-e tamannaa yaa;N se samjhaa chaahiye",
         "ur": "حسرتِ عرضِ تمنّا یاں سے سمجھا چاہیے",
-        "hi": "हसरत-ए र्ज़-ए तमंना याँ से समझा चाहिये",
+        "hi": "हसरत-ए अर्ज़-ए तमंना याँ से समझा चाहिये",
         "ro": "ḥasrat-e ʿarẓ-e tamannā yāñ se samjhā chāhiye"
       },
       {
@@ -9202,13 +9202,13 @@
       {
         "ascii": "kishtii-e ((aalam bah :tuufaan-e ta;Gaaful de kih hai;N",
         "ur": "کشتیِ عالم بہ طوفانِ تغافل دے کہ ہیں",
-        "hi": "किश्ती-ए ालम ब तूफ़ान-ए तग़ाफ़ुल दे कि हैं",
+        "hi": "किश्ती-ए आलम ब तूफ़ान-ए तग़ाफ़ुल दे कि हैं",
         "ro": "kishtī-e ʿālam bah t̤ūfān-e taġhāful de kih haiñ"
       },
       {
         "ascii": "((aalam-e aab-e gudaaz-e jauhar-e afsaanah ham",
         "ur": "عالمِ آبِ گدازِ جوہرِ افسانہ ہم",
-        "hi": "ालम-ए आब-ए गुदाज़-ए जौहर-ए अफ़साना हम",
+        "hi": "आलम-ए आब-ए गुदाज़-ए जौहर-ए अफ़साना हम",
         "ro": "ʿālam-e āb-e gudāz-e jauhar-e afsānah ham"
       },
       {
@@ -9255,7 +9255,7 @@
       {
         "ascii": "bah qadr-e ;hauslah-e ((ishq jalvah-rezii hai",
         "ur": "بہ قدرِ حوسلۂ عشق جلوہ ریزی ہے",
-        "hi": "ब क़दर-ए हौसला-ए िश्क़ जलवा-रेज़ी है",
+        "hi": "ब क़दर-ए हौसला-ए इश्क़ जलवा-रेज़ी है",
         "ro": "bah qadr-e ḥauslah-e ʿishq jalvah-rezī hai"
       },
       {
@@ -9359,7 +9359,7 @@
       {
         "ascii": ";xvush va;hshate kih ((ar.z-e junuun-e fanaa karuu;N",
         "ur": "خوش وحشتے کہ عرضِ جنونِ فنا کروں",
-        "hi": "ख़्वुश वहशते कि र्ज़-ए जुनून-ए फ़ना करूँ",
+        "hi": "ख़्वुश वहशते कि अर्ज़-ए जुनून-ए फ़ना करूँ",
         "ro": "ḳhvush vaḥshate kih ʿarẓ-e junūn-e fanā karūñ"
       },
       {
@@ -9431,7 +9431,7 @@
       {
         "ascii": "vuh raaz-e naalah huu;N kih bah shar;h-e nigaah-e ((ajz",
         "ur": "وہ رازِ نالہ ہوں کہ بہ شرحِ نگاہِ عجز",
-        "hi": "वो राज़-ए नाला हूँ कि ब शरह-ए निगाह-ए जज़",
+        "hi": "वो राज़-ए नाला हूँ कि ब शरह-ए निगाह-ए अज्ज़",
         "ro": "vuh rāz-e nālah hūñ kih bah sharḥ-e nigāh-e ʿajz"
       },
       {
@@ -9532,7 +9532,7 @@
       {
         "ascii": "ham se chhuu;Taa qimaar-;xaanah-e ((ishq",
         "ur": "ہم سے چھوٹا قمار خانۂ عشق",
-        "hi": "हम से छूटा क़िमार-ख़ाना-ए िश्क़",
+        "hi": "हम से छूटा क़िमार-ख़ाना-ए इश्क़",
         "ro": "ham se chhūṭā qimār-ḳhānah-e ʿishq"
       },
       {
@@ -9562,7 +9562,7 @@
       {
         "ascii": "vuh ((anaa.sir me;N i((tidaal kahaa;N",
         "ur": "وہ عناصر میں اعتدال کہاں",
-        "hi": "वो नासिर में इतिदाल कहाँ",
+        "hi": "वो अनासिर में इतिदाल कहाँ",
         "ro": "vuh ʿanāṣir meñ ětidāl kahāñ"
       },
       {
@@ -9781,7 +9781,7 @@
       {
         "ascii": "raunaq-e hastii hai ((ishq-e ;xaanah-viiraa;N-saaz se",
         "ur": "رونقِ ہستی ہے عشقِ خانہ ویراں ساز سے",
-        "hi": "रौनक़-ए हस्ती है िश्क़-ए ख़ाना-वीराँ-साज़ से",
+        "hi": "रौनक़-ए हस्ती है इश्क़-ए ख़ाना-वीराँ-साज़ से",
         "ro": "raunaq-e hastī hai ʿishq-e ḳhānah-vīrāñ-sāz se"
       },
       {
@@ -9881,7 +9881,7 @@
       {
         "ascii": "((uhde se mad;h-e naaz ke baahar nah aa sakaa",
         "ur": "عہدے سے مدحِ ناز کے باہر نہ آ سکا",
-        "hi": "ुहदे से मदह-ए नाज़ के बाहर न आ सका",
+        "hi": "उहदे से मदह-ए नाज़ के बाहर न आ सका",
         "ro": "ʿuhde se madḥ-e nāz ke bāhar nah ā sakā"
       },
       {
@@ -10040,13 +10040,13 @@
       {
         "ascii": "varnah ham chhe;Re;Nge rakh kar ((u;zr-e mastii ek din",
         "ur": "ورنہ ہم چھیڑیں گے رکھ کر عذرِ مستی ایک دن",
-        "hi": "वरना हम छेड़ेंगे रख कर ुज़्र-ए मस्ती एक दिन",
+        "hi": "वरना हम छेड़ेंगे रख कर उज़्र-ए मस्ती एक दिन",
         "ro": "varnah ham chheṛeñge rakh kar ʿużr-e mastī ek din"
       },
       {
         "ascii": ";Garrah-e auj-e binaa-e ((aalam-e imkaa;N nah ho",
         "ur": "غرّۂ اوجِ بنائے عالمِ امکاں نہ ہو",
-        "hi": "ग़र्रा-ए औज-ए बिना-ए ालम-ए इमकाँ न हो",
+        "hi": "ग़र्रा-ए औज-ए बिना-ए आलम-ए इमकाँ न हो",
         "ro": "ġharrah-e auj-e binā-e ʿālam-e imkāñ nah ho"
       },
       {
@@ -10134,7 +10134,7 @@
       {
         "ascii": "ham ko sitam ((aziiz sitamgar ko ham ((aziiz",
         "ur": "ہم کو ستم عزیز ستمگر کو ہم عزیز",
-        "hi": "हम को सितम ज़ीज़ सितम्गर को हम ज़ीज़",
+        "hi": "हम को सितम अज़ीज़ सितम्गर को हम अज़ीज़",
         "ro": "ham ko sitam ʿazīz sitamgar ko ham ʿazīz"
       },
       {
@@ -10158,7 +10158,7 @@
       {
         "ascii": "har-chand jaa;N-gudaazii-e qahr-o-((itaab hai",
         "ur": "ہر چند جاں گدازیِ قہر و عتاب ہے",
-        "hi": "हर-चंद जाँ-गुदाज़ी-ए क़हर-ओ-िताब है",
+        "hi": "हर-चंद जाँ-गुदाज़ी-ए क़हर-ओ-इताब है",
         "ro": "har-chand jāñ-gudāzī-e qahr-o-ʿitāb hai"
       },
       {
@@ -10200,7 +10200,7 @@
       {
         "ascii": "hai ((aar-e dil nafas agar aa;zar-fishaa;N nahii;N",
         "ur": "ہے عارِ دل نفس اگر آذر فشاں نہیں",
-        "hi": "है ार-ए दिल नफ़स अगर आज़र-फ़िशाँ नहीं",
+        "hi": "है आर-ए दिल नफ़स अगर आज़र-फ़िशाँ नहीं",
         "ro": "hai ʿār-e dil nafas agar āżar-fishāñ nahīñ"
       },
       {
@@ -10367,7 +10367,7 @@
       {
         "ascii": ";Gaalib apnaa yih ((aqiidah hai bah qaul-e naasi;x",
         "ur": "غالب اپنا یہ عقیدہ ہے بہ قولِ ناسخ",
-        "hi": "ग़ालिब अपना ये क़ीदा है ब क़ौल-ए नासिख़",
+        "hi": "ग़ालिब अपना ये अक़ीदा है ब क़ौल-ए नासिख़",
         "ro": "ġhālib apnā yih ʿaqīdah hai bah qaul-e nāsiḳh"
       },
       {
@@ -10419,7 +10419,7 @@
       {
         "ascii": "kis dil pah hai ((azm-e .saf-e mizhgaan-e ;xvud-aaraa",
         "ur": "کس دل پہ ہے عزمِ صفِ مژگانِ خود آرا",
-        "hi": "किस दिल पे है ज़्म-ए सफ़-ए मिझ़गान-ए ख़्वुद-आरा",
+        "hi": "किस दिल पे है अज़्म-ए सफ़-ए मिझ़गान-ए ख़्वुद-आरा",
         "ro": "kis dil pah hai ʿazm-e ṣaf-e mizhgān-e ḳhvud-ārā"
       },
       {
@@ -10459,7 +10459,7 @@
       {
         "ascii": "barshkaal-e giryah-e ((aashiq hai dekhaa chaahiye",
         "ur": "برشکالِ گریۂ عاشق ہے دیکھا چاہیے",
-        "hi": "बर्श्काल-ए गिरया-ए ाशिक़ है देखा चाहिये",
+        "hi": "बर्श्काल-ए गिरया-ए आशिक़ है देखा चाहिये",
         "ro": "barshkāl-e giryah-e ʿāshiq hai dekhā chāhiye"
       },
       {
@@ -10536,7 +10536,7 @@
       {
         "ascii": "((ishq taa;siir se naumed nahii;N",
         "ur": "عشق تاثیر سے نومید نہیں",
-        "hi": "िश्क़ तासीर से नौमेद नहीं",
+        "hi": "इश्क़ तासीर से नौमेद नहीं",
         "ro": "ʿishq tāṡīr se naumed nahīñ"
       },
       {
@@ -10614,7 +10614,7 @@
       {
         "ascii": "baadah ;Gaalib ((araq-e bed nahii;N",
         "ur": "بادہ غالب عرقِ بید نہیں",
-        "hi": "बादा ग़ालिब रक़-ए बेद नहीं",
+        "hi": "बादा ग़ालिब अरक़-ए बेद नहीं",
         "ro": "bādah ġhālib ʿaraq-e bed nahīñ"
       }
     ],
@@ -10654,7 +10654,7 @@
       {
         "ascii": "suvaidaa me;N sair-e ((adam dekhte hai;N",
         "ur": "سویدا میں سیرِ عدم دیکھتے ہیں",
-        "hi": "सुवैदा में सैर-ए दम देखते हैं",
+        "hi": "सुवैदा में सैर-ए अदम देखते हैं",
         "ro": "suvaidā meñ sair-e ʿadam dekhte haiñ"
       },
       {
@@ -10754,7 +10754,7 @@
       {
         "ascii": "kaafir huu;N gar nah miltii ho raa;hat ((a;zaab me;N",
         "ur": "کافر ہوں گر نہ ملتی ہو راحت عذاب میں",
-        "hi": "काफ़िर हूँ गर न मिलती हो राहत ज़ाब में",
+        "hi": "काफ़िर हूँ गर न मिलती हो राहत अज़ाब में",
         "ro": "kāfir hūñ gar nah miltī ho rāḥat ʿażāb meñ"
       },
       {
@@ -10772,13 +10772,13 @@
       {
         "ascii": "taa phir nah inti:zaar me;N nii;Nd aa))e ((umr bhar",
         "ur": "تا پھر نہ انتظار میں نیند آئے عمر بھر",
-        "hi": "ता फिर न इंतिज़ार में नींद आए ुमर भर",
+        "hi": "ता फिर न इंतिज़ार में नींद आए उम्र भर",
         "ro": "tā phir nah intiz̤ār meñ nīñd āʾe ʿumr bhar"
       },
       {
         "ascii": "aane kaa ((ahd kar ga))e aa))e jo ;xvaab me;N",
         "ur": "آنے کا عہد کر گئے آئے جو خواب میں",
-        "hi": "आने का हद कर गए आए जो ख़्वाब में",
+        "hi": "आने का अह्द कर गए आए जो ख़्वाब में",
         "ro": "āne kā ʿahd kar gaʾe āʾe jo ḳhvāb meñ"
       },
       {
@@ -10862,7 +10862,7 @@
       {
         "ascii": "laakho;N banaa))o ek biga;Rnaa ((itaab me;N",
         "ur": "لاکھوں بناؤ ایک بگڑنا عتاب میں",
-        "hi": "लाखों बनाओ एक बिगड़ना िताब में",
+        "hi": "लाखों बनाओ एक बिगड़ना इताब में",
         "ro": "lākhoñ banāʾo ek bigaṛnā ʿitāb meñ"
       },
       {
@@ -10956,7 +10956,7 @@
       {
         "ascii": "rau me;N hai ra;xsh-e ((umr kahaa;N dekhiye thame",
         "ur": "رو میں ہے رخشِ عمر کہاں دیکھیے تھمے",
-        "hi": "रौ में है रख़श-ए ुमर कहाँ देखिये थमे",
+        "hi": "रौ में है रख़श-ए उम्र कहाँ देखिये थमे",
         "ro": "rau meñ hai raḳhsh-e ʿumr kahāñ dekhiye thame"
       },
       {
@@ -11182,7 +11182,7 @@
       {
         "ascii": "dekhuu;N ((alii bahaadur-e ((aalii-guhar ko mai;N",
         "ur": "دیکھوں علی بہادرِ عالی گہر کو میں",
-        "hi": "देखूँ ली बहादुर-ए ाली-गुहर को मैं",
+        "hi": "देखूँ अली बहादुर-ए आली-गुहर को मैं",
         "ro": "dekhūñ ʿalī bahādur-e ʿālī-guhar ko maiñ"
       }
     ],
@@ -11229,7 +11229,7 @@
       {
         "ascii": "shaahid-e hastii-e mu:tlaq kii kamar hai ((aalam",
         "ur": "شاہدِ ہستیِ مطلق کی کمر ہے عالم",
-        "hi": "शाहिद-ए हस्ती-ए मुतलक़ की कमर है ालम",
+        "hi": "शाहिद-ए हस्ती-ए मुतलक़ की कमर है आलम",
         "ro": "shāhid-e hastī-e mut̤laq kī kamar hai ʿālam"
       },
       {
@@ -11259,7 +11259,7 @@
       {
         "ascii": "((ishq-e pur-((arbadah kii gau;N tan-e ranjuur nahii;N",
         "ur": "عشقِ پر عربدہ کی گوں تنِ رنجور نہیں",
-        "hi": "िश्क़-ए पुर-रबदा की गौं तन-ए रंजूर नहीं",
+        "hi": "इश्क़-ए पुर-अरबदा की गौं तन-ए रंजूर नहीं",
         "ro": "ʿishq-e pur-ʿarbadah kī gauñ tan-e ranjūr nahīñ"
       },
       {
@@ -11354,7 +11354,7 @@
       {
         "ascii": "((ishq-o-mazduurii-e ((ishrat-gah-e ;xusrau kyaa ;xuub",
         "ur": "عشق و مزدوریِ عشرت گۂ خسرو کیا خوب",
-        "hi": "िश्क़-ओ-मज़्दूरी-ए िशरत-गा-ए ख़ुसरौ क्या ख़ूब",
+        "hi": "इश्क़-ओ-मज़्दूरी-ए इशरत-गा-ए ख़ुसरौ क्या ख़ूब",
         "ro": "ʿishq-o-mazdūrī-e ʿishrat-gah-e ḳhusrau kyā ḳhūb"
       },
       {
@@ -11372,7 +11372,7 @@
       {
         "ascii": "dasht me;N hai mujhe vuh ((aish kih ghar yaad nahii;N",
         "ur": "دشت میں ہے مجھے وہ عیش کہ گھر یاد نہیں",
-        "hi": "दश्त में है मुझे वो ैश कि घर याद नहीं",
+        "hi": "दश्त में है मुझे वो ऐश कि घर याद नहीं",
         "ro": "dasht meñ hai mujhe vuh ʿaish kih ghar yād nahīñ"
       },
       {
@@ -11536,7 +11536,7 @@
       {
         "ascii": "((ishq kaa us ko gumaa;N ham be-zabaano;N par nahii;N",
         "ur": "عشق کا اس کو گماں ہم بے زبانوں پر نہیں",
-        "hi": "िश्क़ का उस को गुमाँ हम बे-ज़बानों पर नहीं",
+        "hi": "इश्क़ का उस को गुमाँ हम बे-ज़बानों पर नहीं",
         "ro": "ʿishq kā us ko gumāñ ham be-zabānoñ par nahīñ"
       },
       {
@@ -11694,7 +11694,7 @@
       {
         "ascii": "junbish-e dil se hu))e hai;N ((uqdah'haa-e kaar vaa",
         "ur": "جنبشِ دل سے ہوئے ہیں عقدہہائے کار وا",
-        "hi": "जुंबिश-ए दिल से हुए हैं ुक़दहहा-ए कार वा",
+        "hi": "जुंबिश-ए दिल से हुए हैं उक़दहहा-ए कार वा",
         "ro": "junbish-e dil se huʾe haiñ ʿuqdah'hā-e kār vā"
       },
       {
@@ -11836,7 +11836,7 @@
       {
         "ascii": "((alaavah ((iid ke miltii hai aur din bhii sharaab",
         "ur": "علاوہ عید کے ملتی ہے اور دن بھی شراب",
-        "hi": "लावा ीद के मिलती है और दिन भी शराब",
+        "hi": "अलावा ईद के मिलती है और दिन भी शराब",
         "ro": "ʿalāvah ʿīd ke miltī hai aur din bhī sharāb"
       },
       {
@@ -11913,7 +11913,7 @@
       {
         "ascii": "terii fur.sat ke muqaabil ai ((umr",
         "ur": "تیری فرصت کے مقابل اے عمر",
-        "hi": "तेरी फ़ुरसत के मुक़ाबिल ऐ ुमर",
+        "hi": "तेरी फ़ुरसत के मुक़ाबिल ऐ उम्र",
         "ro": "terī furṣat ke muqābil ai ʿumr"
       },
       {
@@ -12104,7 +12104,7 @@
       {
         "ascii": "bah ((aks-e aa))inah yak fard-e saadah rakhte hai;N",
         "ur": "بہ عکسِ آئنہ یک فردِ سادہ رکھتے ہیں",
-        "hi": "ब कस-ए आइना यक फ़र्द-ए सादा रखते हैं",
+        "hi": "ब अक्स-ए आइना यक फ़र्द-ए सादा रखते हैं",
         "ro": "bah ʿaks-e āʾinah yak fard-e sādah rakhte haiñ"
       },
       {
@@ -12134,7 +12134,7 @@
       {
         "ascii": "mu((aaf-e behudah-go))ii hai;N naa.si;haan-e ((aziiz",
         "ur": "معافِ بیہدہ گوئی ہیں ناصحانِ عزیز",
-        "hi": "मुआफ़-ए बेहुदा-गोई हैं नासिहान-ए ज़ीज़",
+        "hi": "मुआफ़-ए बेहुदा-गोई हैं नासिहान-ए अज़ीज़",
         "ro": "muʿāf-e behudah-goʾī haiñ nāṣiḥān-e ʿazīz"
       },
       {
@@ -12146,7 +12146,7 @@
       {
         "ascii": "bah rang-e sabzah ((aziizaan-e bad-zabaa;N yak-dast",
         "ur": "بہ رنگِ سبزہ عزیزانِ بد زباں یک دست",
-        "hi": "ब रंग-ए सबज़ा ज़ीज़ान-ए बद-ज़बाँ यक-दस्त",
+        "hi": "ब रंग-ए सबज़ा अज़ीज़ान-ए बद-ज़बाँ यक-दस्त",
         "ro": "bah rang-e sabzah ʿazīzān-e bad-zabāñ yak-dast"
       },
       {
@@ -12222,7 +12222,7 @@
       {
         "ascii": ";had chaahiye sazaa me;N ((uquubat ke vaas:te",
         "ur": "حد چاہیے سزا میں عقوبت کے واسطے",
-        "hi": "हद चाहिये सज़ा में ुक़ूबत के वासते",
+        "hi": "हद चाहिये सज़ा में उक़ूबत के वासते",
         "ro": "ḥad chāhiye sazā meñ ʿuqūbat ke vāst̤e"
       },
       {
@@ -12234,7 +12234,7 @@
       {
         "ascii": "kis vaas:te ((aziiz nahii;N jaante mujhe",
         "ur": "کس واسطے عزیز نہیں جانتے مجھے",
-        "hi": "किस वासते ज़ीज़ नहीं जांते मुझे",
+        "hi": "किस वासते अज़ीज़ नहीं जांते मुझे",
         "ro": "kis vāst̤e ʿazīz nahīñ jānte mujhe"
       },
       {
@@ -12328,7 +12328,7 @@
       {
         "ascii": "shab ko un ke jii me;N kyaa aa))ii kih ((uryaa;N ho ga))ii;N",
         "ur": "شب کو ان کے جی میں کیا آئی کہ عریاں ہو گئیں",
-        "hi": "शब को उन के जी में क्या आई कि ुर्याँ हो गईं",
+        "hi": "शब को उन के जी में क्या आई कि उरयाँ हो गईं",
         "ro": "shab ko un ke jī meñ kyā āʾī kih ʿuryāñ ho gaʾīñ"
       },
       {
@@ -12542,7 +12542,7 @@
       {
         "ascii": "be-((ishq ((umr ka;T nahii;N saktii hai aur yaa;N",
         "ur": "بے عشق عمر کٹ نہیں سکتی ہے اور یاں",
-        "hi": "बे-िश्क़ ुमर कट नहीं सकती है और याँ",
+        "hi": "बे-इश्क़ उम्र कट नहीं सकती है और याँ",
         "ro": "be-ʿishq ʿumr kaṭ nahīñ saktī hai aur yāñ"
       },
       {
@@ -12566,7 +12566,7 @@
       {
         "ascii": "gunjaa))ish-e ((adaavat-e a;Gyaar yak :taraf",
         "ur": "گنجائشِ عداوتِ اغیار یک طرف",
-        "hi": "गुंजाइश-ए दावत-ए अग़यार यक तरफ़",
+        "hi": "गुंजाइश-ए अदावत-ए अग़यार यक तरफ़",
         "ro": "gunjāʾish-e ʿadāvat-e aġhyār yak t̤araf"
       },
       {
@@ -12726,7 +12726,7 @@
       {
         "ascii": "hazaaro;N dil diye josh-e junuun-e ((ishq ne mujh ko",
         "ur": "ہزاروں دل دیے جوشِ جنونِ عشق نے مجھ کو",
-        "hi": "हज़ारों दिल दिये जोश-ए जुनून-ए िश्क़ ने मुझ को",
+        "hi": "हज़ारों दिल दिये जोश-ए जुनून-ए इश्क़ ने मुझ को",
         "ro": "hazāroñ dil diye josh-e junūn-e ʿishq ne mujh ko"
       },
       {
@@ -12839,7 +12839,7 @@
       {
         "ascii": "hu))aa huu;N ((ishq kii ;Gaarat-garii se sharmindah",
         "ur": "ہوا ہوں عشق کی غارت گری سے شرمندہ",
-        "hi": "हुआ हूँ िश्क़ की ग़ारत-गरी से शर्मिंदा",
+        "hi": "हुआ हूँ इश्क़ की ग़ारत-गरी से शर्मिंदा",
         "ro": "huʾā hūñ ʿishq kī ġhārat-garī se sharmindah"
       },
       {
@@ -12857,7 +12857,7 @@
       {
         "ascii": "khulaa kih faa))idah ((ar.z-e hunar me;N ;xaak nahii;N",
         "ur": "کھلا کہ فائدہ عرضِ ہنر میں خاک نہیں",
-        "hi": "खुला कि फ़ाइदा र्ज़-ए हुनर में ख़ाक नहीं",
+        "hi": "खुला कि फ़ाइदा अर्ज़-ए हुनर में ख़ाक नहीं",
         "ro": "khulā kih fāʾidah ʿarẓ-e hunar meñ ḳhāk nahīñ"
       }
     ],
@@ -12921,7 +12921,7 @@
       {
         "ascii": "teraa hii ((aks-e ru;x sahii saamne tere aa))e kyuu;N",
         "ur": "تیرا ہی عکسِ رخ سہی سامنے تیرے آئے کیوں",
-        "hi": "तेरा ही कस-ए रुख़ सही सामने तेरे आए क्यूँ",
+        "hi": "तेरा ही अक्स-ए रुख़ सही सामने तेरे आए क्यूँ",
         "ro": "terā hī ʿaks-e ruḳh sahī sāmne tere āʾe kyūñ"
       },
       {
@@ -12951,7 +12951,7 @@
       {
         "ascii": "vaa;N vuh ;Guruur-e ((izz-o-naaz yaa;N yih ;hijaab-e paas-e va.z((a",
         "ur": "واں وہ غرورِ عزّ و ناز یاں یہ حجابِ پاسِ وضع",
-        "hi": "वाँ वो ग़ुरूर-ए िज़्ज़-ओ-नाज़ याँ ये हिजाब-ए पास-ए वज़",
+        "hi": "वाँ वो ग़ुरूर-ए इज़्ज़-ओ-नाज़ याँ ये हिजाब-ए पास-ए वज़",
         "ro": "vāñ vuh ġhurūr-e ʿizz-o-nāz yāñ yih ḥijāb-e pās-e vaẓʿa"
       },
       {
@@ -12969,7 +12969,7 @@
       {
         "ascii": "jis ko ho diin-o-dil ((aziiz us kii galii me;N jaa))e kyuu;N",
         "ur": "جس کو ہو دین و دل عزیز اس کی گلی میں جائے کیوں",
-        "hi": "जिस को हो दीन-ओ-दिल ज़ीज़ उस की गली में जाए क्यूँ",
+        "hi": "जिस को हो दीन-ओ-दिल अज़ीज़ उस की गली में जाए क्यूँ",
         "ro": "jis ko ho dīn-o-dil ʿazīz us kī galī meñ jāʾe kyūñ"
       },
       {
@@ -13309,7 +13309,7 @@
       {
         "ascii": "kiije hamaare saath ((adaavat hii kyuu;N nah ho",
         "ur": "کیجے ہمارے ساتھ عداوت ہی کیوں نہ ہو",
-        "hi": "कीजे हमारे साथ दावत ही क्यूँ न हो",
+        "hi": "कीजे हमारे साथ अदावत ही क्यूँ न हो",
         "ro": "kīje hamāre sāth ʿadāvat hī kyūñ nah ho"
       },
       {
@@ -13381,7 +13381,7 @@
       {
         "ascii": ";haa.sil nah kiije dahr se ((ibrat hii kyuu;N nah ho",
         "ur": "حاصل نہ کیجے دہر سے عبرت ہی کیوں نہ ہو",
-        "hi": "हासिल न कीजे दहर से िबरत ही क्यूँ न हो",
+        "hi": "हासिल न कीजे दहर से इबरत ही क्यूँ न हो",
         "ro": "ḥāṣil nah kīje dahr se ʿibrat hī kyūñ nah ho"
       },
       {
@@ -13405,7 +13405,7 @@
       {
         "ascii": "((umr-e ((aziiz .sarf-e ((ibaadat hii kyuu;N nah ho",
         "ur": "عمرِ عزیز صرفِ عبادت ہی کیوں نہ ہو",
-        "hi": "ुमर-ए ज़ीज़ सरफ़-ए िबादत ही क्यूँ न हो",
+        "hi": "उम्र-ए अज़ीज़ सरफ़-ए इबादत ही क्यूँ न हो",
         "ro": "ʿumr-e ʿazīz ṣarf-e ʿibādat hī kyūñ nah ho"
       },
       {
@@ -13854,7 +13854,7 @@
       {
         "ascii": "ham vuh ((aajiz kih ta;Gaaful bhii sitam hai ham ko",
         "ur": "ہم وہ عاجز کہ تغافل بھی ستم ہے ہم کو",
-        "hi": "हम वो ाजिज़ कि तग़ाफ़ुल भी सितम है हम को",
+        "hi": "हम वो आजिज़ कि तग़ाफ़ुल भी सितम है हम को",
         "ro": "ham vuh ʿājiz kih taġhāful bhī sitam hai ham ko"
       },
       {
@@ -13878,7 +13878,7 @@
       {
         "ascii": "((azm-e sair-e najaf-o-:tauf-e ;haram hai ham ko",
         "ur": "عزمِ سیرِ نجف و طوفِ حرم ہے ہم کو",
-        "hi": "ज़्म-ए सैर-ए नजफ़-ओ-तौफ़-ए हरम है हम को",
+        "hi": "अज़्म-ए सैर-ए नजफ़-ओ-तौफ़-ए हरम है हम को",
         "ro": "ʿazm-e sair-e najaf-o-t̤auf-e ḥaram hai ham ko"
       },
       {
@@ -14221,7 +14221,7 @@
       {
         "ascii": "vafaa kaisii kahaa;N kaa ((ishq jab sar pho;Rnaa ;Thahraa",
         "ur": "وفا کیسی کہاں کا عشق جب سر پھوڑنا ٹھہرا",
-        "hi": "वफ़ा कैसी कहाँ का िश्क़ जब सर फोड़ना ठहरा",
+        "hi": "वफ़ा कैसी कहाँ का इश्क़ जब सर फोड़ना ठहरा",
         "ro": "vafā kaisī kahāñ kā ʿishq jab sar phoṛnā ṭhahrā"
       },
       {
@@ -14287,7 +14287,7 @@
       {
         "ascii": "((aduu ke ho liye jab tum to meraa imti;haa;N kyuu;N ho",
         "ur": "عدو کے ہو لیے جب تم تو میرا امتحاں کیوں ہو",
-        "hi": "दू के हो लिये जब तुम तो मेरा इमतिहाँ क्यूँ हो",
+        "hi": "अदू के हो लिये जब तुम तो मेरा इमतिहाँ क्यूँ हो",
         "ro": "ʿadū ke ho liye jab tum to merā imtiḥāñ kyūñ ho"
       },
       {
@@ -14403,7 +14403,7 @@
       {
         "ascii": "jauhar :tilism ((uqdah-e mushkil hai aa))inah",
         "ur": "جوہر طلسم عقدۂ مشکل ہے آئنہ",
-        "hi": "जौहर तिलिस्म ुक़दा-ए मुशकिल है आइना",
+        "hi": "जौहर तिलिस्म उक़दा-ए मुशकिल है आइना",
         "ro": "jauhar t̤ilism ʿuqdah-e mushkil hai āʾinah"
       },
       {
@@ -14479,7 +14479,7 @@
       {
         "ascii": "aa))iinah ((ar.z kar ;xa:t-o-;xaal-e bayaa;N nah puuchh",
         "ur": "آئینہ عرض کر خط و خالِ بیاں نہ پوچھ",
-        "hi": "आईना र्ज़ कर ख़त-ओ-ख़ाल-ए बयाँ न पूछ",
+        "hi": "आईना अर्ज़ कर ख़त-ओ-ख़ाल-ए बयाँ न पूछ",
         "ro": "āʾīnah ʿarẓ kar ḳhat̤-o-ḳhāl-e bayāñ nah pūchh"
       },
       {
@@ -14491,13 +14491,13 @@
       {
         "ascii": "jaah-o-jalaal-e ((ahd-e vi.saal-e butaa;N nah puuchh",
         "ur": "جاہ و جلالِ عہدِ وصالِ بتاں نہ پوچھ",
-        "hi": "जाह-ओ-जलाल-ए हद-ए विसाल-ए बुताँ न पूछ",
+        "hi": "जाह-ओ-जलाल-ए अह्द-ए विसाल-ए बुताँ न पूछ",
         "ro": "jāh-o-jalāl-e ʿahd-e viṣāl-e butāñ nah pūchh"
       },
       {
         "ascii": ";Gaflat-mataa((-e kaffah-e miizaan-e ((adl huu;N",
         "ur": "غفلت متاعِ کفّۂ میزانِ عدل ہوں",
-        "hi": "ग़फ़लत-मता-ए कफ़फ़ा-ए मीज़ान-ए दल हूँ",
+        "hi": "ग़फ़लत-मता-ए कफ़फ़ा-ए मीज़ान-ए अद्ल हूँ",
         "ro": "ġhaflat-matāʿ-e kaffah-e mīzān-e ʿadl hūñ"
       },
       {
@@ -14515,7 +14515,7 @@
       {
         "ascii": "((ar.z-e fa.zaa-e siinah-e dard-imtihaa;N nah puuchh",
         "ur": "عرضِ فضائے سینۂ درد امتہاں نہ پوچھ",
-        "hi": "र्ज़-ए फ़ज़ा-ए सीना-ए दर्द-इमतिहाँ न पूछ",
+        "hi": "अर्ज़-ए फ़ज़ा-ए सीना-ए दर्द-इमतिहाँ न पूछ",
         "ro": "ʿarẓ-e faẓā-e sīnah-e dard-imtihāñ nah pūchh"
       },
       {
@@ -14561,7 +14561,7 @@
       {
         "ascii": "hai sang par baraat-e ma((aash-e junuun-e ((ishq",
         "ur": "ہے سنگ پر براتِ معاشِ جنونِ عشق",
-        "hi": "है संग पर बरात-ए माश-ए जुनून-ए िश्क़",
+        "hi": "है संग पर बरात-ए माश-ए जुनून-ए इश्क़",
         "ro": "hai sang par barāt-e maʿāsh-e junūn-e ʿishq"
       },
       {
@@ -14603,7 +14603,7 @@
       {
         "ascii": "yak ((umr naaz-e sho;xii-e ((unvaa;N u;Thaa))iye",
         "ur": "یک عمر نازِ شوخیِ عنواں اٹھائیے",
-        "hi": "यक ुमर नाज़-ए शोख़ी-ए ुंवाँ उठाइये",
+        "hi": "यक उम्र नाज़-ए शोख़ी-ए उंवाँ उठाइये",
         "ro": "yak ʿumr nāz-e shoḳhī-e ʿunvāñ uṭhāʾiye"
       },
       {
@@ -14661,7 +14661,7 @@
       {
         "ascii": "((aashiq hu))e hai;N aap bhii ek aur sha;x.s par",
         "ur": "عاشق ہوئے ہیں آپ بھی ایک اور شخص پر",
-        "hi": "ाशिक़ हुए हैं आप भी एक और शख़स पर",
+        "hi": "आशिक़ हुए हैं आप भी एक और शख़स पर",
         "ro": "ʿāshiq huʾe haiñ āp bhī ek aur shaḳhṣ par"
       },
       {
@@ -14751,7 +14751,7 @@
       {
         "ascii": "((aarif hameshah mast-e mai-e ;zaat chaahiye",
         "ur": "عارف ہمیشہ مستِ مےِ ذات چاہیے",
-        "hi": "ारिफ़ हमेशा मस्त-ए मै-ए ज़ात चाहिये",
+        "hi": "आरिफ़ हमेशा मस्त-ए मै-ए ज़ात चाहिये",
         "ro": "ʿārif hameshah mast-e mai-e żāt chāhiye"
       },
       {
@@ -14785,7 +14785,7 @@
       {
         "ascii": "bisaa:t-e ((ajz me;N thaa ek dil yak qa:trah ;xuu;N vuh bhii",
         "ur": "بساطِ عجز میں تھا ایک دل یک قطرہ خوں وہ بھی",
-        "hi": "बिसात-ए जज़ में था एक दिल यक क़तरा ख़ूँ वो भी",
+        "hi": "बिसात-ए अज्ज़ में था एक दिल यक क़तरा ख़ूँ वो भी",
         "ro": "bisāt̤-e ʿajz meñ thā ek dil yak qat̤rah ḳhūñ vuh bhī"
       },
       {
@@ -14845,7 +14845,7 @@
       {
         "ascii": "mai-e ((ishrat kii ;xvaahish saaqii-e garduu;N se kyaa kiije",
         "ur": "مےِ عشرت کی خواہش ساقیِ گردوں سے کیا کیجے",
-        "hi": "मै-ए िशरत की ख़्वाहिश साक़ी-ए गर्दूँ से क्या कीजे",
+        "hi": "मै-ए इशरत की ख़्वाहिश साक़ी-ए गर्दूँ से क्या कीजे",
         "ro": "mai-e ʿishrat kī ḳhvāhish sāqī-e gardūñ se kyā kīje"
       },
       {
@@ -15402,13 +15402,13 @@
       {
         "ascii": "((umr bhar kaa tuu ne paimaan-e vafaa baa;Ndhaa to kyaa",
         "ur": "عمر بھر کا تو نے پیمانِ وفا باندھا تو کیا",
-        "hi": "ुमर भर का तू ने पैमान-ए वफ़ा बांधा तो क्या",
+        "hi": "उम्र भर का तू ने पैमान-ए वफ़ा बांधा तो क्या",
         "ro": "ʿumr bhar kā tū ne paimān-e vafā bāñdhā to kyā"
       },
       {
         "ascii": "((umr ko bhii to nahii;N hai paa))idaarii haa))e haa))e",
         "ur": "عمر کو بھی تو نہیں ہے پائداری ہائے ہائے",
-        "hi": "ुमर को भी तो नहीं है पाइदारी हाए हाए",
+        "hi": "उम्र को भी तो नहीं है पाइदारी हाए हाए",
         "ro": "ʿumr ko bhī to nahīñ hai pāʾidārī hāʾe hāʾe"
       },
       {
@@ -15498,7 +15498,7 @@
       {
         "ascii": "((ishq ne pak;Raa nah thaa ;Gaalib abhii va;hshat kaa rang",
         "ur": "عشق نے پکڑا نہ تھا غالب ابھی وحشت کا رنگ",
-        "hi": "िश्क़ ने पकड़ा न था ग़ालिब अभी वहशत का रंग",
+        "hi": "इश्क़ ने पकड़ा न था ग़ालिब अभी वहशत का रंग",
         "ro": "ʿishq ne pakṛā nah thā ġhālib abhī vaḥshat kā rang"
       },
       {
@@ -15538,7 +15538,7 @@
       {
         "ascii": "sar-gashtagii me;N ((aalam-e hastii se yaas hai",
         "ur": "سر گشتگی میں عالمِ ہستی سے یاس ہے",
-        "hi": "सर-गशतगी में ालम-ए हस्ती से यास है",
+        "hi": "सर-गशतगी में आलम-ए हस्ती से यास है",
         "ro": "sar-gashtagī meñ ʿālam-e hastī se yās hai"
       },
       {
@@ -15610,7 +15610,7 @@
       {
         "ascii": "kyaa ;Gam hai us ko jis kaa ((alii saa imaam ho",
         "ur": "کیا غم ہے اس کو جس کا علی سا امام ہو",
-        "hi": "क्या ग़म है उस को जिस का ली सा इमाम हो",
+        "hi": "क्या ग़म है उस को जिस का अली सा इमाम हो",
         "ro": "kyā ġham hai us ko jis kā ʿalī sā imām ho"
       },
       {
@@ -15668,7 +15668,7 @@
       {
         "ascii": "ra;hmat kih ((u;zr-;xvaah-e lab-e be-savaal hai",
         "ur": "رحمت کہ عذر خواہِ لبِ بے سوال ہے",
-        "hi": "रहमत कि ुज़्र-ख़्वाह-ए लब-ए बे-सवाल है",
+        "hi": "रहमत कि उज़्र-ख़्वाह-ए लब-ए बे-सवाल है",
         "ro": "raḥmat kih ʿużr-ḳhvāh-e lab-e be-savāl hai"
       },
       {
@@ -15686,7 +15686,7 @@
       {
         "ascii": "mushkii;N libaas-e ka((bah ((alii ke qadam se jaan",
         "ur": "مشکیں لباسِ کعبہ علی کے قدم سے جان",
-        "hi": "मुश्कीं लिबास-ए काबा ली के क़दम से जान",
+        "hi": "मुश्कीं लिबास-ए काबा अली के क़दम से जान",
         "ro": "mushkīñ libās-e kaʿbah ʿalī ke qadam se jān"
       },
       {
@@ -15698,13 +15698,13 @@
       {
         "ascii": "va;hshat pah merii ((ar.sah-e aafaaq tang thaa",
         "ur": "وحشت پہ میری عرصۂ آفاق تنگ تھا",
-        "hi": "वहशत पे मेरी रसा-ए आफ़ाक़ तंग था",
+        "hi": "वहशत पे मेरी अरसा-ए आफ़ाक़ तंग था",
         "ro": "vaḥshat pah merī ʿarṣah-e āfāq tang thā"
       },
       {
         "ascii": "daryaa zamiin ko ((araq-e infi((aal hai",
         "ur": "دریا زمین کو عرقِ انفعال ہے",
-        "hi": "दरया ज़मीन को रक़-ए इंफ़िाल है",
+        "hi": "दरया ज़मीन को अरक़-ए इंफ़िाल है",
         "ro": "daryā zamīn ko ʿaraq-e infiʿāl hai"
       },
       {
@@ -15716,7 +15716,7 @@
       {
         "ascii": "((aalam tamaam ;halqah-e daam-e ;xayaal hai",
         "ur": "عالم تمام حلقۂ دامِ خیال ہے",
-        "hi": "ालम तमाम हलक़ा-ए दाम-ए ख़याल है",
+        "hi": "आलम तमाम हलक़ा-ए दाम-ए ख़याल है",
         "ro": "ʿālam tamām ḥalqah-e dām-e ḳhayāl hai"
       },
       {
@@ -15850,7 +15850,7 @@
       {
         "ascii": "hai vuhii bad-mastii-e har ;zarrah kaa ;xvud ((u;zr-;xvaah",
         "ur": "ہے وہی بد مستیِ ہر ذرّہ کا خود عذر خواہ",
-        "hi": "है वही बद-मस्ती-ए हर ज़र्रा का ख़्वुद ुज़्र-ख़्वाह",
+        "hi": "है वही बद-मस्ती-ए हर ज़र्रा का ख़्वुद उज़्र-ख़्वाह",
         "ro": "hai vuhī bad-mastī-e har żarrah kā ḳhvud ʿużr-ḳhvāh"
       },
       {
@@ -15972,7 +15972,7 @@
       {
         "ascii": "jise kahte hai;N naalah vuh usii ((aalam kaa ((anqaa hai",
         "ur": "جسے کہتے ہیں نالہ وہ اسی عالم کا عنقا ہے",
-        "hi": "जिसे कहते हैं नाला वो उसी ालम का ंक़ा है",
+        "hi": "जिसे कहते हैं नाला वो उसी आलम का अंक़ा है",
         "ro": "jise kahte haiñ nālah vuh usī ʿālam kā ʿanqā hai"
       },
       {
@@ -16008,7 +16008,7 @@
       {
         "ascii": "kaf-e afsos malnaa ((ahd-e tajdiid-e tamannaa hai",
         "ur": "کفِ افسوس ملنا عہدِ تجدیدِ تمنّا ہے",
-        "hi": "कफ़-ए अफ़सोस मलना हद-ए तजदीद-ए तमंना है",
+        "hi": "कफ़-ए अफ़सोस मलना अह्द-ए तजदीद-ए तमंना है",
         "ro": "kaf-e afsos malnā ʿahd-e tajdīd-e tamannā hai"
       },
       {
@@ -16020,7 +16020,7 @@
       {
         "ascii": "bah jaulaa;N-gaah-e naumiidii nigaah-e ((aajizaa;N paa hai",
         "ur": "بہ جولاں گاہِ نومیدی نگاہِ عاجزاں پا ہے",
-        "hi": "ब जौलाँ-गाह-ए नौमीदी निगाह-ए ाजिज़ाँ पा है",
+        "hi": "ब जौलाँ-गाह-ए नौमीदी निगाह-ए आजिज़ाँ पा है",
         "ro": "bah jaulāñ-gāh-e naumīdī nigāh-e ʿājizāñ pā hai"
       },
       {
@@ -16056,7 +16056,7 @@
       {
         "ascii": "savaad-e chashm-e aahuu ((aks-e ;xaal-e ruu-e lailaa hai",
         "ur": "سوادِ چشمِ آہو عکسِ خالِ روئے لیلا ہے",
-        "hi": "सवाद-ए चश्म-ए आहू कस-ए ख़ाल-ए रू-ए लैला है",
+        "hi": "सवाद-ए चश्म-ए आहू अक्स-ए ख़ाल-ए रू-ए लैला है",
         "ro": "savād-e chashm-e āhū ʿaks-e ḳhāl-e rū-e lailā hai"
       },
       {
@@ -16122,7 +16122,7 @@
       {
         "ascii": "((aziizo ;zikr-e va.sl-e ;Gair se mujh ko nah bahlaa))o",
         "ur": "عزیزو ذکرِ وصلِ غیر سے مجھ کو نہ بہلاؤ",
-        "hi": "ज़ीज़ो ज़िकर-ए वसल-ए ग़ैर से मुझ को न बहलाओ",
+        "hi": "अज़ीज़ो ज़िकर-ए वसल-ए ग़ैर से मुझ को न बहलाओ",
         "ro": "ʿazīzo żikr-e vaṣl-e ġhair se mujh ko nah bahlāʾo"
       },
       {
@@ -16222,7 +16222,7 @@
       {
         "ascii": "shor hai kis bazm kii ((ar.z-e jaraa;hat-;xaanah kaa",
         "ur": "شور ہے کس بزم کی عرضِ جراحت خانہ کا",
-        "hi": "शोर है किस बज़्म की र्ज़-ए जराहत-ख़ाना का",
+        "hi": "शोर है किस बज़्म की अर्ज़-ए जराहत-ख़ाना का",
         "ro": "shor hai kis bazm kī ʿarẓ-e jarāḥat-ḳhānah kā"
       },
       {
@@ -16262,7 +16262,7 @@
       {
         "ascii": "paikar-e ((ushshaaq saaz-e :taali((-e naa-saaz hai",
         "ur": "پیکرِ عشّاق سازِ طالعِ نا ساز ہے",
-        "hi": "पैकर-ए ुश्शाक़ साज़-ए तालि-ए ना-साज़ है",
+        "hi": "पैकर-ए उशशाक़ साज़-ए तालि-ए ना-साज़ है",
         "ro": "paikar-e ʿushshāq sāz-e t̤āliʿ-e nā-sāz hai"
       },
       {
@@ -16351,7 +16351,7 @@
       {
         "ascii": "((ishq mujh ko nahii;N va;hshat hii sahii",
         "ur": "عشق مجھ کو نہیں وحشت ہی سہی",
-        "hi": "िश्क़ मुझ को नहीं वहशत ही सही",
+        "hi": "इश्क़ मुझ को नहीं वहशत ही सही",
         "ro": "ʿishq mujh ko nahīñ vaḥshat hī sahī"
       },
       {
@@ -16369,7 +16369,7 @@
       {
         "ascii": "kuchh nahii;N hai to ((adaavat hii sahii",
         "ur": "کچھ نہیں ہے تو عداوت ہی سہی",
-        "hi": "कुछ नहीं है तो दावत ही सही",
+        "hi": "कुछ नहीं है तो अदावत ही सही",
         "ro": "kuchh nahīñ hai to ʿadāvat hī sahī"
       },
       {
@@ -16411,7 +16411,7 @@
       {
         "ascii": "((umr har-chand kih hai barq-;xiraam",
         "ur": "عمر ہر چند کہ ہے برق خرام",
-        "hi": "ुमर हर-चंद कि है बरक़-ख़िराम",
+        "hi": "उम्र हर-चंद कि है बरक़-ख़िराम",
         "ro": "ʿumr har-chand kih hai barq-ḳhirām"
       },
       {
@@ -16429,7 +16429,7 @@
       {
         "ascii": "nah sahii ((ishq mu.siibat hii sahii",
         "ur": "نہ سہی عشق مصیبت ہی سہی",
-        "hi": "न सही िश्क़ मुसीबत ही सही",
+        "hi": "न सही इश्क़ मुसीबत ही सही",
         "ro": "nah sahī ʿishq muṣībat hī sahī"
       },
       {
@@ -16453,7 +16453,7 @@
       {
         "ascii": "be-niyaazii tirii ((aadat hii sahii",
         "ur": "بے نیازی تری عادت ہی سہی",
-        "hi": "बे-नियाज़ी तिरी ादत ही सही",
+        "hi": "बे-नियाज़ी तिरी आदत ही सही",
         "ro": "be-niyāzī tirī ʿādat hī sahī"
       },
       {
@@ -16712,7 +16712,7 @@
       {
         "ascii": "be-.sarfah hii guzartii hai ho garchih ((umr-e ;xi.zr",
         "ur": "بے صرفہ ہی گزرتی ہے ہو گرچہ عمرِ خضر",
-        "hi": "बे-सरफ़ा ही गुज़रती है हो गरचिह ुमर-ए ख़िज़्र",
+        "hi": "बे-सरफ़ा ही गुज़रती है हो गरचिह उम्र-ए ख़िज़्र",
         "ro": "be-ṣarfah hī guzartī hai ho garchih ʿumr-e ḳhiẓr"
       },
       {
@@ -16736,7 +16736,7 @@
       {
         "ascii": "kis roz tuhmate;N nah taraashaa kiye ((aduu",
         "ur": "کس روز تہمتیں نہ تراشا کیے عدو",
-        "hi": "किस रोज़ तुहमतें न तराशा किये दू",
+        "hi": "किस रोज़ तुहमतें न तराशा किये अदू",
         "ro": "kis roz tuhmateñ nah tarāshā kiye ʿadū"
       },
       {
@@ -16800,7 +16800,7 @@
       {
         "ascii": "raftaar-e ((umr qa:t((-e rah-e i.z:tiraab hai",
         "ur": "رفتارِ عمر قطعِ رۂ اضطراب ہے",
-        "hi": "रफ़तार-ए ुमर क़त-ए रह-ए इज़तिराब है",
+        "hi": "रफ़तार-ए उम्र क़त-ए रह-ए इज़तिराब है",
         "ro": "raftār-e ʿumr qat̤ʿ-e rah-e iẓt̤irāb hai"
       },
       {
@@ -16960,7 +16960,7 @@
       {
         "ascii": "garchih hai :tarz-e ta;Gaaful pardah-daar-e raaz-e ((ishq",
         "ur": "گرچہ ہے طرزِ تغافل پردہ دارِ رازِ عشق",
-        "hi": "गरचिह है तर्ज़-ए तग़ाफ़ुल पर्दा-दार-ए राज़-ए िश्क़",
+        "hi": "गरचिह है तर्ज़-ए तग़ाफ़ुल पर्दा-दार-ए राज़-ए इश्क़",
         "ro": "garchih hai t̤arz-e taġhāful pardah-dār-e rāz-e ʿishq"
       },
       {
@@ -16984,7 +16984,7 @@
       {
         "ascii": "ho ke ((aashiq vuh parii-ru;x aur naazuk ban gayaa",
         "ur": "ہو کے عاشق وہ پری رخ اور نازک بن گیا",
-        "hi": "हो के ाशिक़ वो परी-रुख़ और नाज़ुक बन गया",
+        "hi": "हो के आशिक़ वो परी-रुख़ और नाज़ुक बन गया",
         "ro": "ho ke ʿāshiq vuh parī-ruḳh aur nāzuk ban gayā"
       },
       {
@@ -17049,13 +17049,13 @@
       {
         "ascii": "nisyah-o-naqd-e do-((aalam kii ;haqiiqat ma((luum",
         "ur": "نسیہ و نقدِ دو عالم کی حقیقت معلوم",
-        "hi": "निसया-ओ-नक़द-ए दो-ालम की हक़ीक़त मालूम",
+        "hi": "निसया-ओ-नक़द-ए दो-आलम की हक़ीक़त मालूम",
         "ro": "nisyah-o-naqd-e do-ʿālam kī ḥaqīqat maʿlūm"
       },
       {
         "ascii": "le liyaa mujh se mirii himmat-e ((aalii ne mujhe",
         "ur": "لے لیا مجھ سے مری ہمّتِ عالی نے مجھے",
-        "hi": "ले लिया मुझ से मिरी हिममत-ए ाली ने मुझे",
+        "hi": "ले लिया मुझ से मिरी हिममत-ए आली ने मुझे",
         "ro": "le liyā mujh se mirī himmat-e ʿālī ne mujhe"
       },
       {
@@ -17079,7 +17079,7 @@
       {
         "ascii": "((ajab aaraam diyaa be-par-o-baalii ne mujhe",
         "ur": "عجب آرام دیا بے پر و بالی نے مجھے",
-        "hi": "जब आराम दिया बे-पर-ओ-बाली ने मुझे",
+        "hi": "अजब आराम दिया बे-पर-ओ-बाली ने मुझे",
         "ro": "ʿajab ārām diyā be-par-o-bālī ne mujhe"
       },
       {
@@ -17149,7 +17149,7 @@
       {
         "ascii": ";Gunchah taa shiguftan'haa barg-e ((aafiyat ma((luum",
         "ur": "غنچہ تا شگفتنہا برگِ عافیت معلوم",
-        "hi": "ग़ुंचा ता शिगुफ़्तनहा बरग-ए ाफ़ियत मालूम",
+        "hi": "ग़ुंचा ता शिगुफ़्तनहा बरग-ए आफ़ियत मालूम",
         "ro": "ġhunchah tā shiguftan'hā barg-e ʿāfiyat maʿlūm"
       },
       {
@@ -17167,13 +17167,13 @@
       {
         "ascii": "daa;G pusht-e dast-e ((ajz shu((lah ;xas bah dandaa;N hai",
         "ur": "داغ پشتِ دستِ عجز شعلہ خس بہ دنداں ہے",
-        "hi": "दाग़ पुश्त-ए दस्त-ए जज़ शुला ख़स ब दंदाँ है",
+        "hi": "दाग़ पुश्त-ए दस्त-ए अज्ज़ शुला ख़स ब दंदाँ है",
         "ro": "dāġh pusht-e dast-e ʿajz shuʿlah ḳhas bah dandāñ hai"
       },
       {
         "ascii": "((ishq ke ta;Gaaful se harzah-gard hai ((aalam",
         "ur": "عشق کے تغافل سے ہرزہ گرد ہے عالم",
-        "hi": "िश्क़ के तग़ाफ़ुल से हर्ज़ा-गर्द है ालम",
+        "hi": "इश्क़ के तग़ाफ़ुल से हर्ज़ा-गर्द है आलम",
         "ro": "ʿishq ke taġhāful se harzah-gard hai ʿālam"
       },
       {
@@ -17238,7 +17238,7 @@
       {
         "ascii": "baa;G-e ;xaamoshii-e dil se su;xan-e ((ishq asad",
         "ur": "باغِ خاموشیِ دل سے سخنِ عشق اسد",
-        "hi": "बाग़-ए ख़ामोशी-ए दिल से सुख़न-ए िश्क़ असद",
+        "hi": "बाग़-ए ख़ामोशी-ए दिल से सुख़न-ए इश्क़ असद",
         "ro": "bāġh-e ḳhāmoshī-e dil se suḳhan-e ʿishq asad"
       },
       {
@@ -17314,7 +17314,7 @@
       {
         "ascii": "ranj-e rah kyuu;N khe;Nchiye vaa-maa;Ndagii ko ((ishq hai",
         "ur": "رنجِ رہ کیوں کھینچیے وا ماندگی کو عشق ہے",
-        "hi": "रंज-ए रह क्यूँ खेंचिये वा-मांदगी को िश्क़ है",
+        "hi": "रंज-ए रह क्यूँ खेंचिये वा-मांदगी को इश्क़ है",
         "ro": "ranj-e rah kyūñ kheñchiye vā-māñdagī ko ʿishq hai"
       },
       {
@@ -17870,13 +17870,13 @@
       {
         "ascii": ";Gamzah-o-((ishvah-o-adaa kyaa hai",
         "ur": "غمزہ و عشوہ و ادا کیا ہے",
-        "hi": "ग़मज़ा-ओ-िशवा-ओ-अदा क्या है",
+        "hi": "ग़मज़ा-ओ-इशवा-ओ-अदा क्या है",
         "ro": "ġhamzah-o-ʿishvah-o-adā kyā hai"
       },
       {
         "ascii": "shikan-e zulf-e ((anbarii;N kyuu;N hai",
         "ur": "شکنِ زلفِ عنبریں کیوں ہے",
-        "hi": "शिकन-ए ज़ुलफ़-ए ंबरीं क्यूँ है",
+        "hi": "शिकन-ए ज़ुलफ़-ए अंबरीं क्यूँ है",
         "ro": "shikan-e zulf-e ʿanbarīñ kyūñ hai"
       },
       {
@@ -17988,7 +17988,7 @@
       {
         "ascii": "hai .saa((iqah-o-shu((lah-o-siimaab kaa ((aalam",
         "ur": "ہے صاعقہ و شعلہ و سیماب کا عالم",
-        "hi": "है सािक़ा-ओ-शुला-ओ-सीमाब का ालम",
+        "hi": "है सािक़ा-ओ-शुला-ओ-सीमाब का आलम",
         "ro": "hai ṣāʿiqah-o-shuʿlah-o-sīmāb kā ʿālam"
       },
       {
@@ -18119,7 +18119,7 @@
       {
         "ascii": "phir vuhii pardah-e ((amaarii hai",
         "ur": "پھر وہی پردۂ عماری ہے",
-        "hi": "फिर वही पर्दा-ए मारी है",
+        "hi": "फिर वही पर्दा-ए अमारी है",
         "ro": "phir vuhī pardah-e ʿamārī hai"
       },
       {
@@ -18161,7 +18161,7 @@
       {
         "ascii": "jalvah phir ((ar.z-e naaz kartaa hai",
         "ur": "جلوہ پھر عرضِ ناز کرتا ہے",
-        "hi": "जलवा फिर र्ज़-ए नाज़ करता है",
+        "hi": "जलवा फिर अर्ज़-ए नाज़ करता है",
         "ro": "jalvah phir ʿarẓ-e nāz kartā hai"
       },
       {
@@ -18185,7 +18185,7 @@
       {
         "ascii": "phir khulaa hai dar-e ((adaalat-e naaz",
         "ur": "پھر کھلا ہے درِ عدالتِ ناز",
-        "hi": "फिर खुला है दर-ए दालत-ए नाज़",
+        "hi": "फिर खुला है दर-ए अदालत-ए नाज़",
         "ro": "phir khulā hai dar-e ʿadālat-e nāz"
       },
       {
@@ -18221,7 +18221,7 @@
       {
         "ascii": "phir hu))e hai;N gavaah-e ((ishq :talab",
         "ur": "پھر ہوئے ہیں گواہِ عشق طلب",
-        "hi": "फिर हुए हैं गवाह-ए िश्क़ तलब",
+        "hi": "फिर हुए हैं गवाह-ए इश्क़ तलब",
         "ro": "phir huʾe haiñ gavāh-e ʿishq t̤alab"
       },
       {
@@ -18385,7 +18385,7 @@
       {
         "ascii": "karuu;N be-daad-e ;zauq-e par-fishaanii ((ar.z kyaa qudrat",
         "ur": "کروں بے دادِ ذوقِ پر فشانی عرض کیا قدرت",
-        "hi": "करूँ बे-दाद-ए ज़ौक़-ए पर-फ़िशानी र्ज़ क्या क़ुदरत",
+        "hi": "करूँ बे-दाद-ए ज़ौक़-ए पर-फ़िशानी अर्ज़ क्या क़ुदरत",
         "ro": "karūñ be-dād-e żauq-e par-fishānī ʿarẓ kyā qudrat"
       },
       {
@@ -18485,7 +18485,7 @@
       {
         "ascii": "sa;xtii-kashaan-e ((ishq kii puuchhe hai kyaa ;xabar",
         "ur": "سختی کشانِ عشق کی پوچھے ہے کیا خبر",
-        "hi": "सख़्ती-कशान-ए िश्क़ की पूछे है क्या ख़बर",
+        "hi": "सख़्ती-कशान-ए इश्क़ की पूछे है क्या ख़बर",
         "ro": "saḳhtī-kashān-e ʿishq kī pūchhe hai kyā ḳhabar"
       },
       {
@@ -18533,19 +18533,19 @@
       {
         "ascii": "ahl-e havas kii fat;h hai tark-e nabard-e ((ishq",
         "ur": "اہلِ ہوس کی فتح ہے ترکِ نبردِ عشق",
-        "hi": "अहल-ए हवस की फ़तह है तरक-ए नबर्द-ए िश्क़",
+        "hi": "अहल-ए हवस की फ़तह है तरक-ए नबर्द-ए इश्क़",
         "ro": "ahl-e havas kī fatḥ hai tark-e nabard-e ʿishq"
       },
       {
         "ascii": "jo paa;Nv u;Th gaye vuhii un ke ((alam hu))e",
         "ur": "جو پانو اٹھ گیے وہی ان کے علم ہوئے",
-        "hi": "जो पांव उठ गये वही उन के लम हुए",
+        "hi": "जो पांव उठ गये वही उन के अलम हुए",
         "ro": "jo pāñv uṭh gaye vuhī un ke ʿalam huʾe"
       },
       {
         "ascii": "naale ((adam me;N chand hamaare supurd the",
         "ur": "نالے عدم میں چند ہمارے سپرد تھے",
-        "hi": "नाले दम में चंद हमारे सुपुर्द थे",
+        "hi": "नाले अदम में चंद हमारे सुपुर्द थे",
         "ro": "nāle ʿadam meñ chand hamāre supurd the"
       },
       {
@@ -18563,7 +18563,7 @@
       {
         "ascii": "saa))il hu))e to ((aashiq-e ahl-e karam hu))e",
         "ur": "سائل ہوئے تو عاشقِ اہلِ کرم ہوئے",
-        "hi": "साइल हुए तो ाशिक़-ए अहल-ए करम हुए",
+        "hi": "साइल हुए तो आशिक़-ए अहल-ए करम हुए",
         "ro": "sāʾil huʾe to ʿāshiq-e ahl-e karam huʾe"
       }
     ],
@@ -18615,7 +18615,7 @@
       {
         "ascii": "kih mire ((aduu ko yaa rab mile merii zindagaanii",
         "ur": "کہ مرے عدو کو یا رب ملے میری زندگانی",
-        "hi": "कि मिरे दू को या रब मिले मेरी ज़िंदगानी",
+        "hi": "कि मिरे अदू को या रब मिले मेरी ज़िंदगानी",
         "ro": "kih mire ʿadū ko yā rab mile merī zindagānī"
       }
     ],
@@ -18673,7 +18673,7 @@
       {
         "ascii": "gauhar ko ((aqd-e gardan-e ;xuubaa;N me;N dekhnaa",
         "ur": "گوہر کو عقدِ گردنِ خوباں میں دیکھنا",
-        "hi": "गौहर को क़द-ए गर्दन-ए ख़ूबाँ में देखना",
+        "hi": "गौहर को अक़्द-ए गर्दन-ए ख़ूबाँ में देखना",
         "ro": "gauhar ko ʿaqd-e gardan-e ḳhūbāñ meñ dekhnā"
       },
       {
@@ -18709,7 +18709,7 @@
       {
         "ascii": "dekho mujhe jo diidah-e ((ibrat-nigaah ho",
         "ur": "دیکھو مجھے جو دیدۂ عبرت نگاہ ہو",
-        "hi": "देखो मुझे जो दीदा-ए िबरत-निगाह हो",
+        "hi": "देखो मुझे जो दीदा-ए इबरत-निगाह हो",
         "ro": "dekho mujhe jo dīdah-e ʿibrat-nigāh ho"
       },
       {
@@ -18793,7 +18793,7 @@
       {
         "ascii": "ho kar shahiid ((ishq me;N paa))e hazaar jism",
         "ur": "ہو کر شہید عشق میں پائے ہزار جسم",
-        "hi": "हो कर शहीद िश्क़ में पाए हज़ार जिस्म",
+        "hi": "हो कर शहीद इश्क़ में पाए हज़ार जिस्म",
         "ro": "ho kar shahīd ʿishq meñ pāʾe hazār jism"
       },
       {
@@ -18857,13 +18857,13 @@
       {
         "ascii": "ham se ((aba;s hai gumaan-e ranjish-e ;xaa:tir",
         "ur": "ہم سے عبث ہے گمانِ رنجشِ خاطر",
-        "hi": "हम से बस है गुमान-ए रंजिश-ए ख़ातिर",
+        "hi": "हम से अबस है गुमान-ए रंजिश-ए ख़ातिर",
         "ro": "ham se ʿabaṡ hai gumān-e ranjish-e ḳhāt̤ir"
       },
       {
         "ascii": ";xaak me;N ((ushshaaq kii ;Gubaar nahii;N hai",
         "ur": "خاک میں عشّاق کی غبار نہیں ہے",
-        "hi": "ख़ाक में ुश्शाक़ की ग़ुबार नहीं है",
+        "hi": "ख़ाक में उशशाक़ की ग़ुबार नहीं है",
         "ro": "ḳhāk meñ ʿushshāq kī ġhubār nahīñ hai"
       },
       {
@@ -18881,13 +18881,13 @@
       {
         "ascii": "qatl kaa mere kiyaa hai ((ahd to baare",
         "ur": "قتل کا میرے کیا ہے عہد تو بارے",
-        "hi": "क़तल का मेरे किया है हद तो बारे",
+        "hi": "क़तल का मेरे किया है अह्द तो बारे",
         "ro": "qatl kā mere kiyā hai ʿahd to bāre"
       },
       {
         "ascii": "vaa))e agar ((ahd ustuvaar nahii;N hai",
         "ur": "وائے اگر عہد استوار نہیں ہے",
-        "hi": "वाए अगर हद उसतुवार नहीं है",
+        "hi": "वाए अगर अह्द उसतुवार नहीं है",
         "ro": "vāʾe agar ʿahd ustuvār nahīñ hai"
       },
       {
@@ -18957,7 +18957,7 @@
       {
         "ascii": "hu))aa hai maan((a-e ((aashiq-navaazii naaz-e ;xvud-biinii",
         "ur": "ہوا ہے مانعِ عاشق نوازی نازِ خود بینی",
-        "hi": "हुआ है मां-ए ाशिक़-नवाज़ी नाज़-ए ख़्वुद-बीनी",
+        "hi": "हुआ है मां-ए आशिक़-नवाज़ी नाज़-ए ख़्वुद-बीनी",
         "ro": "huʾā hai mānʿa-e ʿāshiq-navāzī nāz-e ḳhvud-bīnī"
       },
       {
@@ -19033,7 +19033,7 @@
       {
         "ascii": "baa((i;s-e vaa-maa;Ndagii hai ((umr-e fur.sat-juu mujhe",
         "ur": "باعثِ وا ماندگی ہے عمرِ فرصت جو مجھے",
-        "hi": "बािस-ए वा-मांदगी है ुमर-ए फ़ुरसत-जू मुझे",
+        "hi": "बािस-ए वा-मांदगी है उम्र-ए फ़ुरसत-जू मुझे",
         "ro": "bāʿiṡ-e vā-māñdagī hai ʿumr-e furṣat-jū mujhe"
       },
       {
@@ -19057,7 +19057,7 @@
       {
         "ascii": "saaz-e iimaa-e fanaa hai ((aalam-e piirii asad",
         "ur": "سازِ ایمائے فنا ہے عالمِ پیری اسد",
-        "hi": "साज़-ए ईमा-ए फ़ना है ालम-ए पीरी असद",
+        "hi": "साज़-ए ईमा-ए फ़ना है आलम-ए पीरी असद",
         "ro": "sāz-e īmā-e fanā hai ʿālam-e pīrī asad"
       },
       {
@@ -19294,7 +19294,7 @@
       {
         "ascii": "dekhiye paate hai;N ((ushshaaq buto;N se kyaa fai.z",
         "ur": "دیکھیے پاتے ہیں عشّاق بتوں سے کیا فیض",
-        "hi": "देखिये पाते हैं ुश्शाक़ बुतों से क्या फ़ैज़",
+        "hi": "देखिये पाते हैं उशशाक़ बुतों से क्या फ़ैज़",
         "ro": "dekhiye pāte haiñ ʿushshāq butoñ se kyā faiẓ"
       },
       {
@@ -19443,13 +19443,13 @@
       {
         "ascii": "((ishrat-e .su;hbat-e ;xuubaa;N hii ;Ganiimat samjho",
         "ur": "عشرتِ صحبتِ خوباں ہی غنیمت سمجھو",
-        "hi": "िशरत-ए सुहबत-ए ख़ूबाँ ही ग़नीमत समझो",
+        "hi": "इशरत-ए सुहबत-ए ख़ूबाँ ही ग़नीमत समझो",
         "ro": "ʿishrat-e ṣuḥbat-e ḳhūbāñ hī ġhanīmat samjho"
       },
       {
         "ascii": "nah hu))ii ;Gaalib agar ((umr-e :tabii((ii nah sahii",
         "ur": "نہ ہوئی غالب اگر عمرِ طبیعی نہ سہی",
-        "hi": "न हुई ग़ालिब अगर ुमर-ए तबीी न सही",
+        "hi": "न हुई ग़ालिब अगर उम्र-ए तबीी न सही",
         "ro": "nah huʾī ġhālib agar ʿumr-e t̤abīʿī nah sahī"
       }
     ],
@@ -19471,7 +19471,7 @@
       {
         "ascii": "((ajab nashaa:t se jallaad ke chale hai;N ham aage",
         "ur": "عجب نشاط سے جلاد کے چلے ہیں ہم آگے",
-        "hi": "जब नशात से जल्लाद के चले हैं हम आगे",
+        "hi": "अजब नशात से जल्लाद के चले हैं हम आगे",
         "ro": "ʿajab nashāt̤ se jallād ke chale haiñ ham āge"
       },
       {
@@ -19495,7 +19495,7 @@
       {
         "ascii": ";Gam-e zamaanah ne jhaa;Rii nashaa:t-e ((ishq kii mastii",
         "ur": "غمِ زمانہ نے جھاڑی نشاطِ عشق کی مستی",
-        "hi": "ग़म-ए ज़माना ने झाड़ी नशात-ए िश्क़ की मस्ती",
+        "hi": "ग़म-ए ज़माना ने झाड़ी नशात-ए इश्क़ की मस्ती",
         "ro": "ġham-e zamānah ne jhāṛī nashāt̤-e ʿishq kī mastī"
       },
       {
@@ -19519,7 +19519,7 @@
       {
         "ascii": "yih ((umr bhar jo pareshaaniyaa;N u;Thaa))ii hai;N ham ne",
         "ur": "یہ عمر بھر جو پریشانیاں اٹھائی ہیں ہم نے",
-        "hi": "ये ुमर भर जो परेशानियाँ उठाई हैं हम ने",
+        "hi": "ये उम्र भर जो परेशानियाँ उठाई हैं हम ने",
         "ro": "yih ʿumr bhar jo pareshāniyāñ uṭhāʾī haiñ ham ne"
       },
       {
@@ -19608,7 +19608,7 @@
       {
         "ascii": "((ishq kii raah me;N hai char;x-e mukaukab kii",
         "ur": "عشق کی راہ میں ہے چرخِ مکوکب کی",
-        "hi": "िश्क़ की राह में है चरख़-ए मुकौकब की",
+        "hi": "इश्क़ की राह में है चरख़-ए मुकौकब की",
         "ro": "ʿishq kī rāh meñ hai charḳh-e mukaukab kī"
       },
       {
@@ -19644,7 +19644,7 @@
       {
         "ascii": "naalah jaataa thaa pare ((arsh se meraa aur ab",
         "ur": "نالہ جاتا تھا پرے عرش سے میرا اور اب",
-        "hi": "नाला जाता था परे रश से मेरा और अब",
+        "hi": "नाला जाता था परे अर्श से मेरा और अब",
         "ro": "nālah jātā thā pare ʿarsh se merā aur ab"
       },
       {
@@ -19668,7 +19668,7 @@
       {
         "ascii": "ai shahinshaah-e kavaakib-sipah-o-mihr-((alam",
         "ur": "اے شہنشاہِ کواکب سپہ و مہر علم",
-        "hi": "ऐ शहिंशाह-ए कवाकिब-सिपा-ओ-मिहर-लम",
+        "hi": "ऐ शहिंशाह-ए कवाकिब-सिपा-ओ-मिहर-अलम",
         "ro": "ai shahinshāh-e kavākib-sipah-o-mihr-ʿalam"
       },
       {
@@ -19775,7 +19775,7 @@
       {
         "ascii": "vagarnah ;xauf-e bad-aamozii-e ((aduu kyaa hai",
         "ur": "وگرنہ خوفِ بد آموزیِ عدو کیا ہے",
-        "hi": "वगर्ना ख़ौफ़-ए बद-आमोज़ी-ए दू क्या है",
+        "hi": "वगर्ना ख़ौफ़-ए बद-आमोज़ी-ए अदू क्या है",
         "ro": "vagarnah ḳhauf-e bad-āmozī-e ʿadū kyā hai"
       },
       {
@@ -19817,7 +19817,7 @@
       {
         "ascii": "vuh chiiz jis ke liye ham ko ho bihisht ((aziiz",
         "ur": "وہ چیز جس کے لیے ہم کو ہو بہشت عزیز",
-        "hi": "वो चीज़ जिस के लिये हम को हो बिहिश्त ज़ीज़",
+        "hi": "वो चीज़ जिस के लिये हम को हो बिहिश्त अज़ीज़",
         "ro": "vuh chīz jis ke liye ham ko ho bihisht ʿazīz"
       },
       {
@@ -19976,7 +19976,7 @@
       {
         "ascii": "ham to ((aashiq hai;N tumhaare naam ke",
         "ur": "ہم تو عاشق ہیں تمہارے نام کے",
-        "hi": "हम तो ाशिक़ हैं तुम्हारे नाम के",
+        "hi": "हम तो आशिक़ हैं तुम्हारे नाम के",
         "ro": "ham to ʿāshiq haiñ tumhāre nām ke"
       },
       {
@@ -20018,7 +20018,7 @@
       {
         "ascii": "((ishq ne ;Gaalib nikammaa kar diyaa",
         "ur": "عشق نے غالب نکمّا کر دیا",
-        "hi": "िश्क़ ने ग़ालिब निकममा कर दिया",
+        "hi": "इश्क़ ने ग़ालिब निकममा कर दिया",
         "ro": "ʿishq ne ġhālib nikammā kar diyā"
       },
       {
@@ -20065,7 +20065,7 @@
       {
         "ascii": "is ko kahte hai;N ((aalam-aaraa))ii",
         "ur": "اس کو کہتے ہیں عالم آرائی",
-        "hi": "इस को कहते हैं ालम-आराई",
+        "hi": "इस को कहते हैं आलम-आराई",
         "ro": "is ko kahte haiñ ʿālam-ārāʾī"
       },
       {
@@ -20147,7 +20147,7 @@
       {
         "ascii": "ta;Gaaful-dost huu;N meraa dimaa;G-e ((ajz ((aalii hai",
         "ur": "تغافل دوست ہوں میرا دماغِ عجز عالی ہے",
-        "hi": "तग़ाफ़ुल-दोस्त हूँ मेरा दिमाग़-ए जज़ ाली है",
+        "hi": "तग़ाफ़ुल-दोस्त हूँ मेरा दिमाग़-ए अज्ज़ आली है",
         "ro": "taġhāful-dost hūñ merā dimāġh-e ʿajz ʿālī hai"
       },
       {
@@ -20159,7 +20159,7 @@
       {
         "ascii": "rahaa aabaad ((aalam ahl-e himmat ke nah hone se",
         "ur": "رہا آباد عالم اہلِ ہمّت کے نہ ہونے سے",
-        "hi": "रहा आबाद ालम अहल-ए हिममत के न होने से",
+        "hi": "रहा आबाद आलम अहल-ए हिममत के न होने से",
         "ro": "rahā ābād ʿālam ahl-e himmat ke nah hone se"
       },
       {
@@ -20308,7 +20308,7 @@
       {
         "ascii": "kar diyaa .zu((f ne ((aajiz ;Gaalib",
         "ur": "کر دیا ضعف نے عاجز غالب",
-        "hi": "कर दिया ज़ुफ़ ने ाजिज़ ग़ालिब",
+        "hi": "कर दिया ज़ुफ़ ने आजिज़ ग़ालिब",
         "ro": "kar diyā ẓuʿf ne ʿājiz ġhālib"
       },
       {
@@ -20361,7 +20361,7 @@
       {
         "ascii": "vuh tab-e ((ishq tamannaa hai kih phir .suurat-e sham((a",
         "ur": "وہ تبِ عشق تمنّا ہے کہ پھر صورتِ شمع",
-        "hi": "वो तब-ए िश्क़ तमंना है कि फिर सूरत-ए शम",
+        "hi": "वो तब-ए इश्क़ तमंना है कि फिर सूरत-ए शम",
         "ro": "vuh tab-e ʿishq tamannā hai kih phir ṣūrat-e shamʿa"
       },
       {
@@ -20483,7 +20483,7 @@
       {
         "ascii": "likh diijiyo yaa rab use qismat me;N ((aduu kii",
         "ur": "لکھ دیجیو یا رب اسے قسمت میں عدو کی",
-        "hi": "लिख दीजियो या रब उसे क़िस्मत में दू की",
+        "hi": "लिख दीजियो या रब उसे क़िस्मत में अदू की",
         "ro": "likh dījiyo yā rab use qismat meñ ʿadū kī"
       },
       {
@@ -20501,7 +20501,7 @@
       {
         "ascii": "kyuu;N ;Darte ho ((ushshaaq kii be-;hau.slagii se",
         "ur": "کیوں ڈرتے ہو عشّاق کی بے حوصلگی سے",
-        "hi": "क्यूँ डरते हो ुश्शाक़ की बे-हौसलगी से",
+        "hi": "क्यूँ डरते हो उशशाक़ की बे-हौसलगी से",
         "ro": "kyūñ ḍarte ho ʿushshāq kī be-ḥauṣlagī se"
       },
       {
@@ -20513,13 +20513,13 @@
       {
         "ascii": ".sad ;haif vuh naa-kaam kih ik ((umr se ;Gaalib",
         "ur": "صد حیف وہ نا کام کہ اک عمر سے غالب",
-        "hi": "सद हैफ़ वो ना-काम कि इक ुमर से ग़ालिब",
+        "hi": "सद हैफ़ वो ना-काम कि इक उम्र से ग़ालिब",
         "ro": "ṣad ḥaif vuh nā-kām kih ik ʿumr se ġhālib"
       },
       {
         "ascii": ";hasrat me;N rahe ek but-e ((arbadah-juu kii",
         "ur": "حسرت میں رہے ایک بتِ عربدہ جو کی",
-        "hi": "हसरत में रहे एक बुत-ए रबदा-जू की",
+        "hi": "हसरत में रहे एक बुत-ए अरबदा-जू की",
         "ro": "ḥasrat meñ rahe ek but-e ʿarbadah-jū kī"
       },
       {
@@ -20537,7 +20537,7 @@
       {
         "ascii": "go zindagii-e zaahid-e be-chaarah ((aba;s hai",
         "ur": "گو زندگیِ زاہدِ بے چارہ عبث ہے",
-        "hi": "गो ज़िंदगी-ए ज़ाहिद-ए बे-चारा बस है",
+        "hi": "गो ज़िंदगी-ए ज़ाहिद-ए बे-चारा अबस है",
         "ro": "go zindagī-e zāhid-e be-chārah ʿabaṡ hai"
       },
       {
@@ -20595,7 +20595,7 @@
       {
         "ascii": "ai ((andaliib chal kih chale din bahaar ke",
         "ur": "اے عندلیب چل کہ چلے دن بہار کے",
-        "hi": "ऐ ंदलीब चल कि चले दिन बहार के",
+        "hi": "ऐ अंदलीब चल कि चले दिन बहार के",
         "ro": "ai ʿandalīb chal kih chale din bahār ke"
       },
       {
@@ -20653,13 +20653,13 @@
       {
         "ascii": "hai va.sl hijr ((aalam-e tamkiin-o-.zab:t me;N",
         "ur": "ہے وصل ہجر عالمِ تمکین و ضبط میں",
-        "hi": "है वसल हिजर ालम-ए तमकीन-ओ-ज़बत में",
+        "hi": "है वसल हिजर आलम-ए तमकीन-ओ-ज़बत में",
         "ro": "hai vaṣl hijr ʿālam-e tamkīn-o-ẓabt̤ meñ"
       },
       {
         "ascii": "ma((shuuq-e sho;x-o-((aashiq-e diivaanah chaahiye",
         "ur": "معشوقِ شوخ و عاشقِ دیوانہ چاہیے",
-        "hi": "माशूक़-ए शोख़-ओ-ाशिक़-ए दीवाना चाहिये",
+        "hi": "माशूक़-ए शोख़-ओ-आशिक़-ए दीवाना चाहिये",
         "ro": "maʿshūq-e shoḳh-o-ʿāshiq-e dīvānah chāhiye"
       },
       {
@@ -20677,7 +20677,7 @@
       {
         "ascii": "((aashiq naqaab-e jalvah-e jaanaanah chaahiye",
         "ur": "عاشق نقابِ جلوۂ جانانہ چاہیے",
-        "hi": "ाशिक़ नक़ाब-ए जलवा-ए जानाना चाहिये",
+        "hi": "आशिक़ नक़ाब-ए जलवा-ए जानाना चाहिये",
         "ro": "ʿāshiq naqāb-e jalvah-e jānānah chāhiye"
       },
       {
@@ -20878,7 +20878,7 @@
       {
         "ascii": "dars-e ((unvaan-e tamaashaa bah ta;Gaaful ;xvushtar",
         "ur": "درسِ عنوانِ تماشا بہ تغافل خوشتر",
-        "hi": "दरस-ए ुंवान-ए तमाशा ब तग़ाफ़ुल ख़्वुश्तर",
+        "hi": "दरस-ए उंवान-ए तमाशा ब तग़ाफ़ुल ख़्वुश्तर",
         "ro": "dars-e ʿunvān-e tamāshā bah taġhāful ḳhvushtar"
       },
       {
@@ -20902,7 +20902,7 @@
       {
         "ascii": ";Gam-e ((ushshaaq nah ho saadagii-aamoz-e butaa;N",
         "ur": "غمِ عشّاق نہ ہو سادگی آموزِ بتاں",
-        "hi": "ग़म-ए ुश्शाक़ न हो सादगी-आमोज़-ए बुताँ",
+        "hi": "ग़म-ए उशशाक़ न हो सादगी-आमोज़-ए बुताँ",
         "ro": "ġham-e ʿushshāq nah ho sādagī-āmoz-e butāñ"
       },
       {
@@ -20986,13 +20986,13 @@
       {
         "ascii": "bastan-e ((ahd-e mu;habbat hamah naa-daanii thaa",
         "ur": "بستنِ عہدِ محبّت ہمہ نا دانی تھا",
-        "hi": "बसतन-ए हद-ए मुहब्बत हमह ना-दानी था",
+        "hi": "बसतन-ए अह्द-ए मुहब्बत हमह ना-दानी था",
         "ro": "bastan-e ʿahd-e muḥabbat hamah nā-dānī thā"
       },
       {
         "ascii": "chashm-e nakshuudah rahaa ((uqdah-e paimaa;N mujh se",
         "ur": "چشمِ نکشودہ رہا عقدۂ پیماں مجھ سے",
-        "hi": "चश्म-ए नकशूदा रहा ुक़दा-ए पैमाँ मुझ से",
+        "hi": "चश्म-ए नकशूदा रहा उक़दा-ए पैमाँ मुझ से",
         "ro": "chashm-e nakshūdah rahā ʿuqdah-e paimāñ mujh se"
       },
       {
@@ -21123,7 +21123,7 @@
       {
         "ascii": "((ishq par zor nahii;N hai yih vuh aatish ;Gaalib",
         "ur": "عشق پر زور نہیں ہے یہ وہ آتش غالب",
-        "hi": "िश्क़ पर ज़ोर नहीं है ये वो आतिश ग़ालिब",
+        "hi": "इश्क़ पर ज़ोर नहीं है ये वो आतिश ग़ालिब",
         "ro": "ʿishq par zor nahīñ hai yih vuh ātish ġhālib"
       },
       {
@@ -21151,7 +21151,7 @@
       {
         "ascii": "chaak kii ;xvaahish agar va;hshat bah ((uryaanii kare",
         "ur": "چاک کی خواہش اگر وحشت بہ عریانی کرے",
-        "hi": "चाक की ख़्वाहिश अगर वहशत ब ुरयानी करे",
+        "hi": "चाक की ख़्वाहिश अगर वहशत ब उरयानी करे",
         "ro": "chāk kī ḳhvāhish agar vaḥshat bah ʿuryānī kare"
       },
       {
@@ -21163,7 +21163,7 @@
       {
         "ascii": "jalve kaa tere vuh ((aalam hai kih gar kiije ;xayaal",
         "ur": "جلوے کا تیرے وہ عالم ہے کہ گر کیجے خیال",
-        "hi": "जलवे का तेरे वो ालम है कि गर कीजे ख़याल",
+        "hi": "जलवे का तेरे वो आलम है कि गर कीजे ख़याल",
         "ro": "jalve kā tere vuh ʿālam hai kih gar kīje ḳhayāl"
       },
       {
@@ -21181,7 +21181,7 @@
       {
         "ascii": "aab-giinah koh par ((ar.z-e giraa;N-jaanii kare",
         "ur": "آب گینہ کوہ پر عرضِ گراں جانی کرے",
-        "hi": "आब-गीना कोह पर र्ज़-ए गिराँ-जानी करे",
+        "hi": "आब-गीना कोह पर अर्ज़-ए गिराँ-जानी करे",
         "ro": "āb-gīnah koh par ʿarẓ-e girāñ-jānī kare"
       },
       {
@@ -21199,7 +21199,7 @@
       {
         "ascii": ";xa:t:t-e ((aari.z se likhaa hai zulf ko ulfat ne ((ahd",
         "ur": "خطِّ عارض سے لکھا ہے زلف کو الفت نے عہد",
-        "hi": "ख़तत-ए ारिज़ से लिखा है ज़ुलफ़ को उलफ़त ने हद",
+        "hi": "ख़तत-ए आरिज़ से लिखा है ज़ुलफ़ को उलफ़त ने अह्द",
         "ro": "ḳhat̤t̤-e ʿāriẓ se likhā hai zulf ko ulfat ne ʿahd"
       },
       {
@@ -21352,7 +21352,7 @@
       {
         "ascii": "sirishk-e sar bah .sa;hraa daadah nuur ul-((ain-e daaman hai",
         "ur": "سرشکِ سر بہ صحرا دادہ نور العینِ دامن ہے",
-        "hi": "सिरिश्क-ए सर ब सहरा दादा नूर उल-ैन-ए दामन है",
+        "hi": "सिरिश्क-ए सर ब सहरा दादा नूर उल-ऐन-ए दामन है",
         "ro": "sirishk-e sar bah ṣaḥrā dādah nūr ul-ʿain-e dāman hai"
       },
       {
@@ -21364,7 +21364,7 @@
       {
         "ascii": ";xvushaa iqbaal-e ranjuurii ((iyaadat ko tum aa))e ho",
         "ur": "خوشا اقبالِ رنجوری عیادت کو تم آئے ہو",
-        "hi": "ख़्वुशा इक़बाल-ए रंजूरी ियादत को तुम आए हो",
+        "hi": "ख़्वुशा इक़बाल-ए रंजूरी इयादत को तुम आए हो",
         "ro": "ḳhvushā iqbāl-e ranjūrī ʿiyādat ko tum āʾe ho"
       },
       {
@@ -21394,7 +21394,7 @@
       {
         "ascii": "hamaarii diid ko ;xvaab-e zulai;xaa ((aar-e bistar hai",
         "ur": "ہماری دید کو خوابِ زلیخا عارِ بستر ہے",
-        "hi": "हमारी दीद को ख़्वाब-ए ज़ुलैख़ा ार-ए बिसतर है",
+        "hi": "हमारी दीद को ख़्वाब-ए ज़ुलैख़ा आर-ए बिसतर है",
         "ro": "hamārī dīd ko ḳhvāb-e zulaiḳhā ʿār-e bistar hai"
       },
       {
@@ -21565,7 +21565,7 @@
       {
         "ascii": "hastii hai nah kuchh ((adam hai ;Gaalib",
         "ur": "ہستی ہے نہ کچھ عدم ہے غالب",
-        "hi": "हस्ती है न कुछ दम है ग़ालिब",
+        "hi": "हस्ती है न कुछ अदम है ग़ालिब",
         "ro": "hastī hai nah kuchh ʿadam hai ġhālib"
       },
       {
@@ -21595,7 +21595,7 @@
       {
         "ascii": "vaa;N ((izzat-e ta;xt-e kai nahii;N hai",
         "ur": "واں عزّتِ تختِ کے نہیں ہے",
-        "hi": "वाँ िज़्ज़त-ए तख़्त-ए कै नहीं है",
+        "hi": "वाँ इज़्ज़त-ए तख़्त-ए कै नहीं है",
         "ro": "vāñ ʿizzat-e taḳht-e kai nahīñ hai"
       }
     ],
@@ -21660,7 +21660,7 @@
       {
         "ascii": "kih ek vahm-e .za((iif-o-;Gam-e do-((aalam hai",
         "ur": "کہ ایک وہمِ ضعیف و غمِ دو عالم ہے",
-        "hi": "कि एक वहम-ए ज़ीफ़-ओ-ग़म-ए दो-ालम है",
+        "hi": "कि एक वहम-ए ज़ीफ़-ओ-ग़म-ए दो-आलम है",
         "ro": "kih ek vahm-e ẓaʿīf-o-ġham-e do-ʿālam hai"
       }
     ],
@@ -21753,7 +21753,7 @@
       {
         "ascii": "kih ek ((umr se ;hasrat-parast-e baalii;N hai",
         "ur": "کہ ایک عمر سے حسرت پرستِ بالیں ہے",
-        "hi": "कि एक ुमर से हसरत-परस्त-ए बालीं है",
+        "hi": "कि एक उम्र से हसरत-परस्त-ए बालीं है",
         "ro": "kih ek ʿumr se ḥasrat-parast-e bālīñ hai"
       },
       {
@@ -21783,7 +21783,7 @@
       {
         "ascii": "shafaq bah da((v;aa-e ((aashiq gavaah-e rangii;N hai",
         "ur": "شفق بہ دعویِٰ عاشق گواہِ رنگیں ہے",
-        "hi": "शफ़क़ ब दावा-ए ाशिक़ गवाह-ए रंगीं है",
+        "hi": "शफ़क़ ब दावा-ए आशिक़ गवाह-ए रंगीं है",
         "ro": "shafaq bah daʿvâ-e ʿāshiq gavāh-e rangīñ hai"
       },
       {
@@ -21847,7 +21847,7 @@
       {
         "ascii": "((aari.z-e gul dekh ruu-e yaar yaad aayaa asad",
         "ur": "عارضِ گل دیکھ روئے یار یاد آیا اسد",
-        "hi": "ारिज़-ए गुल देख रू-ए यार याद आया असद",
+        "hi": "आरिज़-ए गुल देख रू-ए यार याद आया असद",
         "ro": "ʿāriẓ-e gul dekh rū-e yār yād āyā asad"
       },
       {
@@ -22030,7 +22030,7 @@
       {
         "ascii": "kar ga))ii vaa-bastah-e tan merii ((uryaanii mujhe",
         "ur": "کر گئی وا بستۂ تن میری عریانی مجھے",
-        "hi": "कर गई वा-बसता-ए तन मेरी ुरयानी मुझे",
+        "hi": "कर गई वा-बसता-ए तन मेरी उरयानी मुझे",
         "ro": "kar gaʾī vā-bastah-e tan merī ʿuryānī mujhe"
       },
       {
@@ -22202,7 +22202,7 @@
       {
         "ascii": "((ishq se aate the maana(( miirzaa .saa;hab mujhe",
         "ur": "عشق سے آتے تھے مانع میرزا صاحب مجھے",
-        "hi": "िश्क़ से आते थे माना मीर्ज़ा साहब मुझे",
+        "hi": "इश्क़ से आते थे माना मीर्ज़ा साहब मुझे",
         "ro": "ʿishq se āte the mānaʿ mīrzā ṣāḥab mujhe"
       },
       {
@@ -22402,7 +22402,7 @@
       {
         "ascii": "((ibaarat mu;xta.sar qaa.sid bhii ghabraa jaa))e hai mujh se",
         "ur": "عبارت مختصر قاصد بھی گھبرا جائے ہے مجھ سے",
-        "hi": "िबारत मुख़्तसर क़ासिद भी घबरा जाए है मुझ से",
+        "hi": "इबारत मुख़्तसर क़ासिद भी घबरा जाए है मुझ से",
         "ro": "ʿibārat muḳhtaṣar qāṣid bhī ghabrā jāʾe hai mujh se"
       },
       {
@@ -22444,7 +22444,7 @@
       {
         "ascii": "hu))e hai;N paa;Nv hii pahle nabard-e ((ishq me;N za;xmii",
         "ur": "ہوئے ہیں پانو ہی پہلے نبردِ عشق میں زخمی",
-        "hi": "हुए हैं पांव ही पहले नबर्द-ए िश्क़ में ज़ख़्मी",
+        "hi": "हुए हैं पांव ही पहले नबर्द-ए इश्क़ में ज़ख़्मी",
         "ro": "huʾe haiñ pāñv hī pahle nabard-e ʿishq meñ zaḳhmī"
       },
       {
@@ -22485,7 +22485,7 @@
       {
         "ascii": "z-baskih mashq-e tamaashaa junuu;N-((alaamat hai",
         "ur": "ز بسکہ مشقِ تماشا جنوں علامت ہے",
-        "hi": "ज़-बसकि मश्क़-ए तमाशा जुनूँ-लामत है",
+        "hi": "ज़-बसकि मश्क़-ए तमाशा जुनूँ-अलामत है",
         "ro": "z-baskih mashq-e tamāshā junūñ-ʿalāmat hai"
       },
       {
@@ -22497,7 +22497,7 @@
       {
         "ascii": "nah jaanuu;N kyuu;Nkih mi;Te daa;G-e :ta((n-e bad-((ahdii",
         "ur": "نہ جانوں کیونکہ مٹے داغِ طعنِ بد عہدی",
-        "hi": "न जानूँ क्यूंकि मिटे दाग़-ए तान-ए बद-हदी",
+        "hi": "न जानूँ क्यूंकि मिटे दाग़-ए तान-ए बद-अहदी",
         "ro": "nah jānūñ kyūñkih miṭe dāġh-e t̤aʿn-e bad-ʿahdī"
       },
       {
@@ -22509,19 +22509,19 @@
       {
         "ascii": "bah pech-o-taab-e havas silk-e ((aafiyat mat to;R",
         "ur": "بہ پیچ و تابِ ہوس سلکِ عافیت مت توڑ",
-        "hi": "ब पेच-ओ-ताब-ए हवस सिलक-ए ाफ़ियत मत तोड़",
+        "hi": "ब पेच-ओ-ताब-ए हवस सिलक-ए आफ़ियत मत तोड़",
         "ro": "bah pech-o-tāb-e havas silk-e ʿāfiyat mat toṛ"
       },
       {
         "ascii": "nigaah-e ((ajz sar-e rishtah-e salaamat hai",
         "ur": "نگاہِ عجز سرِ رشتۂ سلامت ہے",
-        "hi": "निगाह-ए जज़ सर-ए रिशता-ए सलामत है",
+        "hi": "निगाह-ए अज्ज़ सर-ए रिशता-ए सलामत है",
         "ro": "nigāh-e ʿajz sar-e rishtah-e salāmat hai"
       },
       {
         "ascii": "vafaa muqaabil-o-da((vaa-e ((ishq be-bunyaad",
         "ur": "وفا مقابل و دعوائے عشق بے بنیاد",
-        "hi": "वफ़ा मुक़ाबिल-ओ-दावा-ए िश्क़ बे-बुंयाद",
+        "hi": "वफ़ा मुक़ाबिल-ओ-दावा-ए इश्क़ बे-बुंयाद",
         "ro": "vafā muqābil-o-daʿvā-e ʿishq be-bunyād"
       },
       {
@@ -22539,7 +22539,7 @@
       {
         "ascii": "vi.saal-e laalah-((i;zaaraan-e sarv-qaamat hai",
         "ur": "وصالِ لالہ عذارانِ سرو قامت ہے",
-        "hi": "विसाल-ए लाला-िज़ारान-ए सरव-क़ामत है",
+        "hi": "विसाल-ए लाला-इज़ारान-ए सरव-क़ामत है",
         "ro": "viṣāl-e lālah-ʿiżārān-e sarv-qāmat hai"
       }
     ],
@@ -22585,7 +22585,7 @@
       {
         "ascii": "mu;Nh nah dikhlaave nah dikhlaa par bah andaaz-e ((itaab",
         "ur": "منہ نہ دکھلاوے نہ دکھلا پر بہ اندازِ عتاب",
-        "hi": "मुंह न दिखलावे न दिखला पर ब अंदाज़-ए िताब",
+        "hi": "मुंह न दिखलावे न दिखला पर ब अंदाज़-ए इताब",
         "ro": "muñh nah dikhlāve nah dikhlā par bah andāz-e ʿitāb"
       },
       {
@@ -22649,7 +22649,7 @@
       {
         "ascii": "juz naam nahii;N .suurat-e ((aalam mujhe man:zuur",
         "ur": "جز نام نہیں صورتِ عالم مجھے منظور",
-        "hi": "जुज़ नाम नहीं सूरत-ए ालम मुझे मंज़ूर",
+        "hi": "जुज़ नाम नहीं सूरत-ए आलम मुझे मंज़ूर",
         "ro": "juz nām nahīñ ṣūrat-e ʿālam mujhe manz̤ūr"
       },
       {
@@ -22733,7 +22733,7 @@
       {
         "ascii": "((aashiq huu;N pah ma((shuuq-farebii hai miraa kaam",
         "ur": "عاشق ہوں پہ معشوق فریبی ہے مرا کام",
-        "hi": "ाशिक़ हूँ पे माशूक़-फ़रेबी है मिरा काम",
+        "hi": "आशिक़ हूँ पे माशूक़-फ़रेबी है मिरा काम",
         "ro": "ʿāshiq hūñ pah maʿshūq-farebī hai mirā kām"
       },
       {
@@ -22958,7 +22958,7 @@
       {
         "ascii": "rone se aur ((ishq me;N be-baak ho ga))e",
         "ur": "رونے سے اور عشق میں بے باک ہو گئے",
-        "hi": "रोने से और िश्क़ में बे-बाक हो गए",
+        "hi": "रोने से और इश्क़ में बे-बाक हो गए",
         "ro": "rone se aur ʿishq meñ be-bāk ho gaʾe"
       },
       {
@@ -23006,7 +23006,7 @@
       {
         "ascii": "puuchhe hai kyaa vujuud-o-((adam ahl-e shauq kaa",
         "ur": "پوچھے ہے کیا وجود و عدم اہلِ شوق کا",
-        "hi": "पूछे है क्या वुजूद-ओ-दम अहल-ए शौक़ का",
+        "hi": "पूछे है क्या वुजूद-ओ-अदम अहल-ए शौक़ का",
         "ro": "pūchhe hai kyā vujūd-o-ʿadam ahl-e shauq kā"
       },
       {
@@ -23042,7 +23042,7 @@
       {
         "ascii": "puuchhe hai kyaa ma((aash-e jigar-taftagaan-e ((ishq",
         "ur": "پوچھے ہے کیا معاشِ جگر تفتگانِ عشق",
-        "hi": "पूछे है क्या माश-ए जिगर-तफ़तगान-ए िश्क़",
+        "hi": "पूछे है क्या माश-ए जिगर-तफ़तगान-ए इश्क़",
         "ro": "pūchhe hai kyā maʿāsh-e jigar-taftagān-e ʿishq"
       },
       {
@@ -23082,7 +23082,7 @@
       {
         "ascii": "ham-nishii;N mat kah kih bar-ham kar nah bazm-e ((aish-e dost",
         "ur": "ہم نشیں مت کہہ کہ بر ہم کر نہ بزمِ عیشِ دوست",
-        "hi": "हम-निशीं मत का कि बर-हम कर न बज़्म-ए ैश-ए दोस्त",
+        "hi": "हम-निशीं मत का कि बर-हम कर न बज़्म-ए ऐश-ए दोस्त",
         "ro": "ham-nishīñ mat kah kih bar-ham kar nah bazm-e ʿaish-e dost"
       },
       {
@@ -23118,7 +23118,7 @@
       {
         "ascii": "saaz-e ((aish-e be-dilii hai ;xaanah-viiraanii mujhe",
         "ur": "سازِ عیشِ بے دلی ہے خانہ ویرانی مجھے",
-        "hi": "साज़-ए ैश-ए बे-दिली है ख़ाना-वीरानी मुझे",
+        "hi": "साज़-ए ऐश-ए बे-दिली है ख़ाना-वीरानी मुझे",
         "ro": "sāz-e ʿaish-e be-dilī hai ḳhānah-vīrānī mujhe"
       },
       {
@@ -23182,7 +23182,7 @@
       {
         "ascii": "((ar.z-e naaz-e sho;xii-e dandaa;N baraa))e ;xandah hai",
         "ur": "عرضِ نازِ شوخیِ دنداں برائے خندہ ہے",
-        "hi": "र्ज़-ए नाज़-ए शोख़ी-ए दंदाँ बराए ख़ंदा है",
+        "hi": "अर्ज़-ए नाज़-ए शोख़ी-ए दंदाँ बराए ख़ंदा है",
         "ro": "ʿarẓ-e nāz-e shoḳhī-e dandāñ barāʾe ḳhandah hai"
       },
       {
@@ -23194,7 +23194,7 @@
       {
         "ascii": "hai ((adam me;N ;Gunchah ma;hv-e ((ibrat-e anjaam-e gul",
         "ur": "ہے عدم میں غنچہ محوِ عبرتِ انجامِ گل",
-        "hi": "है दम में ग़ुंचा महव-ए िबरत-ए अंजाम-ए गुल",
+        "hi": "है अदम में ग़ुंचा महव-ए इबरत-ए अंजाम-ए गुल",
         "ro": "hai ʿadam meñ ġhunchah maḥv-e ʿibrat-e anjām-e gul"
       },
       {
@@ -23206,7 +23206,7 @@
       {
         "ascii": "kulfat-e afsurdagii ko ((aish-e be-taabii ;haraam",
         "ur": "کلفتِ افسردگی کو عیشِ بے تابی حرام",
-        "hi": "कुलफ़त-ए अफ़सुर्दगी को ैश-ए बे-ताबी हराम",
+        "hi": "कुलफ़त-ए अफ़सुर्दगी को ऐश-ए बे-ताबी हराम",
         "ro": "kulfat-e afsurdagī ko ʿaish-e be-tābī ḥarām"
       },
       {
@@ -23242,7 +23242,7 @@
       {
         "ascii": "naqsh-e ((ibrat dar na:zar yaa naqd-e ((ishrat dar bi.saa:t",
         "ur": "نقشِ عبرت در نظر یا نقدِ عشرت در بصاط",
-        "hi": "नक़्श-ए िबरत दर नज़र या नक़द-ए िशरत दर बिसात",
+        "hi": "नक़्श-ए इबरत दर नज़र या नक़द-ए इशरत दर बिसात",
         "ro": "naqsh-e ʿibrat dar naz̤ar yā naqd-e ʿishrat dar biṣāt̤"
       },
       {
@@ -23254,7 +23254,7 @@
       {
         "ascii": "jaa-e istihzaa hai ((ishrat-koshii-e hastii asad",
         "ur": "جائے استہزا ہے عشرت کوشیِ ہستی اسد",
-        "hi": "जा-ए इसतिहज़ा है िशरत-कोशी-ए हस्ती असद",
+        "hi": "जा-ए इसतिहज़ा है इशरत-कोशी-ए हस्ती असद",
         "ro": "jā-e istihzā hai ʿishrat-koshī-e hastī asad"
       },
       {
@@ -23306,7 +23306,7 @@
       {
         "ascii": "((ajz-e diidanhaa bah naaz-o-naaz-e raftanhaa bah chashm",
         "ur": "عجزِ دیدنہا بہ ناز و نازِ رفتنہا بہ چشم",
-        "hi": "जज़-ए दीदंहा ब नाज़-ओ-नाज़-ए रफ़तंहा ब चश्म",
+        "hi": "अज्ज़-ए दीदंहा ब नाज़-ओ-नाज़-ए रफ़तंहा ब चश्म",
         "ro": "ʿajz-e dīdanhā bah nāz-o-nāz-e raftanhā bah chashm"
       },
       {
@@ -23346,7 +23346,7 @@
       {
         "ascii": "((aalam ;Gubaar-e va;hshat-e majnuu;N hai sar-ba-sar",
         "ur": "عالم غبارِ وحشتِ مجنوں ہے سربسر",
-        "hi": "ालम ग़ुबार-ए वहशत-ए मज्नूँ है सर-ब-सर",
+        "hi": "आलम ग़ुबार-ए वहशत-ए मज्नूँ है सर-ब-सर",
         "ro": "ʿālam ġhubār-e vaḥshat-e majnūñ hai sar-ba-sar"
       },
       {
@@ -23376,7 +23376,7 @@
       {
         "ascii": "aa;xir kabhii to ((uqdah-e dil vaa kare ko))ii",
         "ur": "آخر کبھی تو عقدۂ دل وا کرے کوئی",
-        "hi": "आख़िर कभी तो ुक़दा-ए दिल वा करे कोई",
+        "hi": "आख़िर कभी तो उक़दा-ए दिल वा करे कोई",
         "ro": "āḳhir kabhī to ʿuqdah-e dil vā kare koʾī"
       },
       {
@@ -23430,7 +23430,7 @@
       {
         "ascii": "sar-bar hu))ii nah va((dah-e .sabr-aazmaa se ((umr",
         "ur": "سر بر ہوئی نہ وعدۂ صبر آزما سے عمر",
-        "hi": "सर-बर हुई न वादा-ए सबर-आज़मा से ुमर",
+        "hi": "सर-बर हुई न वादा-ए सबर-आज़मा से उम्र",
         "ro": "sar-bar huʾī nah vaʿdah-e ṣabr-āzmā se ʿumr"
       },
       {
@@ -23484,7 +23484,7 @@
       {
         "ascii": "hastii ko laf:z-e ma((nii-e ((anqaa kare ko))ii",
         "ur": "ہستی کو لفظِ معنیِ عنقا کرے کوئی",
-        "hi": "हस्ती को लफ़्ज़-ए मानी-ए ंक़ा करे कोई",
+        "hi": "हस्ती को लफ़्ज़-ए मानी-ए अंक़ा करे कोई",
         "ro": "hastī ko lafz̤-e maʿnī-e ʿanqā kare koʾī"
       },
       {
@@ -23502,7 +23502,7 @@
       {
         "ascii": "((ar.z-e sirishk par hai fa.zaa-e zamaanah tang",
         "ur": "عرضِ سرشک پر ہے فضائے زمانہ تنگ",
-        "hi": "र्ज़-ए सिरिश्क पर है फ़ज़ा-ए ज़माना तंग",
+        "hi": "अर्ज़-ए सिरिश्क पर है फ़ज़ा-ए ज़माना तंग",
         "ro": "ʿarẓ-e sirishk par hai faẓā-e zamānah tang"
       },
       {
@@ -23793,7 +23793,7 @@
       {
         "ascii": "naalah sarmaayah-e yak-((aalam-o-((aalam kaf-e ;xaak",
         "ur": "نالہ سرمایۂ یک عالم و عالم کفِ خاک",
-        "hi": "नाला सर्माया-ए यक-ालम-ओ-ालम कफ़-ए ख़ाक",
+        "hi": "नाला सर्माया-ए यक-आलम-ओ-आलम कफ़-ए ख़ाक",
         "ro": "nālah sarmāyah-e yak-ʿālam-o-ʿālam kaf-e ḳhāk"
       },
       {
@@ -23877,13 +23877,13 @@
       {
         "ascii": "maah-e nau huu;N kih falak ((ajz sikhaataa hai mujhe",
         "ur": "ماہِ نو ہوں کہ فلک عجز سکھاتا ہے مجھے",
-        "hi": "माह-ए नौ हूँ कि फ़लक जज़ सिखाता है मुझे",
+        "hi": "माह-ए नौ हूँ कि फ़लक अज्ज़ सिखाता है मुझे",
         "ro": "māh-e nau hūñ kih falak ʿajz sikhātā hai mujhe"
       },
       {
         "ascii": "((umr bhar ek hii pahluu pah sulaataa hai mujhe",
         "ur": "عمر بھر ایک ہی پہلو پہ سلاتا ہے مجھے",
-        "hi": "ुमर भर एक ही पहलू पे सुलाता है मुझे",
+        "hi": "उम्र भर एक ही पहलू पे सुलाता है मुझे",
         "ro": "ʿumr bhar ek hī pahlū pah sulātā hai mujhe"
       }
     ],
@@ -23975,7 +23975,7 @@
       {
         "ascii": "vuh ;xuu;N jo chashm-e tar se ((umr bhar yuu;N dam bah dam nikle",
         "ur": "وہ خوں جو چشمِ تر سے عمر بھر یوں دم بہ دم نکلے",
-        "hi": "वो ख़ूँ जो चश्म-ए तर से ुमर भर यूँ दम ब दम निकले",
+        "hi": "वो ख़ूँ जो चश्म-ए तर से उम्र भर यूँ दम ब दम निकले",
         "ro": "vuh ḳhūñ jo chashm-e tar se ʿumr bhar yūñ dam bah dam nikle"
       },
       {
@@ -24209,7 +24209,7 @@
       {
         "ascii": "lab-e ((iis;aa kii junbish kartii hai gahvaarah-junbaanii",
         "ur": "لبِ عیسیٰ کی جنبش کرتی ہے گہوارہ جنبانی",
-        "hi": "लब-ए ीसा की जुंबिश करती है गहवारा-जुंबानी",
+        "hi": "लब-ए ईसा की जुंबिश करती है गहवारा-जुंबानी",
         "ro": "lab-e ʿīsâ kī junbish kartī hai gahvārah-junbānī"
       },
       {
@@ -24251,7 +24251,7 @@
       {
         "ascii": "kushaad-e ((aqd ma;hv-e naa;xuun-e dast-e nigaarii;N hai",
         "ur": "کشادِ عقد محوِ ناخونِ دستِ نگاریں ہے",
-        "hi": "कुशाद-ए क़द महव-ए नाख़ून-ए दस्त-ए निगारीं है",
+        "hi": "कुशाद-ए अक़्द महव-ए नाख़ून-ए दस्त-ए निगारीं है",
         "ro": "kushād-e ʿaqd maḥv-e nāḳhūn-e dast-e nigārīñ hai"
       }
     ],
@@ -24315,7 +24315,7 @@
       {
         "ascii": "josh-e nairang-e bahaar-e ((ar.z-e .sa;hraa-daadah se",
         "ur": "جوشِ نیرنگِ بہارِ عرضِ صحرا دادہ سے",
-        "hi": "जोश-ए नैरंग-ए बहार-ए र्ज़-ए सहरा-दादा से",
+        "hi": "जोश-ए नैरंग-ए बहार-ए अर्ज़-ए सहरा-दादा से",
         "ro": "josh-e nairang-e bahār-e ʿarẓ-e ṣaḥrā-dādah se"
       },
       {
@@ -24327,7 +24327,7 @@
       {
         "ascii": "josh-e viiraanii hai ((ishq-e daa;G-e beruu;N-daadah se",
         "ur": "جوشِ ویرانی ہے عشقِ داغِ بیروں دادہ سے",
-        "hi": "जोश-ए वीरानी है िश्क़-ए दाग़-ए बेरूँ-दादा से",
+        "hi": "जोश-ए वीरानी है इश्क़-ए दाग़-ए बेरूँ-दादा से",
         "ro": "josh-e vīrānī hai ʿishq-e dāġh-e berūñ-dādah se"
       },
       {
@@ -24339,7 +24339,7 @@
       {
         "ascii": "dekhte hai;N chashm-e az ;xvaab-e ((adam nakshaadah se",
         "ur": "دیکھتے ہیں چشمِ از خوابِ عدم نکشادہ سے",
-        "hi": "देखते हैं चश्म-ए अज़ ख़्वाब-ए दम नकशादा से",
+        "hi": "देखते हैं चश्म-ए अज़ ख़्वाब-ए अदम नकशादा से",
         "ro": "dekhte haiñ chashm-e az ḳhvāb-e ʿadam nakshādah se"
       }
     ],
@@ -24489,7 +24489,7 @@
       {
         "ascii": "hujuum-e naalah ;hairat ((aajiz-e ((ar.z-e yak-af;Gaa;N hai",
         "ur": "ہجومِ نالہ حیرت عاجزِ عرضِ یک افغاں ہے",
-        "hi": "हुजूम-ए नाला हैरत ाजिज़-ए र्ज़-ए यक-अफ़ग़ाँ है",
+        "hi": "हुजूम-ए नाला हैरत आजिज़-ए अर्ज़-ए यक-अफ़ग़ाँ है",
         "ro": "hujūm-e nālah ḥairat ʿājiz-e ʿarẓ-e yak-afġhāñ hai"
       },
       {
@@ -24507,7 +24507,7 @@
       {
         "ascii": "nigaah-e be-;hijaab-e naaz te;G-e tez-e ((uryaa;N hai",
         "ur": "نگاہِ بے حجابِ ناز تیغِ تیزِ عریاں ہے",
-        "hi": "निगाह-ए बे-हिजाब-ए नाज़ तेग़-ए तेज़-ए ुर्याँ है",
+        "hi": "निगाह-ए बे-हिजाब-ए नाज़ तेग़-ए तेज़-ए उरयाँ है",
         "ro": "nigāh-e be-ḥijāb-e nāz teġh-e tez-e ʿuryāñ hai"
       },
       {
@@ -24519,7 +24519,7 @@
       {
         "ascii": "kih .sub;h-e ((iid mujh ko bad-tar az chaak-e garebaa;N hai",
         "ur": "کہ صبحِ عید مجھ کو بد تر از چاکِ گریباں ہے",
-        "hi": "कि सुबह-ए ीद मुझ को बद-तर अज़ चाक-ए गरेबाँ है",
+        "hi": "कि सुबह-ए ईद मुझ को बद-तर अज़ चाक-ए गरेबाँ है",
         "ro": "kih ṣubḥ-e ʿīd mujh ko bad-tar az chāk-e garebāñ hai"
       },
       {
@@ -24537,7 +24537,7 @@
       {
         "ascii": ";Gam aa;Gosh-e balaa me;N parvarish detaa hai ((aashiq ko",
         "ur": "غم آغوشِ بلا میں پرورش دیتا ہے عاشق کو",
-        "hi": "ग़म आग़ोश-ए बला में परवरिश देता है ाशिक़ को",
+        "hi": "ग़म आग़ोश-ए बला में परवरिश देता है आशिक़ को",
         "ro": "ġham āġhosh-e balā meñ parvarish detā hai ʿāshiq ko"
       },
       {
@@ -24555,7 +24555,7 @@
       {
         "ascii": "dil-e ;xuu;N-gashtah dar dast-e ;hinaa-aaluudah ((uryaa;N hai",
         "ur": "دلِ خوں گشتہ در دستِ حنا آلودہ عریاں ہے",
-        "hi": "दिल-ए ख़ूँ-गशता दर दस्त-ए हिना-आलूदा ुर्याँ है",
+        "hi": "दिल-ए ख़ूँ-गशता दर दस्त-ए हिना-आलूदा उरयाँ है",
         "ro": "dil-e ḳhūñ-gashtah dar dast-e ḥinā-ālūdah ʿuryāñ hai"
       },
       {
@@ -24567,7 +24567,7 @@
       {
         "ascii": "do-((aalam aagahii saamaan-e yak ;xvaab-e pareshaa;N hai",
         "ur": "دو عالم آگہی سامانِ یک خوابِ پریشاں ہے",
-        "hi": "दो-ालम आगही सामान-ए यक ख़्वाब-ए परेशाँ है",
+        "hi": "दो-आलम आगही सामान-ए यक ख़्वाब-ए परेशाँ है",
         "ro": "do-ʿālam āgahī sāmān-e yak ḳhvāb-e pareshāñ hai"
       },
       {
@@ -24626,7 +24626,7 @@
       {
         "ascii": "nah puuchh siinah-e ((aashiq se aab-e te;G-e nigaah",
         "ur": "نہ پوچھ سینۂ عاشق سے آبِ تیغِ نگاہ",
-        "hi": "न पूछ सीना-ए ाशिक़ से आब-ए तेग़-ए निगाह",
+        "hi": "न पूछ सीना-ए आशिक़ से आब-ए तेग़-ए निगाह",
         "ro": "nah pūchh sīnah-e ʿāshiq se āb-e teġh-e nigāh"
       },
       {
@@ -24714,7 +24714,7 @@
       {
         "ascii": "dil mudda((ii-o-diidah banaa mudda((;aa ((aliih",
         "ur": "دل مدّعی و دیدہ بنا مدّعیٰ علیہ",
-        "hi": "दिल मुद््दी-ओ-दीदा बना मुद््दा लीह",
+        "hi": "दिल मुद््दी-ओ-दीदा बना मुद््दा अलीह",
         "ro": "dil muddaʿī-o-dīdah banā muddaʿâ ʿalīh"
       },
       {
@@ -24732,7 +24732,7 @@
       {
         "ascii": "ay ((andaliib vaqt-e vidaa((-e bahaar hai",
         "ur": "اے عندلیب وقتِ وداعِ بہار ہے",
-        "hi": "अय ंदलीब वक़त-ए विदा-ए बहार है",
+        "hi": "अय अंदलीब वक़त-ए विदा-ए बहार है",
         "ro": "ay ʿandalīb vaqt-e vidāʿ-e bahār hai"
       },
       {
@@ -24762,7 +24762,7 @@
       {
         "ascii": "ai ((andaliib yak kaf-e ;xas bahr-e aashiyaa;N",
         "ur": "اے عندلیب یک کفِ خس بہرِ آشیاں",
-        "hi": "ऐ ंदलीब यक कफ़-ए ख़स बहर-ए आशियाँ",
+        "hi": "ऐ अंदलीब यक कफ़-ए ख़स बहर-ए आशियाँ",
         "ro": "ai ʿandalīb yak kaf-e ḳhas bahr-e āshiyāñ"
       },
       {
@@ -24786,7 +24786,7 @@
       {
         "ascii": ";Gaflat kafiil-e ((umr-o-asad .zaamin-e nashaa:t",
         "ur": "غفلت کفیلِ عمر و اسد ضامنِ نشاط",
-        "hi": "ग़फ़लत कफ़ील-ए ुमर-ओ-असद ज़ामिन-ए नशात",
+        "hi": "ग़फ़लत कफ़ील-ए उम्र-ओ-असद ज़ामिन-ए नशात",
         "ro": "ġhaflat kafīl-e ʿumr-o-asad ẓāmin-e nashāt̤"
       },
       {
@@ -24810,7 +24810,7 @@
       {
         "ascii": "((ibrat-:talab hai ;hal-e mu((ammaa-e aagahii",
         "ur": "عبرت طلب ہے حلِ معمّائے آگہی",
-        "hi": "िबरत-तलब है हल-ए मुममा-ए आगही",
+        "hi": "इबरत-तलब है हल-ए मुममा-ए आगही",
         "ro": "ʿibrat-t̤alab hai ḥal-e muʿammā-e āgahī"
       },
       {
@@ -24904,13 +24904,13 @@
       {
         "ascii": "shauq-e ((inaa;N-gusii;xtah daryaa kahe;N jise",
         "ur": "شوقِ عناں گسیختہ دریا کہیں جسے",
-        "hi": "शौक़-ए िनाँ-गुसीख़्ता दरया कहें जिसे",
+        "hi": "शौक़-ए इनाँ-गुसीख़्ता दरया कहें जिसे",
         "ro": "shauq-e ʿināñ-gusīḳhtah daryā kaheñ jise"
       },
       {
         "ascii": "dar-kaar hai shiguftan-e gul'haa-e ((aish ko",
         "ur": "در کار ہے شگفتنِ گلہائے عیش کو",
-        "hi": "दर-कार है शिगुफ़्तन-ए गुलहा-ए ैश को",
+        "hi": "दर-कार है शिगुफ़्तन-ए गुलहा-ए ऐश को",
         "ro": "dar-kār hai shiguftan-e gul'hā-e ʿaish ko"
       },
       {
@@ -25064,7 +25064,7 @@
       {
         "ascii": "saaye kii :tara;h ham pah ((ajab vaqt pa;Raa hai",
         "ur": "سایے کی طرح ہم پہ عجب وقت پڑا ہے",
-        "hi": "साये की तरह हम पे जब वक़त पड़ा है",
+        "hi": "साये की तरह हम पे अजब वक़त पड़ा है",
         "ro": "sāye kī t̤araḥ ham pah ʿajab vaqt paṛā hai"
       },
       {
@@ -25094,7 +25094,7 @@
       {
         "ascii": "sar-rishtah-e be-taabii-e dil dar girih-e ((ajz",
         "ur": "سر رشتۂ بے تابیِ دل در گرۂ عجز",
-        "hi": "सर-रिशता-ए बे-ताबी-ए दिल दर गिरिह-ए जज़",
+        "hi": "सर-रिशता-ए बे-ताबी-ए दिल दर गिरिह-ए अज्ज़",
         "ro": "sar-rishtah-e be-tābī-e dil dar girih-e ʿajz"
       },
       {
@@ -25288,7 +25288,7 @@
       {
         "ascii": "paadaash-e ((amal kii :tama((-e ;xaam bahut hai",
         "ur": "پاداشِ عمل کی طمعِ خام بہت ہے",
-        "hi": "पादाश-ए मल की तमा-ए ख़ाम बहुत है",
+        "hi": "पादाश-ए अमल की तमा-ए ख़ाम बहुत है",
         "ro": "pādāsh-e ʿamal kī t̤amaʿ-e ḳhām bahut hai"
       },
       {
@@ -25300,7 +25300,7 @@
       {
         "ascii": "paa-bastagii-e rasm-o-rah-e ((aam bahut hai",
         "ur": "پا بستگیِ رسم و رۂ عام بہت ہے",
-        "hi": "पा-बसतगी-ए रस्म-ओ-रह-ए ाम बहुत है",
+        "hi": "पा-बसतगी-ए रस्म-ओ-रह-ए आम बहुत है",
         "ro": "pā-bastagī-e rasm-o-rah-e ʿām bahut hai"
       },
       {
@@ -25388,7 +25388,7 @@
       {
         "ascii": "((ar.sah hu))aa hai da((vat-e mizhgaa;N kiye hu))e",
         "ur": "عرصہ ہوا ہے دعوتِ مژگاں کیے ہوئے",
-        "hi": "रसा हुआ है दावत-ए मिझ़्गाँ किये हुए",
+        "hi": "अरसा हुआ है दावत-ए मिझ़्गाँ किये हुए",
         "ro": "ʿarṣah huʾā hai daʿvat-e mizhgāñ kiye huʾe"
       },
       {
@@ -25418,7 +25418,7 @@
       {
         "ascii": "phir pursish-e jaraa;hat-e dil ko chalaa hai ((ishq",
         "ur": "پھر پرسشِ جراحتِ دل کو چلا ہے عشق",
-        "hi": "फिर पुरसिश-ए जराहत-ए दिल को चला है िश्क़",
+        "hi": "फिर पुरसिश-ए जराहत-ए दिल को चला है इश्क़",
         "ro": "phir pursish-e jarāḥat-e dil ko chalā hai ʿishq"
       },
       {
@@ -25472,7 +25472,7 @@
       {
         "ascii": "((ar.z-e mataa((-e ((aql-o-dil-o-jaa;N kiye hu))e",
         "ur": "عرضِ متاعِ عقل و دل و جاں کیے ہوئے",
-        "hi": "र्ज़-ए मता-ए क़ल-ओ-दिल-ओ-जाँ किये हुए",
+        "hi": "अर्ज़-ए मता-ए अक़्ल-ओ-दिल-ओ-जाँ किये हुए",
         "ro": "ʿarẓ-e matāʿ-e ʿaql-o-dil-o-jāñ kiye huʾe"
       },
       {
@@ -25496,7 +25496,7 @@
       {
         "ascii": "jaa;N na;zr-e dil-farebii-e ((unvaa;N kiye hu))e",
         "ur": "جاں نذرِ دل فریبیِ عنواں کیے ہوئے",
-        "hi": "जाँ नज़्र-ए दिल-फ़रेबी-ए ुंवाँ किये हुए",
+        "hi": "जाँ नज़्र-ए दिल-फ़रेबी-ए उंवाँ किये हुए",
         "ro": "jāñ nażr-e dil-farebī-e ʿunvāñ kiye huʾe"
       },
       {
@@ -25621,7 +25621,7 @@
       {
         "ascii": "nah tum kih chor bane ((umr-e jaavidaa;N ke liye",
         "ur": "نہ تم کہ چور بنے عمرِ جاوداں کے لیے",
-        "hi": "न तुम कि चोर बने ुमर-ए जाविदाँ के लिये",
+        "hi": "न तुम कि चोर बने उम्र-ए जाविदाँ के लिये",
         "ro": "nah tum kih chor bane ʿumr-e jāvidāñ ke liye"
       },
       {
@@ -25693,7 +25693,7 @@
       {
         "ascii": "banaa hai ((aish tajammul ;husain ;xaa;N ke liye",
         "ur": "بنا ہے عیش تجمّل حسین خاں کے لیے",
-        "hi": "बना है ैश तजम्मुल हुसैन ख़ाँ के लिये",
+        "hi": "बना है ऐश तजम्मुल हुसैन ख़ाँ के लिये",
         "ro": "banā hai ʿaish tajammul ḥusain ḳhāñ ke liye"
       },
       {
@@ -25723,7 +25723,7 @@
       {
         "ascii": "zamaanah ((ahd me;N us ke hai ma;hv-e aaraa))ish",
         "ur": "زمانہ عہد میں اس کے ہے محوِ آرائش",
-        "hi": "ज़माना हद में उस के है महव-ए आराइश",
+        "hi": "ज़माना अह्द में उस के है महव-ए आराइश",
         "ro": "zamānah ʿahd meñ us ke hai maḥv-e ārāʾish"
       },
       {
@@ -25753,7 +25753,7 @@
       {
         "ascii": ".salaa-e ((aam hai yaaraan-e nuktah-daa;N ke liye",
         "ur": "صلائے عام ہے یارانِ نکتہ داں کے لیے",
-        "hi": "सला-ए ाम है यारान-ए नुकता-दाँ के लिये",
+        "hi": "सला-ए आम है यारान-ए नुकता-दाँ के लिये",
         "ro": "ṣalā-e ʿām hai yārān-e nuktah-dāñ ke liye"
       }
     ],

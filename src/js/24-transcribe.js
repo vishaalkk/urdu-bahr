@@ -163,14 +163,15 @@ function trMarkedAscii(core, ascii) {
 
 /* a word typed in Urdu / Persian script: one piece carrying its scripts. A Persian line asks the Persian list first, an Urdu
    one Scan's word map first; the letter map is the last resort. A written iẓāfat (zer, ۂ) shows as -e, as in faLineScripts. */
-function trArabicWord(core, lang) {
+function trArabicWord(core, lang, prev, next) {
   var literal = /[\u064B-\u065F\u0670]/.test(core), known = (typeof wordAscii === 'function') && wordAscii(core, literal);
-  var fa = (typeof faWordScripts === 'function' && (lang === 'fa' || !known)) ? faWordScripts(core) : null;
+  var fa = (typeof faWordScripts === 'function' && lang === 'fa') ? faWordScripts(core) : null;
   var r;
-  if (fa && fa.ro) r = { tier: (lang === 'fa' || !known) ? 'persian' : 'known', ro: trFaRo(fa.ro, core), hi: fa.hi || '' };
+  if (fa && fa.ro) r = { tier: 'persian', ro: trFaRo(fa.ro, core), hi: fa.hi || '' };
   else {
-    var u = (typeof urduWordsToScripts === 'function') ? urduWordsToScripts(core) : null;   // Scan's per-word reading, letter map for the unknown
-    r = { tier: known ? 'known' : 'guess', ro: (u && u.ro) || core, hi: (u && u.hi) || core };
+    var u = (typeof urduWordReading === 'function') ? urduWordReading(core, literal, prev, next) : null;   // Scan's reading of one word (19-scan.js)
+    r = { tier: (u && u.tier) || (known ? 'known' : 'guess'), ro: (u && u.ro) || core, hi: (u && u.hi) || core };
+    if (r.tier === 'persian') r.ro = trFaRo(r.ro, core);
     var marked = known && literal ? trMarkedAscii(core, known) : known;
     if (marked !== known) { var m = asciiToScripts(marked); if (m.ro) { r.ro = m.ro; r.hi = m.hi || r.hi; } }
   }
@@ -180,7 +181,8 @@ function trArabicWord(core, lang) {
 
 function trScriptWords(raw, o) {
   var lang = (typeof detectScanLang === 'function' && /[\u0600-\u06FF]/.test(raw)) ? detectScanLang(raw) : 'ur';
-  return raw.split(/\s+/).filter(Boolean).map(function (tok) {
+  var toks = raw.split(/\s+/).filter(Boolean), core = function (t) { return t ? trSplitEdges(t).core : null; };
+  return toks.map(function (tok, ti) {
     var e = trSplitEdges(tok), w = { lead: e.lead, trail: e.trail, pieces: [], src: tok, plain: false };
     if (/[\u0900-\u097F]/.test(e.core)) {
       var asc = (typeof devToAscii === 'function') ? devToAscii(e.core) : e.core, p = asciiToScripts(asc);
@@ -191,7 +193,7 @@ function trScriptWords(raw, o) {
       var parts = e.core.split('\u200c').filter(Boolean);   // صاحب‌دلان: two words, one compound
       w.zwnj = parts.length > 1;
       parts.forEach(function (part) {
-        var r = trArabicWord(part, lang);
+        var r = trArabicWord(part, lang, core(toks[ti - 1]), core(toks[ti + 1]));
         w.pieces.push({ src: part, tier: r.tier, key: part, fixed: r.fixed, script: true });
       });
     }
@@ -217,6 +219,9 @@ function trCands(piece, def, lang) {
   if (piece.script) {
     add({ ro: def.ro, hi: def.hi, ur: def.ur, fixed: { ur: def.ur, ro: def.ro, hi: def.hi }, tag: 'now', isDefault: true });
     trFaHits(piece.src).forEach(function (h) { add({ ro: h.ro, hi: h.hi, ur: isFa ? trUrToFa(piece.src) : piece.src, fixed: { ur: piece.src, ro: h.ro, hi: h.hi }, tag: 'persian' }); });
+    /* the same spelling's other readings in Platts (حسن ḥasan, ḥusn), once the dictionary has loaded */
+    if (!isFa && typeof DICT_STORE !== 'undefined' && DICT_STORE.status === 'ready')
+      DICT_STORE.readingsOf(piece.src).slice(0, 3).forEach(function (r) { add({ ro: r.ro, hi: r.hi, ur: piece.src, fixed: { ur: piece.src, ro: r.ro, hi: r.hi }, tag: 'reading' }); });
     return out;
   }
   var plain = piece.src.toLowerCase().replace(/[āáâ]/g, 'ā').replace(/[īíî]/g, 'ī').replace(/[ūúû]/g, 'ū');
@@ -505,7 +510,8 @@ function trBuild(text, opts) {
       });
       w.hasChoice = hasChoice;
       w.needsCheck = hasChoice || w.tier === 'guess' || w.tier === 'loose' || w.tier === 'derived' ||
-        w.tier === 'form';   // a dictionary form is still a guess at which word: underlined (tests/benchmark_transcribe.js: caught)
+        w.tier === 'form' ||   // a dictionary form is still a guess at which word: underlined (tests/benchmark_transcribe.js: caught)
+        (w.tier === 'persian' && lineLang !== 'fa' && w.pieces.some(function (p) { return p.script; }));   // Urdu script read by the Persian list (tests/benchmark_urdu_input.js: caught)
       if (!w.plain) {
         stats.words++;
         if (stats[w.tier] != null) stats[w.tier]++;
@@ -685,6 +691,8 @@ function trEditHtml(w, script) {
    needless underlines). */
 function trRivals(p, cands) {
   var alts = cands.filter(function (c) { return !c.isDefault; });
+  /* Urdu script read from the poets' list: another reading of the spelling in Platts makes it a guess at which word */
+  if (p.script && p.tier === 'poets') return alts.filter(function (c) { return c.tag === 'reading' && casualKey(c.ro, 0) !== casualKey(cands[0].ro || '', 0); }).length;
   if (!/^(known|poets)$/.test(p.tier) || !cands.length || typeof typedDistance !== 'function') return alts.length;
   var own = typedDistance(p.src, cands[0].ro || ''), u0 = dictFoldUr(cands[0].ur || '');
   return alts.filter(function (c) {

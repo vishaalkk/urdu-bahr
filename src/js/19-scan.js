@@ -357,15 +357,114 @@ function meterLabel(m, opts){
   if (tech) return `${numStr} — ${tech}`;
   return numStr;
 }
+/* The poets' list (ROMAN_FALLBACK: typed Roman -> ASCII) read the other way: Urdu spelling -> its ASCII. Built once. A spelling
+   two words share goes to the one more typed spellings lead to. */
+let _poetsByUr = null;
+function poetsUrduIndex(){
+  if(_poetsByUr) return _poetsByUr;
+  _poetsByUr = new Map();
+  if(typeof ROMAN_FALLBACK === 'undefined' || !window.p_ur) return _poetsByUr;
+  const n = new Map();
+  Object.keys(ROMAN_FALLBACK).forEach(k => { const a = ROMAN_FALLBACK[k]; n.set(a, (n.get(a) || 0) + 1); });
+  n.forEach((c, a) => {
+    let ur = ''; try { ur = window.p_ur.parse(a); } catch(e) { return; }
+    const key = lexKey(ur), had = _poetsByUr.get(key);
+    if(!had || c > had.c) _poetsByUr.set(key, { a, c });
+  });
+  return _poetsByUr;
+}
+/* verbs and auxiliaries written joined to the word before (\u06C1\u0648\u06AF\u06CC\u0627 ho gay\u0101, \u06A9\u0631\u062F\u06CC\u0627 kar diy\u0101): a closed class */
+const UR_JOINED_AUX = /(\u06AF\u06CC\u0627|\u06AF\u0626\u06CC|\u06AF\u0626\u06D2|\u06AF\u0626\u06CC\u06BA|\u062C\u0627\u0626\u06D2|\u062C\u0627\u062A\u0627|\u062C\u0627\u062A\u06CC|\u062C\u0627\u062A\u06D2|\u062C\u0627\u0626\u06CC\u06BA|\u062F\u06CC\u0627|\u062F\u06CC\u06BA|\u062F\u06CC\u06D2|\u062F\u06CC\u0626\u06D2|\u0644\u06CC\u0627|\u0644\u06CC\u06BA|\u0644\u06CC\u06D2|\u0644\u0626\u06D2|\u0633\u06A9\u0627|\u0633\u06A9\u06CC|\u0633\u06A9\u06D2|\u0633\u06A9\u062A\u0627|\u0633\u06A9\u062A\u06CC|\u0633\u06A9\u062A\u06D2|\u0631\u06C1\u0627|\u0631\u06C1\u06CC|\u0631\u06C1\u06D2|\u0686\u06A9\u0627|\u0686\u06A9\u06CC|\u0686\u06A9\u06D2)$/;
+/* One Urdu-script word -> {tier, ro, hi, ascii?}: Pritchett's word map (known), the poets' list (poets), the Persian list
+   (persian), a word and a joined auxiliary both listed (derived), else read as a Hindi reader reads it (guess: urduGuessAscii),
+   else the letter map. prev / next: the neighbouring words (null at a line's edge), which settle a homograph (ctxReading).
+   Scan's per-word fallback and Transcribe's reading of Urdu script both come from here. */
+function urduWordReading(word, literal, prev, next){
+  const m = String(word || '').match(/^([^\u0600-\u06FF]*)([\s\S]*?)([^\u0600-\u06FF\u064B-\u065F\u0670]*)$/);
+  const lead = m ? m[1] : '', trail = m ? m[3] : '', core = (m ? m[2] : String(word || '')).replace(/[\u0614]/g, '');   // \u0614 the pen-name mark
+  const wrap = r => ({ tier: r.tier, ascii: r.ascii, ro: lead + r.ro + trail, hi: lead + r.hi + trail });
+  const viaAscii = (a, tier) => { try { const r = window.p_di.parse(a), h = window.p_hi.parse(a); return r ? { tier, ascii: a, ro: r, hi: h || '' } : null; } catch(e) { return null; } };
+  if(!core) return { tier: 'plain', ro: String(word || ''), hi: String(word || '') };
+  let r = null;
+  const known = (!literal && typeof ctxReading === 'function' && wordAscii(core, false) && ctxReading(core, prev, next)) || wordAscii(core, literal);   // میں: maiñ or meñ by its neighbours
+  if(known) r = viaAscii(known, 'known');
+  const listed = w => { const a = wordAscii(w, false); if(a) return a; const p = poetsUrduIndex().get(lexKey(w)); return p ? p.a : null; };
+  if(!r){ const p = poetsUrduIndex().get(lexKey(core)); if(p) r = viaAscii(p.a, 'poets'); }
+  if(!r && typeof listedFormAscii === 'function'){ const f = listedFormAscii(core, listed); if(f) r = viaAscii(f, 'derived'); }
+  /* the Persian list's own words only: its prefix and suffix splits misread Urdu (چاہئے chāh; tests/benchmark_urdu_input.js) */
+  if(!r && typeof faKey === 'function' && typeof faLookup === 'function'){ const k = faKey(core), fa = k ? faLookup(k) : null; if(fa && fa.ro) r = { tier: 'persian', ro: fa.ro, hi: fa.hi || '' }; }
+  if(!r){
+    const j = lexKey(core).match(UR_JOINED_AUX);
+    if(j && j.index > 0){
+      const a1 = listed(lexKey(core).slice(0, j.index)), a2 = listed(j[1]);
+      if(a1 && a2){ const p1 = viaAscii(a1, 'derived'), p2 = viaAscii(a2, 'derived'); if(p1 && p2) r = { tier: 'derived', ro: p1.ro + ' ' + p2.ro, hi: p1.hi + ' ' + p2.hi }; }
+    }
+  }
+  if(!r && typeof urduGuessAscii === 'function'){ const g = urduGuessAscii(core); if(g) r = viaAscii(g, 'guess'); }
+  if(!r) r = { tier: 'guess', ro: typeof urduToRoman === 'function' ? urduToRoman(core) : core, hi: typeof urduToDevanagari === 'function' ? urduToDevanagari(core) : core };
+  return wrap(r);
+}
+/* A word written without a vowel letter (عشق, عجب, صبر) gives the engine two splits at the same cost: ʿish-q and ʿa-shq. Pritchett's
+   verses say which: when every reading of the spelling in them (KNOWN_VERSES, seen at least 3 times, any iẓāfat aside) puts its
+   vowels on the same consonants, the engine's one split that agrees is pinned (scanLine overrides). Words with an iẓāfat, or read
+   two ways in her verses (qadr / qadar, t̤araf / t̤arf), are left free. Ghalib's meter top-1 goes from 91.33 to 91.88% with top-3
+   unchanged (tests/benchmark.js meter.pasted*); a pasted مقامِ عشق بھی عجب بات ہے no longer passes for mutaqārib on ʿa-shq. */
+let _verseReadings = null;
+function verseReadings(){
+  if(_verseReadings) return _verseReadings;
+  _verseReadings = new Map();
+  if(typeof KNOWN_VERSES === 'undefined') return _verseReadings;
+  const seen = new Set();
+  Object.keys(KNOWN_VERSES).forEach(k => { const v = KNOWN_VERSES[k];
+    if(!v || !v.ur || !v.ascii || seen.has(v)) return; seen.add(v);
+    const u = v.ur.split(/\s+/).filter(Boolean), a = v.ascii.split(/\s+/).filter(Boolean);
+    if(u.length !== a.length) return;
+    u.forEach((w, i) => { const key = lexKey(w); let e = _verseReadings.get(key); if(!e) _verseReadings.set(key, e = new Map());
+      const r = a[i].replace(/-e$/, ''); e.set(r, (e.get(r) || 0) + 1); });
+  });
+  return _verseReadings;
+}
+/* which of a word's n consonant letters carry a vowel, by its ASCII; null when they do not line up one to one */
+function asciiVoweled(a, n){
+  const toks = []; let i = 0; a = String(a);
+  while(i < a.length){
+    const v = a.slice(i).match(/^(aa|ii|uu|ai|au|e|o|a|i|u)/); if(v){ toks.push(1); i += v[1].length; continue; }
+    const c = a.slice(i).match(/^(\(\(|\)\)|[;:.][a-zA-Z]|chh|ch|sh|zh|kh|gh|ph|th|bh|dh|jh|[a-z])/); if(c){ toks.push(0); i += c[1].length; continue; }
+    return null;
+  }
+  const out = []; toks.forEach((t, k) => { if(!t) out.push(toks[k + 1] === 1); });
+  return out.length === n ? out : null;
+}
+const ROMAN_PIN_CONS = /^[بپتٹثجچحخدڈذرڑزژسشصضطظعغفقکگلمن]+$/;
+function romanPins(line){
+  if(typeof Scan === 'undefined' || typeof lexKey !== 'function') return null;
+  let words; try { words = Scan.tokenize(String(line || '').normalize('NFC')); } catch(e) { return null; }
+  const pins = {}; let n = 0;
+  words.forEach((wd, i) => {
+    const bare = lexKey(wd.raw), opts = wd.opts || [];
+    if(!ROMAN_PIN_CONS.test(bare) || opts.length < 2 || /ِ/.test(wd.raw) || opts.some(o => o.syl.some(sy => sy.k === 'SUF' || sy.suf))) return;
+    const rs = verseReadings().get(bare); if(!rs) return;
+    let seen = 0, pat = null;
+    for(const [r, c] of rs){ const V = asciiVoweled(r, [...bare].length); if(!V || (pat && pat.join() !== V.join())) return; pat = V; seen += c; }
+    if(!pat || seen < 3) return;
+    const ok = opts.map(o => { let p = 0, good = true;
+      o.syl.forEach(sy => { const t = sy.t.filter(x => !/[ً-ٟ]/.test(x));
+        if(t.length >= 2){ if(!pat[p]) good = false; for(let q = 1; q < t.length; q++) if(pat[p + q]) good = false; }   // a syllable opens on a voweled consonant and closes on bare ones
+        p += t.length; });
+      return good && p === pat.length; });
+    if(ok.filter(Boolean).length === 1 && ok.some(x => !x)){ pins[i] = { opt: ok.indexOf(true) }; n++; }
+  });
+  return n ? pins : null;
+}
+window.romanPins = romanPins;
 /* per-word Devanagari/Roman for a line only partly in the verified word map */
 function urduWordsToScripts(line){
   if(typeof wordAscii!=='function' || !window.p_hi || !window.p_di) return null;
   const hi=[], ro=[], literal=/[\u064B-\u065F\u0670]/.test(line);
-  for(const w of line.split(/\s+/).filter(Boolean)){
-    const a=wordAscii(w, literal); let h='', r='';
-    if(a){ try{ h=window.p_hi.parse(a); r=window.p_di.parse(a); }catch(e){ h=r=''; } }
-    hi.push(h || (typeof urduToDevanagari==='function'?urduToDevanagari(w):w));
-    ro.push(r || (typeof urduToRoman==='function'?urduToRoman(w):w));
+  const ws = line.split(/\s+/).filter(Boolean);
+  for(let i = 0; i < ws.length; i++){
+    const w = ws[i], r = urduWordReading(w, literal, i ? ws[i - 1] : null, i < ws.length - 1 ? ws[i + 1] : null);
+    hi.push(r.hi); ro.push(r.ro);
   }
   return {hi:hi.join(' '), ro:ro.join(' ')};
 }
@@ -500,7 +599,9 @@ function runScan(){
     lineObjs.push(lineObj);
   });
   const eng = (lang === 'fa' && typeof ScanFa !== 'undefined') ? ScanFa : Scan;   // Fārsī: the Persian engine (Persian readings and meters)
-  const scanL = (l, o) => { const r = eng.scanLine(l, o); if (lang === 'fa') { r.fits = r.fits.filter(f => f.meter.id !== 'H'); r.__fa = 1; } return r; };
+  const scanL = (l, o) => {
+    if (lang !== 'fa') { const p = romanPins(l); if (p) o = Object.assign({}, p, o || {}); }   // a learner's edit of a word overrides its pin
+    const r = eng.scanLine(l, o); if (lang === 'fa') { r.fits = r.fits.filter(f => f.meter.id !== 'H'); r.__fa = 1; } return r; };
 
   if($('studioInput') && $('studioInput').value !== $('scanIn').value) {
     $('studioInput').value = $('scanIn').value;

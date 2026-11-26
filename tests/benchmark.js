@@ -6,6 +6,8 @@
 
    Scores, per corpus:
      meter.top1 / meter.top3   engine's meter for each line = her meter for the ghazal
+     meter.pasted1 / .pasted3  the same, as the Scan tab scans a pasted line: a vowel-less word whose readings in her verses
+                               agree is pinned to the engine's split that matches them (romanPins, src/js/19-scan.js)
      verbatim.roman / .hindi   her own line, typed as she spells it, shows her exact Roman / Devanagari
      typed.romanWord / .hindiWord / .romanLine
                                her line typed WITHOUT diacritics (how people type Urdu), bypassing the
@@ -38,7 +40,7 @@ const pct = (a, b) => b ? +(100 * a / b).toFixed(2) : 0;
 function run(name, file) {
   let ghazals = JSON.parse(fs.readFileSync(path.join(ROOT, file), 'utf8'));
   if (QUICK) ghazals = ghazals.filter((_, i) => i % 10 === 0);
-  const n = { lines: 0, m1: 0, m3: 0, mLines: 0, vr: 0, vh: 0, tw: 0, twOk: 0, thOk: 0, tl: 0 };
+  const n = { lines: 0, m1: 0, m3: 0, p1: 0, p3: 0, mLines: 0, vr: 0, vh: 0, tw: 0, twOk: 0, thOk: 0, tl: 0 };
   for (const g of ghazals) {
     if (file.includes('mir') && g.source === 'rekhta_only') continue;
     const want = new Set((g.meters || []).map(String));
@@ -50,6 +52,9 @@ function run(name, file) {
         const fits = Scan.scanLine(l.ur).fits || [];
         if (fits[0] && want.has(String(fits[0].meter.id))) n.m1++;
         if (fits.slice(0, 3).some(f => want.has(String(f.meter.id)))) n.m3++;
+        const pins = ctx.romanPins(l.ur), pf = pins ? (Scan.scanLine(l.ur, pins).fits || []) : fits;
+        if (pf[0] && want.has(String(pf[0].meter.id))) n.p1++;
+        if (pf.slice(0, 3).some(f => want.has(String(f.meter.id)))) n.p3++;
       }
       const v = lineScripts(l.ur);
       if (v && v.ro === l.ro) n.vr++;
@@ -65,7 +70,7 @@ function run(name, file) {
     }
   }
   return { lines: n.lines,
-    'meter.top1': pct(n.m1, n.mLines), 'meter.top3': pct(n.m3, n.mLines),
+    'meter.top1': pct(n.m1, n.mLines), 'meter.top3': pct(n.m3, n.mLines), 'meter.pasted1': pct(n.p1, n.mLines), 'meter.pasted3': pct(n.p3, n.mLines),
     'verbatim.roman': pct(n.vr, n.lines), 'verbatim.hindi': pct(n.vh, n.lines),
     'typed.romanWord': pct(n.twOk, n.tw), 'typed.hindiWord': pct(n.thOk, n.tw), 'typed.romanLine': pct(n.tl, n.lines) };
 }

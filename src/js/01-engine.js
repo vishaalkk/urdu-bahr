@@ -986,6 +986,14 @@ function izWanted(words, k){
   const wl = Scan.hypLetters(words[k]), nl = Scan.hypLetters(words[k+1]); if(!wl) return null;
   return Scan.hypProb(HYP_COSTS.iz, Scan.hypIzFeats(wl, nl, k, n, _hypFunc)) > HYP_TAU;
 }
+/* A spelling Fran reads two ways, settled by its neighbour in her verses (HOMOGRAPH_CTX, scripts/build_app.py): میں at a line's
+   start or after ہوں is maiñ, else meñ. prev / next: the neighbouring words, null at the line's edges. -> ASCII or null */
+function ctxReading(w, prev, next){
+  if(typeof HOMOGRAPH_CTX === 'undefined') return null;
+  const e = HOMOGRAPH_CTX[lexKey(w)]; if(!e) return null;
+  const p = e.p && e.p[prev == null ? '^' : lexKey(prev)], n = e.n && e.n[next == null ? '$' : lexKey(next)];
+  return (p && n && p !== n) ? null : (p || n || null);
+}
 function urduLineToAscii(urLine){
   const parts = urLine.split(/(\s+)/);
   const wi = []; parts.forEach((w, i) => { if(!/^\s*$/.test(w)) wi.push(i); });
@@ -995,6 +1003,8 @@ function urduLineToAscii(urLine){
   const out = parts.map((w, i) => {
     if(/^\s*$/.test(w)) return w;
     let a = wordAscii(w, literal);
+    if(a && !literal){ const k = wi.indexOf(i), c = ctxReading(w, k ? words[k - 1] : null, k < words.length - 1 ? words[k + 1] : null);
+      if(c) a = /-e$/.test(a) && !/-e$/.test(c) ? c + '-e' : c; }
     if(a){
       if(!literal){
         const e = wordAsciiNormMap()[lexKey(w)], want = izWanted(words, wi.indexOf(i));

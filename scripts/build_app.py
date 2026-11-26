@@ -1,4 +1,5 @@
 import json
+import unicodedata
 import re, re, os, sys, subprocess, base64
 from collections import Counter
 
@@ -183,6 +184,44 @@ for _g in EXERCISES + GHALIB_EXT + MIR_EXT + IQBAL + OTHERS_WORDS:
                 _slot = _ki_next.setdefault(_casual_key(_t[_i + 1], 1), [0, 0])
                 _slot[0 if _t[_i] == 'kih' else 1] += 1
 KI_NEXT = {_k: _v for _k, _v in _ki_next.items() if sum(_v) >= 3}
+
+# HOMOGRAPH_CTX: a spelling Fran reads two ways (میں maiñ / meñ), and the neighbour that settles it. For each Urdu word read
+# otherwise than its usual reading at least 10 times in her verses, the previous word ('^' at a line's start) and the next
+# ('$' at its end) that pick the other reading at least 4 times in 5 (seen 3+ times) -> {word: {'p': {prev: ascii}, 'n': {next: ascii}}}.
+# Only contexts that overturn the usual reading are kept. Read by ctxReading (src/js/01-engine.js, outside the engine block).
+def _lex_key(w):
+    w = re.sub(r'[\u064B-\u065F\u0670\u0640\u200C\u200D]', '', unicodedata.normalize('NFC', w))
+    return w.replace('ي', 'ی').replace('ى', 'ی').replace('ك', 'ک').replace('ه', 'ہ')
+_hg_read, _hg_ctx = {}, {}
+for _g in EXERCISES + GHALIB_EXT + MIR_EXT + IQBAL + OTHERS_WORDS:
+    if _g.get('source') == 'rekhta_only':
+        continue
+    for _li, _l in enumerate(_g['lines']):
+        if _g.get('fran_lines') is not None and _li not in _g['fran_lines']:
+            continue
+        _uw, _aw = _l['ur'].split(), _l['ascii'].split()
+        if len(_uw) != len(_aw):
+            _aw = _split_hyphens(_aw)
+        if len(_uw) != len(_aw):
+            continue
+        _uk = [_lex_key(x) for x in _uw]
+        for _i, (_u, _a) in enumerate(zip(_uk, _aw)):
+            _a = re.sub(r'-(e|ye)$', '', _a)
+            _hg_read.setdefault(_u, Counter())[_a] += 1
+            for _side, _nb in (('p', _uk[_i - 1] if _i else '^'), ('n', _uk[_i + 1] if _i + 1 < len(_uk) else '$')):
+                _hg_ctx.setdefault(_u, {}).setdefault(_side, {}).setdefault(_nb, Counter())[_a] += 1
+HOMOGRAPH_CTX = {}
+for _u, _rc in _hg_read.items():
+    if len(_rc) < 2:
+        continue
+    (_top, _), (_second, _n2) = _rc.most_common(2)
+    if _n2 < 10:
+        continue
+    for _side, _by in _hg_ctx[_u].items():
+        for _nb, _c in _by.items():
+            _r, _k = _c.most_common(1)[0]
+            if _r != _top and sum(_c.values()) >= 3 and _k >= 0.8 * sum(_c.values()):
+                HOMOGRAPH_CTX.setdefault(_u, {}).setdefault(_side, {})[_nb] = _r
 
 # Load Sean Pue AST transliteration parser scripts
 with open('pritchett_scripts/urdu_parser_data.js', 'r', encoding='utf-8') as f:
@@ -401,6 +440,7 @@ substitutions = {
     'URDUPOETRY_DATA': json.dumps(URDUPOETRY_EXT, ensure_ascii=False),
     'WORD_ASCII_MAP': json.dumps(WORD_ASCII_MAP, ensure_ascii=False),
     'KI_NEXT': json.dumps(KI_NEXT, ensure_ascii=False),
+    'HOMOGRAPH_CTX': json.dumps(HOMOGRAPH_CTX, ensure_ascii=False),
     'ROMAN_FALLBACK': _dumps_json(ROMAN_FALLBACK),
     'TYPING_COSTS': _dumps_json(TYPING_COSTS),
     'WORD_FREQ': _dumps_json(WORD_FREQ),

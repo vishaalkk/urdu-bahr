@@ -2067,6 +2067,83 @@ function urduToRoman(str) {
   return out;
 }
 
+/* An Urdu-script word no list knows, read as a reader of Hindi reads its Devanagari: a consonant no vowel letter or mark follows
+   carries an inherent a, and a schwa between two consonants that stand between vowels is dropped (Hindi schwa deletion, right
+   to left; a final one always): درشن darshan, تڑپت taṛpat, محسوس maḥsūs, صدقہ ṣadqah, دستک dastak. Urdu writes no short vowels, so
+   an i or u comes out a (جبر jabar) and the word stays a guess. A written zabar, zer, pesh, jazm or tashdīd is read as written.
+   -> ASCII in Pritchett's scheme (asciiToScripts reads it), or null for a word with letters it does not know */
+const UR_GUESS_C = { 'ب': 'b', 'پ': 'p', 'ت': 't', 'ٹ': ';T', 'ث': ';s', 'ج': 'j', 'چ': 'ch', 'ح': ';h', 'خ': ';x', 'د': 'd', 'ڈ': ';D',
+  'ذ': ';z', 'ر': 'r', 'ڑ': ';R', 'ز': 'z', 'ژ': 'zh', 'س': 's', 'ش': 'sh', 'ص': '.s', 'ض': '.z', 'ط': ':t', 'ظ': ':z', 'ع': '((',
+  'غ': ';G', 'ف': 'f', 'ق': 'q', 'ک': 'k', 'گ': 'g', 'ل': 'l', 'م': 'm', 'ن': 'n', 'ہ': 'h', 'ء': '))', 'ئ': '))' };
+const UR_GUESS_LONG = /^(aa|ii|uu|e|o|ai|au)$/;
+var UR_GUESS_MID = { v: 'o', vEnd: 'o', y: 'ii' };
+function urduGuessAscii(word) {
+  const w = String(word || '').normalize('NFC').replace(/[يى]/g, 'ی').replace(/ك/g, 'ک').replace(/ه/g, 'ہ').replace(/[ـ‌‍ٔ]/g, '')
+    .replace(/[ِ]$/, '');   // a final zer is the iẓāfat: the caller writes it -e
+  const L = [...w];
+  if (!L.length) return null;
+  const seg = [];   // {c: ascii} a consonant, {v: ascii} a vowel; c.mark: its vowel is written (a / i / u / '' for jazm)
+  const isC = s => s && s.c != null, isV = s => s && s.v != null;
+  const VL = /[اآوےیں]/;   // the letters that write (or nasalise) a vowel
+  for (let i = 0; i < L.length; i++) {
+    const ch = L[i], prev = seg[seg.length - 1], next = L[i + 1], last = i === L.length - 1;
+    if (ch === 'َ' || ch === 'ِ' || ch === 'ُ' || ch === 'ْ') { if (isC(prev)) prev.mark = { 'َ': 'a', 'ِ': 'i', 'ُ': 'u', 'ْ': '' }[ch]; continue; }
+    if (ch === 'ّ') { if (isC(prev)) seg.splice(seg.length - 1, 0, { c: prev.c, mark: '' }); continue; }
+    if (ch === 'ٰ' || ch === 'ً') { seg.push({ v: ch === 'ٰ' ? 'aa' : 'an' }); continue; }
+    if (ch === 'ھ') { if (isC(prev)) prev.c += 'h'; continue; }
+    if (ch === 'آ') { seg.push({ v: 'aa' }); continue; }
+    if (ch === 'ا') {
+      if (i === 0) {
+        if (next === 'و') { seg.push({ v: 'au' }); i++; }
+        else if (next === 'ی') { seg.push({ v: 'ai' }); i++; }
+        else seg.push({ v: 'a', short: true });
+      } else seg.push({ v: 'aa' });
+      continue;
+    }
+    if (ch === 'ی' && next === 'ٰ') { seg.push({ v: 'aa' }); i++; continue; }   // alif maqṣūra: کبریٰ kubrā
+    if (ch === 'و' || ch === 'ی') {
+      const glide = ch === 'و' ? 'v' : 'y';
+      if (i === 0 || (isV(prev) && next && VL.test(next) && next !== 'ں')) { seg.push({ c: glide }); continue; }
+      if (ch === 'ی' && isC(prev) && next && (/[اے]/.test(next) || (next === 'و' && L[i + 2] === 'ں'))) { seg.push({ v: 'i', short: true }); seg.push({ c: 'y' }); continue; }   // دیا diyā, آندھیوں āñdhiyoñ
+      if (ch === 'و' && isC(prev) && next === 'ا') { seg.push({ c: 'v' }); continue; }   // جواب javāb
+      seg.push({ v: ch === 'و' ? (last ? UR_GUESS_MID.vEnd : UR_GUESS_MID.v) : (last ? 'ii' : UR_GUESS_MID.y) });
+      continue;
+    }
+    if (ch === 'ے') { seg.push({ v: 'e' }); continue; }
+    if (ch === 'ں') { if (isV(prev)) prev.v += ';N'; else seg.push({ v: ';N' }); continue; }
+    if (ch === 'ن' && isV(prev) && UR_GUESS_LONG.test(prev.v) && next && UR_GUESS_C[next] && next !== 'ہ' && next !== 'ئ' && next !== 'ء') { prev.v += ';N'; continue; }   // آنکھ āñkh
+    if (ch === 'ہ' && last && isC(prev)) { seg.push({ c: 'h', silent: true }); continue; }   // the final silent h: Cah
+    if (UR_GUESS_C[ch] != null) { seg.push({ c: UR_GUESS_C[ch] }); continue; }
+    return null;
+  }
+  /* each consonant: its vowel. 'a' an inherent schwa (droppable), '' none, else written */
+  const vow = seg.map((s, k) => {
+    if (!isC(s)) return null;
+    if (s.silent) return '';
+    if (s.mark != null) return s.mark;
+    const nx = seg[k + 1];
+    if (isV(nx)) return '';
+    if (nx && nx.silent) return 'A';   // before a final silent h: a kept a (ṣadqah)
+    if (!nx) return '';   // the final schwa is always dropped
+    return 'a';
+  });
+  const voiced = j => isC(seg[j]) && (isV(seg[j + 1]) || !!vow[j]);   // consonant j is followed by a vowel
+  for (let k = seg.length - 1; k >= 0; k--) {
+    if (vow[k] !== 'a') continue;
+    const before = seg[k - 1], after = seg[k + 1];
+    const vowelBefore = before && (isV(before) || (vow[k - 1] != null && vow[k - 1] !== ''));
+    if (vowelBefore && isC(after) && !after.silent && voiced(k + 1)) vow[k] = '';
+  }
+  let out = '';
+  seg.forEach((s, k) => {
+    if (isV(s)) { out += s.v; return; }
+    out += s.c;
+    const v = vow[k];
+    out += v === 'A' ? 'a' : (v || '');
+  });
+  return out || null;
+}
+
 const FA_LINE_SCRIPTS = new WeakMap();
 function getLineDisplay(lineObj, script) {
   if(!lineObj) return '';

@@ -203,6 +203,38 @@ function dictLemmas(word) {
   return out;
 }
 
+/* An Urdu-script form whose dictionary word the word lists know, read through the same table (no dictionary needed): محبتوں is
+   muḥabbat + oñ, بچھڑنے bichhaṛnā's stem + ne. listed(ur) -> that spelling's ASCII or null (Scan's lists: urduWordReading). The
+   ending is taken off the word as written (ھ kept), the dictionary word looked up, and the form rebuilt from its ASCII; kept only
+   if it spells the word back. A verb's bare stem stands for it when only the stem is listed. Longest ending first. -> ASCII or null */
+const LF_C = '(?:[;:.][a-zA-Z]|ch|sh|zh|[bcdfgjklmnpqrstvwxyz])h?';
+const LF_SYNCOPE = new RegExp('([aeiou])(' + LF_C + ')a(' + LF_C + ')$');
+function listedFormAscii(word, listed) {
+  if (typeof lexKey !== 'function' || typeof listed !== 'function') return null;
+  const raw = lexKey(word), w = dictFoldUr(raw), ue = urEndings(), cands = [];
+  if (raw.length !== w.length || /\u0670/.test(word)) return null;   // a written khaṛā zabar (کبریٰ kubrā) is not an ending's ī
+  PARADIGMS.forEach((P, pi) => P.forms.forEach(([r, a], fi) => {
+    const end = ue[pi].forms[fi];
+    if (!r || !end || !w.endsWith(end) || /\s/.test(a)) return;
+    const stem = raw.slice(0, raw.length - end.length);
+    if (stem.length < (P.pos === 'v' ? 1 : 2)) return;
+    cands.push({ len: end.length, P, a, lemma: stem + ue[pi].lemma, stem });
+  }));
+  cands.sort((x, y) => y.len - x.len);
+  for (const c of cands) {
+    let known = listed(c.lemma), sa = null;
+    if (known && !/\s/.test(known) && known.endsWith(c.P.asc)) sa = c.P.asc ? known.slice(0, known.length - c.P.asc.length) : known;
+    else if (c.P.pos === 'v' && (known = listed(c.stem)) && !/\s/.test(known)) sa = known;
+    if (sa == null || (c.P.sa && !c.P.sa.test(sa))) continue;
+    /* a verb's short a between its stem's last two consonants drops before an ending that opens with a vowel (nikal + e:
+       nikle, Pritchett's spelling; utar + eñ: utreñ). A noun keeps it (mausam + oñ: mausamoñ) */
+    if (c.P.pos === 'v' && /^[aeiou]/.test(c.a)) sa = sa.replace(LF_SYNCOPE, '$1$2$3');
+    const form = sa + c.a;
+    if (dictFoldUr(asciiToScripts(form).ur || '') === w) return form;
+  }
+  return null;
+}
+
 /* the key a typed spelling and a generated one share: casualKey's loose level, with a glide y between vowels and ei folded
    (gaye ~ gaʾe, sunayein ~ sunāʾeñ, larkiyan ~ laṛkiyāñ) */
 function formKey(s) { return dictRoKey(s).replace(/([aeiou])y(?=[aeiou])/g, '$1').replace(/ei/g, 'e'); }

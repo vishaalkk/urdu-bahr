@@ -52,6 +52,7 @@ job() {   # job <title> <command…>: run in the background under errexit + pipe
 job "Fran benchmark (Ghalib + Mir: no score may fall below tests/benchmark_baseline.json)" node tests/benchmark.js
 job "Typed Roman, held-out poets (no score may fall below tests/typed_roman_baseline.json)" node tests/typed_roman_heldout.js
 job "Transcribe, held-out poets (no score may fall below tests/transcribe_baseline.json)" node tests/benchmark_transcribe.js
+job "Urdu script in, held-out poets (no score may fall below tests/urdu_input_baseline.json)" node tests/benchmark_urdu_input.js
 job "Persian benchmark (quick; the full run is \`npm run bench:fa\`)" bash -c 'set -o pipefail; node tests/benchmark_fa.js --quick 2>&1 | { grep -v "^parser" || true; }'
 for ((s = 0; s < SHARDS; s++)); do job "DOM smoke (jsdom), shard $((s + 1))/$SHARDS" env DOM_SHARD="$s/$SHARDS" node tests/dom_smoke.js; done
 job "quick suites" quick_suites

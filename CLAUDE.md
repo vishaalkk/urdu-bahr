@@ -80,6 +80,9 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   regular form, once the dictionary has loaded; the dictionary's IndexedDB copy is kept while it matches `DICT_BUNDLE_HASH`, stamped by the build), the same chain `casualRomanLine` uses. Guessed
   words are filled from `FA_LEXICON` (Persian list, `trFaRo` turns its dots into ʿ ʾ); the user's corrections are kept per spelling
   (`store` key `trChoices`). Logic: `tests/transcribe_logic.js`.
+  Urdu-script words: `urduWordReading` (`19-scan.js`) is the one reader Scan and Transcribe share: Pritchett's map, the poets'
+  list read backwards (`poetsUrduIndex`), a listed word's inflected form (`listedFormAscii`, the `PARADIGMS` table backwards), the
+  Persian list's own words, a word with a joined auxiliary (ہوگیا ho gayā), else `urduGuessAscii` (Hindi schwa rules: درشن darshan).
   Analyzer (`12-dictionary-module.js`): one table of Urdu's regular inflection (`PARADIGMS`), read forward (a dictionary word's
   forms: `dictEntryForms`, `knownForms`, `DICT_STORE.formsFor`) and backward (a form's dictionary words: `dictLemmas` in
   `DICT_STORE.lookup`); same-spelling readings `readingsOf`, sound-alikes `soundsLike`. Word families: `build_dictionary_bundle.py`
@@ -92,7 +95,8 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   gives, `tests/data/transcribe_golden.json`, frozen by `scripts/build_transcribe_golden.js`; its `todo` lists known-wrong words) and
   `tests/benchmark_dictionary.js` (drawer lookup on held-out words), `tests/benchmark_lemma.js` (gold form → dictionary word),
   `tests/benchmark_transcribe.js` (Transcribe's own output on held-out poets, incl. underlining: caught / calm),
-  `tests/benchmark_readings.js` (Platts homographs offered), `tests/benchmark_lang.js` (line language); `tests/dictionary_cache.js`
+  `tests/benchmark_readings.js` (Platts homographs offered), `tests/benchmark_lang.js` (line language),
+  `tests/benchmark_urdu_input.js` (Urdu script in → Roman / Devanagari on held-out poets, Scan's and Transcribe's path); `tests/dictionary_cache.js`
   (IndexedDB copy kept per fingerprint); `tests/derived_data.js` (roman_fallback / fa_scan / lang_words match their builders: rebuild
   data with its script when its code changes). Shared: `tests/lib_page.js` (the built page in a vm), `tests/lib_bench.js` (folds, floors;
   `roFold` reads Rekhta's Ḍ as ṛ and Pritchett's final silent -ah as Rekhta's -a, notation, not error). Replace exceptions with general
@@ -131,6 +135,10 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   mixer (stays when paused); the bouncing ball (`settings.ball`) rides every couplet. Drills, Learn and pattern ▶ keep
   `play()`. `settings.style` is kept in step with the layers (`tkLegacy`) for the players that still read it. Strokes:
   `data/tabla/` → `scripts/build_tabla_strokes.py` → `data/tabla_strokes.json` (credited on About).
+- Scan pins a vowel-less word (عشق) to the engine split its readings in Pritchett's verses agree on (`romanPins`, `19-scan.js`,
+  passed as `scanLine` overrides; gated by `tests/benchmark.js` `meter.pasted*`). The engine itself is unchanged.
+- The Devanagari parser drops a word-initial ʿain before parsing (patch at `p_hi` in `pritchett_scripts/ghalib.js`: इश्क़, not िश्क़);
+  the shipped corpora's stored `hi` was repaired to match (`scripts/fix_hi_ain.js`).
 - Couplet and signature-verse lines shrink to stay on one line (`fitVerseLines`, `--vfit`, floor 0.62), alongside `fitChipRows`.
 - Navigating away stops playback (`pbCancel`). Last route is stored under `lastRoute`.
 - Persistence is `store` / `localStorage`: script, theme, settings (voice, tempo, foot gap, drum, ASCII; the sound layers
