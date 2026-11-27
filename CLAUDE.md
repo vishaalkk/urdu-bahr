@@ -34,7 +34,7 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
 | `#/home` | Landing page (what a bare URL opens) |
 | `#/weight/{learn\|drill\|lookup}` | Weight |
 | `#/meter/{learn\|drill\|lookup}` | Meter (`?open=<famId>`, `?meter=<id>`) |
-| `#/scan` | Scan (`?g=ghalib/21` scans a ghazal by reference) |
+| `#/scan` | Scan (`?g=ghalib/21` scans a ghazal by reference; `?t=<text>` pre-fills it) |
 | `#/ghazals` | One list of every poet's ghazals by bahr (`gzLibrary`, `09-exercises-module.js`), filtered by `?poet=<key>&lang=ur\|fa&notes=1&q=<text>`; `?meter=<id>` opens that group. Poets rail (≥1260px) / Poets ▾ sheet. Old `#/ghazals/{handbook\|ghalib\|<poet>\|others}` become filters |
 | `#/ghazals/{collection}/{id}` | Reader (unchanged addresses: `handbook`, `ghalib`, `mir`, a poet key). A Handbook exercise that is a poem already in its poet's collection is listed once; her notes show in that ghazal's reader (`gzExerciseOf`, matched by line text) |
 | `#/guide`, `#/about` | How to use; sources and scanner accuracy |
@@ -146,6 +146,18 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   a written zabar kept); `devToAscii` gives Hindi's inherent a by the same schwa rule (नैनन nainan, समझना samajhnā), ृ ri, ज्ञ gy,
   ः silent, anusvār n before a consonant after a short vowel. The Letters page writes each example's Roman from its ASCII at
   render; the test checks the Transliterator reads the example the same way.
+- **Scan and the Transliterator share one input** (`src/js/18c-verse-shared.js`, `src/styles/workspace.css`; built so the two
+  can merge into one Read | Scan page later): `viDetect` + `viBadgeHTML` (the "Read as" badge and its menu), `viGrow` (the
+  textarea grows with its text), `viSamplesHTML` (Scan's empty-state cards: whole ghazals), `viLangDir`, `viScrollTo`. Scan's
+  results: a quiet summary (the famous verse in the bahr and the pattern lead; the technical name in the script being read, the
+  number and "paired bahr" in a muted line), then a bar with the fit count, ▶ Play the ghazal (`scanPlayAll`) and Couplets |
+  Rhythm map (`scanView`, stored as `scanView`). The map (`rhythmMapData` from `lineExplain`, never a second scan) draws
+  every misra in the legend's own marks; Play the ghazal lights its marks (`data-i` = syllable index). A misra that does not
+  fit says which foot and why (`unfitWhy`, measured against its own bahr, its partner misra, or the bahr most misras share:
+  `benchmarkSource`); no reading is suggested. Outline rail of couplets at ≥1260px (`renderScanRail`). The Transliterator:
+  One script | Interlinear (`trView`; Interlinear is full width and folds the input to a bar, `trEditInput`), the input
+  override (`trInput`), word drawer with how sure a reading is (`TR_TIER_SURE`), hand-offs `trScanHref` / `scanTranscribeHref`
+  and Letters links for Punjabi / Saraiki letters (`trPaGroups`). Gate: `tests/workspace_logic.js`.
 - Scan pins a vowel-less word (عشق) to the engine split its readings in Pritchett's verses agree on (`romanPins`, `19-scan.js`,
   passed as `scanLine` overrides; gated by `tests/benchmark.js` `meter.pasted*`). The engine itself is unchanged.
 - The Devanagari parser drops a word-initial ʿain before parsing (patch at `p_hi` in `pritchett_scripts/ghalib.js`: इश्क़, not िश्क़);

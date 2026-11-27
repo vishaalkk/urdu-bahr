@@ -9,7 +9,8 @@
     "src/styles/practice.css",
     "src/styles/transcribe.css",
     "src/styles/circles.css",
-    "src/styles/letters.css"
+    "src/styles/letters.css",
+    "src/styles/workspace.css"
   ],
   "body": [
     "src/body/header.html",
@@ -55,6 +56,7 @@
     "src/js/17c-circles.js",
     "src/js/18-tap.js",
     "src/js/18b-meter-label.js",
+    "src/js/18c-verse-shared.js",
     "src/js/19-scan.js",
     "src/js/20-bahr.js",
     "src/js/20b-weight-corpus.js",

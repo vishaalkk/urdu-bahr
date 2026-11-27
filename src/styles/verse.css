@@ -615,7 +615,7 @@
   font-weight: 600;
   opacity: 0.9;
 }
-.pair-bahr-pill::after {
+.pair-bahr-pill::after, .tip-note::after {
   content: attr(data-tip);
   position: absolute;
   left: 0;
@@ -639,7 +639,7 @@
   text-transform: none;
   letter-spacing: normal;
 }
-.pair-bahr-pill:hover::after, .pair-bahr-pill:focus::after, .pair-bahr-pill:focus-within::after {
+.pair-bahr-pill:hover::after, .pair-bahr-pill:focus::after, .pair-bahr-pill:focus-within::after, .tip-note:hover::after, .tip-note:focus::after {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
@@ -721,13 +721,22 @@
 }
 .ss-name { font-family: var(--serif); font-size: 24px; line-height: 1.25; color: var(--ink); }
 .ss-name::first-letter { text-transform: uppercase; }
-.ss-pat { font-family: var(--mono); font-size: 14px; color: var(--dim); letter-spacing: .12em; white-space: nowrap; overflow-x: auto; max-width: 100%; }
-.ss-ref { display: flex; flex-direction: column; align-items: center; gap: 2px; margin-top: var(--sp-2); }
+.ss-pat { font-family: var(--mono); font-size: 17px; color: var(--dim); letter-spacing: .12em; white-space: nowrap; overflow-x: auto; max-width: 100%; }
+.ss-ref { display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .ss-lbl { font-size: 12px; color: var(--faint); }
-.ss-verse.urdu { font-family: var(--urdu); font-size: 20px; line-height: 2; direction: rtl; }
-.ss-verse.ro { font-family: var(--mono); font-size: 14px; }
+.ss-verse.urdu { font-family: var(--urdu); font-size: 26px; line-height: 2.1; direction: rtl; color: var(--ink); }
+.ss-verse.ro { font-family: var(--mono); font-size: 16px; color: var(--ink); }
 .ss-cite { font-family: var(--mono); font-size: 12px; color: var(--faint); }
-.ss-more { color: var(--gold); margin-top: var(--sp-1); }
+/* the muted line under the pattern: technical name · Urdu name · number · paired · more */
+.ss-meta { display: flex; flex-direction: column; align-items: center; gap: 2px; margin-top: var(--sp-2); color: var(--faint); }
+.ss-meta-row { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 2px var(--sp-2); font: 400 var(--fs-xs)/1.6 var(--sans); }
+.ss-meta .ss-name { font: italic 400 var(--fs-base)/1.5 var(--serif); color: var(--dim); }
+.ss-meta .ss-name-ur { font-size: 17px; line-height: 1.9; color: var(--dim); }
+.ss-dot { color: var(--ghost); }
+.ss-meta .ss-more { margin: 0; padding: 0; min-height: 0; font-size: inherit; line-height: inherit; }
+/* a quiet note that explains itself on hover or focus (paired-bahr endings) */
+.tip-note { position: relative; cursor: help; font: 400 var(--fs-xs)/1.6 var(--sans); color: var(--faint); text-decoration: underline dotted var(--line2); text-underline-offset: 3px; outline-offset: 2px; }
+.ss-pair-note { font-size: var(--fs-xs); color: var(--faint); }
 
 /* Urdu syllables: room under the letters so nuqtas/descenders clear the weight underline;
    padding-top and extra padding-right to cover the ascending kashish of kāf/gāf (کو، کا، کہ، کے، etc.) */
@@ -757,8 +766,6 @@
 .pg { font-family: var(--mono); font-weight: 600; }
 .pg.l { color: var(--mark-l); } .pg.s { color: var(--mark-s); } .pg.x { color: var(--mark-x); }
 .pg.sep { color: var(--ghost); font-weight: 400; }
-.ss-pat-key { font-size: 12px; color: var(--faint); }
-.ss-pat-key .pg { margin: 0 2px 0 8px; }
 
 /* ---- One couplet box everywhere (reader + Scan): identical head, verse, scans, notes ---- */
 .couplet-card .vnum, .misra-card .card-head > span:first-child {

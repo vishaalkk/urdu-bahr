@@ -53,11 +53,15 @@ function trModernWord(w) {
     return c === 'ī' ? (end ? 'i' : 'ee') : (end ? 'u' : 'oo');
   });
 }
-function trStyleRo(ro) {
-  if (TR.style !== 'modern' || !ro) return ro;
+function trToModernRo(ro) {
+  if (!ro) return ro;
   return String(ro).split(' ').map(function (w) {
     return w.split('-').map(trModernWord).join('-');
   }).join(' ');
+}
+function trStyleRo(ro) {
+  if (TR.style !== 'modern' || !ro) return ro;
+  return trToModernRo(ro);
 }
 
 /* ---- script helpers ---- */
@@ -403,14 +407,14 @@ function trBuild(text, opts) {
   var stats = { words: 0, known: 0, poets: 0, persian: 0, form: 0, loose: 0, derived: 0, guess: 0, you: 0, check: 0 };
   var lines = String(text || '').replace(/\r/g, '').split('\n').map(function (rawLine) {
     var raw = rawLine.normalize('NFC').trim();
-    if (!raw) return { src: '', blank: true, words: [], out: { ro: '', hi: '', ur: '', fa: '' } };
+    if (!raw) return { src: '', blank: true, words: [], out: { ro: '', roClass: '', rom: '', hi: '', ur: '', fa: '' } };
     var nk = normVerseKey(raw), kv = (typeof KNOWN_VERSES !== 'undefined') ? KNOWN_VERSES[nk] : null;
-    var scripted = AR_SCRIPT.test(raw) || /[\u0900-\u097F]/.test(raw);
+    var scripted = (AR_SCRIPT.test(raw) || /[\u0900-\u097F]/.test(raw)) && opts.input !== 'ro';   // input 'ro': the reader says it is Roman
     if (kv && kv.ro && kv.ur && !scripted) {
       /* a verse of Pritchett's own corpora: her Roman, verbatim */
-      return { src: raw, verified: true, words: [], out: { ro: kv.ro, hi: kv.hi || '', ur: kv.ur, fa: trUrToFa(kv.ur) } };
+      return { src: raw, verified: true, words: [], out: { ro: kv.ro, roClass: kv.ro, rom: trToModernRo(kv.ro), hi: kv.hi || '', ur: kv.ur, fa: trUrToFa(kv.ur) } };
     }
-    var lineLang = (opts && opts.lang) || (TR.script === 'fa' ? 'fa' : ((typeof detectScanLang === 'function') ? detectScanLang(raw) : 'ur'));
+    var lineLang = (opts && opts.lang) || (opts.input === 'ur' || opts.input === 'fa' ? opts.input : (TR.script === 'fa' ? 'fa' : ((typeof detectScanLang === 'function') ? detectScanLang(raw) : 'ur')));
     var words = scripted ? trScriptWords(raw, opts) : trRomanWords(raw, opts);
     words.forEach(function (w) {
       w.lang = lineLang;
@@ -495,7 +499,11 @@ function trBuild(text, opts) {
         }
       });
       w.out = trWordOut(w);
-      if (!w.pieces.some(function (p) { return p.chosen && p.fixed && p.fixed.ownRo; })) w.out.ro = trStyleRo(w.out.ro);
+      var roClass = w.out.ro;
+      var hasOwnRo = w.pieces.some(function (p) { return p.chosen && p.fixed && p.fixed.ownRo; });
+      w.out.roClass = roClass;
+      w.out.rom = hasOwnRo ? roClass : trToModernRo(roClass);
+      if (!hasOwnRo) w.out.ro = trStyleRo(roClass);
       var worst = null;
       w.pieces.forEach(function (p) {
         if (!(p.tier in TR_SEVERITY) && p.tier !== 'known' && p.tier !== 'poets') return;
@@ -584,7 +592,19 @@ function trText(model, script) {
 
 /* ---- view ---- */
 
-var TR = { script: 'ro', style: 'classical', open: null, model: null, choices: {}, timer: null, msg: '', dictTarget: null };
+var TR = { script: 'ro', style: 'classical', open: null, model: null, choices: {}, timer: null, msg: '', dictTarget: null,
+  view: 'one', inter: { ro: true, rom: false, ur: true, fa: false, hi: true }, input: 'auto' };
+/* interlinear row options: [key, toggle button label, row tag] */
+var TR_INTER_ROWS = [
+  ['ro', 'Roman · diacritics', 'Diacritics'],
+  ['rom', 'Roman · modern', 'Modern'],
+  ['ur', 'اردو', 'اردو'],
+  ['fa', 'فارسی', 'فارسی'],
+  ['hi', 'हिन्दी', 'हिन्दी']
+];
+/* how the reader may be told to read the input (the badge's menu): trBuild's opts.input */
+var TR_INPUTS = [['auto', 'Detect from the text'], ['ro', 'Roman'], ['ur', 'Urdu'], ['fa', 'Fārsī']];
+var TR_INPUT_LABEL = { ro: 'Roman', ur: 'Urdu', fa: 'Fārsī' };
 
 function trSave(key, val) { try { if (typeof store !== 'undefined' && store.set) store.set(key, val); } catch (e) {} }
 function trLoad(key, def) { try { if (typeof store !== 'undefined' && store.get) { var v = store.get(key, def); return v == null ? def : v; } } catch (e) {} return def; }
@@ -599,20 +619,36 @@ var TR_PAIRS = [['sada', 'sadaa', ['صدا', 'ṣadā'], ['سدا', 'sadā']], [
   ['salam', 'salām', ['سلام', 'salām'], ['سالم', 'sālim']], ['nazar', 'nazr', ['نظر', 'naz̤ar'], ['نذر', 'nażr']],
   ['durud', 'durūd', ['درود', 'durūd'], ['درود', 'darūd']], ['buvad', 'buad', ['بود', 'buvad'], ['بود', 'būd']], ['bood', 'būd', ['بود', 'buvad'], ['بود', 'būd']],
   ['main', 'meen', ['میں', 'maiñ'], ['مین', 'mīn']], ['mein', 'meen', ['میں', 'meñ'], ['مین', 'mīn']], ['gaye', 'gāye', ['گئے', 'gaʾe'], ['گیے', 'gaye']], ['naye', 'nayi', ['نئے', 'naʾe'], ['نیے', 'naye']], ['aaye', 'āye', ['آئے', 'āʾe'], ['آیے', 'āye']]];
+/* how sure a reading is, in plain words (the drawer's first line): the tier trBuild gave the word */
+var TR_TIER_SURE = {
+  known: 'Sure: this word is in Pritchett’s word list.',
+  poets: 'Fairly sure: the Rekhta poets’ list has it spelled this way.',
+  persian: 'Fairly sure: it comes from the Persian list.',
+  form: 'Fairly sure: a regular form of a dictionary word, but check it is the word you meant.',
+  loose: 'Not sure: only a loose match to a listed word. Check it.',
+  derived: 'Not sure: built by an inflection rule and found in no list. Check it.',
+  guess: 'A guess: no list has this word, so it is read from its letters and the short vowels are a guess.',
+  typed: 'Exact: you wrote it with marks, so it is read just as typed.',
+  you: 'Your correction, kept for every place this spelling appears.'
+};
 var TR_TAG_NOTE = { now: 'as read now', list: 'Pritchett’s list', loose: 'loose match', poets: 'Rekhta poets', persian: 'Persian list', letters: 'from the letters', reading: 'same spelling, another word', lexicon: 'dictionary', pair: 'classical pair', form: 'dictionary word’s form', phonetic: 'sounds like', tie: 'typed the same way, another word' };
 
 function trScriptAttrs(script) {
-  return script === 'ur' ? 'class="tr-res tr-res-ur" lang="ur" dir="rtl"' : script === 'fa' ? 'class="tr-res tr-res-ur" lang="fa" dir="rtl"' : script === 'hi' ? 'class="tr-res tr-res-hi" lang="hi" dir="ltr"' : 'class="tr-res tr-res-ro" lang="und-Latn" dir="ltr"';
+  var base = script === 'rom' ? 'ro' : script;
+  var a = viLangDir(base);
+  return 'class="tr-res tr-res-' + (base === 'fa' ? 'ur' : base) + '" lang="' + a.lang + '" dir="' + a.dir + '"';
 }
 
-function trWordHtml(w, li, wi, script) {
-  var txt = escapeHtml(trEdge(w.lead, script) + w.out[script] + trEdge(w.trail, script));
+function trWordHtml(w, li, wi, script, useClassRo) {
+  var edgeScript = script === 'rom' ? 'ro' : script;
+  var body = (useClassRo && script === 'ro' && w.out.roClass != null) ? w.out.roClass : w.out[script];
+  var txt = escapeHtml(trEdge(w.lead, edgeScript) + (body != null ? body : w.out.ro) + trEdge(w.trail, edgeScript));
   var checkCls = w.tier === 'you' ? ' tr-t-you' : (w.needsCheck ? ' tr-t-choice' : '');
   var cls = 'tr-w tr-t-' + w.tier + checkCls;
-  if (!w.reviewable) return '<span class="' + cls + '">' + txt + '</span>';
+  if (!w.reviewable) return '<span class="' + cls + '" data-li="' + li + '" data-wi="' + wi + '">' + txt + '</span>';
   var on = TR.open && TR.open.li === li && TR.open.wi === wi;
   var note = TR_TIER_NOTE[w.tier] || '';
-  return '<button type="button" class="' + cls + (on ? ' on' : '') + '" aria-expanded="' + (on ? 'true' : 'false') + '" title="' + escapeHtml(note) + '" onclick="trOpen(' + li + ',' + wi + ')">' + txt + '</button>';
+  return '<button type="button" class="' + cls + (on ? ' on' : '') + '" data-li="' + li + '" data-wi="' + wi + '" aria-expanded="' + (on ? 'true' : 'false') + '" title="' + escapeHtml(note) + '" onclick="trOpen(' + li + ',' + wi + ')">' + txt + '</button>';
 }
 
 /* what a candidate looks like inside its button */
@@ -629,7 +665,7 @@ function trCandHtml(c, script) {
   } else if (script === 'ur') {
     return '<span class="tr-cand-script" lang="ur" dir="rtl">' + (ur || ro) + '</span><span class="tr-cand-ro-lbl">' + ro + '</span>';
   } else if (script === 'fa') {
-    var fa = escapeHtml(trUrToFa(c.ur) || ro);
+    var fa = c.ur ? escapeHtml(trUrToFa(c.ur)) : ro;
     return '<span class="tr-cand-script" lang="fa" dir="rtl">' + fa + '</span><span class="tr-cand-ro-lbl">' + ro + '</span>';
   } else if (script === 'hi') {
     return '<span class="tr-cand-deva" lang="hi" dir="ltr">' + (hi || ro) + '</span><span class="tr-cand-ro-lbl">' + ro + '</span>';
@@ -679,7 +715,8 @@ function trEditHtml(w, script) {
     }
   }
   var dictHtml = trDictSectionHtml(w, activePiece, script);
-  return '<div class="tr-edit" role="group" aria-label="Spellings for ' + escapeHtml(w.src) + '" title="A choice applies to every place this spelling appears.">' + rows.join('') + dictHtml +
+  var sure = '<p class="tr-sure tr-sure-' + escapeHtml(w.tier) + '">' + escapeHtml(TR_TIER_SURE[w.tier] || '') + '</p>';
+  return '<div class="tr-edit" role="group" aria-label="Spellings for ' + escapeHtml(w.src) + '" title="A choice applies to every place this spelling appears.">' + sure + rows.join('') + dictHtml +
     '<button type="button" class="btn ghost sm tr-close" aria-label="Close" onclick="trClose()">×</button></div>';
 }
 
@@ -721,6 +758,8 @@ function trLookupFirst(spellings) {
   }
   return [];
 }
+
+function trFoldRo(s) { return !s ? '' : s.normalize('NFC').replace(/ć/g, 'ch').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z]/g, ''); }
 
 function trDictSectionHtml(w, activeP, script) {
   if (typeof DICT_STORE === 'undefined') return '';
@@ -832,11 +871,6 @@ function trDictSectionHtml(w, activeP, script) {
   }
 
   if (!hits.length) return (morphBanner || tabsHtml) ? '<div class="tr-dict-box">' + morphBanner + tabsHtml + '<div class="dim small">No dictionary entry found.</div></div>' : '';
-
-  function trFoldRo(s) {
-    if (!s) return '';
-    return s.normalize('NFC').replace(/ć/g, 'ch').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z]/g, '');
-  }
 
   var distinctReadings = [];
   var seenReadings = {};
@@ -986,26 +1020,51 @@ function trCorrectionsHtml() {
     '<button type="button" class="btn ghost sm" onclick="trUndoAll()">Clear all</button></div>';
 }
 
+/* one output line in the chosen layout: one script, or every shown script stacked (interlinear) */
+function trLineHtml(l, li) {
+  if (l.blank) return '<div class="tr-gap" aria-hidden="true"></div>';
+  var one = function (script, useClassRo) {
+    var vtxt = (useClassRo && script === 'ro' && l.out.roClass != null) ? l.out.roClass : l.out[script];
+    return '<div ' + trScriptAttrs(script) + '>' + (l.verified ? escapeHtml(vtxt != null ? vtxt : l.out.ro) : l.words.map(function (w, wi) { return trWordHtml(w, li, wi, script, useClassRo); }).join(' ')) + '</div>';
+  };
+  if (TR.view !== 'inter') return '<div class="tr-line">' + one(TR.script, false) + '</div>';
+  return '<div class="tr-line tr-line-inter">' + TR_INTER_ROWS.filter(function (s) { return TR.inter[s[0]]; }).map(function (s) {
+    var base = s[0] === 'rom' ? 'ro' : s[0];
+    var a = viLangDir(base);
+    return '<div class="tr-il-row"><span class="tr-il-tag" lang="' + (base === 'ro' ? 'en' : a.lang) + '">' + s[2] + '</span>' + one(s[0], true) + '</div>';
+  }).join('') + '</div>';
+}
+/* the Urdu (or Fārsī) text of the output, for the hand-off to Scan */
+function trScanHref(model, fa) { return '#/scan?t=' + encodeURIComponent(trText(model, fa ? 'fa' : 'ur')); }
+/* Punjabi / Saraiki letters in a text: the Letters groups worth a link */
+function trPaGroups(text) {
+  var g = [];
+  if (/[ݨݪࣇ]/.test(text)) g.push('punjabi');
+  if (/[ٻڄݙڳڻڏ]/.test(text)) g.push('saraiki');
+  return g;
+}
+/* Scan gets the Fārsī script when the text is read as Persian: shown or forced as Fārsī, else as its first word was read */
+function trReadsFa(m) {
+  if (TR.script === 'fa' || TR.input === 'fa') return true;
+  var first = m.lines.find(function (l) { return l.words && l.words.length; });
+  return !!first && first.words[0].lang === 'fa';
+}
+
 function trRender() {
   var host = $('trOut');
-  if (!host || !host.innerHTML === undefined) return;
+  if (!host || host.innerHTML === undefined) return;
   var ta = $('trIn'), text = ta ? ta.value : '';
-  TR.model = trBuild(text, { choices: TR.choices });
+  TR.model = trBuild(text, { choices: TR.choices, input: TR.input === 'auto' ? undefined : TR.input });
   var m = TR.model, script = TR.script, has = m.lines.some(function (l) { return !l.blank; });
-  var attrs = trScriptAttrs(script);
-  var html = m.lines.map(function (l, li) {
-    if (l.blank) return '<div class="tr-gap" aria-hidden="true"></div>';
-    var body = l.verified ? '<div ' + attrs + '>' + escapeHtml(l.out[script]) + '</div>'
-      : '<div ' + attrs + '>' + l.words.map(function (w, wi) { return trWordHtml(w, li, wi, script); }).join(' ') + '</div>';
-    return '<div class="tr-line">' + body + '</div>';
-  }).join('');
-  host.innerHTML = html;
+  host.innerHTML = m.lines.map(trLineHtml).join('');
+  if (typeof viGrow === 'function') viGrow(ta);
 
   var insp = $('trInspector');
   if (insp) {
     var openWord = (TR.open && m.lines[TR.open.li] && m.lines[TR.open.li].words[TR.open.wi]) || null;
     if (openWord) {
-      insp.innerHTML = trEditHtml(openWord, script);
+      var inspScript = TR.view === 'inter' ? (['ro', 'ur', 'fa', 'hi'].find(function (k) { return TR.inter[k]; }) || script) : script;
+      insp.innerHTML = trEditHtml(openWord, inspScript);
       insp.classList.remove('hidden');
     } else {
       insp.innerHTML = '';
@@ -1019,19 +1078,84 @@ function trRender() {
   var em = $('trEmpty'); if (em) em.classList.toggle('hidden', has);
   var lg = $('trLegend'); if (lg) lg.classList.toggle('hidden', !has);
   var inClr = $('trInClear'); if (inClr) inClr.classList.toggle('hidden', !has);
+  var ts = $('trToScan'); if (ts && has) ts.href = trScanHref(m, trReadsFa(m));
+  var pl = $('trLetters');
+  if (pl) {
+    var pg = has ? trPaGroups(trText(m, 'ur')) : [];
+    pl.classList.toggle('hidden', !pg.length);
+    pl.innerHTML = pg.map(function (g) { return 'The text has ' + (g === 'punjabi' ? 'Punjabi' : 'Saraiki') + ' letters: <a href="#/letters?g=' + g + '">how they are read</a>.'; }).join(' ');
+  }
+  var inter = TR.view === 'inter';
+  /* Interlinear reads full width: the input folds into a one-line bar (Edit text opens it) */
+  var sec = $('transcribe-section'), folded = inter && has && !TR.editIn;
+  if (sec && sec.classList) { sec.classList.toggle('tr-inter', inter); sec.classList.toggle('tr-in-folded', folded); }
+  var barT = $('trInBarText');
+  if (barT) { var ls = text.split('\n').map(function (s) { return s.trim(); }).filter(Boolean); barT.textContent = ls.length ? ls[0] + (ls.length > 1 ? '  · ' + ls.length + ' lines' : '') : ''; }
+  var bar = $('trInBar'); if (bar && bar.classList) bar.classList.toggle('hidden', !folded);
+  var done = $('trInDone'); if (done && done.classList) done.classList.toggle('hidden', !(inter && has && TR.editIn));
+  var romanOn = !!(TR.inter.ro || TR.inter.rom);
   var sb = $('trScriptBtns');
-  if (sb) sb.innerHTML = TR_SCRIPTS.map(function (s) {
-    var cls = 'tr-script-btn tr-script-btn-' + s[0] + (TR.script === s[0] ? ' on' : '');
-    return '<button type="button" class="' + cls + '" data-script="' + s[0] + '" aria-pressed="' + (TR.script === s[0]) + '" onclick="trSetScript(\'' + s[0] + '\')">' + s[1] + '</button>';
-  }).join('');
-  var stb = $('trStyleBtns');
-  if (stb) {
-    stb.classList.toggle('hidden', TR.script !== 'ro');
-    stb.innerHTML = TR_STYLES.map(function (st) {
-      return '<button type="button" class="tr-script-btn' + (TR.style === st[0] ? ' on' : '') + '" aria-pressed="' + (TR.style === st[0]) + '" onclick="trSetStyle(\'' + st[0] + '\')">' + st[1] + '</button>';
+  if (sb) {
+    sb.innerHTML = TR_SCRIPTS.map(function (s) {
+      var on = inter ? (s[0] === 'ro' ? romanOn : !!TR.inter[s[0]]) : TR.script === s[0];
+      var cls = 'tr-script-btn tr-script-btn-' + s[0] + (on ? ' on' : '');
+      var tip = inter ? ' title="Click to show or hide in Interlinear"' : '';
+      return '<button type="button" class="' + cls + '" data-script="' + s[0] + '" aria-pressed="' + on + '"' + tip + ' onclick="' + (inter ? 'trToggleInter' : 'trSetScript') + '(\'' + s[0] + '\')">' + s[1] + '</button>';
     }).join('');
   }
+  var stb = $('trStyleBtns');
+  if (stb) {
+    stb.classList.toggle('hidden', inter ? !romanOn : TR.script !== 'ro');
+    stb.innerHTML = TR_STYLES.map(function (st) {
+      var ik = st[0] === 'modern' ? 'rom' : 'ro';
+      var on = inter ? !!TR.inter[ik] : TR.style === st[0];
+      var fn = inter ? ('trToggleInterStyle(\'' + ik + '\')') : ('trSetStyle(\'' + st[0] + '\')');
+      var tip = inter ? ' title="Click to show or hide in Interlinear"' : '';
+      return '<button type="button" class="tr-script-btn' + (on ? ' on' : '') + '" aria-pressed="' + on + '"' + tip + ' onclick="' + fn + '">' + st[1] + '</button>';
+    }).join('');
+  }
+  var vb = $('trViewBtns');
+  if (vb) vb.innerHTML = [['one', 'One script'], ['inter', 'Interlinear']].map(function (v) {
+    return '<button type="button" class="tr-script-btn' + (TR.view === v[0] ? ' on' : '') + '" aria-pressed="' + (TR.view === v[0]) + '" onclick="trSetView(\'' + v[0] + '\')">' + v[1] + '</button>';
+  }).join('');
+  var bd = $('trBadge'), det = viDetect(text);
+  if (bd) bd.innerHTML = det ? viBadgeHTML({ id: 'trBadgeMenu', valId: 'trBadgeVal', current: TR.input, onPick: 'trSetInput', options: TR_INPUTS,
+    text: TR.input === 'auto' ? det.label : TR_INPUT_LABEL[TR.input] + ' (set by you)' }) : '';
   var ms = $('trMsg'); if (ms) ms.textContent = TR.msg || '';
+}
+
+/* hovering or focusing a word marks the same word in every script line shown */
+function trLinkSet(ev, on) {
+  var t = ev && ev.target && ev.target.closest ? ev.target.closest('.tr-w[data-li]') : null, host = $('trOut');
+  if (!host || !host.querySelectorAll) return;
+  host.querySelectorAll('.tr-w.link').forEach(function (e) { e.classList.remove('link'); });
+  if (on && t) host.querySelectorAll('.tr-w[data-li="' + t.getAttribute('data-li') + '"][data-wi="' + t.getAttribute('data-wi') + '"]').forEach(function (e) { e.classList.add('link'); });
+}
+function trSetInput(k) { TR.input = TR_INPUTS.some(function (x) { return x[0] === k; }) ? k : 'auto'; trSave('trInput', TR.input); TR.open = null; trRender(); }
+function trSetView(v) { TR.view = v === 'inter' ? 'inter' : 'one'; TR.editIn = false; trSave('trView', TR.view); trRender(); }
+function trEditInput() {
+  TR.editIn = !TR.editIn; trRender();
+  var ta = $('trIn'); if (TR.editIn && ta && typeof ta.focus === 'function') ta.focus();
+  else { var b = $('trInBarBtn'); if (b && typeof b.focus === 'function') b.focus(); }
+}
+function trToggleInter(k) {
+  var roOn = !!(TR.inter.ro || TR.inter.rom);
+  var count = (roOn ? 1 : 0) + (TR.inter.ur ? 1 : 0) + (TR.inter.fa ? 1 : 0) + (TR.inter.hi ? 1 : 0);
+  if (k === 'ro') {
+    if (roOn && count === 1) return;
+    if (roOn) { TR.inter.ro = false; TR.inter.rom = false; }
+    else { TR.inter[TR.style === 'modern' ? 'rom' : 'ro'] = true; }
+  } else {
+    if (TR.inter[k] && count === 1) return;
+    TR.inter[k] = !TR.inter[k];
+  }
+  trSave('trInter', TR.inter); trRender();
+}
+function trToggleInterStyle(ik) {
+  var other = ik === 'rom' ? 'ro' : 'rom';
+  if (TR.inter[ik] && !TR.inter[other]) return;
+  TR.inter[ik] = !TR.inter[ik];
+  trSave('trInter', TR.inter); trRender();
 }
 
 function trOnInput() {
@@ -1153,7 +1277,7 @@ function trCopy() {
 }
 
 var TR_SAMPLE = 'dil-e nadan tujhe hua kya hai\naakhir is dard ki dava kya hai\nhum hain mushtaaq aur vo bezaar\nya ilaahi ye maajra kya hai';
-function trSample() { var ta = $('trIn'); if (ta) { ta.value = TR_SAMPLE; trOnInput(); trRender(); } }
+function trSample() { var ta = $('trIn'); if (ta) { ta.value = TR_SAMPLE; TR.input = 'auto'; trOnInput(); trRender(); } }
 function trClear() { var ta = $('trIn'); if (ta) ta.value = ''; TR.open = null; TR.msg = ''; trSave('trText', ''); trRender(); if (typeof setHashQuiet === 'function' && typeof location !== 'undefined' && /^#\/lab\/transcribe/.test(location.hash || '')) setHashQuiet('/lab/transcribe'); }
 
 function mountTranscribe(params) {
@@ -1163,6 +1287,17 @@ function mountTranscribe(params) {
   TR.script = trLoad('trScript', 'ro');
   if (!TR_SCRIPTS.some(function (s) { return s[0] === TR.script; })) TR.script = 'ro';
   TR.style = trLoad('trRomanStyle', 'classical') === 'modern' ? 'modern' : 'classical';
+  TR.view = trLoad('trView', 'one') === 'inter' ? 'inter' : 'one';
+  var inter = trLoad('trInter', null);
+  if (inter && typeof inter === 'object') TR.inter = { ro: inter.ro !== false, rom: !!inter.rom, ur: inter.ur !== false, fa: !!inter.fa, hi: inter.hi !== false };
+  TR.input = trLoad('trInput', 'auto');
+  if (!TR_INPUTS.some(function (x) { return x[0] === TR.input; })) TR.input = 'auto';
+  var outEl = $('trOut');
+  if (outEl && !outEl.__trLink && typeof outEl.addEventListener === 'function') {
+    outEl.__trLink = true;
+    ['mouseover', 'focusin'].forEach(function (e) { outEl.addEventListener(e, function (ev) { trLinkSet(ev, true); }); });
+    ['mouseout', 'focusout'].forEach(function (e) { outEl.addEventListener(e, function (ev) { trLinkSet(ev, false); }); });
+  }
   var saved = trLoad('trChoices', {});
   TR.choices = (saved && typeof saved === 'object') ? saved : {};
   if (params && params.t) ta.value = params.t;

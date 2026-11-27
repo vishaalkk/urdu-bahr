@@ -12,29 +12,29 @@
     </div>
   </div>
 
-  <textarea id="scanIn" rows="3" class="scan-input" placeholder="Paste a misra, a sher, or a whole ghazal" oninput="onScanComposerInput()"></textarea>
-  <textarea id="studioInput" class="hidden" aria-hidden="true"></textarea>
-
-  <div class="row scan-lang" role="group" aria-label="Language of the verse">
-    <span class="tiny muted scan-lang-label">Language</span>
-    <span id="scanLangButtons" class="scan-lang-buttons"></span>
-    <span id="scanLangDetected" class="tiny faint"></span>
+  <!-- the same input head as the Transliterator's: label left, what it was read as right -->
+  <div class="tr-pane-head scan-in-head">
+    <span class="eyebrow">Input</span>
+    <span id="scanLangBadge" class="scan-lang-badge"></span>
   </div>
+  <textarea id="scanIn" rows="3" class="scan-input vi-grow" placeholder="Paste a misra, a sher, or a whole ghazal" oninput="onScanComposerInput()"></textarea>
+  <textarea id="studioInput" class="hidden" aria-hidden="true"></textarea>
 
   <div class="row scan-actions">
     <button class="btn gold" onclick="runScan()">Scan ▸</button>
-    <button class="play sm hidden" id="btnPlayCouplet" onclick="scanPlayAll(null,this)" aria-label="Play all lines" data-label="Play all lines">▶︎</button>
     <button class="btn ghost sm" onclick="clearScan()">Clear</button>
+    <a class="btn sm hidden" id="scanToTr" href="#/lab/transcribe">Transliterate these lines →</a>
   </div>
 
-  <!-- Empty state quick try chips -->
+  <!-- Empty state: three sample couplets, one tap each -->
   <div id="scanEmptyState" class="scan-samples">
-    <span class="tiny muted">Try:</span>
-    <span id="samples" class="scan-samples-list"></span>
+    <div class="eyebrow scan-samples-lbl">Try a couplet</div>
+    <div id="samples" class="vi-samples"></div>
   </div>
 
   <div id="scanOut"></div>
   <div id="studioResults" class="hidden" aria-hidden="true"></div>
+  <nav id="scanRail" class="outline-rail" aria-label="Couplets"></nav>
 
   <!-- Accuracy footnote -->
   <div class="footnote faint tiny scan-footnote">

@@ -981,7 +981,7 @@ textarea {
   font-weight: 600;
   opacity: 0.9;
 }
-.pair-bahr-pill::after {
+.pair-bahr-pill::after, .tip-note::after {
   content: attr(data-tip);
   position: absolute;
   left: 0;
@@ -1005,7 +1005,7 @@ textarea {
   text-transform: none;
   letter-spacing: normal;
 }
-.pair-bahr-pill:hover::after, .pair-bahr-pill:focus::after, .pair-bahr-pill:focus-within::after {
+.pair-bahr-pill:hover::after, .pair-bahr-pill:focus::after, .pair-bahr-pill:focus-within::after, .tip-note:hover::after, .tip-note:focus::after {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
@@ -1087,13 +1087,22 @@ textarea {
 }
 .ss-name { font-family: var(--serif); font-size: 24px; line-height: 1.25; color: var(--ink); }
 .ss-name::first-letter { text-transform: uppercase; }
-.ss-pat { font-family: var(--mono); font-size: 14px; color: var(--dim); letter-spacing: .12em; white-space: nowrap; overflow-x: auto; max-width: 100%; }
-.ss-ref { display: flex; flex-direction: column; align-items: center; gap: 2px; margin-top: var(--sp-2); }
+.ss-pat { font-family: var(--mono); font-size: 17px; color: var(--dim); letter-spacing: .12em; white-space: nowrap; overflow-x: auto; max-width: 100%; }
+.ss-ref { display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .ss-lbl { font-size: 12px; color: var(--faint); }
-.ss-verse.urdu { font-family: var(--urdu); font-size: 20px; line-height: 2; direction: rtl; }
-.ss-verse.ro { font-family: var(--mono); font-size: 14px; }
+.ss-verse.urdu { font-family: var(--urdu); font-size: 26px; line-height: 2.1; direction: rtl; color: var(--ink); }
+.ss-verse.ro { font-family: var(--mono); font-size: 16px; color: var(--ink); }
 .ss-cite { font-family: var(--mono); font-size: 12px; color: var(--faint); }
-.ss-more { color: var(--gold); margin-top: var(--sp-1); }
+/* the muted line under the pattern: technical name · Urdu name · number · paired · more */
+.ss-meta { display: flex; flex-direction: column; align-items: center; gap: 2px; margin-top: var(--sp-2); color: var(--faint); }
+.ss-meta-row { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 2px var(--sp-2); font: 400 var(--fs-xs)/1.6 var(--sans); }
+.ss-meta .ss-name { font: italic 400 var(--fs-base)/1.5 var(--serif); color: var(--dim); }
+.ss-meta .ss-name-ur { font-size: 17px; line-height: 1.9; color: var(--dim); }
+.ss-dot { color: var(--ghost); }
+.ss-meta .ss-more { margin: 0; padding: 0; min-height: 0; font-size: inherit; line-height: inherit; }
+/* a quiet note that explains itself on hover or focus (paired-bahr endings) */
+.tip-note { position: relative; cursor: help; font: 400 var(--fs-xs)/1.6 var(--sans); color: var(--faint); text-decoration: underline dotted var(--line2); text-underline-offset: 3px; outline-offset: 2px; }
+.ss-pair-note { font-size: var(--fs-xs); color: var(--faint); }
 
 /* Urdu syllables: room under the letters so nuqtas/descenders clear the weight underline;
    padding-top and extra padding-right to cover the ascending kashish of kāf/gāf (کو، کا، کہ، کے، etc.) */
@@ -1123,8 +1132,6 @@ textarea {
 .pg { font-family: var(--mono); font-weight: 600; }
 .pg.l { color: var(--mark-l); } .pg.s { color: var(--mark-s); } .pg.x { color: var(--mark-x); }
 .pg.sep { color: var(--ghost); font-weight: 400; }
-.ss-pat-key { font-size: 12px; color: var(--faint); }
-.ss-pat-key .pg { margin: 0 2px 0 8px; }
 
 /* ---- One couplet box everywhere (reader + Scan): identical head, verse, scans, notes ---- */
 .couplet-card .vnum, .misra-card .card-head > span:first-child {
@@ -3277,52 +3284,16 @@ button.tr-w:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px;
   .tr-out-wrap { background: transparent; border: none; padding: 0; min-height: auto; }
 }
 
+/* Side by side, the two columns share one grid's rows (subgrid): the heads, the boxes and the feet line up, and both boxes
+   are as tall as the taller text (capped at 70vh; past that each scrolls). */
 @media (min-width: 768px) {
-  .tr-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--sp-4);
-    align-items: stretch;
-    margin-top: var(--sp-3);
-  }
-  .tr-col {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-  }
-  .tr-in-head, .tr-out-head {
-    height: 34px;
-    min-height: 34px;
-    margin-bottom: var(--sp-2);
-    display: flex;
-    align-items: center;
-    box-sizing: border-box;
-  }
-  .tr-controls {
-    margin: 0;
-  }
-  .tr-input-wrap {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  .tr-input-area {
-    min-height: 380px;
-    height: 100%;
-    box-sizing: border-box;
-    padding: 14px 16px;
-    resize: vertical;
-  }
-  .tr-out-wrap {
-    flex: 1;
-    min-height: 380px;
-    box-sizing: border-box;
-    padding: 14px 16px;
-    background: var(--bg);
-    border: 1px solid var(--line2);
-    border-radius: var(--radius-md, 10px);
-    overflow-y: auto;
-  }
+  .tr-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto auto; column-gap: var(--sp-4); row-gap: var(--sp-2); align-items: stretch; margin-top: var(--sp-3); }
+  .tr-col { min-width: 0; display: grid; grid-row: span 3; grid-template-rows: subgrid; }
+  .tr-in-head, .tr-out-head { min-height: 34px; display: flex; align-items: center; box-sizing: border-box; }
+  .tr-controls { margin: 0; }
+  .tr-input-wrap { display: flex; flex-direction: column; }
+  .tr-input-area.vi-grow { flex: 1 0 auto; min-height: 380px; height: var(--vi-h, auto); max-height: 70vh; box-sizing: border-box; padding: 14px 16px; resize: vertical; }
+  .tr-out-wrap { min-height: 380px; max-height: 70vh; box-sizing: border-box; padding: 14px 16px; background: var(--bg); border: 1px solid var(--line2); border-radius: var(--radius-md, 10px); overflow-y: auto; }
   .tr-out {
     margin-top: 0;
   }
@@ -3422,16 +3393,35 @@ button.tr-w:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px;
   max-width: 95ch;
 }
 
-/* Widen desktop layout for Transliterator workspace */
+/* Spacious 1200px desktop workspace while keeping header#siteHeader steady */
 @media (min-width: 1024px) {
-  body:has(#transcribe-section.on) .wrap,
-  body:has(#transcribe-section.on) header#siteHeader,
-  body.route-transcribe .wrap,
-  body.route-transcribe header#siteHeader {
-    max-width: 1200px;
-    transition: max-width 180ms ease-out;
-  }
+  body:has(#transcribe-section.on) .wrap { max-width: 1200px; }
 }
+.tr-badge { display: inline-flex; }
+.tr-input-area.vi-grow { min-height: 8rem; max-height: 70vh; }
+/* Interlinear: one column, the text read at full width */
+.tr-in-bar { display: none; }
+#transcribe-section.tr-inter .tr-grid { display: flex; flex-direction: column; gap: var(--sp-3); }
+#transcribe-section.tr-inter .tr-in-bar { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-2) var(--sp-3); border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--bg2); }
+.tr-in-bar-text { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; unicode-bidi: plaintext; text-align: start; font-family: var(--serif); color: var(--dim); }
+#transcribe-section.tr-in-folded .tr-input-wrap, #transcribe-section.tr-in-folded .tr-in-foot { display: none; }
+#transcribe-section.tr-inter .tr-in-foot { justify-content: flex-end; }
+#transcribe-section.tr-inter .tr-input-area { min-height: 8rem; }
+#transcribe-section.tr-inter .tr-out-wrap { min-height: 0; max-height: none; overflow: visible; }
+@media (max-width: 767px) {
+  .tr-out-head { position: sticky; top: 0; z-index: var(--z-nav); background: var(--bg); padding: var(--sp-2) 0; border-bottom: 1px solid var(--line); margin: 0 0 var(--sp-2); flex-wrap: wrap; }
+  .tr-in-head { flex-wrap: wrap; }
+}
+.tr-view-switch { margin-inline-start: auto; }
+.tr-line-inter { padding: var(--sp-2) 0; border-bottom: 1px solid var(--line); }
+.tr-il-row { display: grid; grid-template-columns: 5.5em minmax(0, 1fr); align-items: baseline; gap: var(--sp-2); }
+.tr-il-tag { font-family: var(--sans); font-size: var(--fs-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+.tr-il-row .tr-res { line-height: 1.7; }
+.tr-il-row .tr-res-ur { line-height: 2; }
+button.tr-w.link, span.tr-w.link { background: color-mix(in srgb, var(--gold) 12%, transparent); border-radius: 3px; }
+.tr-sure { margin: var(--sp-1) 0 var(--sp-2); font-family: var(--sans); font-size: var(--fs-sm); color: var(--dim); max-width: none; }
+.tr-sure-guess, .tr-sure-loose, .tr-sure-derived { color: var(--ink); }
+@media (prefers-reduced-motion: reduce) { .tr-script-btn { transition: none; } }
 
 /* ===================== CIRCLES (DAWĀʾIR) =====================
    Exact Quiet Manuscript design from initial mockup (bahr_circles_mockup.html).
@@ -4563,6 +4553,105 @@ html[data-script="ascii"] .fa-couplet-line.fa-hi { display: none; }
   .lt-name { grid-area: name; }
   .lt-ex { grid-area: ex; margin-top: var(--sp-1); }
 }
+
+/* Shared verse workspace styles (Scan + Transliterator) */
+.vi-grow { height: var(--vi-h, auto); min-height: 7.5rem; max-height: 16rem; overflow-y: auto; resize: vertical; box-sizing: border-box; }
+
+/* ---- "Read as: casual Roman ▾" ---- */
+.vi-badge { position: relative; display: inline-flex; align-items: center; gap: var(--sp-2); }
+.vi-badge-lbl { font-family: var(--sans); font-size: var(--fs-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+.vi-badge-btn { min-height: 28px; padding: 2px var(--sp-2); text-transform: none; letter-spacing: 0; font-size: var(--fs-sm); font-weight: 400; }
+.vi-badge.open .vi-badge-btn { border-color: var(--ink); color: var(--ink); }
+.vi-caret { font-size: 10px; }
+.vi-menu { display: none; position: absolute; top: calc(100% + var(--sp-1)); inset-inline-start: 0; z-index: var(--z-nav); min-width: 16em; flex-direction: column; padding: var(--sp-1); background: var(--bg); border: 1px solid var(--line2); border-radius: 4px; }
+.vi-badge.open .vi-menu { display: flex; }
+.vi-menu-item { font-family: var(--sans); font-size: var(--fs-sm); text-align: start; padding: var(--sp-2); border: 0; border-radius: 3px; background: none; color: var(--dim); cursor: pointer; transition: color 140ms ease-out, background-color 140ms ease-out; }
+.vi-menu-item:hover, .vi-menu-item:focus-visible { color: var(--ink); background: color-mix(in srgb, var(--ink) 6%, transparent); }
+.vi-menu-item.on { color: var(--ink); font-weight: 500; }
+.vi-menu-item.on::before { content: '✓ '; }
+.scan-samples-lbl { margin-bottom: var(--sp-2); }
+.vi-samples { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--sp-3); }
+.vi-sample { display: flex; flex-direction: column; gap: var(--sp-1); text-align: start; padding: var(--sp-3) var(--sp-3) var(--sp-2); border: 1px solid var(--line2); border-radius: var(--radius-sm); background: transparent; color: var(--ink); cursor: pointer; transition: border-color 140ms ease-out, background-color 140ms ease-out; min-width: 0; }
+.vi-sample:hover, .vi-sample:focus-visible { border-color: var(--ink); background: color-mix(in srgb, var(--ink) 4%, transparent); }
+.vi-sample-line { display: block; overflow-wrap: anywhere; }
+.vi-sample-ur, .vi-sample-fa { font-family: var(--urdu); font-size: 20px; line-height: 2; }
+.vi-sample-ro { font-family: var(--mono-ro); font-size: var(--fs-xs); color: var(--faint); line-height: 1.5; }
+.vi-sample-hi { font-family: var(--deva); font-size: 17px; line-height: 1.6; }
+.vi-sample-foot { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-2); margin-top: var(--sp-1); padding-top: var(--sp-1); border-top: 1px solid var(--line); }
+.vi-sample-poet { font-family: var(--sans); font-size: var(--fs-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+.vi-sample-go { font-family: var(--sans); font-size: var(--fs-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); }
+.vi-sample:hover .vi-sample-go, .vi-sample:focus-visible .vi-sample-go { color: var(--ink); }
+.scan-in-head { margin-bottom: var(--sp-2); }
+a.btn:not(.link) { text-decoration: none; }   /* a link that looks like a button is a button: no underline, no link blue */
+.mono-pat { font-family: var(--mono-pat); color: var(--ink); white-space: nowrap; }
+.diag-pat { margin-top: var(--sp-1); }
+.diag-why { margin: var(--sp-2) 0 0; padding: 0; list-style: none; font-size: 13px; line-height: 1.7; color: var(--dim); }
+.diag-why li + li { margin-top: var(--sp-1); }
+.diag-why .why-head { font-family: var(--serif); font-size: var(--fs-base); color: var(--ink); font-weight: 500; }
+.diag-why .urdu { font-size: 16px; line-height: 1.4; }
+.chips.bad-misra .chip.extra, .chips.bad-misra .chip.clash, .chips.bad-misra .chip.missing { outline: 1.5px solid var(--no); outline-offset: 1px; }
+.rmap-host:empty { display: none; }
+.scan-viewbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp-2) var(--sp-4); margin: var(--sp-4) 0 var(--sp-3); }
+.scan-viewbar .small { margin: 0; }
+.scan-playall { display: inline-flex; align-items: center; gap: var(--sp-2); margin-inline-end: auto; padding: 0; border: 0; background: none; font: 500 var(--fs-sm)/1 var(--sans); color: var(--dim); cursor: pointer; transition: color 140ms ease-out; }
+.scan-playall:hover { color: var(--ink); }
+.scan-playall .lbl-stop, .scan-playall:has(.playing) .lbl-play { display: none; }
+.scan-playall:has(.playing) .lbl-stop { display: inline; }
+#scan-section.scan-mapview #scanOut .misra-card { display: none; }
+/* The rhythm map: one row per misra, in the legend's own marks (solid underline long, dotted short, the rose diamond for
+   flexible, the dashed tile for an extra syllable). The misra being read sits in a caption above the map, so the map
+   keeps the full width and nothing beside it stands empty. */
+.rmap { --rm-cell: 22px; --rm-l: 16px; --rm-s: 7px; display: flex; flex-direction: column; gap: var(--sp-2); margin: 0 0 var(--sp-5); }
+.rmap-main { min-width: 0; max-width: 100%; overflow-x: auto; }
+.rmap-grid { display: flex; flex-direction: column; width: max-content; margin-inline: auto; }
+.rmap-row { display: flex; align-items: center; gap: var(--sp-5); padding: 1px var(--sp-3); border: 0; border-radius: 3px; background: none; font: inherit; color: var(--dim); cursor: pointer; transition: background-color 140ms ease-out; }
+.rmap-row.pair-end { margin-bottom: 5px; }
+.rmap-row.no { background: color-mix(in srgb, var(--no) 7%, transparent); }
+button.rmap-row:hover, button.rmap-row.sel, button.rmap-row:focus-visible { background: color-mix(in srgb, var(--ink) 6%, transparent); }
+button.rmap-row.no.sel, button.rmap-row.no:hover { background: color-mix(in srgb, var(--no) 14%, transparent); }
+.rmap-head { cursor: default; padding-bottom: var(--sp-1); }
+.rmap-num { width: 2.2ch; text-align: end; font-family: var(--mono-ro); font-size: var(--fs-xs); color: var(--faint); }
+.rmap-row.no .rmap-num { color: var(--no); font-weight: 500; }
+.rmap-foot { display: inline-flex; align-items: flex-end; justify-content: flex-start; gap: 6px; min-width: calc(var(--n, 3) * var(--rm-cell)); height: 11px; }
+.rmap-head .rmap-foot { justify-content: center; align-items: center; height: auto; }
+.rmap-head .urdu { font-size: 15px; line-height: 1.6; color: var(--dim); }
+.rm-w1 { --n: 1; } .rm-w2 { --n: 2; } .rm-w3 { --n: 3; } .rm-w4 { --n: 4; } .rm-w5 { --n: 5; } .rm-w6 { --n: 6; }
+.rm { position: relative; display: inline-block; flex: none; box-sizing: border-box; height: 0; margin-bottom: 2px; }
+.rm.l { width: var(--rm-l); border-bottom: 2.5px solid var(--mark-l); }
+.rm.s { width: var(--rm-s); border-bottom: 3px dotted var(--mark-s); }
+.rm.x::before { content: ''; position: absolute; left: 50%; bottom: 6px; width: 5px; height: 5px; margin-left: -2.5px; background: var(--rose); transform: rotate(45deg); }
+.rm.bad { border-bottom-color: var(--no); border-bottom-style: solid; }
+.rm.gap { border-bottom: 2px dashed var(--no); }
+.rm.tick { width: 12px; height: 10px; margin-bottom: 0; border: 1.5px dashed var(--ghost); border-radius: 3px; }
+.rmap-detail { height: 7rem; overflow: hidden; padding: 0 var(--sp-2) var(--sp-3); border-bottom: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; column-gap: var(--sp-4); }
+.rmap-detail .eyebrow { grid-column: 1 / -1; }
+.rmap-ur { grid-column: 1 / -1; font-family: var(--urdu); font-size: 20px; line-height: 1.9; margin: var(--sp-1) 0 0; color: var(--ink); text-align: start; }
+.rmap-ro { font-family: var(--mono-ro); font-size: var(--fs-sm); color: var(--dim); overflow-wrap: anywhere; }
+.rmap-detail p { margin: var(--sp-1) 0 0; grid-column: 1; }
+.rmap-ur, .rmap-ro, .rmap-detail p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rmap-detail .btn { grid-column: 2; grid-row: 3 / span 2; align-self: center; }
+.rmap.rmap-wide { --rm-cell: 18px; --rm-l: 13px; --rm-s: 6px; }
+.rmap.rmap-wide .rmap-row { gap: var(--sp-3); padding-inline: var(--sp-1); }
+@media (max-width: 767px) {
+  .rmap { --rm-cell: 17px; --rm-l: 12px; --rm-s: 6px; }
+  .rmap-row { gap: var(--sp-3); padding-inline: var(--sp-1); }
+  .rmap-detail { grid-template-columns: minmax(0, 1fr); height: auto; overflow: visible; }
+  .rmap-ur, .rmap-ro, .rmap-detail p { white-space: normal; }
+  .rmap-detail .btn { grid-column: 1; grid-row: auto; justify-self: start; margin-top: var(--sp-2); }
+}
+.outline-rail { display: none; }
+@media (min-width: 1260px) {
+  #scan-section.on .outline-rail.has-items { display: flex; }
+  .outline-rail { position: fixed; top: 112px; bottom: 0; width: 210px; left: calc(50% - 360px - 250px); flex-direction: column; overflow-y: auto; padding: 0 var(--sp-2) var(--sp-7) 0; scrollbar-width: thin; }
+}
+.outline-rail-label { font-family: var(--sans); font-size: var(--fs-xs); letter-spacing: 0.15em; text-transform: uppercase; color: var(--faint); margin-bottom: var(--sp-2); }
+.rail-item { display: grid; grid-template-columns: 2ch minmax(0, 1fr) 1.5ch; align-items: center; gap: var(--sp-2); padding: 2px 0; border: 0; border-radius: 0; background: none; color: var(--dim); font: inherit; text-align: start; cursor: pointer; transition: color 140ms ease-out; }
+.rail-item:hover, .rail-item:focus-visible { color: var(--gold); }
+.rail-n { font-family: var(--mono-ro); font-size: var(--fs-xs); color: var(--faint); text-align: end; }
+.rail-t { font-family: var(--urdu); font-size: 15px; line-height: 2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rail-mark { font-family: var(--sans); font-size: var(--fs-xs); color: var(--ok); }
+.rail-item.no .rail-mark { color: var(--no); }
+.misra-card { scroll-margin-top: calc(var(--sp-8) + var(--sp-4)); }
 </style>
 
 </head>
@@ -5081,29 +5170,29 @@ html[data-script="ascii"] .fa-couplet-line.fa-hi { display: none; }
     </div>
   </div>
 
-  <textarea id="scanIn" rows="3" class="scan-input" placeholder="Paste a misra, a sher, or a whole ghazal" oninput="onScanComposerInput()"></textarea>
-  <textarea id="studioInput" class="hidden" aria-hidden="true"></textarea>
-
-  <div class="row scan-lang" role="group" aria-label="Language of the verse">
-    <span class="tiny muted scan-lang-label">Language</span>
-    <span id="scanLangButtons" class="scan-lang-buttons"></span>
-    <span id="scanLangDetected" class="tiny faint"></span>
+  <!-- the same input head as the Transliterator's: label left, what it was read as right -->
+  <div class="tr-pane-head scan-in-head">
+    <span class="eyebrow">Input</span>
+    <span id="scanLangBadge" class="scan-lang-badge"></span>
   </div>
+  <textarea id="scanIn" rows="3" class="scan-input vi-grow" placeholder="Paste a misra, a sher, or a whole ghazal" oninput="onScanComposerInput()"></textarea>
+  <textarea id="studioInput" class="hidden" aria-hidden="true"></textarea>
 
   <div class="row scan-actions">
     <button class="btn gold" onclick="runScan()">Scan ▸</button>
-    <button class="play sm hidden" id="btnPlayCouplet" onclick="scanPlayAll(null,this)" aria-label="Play all lines" data-label="Play all lines">▶︎</button>
     <button class="btn ghost sm" onclick="clearScan()">Clear</button>
+    <a class="btn sm hidden" id="scanToTr" href="#/lab/transcribe">Transliterate these lines →</a>
   </div>
 
-  <!-- Empty state quick try chips -->
+  <!-- Empty state: three sample couplets, one tap each -->
   <div id="scanEmptyState" class="scan-samples">
-    <span class="tiny muted">Try:</span>
-    <span id="samples" class="scan-samples-list"></span>
+    <div class="eyebrow scan-samples-lbl">Try a couplet</div>
+    <div id="samples" class="vi-samples"></div>
   </div>
 
   <div id="scanOut"></div>
   <div id="studioResults" class="hidden" aria-hidden="true"></div>
+  <nav id="scanRail" class="outline-rail" aria-label="Couplets"></nav>
 
   <!-- Accuracy footnote -->
   <div class="footnote faint tiny scan-footnote">
@@ -5330,12 +5419,18 @@ html[data-script="ascii"] .fa-couplet-line.fa-hi { display: none; }
           <span class="tiny muted">Try:</span>
           <button type="button" class="btn ghost sm" onclick="trSample()">a ghazal in casual Roman</button>
         </div>
+        <span id="trBadge" class="tr-badge"></span>
+      </div>
+      <div id="trInBar" class="tr-in-bar">
+        <span id="trInBarText" class="tr-in-bar-text"></span>
+        <button type="button" id="trInBarBtn" class="btn sm" onclick="trEditInput()">Edit text</button>
       </div>
       <div class="tr-input-wrap">
-        <textarea id="trIn" rows="7" class="scan-input tr-input-area" spellcheck="false" autocapitalize="off" placeholder="Paste text in Roman, Urdu, Fārsī or Hindi, one line to a line" oninput="trOnInput()"></textarea>
+        <textarea id="trIn" rows="7" class="scan-input tr-input-area vi-grow" spellcheck="false" autocapitalize="off" placeholder="Paste text in Roman, Urdu, Fārsī or Hindi, one line to a line" oninput="trOnInput()"></textarea>
       </div>
       <div class="tr-pane-foot tr-in-foot">
         <button type="button" id="trInClear" class="btn ghost sm tr-in-clear hidden" onclick="trClear()">Clear</button>
+        <button type="button" id="trInDone" class="btn sm tr-in-done" onclick="trEditInput()">Done</button>
       </div>
     </div>
 
@@ -5344,6 +5439,7 @@ html[data-script="ascii"] .fa-couplet-line.fa-hi { display: none; }
       <div class="tr-pane-head tr-controls tr-out-head">
         <div class="tr-script-switch" id="trScriptBtns" role="group" aria-label="Script to show"></div>
         <div class="tr-script-switch tr-style-switch hidden" id="trStyleBtns" role="group" aria-label="Roman style"></div>
+        <div class="tr-script-switch tr-view-switch" id="trViewBtns" role="group" aria-label="Layout"></div>
       </div>
 
       <div class="tr-out-wrap">
@@ -5353,10 +5449,12 @@ html[data-script="ascii"] .fa-couplet-line.fa-hi { display: none; }
       <div class="tr-pane-foot tr-out-foot">
         <div id="trActions" class="tr-actions hidden">
           <button type="button" class="btn sm" onclick="trCopy()">Copy</button>
+          <a id="trToScan" class="btn sm" href="#/scan">Scan these lines →</a>
           <span id="trStats" class="tiny faint"></span>
           <span id="trMsg" class="tiny faint tr-msg" role="status" aria-live="polite"></span>
         </div>
-        <p id="trLegend" class="tiny faint tr-legend hidden">Tap an underlined word to see other spellings.</p>
+        <p id="trLegend" class="tiny faint tr-legend hidden">Tap an underlined word to see other spellings and dictionary meanings.</p>
+        <p id="trLetters" class="tiny faint tr-legend hidden"></p>
       </div>
     </div>
   </div>
@@ -8593,16 +8691,7 @@ function handleGhazalsRoute(parts, params) {
 let activeCollection = '';
 
 function initScanEmptyState() {
-  const host = $('samples');
-  if (!host) return;
-  const samples = [
-    { title: "Ghalib: dil-e nādāñ", text: "دلِ ناداں تجھے ہوا کیا ہے\nآخر اس درد کی دوا کیا ہے" },
-    { title: "Mir: hastī apnī", text: "ہستی اپنی حباب کی سی ہے\nیہ نمائش سراب کی سی ہے" },
-    { title: "Iqbal: sitāroñ se āge", text: "ستاروں سے آگے جہاں اور بھی ہیں\nابھی عشق کے امتحان اور بھی ہیں" }
-  ];
-  host.innerHTML = samples.map((s, i) => `
-    <button class="chipbtn sm" onclick="$('scanIn').value=\`${s.text}\`;runScan();">${s.title}</button>
-  `).join('');
+  if (typeof renderScanSamples === 'function') renderScanSamples();   // the three sample cards (19-scan.js, shared component 18c-verse-shared.js)
 }
 
 function toggleScanHelp() {
@@ -14877,7 +14966,7 @@ function tkNoteName(s) {   /* semitones from Sa → sargam, a dot below for the 
   const o = Math.floor(s / 12), nm = TK_SARGAM[((s % 12) + 12) % 12];
   return o < 0 ? nm[0] + '̣' + nm.slice(1) : o > 0 ? nm[0] + '̇' + nm.slice(1) : nm;
 }
-function tkBox(btn) { return btn && typeof btn.closest === 'function' ? btn.closest('.couplet-card, .misra-card, .card') : null; }
+function tkBox(btn) { return btn && typeof btn.closest === 'function' ? btn.closest('.tk-box, .couplet-card, .misra-card, .card') : null; }
 function tkEl(tag, cls, html) { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
 const TK_RIB = { R: null };   /* the ribbon on screen */
 function tkRibbon(box, btn, T, ps) {
@@ -19337,6 +19426,101 @@ function renderMeterLabel(mOrId, opts) {
 window.meterLabelInfo = meterLabelInfo;
 window.renderMeterLabel = renderMeterLabel;
 
+/* Shared verse workspace helpers (Scan, Transliterator): viDetect, viBadgeHTML, viGrow, viSamplesHTML, viLangDir, viFirstLine, viScrollTo */
+
+var VI_MARKS = /[āīūñḍṭṛḥṣẓżḳġʿʾṇḷ]/i;
+var VI_KIND_LABEL = { ro: 'casual Roman', rod: 'Roman with diacritics', ur: 'Urdu script', fa: 'Fārsī script', hi: 'Devanagari', mixed: 'mixed scripts' };
+
+/* What a text is written in, by its lines: { kind, lang, label, lines } (null for no text). kind: ro / rod / ur / fa / hi /
+   mixed; lang: the language the code already works out for the text (detectScanLang: 'ur' or 'fa'). */
+function viDetect(text) {
+  var lines = String(text || '').split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+  if (!lines.length) return null;
+  var arScript = (typeof AR_SCRIPT !== 'undefined') ? AR_SCRIPT : /[؀-ۿݐ-ݿ]/;
+  var n = { ar: 0, hi: 0, ro: 0, marks: 0 };
+  lines.forEach(function (l) {
+    if (/[ऀ-ॿ]/.test(l)) n.hi++;
+    else if (arScript.test(l)) n.ar++;
+    else { n.ro++; if (VI_MARKS.test(l)) n.marks++; }
+  });
+  var kinds = ['ar', 'hi', 'ro'].filter(function (k) { return n[k]; });
+  var lang = (typeof detectScanLang === 'function') ? detectScanLang(lines.join(' ')) : 'ur';
+  var kind = kinds.length > 1 ? 'mixed' : n.ar ? (lang === 'fa' ? 'fa' : 'ur') : n.hi ? 'hi' : (n.marks * 2 >= n.ro ? 'rod' : 'ro');
+  return { kind: kind, lang: lang, label: VI_KIND_LABEL[kind], lines: lines.length };
+}
+
+/* ---- the badge: "Read as: casual Roman ▾" ---- */
+/* o: { id, valId, text (what is shown), options: [[key, label]], current (key), onPick (name of a global function) } */
+function viBadgeHTML(o) {
+  var items = o.options.map(function (op) {
+    var on = op[0] === o.current;
+    return '<button type="button" role="menuitemradio" aria-checked="' + on + '" class="vi-menu-item' + (on ? ' on' : '') + '" onclick="viMenuClose();' + o.onPick + '(\'' + op[0] + '\')">' + escapeHtml(op[1]) + '</button>';
+  }).join('');
+  return '<span class="vi-badge" id="' + o.id + '"><span class="vi-badge-lbl">Read as</span>' +
+    '<button type="button" class="btn sm vi-badge-btn" aria-haspopup="menu" aria-expanded="false" onclick="viMenuToggle(this)"><span class="vi-badge-val"' + (o.valId ? ' id="' + o.valId + '"' : '') + '>' + escapeHtml(o.text) + '</span><span class="vi-caret" aria-hidden="true">▾</span></button>' +
+    '<span class="vi-menu" role="menu" aria-label="Read the text as">' + items + '</span></span>';
+}
+function viMenuClose() {
+  if (typeof document === 'undefined' || typeof document.querySelectorAll !== 'function') return;
+  document.querySelectorAll('.vi-badge.open').forEach(function (b) {
+    b.classList.remove('open');
+    var btn = b.querySelector('.vi-badge-btn'); if (btn) btn.setAttribute('aria-expanded', 'false');
+  });
+}
+function viMenuToggle(btn) {
+  var w = btn && btn.closest ? btn.closest('.vi-badge') : null; if (!w) return;
+  var was = w.classList.contains('open');
+  viMenuClose();
+  if (was) return;
+  w.classList.add('open'); btn.setAttribute('aria-expanded', 'true');
+  var cur = w.querySelector('.vi-menu-item.on') || w.querySelector('.vi-menu-item'); if (cur && cur.focus) cur.focus();
+}
+if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
+  document.addEventListener('click', function (e) { if (!(e.target && e.target.closest && e.target.closest('.vi-badge'))) viMenuClose(); });
+  document.addEventListener('keydown', function (e) {
+    if (!e.target || !e.target.closest || !e.target.closest('.vi-badge.open')) return;
+    var w = e.target.closest('.vi-badge'), items = [].slice.call(w.querySelectorAll('.vi-menu-item')), i = items.indexOf(e.target);
+    if (e.key === 'Escape') { e.preventDefault(); viMenuClose(); var b = w.querySelector('.vi-badge-btn'); if (b && b.focus) b.focus(); }
+    else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); var d = e.key === 'ArrowDown' ? 1 : -1; var nx = items[(i + d + items.length) % items.length]; if (nx) nx.focus(); }
+  });
+}
+
+/* ---- a textarea that grows with its text ---- */
+function viGrow(ta) {
+  if (!ta || !ta.style || typeof ta.style.setProperty !== 'function') return;
+  ta.style.setProperty('--vi-h', 'auto');
+  var extra = (ta.offsetHeight || 0) - (ta.clientHeight || 0);
+  var h = (ta.scrollHeight || 0) + (extra > 0 ? extra : 0);
+  if (h) ta.style.setProperty('--vi-h', h + 'px');
+}
+
+/* ---- sample cards ---- */
+/* list: [{ poet, first: [{ text, script }], cta }] (script ur / fa / hi / ro: how the first line is shown); handler: a global function taking the index */
+function viSamplesHTML(list, handler) {
+  return list.map(function (s, i) {
+    var lines = (s.first || []).filter(function (f) { return f && f.text; }).map(function (f) {
+      var a = viLangDir(f.script);
+      return '<span class="vi-sample-line vi-sample-' + f.script + '" lang="' + a.lang + '" dir="' + a.dir + '">' + escapeHtml(f.text) + '</span>';
+    }).join('');
+    return '<button type="button" class="vi-sample" onclick="' + handler + '(' + i + ')">' + lines +
+      '<span class="vi-sample-foot"><span class="vi-sample-poet">' + escapeHtml(s.poet) + '</span><span class="vi-sample-go">' + escapeHtml(s.cta || 'Scan') + ' →</span></span></button>';
+  }).join('');
+}
+
+/* ---- per-line text and script attributes ---- */
+function viLangDir(script) {
+  return script === 'ur' ? { lang: 'ur', dir: 'rtl' } : script === 'fa' ? { lang: 'fa', dir: 'rtl' } : script === 'hi' ? { lang: 'hi', dir: 'ltr' } : { lang: 'und-Latn', dir: 'ltr' };
+}
+/* a line's text in each script, from a Scan line object ({ur, ro, hi}) or a Transliterator line ({out: {ur, ro, hi, fa}}) */
+function viFirstLine(text) { return String(text || '').split('\n').map(function (s) { return s.trim(); }).filter(Boolean)[0] || ''; }
+
+function viScrollTo(el) {
+  if (!el || typeof el.scrollIntoView !== 'function') return;
+  var calm = false;
+  try { calm = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  try { el.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' }); } catch (e2) { el.scrollIntoView(); }
+}
+
 /* ================= SCAN ================= */
 const EXERCISES=[
 {g:1,poet:'Vali',m:[26],L:`کیا مجھ عشق نے ظالم کو آب آہستہ آہستہ
@@ -19575,7 +19759,29 @@ const SAMPLES=[
  ['Hafiz (Fārsī)',"دل می‌رود ز دستم صاحب‌دلان خدا را\nدردا که راز پنهان خواهد شد آشکارا"],
  ['Rumi (Fārsī)',"بشنو این نی چون شکایت می‌کند\nاز جدایی‌ها حکایت می‌کند"],
 ];
-if ($('samples')) $('samples').innerHTML=SAMPLES.map((s,i)=>`<button class="chipbtn" onclick="loadSample(${i})">${s[0]}</button>`).join('');
+/* The empty state: three ghazals as cards (the first line in Urdu, its Roman, the poet), one tap scans the whole ghazal. Built
+   by the shared sample component (18c-verse-shared.js); initScanEmptyState (02-store.js) draws it when the router opens Scan. */
+const SCAN_TRY=[
+ {poet:'Ghalib · 11 couplets',ref:'ghalib/162',text:"دلِ ناداں تجھے ہوا کیا ہے\nآخر اس درد کی دوا کیا ہے"},
+ {poet:'Mir · 9 couplets',ref:'mir/141',text:"ہستی اپنی حباب کی سی ہے\nیہ نمائش سراب کی سی ہے"},
+ {poet:'Iqbal · 7 couplets',ref:'iqbal/90',text:"ستاروں سے آگے جہاں اور بھی ہیں\nابھی عشق کے امتحان اور بھی ہیں"}
+];
+function renderScanSamples(){
+  const host=$('samples'); if(!host) return;
+  host.innerHTML=viSamplesHTML(SCAN_TRY.map(s=>{ const f=viFirstLine(s.text); let ro=''; try{ ro=lineScripts(f).ro||''; }catch(e){}
+    return {poet:s.poet,first:[{text:f,script:'ur'},{text:ro,script:'ro'}],cta:'Scan ghazal'}; }),'scanTry');
+}
+function scanTry(i){
+  const s=SCAN_TRY[i]; if(!s||!$('scanIn')) return;
+  const full = s.ref && typeof ghazalScanText === 'function' ? ghazalScanText(s.ref) : null;
+  scanGhazalRef = full ? s.ref : '';
+  $('scanIn').value = full || s.text;
+  ovr={}; selWord=null; curEx=null; if($('exSel')) $('exSel').value='';
+  runScan();
+}
+window.scanTry=scanTry; window.renderScanSamples=renderScanSamples;
+/* the Transliterator link under the input: the scanned text as it stands */
+function scanTranscribeHref(text){ return '#/lab/transcribe?t='+encodeURIComponent(String(text||'')); }
 if ($('exSel')) $('exSel').innerHTML='<option value="">Pritchett\'s exercise ghazals (1–24)…</option>'+EXERCISES.map((e,i)=>`<option value="${i}">${e.g}. ${e.poet}</option>`).join('');
 let curEx=null;
 /* answer-key meters: Scan's own EXERCISES use .m, corpus ghazals (Mir/Ghalib browse) use .meters */
@@ -19863,11 +20069,12 @@ function SE() { return (typeof lastScan !== 'undefined' && lastScan && lastScan.
    (faScanText: Iranian letters, the uncounted nūn after a long vowel) and never take Mir's Hindi meter, which is Urdu only. */
 let scanLang = (typeof store !== 'undefined' && store.get) ? store.get('scanLang', 'auto') : 'auto';
 function renderScanLangButtons(detected) {
-  const host = $('scanLangButtons');
-  if (host) host.innerHTML = [['auto', 'Auto'], ['ur', 'Urdu'], ['fa', 'Fārsī']].map(([k, label]) =>
-    `<button type="button" class="btn sm${scanLang === k ? ' on' : ''}" aria-pressed="${scanLang === k}" onclick="setScanLang('${k}')">${label}</button>`).join('');
-  const d = $('scanLangDetected');
-  if (d) d.textContent = (scanLang === 'auto' && detected) ? `read as ${detected === 'fa' ? 'Fārsī' : 'Urdu'}` : '';
+  const host = $('scanLangBadge');
+  if (!host) return;
+  const det = viDetect($('scanIn') ? $('scanIn').value : '');
+  const text = scanLang === 'ur' ? 'Urdu' : scanLang === 'fa' ? 'Fārsī' : (det ? det.label : (detected === 'fa' ? 'Fārsī script' : 'detected from the text'));
+  host.innerHTML = viBadgeHTML({ id: 'scanLangMenu', valId: 'scanLangDetected', text, current: scanLang, onPick: 'setScanLang',
+    options: [['auto', 'Detect from the text'], ['ur', 'Urdu'], ['fa', 'Fārsī']] });
 }
 function setScanLang(lang) {
   scanLang = lang;
@@ -19920,10 +20127,10 @@ function runScan(){
   const sameGhazal = !!scanGhazalRef && typeof ghazalScanText==='function' && ghazalScanText(scanGhazalRef)===rawLines.join('\n');
   if(!sameGhazal) scanGhazalRef='';
   if(typeof setHashQuiet==='function' && typeof location!=='undefined' && /^#\/scan/.test(location.hash||'')) setHashQuiet(rawLines.length ? (sameGhazal ? '/scan?g=' + scanGhazalRef : '/scan?t=' + encodeURIComponent(rawLines.join('\n'))) : '/scan');
+  scanChrome(rawLines);
   if(!rawLines.length){
     $('scanOut').innerHTML='';
     if($('studioResults')) $('studioResults').innerHTML='';
-    const btn = $('btnPlayCouplet'); if(btn) btn.classList.add('hidden');
     return;
   }
 
@@ -19953,8 +20160,6 @@ function runScan(){
   if(typeof runStudioScan === 'function') {
     runStudioScan();
   }
-  const btnPlay = $('btnPlayCouplet');
-  if(btnPlay) btnPlay.classList.toggle('hidden', lines.length <= 1);
 
   /* The bahr is decided on the text as written; a learner's edits are then judged only
      against that original bahr, even when the edited line happens to fit another one. */
@@ -20001,15 +20206,15 @@ function runScan(){
       { const _tech = meterTechName(_m);
         const _pm = (typeof persianMeterMeta === 'function') ? persianMeterMeta(_m.id) : null;
         const _num = _m.id==='H' ? '' : _pm ? _pm.label : (_m.kind==='rubai' ? ('Rubāʿī ' + (''+_m.id).replace(/^R/i,'')) : (_isPair ? ('Meter #' + common.group.join(' / #')) : ('Meter #' + _m.id)));
-        const _pairTip = _isPair ? `Classic paired meters (#${common.group.join(' & #')}): In Classical Urdu prosody, these variation endings can be freely alternated within the same poem without breaking meter. (Handbook \u00a76.1)` : '';
-        const _pairPill = _isPair ? `<span class="pair-bahr-pill" tabindex="0" data-tip="${_pairTip}">Paired Bahr</span>` : '';
+        /* The summary leads with what a reader knows (the famous verse in this bahr) and the rhythm itself; the
+           technical name, its number and the paired-bahr note follow in two quiet lines. */
         h+=`<div class="scan-summary">`;
-        h+=`<div class="ss-top"><span class="pill ${_vc}">${_vt}</span>${_num?`<span class="ss-num">${_num}</span>`:''}${_pairPill}</div>`;
-        h+=`<div class="ss-name">${_tech || meterLabel(_m,{tech:false})}</div>`;
-        { const _rawTech = (typeof METERS_DATA !== 'undefined' && METERS_DATA.standard) ? ((METERS_DATA.standard.find(x => x.id === _m.id) || {}).name || '') : (METER_TECH_NAMES[_m.id] || '');
-          const _ur = aruzName(_rawTech).ur; if(_ur) h+=`<div class="ss-name-ur">${_ur}</div>`; }
-        let _patStr = _m.raw ? patGlyphs(_m.raw) : '';
-        let _pairKeyNote = '';
+        h+=`<div class="ss-top"><span class="pill ${_vc}">${_vt}</span>${_fam && !_famIsWhatWasScanned ? `<span class="ss-lbl">the same bahr as</span>` : ''}</div>`;
+        if(_fam){
+          if(_famIsWhatWasScanned) h+=`<div class="ss-ref"><span class="ss-lbl">This couplet is the reference example for this bahr</span></div>`;
+          else h+=`<div class="ss-ref"><span class="${isRtl?'urdu':'ro'} ss-verse">${famTxt}</span><span class="ss-cite">${cs==='ro'?famDisp.ref:famDisp.ro+' — '+famDisp.ref}</span></div>`;
+        }
+        let _patStr = _m.raw ? patGlyphs(_m.raw) : '', _pairNote = '';
         if(_isPair && common.group && common.group.length === 2){
           const _g = common.group;
           const _m1 = SE().METERS.find(x => x.id === _g[0]);
@@ -20020,24 +20225,29 @@ function runScan(){
             const _f1 = _r1.split('/').map(s => s.trim());
             const _f2 = _r2.split('/').map(s => s.trim());
             if(_f1.length === _f2.length && _f1.slice(0, -1).join('/') === _f2.slice(0, -1).join('/')){
-              const _base = patGlyphs(_f1.slice(0, -1).join(' / '));
-              const _alt1 = patGlyphs(_f1[_f1.length - 1]);
-              const _alt2 = patGlyphs(_f2[_f2.length - 1]);
-              _patStr = `${_base} <span class="pg sep">/</span> <span class="pat-alt-cadence">[ ${_alt1} <span class="pg sep">|</span> ${_alt2} ]</span>`;
-              _pairKeyNote = ` <span class="pat-alt-cadence" style="margin-inline-start:6px;">[ ${_alt1} <span class="pg sep">|</span> ${_alt2} ]</span> alternating cadence`;
+              const _alt1 = patGlyphs(_f1[_f1.length - 1]), _alt2 = patGlyphs(_f2[_f2.length - 1]);
+              _patStr = `${patGlyphs(_f1.slice(0, -1).join(' / '))} <span class="pg sep">/</span> <span class="pat-alt-cadence">[ ${_alt1} <span class="pg sep">|</span> ${_alt2} ]</span>`;
+              _pairNote = 'the last foot may end either way';
             }
           }
         }
-        if(_patStr) h+=`<div class="ss-pat">${_patStr}</div><div class="ss-pat-key"><span class="pg l">=</span> long <span class="pg s">-</span> short${/x/.test(_m.raw)?' <span class="pg x">x</span> shortenable long (may scan = or –)':''} <span class="pg sep">/</span> foot break${_pairKeyNote}</div>`;
-        if(_fam){
-          if(_famIsWhatWasScanned) h+=`<div class="ss-ref"><span class="ss-lbl">This couplet is the reference example for this bahr</span></div>`;
-          else h+=`<div class="ss-ref"><span class="ss-lbl">Same bahr as</span><span class="${isRtl?'urdu':'ro'} ss-verse">${famTxt}</span><span class="ss-cite">${cs==='ro'?famDisp.ref:famDisp.ro+' — '+famDisp.ref}</span></div>`;
-          h+=`<button class="btn sm ss-more" onclick="go('bahr');document.getElementById('fam-${_fam.id}').scrollIntoView()">More in this bahr ›</button>`;
-        }
+        if(_patStr) h+=`<div class="ss-pat" title="= long · – short · x long or short · / between feet">${_patStr}</div>`;
+        if(_pairNote) h+=`<div class="ss-pair-note">${_pairNote}</div>`;
+        { const _rawTech = (typeof METERS_DATA !== 'undefined' && METERS_DATA.standard) ? ((METERS_DATA.standard.find(x => x.id === _m.id) || {}).name || '') : (METER_TECH_NAMES[_m.id] || '');
+          const _ur = aruzName(_rawTech).ur;
+          const _pairTip = _isPair ? `Classic paired meters (#${common.group.join(' & #')}): in classical Urdu prosody these endings alternate freely within one poem without breaking the meter (Handbook §6.1).` : '';
+          /* two quiet lines: the name, in the script being read (Urdu in اردو, else Roman); then number · paired · more */
+          const name = (cs === 'ur' && _ur) ? `<span class="ss-name-ur" lang="ur" dir="rtl">${_ur}</span>` : `<span class="ss-name">${_tech || meterLabel(_m,{tech:false})}</span>`;
+          const meta = [];
+          if(_num) meta.push(`<span class="ss-num">${_num}</span>`);
+          if(_isPair) meta.push(`<span class="tip-note" tabindex="0" data-tip="${_pairTip}">paired bahr</span>`);
+          if(_fam) meta.push(`<button class="btn link sm ss-more" onclick="go('bahr');document.getElementById('fam-${_fam.id}').scrollIntoView()">More in this bahr →</button>`);
+          h+=`<div class="ss-meta"><div class="ss-meta-name">${name}</div>${meta.length ? `<div class="ss-meta-row">${meta.join('<span class="ss-dot" aria-hidden="true">·</span>')}</div>` : ''}</div>`; }
         h+=`</div>`; }
       /* answer key if exercise */
       if(curEx){ const _hit=lastScan.forced.every(f=>exMeters(curEx).includes(f.meter.id)); h+=`<p class="tiny muted mt-loose">Pritchett's answer key (ch. 11): <b class="t">${exMeters(curEx).map(x=>x==='H'?'Hindi meter':'#'+x).join(' / ')}</b> — ${_hit?'<span class="ok-text">the scanner agrees ✓</span>':'<span class="no-text">the scanner disagrees ✗</span>'}</p>`; }
       h+=legendHTML('legend-sticky');
+      h+=`<div id="scanMap" class="rmap-host"></div>`;
       /* lines grouped into couplets (shers) of 2, each its own bordered card */
       for(let _i=0;_i<results.length;_i+=2){
         const _li2 = (_i+1<results.length) ? _i+1 : null;
@@ -20046,7 +20256,7 @@ function runScan(){
       h+='</div>';
     } else {
       h+=legendHTML('legend-sticky');
-      h+=`<div class="card callout-mismatch"><div class="row">Differing or Strained Meters Between Misras</div><div class="muted small note-sub">No single classical bahr fits every misra. Inspect individual misra scans below.</div></div>`;
+      h+=`<div id="scanMap" class="rmap-host"></div>`;
       for(let _i=0;_i<results.length;_i+=2){
         const _li2 = (_i+1<results.length) ? _i+1 : null;
         const _f1 = lastScan.disp[_i];
@@ -20061,6 +20271,131 @@ function runScan(){
   if (lang === 'fa' && typeof ScanFa === 'undefined') h += faOnlyNoteHTML(lines, results);
   $('scanOut').innerHTML=h;
   scanRolls = {};
+  renderScanMap(); renderScanRail();
+}
+/* what surrounds the results: the empty-state cards show only until there is text, the Transliterator hand-off follows the text,
+   the input grows with it, and the map and rail go with the results */
+function scanChrome(rawLines){
+  const es=$('scanEmptyState'); if(es && es.classList) es.classList.toggle('hidden', rawLines.length>0);
+  const tr=$('scanToTr'); if(tr){ if(tr.classList) tr.classList.toggle('hidden', !rawLines.length); if(rawLines.length) tr.href=scanTranscribeHref(rawLines.join('\n')); }
+  viGrow($('scanIn'));
+  if(!rawLines.length){ scanMapSel=null; const m=$('scanMap'); if(m) m.innerHTML=''; const r=$('scanRail'); if(r){ r.innerHTML=''; if(r.classList) r.classList.remove('has-items'); } renderScanLangButtons(); }
+}
+/* ---- the rhythm map: one row per misra, every syllable a mark, rows aligned by foot ----
+   Built from what the chips are built from (lineExplain: syl + feet), never from a second scan. A mark is drawn in the
+   legend's own signs: { w:'l'|'s' } a solid or dotted underline, { flex } the rose diamond (the meter settled it), { bad } a
+   syllable the bahr has no room for or weighs otherwise (red), { gap } a slot the line leaves empty, { tick } the dashed tile
+   of a counted-out final consonant. The map is a view of its own (Couplets | Rhythm map), and Play the ghazal lights it. */
+let scanMapSel = null;
+function rhythmMark(s){
+  if(s.missing) return { w: s.expected==='s' ? 's' : 'l', gap: true };
+  if(s.extra || s.clash) return { w: s.resolved==='l' ? 'l' : 's', bad: true };
+  if(s.resolved==='c' || s.fsyl==='+') return { tick: true };
+  return { w: s.resolved==='l' ? 'l' : 's', flex: s.native==='x' };
+}
+/* explains: [{syl, feet}] per misra (SE().explain or diagnose); fits: [bool] per misra.
+   -> { cols: [{ name, n }] (a foot: its Urdu name, the most marks any row gives it), rows: [{ li, ok, feet: [[mark]] }] } */
+function rhythmMapData(explains, fits){
+  const nF = Math.max(0, ...explains.map(e => (e && e.feet) ? e.feet.length : 0));
+  const cols = [];
+  for(let fi=0; fi<nF; fi++){
+    let n = 0, name = '';
+    explains.forEach(e => { const F = e && e.feet && e.feet[fi]; if(!F) return; n = Math.max(n, F.idx.length); if(!name && F.ur) name = F.ur; });
+    cols.push({ name, n });
+  }
+  const rows = explains.map((e, li) => ({ li, ok: !!(fits && fits[li]),
+    feet: cols.map((_, fi) => { const F = e && e.feet && e.feet[fi]; return F ? F.idx.map(i => rhythmMark(e.syl[i])) : []; }),
+    idx: cols.map((_, fi) => { const F = e && e.feet && e.feet[fi]; return F ? F.idx.slice() : []; }) }));
+  return { cols, rows };
+}
+function scanMapInfo(){
+  if(!lastScan || !lastScan.results || lastScan.results.length < 3) return null;
+  const explains = lastScan.results.map((r, li) => { try { return lineExplain(li); } catch(e) { return { syl: [], feet: [] }; } });
+  return rhythmMapData(explains, lastScan.results.map((r, li) => !!(lastScan.disp && lastScan.disp[li])));
+}
+function rmMarkHTML(m, i){
+  const di = i != null ? ` data-i="${i}"` : '';
+  if(m.tick) return `<i class="rm tick"${di}></i>`;
+  return `<i class="rm ${m.w}${m.flex?' x':''}${m.bad?' bad':''}${m.gap?' gap':''}"${di}></i>`;
+}
+function renderScanMap(){
+  const host = $('scanMap'); if(!host) return;
+  const d = scanMapInfo();
+  scanViewClass(!!d);
+  if(!d){ host.innerHTML = ''; scanMapSel = null; return; }
+  const fit = d.rows.filter(r => r.ok).length, n = d.rows.length, onMap = scanView() === 'map';
+  let bar = `<div class="tk-box scan-viewwrap"><div class="scan-viewbar"><span class="small ${fit === n ? 'ok-text' : 'no-text'}">${fit === n ? `All ${n} misras fit` : `${fit} of ${n} misras fit one bahr`}</span>`;
+  bar += `<button type="button" class="scan-playall" onclick="scanPlayAll(null, this.querySelector('.play'))"><span class="play sm" data-pb="scan:all" data-label="Play the ghazal" aria-hidden="true">▶︎</span><span class="lbl-play">Play the ghazal</span><span class="lbl-stop">Stop</span></button>`;
+  bar += `<div class="tr-script-switch" role="group" aria-label="Show the scan as">` + [['cp', 'Couplets'], ['map', 'Rhythm map']].map(v =>
+    `<button type="button" class="tr-script-btn${scanView() === v[0] ? ' on' : ''}" aria-pressed="${scanView() === v[0]}" onclick="scanSetView('${v[0]}')">${v[1]}</button>`).join('') + `</div></div>`;
+  if(!onMap){ host.innerHTML = bar + `</div>`; return; }
+  if(scanMapSel != null && scanMapSel >= d.rows.length) scanMapSel = null;
+  const firstMiss = d.rows.find(r => !r.ok), shown = scanMapSel != null ? scanMapSel : (firstMiss ? firstMiss.li : null);
+  const foot = (n, inner) => `<span class="rmap-foot rm-w${Math.min(6, Math.max(1, n))}">${inner}</span>`;
+  let h = `<div class="rmap${d.cols.length >= 6 ? ' rmap-wide' : ''}" role="group" aria-label="Rhythm map of the whole ghazal">`;
+  h += `<div class="rmap-detail" id="scanMapDetail" aria-live="polite">${scanMapDetailHTML(shown)}</div>`;
+  h += `<div class="rmap-main"><div class="rmap-grid" dir="rtl">`;
+  h += `<div class="rmap-row rmap-head" aria-hidden="true"><span class="rmap-num"></span>${d.cols.map(c => foot(c.n, c.name ? `<span class="urdu" lang="ur">${escapeHtml(c.name)}</span>` : '')).join('')}</div>`;
+  d.rows.forEach(r => {
+    const c = Math.floor(r.li / 2) + 1, m = r.li % 2 + 1;
+    h += `<button type="button" class="rmap-row${r.ok ? '' : ' no'}${r.li%2===1 || r.li===d.rows.length-1 ? ' pair-end' : ''}${shown===r.li ? ' sel' : ''}" data-li="${r.li}" aria-label="Couplet ${c}, misra ${m}: ${r.ok ? 'fits the bahr' : 'does not fit'}" onmouseenter="scanMapShow(${r.li})" onfocus="scanMapShow(${r.li})" onclick="scanMapPick(${r.li})">`;
+    h += `<span class="rmap-num">${r.li + 1}</span>` + r.feet.map((f, fi) => foot(d.cols[fi].n, f.map((m, k) => rmMarkHTML(m, r.idx[fi][k])).join(''))).join('') + `</button>`;
+  });
+  h += `</div></div></div>`;
+  host.innerHTML = bar + h + `</div>`;
+}
+function scanMapDetailHTML(li){
+  if(li == null || !lastScan || !lastScan.results[li]) return `<div class="eyebrow">Every misra</div><p class="tiny muted">Each row is a misra: hover or tap one to read it here.</p>`;
+  const o = lastScan.lineObjs[li] || {}, ok = !!(lastScan.disp && lastScan.disp[li]), c = Math.floor(li / 2) + 1, m = li % 2 + 1;
+  let why = '';
+  if(!ok){ try { const w = unfitWhy(lineExplain(li), 'ur'); why = w.title ? ` ${w.title}.` : ''; } catch(e) {} }
+  return `<div class="eyebrow">Couplet ${c}, misra ${m}</div>` +
+    (o.ur ? `<div class="rmap-ur urdu" lang="ur" dir="rtl">${escapeHtml(o.ur)}</div>` : '') +
+    (o.ro ? `<div class="rmap-ro" lang="und-Latn" dir="ltr">${escapeHtml(o.ro)}</div>` : '') +
+    `<p class="small ${ok ? 'ok-text' : 'no-text'}">${ok ? '✓ fits the bahr' : '✗ does not fit.' + why}</p>` +
+    `<button type="button" class="btn link sm" onclick="scanJump(${c})">Go to couplet ${c} ↓</button>`;
+}
+function scanMapShow(li){
+  scanMapSel = li;
+  const d = $('scanMapDetail'); if(d) d.innerHTML = scanMapDetailHTML(li);
+  if(typeof document !== 'undefined' && document.querySelectorAll) document.querySelectorAll('#scanMap .rmap-row').forEach(b => b.classList.toggle('sel', +b.getAttribute('data-li') === li));
+}
+/* a click jumps to the couplet; on a touch screen (no hover) the first tap only shows the misra, the next one jumps */
+function scanMapPick(li){
+  let touch = false; try { touch = typeof matchMedia === 'function' && matchMedia('(hover: none)').matches; } catch(e) {}
+  if(touch && scanMapSel !== li){ scanMapShow(li); return; }
+  scanJump(Math.floor(li / 2) + 1);
+}
+function scanJump(n){
+  if(scanView() === 'map'){ scanSetView('cp'); }
+  viScrollTo($('scan-cp-' + n));
+}
+/* Couplets (the cards) or the Rhythm map (the whole ghazal at a glance): one at a time, the choice remembered */
+let scanViewMode = null;   /* kept in memory too: storage may be off (a private window) */
+function scanView(){
+  if(scanViewMode == null){ try { scanViewMode = (typeof store !== 'undefined' && store.get && store.get('scanView', 'cp') === 'map') ? 'map' : 'cp'; } catch(e) { scanViewMode = 'cp'; } }
+  return scanViewMode;
+}
+function scanViewClass(has){ const s = $('scan-section'); if(s && s.classList) s.classList.toggle('scan-mapview', !!has && scanView() === 'map'); }
+function scanSetView(v){
+  if(typeof PB !== 'undefined' && PB.playing && PB.key === 'scan:all' && typeof pbCancel === 'function') pbCancel();   /* the lit marks belong to the view that is going */
+  scanViewMode = v === 'map' ? 'map' : 'cp'; try { if(typeof store !== 'undefined' && store.set) store.set('scanView', scanViewMode); } catch(e) {} renderScanMap(); }
+/* ---- the outline rail (wide screens, three couplets or more) ---- */
+function scanRailItems(){
+  if(!lastScan || !lastScan.results) return [];
+  const R = lastScan.results, out = [];
+  for(let li=0; li<R.length; li+=2){
+    const o = lastScan.lineObjs[li] || {}, ok = !!(lastScan.disp && lastScan.disp[li]) && (li+1>=R.length || !!lastScan.disp[li+1]);
+    out.push({ n: li/2 + 1, ur: o.ur || R[li].words.map(w => w.raw).join(' '), ok });
+  }
+  return out;
+}
+function renderScanRail(){
+  const host = $('scanRail'); if(!host) return;
+  const items = scanRailItems(), on = items.length >= 3;
+  if(host.classList) host.classList.toggle('has-items', on);
+  host.innerHTML = on ? `<div class="outline-rail-label">Couplets</div>` + items.map(it =>
+    `<button type="button" class="rail-item${it.ok ? '' : ' no'}" onclick="scanJump(${it.n})" aria-label="Couplet ${it.n}, ${it.ok ? 'fits' : 'does not fit'}"><span class="rail-n">${it.n}</span><span class="rail-t urdu" lang="ur" dir="rtl">${escapeHtml(it.ur)}</span><span class="rail-mark" aria-hidden="true">${it.ok ? '✓' : '✗'}</span></button>`).join('') : '';
 }
 function stackHTML(lines,results,common,tot){
   if(!common) {
@@ -20150,7 +20485,7 @@ function lineHTML(r,li,forced,lineObj){
   if(!f){
     const e = explainUnscanned(r, li, benchmarkFit(li));
     h+=editCompareHTML(li, isRtl);
-    h+=`<div class="chips ${isRtl?'':'ltr'}" id="sc${li}">${chipsHTML(e.syl,e.feet,li)}</div>`;
+    h+=`<div class="chips bad-misra ${isRtl?'':'ltr'}" id="sc${li}">${chipsHTML(e.syl,e.feet,li)}</div>`;
     if(selWord&&selWord[0]===li) h+=wordPanel(r,li,selWord[1]);
     h+=renderUnscannedDiagnostic(e, cs, isRtl, li);
     h+='</div>';
@@ -20196,15 +20531,16 @@ function anchoredFit(li,anchor){
 }
 /* the meter an unscanned misra is measured against: its own original bahr, else its
    partner misra's, else the bahr most of the other lines share */
-function benchmarkFit(li){
+function benchmarkSource(li){
   const R = lastScan && lastScan.results; if(!R) return null;
-  if(lastScan.anchor && lastScan.anchor[li]) return lastScan.anchor[li];
+  if(lastScan.anchor && lastScan.anchor[li]) return {fit:lastScan.anchor[li], kind:'own'};
   const p = li%2===0 ? (li+1<R.length ? li+1 : null) : li-1;
   const pf = p!=null && lastScan.anchor && lastScan.anchor[p];
-  if(pf) return pf;
+  if(pf) return {fit:pf, kind:'partner', li:p};
   const g = lastScan.near && lastScan.near.g, m = g && SE().METERS.find(x=>x.id===g[0]);
-  return m ? {meter:m} : null;
+  return m ? {fit:{meter:m}, kind:'common'} : null;
 }
+function benchmarkFit(li){ const b = benchmarkSource(li); return b ? b.fit : null; }
 /* syllables of line li as displayed (and played): the anchored fit's scansion, or the diagnosis */
 function lineExplain(li){
   const r=lastScan.results[li], f=lastScan.disp ? lastScan.disp[li] : (r.fits&&r.fits[0]);
@@ -20237,22 +20573,69 @@ function explainUnscanned(r, li, targetFit) {
     if (!feet[fi]) feet[fi] = { idx: [], ro: [], ur: '', name: '', cae: false }; feet[fi].idx.push(i); });
   return { syl: out, feet, notes: [], diff: 0, targetFit: null, clashCount: 0, extraCount: 0, missingCount: 0 };
 }
+/* A misra's text in the script being read, as one inline run (the partner misra named in a diagnosis) */
+function misraInline(li, cs, isRtl){
+  const lObj = lastScan && lastScan.lineObjs && lastScan.lineObjs[li];
+  const t = (typeof getLineDisplay === 'function') ? getLineDisplay(lObj, cs) : (lObj ? lObj.ur : '');
+  return t ? `<span class="${isRtl ? 'urdu' : cs==='hi' ? 'deva' : 'mono'} fam-inline sm" ${isRtl?'lang="ur" dir="rtl"':''}>${escapeHtml(t)}</span>` : '';
+}
+/* The words for what is wrong with a misra, from the aligned diagnosis (SE().diagnose): for each foot that has a clashing,
+   extra or missing syllable, what the foot wants and what the line gives. Only what the alignment already knows: no licence
+   is proposed (the handbook rules a learner may apply live in the word panel, sylRule). Returns { title, items:[html], flagged:n }. */
+const FOOT_ORD = ['first','second','third','fourth','fifth','sixth'];
+const countOf = (n, w) => `${n===1?'one':n} ${w}${n>1?'s':''}`;
+function unfitWhy(e, cs){
+  const feet = (e && e.feet) || [], syl = (e && e.syl) || [], nF = feet.filter(Boolean).length;
+  const mark = w => w==='l' ? '=' : '–';
+  const wantTxt = F => F && F.toks ? F.toks.map(t=>t==='x' ? '= or –' : mark(t)).join(' ') : (F && F.pat ? F.pat.split('').map(mark).join(' ') : '');
+  const lab = x => { const t = x.text && x.text!=='·' ? x.text : ''; if(!t) return ''; const v = (cs==='ur' || typeof translitText!=='function') ? t : translitText(t, cs); return `<span class="${cs==='ur'?'urdu':'mono'}" ${cs==='ur'?'lang="ur" dir="rtl"':''}>${escapeHtml(v)}</span>`; };
+  const items = []; let title = '';
+  feet.forEach((F, fi) => {
+    if(!F) return;
+    const mine = syl.filter(x => x.foot===fi), bad = mine.filter(x => x.extra || x.clash || x.missing);
+    if(!bad.length) return;
+    const ord = fi===nF-1 ? 'last' : FOOT_ORD[fi] || ('#'+(fi+1));
+    const name = F.ur ? `<span class="urdu" lang="ur" dir="rtl">${escapeHtml(F.ur)}</span>` : 'the foot';
+    const has = mine.filter(x => !x.missing && !x.cheat && x.resolved!=='c').map(x => mark(x.resolved==='l'?'l':'s')).join(' ');
+    const extra = bad.filter(x => x.extra), miss = bad.filter(x => x.missing), clash = bad.filter(x => x.clash);
+    const want = wantTxt(F);
+    const head = [];
+    if(extra.length) head.push(`The ${ord} foot has ${countOf(extra.length,'syllable')} too many`);
+    if(miss.length) head.push(`The ${ord} foot is ${countOf(miss.length,'syllable')} short`);
+    if(!extra.length && !miss.length && clash.length) head.push(`In the ${ord} foot ${clash.length>1?'some syllables have':'a syllable has'} the wrong weight`);
+    if(!title) title = head[0];
+    let txt = `<span class="why-head">${head.join('; ')}.</span> ${name} wants <span class="mono-pat">${want}</span>${has ? `; the line gives <span class="mono-pat">${has}</span>` : ''}.`;
+    clash.forEach(x => { txt += ` ${lab(x) || 'A syllable'} is ${x.resolved==='l'?'long':'short'}, and the bahr wants it ${x.expected==='l'?'long':'short'}.`; });
+    extra.forEach(x => { const l = lab(x); if(l) txt += ` The syllable ${l} has no room.`; });
+    if(miss.length) txt += ' The gap is heard as silence.';
+    items.push(txt);
+  });
+  const shown = items.slice(0, 3); if(items.length > 3) shown.push(`…and ${items.length-3} more feet.`);
+  return { title, items: shown, flagged: items.length };
+}
 function renderUnscannedDiagnostic(e, cs, isRtl, li) {
   let h = `<div class="unscanned-diag">`;
   const edited = li != null && hasEdits(li);
   if (e.targetFit) {
+    const src = li != null ? benchmarkSource(li) : null, kind = src ? src.kind : 'common';
     const fam = famOfMeter[e.targetFit.meter.id];
     const famDisp = fam ? famLabel(fam) : null;
     const famTxt = famDisp ? ((typeof getLineDisplay === 'function') ? getLineDisplay(famDisp, cs) : famDisp.ur) : meterLabel(e.targetFit.meter);
-    const own = li != null && lastScan.anchor && lastScan.anchor[li];
     h += `<div class="verdict no-fit">${edited ? 'Your edit breaks the meter' : "Doesn't scan as typed"}</div>`;
-    h += `<div class="diag-meta"><span class="tiny muted">${own ? 'Measured against its original bahr:' : 'Measured against the partner misra’s bahr:'}</span> <span class="${isRtl ? 'urdu' : 'mono'} fam-inline sm">${famTxt}</span></div>`;
-    const parts = [];
-    const pl = (n, w) => `${n} ${w}${n > 1 ? 's' : ''}`;
-    if (e.clashCount) parts.push(`<strong class="t">${pl(e.clashCount, 'syllable')}</strong> with the wrong weight (dashed)`);
-    if (e.extraCount) parts.push(`<strong class="t">${pl(e.extraCount, 'extra syllable')}</strong> the bahr has no room for`);
-    if (e.missingCount) parts.push(`<strong class="t">${pl(e.missingCount, 'missing syllable')}</strong> (the gaps, heard as silence)`);
-    h += `<div class="diag-body">${parts.length ? parts.join(' · ') + '.' : 'No classical bahr fits every syllable.'} Tap ▶︎ to hear where the rhythm limps${edited ? ', then play the original to compare' : ''}.</div>`;
+    /* what it is measured against: the line's own bahr (named by the poem that stands for it), or its partner misra, the line itself */
+    if (kind === 'partner') h += `<div class="diag-meta"><span class="tiny muted">Measured against the partner misra’s bahr:</span> ${misraInline(src.li, cs, isRtl)}</div>`;
+    else h += `<div class="diag-meta"><span class="tiny muted">${kind === 'own' ? 'Measured against its original bahr:' : 'Measured against the bahr most misras share:'}</span> <span class="${isRtl ? 'urdu' : 'mono'} fam-inline sm">${famTxt}</span></div>`;
+    if (e.targetFit.meter.raw) h += `<div class="diag-pat tiny"><span class="muted">The bahr wants</span> <span class="mono-pat">${patGlyphs(e.targetFit.meter.raw)}</span></div>`;
+    const why = unfitWhy(e, cs);
+    if (why.items.length) h += `<ul class="diag-why">${why.items.map(x => `<li>${x}</li>`).join('')}</ul>`;
+    else {
+      const parts = [];
+      if (e.clashCount) parts.push(`<strong class="t">${countOf(e.clashCount, 'syllable')}</strong> with the wrong weight (dashed)`);
+      if (e.extraCount) parts.push(`<strong class="t">${countOf(e.extraCount, 'extra syllable')}</strong> the bahr has no room for`);
+      if (e.missingCount) parts.push(`<strong class="t">${countOf(e.missingCount, 'missing syllable')}</strong> (the gaps, heard as silence)`);
+      h += `<div class="diag-body">${parts.length ? parts.join(' · ') + '.' : 'No classical bahr fits every syllable.'}</div>`;
+    }
+    h += `<div class="diag-body">The marked syllables are where it limps. Tap a syllable to change its word’s reading; tap ▶︎ to hear it${edited ? ', then play the original to compare' : ''}.</div>`;
   } else {
     h += `<div class="verdict no-fit">Doesn't scan as typed (${e.syl.length} syllables)</div>`;
     h += `<div class="diag-body">No classical bahr fits these syllables. Tap ▶︎ to hear the rhythm as typed, or tap a syllable to change its reading.</div>`;
@@ -20284,7 +20667,7 @@ function misraScan(r,li,forced){
   if(!f){
     const e = explainUnscanned(r, li, benchmarkFit(li));
     h+=editCompareHTML(li, isRtl);
-    h+=`<div class="chips ${isRtl?'':'ltr'}" id="sc${li}">${chipsHTML(e.syl,e.feet,li)}</div>`;
+    h+=`<div class="chips bad-misra ${isRtl?'':'ltr'}" id="sc${li}">${chipsHTML(e.syl,e.feet,li)}</div>`;
     if(selWord&&selWord[0]===li) h+=wordPanel(r,li,selWord[1]);
     h+=renderUnscannedDiagnostic(e, cs, isRtl, li);
     return h;
@@ -20319,14 +20702,14 @@ function coupletCard(li1,li2,r1,f1,lineObj1,r2,f2,lineObj2,label,opts){
       const e1 = patEnding(f1.meter.raw || f1.meter.pattern);
       const e2 = patEnding(f2.meter.raw || f2.meter.pattern);
       const tip = `Misra 1 uses Meter #${m1} (${e1}), Misra 2 uses Meter #${m2} (${e2}). In Classical Urdu prosody, these alternating cadences form an accepted paired meter (Handbook \u00a76.1).`;
-      pairBadge = `<span class="pair-bahr-pill sm" tabindex="0" data-tip="${tip}">Paired · #${m1} &amp; #${m2}</span>`;
+      pairBadge = `<span class="tip-note" tabindex="0" data-tip="${tip}">endings #${m1} &amp; #${m2}</span>`;
     } else if(isPairPoem && opts && opts.group && opts.group.length > 1 && m1 !== opts.group[0]){
       const e1 = patEnding(f1.meter.raw || f1.meter.pattern);
       const tip = `Both misras in this couplet use Meter #${m1} (${e1}), the secondary cadence in this paired bahr.`;
-      pairBadge = `<span class="pair-bahr-pill sm faint-pair" tabindex="0" data-tip="${tip}">Meter #${m1}</span>`;
+      pairBadge = `<span class="tip-note" tabindex="0" data-tip="${tip}">ending #${m1}</span>`;
     }
   }
-  let h=`<div class="card misra-card"><div class="row card-head tight">`;
+  let h=`<div class="card misra-card" id="scan-cp-${(li1/2)+1}"><div class="row card-head tight">`;
   h+=`<div class="row couplet-head-left"><span class="tiny muted">${label}</span>${pairBadge}</div>`;
   h+=canPlay?`<span class="play sm" title="Hear this couplet" aria-label="Hear this couplet" data-label="Hear this couplet" data-pb="scan:${li1}${li2!=null?','+li2:''}" onclick="playCouplet(${li1},${li2!=null?li2:'null'},null,this)">▶︎</span>`:'';
   const _pr=[[li1,lineObj1,f1],[li2,lineObj2,f2]].map(([li,o,f])=>{ if(li==null||!f||hasEdits(li)) return null; const u=typeof o==='string'?o:(o&&o.ur)||''; const ro=typeof o==='object'?(o&&o.ro):''; return (u&&typeof prPracticable==='function'&&prPracticable(u,f.meter.id))?{u,m:f.meter.id,ro}:null; }).find(Boolean);
@@ -20353,10 +20736,18 @@ function playCouplet(li1,li2,start,btn){
 /* ▶ at the top of Scan: play every line in order, chips lighting, through the shared player */
 function scanPlayAll(start,btn){
   if(!lastScan||!lastScan.results||!lastScan.results.length) return;
-  btn = btn || $('btnPlayCouplet');
+  btn = btn || (typeof document !== 'undefined' && document.querySelector ? document.querySelector('#scanMap [data-pb="scan:all"]') : null);
+  const onMap = scanView() === 'map';
   pbToggle('scan:all', btn, ()=>{
     const out=[];
     lastScan.results.forEach((r,li)=>{
+      if(onMap){
+        const row = typeof document !== 'undefined' && document.querySelector ? document.querySelector(`#scanMap .rmap-row[data-li="${li}"]`) : null;
+        if(!row) return;
+        const nodes = []; row.querySelectorAll('.rm[data-i]').forEach(n => { nodes[+n.getAttribute('data-i')] = n; });
+        out.push({ e: lineExplain(li), nodes, groups: null });
+        return;
+      }
       const host = $('sc'+li);
       if(host) out.push(Object.assign({e:lineExplain(li)}, pbNodes(host)));
     });
@@ -20524,6 +20915,7 @@ function toggleTashdid(li,wi){
 function toggleGraft(li,wi){ const o=ens(li,wi); o.noGraft=!o.noGraft; runScan(); }
 let scanTimer = null;
 function onScanComposerInput() {
+  viGrow($('scanIn'));
   ovr = {}; selWord = null; curEx = null; if($('exSel')) $('exSel').value = '';
   clearTimeout(scanTimer);
   scanTimer = setTimeout(runScan, 200);
@@ -20533,10 +20925,10 @@ function clearScan() {
   if ($('studioInput')) $('studioInput').value = '';
   if ($('scanOut')) $('scanOut').innerHTML = '';
   if ($('studioResults')) $('studioResults').innerHTML = '';
-  const btn = $('btnPlayCouplet'); if (btn) btn.classList.add('hidden');
   ovr = {}; selWord = null; curEx = null;
   if ($('exSel')) $('exSel').value = '';
   lastScan = null;
+  scanChrome([]);
   window.lastStudioResults = lastStudioResults = [];
 }
 if ($('scanIn')) $('scanIn').addEventListener('input', onScanComposerInput);
@@ -22779,11 +23171,15 @@ function trModernWord(w) {
     return c === 'ī' ? (end ? 'i' : 'ee') : (end ? 'u' : 'oo');
   });
 }
-function trStyleRo(ro) {
-  if (TR.style !== 'modern' || !ro) return ro;
+function trToModernRo(ro) {
+  if (!ro) return ro;
   return String(ro).split(' ').map(function (w) {
     return w.split('-').map(trModernWord).join('-');
   }).join(' ');
+}
+function trStyleRo(ro) {
+  if (TR.style !== 'modern' || !ro) return ro;
+  return trToModernRo(ro);
 }
 
 /* ---- script helpers ---- */
@@ -23129,14 +23525,14 @@ function trBuild(text, opts) {
   var stats = { words: 0, known: 0, poets: 0, persian: 0, form: 0, loose: 0, derived: 0, guess: 0, you: 0, check: 0 };
   var lines = String(text || '').replace(/\r/g, '').split('\n').map(function (rawLine) {
     var raw = rawLine.normalize('NFC').trim();
-    if (!raw) return { src: '', blank: true, words: [], out: { ro: '', hi: '', ur: '', fa: '' } };
+    if (!raw) return { src: '', blank: true, words: [], out: { ro: '', roClass: '', rom: '', hi: '', ur: '', fa: '' } };
     var nk = normVerseKey(raw), kv = (typeof KNOWN_VERSES !== 'undefined') ? KNOWN_VERSES[nk] : null;
-    var scripted = AR_SCRIPT.test(raw) || /[\u0900-\u097F]/.test(raw);
+    var scripted = (AR_SCRIPT.test(raw) || /[\u0900-\u097F]/.test(raw)) && opts.input !== 'ro';   // input 'ro': the reader says it is Roman
     if (kv && kv.ro && kv.ur && !scripted) {
       /* a verse of Pritchett's own corpora: her Roman, verbatim */
-      return { src: raw, verified: true, words: [], out: { ro: kv.ro, hi: kv.hi || '', ur: kv.ur, fa: trUrToFa(kv.ur) } };
+      return { src: raw, verified: true, words: [], out: { ro: kv.ro, roClass: kv.ro, rom: trToModernRo(kv.ro), hi: kv.hi || '', ur: kv.ur, fa: trUrToFa(kv.ur) } };
     }
-    var lineLang = (opts && opts.lang) || (TR.script === 'fa' ? 'fa' : ((typeof detectScanLang === 'function') ? detectScanLang(raw) : 'ur'));
+    var lineLang = (opts && opts.lang) || (opts.input === 'ur' || opts.input === 'fa' ? opts.input : (TR.script === 'fa' ? 'fa' : ((typeof detectScanLang === 'function') ? detectScanLang(raw) : 'ur')));
     var words = scripted ? trScriptWords(raw, opts) : trRomanWords(raw, opts);
     words.forEach(function (w) {
       w.lang = lineLang;
@@ -23221,7 +23617,11 @@ function trBuild(text, opts) {
         }
       });
       w.out = trWordOut(w);
-      if (!w.pieces.some(function (p) { return p.chosen && p.fixed && p.fixed.ownRo; })) w.out.ro = trStyleRo(w.out.ro);
+      var roClass = w.out.ro;
+      var hasOwnRo = w.pieces.some(function (p) { return p.chosen && p.fixed && p.fixed.ownRo; });
+      w.out.roClass = roClass;
+      w.out.rom = hasOwnRo ? roClass : trToModernRo(roClass);
+      if (!hasOwnRo) w.out.ro = trStyleRo(roClass);
       var worst = null;
       w.pieces.forEach(function (p) {
         if (!(p.tier in TR_SEVERITY) && p.tier !== 'known' && p.tier !== 'poets') return;
@@ -23310,7 +23710,19 @@ function trText(model, script) {
 
 /* ---- view ---- */
 
-var TR = { script: 'ro', style: 'classical', open: null, model: null, choices: {}, timer: null, msg: '', dictTarget: null };
+var TR = { script: 'ro', style: 'classical', open: null, model: null, choices: {}, timer: null, msg: '', dictTarget: null,
+  view: 'one', inter: { ro: true, rom: false, ur: true, fa: false, hi: true }, input: 'auto' };
+/* interlinear row options: [key, toggle button label, row tag] */
+var TR_INTER_ROWS = [
+  ['ro', 'Roman · diacritics', 'Diacritics'],
+  ['rom', 'Roman · modern', 'Modern'],
+  ['ur', 'اردو', 'اردو'],
+  ['fa', 'فارسی', 'فارسی'],
+  ['hi', 'हिन्दी', 'हिन्दी']
+];
+/* how the reader may be told to read the input (the badge's menu): trBuild's opts.input */
+var TR_INPUTS = [['auto', 'Detect from the text'], ['ro', 'Roman'], ['ur', 'Urdu'], ['fa', 'Fārsī']];
+var TR_INPUT_LABEL = { ro: 'Roman', ur: 'Urdu', fa: 'Fārsī' };
 
 function trSave(key, val) { try { if (typeof store !== 'undefined' && store.set) store.set(key, val); } catch (e) {} }
 function trLoad(key, def) { try { if (typeof store !== 'undefined' && store.get) { var v = store.get(key, def); return v == null ? def : v; } } catch (e) {} return def; }
@@ -23325,20 +23737,36 @@ var TR_PAIRS = [['sada', 'sadaa', ['صدا', 'ṣadā'], ['سدا', 'sadā']], [
   ['salam', 'salām', ['سلام', 'salām'], ['سالم', 'sālim']], ['nazar', 'nazr', ['نظر', 'naz̤ar'], ['نذر', 'nażr']],
   ['durud', 'durūd', ['درود', 'durūd'], ['درود', 'darūd']], ['buvad', 'buad', ['بود', 'buvad'], ['بود', 'būd']], ['bood', 'būd', ['بود', 'buvad'], ['بود', 'būd']],
   ['main', 'meen', ['میں', 'maiñ'], ['مین', 'mīn']], ['mein', 'meen', ['میں', 'meñ'], ['مین', 'mīn']], ['gaye', 'gāye', ['گئے', 'gaʾe'], ['گیے', 'gaye']], ['naye', 'nayi', ['نئے', 'naʾe'], ['نیے', 'naye']], ['aaye', 'āye', ['آئے', 'āʾe'], ['آیے', 'āye']]];
+/* how sure a reading is, in plain words (the drawer's first line): the tier trBuild gave the word */
+var TR_TIER_SURE = {
+  known: 'Sure: this word is in Pritchett’s word list.',
+  poets: 'Fairly sure: the Rekhta poets’ list has it spelled this way.',
+  persian: 'Fairly sure: it comes from the Persian list.',
+  form: 'Fairly sure: a regular form of a dictionary word, but check it is the word you meant.',
+  loose: 'Not sure: only a loose match to a listed word. Check it.',
+  derived: 'Not sure: built by an inflection rule and found in no list. Check it.',
+  guess: 'A guess: no list has this word, so it is read from its letters and the short vowels are a guess.',
+  typed: 'Exact: you wrote it with marks, so it is read just as typed.',
+  you: 'Your correction, kept for every place this spelling appears.'
+};
 var TR_TAG_NOTE = { now: 'as read now', list: 'Pritchett’s list', loose: 'loose match', poets: 'Rekhta poets', persian: 'Persian list', letters: 'from the letters', reading: 'same spelling, another word', lexicon: 'dictionary', pair: 'classical pair', form: 'dictionary word’s form', phonetic: 'sounds like', tie: 'typed the same way, another word' };
 
 function trScriptAttrs(script) {
-  return script === 'ur' ? 'class="tr-res tr-res-ur" lang="ur" dir="rtl"' : script === 'fa' ? 'class="tr-res tr-res-ur" lang="fa" dir="rtl"' : script === 'hi' ? 'class="tr-res tr-res-hi" lang="hi" dir="ltr"' : 'class="tr-res tr-res-ro" lang="und-Latn" dir="ltr"';
+  var base = script === 'rom' ? 'ro' : script;
+  var a = viLangDir(base);
+  return 'class="tr-res tr-res-' + (base === 'fa' ? 'ur' : base) + '" lang="' + a.lang + '" dir="' + a.dir + '"';
 }
 
-function trWordHtml(w, li, wi, script) {
-  var txt = escapeHtml(trEdge(w.lead, script) + w.out[script] + trEdge(w.trail, script));
+function trWordHtml(w, li, wi, script, useClassRo) {
+  var edgeScript = script === 'rom' ? 'ro' : script;
+  var body = (useClassRo && script === 'ro' && w.out.roClass != null) ? w.out.roClass : w.out[script];
+  var txt = escapeHtml(trEdge(w.lead, edgeScript) + (body != null ? body : w.out.ro) + trEdge(w.trail, edgeScript));
   var checkCls = w.tier === 'you' ? ' tr-t-you' : (w.needsCheck ? ' tr-t-choice' : '');
   var cls = 'tr-w tr-t-' + w.tier + checkCls;
-  if (!w.reviewable) return '<span class="' + cls + '">' + txt + '</span>';
+  if (!w.reviewable) return '<span class="' + cls + '" data-li="' + li + '" data-wi="' + wi + '">' + txt + '</span>';
   var on = TR.open && TR.open.li === li && TR.open.wi === wi;
   var note = TR_TIER_NOTE[w.tier] || '';
-  return '<button type="button" class="' + cls + (on ? ' on' : '') + '" aria-expanded="' + (on ? 'true' : 'false') + '" title="' + escapeHtml(note) + '" onclick="trOpen(' + li + ',' + wi + ')">' + txt + '</button>';
+  return '<button type="button" class="' + cls + (on ? ' on' : '') + '" data-li="' + li + '" data-wi="' + wi + '" aria-expanded="' + (on ? 'true' : 'false') + '" title="' + escapeHtml(note) + '" onclick="trOpen(' + li + ',' + wi + ')">' + txt + '</button>';
 }
 
 /* what a candidate looks like inside its button */
@@ -23355,7 +23783,7 @@ function trCandHtml(c, script) {
   } else if (script === 'ur') {
     return '<span class="tr-cand-script" lang="ur" dir="rtl">' + (ur || ro) + '</span><span class="tr-cand-ro-lbl">' + ro + '</span>';
   } else if (script === 'fa') {
-    var fa = escapeHtml(trUrToFa(c.ur) || ro);
+    var fa = c.ur ? escapeHtml(trUrToFa(c.ur)) : ro;
     return '<span class="tr-cand-script" lang="fa" dir="rtl">' + fa + '</span><span class="tr-cand-ro-lbl">' + ro + '</span>';
   } else if (script === 'hi') {
     return '<span class="tr-cand-deva" lang="hi" dir="ltr">' + (hi || ro) + '</span><span class="tr-cand-ro-lbl">' + ro + '</span>';
@@ -23405,7 +23833,8 @@ function trEditHtml(w, script) {
     }
   }
   var dictHtml = trDictSectionHtml(w, activePiece, script);
-  return '<div class="tr-edit" role="group" aria-label="Spellings for ' + escapeHtml(w.src) + '" title="A choice applies to every place this spelling appears.">' + rows.join('') + dictHtml +
+  var sure = '<p class="tr-sure tr-sure-' + escapeHtml(w.tier) + '">' + escapeHtml(TR_TIER_SURE[w.tier] || '') + '</p>';
+  return '<div class="tr-edit" role="group" aria-label="Spellings for ' + escapeHtml(w.src) + '" title="A choice applies to every place this spelling appears.">' + sure + rows.join('') + dictHtml +
     '<button type="button" class="btn ghost sm tr-close" aria-label="Close" onclick="trClose()">×</button></div>';
 }
 
@@ -23447,6 +23876,8 @@ function trLookupFirst(spellings) {
   }
   return [];
 }
+
+function trFoldRo(s) { return !s ? '' : s.normalize('NFC').replace(/ć/g, 'ch').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z]/g, ''); }
 
 function trDictSectionHtml(w, activeP, script) {
   if (typeof DICT_STORE === 'undefined') return '';
@@ -23558,11 +23989,6 @@ function trDictSectionHtml(w, activeP, script) {
   }
 
   if (!hits.length) return (morphBanner || tabsHtml) ? '<div class="tr-dict-box">' + morphBanner + tabsHtml + '<div class="dim small">No dictionary entry found.</div></div>' : '';
-
-  function trFoldRo(s) {
-    if (!s) return '';
-    return s.normalize('NFC').replace(/ć/g, 'ch').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z]/g, '');
-  }
 
   var distinctReadings = [];
   var seenReadings = {};
@@ -23712,26 +24138,51 @@ function trCorrectionsHtml() {
     '<button type="button" class="btn ghost sm" onclick="trUndoAll()">Clear all</button></div>';
 }
 
+/* one output line in the chosen layout: one script, or every shown script stacked (interlinear) */
+function trLineHtml(l, li) {
+  if (l.blank) return '<div class="tr-gap" aria-hidden="true"></div>';
+  var one = function (script, useClassRo) {
+    var vtxt = (useClassRo && script === 'ro' && l.out.roClass != null) ? l.out.roClass : l.out[script];
+    return '<div ' + trScriptAttrs(script) + '>' + (l.verified ? escapeHtml(vtxt != null ? vtxt : l.out.ro) : l.words.map(function (w, wi) { return trWordHtml(w, li, wi, script, useClassRo); }).join(' ')) + '</div>';
+  };
+  if (TR.view !== 'inter') return '<div class="tr-line">' + one(TR.script, false) + '</div>';
+  return '<div class="tr-line tr-line-inter">' + TR_INTER_ROWS.filter(function (s) { return TR.inter[s[0]]; }).map(function (s) {
+    var base = s[0] === 'rom' ? 'ro' : s[0];
+    var a = viLangDir(base);
+    return '<div class="tr-il-row"><span class="tr-il-tag" lang="' + (base === 'ro' ? 'en' : a.lang) + '">' + s[2] + '</span>' + one(s[0], true) + '</div>';
+  }).join('') + '</div>';
+}
+/* the Urdu (or Fārsī) text of the output, for the hand-off to Scan */
+function trScanHref(model, fa) { return '#/scan?t=' + encodeURIComponent(trText(model, fa ? 'fa' : 'ur')); }
+/* Punjabi / Saraiki letters in a text: the Letters groups worth a link */
+function trPaGroups(text) {
+  var g = [];
+  if (/[ݨݪࣇ]/.test(text)) g.push('punjabi');
+  if (/[ٻڄݙڳڻڏ]/.test(text)) g.push('saraiki');
+  return g;
+}
+/* Scan gets the Fārsī script when the text is read as Persian: shown or forced as Fārsī, else as its first word was read */
+function trReadsFa(m) {
+  if (TR.script === 'fa' || TR.input === 'fa') return true;
+  var first = m.lines.find(function (l) { return l.words && l.words.length; });
+  return !!first && first.words[0].lang === 'fa';
+}
+
 function trRender() {
   var host = $('trOut');
-  if (!host || !host.innerHTML === undefined) return;
+  if (!host || host.innerHTML === undefined) return;
   var ta = $('trIn'), text = ta ? ta.value : '';
-  TR.model = trBuild(text, { choices: TR.choices });
+  TR.model = trBuild(text, { choices: TR.choices, input: TR.input === 'auto' ? undefined : TR.input });
   var m = TR.model, script = TR.script, has = m.lines.some(function (l) { return !l.blank; });
-  var attrs = trScriptAttrs(script);
-  var html = m.lines.map(function (l, li) {
-    if (l.blank) return '<div class="tr-gap" aria-hidden="true"></div>';
-    var body = l.verified ? '<div ' + attrs + '>' + escapeHtml(l.out[script]) + '</div>'
-      : '<div ' + attrs + '>' + l.words.map(function (w, wi) { return trWordHtml(w, li, wi, script); }).join(' ') + '</div>';
-    return '<div class="tr-line">' + body + '</div>';
-  }).join('');
-  host.innerHTML = html;
+  host.innerHTML = m.lines.map(trLineHtml).join('');
+  if (typeof viGrow === 'function') viGrow(ta);
 
   var insp = $('trInspector');
   if (insp) {
     var openWord = (TR.open && m.lines[TR.open.li] && m.lines[TR.open.li].words[TR.open.wi]) || null;
     if (openWord) {
-      insp.innerHTML = trEditHtml(openWord, script);
+      var inspScript = TR.view === 'inter' ? (['ro', 'ur', 'fa', 'hi'].find(function (k) { return TR.inter[k]; }) || script) : script;
+      insp.innerHTML = trEditHtml(openWord, inspScript);
       insp.classList.remove('hidden');
     } else {
       insp.innerHTML = '';
@@ -23745,19 +24196,84 @@ function trRender() {
   var em = $('trEmpty'); if (em) em.classList.toggle('hidden', has);
   var lg = $('trLegend'); if (lg) lg.classList.toggle('hidden', !has);
   var inClr = $('trInClear'); if (inClr) inClr.classList.toggle('hidden', !has);
+  var ts = $('trToScan'); if (ts && has) ts.href = trScanHref(m, trReadsFa(m));
+  var pl = $('trLetters');
+  if (pl) {
+    var pg = has ? trPaGroups(trText(m, 'ur')) : [];
+    pl.classList.toggle('hidden', !pg.length);
+    pl.innerHTML = pg.map(function (g) { return 'The text has ' + (g === 'punjabi' ? 'Punjabi' : 'Saraiki') + ' letters: <a href="#/letters?g=' + g + '">how they are read</a>.'; }).join(' ');
+  }
+  var inter = TR.view === 'inter';
+  /* Interlinear reads full width: the input folds into a one-line bar (Edit text opens it) */
+  var sec = $('transcribe-section'), folded = inter && has && !TR.editIn;
+  if (sec && sec.classList) { sec.classList.toggle('tr-inter', inter); sec.classList.toggle('tr-in-folded', folded); }
+  var barT = $('trInBarText');
+  if (barT) { var ls = text.split('\n').map(function (s) { return s.trim(); }).filter(Boolean); barT.textContent = ls.length ? ls[0] + (ls.length > 1 ? '  · ' + ls.length + ' lines' : '') : ''; }
+  var bar = $('trInBar'); if (bar && bar.classList) bar.classList.toggle('hidden', !folded);
+  var done = $('trInDone'); if (done && done.classList) done.classList.toggle('hidden', !(inter && has && TR.editIn));
+  var romanOn = !!(TR.inter.ro || TR.inter.rom);
   var sb = $('trScriptBtns');
-  if (sb) sb.innerHTML = TR_SCRIPTS.map(function (s) {
-    var cls = 'tr-script-btn tr-script-btn-' + s[0] + (TR.script === s[0] ? ' on' : '');
-    return '<button type="button" class="' + cls + '" data-script="' + s[0] + '" aria-pressed="' + (TR.script === s[0]) + '" onclick="trSetScript(\'' + s[0] + '\')">' + s[1] + '</button>';
-  }).join('');
-  var stb = $('trStyleBtns');
-  if (stb) {
-    stb.classList.toggle('hidden', TR.script !== 'ro');
-    stb.innerHTML = TR_STYLES.map(function (st) {
-      return '<button type="button" class="tr-script-btn' + (TR.style === st[0] ? ' on' : '') + '" aria-pressed="' + (TR.style === st[0]) + '" onclick="trSetStyle(\'' + st[0] + '\')">' + st[1] + '</button>';
+  if (sb) {
+    sb.innerHTML = TR_SCRIPTS.map(function (s) {
+      var on = inter ? (s[0] === 'ro' ? romanOn : !!TR.inter[s[0]]) : TR.script === s[0];
+      var cls = 'tr-script-btn tr-script-btn-' + s[0] + (on ? ' on' : '');
+      var tip = inter ? ' title="Click to show or hide in Interlinear"' : '';
+      return '<button type="button" class="' + cls + '" data-script="' + s[0] + '" aria-pressed="' + on + '"' + tip + ' onclick="' + (inter ? 'trToggleInter' : 'trSetScript') + '(\'' + s[0] + '\')">' + s[1] + '</button>';
     }).join('');
   }
+  var stb = $('trStyleBtns');
+  if (stb) {
+    stb.classList.toggle('hidden', inter ? !romanOn : TR.script !== 'ro');
+    stb.innerHTML = TR_STYLES.map(function (st) {
+      var ik = st[0] === 'modern' ? 'rom' : 'ro';
+      var on = inter ? !!TR.inter[ik] : TR.style === st[0];
+      var fn = inter ? ('trToggleInterStyle(\'' + ik + '\')') : ('trSetStyle(\'' + st[0] + '\')');
+      var tip = inter ? ' title="Click to show or hide in Interlinear"' : '';
+      return '<button type="button" class="tr-script-btn' + (on ? ' on' : '') + '" aria-pressed="' + on + '"' + tip + ' onclick="' + fn + '">' + st[1] + '</button>';
+    }).join('');
+  }
+  var vb = $('trViewBtns');
+  if (vb) vb.innerHTML = [['one', 'One script'], ['inter', 'Interlinear']].map(function (v) {
+    return '<button type="button" class="tr-script-btn' + (TR.view === v[0] ? ' on' : '') + '" aria-pressed="' + (TR.view === v[0]) + '" onclick="trSetView(\'' + v[0] + '\')">' + v[1] + '</button>';
+  }).join('');
+  var bd = $('trBadge'), det = viDetect(text);
+  if (bd) bd.innerHTML = det ? viBadgeHTML({ id: 'trBadgeMenu', valId: 'trBadgeVal', current: TR.input, onPick: 'trSetInput', options: TR_INPUTS,
+    text: TR.input === 'auto' ? det.label : TR_INPUT_LABEL[TR.input] + ' (set by you)' }) : '';
   var ms = $('trMsg'); if (ms) ms.textContent = TR.msg || '';
+}
+
+/* hovering or focusing a word marks the same word in every script line shown */
+function trLinkSet(ev, on) {
+  var t = ev && ev.target && ev.target.closest ? ev.target.closest('.tr-w[data-li]') : null, host = $('trOut');
+  if (!host || !host.querySelectorAll) return;
+  host.querySelectorAll('.tr-w.link').forEach(function (e) { e.classList.remove('link'); });
+  if (on && t) host.querySelectorAll('.tr-w[data-li="' + t.getAttribute('data-li') + '"][data-wi="' + t.getAttribute('data-wi') + '"]').forEach(function (e) { e.classList.add('link'); });
+}
+function trSetInput(k) { TR.input = TR_INPUTS.some(function (x) { return x[0] === k; }) ? k : 'auto'; trSave('trInput', TR.input); TR.open = null; trRender(); }
+function trSetView(v) { TR.view = v === 'inter' ? 'inter' : 'one'; TR.editIn = false; trSave('trView', TR.view); trRender(); }
+function trEditInput() {
+  TR.editIn = !TR.editIn; trRender();
+  var ta = $('trIn'); if (TR.editIn && ta && typeof ta.focus === 'function') ta.focus();
+  else { var b = $('trInBarBtn'); if (b && typeof b.focus === 'function') b.focus(); }
+}
+function trToggleInter(k) {
+  var roOn = !!(TR.inter.ro || TR.inter.rom);
+  var count = (roOn ? 1 : 0) + (TR.inter.ur ? 1 : 0) + (TR.inter.fa ? 1 : 0) + (TR.inter.hi ? 1 : 0);
+  if (k === 'ro') {
+    if (roOn && count === 1) return;
+    if (roOn) { TR.inter.ro = false; TR.inter.rom = false; }
+    else { TR.inter[TR.style === 'modern' ? 'rom' : 'ro'] = true; }
+  } else {
+    if (TR.inter[k] && count === 1) return;
+    TR.inter[k] = !TR.inter[k];
+  }
+  trSave('trInter', TR.inter); trRender();
+}
+function trToggleInterStyle(ik) {
+  var other = ik === 'rom' ? 'ro' : 'rom';
+  if (TR.inter[ik] && !TR.inter[other]) return;
+  TR.inter[ik] = !TR.inter[ik];
+  trSave('trInter', TR.inter); trRender();
 }
 
 function trOnInput() {
@@ -23879,7 +24395,7 @@ function trCopy() {
 }
 
 var TR_SAMPLE = 'dil-e nadan tujhe hua kya hai\naakhir is dard ki dava kya hai\nhum hain mushtaaq aur vo bezaar\nya ilaahi ye maajra kya hai';
-function trSample() { var ta = $('trIn'); if (ta) { ta.value = TR_SAMPLE; trOnInput(); trRender(); } }
+function trSample() { var ta = $('trIn'); if (ta) { ta.value = TR_SAMPLE; TR.input = 'auto'; trOnInput(); trRender(); } }
 function trClear() { var ta = $('trIn'); if (ta) ta.value = ''; TR.open = null; TR.msg = ''; trSave('trText', ''); trRender(); if (typeof setHashQuiet === 'function' && typeof location !== 'undefined' && /^#\/lab\/transcribe/.test(location.hash || '')) setHashQuiet('/lab/transcribe'); }
 
 function mountTranscribe(params) {
@@ -23889,6 +24405,17 @@ function mountTranscribe(params) {
   TR.script = trLoad('trScript', 'ro');
   if (!TR_SCRIPTS.some(function (s) { return s[0] === TR.script; })) TR.script = 'ro';
   TR.style = trLoad('trRomanStyle', 'classical') === 'modern' ? 'modern' : 'classical';
+  TR.view = trLoad('trView', 'one') === 'inter' ? 'inter' : 'one';
+  var inter = trLoad('trInter', null);
+  if (inter && typeof inter === 'object') TR.inter = { ro: inter.ro !== false, rom: !!inter.rom, ur: inter.ur !== false, fa: !!inter.fa, hi: inter.hi !== false };
+  TR.input = trLoad('trInput', 'auto');
+  if (!TR_INPUTS.some(function (x) { return x[0] === TR.input; })) TR.input = 'auto';
+  var outEl = $('trOut');
+  if (outEl && !outEl.__trLink && typeof outEl.addEventListener === 'function') {
+    outEl.__trLink = true;
+    ['mouseover', 'focusin'].forEach(function (e) { outEl.addEventListener(e, function (ev) { trLinkSet(ev, true); }); });
+    ['mouseout', 'focusout'].forEach(function (e) { outEl.addEventListener(e, function (ev) { trLinkSet(ev, false); }); });
+  }
   var saved = trLoad('trChoices', {});
   TR.choices = (saved && typeof saved === 'object') ? saved : {};
   if (params && params.t) ta.value = params.t;

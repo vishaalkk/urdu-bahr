@@ -391,16 +391,7 @@ function handleGhazalsRoute(parts, params) {
 let activeCollection = '';
 
 function initScanEmptyState() {
-  const host = $('samples');
-  if (!host) return;
-  const samples = [
-    { title: "Ghalib: dil-e nādāñ", text: "دلِ ناداں تجھے ہوا کیا ہے\nآخر اس درد کی دوا کیا ہے" },
-    { title: "Mir: hastī apnī", text: "ہستی اپنی حباب کی سی ہے\nیہ نمائش سراب کی سی ہے" },
-    { title: "Iqbal: sitāroñ se āge", text: "ستاروں سے آگے جہاں اور بھی ہیں\nابھی عشق کے امتحان اور بھی ہیں" }
-  ];
-  host.innerHTML = samples.map((s, i) => `
-    <button class="chipbtn sm" onclick="$('scanIn').value=\`${s.text}\`;runScan();">${s.title}</button>
-  `).join('');
+  if (typeof renderScanSamples === 'function') renderScanSamples();   // the three sample cards (19-scan.js, shared component 18c-verse-shared.js)
 }
 
 function toggleScanHelp() {

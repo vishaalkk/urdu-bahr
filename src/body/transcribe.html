@@ -14,12 +14,18 @@
           <span class="tiny muted">Try:</span>
           <button type="button" class="btn ghost sm" onclick="trSample()">a ghazal in casual Roman</button>
         </div>
+        <span id="trBadge" class="tr-badge"></span>
+      </div>
+      <div id="trInBar" class="tr-in-bar">
+        <span id="trInBarText" class="tr-in-bar-text"></span>
+        <button type="button" id="trInBarBtn" class="btn sm" onclick="trEditInput()">Edit text</button>
       </div>
       <div class="tr-input-wrap">
-        <textarea id="trIn" rows="7" class="scan-input tr-input-area" spellcheck="false" autocapitalize="off" placeholder="Paste text in Roman, Urdu, Fārsī or Hindi, one line to a line" oninput="trOnInput()"></textarea>
+        <textarea id="trIn" rows="7" class="scan-input tr-input-area vi-grow" spellcheck="false" autocapitalize="off" placeholder="Paste text in Roman, Urdu, Fārsī or Hindi, one line to a line" oninput="trOnInput()"></textarea>
       </div>
       <div class="tr-pane-foot tr-in-foot">
         <button type="button" id="trInClear" class="btn ghost sm tr-in-clear hidden" onclick="trClear()">Clear</button>
+        <button type="button" id="trInDone" class="btn sm tr-in-done" onclick="trEditInput()">Done</button>
       </div>
     </div>
 
@@ -28,6 +34,7 @@
       <div class="tr-pane-head tr-controls tr-out-head">
         <div class="tr-script-switch" id="trScriptBtns" role="group" aria-label="Script to show"></div>
         <div class="tr-script-switch tr-style-switch hidden" id="trStyleBtns" role="group" aria-label="Roman style"></div>
+        <div class="tr-script-switch tr-view-switch" id="trViewBtns" role="group" aria-label="Layout"></div>
       </div>
 
       <div class="tr-out-wrap">
@@ -37,10 +44,12 @@
       <div class="tr-pane-foot tr-out-foot">
         <div id="trActions" class="tr-actions hidden">
           <button type="button" class="btn sm" onclick="trCopy()">Copy</button>
+          <a id="trToScan" class="btn sm" href="#/scan">Scan these lines →</a>
           <span id="trStats" class="tiny faint"></span>
           <span id="trMsg" class="tiny faint tr-msg" role="status" aria-live="polite"></span>
         </div>
-        <p id="trLegend" class="tiny faint tr-legend hidden">Tap an underlined word to see other spellings.</p>
+        <p id="trLegend" class="tiny faint tr-legend hidden">Tap an underlined word to see other spellings and dictionary meanings.</p>
+        <p id="trLetters" class="tiny faint tr-legend hidden"></p>
       </div>
     </div>
   </div>

@@ -334,7 +334,7 @@ function tkNoteName(s) {   /* semitones from Sa → sargam, a dot below for the 
   const o = Math.floor(s / 12), nm = TK_SARGAM[((s % 12) + 12) % 12];
   return o < 0 ? nm[0] + '̣' + nm.slice(1) : o > 0 ? nm[0] + '̇' + nm.slice(1) : nm;
 }
-function tkBox(btn) { return btn && typeof btn.closest === 'function' ? btn.closest('.couplet-card, .misra-card, .card') : null; }
+function tkBox(btn) { return btn && typeof btn.closest === 'function' ? btn.closest('.tk-box, .couplet-card, .misra-card, .card') : null; }
 function tkEl(tag, cls, html) { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
 const TK_RIB = { R: null };   /* the ribbon on screen */
 function tkRibbon(box, btn, T, ps) {

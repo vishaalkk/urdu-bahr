@@ -25,6 +25,7 @@ quick_suites() {
   echo "── chip transliteration";  node tests/chip_translit_consistency.js
   echo "── practice logic";        node tests/practice_logic.js
   echo "── transcribe logic";      node tests/transcribe_logic.js
+  echo "── workspace logic (Scan map / diagnosis, Transliterator review + hand-offs)"; node tests/workspace_logic.js
   echo "── transcribe golden (the exceptions' spec)"; node tests/transcribe_golden.js
   echo "── letters page + Punjabi, Saraiki, Arabic and Devanagari letters"; node tests/letters_page.js
   echo "── dictionary lookup (held-out words; floors tests/dictionary_baseline.json)"; node tests/benchmark_dictionary.js
