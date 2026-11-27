@@ -4,6 +4,9 @@
 # shards (DOM_SHARD, one page load each, ~0.5 GB apiece), and the quick suites in one serial job. Each job
 # logs to its own file; the logs print in a fixed order, and the run fails if any job failed.
 set -euo pipefail
+# All of it is one function, called on the last line: bash then reads the whole file before running any of it, so an
+# edit to this file during a run cannot be half-read (that once skipped the later suites and still exited 0).
+main() {
 cd "$(dirname "$0")/.."
 echo "── build";                 uv run python scripts/build_app.py
 echo "── size budget";          node tests/size_budget.js
@@ -66,3 +69,5 @@ done
 if (( ${#failed[@]} )); then
   echo; echo "FAILED:"; printf '  %s\n' "${failed[@]}"; exit 1
 fi
+}
+main "$@"; exit   # exit on the same line: bash stops here, never reading past what it parsed
