@@ -16,7 +16,7 @@
 
 var TR_LEAD = /^["“”‘’'«»\[{<—–…¿¡]+/;
 var TR_TRAIL = /[.,;:!?"“”‘’'«»\]}>—–…،۔؟؛]+$/;
-var TR_LETTER = /[a-zāīūñḍṭṛḥṣẓżḳġʿʾ]/i;
+var TR_LETTER = /[a-zāīūñḍṭṛḥṣẓżḳġʿʾṇḷɓʄɗɠ]/i;
 var TR_SEVERITY = { guess: 4, loose: 3, derived: 3, persian: 2, form: 2, you: 1 };
 var TR_SCRIPTS = [['ro', 'Roman'], ['ur', 'اردو'], ['fa', 'فارسی'], ['hi', 'हिन्दी']];
 /* Roman style. Classical is Pritchett's own spelling (vuh, yih, kih). Modern spells words as most people type them today, by rule
@@ -36,7 +36,7 @@ function trModernWord(w) {
     .replace(/āh$/, 'ah')                                                    // shāh → shah, nigāh → nigah
     .replace(new RegExp('([' + TR_V + '][^' + TR_V + ']+)y([aā])$'), '$1iy$2')  // dunyā → duniyā (not kyā)
     .replace(/ḳhvu/g, 'khu').replace(/ḳh/g, 'kh').replace(/ġh/g, 'gh').replace(/ḳ/g, 'q').replace(/ġ/g, 'gh')
-    .replace(/[ḥ]/g, 'h').replace(/[ṣṡ]|s̤/g, 's').replace(/[ẓż]|z̤/g, 'z').replace(/ṭ|t̤/g, 't').replace(/[ḍṛ]/g, 'd')
+    .replace(/[ḥ]/g, 'h').replace(/ṇ/g, 'n').replace(/ḷ/g, 'l').replace(/[\u0324\u0308]/g, '').replace(/[ṣṡ]|s̤/g, 's').replace(/[ẓż]|z̤/g, 'z').replace(/ṭ|t̤/g, 't').replace(/[ḍṛ]/g, 'd')
     .replace(/'h$/, 'ah').replace(/'/g, '')                                   // vaj'h → vajah, mash'hūr → mashhūr
     .replace(/([aā])ʾ([eī])/g, '$1y$2').replace(/uʾe/g, 'uye').replace(/ʾ/g, '')  // gaʾe → gaye, āʾī → āyī, huʾe → huye
     .replace(/aʿ/g, 'aa').replace(/ʿā/g, 'aa').replace(/ʿ/g, '')               // baʿd → baad, ʿām → aam, ʿalāvah → alāvah
@@ -165,7 +165,7 @@ function trMarkedAscii(core, ascii) {
    one Scan's word map first; the letter map is the last resort. A written iẓāfat (zer, ۂ) shows as -e, as in faLineScripts. */
 function trArabicWord(core, lang, prev, next) {
   var literal = /[\u064B-\u065F\u0670]/.test(core), known = (typeof wordAscii === 'function') && wordAscii(core, literal);
-  var fa = (typeof faWordScripts === 'function' && lang === 'fa') ? faWordScripts(core) : null;
+  var fa = (typeof faWordScripts === 'function' && lang === 'fa' && !PA_LETTER.test(core)) ? faWordScripts(core) : null;
   var r;
   if (fa && fa.ro) r = { tier: 'persian', ro: trFaRo(fa.ro, core), hi: fa.hi || '' };
   else {
@@ -180,7 +180,7 @@ function trArabicWord(core, lang, prev, next) {
 }
 
 function trScriptWords(raw, o) {
-  var lang = (typeof detectScanLang === 'function' && /[\u0600-\u06FF]/.test(raw)) ? detectScanLang(raw) : 'ur';
+  var lang = (typeof detectScanLang === 'function' && AR_SCRIPT.test(raw)) ? detectScanLang(raw) : 'ur';
   var toks = raw.split(/\s+/).filter(Boolean), core = function (t) { return t ? trSplitEdges(t).core : null; };
   return toks.map(function (tok, ti) {
     var e = trSplitEdges(tok), w = { lead: e.lead, trail: e.trail, pieces: [], src: tok, plain: false };
@@ -405,11 +405,11 @@ function trBuild(text, opts) {
     var raw = rawLine.normalize('NFC').trim();
     if (!raw) return { src: '', blank: true, words: [], out: { ro: '', hi: '', ur: '', fa: '' } };
     var nk = normVerseKey(raw), kv = (typeof KNOWN_VERSES !== 'undefined') ? KNOWN_VERSES[nk] : null;
-    if (kv && kv.ro && kv.ur && !/[؀-ۿऀ-ॿ]/.test(raw)) {
+    var scripted = AR_SCRIPT.test(raw) || /[\u0900-\u097F]/.test(raw);
+    if (kv && kv.ro && kv.ur && !scripted) {
       /* a verse of Pritchett's own corpora: her Roman, verbatim */
       return { src: raw, verified: true, words: [], out: { ro: kv.ro, hi: kv.hi || '', ur: kv.ur, fa: trUrToFa(kv.ur) } };
     }
-    var scripted = /[؀-ۿऀ-ॿ]/.test(raw);
     var lineLang = (opts && opts.lang) || (TR.script === 'fa' ? 'fa' : ((typeof detectScanLang === 'function') ? detectScanLang(raw) : 'ur'));
     var words = scripted ? trScriptWords(raw, opts) : trRomanWords(raw, opts);
     words.forEach(function (w) {
@@ -1102,7 +1102,7 @@ function trPick(pi, ci) {
    devToAscii, Roman with Rekhta's capitals kept as marks (ungRi, ulTi, baDi: ṛ ṭ ḍ, which romanToAscii alone would lowercase
    away). Nothing readable, nothing changed: the word is never replaced by an empty one. */
 function trCustomChoice(v, p) {
-  if (/[\u0600-\u06FF]/.test(v)) {
+  if (AR_SCRIPT.test(v)) {
     var u = (typeof urduWordsToScripts === 'function' && urduWordsToScripts(v)) || {};
     return { t: 'f', ur: v, ro: u.ro || v, hi: u.hi || '' };
   }

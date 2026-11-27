@@ -38,6 +38,7 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
 | `#/ghazals` | One list of every poet's ghazals by bahr (`gzLibrary`, `09-exercises-module.js`), filtered by `?poet=<key>&lang=ur\|fa&notes=1&q=<text>`; `?meter=<id>` opens that group. Poets rail (≥1260px) / Poets ▾ sheet. Old `#/ghazals/{handbook\|ghalib\|<poet>\|others}` become filters |
 | `#/ghazals/{collection}/{id}` | Reader (unchanged addresses: `handbook`, `ghalib`, `mir`, a poet key). A Handbook exercise that is a poem already in its poet's collection is listed once; her notes show in that ghazal's reader (`gzExerciseOf`, matched by line text) |
 | `#/guide`, `#/about` | How to use; sources and scanner accuracy |
+| `#/letters` | Letters: every letter and mark the Transliterator reads, its Roman / Devanagari, an example (`?g=<group>` jumps) |
 | `#/lab/tap`, `#/lab/practice`, `#/lab/transcribe` | Unlinked/experimental (`?t=<text>` pre-fills the Transliterator) |
 | `#/handbook/chN` | Redirects to that chapter on Pritchett's site (no in-app reader) |
 
@@ -135,6 +136,16 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   mixer (stays when paused); the bouncing ball (`settings.ball`) rides every couplet. Drills, Learn and pattern ▶ keep
   `play()`. `settings.style` is kept in step with the layers (`tkLegacy`) for the players that still read it. Strokes:
   `data/tabla/` → `scripts/build_tabla_strokes.py` → `data/tabla_strokes.json` (credited on About).
+- **Punjabi, Saraiki and Arabic letters** (ALA-LC Roman; `#/letters`, `src/js/25-letters.js`, gate `tests/letters_page.js`):
+  Pue's ASCII gains `.n .l` (ݨ ݪ / ण ळ / ṇ ḷ) and the Saraiki implosives `.b .j .d .g` (ٻ ڄ ݙ ڳ / ॿ ॼ ॾ ॻ / b̤ j̈ d̤ g̈) by a patch
+  in `pritchett_scripts/ghalib.js` that extends the parser data before the parsers are built (each a plain consonant's class;
+  ڄ's j̈ is inferred, ALA-LC's cell is blank). ڻ ࣇ ڏ are read as ݨ ݪ ݙ. The readers' maps all come from that one table (`PA_LETTERS`, `05-translit-helpers.js`). A word with one (`PA_LETTER`) skips the word lists
+  (their keys drop the letter: پاݨی is not پای). Script regexes take U+0750–077F and U+08A0–08FF (where these letters live)
+  alongside U+0600–06FF (`AR_RANGE` / `AR_SCRIPT`). Typed Roman reads ALA-LC marks and IPA (ɓ ʄ ɗ ɠ), not the underlined ḇ ḏ g̱ j̱ (g̱h is Platts' غ).
+  Devanagari ण stays n (गुण is گن). `urduGuessAscii` reads Arabic spellings (ة ۃ t, وٰ ā, ٱ أ إ ؤ, tanvīn, ى after zabar ā,
+  a written zabar kept); `devToAscii` gives Hindi's inherent a by the same schwa rule (नैनन nainan, समझना samajhnā), ृ ri, ज्ञ gy,
+  ः silent, anusvār n before a consonant after a short vowel. The Letters page writes each example's Roman from its ASCII at
+  render; the test checks the Transliterator reads the example the same way.
 - Scan pins a vowel-less word (عشق) to the engine split its readings in Pritchett's verses agree on (`romanPins`, `19-scan.js`,
   passed as `scanLine` overrides; gated by `tests/benchmark.js` `meter.pasted*`). The engine itself is unchanged.
 - The Devanagari parser drops a word-initial ʿain before parsing (patch at `p_hi` in `pritchett_scripts/ghalib.js`: इश्क़, not िश्क़);
@@ -152,6 +163,8 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
 - `test_runtime.py` runs the inline scripts in a sandbox with a mocked `getElementById`. New code must tolerate missing
   elements (guard `$()` results).
 - Meter ids mix numbers, arrays (`[14,15]`) and strings (`R1…R12`, `H`). Normalise to strings in filter and label code.
+- `handleRoute` hides every `<section>` on the page when the route changes: markup inside a view uses `<div>`, never
+  `<section>` (the Letters groups vanished on their own jump buttons). In-page jumps are a query (`?g=`), not a `#id` anchor.
 - Prefer a verse's **stored Roman** over `urduToRoman`, which is a letter map that cannot see short vowels
   (`ban` → `bn`). Use `wordRomanMap(line, res)` or the corpus `ro` field.
 - Scan edits are a learner exercise, judged against the **original** bahr, even if the edited line fits another meter.

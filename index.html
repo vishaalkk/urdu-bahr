@@ -4501,6 +4501,64 @@ html[data-script="ascii"] .fa-couplet-line.fa-hi { display: none; }
     max-width: 100%;
   }
 }
+
+/* ================= LETTERS (#/letters) =================
+   A reference table per group: hairlines between rows, no boxes (DESIGN_PRINCIPLES §1). The letter is the largest thing in a
+   row; Roman in the mono reading face; script text never tracked or capitalised. Under 640px each row becomes a small grid. */
+.lt-intro { max-width: 560px; margin-top: var(--sp-3); }
+.lt-jump { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin-top: var(--sp-4); }
+.lt-group { margin-top: var(--sp-7); scroll-margin-top: 88px; } /* clears the sticky header on a ?g= jump */
+.lt-title { margin-inline: calc(-1 * var(--sp-2)); padding: 2px var(--sp-2); border-radius: 4px;
+  transition: background-color 160ms ease-out; }
+.lt-title.lt-here { background: color-mix(in srgb, var(--gold) 16%, transparent); }
+@media (prefers-reduced-motion: reduce) { .lt-title { transition: none; } }
+.lt-note { font: 400 var(--fs-base)/1.6 var(--serif); color: var(--dim); max-width: 600px; margin: 0 0 var(--sp-4); }
+
+.lt-table { width: 100%; border-collapse: collapse; }
+.lt-table th {
+  font: 500 11px/1.2 var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--faint);
+  text-align: start; padding: 0 var(--sp-3) var(--sp-2) 0; border-bottom: 1px solid var(--line2);
+}
+.lt-table td { padding: var(--sp-3) var(--sp-3) var(--sp-3) 0; border-bottom: 1px solid var(--line); vertical-align: middle; }
+
+.lt-arab { font-family: var(--urdu); letter-spacing: normal; text-transform: none; }
+.lt-deva { font-family: var(--deva); letter-spacing: normal; text-transform: none; }
+.lt-glyph { width: 76px; text-align: center; color: var(--ink); }
+.lt-glyph.lt-arab { font-size: 30px; line-height: 1.9; }
+.lt-glyph.lt-deva { font-size: 26px; line-height: 1.5; }
+.lt-ro { font: 400 var(--fs-lg)/1.4 var(--mono-ro); color: var(--ink); width: 22%; }
+.lt-other { font-size: var(--fs-lg); color: var(--dim); width: 14%; text-align: left; }
+.lt-other.lt-arab { font-size: 21px; line-height: 1.9; }
+.lt-name { width: 18%; }
+.lt-name-t { display: block; font: italic 400 var(--fs-base)/1.4 var(--serif); color: var(--dim); }
+.lt-ascii { display: block; font: 400 var(--fs-xs)/1.5 var(--mono-ro); color: var(--faint); }
+
+.lt-ex-line { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: var(--sp-3); }
+.lt-ex-src { color: var(--ink); text-align: left; unicode-bidi: isolate; }
+.lt-ex-src.lt-arab { font-size: 22px; line-height: 2; }
+.lt-ex-src.lt-deva { font-size: var(--fs-lg); line-height: 1.6; }
+.lt-ex-ro { font: 400 var(--fs-base)/1.4 var(--mono-ro); color: var(--ink); }
+.lt-ex-other { color: var(--dim); text-align: left; unicode-bidi: isolate; }
+.lt-ex-other.lt-arab { font-size: 18px; line-height: 2; }
+.lt-ex-other.lt-deva { font-size: var(--fs-base); line-height: 1.6; }
+.lt-ex-gl { font: italic 400 var(--fs-sm)/1.5 var(--serif); color: var(--dim); }
+.lt-guess { font-style: normal; font-family: var(--sans); font-size: var(--fs-xs); color: var(--faint); }
+
+@media (max-width: 640px) {
+  .lt-table thead { display: none; }
+  .lt-table tbody, .lt-table tr, .lt-table td { display: block; }
+  .lt-table tr {
+    display: grid; grid-template-columns: 56px 1fr auto; column-gap: var(--sp-3);
+    grid-template-areas: "glyph ro other" "glyph name name" "ex ex ex";
+    padding: var(--sp-3) 0; border-bottom: 1px solid var(--line);
+  }
+  .lt-table td { border: 0; padding: 0; width: auto; }
+  .lt-glyph { grid-area: glyph; width: auto; align-self: center; }
+  .lt-ro { grid-area: ro; align-self: end; }
+  .lt-other { grid-area: other; align-self: end; text-align: end; }
+  .lt-name { grid-area: name; }
+  .lt-ex { grid-area: ex; margin-top: var(--sp-1); }
+}
 </style>
 
 </head>
@@ -5182,6 +5240,26 @@ html[data-script="ascii"] .fa-couplet-line.fa-hi { display: none; }
   </div>
 </section>
 
+<!-- ================= LETTERS (Route #/letters) ================= -->
+<section id="letters-section" class="tab-view" style="display:none;">
+  <div class="page-head">
+    <div class="eyebrow">Reference</div>
+    <h1 class="page-title">Letters</h1>
+    <p class="lede">Every letter and mark the Transliterator reads, the Roman and Devanagari it writes for each, and a word that shows the sound.</p>
+    <p class="lt-intro dim small">Urdu is in Frances Pritchett&rsquo;s Roman. Punjabi, Saraiki and Arabic spellings follow the Library of Congress romanization tables (ALA-LC). Each example&rsquo;s Roman and Devanagari are written by the same engine the <a href="#/lab/transcribe">Transliterator</a> uses. The small code under each name is the letter in Pritchett&rsquo;s ASCII, the notation the engine works in (Settings &rsaquo; Show Pritchett ASCII script shows verses in it). To type a letter in Roman, use the Roman column: ṇ ḷ b̤ j̈ d̤ g̈, or the IPA ɓ ʄ ɗ ɠ.</p>
+    <nav class="lt-jump tag-row" aria-label="Letter groups">
+      <a class="btn ghost sm" href="#/letters?g=urdu">Urdu</a>
+      <a class="btn ghost sm" href="#/letters?g=aspirates">Aspirates</a>
+      <a class="btn ghost sm" href="#/letters?g=marks">Marks</a>
+      <a class="btn ghost sm" href="#/letters?g=punjabi">Punjabi</a>
+      <a class="btn ghost sm" href="#/letters?g=saraiki">Saraiki</a>
+      <a class="btn ghost sm" href="#/letters?g=arabic">Arabic</a>
+      <a class="btn ghost sm" href="#/letters?g=devanagari">Devanagari</a>
+    </nav>
+  </div>
+  <div id="lettersBody"></div>
+</section>
+
 <!-- ===================== PARKED TAP (Route #/lab/tap) ===================== -->
 <section id="tap-section" class="tab-view" style="display:none;">
   <h2 class="sec">Tap</h2>
@@ -5236,7 +5314,7 @@ html[data-script="ascii"] .fa-couplet-line.fa-hi { display: none; }
 <section id="transcribe-section" class="tab-view" style="display:none;">
   <div class="page-head">
     <h1 class="page-title">Transliterator</h1>
-    <p class="lede dim small">Between Roman with diacritics, Urdu script, Fārsī script and Devanagari, in any direction. Paste a text in any of them, casual Roman included, and choose what to see. Words no list knows are underlined: tap one to choose another spelling.</p>
+    <p class="lede dim small">Between Roman with diacritics, Urdu script, Fārsī script and Devanagari, in any direction. Paste a text in any of them, casual Roman included, and choose what to see. Words no list knows are underlined: tap one to choose another spelling. <a href="#/letters">The letters it reads</a>.</p>
   </div>
 
   <div class="tr-grid">
@@ -5315,6 +5393,7 @@ html[data-script="ascii"] .fa-couplet-line.fa-hi { display: none; }
   <p class="footer-credit">Built on Frances W. Pritchett &amp; K. A. K. Anjum&rsquo;s <a href="https://franpritchett.com/00ghalib/meterbk/00_index.html" target="_blank" rel="noopener"><i>Urdu Meter: A Practical Handbook</i> &#8599;</a></p>
   <nav class="footer-links" aria-label="Footer">
     <a href="#/how-to-use">How to use &amp; tips</a>
+    <a href="#/letters">Letters &amp; Roman</a>
     <a href="#/about">About &amp; sources</a>
   </nav>
 </footer>
@@ -5838,6 +5917,41 @@ Parser = (function() {
 
   return Parser;
 
+})();
+
+/* urdu-bahr patch: Punjabi and Saraiki letters. Pue's ASCII has no retroflex n or l and no implosives, so six tokens are
+   added, each a plain consonant (the class a b or s has, so vowels, doubling and Devanagari's halant treat it as one) that
+   writes its own letter: .n ݨ ण ṇ, .l ݪ ळ ḷ (Punjabi), .b ٻ ॿ b̤, .j ڄ ॼ j̈, .d ݙ ॾ d̤, .g ڳ ॻ g̈ (Saraiki implosives).
+   Roman is ALA-LC's (its Sindhi table for the implosives; its ڄ cell is blank, j̈ follows its g̈). The data must be extended
+   before the parsers are built: the constructor indexes tokens and graph once. A doubled letter (.n.n) is written once with
+   tashdid, as nn is. */
+var PUE_EXTRA_LETTERS = [['.n', 'ݨ', 'ण', 'ṇ'], ['.l', 'ݪ', 'ळ', 'ḷ'], ['.b', 'ٻ', 'ॿ', 'b̤'], ['.j', 'ڄ', 'ॼ', 'j̈'], ['.d', 'ݙ', 'ॾ', 'd̤'], ['.g', 'ڳ', 'ॻ', 'g̈']];
+(function () {
+  function extend(tokens, graph, cls, col, doubled) {
+    var root = graph.edge['0'] || graph.edge[0];
+    PUE_EXTRA_LETTERS.forEach(function (L, k) {
+      var tok = L[0], out = L[col], id = 'pa' + k;
+      tokens[tok] = cls.slice();
+      graph.node[id] = { t: tok };
+      graph.node[id + 'r'] = { r: { p: out, tl: 1 } };
+      root.push([0, id, {}]);
+      graph.edge[id] = [[id, id + 'r', { r: { mt: [tok], pl: 0, nl: 1, tl: 1, p: out } }]];
+      if (doubled) {
+        graph.node[id + 'd'] = { t: tok };
+        graph.node[id + 'dr'] = { r: { p: out + doubled, tl: 2 } };
+        graph.edge[id].push([id, id + 'd', {}]);
+        graph.edge[id + 'd'] = [[id + 'd', id + 'dr', { r: { mt: [tok, tok], pl: 0, nl: 2, tl: 2, p: out + doubled } }]];
+      }
+    });
+  }
+  var lead = PUE_EXTRA_LETTERS.map(function (L) { return L[0].replace('.', '\\.'); }).join('|') + '|';
+  extend(urdu_tokens, urdu_graph, urdu_tokens.b, 1, 'ّ');
+  extend(devanagari_tokens, devanagari_graph, devanagari_tokens.b.concat([90]), 2, '');
+  devanagari_onmatch.unshift([[[90], [90]], '्']);   // a doubled one takes a halant (पण्णा), as ll does (बल्ला); class 90 is theirs alone
+  extend(diacritics_tokens, diacritics_graph, diacritics_tokens.b, 3, '');
+  urdu_token_regex = new RegExp(lead + urdu_token_regex.source, 'g');
+  devanagari_token_regex = new RegExp(lead + devanagari_token_regex.source, 'g');
+  diacritics_token_regex = new RegExp(lead + diacritics_token_regex.source, 'g');
 })();
 
 window.p_hi = new Parser('devanagari', devanagari_tokens, devanagari_token_regex, devanagari_graph, devanagari_onmatch);
@@ -8170,6 +8284,7 @@ function parseHash(hash) {
   return { parts, params, raw: h };
 }
 
+let routeRoot = '';   // the view showing before this route, so a jump within a page can keep its scroll
 function handleRoute(targetHash) {
   // Leaving a view stops whatever it was playing
   try { if (typeof pbCancel === 'function') pbCancel(); else if (typeof stopAll === 'function') stopAll(); } catch (e) {}
@@ -8198,6 +8313,8 @@ function handleRoute(targetHash) {
   }
 
   store.set('lastRoute', '/' + raw);
+  const prevRoot = routeRoot;
+  routeRoot = root;
 
   // Top-level sections mapping
   const sectionMap = {
@@ -8208,6 +8325,7 @@ function handleRoute(targetHash) {
     'ghazals': 'ghazals-section',
     'about': 'about-section',
     'guide': 'guide-section',
+    'letters': 'letters-section',
     'how-to-use': 'guide-section',
     'transcribe': 'transcribe-section',
     'dictionary': 'dictionary-section',
@@ -8276,6 +8394,16 @@ function handleRoute(targetHash) {
   } else if (root === 'about') {
     if (typeof document !== 'undefined') document.title = 'About — Baḥr';
     if (typeof renderBibliography === 'function') renderBibliography();
+  } else if (root === 'letters') {
+    if (typeof document !== 'undefined') document.title = 'Letters — Baḥr';
+    if (typeof renderLetters === 'function') renderLetters();
+    /* ?g=<group> jumps to that group (a #id anchor would be read as a route): after the router's own scroll to the top,
+       or, already on the page, straight from where you are */
+    if (params && params.g && typeof setTimeout === 'function') {
+      if (prevRoot === 'letters') params.keepScroll = true;
+      const g = params.g;
+      setTimeout(() => { if (typeof lettersJump === 'function') lettersJump(g); }, 0);
+    }
   } else if (root === 'guide' || root === 'how-to-use') {
     if (typeof document !== 'undefined') document.title = 'How to Use — Baḥr';
   } else if (root === 'lab' && parts[1] === 'practice') {
@@ -8712,46 +8840,78 @@ function indexFamsVerses() {
 }
 
 /* Transliteration helpers for novel/arbitrary inputs */
+/* Arabic script as Urdu, Punjabi and Saraiki write it: the main block plus Arabic Supplement (ݨ ݪ ݙ) and Extended-A (ࣇ) */
+const AR_RANGE = '\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF';
+const AR_SCRIPT = new RegExp('[' + AR_RANGE + ']');
+/* Punjabi and Saraiki letters. The parser patch's table (PUE_EXTRA_LETTERS, pritchett_scripts/ghalib.js) gives each its ASCII,
+   Devanagari and Roman; three have a second spelling (ڻ ṇ, Saraiki's and Sindhi's; ࣇ ḷ, Unicode's newer; ڏ d̤, Sindhi's), and
+   each falls back to a Persian letter (Fārsī output has none of them). */
+const PA_ALT = { 'ڻ': 'ݨ', 'ࣇ': 'ݪ', 'ڏ': 'ݙ' };
+const PA_FA = { 'ݨ': 'ن', 'ݪ': 'ل', 'ٻ': 'ب', 'ڄ': 'ج', 'ݙ': 'د', 'ڳ': 'گ' };
+const PA_LETTERS = {};   // letter → { ascii, hi, ro, fa }
+(typeof PUE_EXTRA_LETTERS !== 'undefined' ? PUE_EXTRA_LETTERS : []).forEach(([ascii, ur, hi, ro]) => { PA_LETTERS[ur] = { ascii, hi, ro, fa: PA_FA[ur] }; });
+Object.keys(PA_ALT).forEach(a => { PA_LETTERS[a] = PA_LETTERS[PA_ALT[a]]; });
+/* a word with one: no word list has them, so it is read by its letters (a list key drops them: پاݨی is not پای) */
+const PA_LETTER = new RegExp('[' + Object.keys(PA_LETTERS).join('') + ']');
+const PA_LETTER_ALL = new RegExp(PA_LETTER.source, 'g');
+const paMap = field => Object.fromEntries(Object.entries(PA_LETTERS).map(([u, x]) => [u, x[field]]));
+/* Devanagari -> Pritchett ASCII. A consonant with no vowel sign has the inherent a, dropped as Hindi drops it: at a word's end,
+   and between a vowel and a consonant that has its own vowel (समझना samajhnā, मोहब्बत mohabbat, नैनन nainan, लड़की laṛkī), the rule
+   urduGuessAscii reads Urdu by. ृ / ऋ ri, ज्ञ gy (gyān, as it is said), the visarga silent (दुःख dukh), ॐ om, the avagraha dropped.
+   ण stays n (Hindi गुण is Urdu گن); ळ and Sindhi's implosive letters are the parser patch's (pritchett_scripts/ghalib.js). */
+const DEV_CONS = {
+  'क':'k','ख':'kh','ग':'g','घ':'gh','ङ':'n',
+  'च':'ch','छ':'chh','ज':'j','झ':'jh','ञ':'n',
+  'ट':';t','ठ':';th','ड':';d','ढ':';dh','ण':'n',
+  'त':'t','थ':'th','द':'d','ध':'dh','न':'n',
+  'प':'p','फ':'ph','ब':'b','भ':'bh','म':'m',
+  'य':'y','र':'r','ल':'l','व':'v',
+  'श':'sh','ष':'sh','स':'s','ह':'h',
+  'ळ':'.l','ॿ':'.b','ॼ':'.j','ॾ':'.d','ॻ':'.g'
+};
+const DEV_NUKTA = { 'क':'q','ख':';x','ग':';g','ज':'z','ड':';r','ढ':';rh','फ':'f' };
+const DEV_VOWEL = { 'अ':'a','आ':'aa','इ':'i','ई':'ii','उ':'u','ऊ':'uu','ए':'e','ऐ':'ai','ओ':'o','औ':'au','ऋ':'ri','ऑ':'o','ॐ':'om' };
+const DEV_MATRA = { 'ा':'aa','ि':'i','ी':'ii','ु':'u','ू':'uu','े':'e','ै':'ai','ो':'o','ौ':'au','ृ':'ri','ॉ':'o' };
 function devToAscii(str) {
   if(!str) return '';
-  str = str.normalize('NFC');
-  const nuktaMap = { 'क़':'q','ख़':';x','ग़':';g','ज़':'z','ड़':';r','ढ़':';rh','फ़':'f' };
-  const consMap = {
-    'क':'k','ख':'kh','ग':'g','घ':'gh','ङ':'n',
-    'च':'ch','छ':'chh','ज':'j','झ':'jh','ञ':'n',
-    'ट':';t','ठ':';th','ड':';d','ढ':';dh','ण':'n',
-    'त':'t','थ':'th','द':'d','ध':'dh','न':'n',
-    'प':'p','फ':'ph','ब':'b','भ':'bh','म':'m',
-    'य':'y','र':'r','ल':'l','व':'v',
-    'श':'sh','ष':'sh','स':'s','ह':'h'
-  };
-  const vowelMap = { 'अ':'a','आ':'aa','इ':'i','ई':'ii','उ':'u','ऊ':'uu','ए':'e','ऐ':'ai','ओ':'o','औ':'au' };
-  const matraMap = { 'ा':'aa','ि':'i','ी':'ii','ु':'u','ू':'uu','े':'e','ै':'ai','ो':'o','ौ':'au' };
-  let s = str;
-  for(const [k, v] of Object.entries(nuktaMap)) s = s.split(k).join(v);
-  let out = '';
-  for(let i = 0; i < s.length; i++) {
-    const ch = s[i];
-    const nextCh = s[i + 1] || '';
-    if(consMap[ch]) {
-      const c = consMap[ch];
-      if(nextCh === '्') { out += c; i++; }
-      else if(matraMap[nextCh]) { out += c + matraMap[nextCh]; i++; }
-      else { out += c; }
-    } else if(vowelMap[ch]) {
-      out += vowelMap[ch];
-    } else if(ch === 'ं' || ch === 'ँ') {
-      out += ';n';
-    } else if(ch === 'ः') {
-      out += 'h';
-    } else if(matraMap[ch]) {   // after a nukta letter, already turned to ASCII above (ड़ी, ज़िं): the vowel sign still counts
-      out += matraMap[ch];
-    } else if(ch === '्') {
-      /* a virama after a nukta letter: no vowel */
-    } else {
-      out += ch;
+  /* precomposed nukta letters (क़ ड़ …) are decomposed first, so one rule reads a base letter and its nukta */
+  const s = str.normalize('NFD').replace(/ऽ/g, '');
+  let out = '', seg = [];
+  const isC = x => x && x.c != null, isV = x => x && x.v != null;
+  const flush = () => {
+    const vow = seg.map((x, k) => !isC(x) ? null : x.m != null ? x.m : (k === seg.length - 1 ? '' : 'a'));
+    const voiced = j => isC(seg[j]) && (isV(seg[j + 1]) || !!vow[j]);
+    for (let k = seg.length - 1; k >= 0; k--) {
+      if (vow[k] !== 'a') continue;
+      const before = seg[k - 1], after = seg[k + 1];
+      const vowelBefore = before && (isV(before) || (vow[k - 1] != null && vow[k - 1] !== ''));
+      if (vowelBefore && isC(after) && voiced(k + 1)) vow[k] = '';
     }
+    seg.forEach((x, k) => { out += isV(x) ? x.v : x.c + (vow[k] === 'A' ? 'a' : (vow[k] || '')); });
+    seg = [];
+  };
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i], next = s[i + 1] || '', last = seg[seg.length - 1];
+    if (ch === 'ज' && next === '्' && s[i + 2] === 'ञ') { seg.push({ c: 'gy' }); i += 2; continue; }
+    if (DEV_CONS[ch]) {
+      if (next === '़') { seg.push({ c: DEV_NUKTA[ch] || DEV_CONS[ch] }); i++; } else seg.push({ c: DEV_CONS[ch] });
+      continue;
+    }
+    if (ch === '़') continue;
+    if (DEV_MATRA[ch]) { if (isC(last) && last.m == null) last.m = DEV_MATRA[ch]; else seg.push({ v: DEV_MATRA[ch] }); continue; }
+    if (ch === '्') { if (isC(last)) last.m = ''; continue; }
+    if (DEV_VOWEL[ch]) { seg.push({ v: DEV_VOWEL[ch] }); continue; }
+    if (ch === 'ं' || ch === 'ँ') {   // the nasal: after a bare consonant it says that consonant's a (रंग rang, कंत kant)
+      const bare = isC(last) && last.m == null;
+      if (bare) last.m = 'A';
+      /* after a short vowel it is a written n (rang, kintu); after a long one the nūn ghunna (āñkh, kahāñ, meñ) */
+      const short = bare || (isC(last) && /^[aiu]$/.test(last.m)) || (isV(last) && /^[aiu]$/.test(last.v));
+      seg.push({ v: short && /^[कखगघचछजझटठडढतथदधपफबभ]/.test(next) ? 'n' : ';n' }); continue;
+    }
+    if (ch === 'ः') continue;
+    flush(); out += ch;
   }
+  flush();
   return out;
 }
 
@@ -9176,7 +9336,8 @@ function rekhtaFallback(plain) {
 }
 /* Urdu letters in Persian orthography: ہ ھ → ه, ے ۓ → ی, ں → ن, ۂ → هٔ */
 function trUrToFa(ur) {
-  return String(ur || '').replace(/ۂ/g, 'هٔ').replace(/[ہھ]/g, 'ه').replace(/[ےۓ]/g, 'ی').replace(/ں/g, 'ن');
+  return String(ur || '').replace(/ۂ/g, 'هٔ').replace(/[ہھ]/g, 'ه').replace(/[ےۓ]/g, 'ی').replace(/ں/g, 'ن')
+    .replace(PA_LETTER_ALL, c => PA_LETTERS[c].fa);
 }
 function trUrSpelling(w) {
   return String(w || '').replace(/[يى]/g, 'ی').replace(/ك/g, 'ک').replace(/[هۀة]/g, function (c) { return c === 'ه' ? 'ہ' : 'ۂ'; });
@@ -9606,6 +9767,10 @@ function romanToAscii(str) {
        .replace(/[īíî]/g, 'ii')
        .replace(/[ūúû]/g, 'uu')
        .replace(/ñ/g, ';n')
+       /* Punjabi ṇ ḷ and Saraiki's implosives, as ALA-LC writes them or in IPA (the underlined ḇ ḏ g̱ j̱ are not read: g̱h is غ
+          in Platts and Fallon, ḏ is ذ in DIN). The ASCII letters are the parser patch's (pritchett_scripts/ghalib.js). */
+       .replace(/ṇ|ṇ/g, '.n').replace(/ḷ|ḷ/g, '.l')
+       .replace(/b̤|ɓ/g, '.b').replace(/j̈|ʄ/g, '.j').replace(/d̤|ɗ/g, '.d').replace(/g̈|ɠ/g, '.g')
        .replace(/ġh|ġ/g, ';g')
        .replace(/ḳh|ḳ/g, ';x')
        .replace(/ṭ/g, ';t')
@@ -10638,7 +10803,8 @@ function urduToDevanagari(str) {
     'ہ': 'ह', 'ۂ': 'ह-ए', 'ھ': 'ह', 'ء': '', 'ی': 'ी', 'ے': 'े', 'ۓ': 'ए',
     'ِ': '-ए-', 'ُ': 'ु', 'َ': '',
     /* hamza on yeh / waw, tanwin, the Urdu comma, and the Arabic forms of yeh, alef maksura and kaf (Rekhta's Iqbal pages use them) */
-    'ئ': 'ए', 'ؤ': 'ओ', 'ً': 'ं', '،': ',', 'ي': 'ी', 'ى': 'ा', 'ك': 'क', 'ٰ': 'ा'
+    'ئ': 'ए', 'ؤ': 'ओ', 'ً': 'ं', '،': ',', 'ي': 'ी', 'ى': 'ा', 'ك': 'क', 'ٰ': 'ा',
+    ...paMap('hi')
   };
   let out = '';
   for(let i = 0; i < s.length; i++) {
@@ -10675,7 +10841,8 @@ function urduToRoman(str) {
     'ک': 'k', 'گ': 'g', 'ل': 'l', 'م': 'm', 'ن': 'n', 'ں': 'ñ', 'و': 'o',
     'ہ': 'h', 'ۂ': 'h-e', 'ھ': 'h', 'ء': 'ʾ', 'ی': 'ī', 'ے': 'e', 'ۓ': 'ʾe',
     'ِ': '-e', 'ُ': 'u', 'َ': 'a',
-    'ئ': 'ʾ', 'ؤ': 'ʾ', 'ً': 'an', '،': ',', 'ي': 'ī', 'ى': 'ā', 'ك': 'k', 'ٰ': 'ā'
+    'ئ': 'ʾ', 'ؤ': 'ʾ', 'ً': 'an', '،': ',', 'ي': 'ī', 'ى': 'ā', 'ك': 'k', 'ٰ': 'ā',
+    ...paMap('ro')
   };
   let out = '';
   for(let i = 0; i < s.length; i++) {
@@ -10697,11 +10864,15 @@ function urduToRoman(str) {
    -> ASCII in Pritchett's scheme (asciiToScripts reads it), or null for a word with letters it does not know */
 const UR_GUESS_C = { 'ب': 'b', 'پ': 'p', 'ت': 't', 'ٹ': ';T', 'ث': ';s', 'ج': 'j', 'چ': 'ch', 'ح': ';h', 'خ': ';x', 'د': 'd', 'ڈ': ';D',
   'ذ': ';z', 'ر': 'r', 'ڑ': ';R', 'ز': 'z', 'ژ': 'zh', 'س': 's', 'ش': 'sh', 'ص': '.s', 'ض': '.z', 'ط': ':t', 'ظ': ':z', 'ع': '((',
-  'غ': ';G', 'ف': 'f', 'ق': 'q', 'ک': 'k', 'گ': 'g', 'ل': 'l', 'م': 'm', 'ن': 'n', 'ہ': 'h', 'ء': '))', 'ئ': '))' };
+  'غ': ';G', 'ف': 'f', 'ق': 'q', 'ک': 'k', 'گ': 'g', 'ل': 'l', 'م': 'm', 'ن': 'n', 'ہ': 'h', 'ء': '))', 'ئ': '))', 'ۃ': 't',
+  ...paMap('ascii') };
 const UR_GUESS_LONG = /^(aa|ii|uu|e|o|ai|au)$/;
 var UR_GUESS_MID = { v: 'o', vEnd: 'o', y: 'ii' };
 function urduGuessAscii(word) {
-  const w = String(word || '').normalize('NFC').replace(/[يى]/g, 'ی').replace(/ك/g, 'ک').replace(/ه/g, 'ہ').replace(/[ـ‌‍ٔ]/g, '')
+  /* Arabic spellings (ALA-LC's readings): a final ى after a fatha is alif maqṣūra (عِيسَى ʿīsā), a final -ū's alif is silent
+     (آمَنُوا āmanū), the waṣla and hamza seats are alifs (ٱلْحَمْدُ, أحمد), tā marbūṭa is t as ۃ is (صلاة ṣalāt) */
+  const w = String(word || '').normalize('NFC').replace(/\u064E\u0649$/, '\u064E\u0627').replace(/\u064F\u0648\u0627$/, '\u064F\u0648')
+    .replace(/[ٱأ]/g, 'ا').replace(/ة/g, 'ۃ').replace(/[يى]/g, 'ی').replace(/ك/g, 'ک').replace(/ه/g, 'ہ').replace(/[ـ‌‍ٔ]/g, '')
     .replace(/[ِ]$/, '');   // a final zer is the iẓāfat: the caller writes it -e
   const L = [...w];
   if (!L.length) return null;
@@ -10712,7 +10883,15 @@ function urduGuessAscii(word) {
     const ch = L[i], prev = seg[seg.length - 1], next = L[i + 1], last = i === L.length - 1;
     if (ch === 'َ' || ch === 'ِ' || ch === 'ُ' || ch === 'ْ') { if (isC(prev)) prev.mark = { 'َ': 'a', 'ِ': 'i', 'ُ': 'u', 'ْ': '' }[ch]; continue; }
     if (ch === 'ّ') { if (isC(prev)) seg.splice(seg.length - 1, 0, { c: prev.c, mark: '' }); continue; }
-    if (ch === 'ٰ' || ch === 'ً') { seg.push({ v: ch === 'ٰ' ? 'aa' : 'an' }); continue; }
+    if (ch === 'ٰ' || ch === 'ً' || ch === 'ٌ' || ch === 'ٍ') { seg.push({ v: { 'ٰ': 'aa', 'ً': 'an', 'ٌ': 'un', 'ٍ': 'in' }[ch] }); continue; }   // tanvīn: -an -un -in
+    if (ch === 'إ') { seg.push({ v: 'i', short: true }); continue; }   // إسلام islām
+    if (ch === 'ؤ') { seg.push({ v: 'o' }); seg.push({ c: '))' }); continue; }   // مؤمن moʾmin: the hamza on its vāv
+    /* a vowel mark before its own letter writes one long vowel: کِتَاب kitāb (not kita-āb), قُوت qūt, دِین dīn */
+    if (isC(prev) && !/[\u064B-\u0652]/.test(next || '') && ((ch === 'ا' && prev.mark === 'a') || (ch === 'و' && prev.mark === 'u') || (ch === 'ی' && prev.mark === 'i'))) {
+      if (ch === 'ا' && next === 'ً') { prev.mark = null; continue; }   // فوراً: the alif only seats the tanvīn
+      prev.mark = ''; seg.push({ v: ch === 'ا' ? 'aa' : ch === 'و' ? 'uu' : 'ii' }); continue;
+    }
+    if (ch === 'ا' && next === 'ً' && i > 0) continue;   // فوراً fauran
     if (ch === 'ھ') { if (isC(prev)) prev.c += 'h'; continue; }
     if (ch === 'آ') { seg.push({ v: 'aa' }); continue; }
     if (ch === 'ا') {
@@ -10724,6 +10903,7 @@ function urduGuessAscii(word) {
       continue;
     }
     if (ch === 'ی' && next === 'ٰ') { seg.push({ v: 'aa' }); i++; continue; }   // alif maqṣūra: کبریٰ kubrā
+    if (ch === 'و' && next === 'ٰ') { seg.push({ v: 'aa' }); i++; continue; }   // the vāv that writes ā: صلوٰۃ ṣalāt, زکوٰۃ zakāt
     if (ch === 'و' || ch === 'ی') {
       const glide = ch === 'و' ? 'v' : 'y';
       if (i === 0 || (isV(prev) && next && VL.test(next) && next !== 'ں')) { seg.push({ c: glide }); continue; }
@@ -10743,7 +10923,7 @@ function urduGuessAscii(word) {
   const vow = seg.map((s, k) => {
     if (!isC(s)) return null;
     if (s.silent) return '';
-    if (s.mark != null) return s.mark;
+    if (s.mark != null) return s.mark === 'a' ? 'A' : s.mark;   // a written zabar is kept, never dropped as a schwa (آمَنُوا āmanū)
     const nx = seg[k + 1];
     if (isV(nx)) return '';
     if (nx && nx.silent) return 'A';   // before a final silent h: a kept a (ṣadqah)
@@ -19534,12 +19714,17 @@ const UR_JOINED_AUX = /(\u06AF\u06CC\u0627|\u06AF\u0626\u06CC|\u06AF\u0626\u06D2
    (persian), a word and a joined auxiliary both listed (derived), else read as a Hindi reader reads it (guess: urduGuessAscii),
    else the letter map. prev / next: the neighbouring words (null at a line's edge), which settle a homograph (ctxReading).
    Scan's per-word fallback and Transcribe's reading of Urdu script both come from here. */
+const UR_WORD_EDGES = new RegExp('^([^' + AR_RANGE + ']*)([\\s\\S]*?)([^' + AR_RANGE + '\\u064B-\\u065F\\u0670]*)$');   // what is not a letter of the script
 function urduWordReading(word, literal, prev, next){
-  const m = String(word || '').match(/^([^\u0600-\u06FF]*)([\s\S]*?)([^\u0600-\u06FF\u064B-\u065F\u0670]*)$/);
+  const m = String(word || '').match(UR_WORD_EDGES);
   const lead = m ? m[1] : '', trail = m ? m[3] : '', core = (m ? m[2] : String(word || '')).replace(/[\u0614]/g, '');   // \u0614 the pen-name mark
   const wrap = r => ({ tier: r.tier, ascii: r.ascii, ro: lead + r.ro + trail, hi: lead + r.hi + trail });
   const viaAscii = (a, tier) => { try { const r = window.p_di.parse(a), h = window.p_hi.parse(a); return r ? { tier, ascii: a, ro: r, hi: h || '' } : null; } catch(e) { return null; } };
   if(!core) return { tier: 'plain', ro: String(word || ''), hi: String(word || '') };
+  if(PA_LETTER.test(core)){   // پاݨی: by its letters
+    const g = urduGuessAscii(core), r = g && viaAscii(g, 'guess');
+    if(r) return wrap(r);
+  }
   let r = null;
   const known = (!literal && typeof ctxReading === 'function' && wordAscii(core, false) && ctxReading(core, prev, next)) || wordAscii(core, literal);   // میں: maiñ or meñ by its neighbours
   if(known) r = viaAscii(known, 'known');
@@ -22553,7 +22738,7 @@ if (typeof document !== 'undefined') {
 
 var TR_LEAD = /^["“”‘’'«»\[{<—–…¿¡]+/;
 var TR_TRAIL = /[.,;:!?"“”‘’'«»\]}>—–…،۔؟؛]+$/;
-var TR_LETTER = /[a-zāīūñḍṭṛḥṣẓżḳġʿʾ]/i;
+var TR_LETTER = /[a-zāīūñḍṭṛḥṣẓżḳġʿʾṇḷɓʄɗɠ]/i;
 var TR_SEVERITY = { guess: 4, loose: 3, derived: 3, persian: 2, form: 2, you: 1 };
 var TR_SCRIPTS = [['ro', 'Roman'], ['ur', 'اردو'], ['fa', 'فارسی'], ['hi', 'हिन्दी']];
 /* Roman style. Classical is Pritchett's own spelling (vuh, yih, kih). Modern spells words as most people type them today, by rule
@@ -22573,7 +22758,7 @@ function trModernWord(w) {
     .replace(/āh$/, 'ah')                                                    // shāh → shah, nigāh → nigah
     .replace(new RegExp('([' + TR_V + '][^' + TR_V + ']+)y([aā])$'), '$1iy$2')  // dunyā → duniyā (not kyā)
     .replace(/ḳhvu/g, 'khu').replace(/ḳh/g, 'kh').replace(/ġh/g, 'gh').replace(/ḳ/g, 'q').replace(/ġ/g, 'gh')
-    .replace(/[ḥ]/g, 'h').replace(/[ṣṡ]|s̤/g, 's').replace(/[ẓż]|z̤/g, 'z').replace(/ṭ|t̤/g, 't').replace(/[ḍṛ]/g, 'd')
+    .replace(/[ḥ]/g, 'h').replace(/ṇ/g, 'n').replace(/ḷ/g, 'l').replace(/[\u0324\u0308]/g, '').replace(/[ṣṡ]|s̤/g, 's').replace(/[ẓż]|z̤/g, 'z').replace(/ṭ|t̤/g, 't').replace(/[ḍṛ]/g, 'd')
     .replace(/'h$/, 'ah').replace(/'/g, '')                                   // vaj'h → vajah, mash'hūr → mashhūr
     .replace(/([aā])ʾ([eī])/g, '$1y$2').replace(/uʾe/g, 'uye').replace(/ʾ/g, '')  // gaʾe → gaye, āʾī → āyī, huʾe → huye
     .replace(/aʿ/g, 'aa').replace(/ʿā/g, 'aa').replace(/ʿ/g, '')               // baʿd → baad, ʿām → aam, ʿalāvah → alāvah
@@ -22702,7 +22887,7 @@ function trMarkedAscii(core, ascii) {
    one Scan's word map first; the letter map is the last resort. A written iẓāfat (zer, ۂ) shows as -e, as in faLineScripts. */
 function trArabicWord(core, lang, prev, next) {
   var literal = /[\u064B-\u065F\u0670]/.test(core), known = (typeof wordAscii === 'function') && wordAscii(core, literal);
-  var fa = (typeof faWordScripts === 'function' && lang === 'fa') ? faWordScripts(core) : null;
+  var fa = (typeof faWordScripts === 'function' && lang === 'fa' && !PA_LETTER.test(core)) ? faWordScripts(core) : null;
   var r;
   if (fa && fa.ro) r = { tier: 'persian', ro: trFaRo(fa.ro, core), hi: fa.hi || '' };
   else {
@@ -22717,7 +22902,7 @@ function trArabicWord(core, lang, prev, next) {
 }
 
 function trScriptWords(raw, o) {
-  var lang = (typeof detectScanLang === 'function' && /[\u0600-\u06FF]/.test(raw)) ? detectScanLang(raw) : 'ur';
+  var lang = (typeof detectScanLang === 'function' && AR_SCRIPT.test(raw)) ? detectScanLang(raw) : 'ur';
   var toks = raw.split(/\s+/).filter(Boolean), core = function (t) { return t ? trSplitEdges(t).core : null; };
   return toks.map(function (tok, ti) {
     var e = trSplitEdges(tok), w = { lead: e.lead, trail: e.trail, pieces: [], src: tok, plain: false };
@@ -22942,11 +23127,11 @@ function trBuild(text, opts) {
     var raw = rawLine.normalize('NFC').trim();
     if (!raw) return { src: '', blank: true, words: [], out: { ro: '', hi: '', ur: '', fa: '' } };
     var nk = normVerseKey(raw), kv = (typeof KNOWN_VERSES !== 'undefined') ? KNOWN_VERSES[nk] : null;
-    if (kv && kv.ro && kv.ur && !/[؀-ۿऀ-ॿ]/.test(raw)) {
+    var scripted = AR_SCRIPT.test(raw) || /[\u0900-\u097F]/.test(raw);
+    if (kv && kv.ro && kv.ur && !scripted) {
       /* a verse of Pritchett's own corpora: her Roman, verbatim */
       return { src: raw, verified: true, words: [], out: { ro: kv.ro, hi: kv.hi || '', ur: kv.ur, fa: trUrToFa(kv.ur) } };
     }
-    var scripted = /[؀-ۿऀ-ॿ]/.test(raw);
     var lineLang = (opts && opts.lang) || (TR.script === 'fa' ? 'fa' : ((typeof detectScanLang === 'function') ? detectScanLang(raw) : 'ur'));
     var words = scripted ? trScriptWords(raw, opts) : trRomanWords(raw, opts);
     words.forEach(function (w) {
@@ -23639,7 +23824,7 @@ function trPick(pi, ci) {
    devToAscii, Roman with Rekhta's capitals kept as marks (ungRi, ulTi, baDi: ṛ ṭ ḍ, which romanToAscii alone would lowercase
    away). Nothing readable, nothing changed: the word is never replaced by an empty one. */
 function trCustomChoice(v, p) {
-  if (/[\u0600-\u06FF]/.test(v)) {
+  if (AR_SCRIPT.test(v)) {
     var u = (typeof urduWordsToScripts === 'function' && urduWordsToScripts(v)) || {};
     return { t: 'f', ur: v, ro: u.ro || v, hi: u.hi || '' };
   }
@@ -23715,6 +23900,193 @@ function mountTranscribe(params) {
 if (typeof document !== 'undefined') {
   var trSec = document.getElementById('transcribe-section');
   if (trSec && trSec.classList && typeof trSec.classList.contains === 'function' && trSec.classList.contains('on')) mountTranscribe(typeof parseHash === 'function' ? parseHash().params : null);
+}
+
+/* ================= LETTERS (#/letters) =================
+   Every letter and mark the Transliterator reads, with the Roman and the other script it writes for it, and one word that
+   shows the sound. Urdu follows Pritchett's Roman (her ASCII is what Pue's parsers read); Punjabi, Saraiki and the Arabic
+   spellings follow the Library of Congress tables (ALA-LC: Sindhi 2024 for the implosives, Urdu 2013 for tā marbūṭa and
+   tanvīn); Devanagari is read as Urdu says the word (Platts' readings). Each example's Roman and other script are not typed
+   here: they are written by the engine from `xa` (Pritchett ASCII) when the page renders, so the page cannot drift from it.
+   tests/letters_page.js checks that each example, read as written, gives that Roman (`guess`: an unwritten vowel the reader
+   cannot know; then only the row's own letter is checked). */
+/* a function, not a var: the router can render #/letters while the page's script is still loading, before a var below
+   would be assigned (a function declaration is hoisted whole) */
+var LETTER_GROUPS_CACHE = null;
+function letterGroups() { return LETTER_GROUPS_CACHE || (LETTER_GROUPS_CACHE = [
+  { id: 'urdu', title: 'Urdu', lang: 'ur',
+    note: 'The alphabet, with the Roman Frances Pritchett uses in her Urdu Meter handbook and the Ghalib and Mir corpora. Short vowels are not written; the Roman supplies them.',
+    rows: [
+      ['ا', 'alif', 'ā, a', 'आ, अ', 'a', 'اب', 'ab', 'now'],
+      ['ب', 'be', 'b', 'ब', 'b', 'بات', 'baat', 'word'],
+      ['پ', 'pe', 'p', 'प', 'p', 'پانی', 'paanii', 'water'],
+      ['ت', 'te', 't', 'त', 't', 'تارا', 'taaraa', 'star'],
+      ['ٹ', 'ṭe', 'ṭ', 'ट', ';t', 'ٹوٹا', ';tuu;taa', 'broken'],
+      ['ث', 'ṡe', 'ṡ', 'स', ';s', 'ثابت', ';saabit', 'proven'],
+      ['ج', 'jīm', 'j', 'ज', 'j', 'جان', 'jaan', 'life'],
+      ['چ', 'che', 'ch', 'च', 'ch', 'چاند', 'chaa;nd', 'moon'],
+      ['ح', 'baṛī ḥe', 'ḥ', 'ह', ';h', 'حال', ';haal', 'state'],
+      ['خ', 'ḳhe', 'ḳh', 'ख़', ';x', 'خواب', ';xvaab', 'dream'],
+      ['د', 'dāl', 'd', 'द', 'd', 'دل', 'dil', 'heart'],
+      ['ڈ', 'ḍāl', 'ḍ', 'ड', ';d', 'ڈر', ';dar', 'fear'],
+      ['ذ', 'żāl', 'ż', 'ज़', ';z', 'ذرا', ';zaraa', 'a little'],
+      ['ر', 're', 'r', 'र', 'r', 'رات', 'raat', 'night'],
+      ['ڑ', 'ṛe', 'ṛ', 'ड़', ';r', 'پڑھنا', 'pa;rhnaa', 'to read'],
+      ['ز', 'ze', 'z', 'ज़', 'z', 'زمین', 'zamiin', 'earth'],
+      ['ژ', 'zhe', 'zh', 'झ़', 'zh', 'ژالہ', 'zhaalah', 'hail'],
+      ['س', 'sīn', 's', 'स', 's', 'سال', 'saal', 'year'],
+      ['ش', 'shīn', 'sh', 'श', 'sh', 'شام', 'shaam', 'evening'],
+      ['ص', 'ṣvād', 'ṣ', 'स', '.s', 'صبح', '.sub;h', 'morning'],
+      ['ض', 'ẓvād', 'ẓ', 'ज़', '.z', 'ضرور', '.zaruur', 'surely'],
+      ['ط', 't̤oʾe', 't̤', 'त', ':t', 'طرف', ':taraf', 'side'],
+      ['ظ', 'z̤oʾe', 'z̤', 'ज़', ':z', 'ظالم', ':zaalim', 'cruel'],
+      ['ع', 'ʿain', 'ʿ', '—', '((', 'عشق', '((ishq', 'love'],
+      ['غ', 'ġhain', 'ġh', 'ग़', ';g', 'غم', ';gam', 'grief'],
+      ['ف', 'fe', 'f', 'फ़', 'f', 'فلک', 'falak', 'sky'],
+      ['ق', 'qāf', 'q', 'क़', 'q', 'قدم', 'qadam', 'step'],
+      ['ک', 'kāf', 'k', 'क', 'k', 'کتاب', 'kitaab', 'book'],
+      ['گ', 'gāf', 'g', 'ग', 'g', 'گل', 'gul', 'rose'],
+      ['ل', 'lām', 'l', 'ल', 'l', 'لب', 'lab', 'lip'],
+      ['م', 'mīm', 'm', 'म', 'm', 'مے', 'mai', 'wine'],
+      ['ن', 'nūn', 'n', 'न', 'n', 'نام', 'naam', 'name'],
+      ['ں', 'nūn ġhunnah', 'ñ', 'ँ, ं', ';n', 'ماں', 'maa;n', 'mother'],
+      ['و', 'vāʾo', 'v, o, ū, au', 'व, ओ, ऊ, औ', 'v', 'وقت', 'vaqt', 'time'],
+      ['ہ', 'choṭī he', 'h', 'ह', 'h', 'ہاتھ', 'haath', 'hand'],
+      ['ھ', 'do-chashmī he', 'h (aspirates the letter before)', 'भ, फ, थ …', 'h', 'بھائی', 'bhaa))ii', 'brother'],
+      ['ء', 'hamzah', 'ʾ', '—', '))', 'نئی', 'na))ii', 'new'],
+      ['ی', 'choṭī ye', 'y, ī', 'य, ई', 'y', 'یار', 'yaar', 'friend'],
+      ['ے', 'baṛī ye', 'e, ai', 'ए, ऐ', 'e', 'سے', 'se', 'from']
+    ] },
+  { id: 'aspirates', title: 'Aspirates', lang: 'ur',
+    note: 'A consonant with do-chashmī he (ھ) is one sound, breathed: one letter in Devanagari, the consonant and h in Roman.',
+    rows: [
+      ['بھ', '', 'bh', 'भ', 'bh', 'بھائی', 'bhaa))ii', 'brother'],
+      ['پھ', '', 'ph', 'फ', 'ph', 'پھول', 'phuul', 'flower'],
+      ['تھ', '', 'th', 'थ', 'th', 'ہاتھ', 'haath', 'hand'],
+      ['ٹھ', '', 'ṭh', 'ठ', ';th', 'ٹھیک', ';thiik', 'right'],
+      ['جھ', '', 'jh', 'झ', 'jh', 'جھوٹ', 'jhuu;t', 'a lie'],
+      ['چھ', '', 'chh', 'छ', 'chh', 'کچھ', 'kuchh', 'some'],
+      ['دھ', '', 'dh', 'ध', 'dh', 'دھوپ', 'dhuup', 'sunshine'],
+      ['ڈھ', '', 'ḍh', 'ढ', ';dh', 'ڈھول', ';dhol', 'drum'],
+      ['ڑھ', '', 'ṛh', 'ढ़', ';rh', 'پڑھنا', 'pa;rhnaa', 'to read'],
+      ['کھ', '', 'kh', 'ख', 'kh', 'آنکھ', 'aa;nkh', 'eye'],
+      ['گھ', '', 'gh', 'घ', 'gh', 'گھر', 'ghar', 'house']
+    ] },
+  { id: 'marks', title: 'Vowel marks and signs', lang: 'ur',
+    note: 'Usually left unwritten. Where a text writes them, the reader takes them as written.',
+    rows: [
+      ['◌َ', 'zabar', 'a', '(none)', 'a', 'دَم', 'dam', 'breath'],
+      ['◌ِ', 'zer', 'i', 'ि', 'i', 'دِل', 'dil', 'heart'],
+      ['◌ُ', 'pesh', 'u', 'ु', 'u', 'گُل', 'gul', 'rose'],
+      ['◌ْ', 'jazm', '(no vowel)', '्', '', 'صَبْر', '.sabr', 'patience'],
+      ['◌ّ', 'tashdīd', '(the letter doubled)', '्', '', 'مُحَبَّت', 'mu;habbat', 'love'],
+      ['آ', 'alif maddah', 'ā', 'आ', 'aa', 'آنکھ', 'aa;nkh', 'eye'],
+      ['◌ً', 'tanvīn', 'aṅ (Pritchett\u2019s; ALA-LC an)', 'न', ':n', 'فوراً', 'faura:n', 'at once'],
+      ['◌ِ ۂ', 'iẓāfat', '-e', '-ए', '-e', 'دلِ ناداں', 'dil-e naadaa;n', 'the foolish heart']
+    ] },
+  { id: 'punjabi', title: 'Punjabi', lang: 'pnb',
+    note: 'Shahmukhi adds two retroflex letters. Many texts write them with ن and ل instead (or ṇ as نڑ); the reader takes the letter only where it is written.',
+    rows: [
+      ['ݨ', 'ṇūn', 'ṇ', 'ण', '.n', 'پاݨی', 'paa.nii', 'water'],
+      ['ݪ', 'ḷām', 'ḷ', 'ळ', '.l', 'کاݪا', 'kaa.laa', 'black']
+    ] },
+  { id: 'saraiki', title: 'Saraiki', lang: 'skr',
+    note: 'Four implosive stops, said with the breath drawn in, and ݨ for ṇ. The Roman is the Library of Congress’s (b̤ d̤ g̈; its cell for ڄ is blank, so j̈ follows g̈). Typed Roman may use the IPA letters ɓ ʄ ɗ ɠ instead.',
+    rows: [
+      ['ٻ', 'ɓe', 'b̤', 'ॿ', '.b', 'ٻال', '.baal', 'child'],
+      ['ڄ', 'ʄīm', 'j̈', 'ॼ', '.j', 'ڄم', '.jam', 'born'],
+      ['ݙ', 'ɗāl', 'd̤', 'ॾ', '.d', 'میݙا', 'me.daa', 'my', true],
+      ['ڳ', 'ɠāf', 'g̈', 'ॻ', '.g', 'ڳالھ', '.gaalh', 'talk, word']
+    ] },
+  { id: 'arabic', title: 'Arabic spellings', lang: 'ar',
+    note: 'Arabic phrases in hamd, naʿt and qawwali keep Arabic letters and marks. Tā marbūṭa and tanvīn read as the Library of Congress’s Urdu table reads them.',
+    rows: [
+      ['ة ۃ', 'tā marbūṭah', 't', 'त', 't', 'صلاة', '.salaat', 'prayer'],
+      ['ى', 'alif maqṣūrah', 'ā (after a zabar)', 'ा', 'aa', 'هُدَى', 'hudaa', 'guidance'],
+      ['وٰ', 'vāʾo with khaṛā zabar', 'ā', 'ा', 'aa', 'زکوٰۃ', 'zakaat', 'alms'],
+      ['ٱ', 'alif waṣlah', 'a (of al-)', 'अ', 'a', 'ٱلْحَمْدُ', 'al;hamdu', 'praise'],
+      ['أ إ', 'hamzah on alif', 'a, i', 'अ, इ', 'a', 'إسلام', 'islaam', 'Islam'],
+      ['ؤ', 'hamzah on vāʾo', 'oʾ', 'ओ', 'o))', 'مؤمن', 'mo))min', 'believer', true],
+      ['◌ٌ ◌ٍ', 'tanvīn', 'un, in', 'उन, इन', 'un', 'رَحْمَةٌ', 'ra;hmatun', 'mercy']
+    ] },
+  { id: 'devanagari', title: 'Devanagari: Hindi, Braj, Avadhi', lang: 'hi', other: 'ur',
+    note: 'Typed in Devanagari, a word is read as Urdu says it. A consonant with no vowel sign has its a, dropped where Hindi drops it.',
+    rows: [
+      ['◌', '(no vowel sign)', 'a, or none', '—', 'a', 'नैनन', 'nainan', 'eyes (Braj)'],
+      ['ण', 'ṇa', 'n', 'ن', 'n', 'गुण', 'gun', 'virtue'],
+      ['ष', 'ṣa', 'sh', 'ش', 'sh', 'भाषा', 'bhaashaa', 'language'],
+      ['ऋ ◌ृ', 'r̥', 'ri', 'ر', 'ri', 'कृष्ण', 'krishn', 'Krishna'],
+      ['ज्ञ', 'jña', 'gy', 'گی', 'gy', 'ज्ञान', 'gyaan', 'knowledge'],
+      ['◌ं', 'anusvār', 'n before a consonant', 'ن', 'n', 'रंग', 'rang', 'colour'],
+      ['◌ँ', 'chandrabindu', 'ñ', 'ں', ';n', 'आँख', 'aa;nkh', 'eye'],
+      ['◌ः', 'visarg', '(silent)', '—', '', 'दुःख', 'dukh', 'sorrow'],
+      ['ऽ', 'avagrah', '(dropped)', '—', '', 'सोऽहम्', 'soham', 'I am He'],
+      ['ॐ', 'om', 'om', 'اوم', 'om', 'ॐ', 'om', 'om']
+    ] }
+]); }
+
+/* one row's parts: [glyph, name, Roman, other script, ASCII, example, example ASCII, meaning, guess] */
+function letterRow(r, g) {
+  var o = (typeof asciiToScripts === 'function') ? asciiToScripts(r[6]) : { ro: '', hi: '', ur: '' };
+  return { glyph: r[0], name: r[1], ro: r[2], other: r[3], ascii: r[4], ex: r[5], xa: r[6], gloss: r[7], guess: !!r[8],
+    exRo: o.ro || '', exOther: g.other === 'ur' ? (o.ur || '') : (o.hi || '') };
+}
+
+function lettersHtml() {
+  var esc = typeof escapeHtml === 'function' ? escapeHtml : function (s) { return String(s); };
+  return letterGroups().map(function (g) {
+    var scriptAttr = g.lang === 'hi' ? 'lang="hi" dir="ltr"' : 'lang="' + g.lang + '" dir="rtl"';
+    var otherAttr = g.other === 'ur' ? 'lang="ur" dir="rtl"' : 'lang="hi" dir="ltr"';
+    var gCls = g.lang === 'hi' ? 'lt-deva' : 'lt-arab', oCls = g.other === 'ur' ? 'lt-arab' : 'lt-deva';
+    var rows = g.rows.map(function (raw) {
+      var r = letterRow(raw, g);
+      return '<tr>' +
+        '<td class="lt-glyph ' + gCls + '" ' + scriptAttr + '>' + esc(r.glyph) + '</td>' +
+        '<td class="lt-ro" lang="ur-Latn">' + esc(r.ro) + '</td>' +
+        '<td class="lt-other ' + oCls + '" ' + otherAttr + '>' + esc(r.other) + '</td>' +
+        '<td class="lt-name">' + (r.name ? '<span class="lt-name-t">' + esc(r.name) + '</span>' : '') +
+          (r.ascii ? '<span class="lt-ascii" title="Pritchett ASCII">' + esc(r.ascii) + '</span>' : '') + '</td>' +
+        '<td class="lt-ex"><div class="lt-ex-line"><span class="lt-ex-src ' + gCls + '" ' + scriptAttr + '>' + esc(r.ex) + '</span>' +
+          '<span class="lt-ex-ro" lang="ur-Latn">' + esc(r.exRo) + '</span>' +
+          (r.exOther ? '<span class="lt-ex-other ' + oCls + '" ' + otherAttr + '>' + esc(r.exOther) + '</span>' : '') +
+          '<span class="lt-ex-gl">' + esc(r.gloss) + (r.guess ? ' <span class="lt-guess">(vowel unwritten)</span>' : '') + '</span></div></td>' +
+        '</tr>';
+    }).join('');
+    /* a div, not a <section>: the router hides every section on the page before it shows the active view */
+    return '<div class="lt-group" role="region" id="lt-' + g.id + '" aria-labelledby="lt-h-' + g.id + '">' +
+      '<h2 class="group-title lt-title" id="lt-h-' + g.id + '" tabindex="-1">' + esc(g.title) + '</h2>' +
+      '<p class="lt-note">' + esc(g.note) + '</p>' +
+      '<table class="lt-table"><thead><tr><th scope="col">Letter</th><th scope="col">Roman</th><th scope="col">' +
+        (g.other === 'ur' ? 'Urdu' : 'Devanagari') + '</th><th scope="col">Name</th><th scope="col">Example</th></tr></thead>' +
+      '<tbody>' + rows + '</tbody></table></div>';
+  }).join('');
+}
+
+function renderLetters() {
+  var host = typeof $ === 'function' ? $('lettersBody') : null;
+  if (!host) return;
+  if (!host.dataset || host.dataset.built !== '1') {
+    host.innerHTML = lettersHtml();
+    if (host.dataset) host.dataset.built = '1';
+  }
+}
+
+/* ?g=<group>: jump straight to the group (no long animated scroll past hundreds of rows), focus its heading for keyboard and
+   screen-reader users, and light the heading briefly so the eye finds where it landed (DESIGN_PRINCIPLES §6: a background
+   transition, nothing moves). */
+var letterJumpTimer = null;
+function lettersJump(g) {
+  var group = typeof $ === 'function' ? $('lt-' + g) : null, head = typeof $ === 'function' ? $('lt-h-' + g) : null;
+  if (!group) return;
+  if (typeof group.scrollIntoView === 'function') group.scrollIntoView({ block: 'start' });   // instant: nothing sets scroll-behavior: smooth
+  if (!head) return;
+  try { head.focus({ preventScroll: true }); } catch (e) {}
+  if (head.classList) {
+    document.querySelectorAll('.lt-title.lt-here').forEach(function (h) { h.classList.remove('lt-here'); });
+    head.classList.add('lt-here');
+    if (letterJumpTimer) clearTimeout(letterJumpTimer);
+    letterJumpTimer = setTimeout(function () { head.classList.remove('lt-here'); }, 900);
+  }
 }
 
 </script>

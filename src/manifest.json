@@ -8,7 +8,8 @@
     "src/styles/home.css",
     "src/styles/practice.css",
     "src/styles/transcribe.css",
-    "src/styles/circles.css"
+    "src/styles/circles.css",
+    "src/styles/letters.css"
   ],
   "body": [
     "src/body/header.html",
@@ -24,6 +25,7 @@
     "src/body/ghazals.html",
     "src/body/about.html",
     "src/body/guide.html",
+    "src/body/letters.html",
     "src/body/tap.html",
     "src/body/practice.html",
     "src/body/transcribe.html",
@@ -59,6 +61,7 @@
     "src/js/21-learn.js",
     "src/js/22-drill.js",
     "src/js/23-practice.js",
-    "src/js/24-transcribe.js"
+    "src/js/24-transcribe.js",
+    "src/js/25-letters.js"
   ]
 }

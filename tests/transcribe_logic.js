@@ -419,7 +419,7 @@ ok((useOut('انگڑی') || {}).ur === 'میری انگڑی', 'an Urdu-script co
 ok((useOut('उंगड़ी') || {}).ur === 'میری انگڑی', 'a Devanagari correction with a nukta letter and a vowel sign: ' + J(useOut('उंगड़ी')));
 ok((useOut('ungRi') || {}).ur === 'میری انگڑی', 'a capital R in a Roman correction is ṛ: ' + J(useOut('ungRi')));
 ok(useOut('???') === null, 'an unreadable correction changes nothing');
-ok(run(`devToAscii('लड़की')`) === 'l;rkii', 'devToAscii keeps the vowel sign after a nukta letter: ' + run(`devToAscii('लड़की')`));
+ok(run(`devToAscii('लड़की')`) === 'la;rkii', 'devToAscii keeps the vowel sign after a nukta letter (and the a Hindi says before it): ' + run(`devToAscii('लड़की')`));
 
 // 46. A word's family from the dictionaries' own links (rel): hārnā leads to hār "defeat"; a verb form read in the drawer (hari
 //     picked as hārī, of hārnā) opens on the verb, with its family next, before the same spelling's unrelated headwords

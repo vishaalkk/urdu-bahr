@@ -379,12 +379,17 @@ const UR_JOINED_AUX = /(\u06AF\u06CC\u0627|\u06AF\u0626\u06CC|\u06AF\u0626\u06D2
    (persian), a word and a joined auxiliary both listed (derived), else read as a Hindi reader reads it (guess: urduGuessAscii),
    else the letter map. prev / next: the neighbouring words (null at a line's edge), which settle a homograph (ctxReading).
    Scan's per-word fallback and Transcribe's reading of Urdu script both come from here. */
+const UR_WORD_EDGES = new RegExp('^([^' + AR_RANGE + ']*)([\\s\\S]*?)([^' + AR_RANGE + '\\u064B-\\u065F\\u0670]*)$');   // what is not a letter of the script
 function urduWordReading(word, literal, prev, next){
-  const m = String(word || '').match(/^([^\u0600-\u06FF]*)([\s\S]*?)([^\u0600-\u06FF\u064B-\u065F\u0670]*)$/);
+  const m = String(word || '').match(UR_WORD_EDGES);
   const lead = m ? m[1] : '', trail = m ? m[3] : '', core = (m ? m[2] : String(word || '')).replace(/[\u0614]/g, '');   // \u0614 the pen-name mark
   const wrap = r => ({ tier: r.tier, ascii: r.ascii, ro: lead + r.ro + trail, hi: lead + r.hi + trail });
   const viaAscii = (a, tier) => { try { const r = window.p_di.parse(a), h = window.p_hi.parse(a); return r ? { tier, ascii: a, ro: r, hi: h || '' } : null; } catch(e) { return null; } };
   if(!core) return { tier: 'plain', ro: String(word || ''), hi: String(word || '') };
+  if(PA_LETTER.test(core)){   // پاݨی: by its letters
+    const g = urduGuessAscii(core), r = g && viaAscii(g, 'guess');
+    if(r) return wrap(r);
+  }
   let r = null;
   const known = (!literal && typeof ctxReading === 'function' && wordAscii(core, false) && ctxReading(core, prev, next)) || wordAscii(core, literal);   // میں: maiñ or meñ by its neighbours
   if(known) r = viaAscii(known, 'known');

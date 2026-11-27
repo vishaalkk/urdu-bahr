@@ -1,0 +1,57 @@
+/* ================= LETTERS (#/letters) =================
+   A reference table per group: hairlines between rows, no boxes (DESIGN_PRINCIPLES §1). The letter is the largest thing in a
+   row; Roman in the mono reading face; script text never tracked or capitalised. Under 640px each row becomes a small grid. */
+.lt-intro { max-width: 560px; margin-top: var(--sp-3); }
+.lt-jump { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin-top: var(--sp-4); }
+.lt-group { margin-top: var(--sp-7); scroll-margin-top: 88px; } /* clears the sticky header on a ?g= jump */
+.lt-title { margin-inline: calc(-1 * var(--sp-2)); padding: 2px var(--sp-2); border-radius: 4px;
+  transition: background-color 160ms ease-out; }
+.lt-title.lt-here { background: color-mix(in srgb, var(--gold) 16%, transparent); }
+@media (prefers-reduced-motion: reduce) { .lt-title { transition: none; } }
+.lt-note { font: 400 var(--fs-base)/1.6 var(--serif); color: var(--dim); max-width: 600px; margin: 0 0 var(--sp-4); }
+
+.lt-table { width: 100%; border-collapse: collapse; }
+.lt-table th {
+  font: 500 11px/1.2 var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--faint);
+  text-align: start; padding: 0 var(--sp-3) var(--sp-2) 0; border-bottom: 1px solid var(--line2);
+}
+.lt-table td { padding: var(--sp-3) var(--sp-3) var(--sp-3) 0; border-bottom: 1px solid var(--line); vertical-align: middle; }
+
+.lt-arab { font-family: var(--urdu); letter-spacing: normal; text-transform: none; }
+.lt-deva { font-family: var(--deva); letter-spacing: normal; text-transform: none; }
+.lt-glyph { width: 76px; text-align: center; color: var(--ink); }
+.lt-glyph.lt-arab { font-size: 30px; line-height: 1.9; }
+.lt-glyph.lt-deva { font-size: 26px; line-height: 1.5; }
+.lt-ro { font: 400 var(--fs-lg)/1.4 var(--mono-ro); color: var(--ink); width: 22%; }
+.lt-other { font-size: var(--fs-lg); color: var(--dim); width: 14%; text-align: left; }
+.lt-other.lt-arab { font-size: 21px; line-height: 1.9; }
+.lt-name { width: 18%; }
+.lt-name-t { display: block; font: italic 400 var(--fs-base)/1.4 var(--serif); color: var(--dim); }
+.lt-ascii { display: block; font: 400 var(--fs-xs)/1.5 var(--mono-ro); color: var(--faint); }
+
+.lt-ex-line { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: var(--sp-3); }
+.lt-ex-src { color: var(--ink); text-align: left; unicode-bidi: isolate; }
+.lt-ex-src.lt-arab { font-size: 22px; line-height: 2; }
+.lt-ex-src.lt-deva { font-size: var(--fs-lg); line-height: 1.6; }
+.lt-ex-ro { font: 400 var(--fs-base)/1.4 var(--mono-ro); color: var(--ink); }
+.lt-ex-other { color: var(--dim); text-align: left; unicode-bidi: isolate; }
+.lt-ex-other.lt-arab { font-size: 18px; line-height: 2; }
+.lt-ex-other.lt-deva { font-size: var(--fs-base); line-height: 1.6; }
+.lt-ex-gl { font: italic 400 var(--fs-sm)/1.5 var(--serif); color: var(--dim); }
+.lt-guess { font-style: normal; font-family: var(--sans); font-size: var(--fs-xs); color: var(--faint); }
+
+@media (max-width: 640px) {
+  .lt-table thead { display: none; }
+  .lt-table tbody, .lt-table tr, .lt-table td { display: block; }
+  .lt-table tr {
+    display: grid; grid-template-columns: 56px 1fr auto; column-gap: var(--sp-3);
+    grid-template-areas: "glyph ro other" "glyph name name" "ex ex ex";
+    padding: var(--sp-3) 0; border-bottom: 1px solid var(--line);
+  }
+  .lt-table td { border: 0; padding: 0; width: auto; }
+  .lt-glyph { grid-area: glyph; width: auto; align-self: center; }
+  .lt-ro { grid-area: ro; align-self: end; }
+  .lt-other { grid-area: other; align-self: end; text-align: end; }
+  .lt-name { grid-area: name; }
+  .lt-ex { grid-area: ex; margin-top: var(--sp-1); }
+}

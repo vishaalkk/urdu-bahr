@@ -23,6 +23,7 @@ quick_suites() {
   echo "── practice logic";        node tests/practice_logic.js
   echo "── transcribe logic";      node tests/transcribe_logic.js
   echo "── transcribe golden (the exceptions' spec)"; node tests/transcribe_golden.js
+  echo "── letters page + Punjabi, Saraiki, Arabic and Devanagari letters"; node tests/letters_page.js
   echo "── dictionary lookup (held-out words; floors tests/dictionary_baseline.json)"; node tests/benchmark_dictionary.js
   echo "── dictionary word of inflected forms (gold; floors tests/lemma_baseline.json)"; node tests/benchmark_lemma.js
   echo "── same spelling, other reading (Platts pairs; floors tests/readings_baseline.json)"; node tests/benchmark_readings.js

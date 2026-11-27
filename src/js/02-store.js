@@ -86,6 +86,7 @@ function parseHash(hash) {
   return { parts, params, raw: h };
 }
 
+let routeRoot = '';   // the view showing before this route, so a jump within a page can keep its scroll
 function handleRoute(targetHash) {
   // Leaving a view stops whatever it was playing
   try { if (typeof pbCancel === 'function') pbCancel(); else if (typeof stopAll === 'function') stopAll(); } catch (e) {}
@@ -114,6 +115,8 @@ function handleRoute(targetHash) {
   }
 
   store.set('lastRoute', '/' + raw);
+  const prevRoot = routeRoot;
+  routeRoot = root;
 
   // Top-level sections mapping
   const sectionMap = {
@@ -124,6 +127,7 @@ function handleRoute(targetHash) {
     'ghazals': 'ghazals-section',
     'about': 'about-section',
     'guide': 'guide-section',
+    'letters': 'letters-section',
     'how-to-use': 'guide-section',
     'transcribe': 'transcribe-section',
     'dictionary': 'dictionary-section',
@@ -192,6 +196,16 @@ function handleRoute(targetHash) {
   } else if (root === 'about') {
     if (typeof document !== 'undefined') document.title = 'About — Baḥr';
     if (typeof renderBibliography === 'function') renderBibliography();
+  } else if (root === 'letters') {
+    if (typeof document !== 'undefined') document.title = 'Letters — Baḥr';
+    if (typeof renderLetters === 'function') renderLetters();
+    /* ?g=<group> jumps to that group (a #id anchor would be read as a route): after the router's own scroll to the top,
+       or, already on the page, straight from where you are */
+    if (params && params.g && typeof setTimeout === 'function') {
+      if (prevRoot === 'letters') params.keepScroll = true;
+      const g = params.g;
+      setTimeout(() => { if (typeof lettersJump === 'function') lettersJump(g); }, 0);
+    }
   } else if (root === 'guide' || root === 'how-to-use') {
     if (typeof document !== 'undefined') document.title = 'How to Use — Baḥr';
   } else if (root === 'lab' && parts[1] === 'practice') {

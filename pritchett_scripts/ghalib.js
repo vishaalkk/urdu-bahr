@@ -342,6 +342,41 @@ Parser = (function() {
 
 })();
 
+/* urdu-bahr patch: Punjabi and Saraiki letters. Pue's ASCII has no retroflex n or l and no implosives, so six tokens are
+   added, each a plain consonant (the class a b or s has, so vowels, doubling and Devanagari's halant treat it as one) that
+   writes its own letter: .n ݨ ण ṇ, .l ݪ ळ ḷ (Punjabi), .b ٻ ॿ b̤, .j ڄ ॼ j̈, .d ݙ ॾ d̤, .g ڳ ॻ g̈ (Saraiki implosives).
+   Roman is ALA-LC's (its Sindhi table for the implosives; its ڄ cell is blank, j̈ follows its g̈). The data must be extended
+   before the parsers are built: the constructor indexes tokens and graph once. A doubled letter (.n.n) is written once with
+   tashdid, as nn is. */
+var PUE_EXTRA_LETTERS = [['.n', 'ݨ', 'ण', 'ṇ'], ['.l', 'ݪ', 'ळ', 'ḷ'], ['.b', 'ٻ', 'ॿ', 'b̤'], ['.j', 'ڄ', 'ॼ', 'j̈'], ['.d', 'ݙ', 'ॾ', 'd̤'], ['.g', 'ڳ', 'ॻ', 'g̈']];
+(function () {
+  function extend(tokens, graph, cls, col, doubled) {
+    var root = graph.edge['0'] || graph.edge[0];
+    PUE_EXTRA_LETTERS.forEach(function (L, k) {
+      var tok = L[0], out = L[col], id = 'pa' + k;
+      tokens[tok] = cls.slice();
+      graph.node[id] = { t: tok };
+      graph.node[id + 'r'] = { r: { p: out, tl: 1 } };
+      root.push([0, id, {}]);
+      graph.edge[id] = [[id, id + 'r', { r: { mt: [tok], pl: 0, nl: 1, tl: 1, p: out } }]];
+      if (doubled) {
+        graph.node[id + 'd'] = { t: tok };
+        graph.node[id + 'dr'] = { r: { p: out + doubled, tl: 2 } };
+        graph.edge[id].push([id, id + 'd', {}]);
+        graph.edge[id + 'd'] = [[id + 'd', id + 'dr', { r: { mt: [tok, tok], pl: 0, nl: 2, tl: 2, p: out + doubled } }]];
+      }
+    });
+  }
+  var lead = PUE_EXTRA_LETTERS.map(function (L) { return L[0].replace('.', '\\.'); }).join('|') + '|';
+  extend(urdu_tokens, urdu_graph, urdu_tokens.b, 1, 'ّ');
+  extend(devanagari_tokens, devanagari_graph, devanagari_tokens.b.concat([90]), 2, '');
+  devanagari_onmatch.unshift([[[90], [90]], '्']);   // a doubled one takes a halant (पण्णा), as ll does (बल्ला); class 90 is theirs alone
+  extend(diacritics_tokens, diacritics_graph, diacritics_tokens.b, 3, '');
+  urdu_token_regex = new RegExp(lead + urdu_token_regex.source, 'g');
+  devanagari_token_regex = new RegExp(lead + devanagari_token_regex.source, 'g');
+  diacritics_token_regex = new RegExp(lead + diacritics_token_regex.source, 'g');
+})();
+
 window.p_hi = new Parser('devanagari', devanagari_tokens, devanagari_token_regex, devanagari_graph, devanagari_onmatch);
 /* urdu-bahr patch: a word that opens with ʿain and a vowel ((ishq, ((ajab) came out as a bare vowel sign or lost its vowel
    (िश्क़, जब). Devanagari writes no ʿain there, so the parser reads the word without it: इश्क़, अजब. Word starts: line start,

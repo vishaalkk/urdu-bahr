@@ -89,46 +89,78 @@ function indexFamsVerses() {
 }
 
 /* Transliteration helpers for novel/arbitrary inputs */
+/* Arabic script as Urdu, Punjabi and Saraiki write it: the main block plus Arabic Supplement (ݨ ݪ ݙ) and Extended-A (ࣇ) */
+const AR_RANGE = '\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF';
+const AR_SCRIPT = new RegExp('[' + AR_RANGE + ']');
+/* Punjabi and Saraiki letters. The parser patch's table (PUE_EXTRA_LETTERS, pritchett_scripts/ghalib.js) gives each its ASCII,
+   Devanagari and Roman; three have a second spelling (ڻ ṇ, Saraiki's and Sindhi's; ࣇ ḷ, Unicode's newer; ڏ d̤, Sindhi's), and
+   each falls back to a Persian letter (Fārsī output has none of them). */
+const PA_ALT = { 'ڻ': 'ݨ', 'ࣇ': 'ݪ', 'ڏ': 'ݙ' };
+const PA_FA = { 'ݨ': 'ن', 'ݪ': 'ل', 'ٻ': 'ب', 'ڄ': 'ج', 'ݙ': 'د', 'ڳ': 'گ' };
+const PA_LETTERS = {};   // letter → { ascii, hi, ro, fa }
+(typeof PUE_EXTRA_LETTERS !== 'undefined' ? PUE_EXTRA_LETTERS : []).forEach(([ascii, ur, hi, ro]) => { PA_LETTERS[ur] = { ascii, hi, ro, fa: PA_FA[ur] }; });
+Object.keys(PA_ALT).forEach(a => { PA_LETTERS[a] = PA_LETTERS[PA_ALT[a]]; });
+/* a word with one: no word list has them, so it is read by its letters (a list key drops them: پاݨی is not پای) */
+const PA_LETTER = new RegExp('[' + Object.keys(PA_LETTERS).join('') + ']');
+const PA_LETTER_ALL = new RegExp(PA_LETTER.source, 'g');
+const paMap = field => Object.fromEntries(Object.entries(PA_LETTERS).map(([u, x]) => [u, x[field]]));
+/* Devanagari -> Pritchett ASCII. A consonant with no vowel sign has the inherent a, dropped as Hindi drops it: at a word's end,
+   and between a vowel and a consonant that has its own vowel (समझना samajhnā, मोहब्बत mohabbat, नैनन nainan, लड़की laṛkī), the rule
+   urduGuessAscii reads Urdu by. ृ / ऋ ri, ज्ञ gy (gyān, as it is said), the visarga silent (दुःख dukh), ॐ om, the avagraha dropped.
+   ण stays n (Hindi गुण is Urdu گن); ळ and Sindhi's implosive letters are the parser patch's (pritchett_scripts/ghalib.js). */
+const DEV_CONS = {
+  'क':'k','ख':'kh','ग':'g','घ':'gh','ङ':'n',
+  'च':'ch','छ':'chh','ज':'j','झ':'jh','ञ':'n',
+  'ट':';t','ठ':';th','ड':';d','ढ':';dh','ण':'n',
+  'त':'t','थ':'th','द':'d','ध':'dh','न':'n',
+  'प':'p','फ':'ph','ब':'b','भ':'bh','म':'m',
+  'य':'y','र':'r','ल':'l','व':'v',
+  'श':'sh','ष':'sh','स':'s','ह':'h',
+  'ळ':'.l','ॿ':'.b','ॼ':'.j','ॾ':'.d','ॻ':'.g'
+};
+const DEV_NUKTA = { 'क':'q','ख':';x','ग':';g','ज':'z','ड':';r','ढ':';rh','फ':'f' };
+const DEV_VOWEL = { 'अ':'a','आ':'aa','इ':'i','ई':'ii','उ':'u','ऊ':'uu','ए':'e','ऐ':'ai','ओ':'o','औ':'au','ऋ':'ri','ऑ':'o','ॐ':'om' };
+const DEV_MATRA = { 'ा':'aa','ि':'i','ी':'ii','ु':'u','ू':'uu','े':'e','ै':'ai','ो':'o','ौ':'au','ृ':'ri','ॉ':'o' };
 function devToAscii(str) {
   if(!str) return '';
-  str = str.normalize('NFC');
-  const nuktaMap = { 'क़':'q','ख़':';x','ग़':';g','ज़':'z','ड़':';r','ढ़':';rh','फ़':'f' };
-  const consMap = {
-    'क':'k','ख':'kh','ग':'g','घ':'gh','ङ':'n',
-    'च':'ch','छ':'chh','ज':'j','झ':'jh','ञ':'n',
-    'ट':';t','ठ':';th','ड':';d','ढ':';dh','ण':'n',
-    'त':'t','थ':'th','द':'d','ध':'dh','न':'n',
-    'प':'p','फ':'ph','ब':'b','भ':'bh','म':'m',
-    'य':'y','र':'r','ल':'l','व':'v',
-    'श':'sh','ष':'sh','स':'s','ह':'h'
-  };
-  const vowelMap = { 'अ':'a','आ':'aa','इ':'i','ई':'ii','उ':'u','ऊ':'uu','ए':'e','ऐ':'ai','ओ':'o','औ':'au' };
-  const matraMap = { 'ा':'aa','ि':'i','ी':'ii','ु':'u','ू':'uu','े':'e','ै':'ai','ो':'o','ौ':'au' };
-  let s = str;
-  for(const [k, v] of Object.entries(nuktaMap)) s = s.split(k).join(v);
-  let out = '';
-  for(let i = 0; i < s.length; i++) {
-    const ch = s[i];
-    const nextCh = s[i + 1] || '';
-    if(consMap[ch]) {
-      const c = consMap[ch];
-      if(nextCh === '्') { out += c; i++; }
-      else if(matraMap[nextCh]) { out += c + matraMap[nextCh]; i++; }
-      else { out += c; }
-    } else if(vowelMap[ch]) {
-      out += vowelMap[ch];
-    } else if(ch === 'ं' || ch === 'ँ') {
-      out += ';n';
-    } else if(ch === 'ः') {
-      out += 'h';
-    } else if(matraMap[ch]) {   // after a nukta letter, already turned to ASCII above (ड़ी, ज़िं): the vowel sign still counts
-      out += matraMap[ch];
-    } else if(ch === '्') {
-      /* a virama after a nukta letter: no vowel */
-    } else {
-      out += ch;
+  /* precomposed nukta letters (क़ ड़ …) are decomposed first, so one rule reads a base letter and its nukta */
+  const s = str.normalize('NFD').replace(/ऽ/g, '');
+  let out = '', seg = [];
+  const isC = x => x && x.c != null, isV = x => x && x.v != null;
+  const flush = () => {
+    const vow = seg.map((x, k) => !isC(x) ? null : x.m != null ? x.m : (k === seg.length - 1 ? '' : 'a'));
+    const voiced = j => isC(seg[j]) && (isV(seg[j + 1]) || !!vow[j]);
+    for (let k = seg.length - 1; k >= 0; k--) {
+      if (vow[k] !== 'a') continue;
+      const before = seg[k - 1], after = seg[k + 1];
+      const vowelBefore = before && (isV(before) || (vow[k - 1] != null && vow[k - 1] !== ''));
+      if (vowelBefore && isC(after) && voiced(k + 1)) vow[k] = '';
     }
+    seg.forEach((x, k) => { out += isV(x) ? x.v : x.c + (vow[k] === 'A' ? 'a' : (vow[k] || '')); });
+    seg = [];
+  };
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i], next = s[i + 1] || '', last = seg[seg.length - 1];
+    if (ch === 'ज' && next === '्' && s[i + 2] === 'ञ') { seg.push({ c: 'gy' }); i += 2; continue; }
+    if (DEV_CONS[ch]) {
+      if (next === '़') { seg.push({ c: DEV_NUKTA[ch] || DEV_CONS[ch] }); i++; } else seg.push({ c: DEV_CONS[ch] });
+      continue;
+    }
+    if (ch === '़') continue;
+    if (DEV_MATRA[ch]) { if (isC(last) && last.m == null) last.m = DEV_MATRA[ch]; else seg.push({ v: DEV_MATRA[ch] }); continue; }
+    if (ch === '्') { if (isC(last)) last.m = ''; continue; }
+    if (DEV_VOWEL[ch]) { seg.push({ v: DEV_VOWEL[ch] }); continue; }
+    if (ch === 'ं' || ch === 'ँ') {   // the nasal: after a bare consonant it says that consonant's a (रंग rang, कंत kant)
+      const bare = isC(last) && last.m == null;
+      if (bare) last.m = 'A';
+      /* after a short vowel it is a written n (rang, kintu); after a long one the nūn ghunna (āñkh, kahāñ, meñ) */
+      const short = bare || (isC(last) && /^[aiu]$/.test(last.m)) || (isV(last) && /^[aiu]$/.test(last.v));
+      seg.push({ v: short && /^[कखगघचछजझटठडढतथदधपफबभ]/.test(next) ? 'n' : ';n' }); continue;
+    }
+    if (ch === 'ः') continue;
+    flush(); out += ch;
   }
+  flush();
   return out;
 }
 
@@ -553,7 +585,8 @@ function rekhtaFallback(plain) {
 }
 /* Urdu letters in Persian orthography: ہ ھ → ه, ے ۓ → ی, ں → ن, ۂ → هٔ */
 function trUrToFa(ur) {
-  return String(ur || '').replace(/ۂ/g, 'هٔ').replace(/[ہھ]/g, 'ه').replace(/[ےۓ]/g, 'ی').replace(/ں/g, 'ن');
+  return String(ur || '').replace(/ۂ/g, 'هٔ').replace(/[ہھ]/g, 'ه').replace(/[ےۓ]/g, 'ی').replace(/ں/g, 'ن')
+    .replace(PA_LETTER_ALL, c => PA_LETTERS[c].fa);
 }
 function trUrSpelling(w) {
   return String(w || '').replace(/[يى]/g, 'ی').replace(/ك/g, 'ک').replace(/[هۀة]/g, function (c) { return c === 'ه' ? 'ہ' : 'ۂ'; });
@@ -983,6 +1016,10 @@ function romanToAscii(str) {
        .replace(/[īíî]/g, 'ii')
        .replace(/[ūúû]/g, 'uu')
        .replace(/ñ/g, ';n')
+       /* Punjabi ṇ ḷ and Saraiki's implosives, as ALA-LC writes them or in IPA (the underlined ḇ ḏ g̱ j̱ are not read: g̱h is غ
+          in Platts and Fallon, ḏ is ذ in DIN). The ASCII letters are the parser patch's (pritchett_scripts/ghalib.js). */
+       .replace(/ṇ|ṇ/g, '.n').replace(/ḷ|ḷ/g, '.l')
+       .replace(/b̤|ɓ/g, '.b').replace(/j̈|ʄ/g, '.j').replace(/d̤|ɗ/g, '.d').replace(/g̈|ɠ/g, '.g')
        .replace(/ġh|ġ/g, ';g')
        .replace(/ḳh|ḳ/g, ';x')
        .replace(/ṭ/g, ';t')
@@ -2015,7 +2052,8 @@ function urduToDevanagari(str) {
     'ہ': 'ह', 'ۂ': 'ह-ए', 'ھ': 'ह', 'ء': '', 'ی': 'ी', 'ے': 'े', 'ۓ': 'ए',
     'ِ': '-ए-', 'ُ': 'ु', 'َ': '',
     /* hamza on yeh / waw, tanwin, the Urdu comma, and the Arabic forms of yeh, alef maksura and kaf (Rekhta's Iqbal pages use them) */
-    'ئ': 'ए', 'ؤ': 'ओ', 'ً': 'ं', '،': ',', 'ي': 'ी', 'ى': 'ा', 'ك': 'क', 'ٰ': 'ा'
+    'ئ': 'ए', 'ؤ': 'ओ', 'ً': 'ं', '،': ',', 'ي': 'ी', 'ى': 'ा', 'ك': 'क', 'ٰ': 'ा',
+    ...paMap('hi')
   };
   let out = '';
   for(let i = 0; i < s.length; i++) {
@@ -2052,7 +2090,8 @@ function urduToRoman(str) {
     'ک': 'k', 'گ': 'g', 'ل': 'l', 'م': 'm', 'ن': 'n', 'ں': 'ñ', 'و': 'o',
     'ہ': 'h', 'ۂ': 'h-e', 'ھ': 'h', 'ء': 'ʾ', 'ی': 'ī', 'ے': 'e', 'ۓ': 'ʾe',
     'ِ': '-e', 'ُ': 'u', 'َ': 'a',
-    'ئ': 'ʾ', 'ؤ': 'ʾ', 'ً': 'an', '،': ',', 'ي': 'ī', 'ى': 'ā', 'ك': 'k', 'ٰ': 'ā'
+    'ئ': 'ʾ', 'ؤ': 'ʾ', 'ً': 'an', '،': ',', 'ي': 'ī', 'ى': 'ā', 'ك': 'k', 'ٰ': 'ā',
+    ...paMap('ro')
   };
   let out = '';
   for(let i = 0; i < s.length; i++) {
@@ -2074,11 +2113,15 @@ function urduToRoman(str) {
    -> ASCII in Pritchett's scheme (asciiToScripts reads it), or null for a word with letters it does not know */
 const UR_GUESS_C = { 'ب': 'b', 'پ': 'p', 'ت': 't', 'ٹ': ';T', 'ث': ';s', 'ج': 'j', 'چ': 'ch', 'ح': ';h', 'خ': ';x', 'د': 'd', 'ڈ': ';D',
   'ذ': ';z', 'ر': 'r', 'ڑ': ';R', 'ز': 'z', 'ژ': 'zh', 'س': 's', 'ش': 'sh', 'ص': '.s', 'ض': '.z', 'ط': ':t', 'ظ': ':z', 'ع': '((',
-  'غ': ';G', 'ف': 'f', 'ق': 'q', 'ک': 'k', 'گ': 'g', 'ل': 'l', 'م': 'm', 'ن': 'n', 'ہ': 'h', 'ء': '))', 'ئ': '))' };
+  'غ': ';G', 'ف': 'f', 'ق': 'q', 'ک': 'k', 'گ': 'g', 'ل': 'l', 'م': 'm', 'ن': 'n', 'ہ': 'h', 'ء': '))', 'ئ': '))', 'ۃ': 't',
+  ...paMap('ascii') };
 const UR_GUESS_LONG = /^(aa|ii|uu|e|o|ai|au)$/;
 var UR_GUESS_MID = { v: 'o', vEnd: 'o', y: 'ii' };
 function urduGuessAscii(word) {
-  const w = String(word || '').normalize('NFC').replace(/[يى]/g, 'ی').replace(/ك/g, 'ک').replace(/ه/g, 'ہ').replace(/[ـ‌‍ٔ]/g, '')
+  /* Arabic spellings (ALA-LC's readings): a final ى after a fatha is alif maqṣūra (عِيسَى ʿīsā), a final -ū's alif is silent
+     (آمَنُوا āmanū), the waṣla and hamza seats are alifs (ٱلْحَمْدُ, أحمد), tā marbūṭa is t as ۃ is (صلاة ṣalāt) */
+  const w = String(word || '').normalize('NFC').replace(/\u064E\u0649$/, '\u064E\u0627').replace(/\u064F\u0648\u0627$/, '\u064F\u0648')
+    .replace(/[ٱأ]/g, 'ا').replace(/ة/g, 'ۃ').replace(/[يى]/g, 'ی').replace(/ك/g, 'ک').replace(/ه/g, 'ہ').replace(/[ـ‌‍ٔ]/g, '')
     .replace(/[ِ]$/, '');   // a final zer is the iẓāfat: the caller writes it -e
   const L = [...w];
   if (!L.length) return null;
@@ -2089,7 +2132,15 @@ function urduGuessAscii(word) {
     const ch = L[i], prev = seg[seg.length - 1], next = L[i + 1], last = i === L.length - 1;
     if (ch === 'َ' || ch === 'ِ' || ch === 'ُ' || ch === 'ْ') { if (isC(prev)) prev.mark = { 'َ': 'a', 'ِ': 'i', 'ُ': 'u', 'ْ': '' }[ch]; continue; }
     if (ch === 'ّ') { if (isC(prev)) seg.splice(seg.length - 1, 0, { c: prev.c, mark: '' }); continue; }
-    if (ch === 'ٰ' || ch === 'ً') { seg.push({ v: ch === 'ٰ' ? 'aa' : 'an' }); continue; }
+    if (ch === 'ٰ' || ch === 'ً' || ch === 'ٌ' || ch === 'ٍ') { seg.push({ v: { 'ٰ': 'aa', 'ً': 'an', 'ٌ': 'un', 'ٍ': 'in' }[ch] }); continue; }   // tanvīn: -an -un -in
+    if (ch === 'إ') { seg.push({ v: 'i', short: true }); continue; }   // إسلام islām
+    if (ch === 'ؤ') { seg.push({ v: 'o' }); seg.push({ c: '))' }); continue; }   // مؤمن moʾmin: the hamza on its vāv
+    /* a vowel mark before its own letter writes one long vowel: کِتَاب kitāb (not kita-āb), قُوت qūt, دِین dīn */
+    if (isC(prev) && !/[\u064B-\u0652]/.test(next || '') && ((ch === 'ا' && prev.mark === 'a') || (ch === 'و' && prev.mark === 'u') || (ch === 'ی' && prev.mark === 'i'))) {
+      if (ch === 'ا' && next === 'ً') { prev.mark = null; continue; }   // فوراً: the alif only seats the tanvīn
+      prev.mark = ''; seg.push({ v: ch === 'ا' ? 'aa' : ch === 'و' ? 'uu' : 'ii' }); continue;
+    }
+    if (ch === 'ا' && next === 'ً' && i > 0) continue;   // فوراً fauran
     if (ch === 'ھ') { if (isC(prev)) prev.c += 'h'; continue; }
     if (ch === 'آ') { seg.push({ v: 'aa' }); continue; }
     if (ch === 'ا') {
@@ -2101,6 +2152,7 @@ function urduGuessAscii(word) {
       continue;
     }
     if (ch === 'ی' && next === 'ٰ') { seg.push({ v: 'aa' }); i++; continue; }   // alif maqṣūra: کبریٰ kubrā
+    if (ch === 'و' && next === 'ٰ') { seg.push({ v: 'aa' }); i++; continue; }   // the vāv that writes ā: صلوٰۃ ṣalāt, زکوٰۃ zakāt
     if (ch === 'و' || ch === 'ی') {
       const glide = ch === 'و' ? 'v' : 'y';
       if (i === 0 || (isV(prev) && next && VL.test(next) && next !== 'ں')) { seg.push({ c: glide }); continue; }
@@ -2120,7 +2172,7 @@ function urduGuessAscii(word) {
   const vow = seg.map((s, k) => {
     if (!isC(s)) return null;
     if (s.silent) return '';
-    if (s.mark != null) return s.mark;
+    if (s.mark != null) return s.mark === 'a' ? 'A' : s.mark;   // a written zabar is kept, never dropped as a schwa (آمَنُوا āmanū)
     const nx = seg[k + 1];
     if (isV(nx)) return '';
     if (nx && nx.silent) return 'A';   // before a final silent h: a kept a (ṣadqah)
