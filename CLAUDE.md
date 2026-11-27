@@ -151,6 +151,8 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
 - The Devanagari parser drops a word-initial ʿain before parsing (patch at `p_hi` in `pritchett_scripts/ghalib.js`: इश्क़, not िश्क़);
   the shipped corpora's stored `hi` was repaired to match (`scripts/fix_hi_ain.js`).
 - Couplet and signature-verse lines shrink to stay on one line (`fitVerseLines`, `--vfit`, floor 0.62), alongside `fitChipRows`.
+- Only the view the router marked `.on` is drawn (`base.css`), and the footer only once one is: the scripts come last in an
+  8 MB page, so a reload used to paint Home first. Don't add an early `<script>`: tests load the page by its first scripts.
 - Navigating away stops playback (`pbCancel`). Last route is stored under `lastRoute`.
 - Persistence is `store` / `localStorage`: script, theme, settings (voice, tempo, foot gap, drum, ASCII; the sound layers
   `voiceOn`/`melodyOn`/`tabla`/`drone`/`pulse`, `gapOn`, `taal`, `taalEnd`, `ball`; Tarannum's options, `src/js/15b-tarannum.js`), `lastRoute`,

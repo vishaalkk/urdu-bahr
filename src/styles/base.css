@@ -119,6 +119,10 @@
 html { scroll-padding-top: env(safe-area-inset-top, 0px); box-sizing: border-box; }
 *, *:before, *:after { box-sizing: inherit; -webkit-tap-highlight-color: transparent; }
 html, body { margin: 0; padding: 0; }
+/* Only the view the router marked .on is drawn, and the footer only once there is one: the scripts come last in an 8 MB
+   page, so before this a reload painted Home (the first view in the markup) until the router ran. CSS only, no early
+   script: tests and tools load the page by running its first scripts. */
+.tab-view:not(.on), body:not(:has(.tab-view.on)) #siteFooter { display: none !important; }
 /* Phones: no sideways pan / zoom-out. Wide tables and Nastaliq lines scroll inside their own box. */
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; overflow-x: hidden; overflow-x: clip; }
 body { max-width: 100vw; overflow-x: hidden; overflow-x: clip; }
