@@ -1070,6 +1070,8 @@ function trRender() {
       insp.innerHTML = '';
       insp.classList.add('hidden');
     }
+    var secS = $('transcribe-section');   // phones: room to scroll the text above the sheet
+    if (secS && secS.classList) secS.classList.toggle('tr-sheet-open', !!openWord);
   }
 
   var st = $('trStats'); if (st) st.textContent = trStatsHtml(m.stats);
@@ -1103,21 +1105,35 @@ function trRender() {
       return '<button type="button" class="' + cls + '" data-script="' + s[0] + '" aria-pressed="' + on + '"' + tip + ' onclick="' + (inter ? 'trToggleInter' : 'trSetScript') + '(\'' + s[0] + '\')">' + s[1] + '</button>';
     }).join('');
   }
+  /* [label, on, handler]: switches, and the ⋯ menu on phones */
+  var showStyle = inter ? romanOn : TR.script === 'ro';
+  var styleOpts = TR_STYLES.map(function (st) {
+    var ik = st[0] === 'modern' ? 'rom' : 'ro';
+    return [st[1], inter ? !!TR.inter[ik] : TR.style === st[0], inter ? ('trToggleInterStyle(\'' + ik + '\')') : ('trSetStyle(\'' + st[0] + '\')')];
+  });
+  var viewOpts = [['one', 'One script'], ['inter', 'Interlinear']].map(function (v) { return [v[1], TR.view === v[0], 'trSetView(\'' + v[0] + '\')']; });
   var stb = $('trStyleBtns');
   if (stb) {
-    stb.classList.toggle('hidden', inter ? !romanOn : TR.script !== 'ro');
-    stb.innerHTML = TR_STYLES.map(function (st) {
-      var ik = st[0] === 'modern' ? 'rom' : 'ro';
-      var on = inter ? !!TR.inter[ik] : TR.style === st[0];
-      var fn = inter ? ('trToggleInterStyle(\'' + ik + '\')') : ('trSetStyle(\'' + st[0] + '\')');
-      var tip = inter ? ' title="Click to show or hide in Interlinear"' : '';
-      return '<button type="button" class="tr-script-btn' + (on ? ' on' : '') + '" aria-pressed="' + on + '"' + tip + ' onclick="' + fn + '">' + st[1] + '</button>';
+    stb.classList.toggle('hidden', !showStyle);
+    var tip = inter ? ' title="Click to show or hide in Interlinear"' : '';
+    stb.innerHTML = styleOpts.map(function (o) {
+      return '<button type="button" class="tr-script-btn' + (o[1] ? ' on' : '') + '" aria-pressed="' + o[1] + '"' + tip + ' onclick="' + o[2] + '">' + o[0] + '</button>';
     }).join('');
   }
   var vb = $('trViewBtns');
-  if (vb) vb.innerHTML = [['one', 'One script'], ['inter', 'Interlinear']].map(function (v) {
-    return '<button type="button" class="tr-script-btn' + (TR.view === v[0] ? ' on' : '') + '" aria-pressed="' + (TR.view === v[0]) + '" onclick="trSetView(\'' + v[0] + '\')">' + v[1] + '</button>';
+  if (vb) vb.innerHTML = viewOpts.map(function (o) {
+    return '<button type="button" class="tr-script-btn' + (o[1] ? ' on' : '') + '" aria-pressed="' + o[1] + '" onclick="' + o[2] + '">' + o[0] + '</button>';
   }).join('');
+  var mo = $('trMore');
+  if (mo) {
+    var mItems = function (head, opts) {
+      return '<span class="vi-menu-head">' + head + '</span>' + opts.map(function (o) {
+        return '<button type="button" role="menuitemcheckbox" aria-checked="' + o[1] + '" class="vi-menu-item' + (o[1] ? ' on' : '') + '" onclick="viMenuClose();' + o[2] + '">' + o[0] + '</button>';
+      }).join('');
+    };
+    mo.innerHTML = '<span class="vi-badge tr-more-badge"><button type="button" class="btn ghost sm vi-badge-btn tr-more-btn" aria-haspopup="menu" aria-expanded="false" aria-label="Roman style and layout" onclick="viMenuToggle(this)">⋯</button>' +
+      '<span class="vi-menu" role="menu" aria-label="Roman style and layout">' + (showStyle ? mItems('Roman', styleOpts) : '') + mItems('Layout', viewOpts) + '</span></span>';
+  }
   var bd = $('trBadge'), det = viDetect(text);
   if (bd) bd.innerHTML = det ? viBadgeHTML({ id: 'trBadgeMenu', valId: 'trBadgeVal', current: TR.input, onPick: 'trSetInput', options: TR_INPUTS,
     text: TR.input === 'auto' ? det.label : TR_INPUT_LABEL[TR.input] + ' (set by you)' }) : '';
@@ -1174,12 +1190,30 @@ function trOpen(li, wi) {
   trRender();
   if (wasClosed) {
     var insp = $('trInspector');
-    if (insp && typeof insp.scrollIntoView === 'function') {
+    if (trIsPhone()) trKeepWordInView(insp);
+    else if (insp && typeof insp.scrollIntoView === 'function') {
       try { insp.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
     }
   }
 }
+function trIsPhone() { return typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 767px)').matches; }
+/* phones: scroll the open word above the sheet */
+function trKeepWordInView(insp) {
+  var host = $('trOut');
+  if (!insp || !host || typeof host.querySelectorAll !== 'function' || typeof insp.getBoundingClientRect !== 'function') return;
+  var ws = host.querySelectorAll('.tr-w.on'), w = ws[ws.length - 1];
+  if (!w || typeof w.getBoundingClientRect !== 'function') return;
+  var over = w.getBoundingClientRect().bottom - insp.getBoundingClientRect().top + 24;
+  if (over > 0 && typeof window.scrollBy === 'function') { try { window.scrollBy({ top: over, behavior: 'smooth' }); } catch (e) {} }
+}
 function trClose() { TR.open = null; TR.dictTarget = null; TR.dictHitIdx = null; trRender(); }
+if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
+  document.addEventListener('keydown', function (e) {   // Esc closes the word panel
+    if (e.key !== 'Escape' || !TR.open || (e.target && e.target.closest && e.target.closest('.vi-badge.open'))) return;
+    var sec = $('transcribe-section'); if (!sec || !sec.classList || !sec.classList.contains('on')) return;
+    trClose();
+  });
+}
 function trSetDictTarget(t) { TR.dictTarget = t; TR.dictHitIdx = null; trRender(); }
 function trSetDictHit(idx) { TR.dictHitIdx = idx; trRender(); }
 function trUseDictReading(idx) {

@@ -13,6 +13,8 @@
 .vi-menu-item:hover, .vi-menu-item:focus-visible { color: var(--ink); background: color-mix(in srgb, var(--ink) 6%, transparent); }
 .vi-menu-item.on { color: var(--ink); font-weight: 500; }
 .vi-menu-item.on::before { content: '✓ '; }
+.vi-menu-head { padding: var(--sp-2) var(--sp-2) var(--sp-1); font-family: var(--sans); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); }
+.vi-menu-head ~ .vi-menu-head { margin-top: var(--sp-1); border-top: 1px solid var(--line); }
 .scan-samples-lbl { margin-bottom: var(--sp-2); }
 .vi-samples { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--sp-3); }
 .vi-sample { display: flex; flex-direction: column; gap: var(--sp-1); text-align: start; padding: var(--sp-3) var(--sp-3) var(--sp-2); border: 1px solid var(--line2); border-radius: var(--radius-sm); background: transparent; color: var(--ink); cursor: pointer; transition: border-color 140ms ease-out, background-color 140ms ease-out; min-width: 0; }

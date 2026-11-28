@@ -45,6 +45,7 @@
 }
 .tr-actions { display: inline-flex; gap: var(--sp-2); align-items: center; flex-wrap: wrap; }
 .tr-msg { color: var(--gold); margin-inline-start: var(--sp-2); }
+.tr-msg:empty { display: none; }
 .tr-legend { margin: 0 0 var(--sp-3); }
 .tr-input-area { direction: ltr; unicode-bidi: plaintext; text-align: start; font-family: var(--serif); font-size: 18px; line-height: 1.6; }
 .tr-out-wrap { width: 100%; }
@@ -104,13 +105,6 @@ button.tr-w:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px;
 .tr-in-foot { justify-content: flex-start; }
 .tr-out-foot { justify-content: space-between; }
 .tr-out-foot .tr-legend { margin: 0; }
-
-@media (max-width: 767px) {
-  .tr-pane-lbl { display: none; }
-  .tr-in-clear { display: none !important; }
-  .tr-samples { margin: var(--sp-1) 0 var(--sp-2); }
-  .tr-out-wrap { background: transparent; border: none; padding: 0; min-height: auto; }
-}
 
 /* Side by side, the two columns share one grid's rows (subgrid): the heads, the boxes and the feet line up, and both boxes
    are as tall as the taller text (capped at 70vh; past that each scrolls). */
@@ -236,10 +230,6 @@ button.tr-w:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px;
 #transcribe-section.tr-inter .tr-in-foot { justify-content: flex-end; }
 #transcribe-section.tr-inter .tr-input-area { min-height: 8rem; }
 #transcribe-section.tr-inter .tr-out-wrap { min-height: 0; max-height: none; overflow: visible; }
-@media (max-width: 767px) {
-  .tr-out-head { position: sticky; top: 0; z-index: var(--z-nav); background: var(--bg); padding: var(--sp-2) 0; border-bottom: 1px solid var(--line); margin: 0 0 var(--sp-2); flex-wrap: wrap; }
-  .tr-in-head { flex-wrap: wrap; }
-}
 .tr-view-switch { margin-inline-start: auto; }
 .tr-line-inter { padding: var(--sp-2) 0; border-bottom: 1px solid var(--line); }
 .tr-il-row { display: grid; grid-template-columns: 5.5em minmax(0, 1fr); align-items: baseline; gap: var(--sp-2); }
@@ -250,3 +240,33 @@ button.tr-w.link, span.tr-w.link { background: color-mix(in srgb, var(--gold) 12
 .tr-sure { margin: var(--sp-1) 0 var(--sp-2); font-family: var(--sans); font-size: var(--fs-sm); color: var(--dim); max-width: none; }
 .tr-sure-guess, .tr-sure-loose, .tr-sure-derived { color: var(--ink); }
 @media (prefers-reduced-motion: reduce) { .tr-script-btn { transition: none; } }
+
+/* Phones: style and layout behind ⋯, the word panel a sheet above the nav */
+.tr-more { display: none; }
+.tr-more .vi-menu { inset-inline-start: auto; inset-inline-end: 0; min-width: 12em; }
+.tr-more-btn { min-width: 36px; justify-content: center; font-size: 16px; }
+@media (max-width: 767px) {
+  .tr-lede-long, .tr-wide, .tr-pane-lbl, .tr-hint { display: none; }
+
+  .tr-col-in { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "bar bar" "box box" "head foot"; align-items: center; column-gap: var(--sp-2); }
+  .tr-in-bar { grid-area: bar; }
+  .tr-input-wrap { grid-area: box; }
+  .tr-in-head { grid-area: head; justify-content: flex-start; flex-wrap: wrap; margin-top: var(--sp-1); }
+  .tr-in-foot { grid-area: foot; margin-top: var(--sp-1); }
+  .tr-samples { margin: 0; }
+  .tr-input-area.vi-grow { min-height: 4.5rem; }
+
+  .tr-out-head { position: sticky; top: 0; z-index: var(--z-nav); background: var(--bg); flex-wrap: nowrap; gap: var(--sp-2); padding: var(--sp-1) 0; margin: var(--sp-4) 0 var(--sp-2); border-bottom: 1px solid var(--line); }
+  .tr-out-head .tr-script-switch { flex: 1; justify-content: space-between; }
+  .tr-out-head .tr-style-switch, .tr-out-head .tr-view-switch { display: none; }
+  .tr-more { display: inline-flex; }
+  .tr-script-btn { min-height: 36px; }
+  .tr-out { margin-top: var(--sp-2); }
+
+  .tr-actions { display: flex; width: 100%; }
+  .tr-actions .tr-stats { order: -1; margin-inline-end: auto; }
+
+  .tr-inspector { position: fixed; left: 0; right: 0; bottom: calc(60px + env(safe-area-inset-bottom, 0px)); z-index: var(--z-overlay); margin: 0; max-height: 55vh; overflow-y: auto; overscroll-behavior: contain; padding: var(--sp-4) var(--sp-4) var(--sp-3); border: 0; border-top: 1px solid var(--line2); border-radius: var(--radius-lg) var(--radius-lg) 0 0; box-shadow: var(--shadow); }
+  .tr-inspector .tr-close { top: var(--sp-2); inset-inline-end: var(--sp-2); }
+  #transcribe-section.tr-sheet-open { padding-bottom: 55vh; }
+}

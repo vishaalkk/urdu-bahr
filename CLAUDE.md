@@ -134,7 +134,9 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   tabla changes the timing, so it restarts the couplet. With the tabla, lines are laid on the taal by mātrās (`tkLay`,
   Auto = `tkFits`), a cycle of theka first, a one-cycle tihai onto sam after. The ribbon under the playing couplet is the
   mixer (stays when paused); the bouncing ball (`settings.ball`) rides every couplet. Drills, Learn and pattern ▶ keep
-  `play()`. `settings.style` is kept in step with the layers (`tkLegacy`) for the players that still read it. Strokes:
+  `play()`. `settings.style` is kept in step with the layers (`tkLegacy`) for the players that still read it. The recorded voice takes
+  (`VOICEPACK`, `15-audio.js`) are MP3 (`lame -V 5 -m m`, from 22.05 kHz WAV); `on` is where each take's sound starts in the WAV, and
+  `recShift` moves `off`/`dur` by however far a decoder's copy starts later (encoder lead-in). Strokes:
   `data/tabla/` → `scripts/build_tabla_strokes.py` → `data/tabla_strokes.json` (credited on About).
 - **Punjabi, Saraiki and Arabic letters** (ALA-LC Roman; `#/letters`, `src/js/25-letters.js`, gate `tests/letters_page.js`):
   Pue's ASCII gains `.n .l` (ݨ ݪ / ण ळ / ṇ ḷ) and the Saraiki implosives `.b .j .d .g` (ٻ ڄ ݙ ڳ / ॿ ॼ ॾ ॻ / b̤ j̈ d̤ g̈) by a patch
@@ -155,7 +157,8 @@ Design rules live in `docs/DESIGN_PRINCIPLES.md` — read it before touching any
   every misra in the legend's own marks; Play the ghazal lights its marks (`data-i` = syllable index). A misra that does not
   fit says which foot and why (`unfitWhy`, measured against its own bahr, its partner misra, or the bahr most misras share:
   `benchmarkSource`); no reading is suggested. Outline rail of couplets at ≥1260px (`renderScanRail`). The Transliterator:
-  One script | Interlinear (`trView`; Interlinear is full width and folds the input to a bar, `trEditInput`), the input
+  One script | Interlinear (`trView`; Interlinear is full width and folds the input to a bar, `trEditInput`); on phones (<768px) Roman
+  style and layout sit behind ⋯ (`trMore`) and the word panel is a sheet above the bottom nav (`tr-sheet-open`, `trKeepWordInView`), the input
   override (`trInput`), word drawer with how sure a reading is (`TR_TIER_SURE`), hand-offs `trScanHref` / `scanTranscribeHref`
   and Letters links for Punjabi / Saraiki letters (`trPaGroups`). Gate: `tests/workspace_logic.js`.
 - Scan pins a vowel-less word (عشق) to the engine split its readings in Pritchett's verses agree on (`romanPins`, `19-scan.js`,
